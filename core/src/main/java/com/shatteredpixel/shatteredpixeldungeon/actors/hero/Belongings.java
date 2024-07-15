@@ -36,18 +36,74 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.network.SpecialSlot;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Belongings implements Iterable<Item> {
 
 	private Hero owner;
+	public ArrayList<SpecialSlot> getSpecialSlots() {
+		ArrayList<SpecialSlot> slots = new ArrayList<>(4);
+		slots.add(new SpecialSlot(0, "items.png", ItemSpriteSheet.WEAPON_HOLDER, weapon()));
+		slots.add(new SpecialSlot(1, "items.png", ItemSpriteSheet.ARMOR_HOLDER, armor));
+		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.HOLDER, misc()));
+		slots.add(new SpecialSlot(4, "items.png", ItemSpriteSheet.RING_HOLDER, ring()));
+		slots.add(new SpecialSlot(5, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, artifact));
+		return slots;
+	}
 
+	public List<Integer> pathOfItem(@NotNull Item item) {
+		assert (item != null) : "path of null item";
+		List<SpecialSlot> specialSlots = getSpecialSlots();
+		for (int i = 0; i < specialSlots.size(); i++) {
+			if (specialSlots.get(i) == null) {
+				continue;
+			}
+			if (specialSlots.get(i).item == item) {
+				List<Integer> slot = new ArrayList<>(2);
+				slot.add(-i - 1);
+				return slot;
+			}
+			if (specialSlots.get(i).item instanceof Bag) {
+				List<Integer> path = ((Bag) specialSlots.get(i).item).pathOfItem(item);
+				if (path != null) {
+					path.add(0, -i - 1);
+					return path;
+				}
+			}
+		}
+		return backpack.pathOfItem(item);
+	}
 	public static class Backpack extends Bag {
+		public List<Integer> pathOfItem(Item item) {
+			assert (item != null) : "path of null item";
+			for (int i = 0; i < items.size(); i++) {
+				Item cur_item = items.get(i);
+				if (cur_item == null) {
+					continue;
+				}
+				if (cur_item == item) {
+					List<Integer> path = new ArrayList<>(2);
+					path.add(i);
+					return path;
+				}
+				if (cur_item instanceof Bag) {
+					List<Integer> path = ((Bag) cur_item).pathOfItem(item);
+					if (path != null) {
+						path.add(0, i);
+						return path;
+					}
+				}
+			}
+			return null;
+		}
 		{
 			image = ItemSpriteSheet.BACKPACK;
 		}

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -32,13 +33,17 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -46,14 +51,22 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
+
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 
 public class Item implements Bundlable {
 
@@ -94,7 +107,16 @@ public class Item implements Bundlable {
 
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
-	
+	// Can be changed to be used in custom textures
+	private String spriteSheet = Assets.Sprites.ITEMS;
+	// I don't know what I am doing
+	protected static final String TXT_STRENGTH = ":%d";
+	public static final int DEGRADED = 0xFF4444;
+	public static final int UPGRADED = 0x44FF44;
+	public static final int WARNING = 0xFF8800;
+	protected static final String TXT_TYPICAL_STR = "%d?";
+	protected static final String TXT_LEVEL = "%+d";
+	protected static final String TXT_CURSED = "";//"-";
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
@@ -501,11 +523,17 @@ public class Item implements Bundlable {
 
 	public Emitter emitter() { return null; }
 	
-	public String info() {
-		return desc();
+	public String info(Hero hero) {
+		return desc(hero);
+	}
+	public String info(){
+		return Messages.get(this, "desc");
 	}
 	
-	public String desc() {
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc");
+	}
+	public String desc(){
 		return Messages.get(this, "desc");
 	}
 	
@@ -684,4 +712,99 @@ public class Item implements Bundlable {
 			return Messages.get(Item.class, "prompt");
 		}
 	};
+	public static JSONObject packItem(@NotNull Item item, @Nullable Hero hero) {
+		return item.toJsonObject(hero);
+	}
+
+	public final JSONObject toJsonObject(@Nullable Hero hero) {
+		JSONObject itemObj = new JSONObject();
+		try {
+			if (hero != null) {
+				itemObj.put("actions", NetworkPacket.packActions(this, hero));
+				itemObj.put("default_action", defaultAction == null ? "null" : defaultAction);
+				itemObj.put("info", info(hero));
+				itemObj.put("ui", itemUI(hero));
+			}
+			itemObj.put("sprite_sheet", spriteSheet());
+			itemObj.put("image", image());
+			itemObj.put("name", name());
+			itemObj.put("stackable", stackable);
+			itemObj.put("quantity", quantity());
+			itemObj.put("known", isIdentified());
+			itemObj.put("cursed", visiblyCursed());
+			itemObj.put("identified", isIdentified());
+			itemObj.put("level_known", levelKnown);
+			itemObj.put("level", visiblyUpgraded());
+			ItemSprite.Glowing glowing = glowing();
+			if (glowing != null) {
+				itemObj.put("glowing", glowing.toJsonObject());
+			}
+			else{
+				itemObj.put("glowing", JSONObject.NULL);
+			}
+			if (this instanceof Bag) {
+				itemObj = NetworkPacket.packBag((Bag) this, hero, itemObj);
+			}
+		} catch (JSONException e) {
+			Log.e("Packet", "JSONException inside packItem. " + e.toString());
+		}
+		return itemObj;
+	}
+
+	@NotNull
+	protected JSONObject itemUI(@NotNull Hero owner) throws JSONException {
+		Objects.requireNonNull(owner);
+		@NotNull Item item = this;
+		JSONObject ui = new JSONObject();
+		JSONObject topLeft = new JSONObject();
+		JSONObject topRight = new JSONObject();
+		JSONObject bottomRight = new JSONObject();
+
+		topLeft.put("visible", true);
+		topRight.put("visible", true);
+		bottomRight.put("visible", true);
+
+		topLeft.put("text", item.status());
+
+		boolean isArmor = item instanceof Armor;
+		boolean isWeapon = item instanceof Weapon;
+		if (isArmor || isWeapon) {
+			if (item.levelKnown || (isWeapon && !(item instanceof MeleeWeapon))) {
+				int str = isArmor ? ((Armor) item).STRReq() : ((Weapon) item).STRReq();
+				topRight.put("text", Utils.format(TXT_STRENGTH, str));
+				if (str > owner.STR()) {
+					topRight.put("color", DEGRADED);
+				} else {
+					topRight.put("color", JSONObject.NULL);
+				}
+			} else {
+				topRight.put("text", Utils.format(TXT_TYPICAL_STR, isArmor ?
+						((Armor) item).STRReq(0) :
+						((MeleeWeapon) item).STRReq(0)));
+				topRight.put("color", WARNING);
+			}
+		} else {
+			topRight.put("text", JSONObject.NULL);
+		}
+
+		int level = item.visiblyUpgraded();
+		if (level != 0 || (item.cursed && item.cursedKnown)) {
+			bottomRight.put("text", item.levelKnown ? Utils.format(TXT_LEVEL, level) : TXT_CURSED);
+			bottomRight.put("color", level > 0 ? (UPGRADED) : DEGRADED);
+		} else {
+			bottomRight.put("text", JSONObject.NULL);
+		}
+		ui.put("top_left", topLeft);
+		ui.put("top_right", topRight);
+		ui.put("bottom_right", bottomRight);
+		return ui;
+	}
+	public String spriteSheet() {
+		return spriteSheet;
+	}
+
+	public void spriteSheet(String newSpriteSheet) {
+		spriteSheet = newSpriteSheet;
+		sendUpdateItemFull(this);
+	}
 }

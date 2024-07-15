@@ -47,25 +47,29 @@ public class GamesInProgress {
 	private static final String GAME_FILE	= "game.dat";
 	private static final String DEPTH_FILE	= "depth%d.dat";
 	private static final String DEPTH_BRANCH_FILE	= "depth%d-branch%d.dat";
-	
-	public static boolean gameExists( int slot ){
-		return FileUtils.dirExists(gameFolder(slot))
-				&& FileUtils.fileLength(gameFile(slot)) > 1;
+	@Deprecated
+	public static boolean gameExists(int slot){
+		return FileUtils.dirExists(gameFolder())
+				&& FileUtils.fileLength(gameFile()) > 1;
+	}
+	public static boolean gameExists(){
+		return FileUtils.dirExists(gameFolder())
+				&& FileUtils.fileLength(gameFile()) > 1;
+	}
+
+	public static String gameFolder(){
+		return Messages.format(GAME_FOLDER);
 	}
 	
-	public static String gameFolder( int slot ){
-		return Messages.format(GAME_FOLDER, slot);
+	public static String gameFile( ){
+		return gameFolder() + "/" + GAME_FILE;
 	}
 	
-	public static String gameFile( int slot ){
-		return gameFolder(slot) + "/" + GAME_FILE;
-	}
-	
-	public static String depthFile( int slot, int depth, int branch ) {
+	public static String depthFile(int depth, int branch ) {
 		if (branch == 0) {
-			return gameFolder(slot) + "/" + Messages.format(DEPTH_FILE, depth);
+			return gameFolder() + "/" + Messages.format(DEPTH_FILE, depth);
 		} else {
-			return gameFolder(slot) + "/" + Messages.format(DEPTH_BRANCH_FILE, depth, branch);
+			return gameFolder() + "/" + Messages.format(DEPTH_BRANCH_FILE, depth, branch);
 		}
 	}
 	
@@ -102,7 +106,7 @@ public class GamesInProgress {
 			Info info;
 			try {
 				
-				Bundle bundle = FileUtils.bundleFromFile(gameFile(slot));
+				Bundle bundle = FileUtils.bundleFromFile(gameFile());
 				info = new Info();
 				info.slot = slot;
 				Dungeon.preview(info, bundle);
@@ -159,9 +163,12 @@ public class GamesInProgress {
 	}
 	
 	public static void delete( int slot ) {
-		slotStates.put( slot, null );
+		slotStates.put(0, null );
 	}
-	
+	public static void delete() {
+		slotStates.put(0, null );
+	}
+
 	public static class Info {
 		public int slot;
 		

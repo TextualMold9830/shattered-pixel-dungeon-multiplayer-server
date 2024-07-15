@@ -255,25 +255,24 @@ public class Game implements ApplicationListener {
 	protected void draw() {
 		if (scene != null) scene.draw();
 	}
-	
-	protected void switchScene() {
 
-		Camera.reset();
-		
-		if (scene != null) {
-			scene.destroy();
-		}
-		//clear any leftover vertex buffers
-		Vertexbuffer.clear();
+	protected void switchScene() {
+		if (requestedScene == scene) return;
+
 		scene = requestedScene;
 		if (onChange != null) onChange.beforeCreate();
-		scene.create();
+		// small hack to not include core
+		if (scene.getClass().getSimpleName().equals("PixelScene"))
+		{
+			scene.create();
+		}
 		if (onChange != null) onChange.afterCreate();
 		onChange = null;
-		
+
 		Game.elapsed = 0f;
 		Game.timeScale = 1f;
 		Game.timeTotal = 0f;
+
 	}
 
 	protected void update() {
@@ -330,5 +329,14 @@ public class Game implements ApplicationListener {
 		void beforeCreate();
 		void afterCreate();
 	}
-	
+	public void server_step(){
+		// I don't know what this does
+		/*
+		SystemTime.tick();
+		long rightNow = SystemTime.now;
+		step = (now == 0 ? 0 : rightNow - now);
+		now = rightNow;
+		*/
+		step();
+	}
 }

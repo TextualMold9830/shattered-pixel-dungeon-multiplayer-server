@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Tipp
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
@@ -57,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+
+import static com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room.Door.Type.HIDDEN;
 
 public class Heap implements Bundlable {
 	
@@ -205,7 +208,9 @@ public class Heap implements Bundlable {
 			sprite.view(this).place( pos );
 		}
 	}
-	
+	public boolean showsFirstItem() {
+		return (type == Type.HEAP || type == Type.FOR_SALE || type == Type.CRYSTAL_CHEST);
+	}
 	public void burn() {
 
 		if (type != Type.HEAP) {
@@ -452,6 +457,24 @@ public class Heap implements Bundlable {
 		bundle.put( ITEMS, items );
 		bundle.put( HAUNTED, haunted );
 		bundle.put( AUTO_EXPLORED, autoExplored );
+	}
+	public int image() {
+		switch (type) {
+			case HEAP:
+			case FOR_SALE:
+				return size() > 0 ? items.peek().image() : 0;
+			case CHEST:
+			case LOCKED_CHEST:
+				return ItemSpriteSheet.LOCKED_CHEST;
+			case CRYSTAL_CHEST:
+				return ItemSpriteSheet.CRYSTAL_CHEST;
+			case TOMB:
+				return ItemSpriteSheet.TOMB;
+			case SKELETON:
+				return ItemSpriteSheet.BONES;
+			default:
+				return 0;
+		}
 	}
 	
 }

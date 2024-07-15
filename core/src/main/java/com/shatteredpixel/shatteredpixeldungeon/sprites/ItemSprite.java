@@ -44,6 +44,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.Buffer;
 
@@ -398,6 +400,17 @@ public class ItemSprite extends MovieClip {
 			blue = (color & 0xFF) / 255f;
 			
 			this.period = period;
+		}
+		public JSONObject toJsonObject() {
+			JSONObject result = new JSONObject();
+			try {
+				result.put("color", color);
+				result.put("period", period);
+			} catch (JSONException ignored) {
+				return new JSONObject();
+			}
+			return result;
+
 		}
 	}
 }

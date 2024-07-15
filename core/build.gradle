@@ -6,4 +6,6 @@ sourceCompatibility = targetCompatibility = appJavaCompatibility
 dependencies {
     api project(':SPD-classes')
     implementation project(':services')
+    implementation ('org.json:json:20240303')
+    implementation ('org.jetbrains:annotations:24.1.0')
 }

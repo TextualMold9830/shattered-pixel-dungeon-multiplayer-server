@@ -34,7 +34,32 @@ import com.watabou.utils.Point;
 import java.util.Locale;
 
 public class SPDSettings extends GameSettings {
-	
+	// Multiplayer
+	public static final String KEY_KILL_ON_DISCONNECT = "kill_on_disconnect";
+	public static boolean killOnDisconnect = false;
+	public static void KillOnDisconnect(boolean killOnDisconnect){
+		put(KEY_KILL_ON_DISCONNECT, killOnDisconnect);
+	}
+	public static boolean KillOnDisconnect(){
+		return getBoolean(KEY_KILL_ON_DISCONNECT, false);
+	}
+	public static String KEY_MAX_PLAYERS =	"max_players";
+	public static int maxPlayers = 4;
+	public static int maxPlayers(){
+		return getInt(KEY_MAX_PLAYERS, 4);
+	}
+	public void maxPlayers(int maxPlayers){
+		put(KEY_MAX_PLAYERS, maxPlayers);
+	}
+	public static String KEY_SERVER_NAME;
+
+	public static String serverName = "SPD-server";
+	public static String serverName(){
+		return getString(serverName, "SPD-server");
+	}
+	public static void serverName(String serverName){
+		put(KEY_SERVER_NAME, serverName);
+	}
 	//Version info
 	
 	public static final String KEY_VERSION      = "version";

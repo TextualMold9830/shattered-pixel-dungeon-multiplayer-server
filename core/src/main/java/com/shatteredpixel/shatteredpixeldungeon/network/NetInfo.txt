@@ -1,0 +1,46 @@
+version 5  //increment when modify
+1. Протокол
+    1.1 tcp
+    1.2 JSON
+    1.3 Запросы разделяются переносом строки (перенос строки запрещён внутри пакетп и должен экранироваться)
+    1.4 Синхронизирующий пакет отсутствует
+
+2. Топология - звезда. (Единый сервер, множество клиентов.)
+3. Функция info для предметов и окружения работает на стороне клиента (если сервер не требует иного, тогда это явно передается).
+    3.1 сервер отправит специальный пакет клиенту, сообщающий, что для функции Info последний ОБЯЗАН обратиться к серверу за получением конечной строки.
+
+4. опционально:
+    4.1. Сервер передает клиенту мир так, как клиент его видит
+        4.1.1 вместо скрытых ловушек передается просто пол
+        4.1.2 Аналогично для остального
+5. Синхронизация состояния:
+    5.1 Сервер передает измененное или полное состояние
+    5.2 Сервер передает состояние некоторых UI элементов
+    5.3 Для синхронизации состояния со стороны сервера не требуется предварительных пакетов
+    5.4 Клиент имеет прао запросить синхронизацию состояния
+        5.4.1 Сервер имеет право не удовлетворять этот запрос
+        5.4.2 Синхронизация состояния проводится стандартными пакетами
+
+FromVersion: 5 //Copy from "version"
+Translator: translate.yandex.ru //change if use other
+1. Protocol
+    1.1 tcp
+    1.2 JSON
+    1.3 Requests are separated by a line break (line break is prohibited inside the package and must be escaped)
+    1.4 There is no synchronizing package
+
+2. Topology is a star. (Single server, multiple clients.)
+3. The info function for objects and environment works on the client side (if the server does not require otherwise, then it is explicitly transmitted).
+    3.1 the server will send a special packet to the client informing that for the Info function, the latter is OBLIGED to contact the server to receive the final string.
+
+4. optional:
+    4.1. The server transmits the world to the client as the client sees it
+        4.1.1 instead of hidden traps, just the floor is transmitted
+        4.1.2 Similarly for the others
+5. Status synchronization:
+    5.1 The server transmits a modified or complete state
+    5.2 The server transmits the state of some UI elements
+    5.3 No pre-packages are required to synchronize the state from the server side
+    5.4 The client has the right to request state synchronization
+        5.4.1 The Server has the right not to satisfy this request
+        5.4.2 State synchronization is carried out by standard packages

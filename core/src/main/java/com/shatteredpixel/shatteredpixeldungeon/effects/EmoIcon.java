@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Random;
+import org.json.JSONObject;
 
 public class EmoIcon extends Image {
 
@@ -43,7 +44,19 @@ public class EmoIcon extends Image {
 		this.owner = owner;
 		GameScene.add( this );
 	}
-	
+	public JSONObject toJsonObject() {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("max_size", maxSize);
+			json.put("time_scale", timeScale);
+			json.put("max_size", maxSize);
+		} catch (Exception ignored) {
+		}
+		// todo: part of future, for ShatteredPD
+		// Now it's time
+		assert false;
+		return new JSONObject();
+	}
 	@Override
 	public void update() {
 		super.update();

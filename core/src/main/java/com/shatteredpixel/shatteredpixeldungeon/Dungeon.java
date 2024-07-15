@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -85,17 +86,18 @@ import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
+
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.*;
 
 public class Dungeon {
+
 
 	//enum of items which have limited spawns, records how many have spawned
 	//could all be their own separate numbers, but this allows iterating, much nicer for bundling/initializing.
@@ -217,7 +219,9 @@ public class Dungeon {
 	public static boolean dailyReplay;
 	public static String customSeedText = "";
 	public static long seed;
-	
+
+	@Nullable
+	public static Hero[] heroes;
 	public static void init() {
 
 		initialVersion = version = Game.versionCode;
@@ -688,7 +692,7 @@ public class Dungeon {
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
 			
-			FileUtils.bundleToFile( GamesInProgress.gameFile(save), bundle);
+			FileUtils.bundleToFile( GamesInProgress.gameFile(), bundle);
 			
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
@@ -696,11 +700,11 @@ public class Dungeon {
 		}
 	}
 	
-	public static void saveLevel( int save ) throws IOException {
+	public static void saveLevel() throws IOException {
 		Bundle bundle = new Bundle();
 		bundle.put( LEVEL, level );
 		
-		FileUtils.bundleToFile(GamesInProgress.depthFile( save, depth, branch ), bundle);
+		FileUtils.bundleToFile(GamesInProgress.depthFile(depth, branch ), bundle);
 	}
 	
 	public static void saveAll() throws IOException {
@@ -709,7 +713,7 @@ public class Dungeon {
 			Actor.fixTime();
 			updateLevelExplored();
 			saveGame( GamesInProgress.curSlot );
-			saveLevel( GamesInProgress.curSlot );
+			saveLevel();
 
 			GamesInProgress.set( GamesInProgress.curSlot );
 
@@ -722,7 +726,7 @@ public class Dungeon {
 	
 	public static void loadGame( int save, boolean fullLoad ) throws IOException {
 		
-		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.gameFile( save ) );
+		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.gameFile() );
 
 		//pre-1.3.0 saves
 		if (bundle.contains(INIT_VER)){
@@ -835,12 +839,12 @@ public class Dungeon {
 		}
 	}
 	
-	public static Level loadLevel( int save ) throws IOException {
+	public static Level loadLevel() throws IOException {
 		
 		Dungeon.level = null;
 		Actor.clear();
 
-		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.depthFile( save, depth, branch ));
+		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.depthFile(depth, branch ));
 
 		Level level = (Level)bundle.get( LEVEL );
 
@@ -851,10 +855,10 @@ public class Dungeon {
 		}
 	}
 	
-	public static void deleteGame( int save, boolean deleteLevels ) {
+	public static void deleteGame(boolean deleteLevels ) {
 
 		if (deleteLevels) {
-			String folder = GamesInProgress.gameFolder(save);
+			String folder = GamesInProgress.gameFolder();
 			for (String file : FileUtils.filesInDir(folder)){
 				if (file.contains("depth")){
 					FileUtils.deleteFile(folder + "/" + file);
@@ -862,9 +866,9 @@ public class Dungeon {
 			}
 		}
 
-		FileUtils.overwriteFile(GamesInProgress.gameFile(save), 1);
+		FileUtils.overwriteFile(GamesInProgress.gameFile(), 1);
 		
-		GamesInProgress.delete( save );
+		GamesInProgress.delete();
 	}
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
@@ -1102,5 +1106,53 @@ public class Dungeon {
 		return PathFinder.getStepBack( ch.pos, from, canApproachFromPos ? 8 : 4, passable, canApproachFromPos );
 		
 	}
+	public static void removeHero(Hero hero){
+		if (SPDSettings.killOnDisconnect) {
+			if (hero == null) {
+				return;
+			}
+			int ID = Arrays.asList(heroes).indexOf(hero);
+			hero.die(null);
+			if (ID == -1) {
+				return;
+			}
+			heroes[ID] = null;
+		} else {
+			hero.next();
+		}
+	}
+	public static void switchLevel(final Level level, int pos, @NotNull Hero hero ) {
+		switchLevelToAll(level, pos);  //todo change this for multilevels support
+		/*
+		switchLevel(level);
+        swichLevelChangePosition(pos,hero);
+		 */
+	}
 
+	public static void switchLevel(final Level level) {
+		//todo rewrite
+		//todo add cheking Hero pos is  clear
+		if (Dungeon.level == level) {
+			return;
+		}
+		Dungeon.level = level;
+		Actor.init();
+
+		Actor respawner = level.respawner();
+		if (respawner != null) {
+			Actor.add(level.respawner());
+		}
+		for (Hero hero:heroes) {
+			if (hero == null){
+				continue;
+			}
+			if (hero.networkID == -1){
+				continue;
+			}
+
+			sendLevel(level, hero.networkID);
+			sendAllChars(hero.networkID);
+			sendHeroNewID(hero, hero.networkID);
+		}
+	}
 }

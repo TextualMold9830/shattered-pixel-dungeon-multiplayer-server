@@ -52,14 +52,19 @@ import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.nio.Buffer;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip.Listener {
-	
+	protected final Set<State> states = new CopyOnWriteArraySet<State>();
 	// Color constants for floating text
 	public static final int DEFAULT		= 0xFFFFFF;
 	public static final int POSITIVE	= 0x00FF00;
@@ -125,7 +130,26 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 	//used to prevent the actor associated with this sprite from acting until movement completes
 	public volatile boolean isMoving = false;
-	
+	public Set<State> states(){
+		return states;
+	}
+
+	public JSONObject getEmoJsonObject() {
+		if (emo == null){
+			return new JSONObject();
+		}
+		return emo.toJsonObject();
+	}
+
+	@Nullable
+	// needs to return spritename.json
+	// any non-null return needs a texture to be loaded for that sprite
+	public String getSpriteAsset() {
+		return null;
+	}
+	public String spriteName() {
+		return Utils.toSnakeCase(this.getClass().getSimpleName());
+	}
 	public CharSprite() {
 		super();
 		listener = this;
