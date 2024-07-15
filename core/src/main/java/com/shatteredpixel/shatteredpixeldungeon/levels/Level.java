@@ -671,7 +671,7 @@ public abstract class Level implements Bundlable {
 		return null;
 	}
 
-	private Respawner respawner;
+	public Respawner respawner;
 
 	public Actor addRespawner() {
 		if (respawner == null){
@@ -1457,7 +1457,7 @@ public abstract class Level implements Bundlable {
 		int by = b / width();
 		return Math.max( Math.abs( ax - bx ), Math.abs( ay - by ) );
 	}
-	
+
 	public boolean adjacent( int a, int b ) {
 		return distance( a, b ) == 1;
 	}

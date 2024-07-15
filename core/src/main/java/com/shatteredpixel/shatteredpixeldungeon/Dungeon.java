@@ -1138,9 +1138,9 @@ public class Dungeon {
 		Dungeon.level = level;
 		Actor.init();
 
-		Actor respawner = level.respawner();
+		Actor respawner = level.respawner;
 		if (respawner != null) {
-			Actor.add(level.respawner());
+			Actor.add(level.respawner);
 		}
 		for (Hero hero:heroes) {
 			if (hero == null){
@@ -1154,5 +1154,24 @@ public class Dungeon {
 			sendAllChars(hero.networkID);
 			sendHeroNewID(hero, hero.networkID);
 		}
+	}
+	public static void switchLevelToAll(final Level level,int pos ){
+		switchLevel(level);
+		for (Hero hero:heroes) {
+			if (hero!=null){
+				switchLevelChangePosition(pos,hero);
+			}
+		}
+	}
+	private static void switchLevelChangePosition(int pos, @NotNull Hero hero)
+	{
+		hero.pos = pos != -1 ? (Level.getNearClearCell(pos)) : Level.getNearClearCell(level.exit);
+
+		sendDepth(hero.networkID, depth);
+
+		Light light = hero.buff( Light.class );
+		hero.viewDistance = light == null ? level.viewDistance : Math.max( Light.DISTANCE, level.viewDistance );
+
+		observe(hero);
 	}
 }
