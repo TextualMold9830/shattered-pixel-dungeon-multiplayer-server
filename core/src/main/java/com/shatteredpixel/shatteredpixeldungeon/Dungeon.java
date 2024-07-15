@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
@@ -94,7 +95,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.*;
+import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 public class Dungeon {
 
@@ -494,7 +497,7 @@ public class Dungeon {
 		for(Mob m : level.mobs){
 			if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)){
 				//displace mob
-				for(int i : PathFinder.NEIGHBOURS8){
+				for(int i : NEIGHBOURS8){
 					if (Actor.findChar(m.pos+i) == null && level.passable[m.pos + i]){
 						m.pos += i;
 						break;
@@ -1173,5 +1176,78 @@ public class Dungeon {
 		hero.viewDistance = light == null ? level.viewDistance : Math.max( Light.DISTANCE, level.viewDistance );
 
 		observe(hero);
+	}
+	public static void observe(@NotNull Hero hero) {
+		observe(hero, true);
+	}
+
+	public static void observe(@NotNull Hero hero, boolean send){
+
+		if (level == null) {
+			return;
+		}
+
+		level.updateFieldOfView( hero );
+
+		boolean[] newVisited;
+
+		newVisited = BArray.or( level.visited, hero.fieldOfView, null );
+		boolean[] diff;
+		diff = BArray.xor(level.visited, newVisited, null);
+		level.visited  = newVisited;
+		//todo fix this
+		addToSendLevelVisitedState(level, diff);
+
+		if (send) {
+			int networkID = getHeroID(hero);
+			addToSendHeroVisibleCells(hero.fieldOfView,networkID);
+			SendData.flush(networkID);
+		}
+	}
+	public static int getNearClearCell(int startPos){
+		if (Actor.findChar( startPos ) == null){
+			return startPos;
+		}
+		//need to create random circle
+		else for (int i:NEIGHBOURS8) {
+			if ((Actor.findChar( startPos+i ) == null)&&(passable[startPos+i])){
+				return startPos+i;
+			}
+		}
+
+		int count = 10;
+		int pos;
+		do {
+			pos = Dungeon.level.randomRespawnCell();
+			if (count-- <= 0) {
+				break;
+			}
+		} while (pos == -1);
+		return pos;
+	};
+	public static boolean visibleforAnyHero(int pos) {
+		for (Hero hero : heroes) {
+			if (hero == null) {
+				continue;
+			}
+			if (hero.fieldOfView[pos]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean[] visibleForHeroes(int ...positions) {
+		boolean[] result = new boolean[heroes.length];
+		for (int pos : positions) {
+			for (int i = 0; i < heroes.length; i++) {
+				if (heroes[i] == null) {
+					result[i] = false;
+				} else {
+					result[i] = result[i] || heroes[i].fieldOfView[pos];
+				}
+			}
+		}
+		return result;
 	}
 }

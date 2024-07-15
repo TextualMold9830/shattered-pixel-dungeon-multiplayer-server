@@ -773,7 +773,13 @@ public abstract class Level implements Bundlable {
 				|| Actor.findChar( cell ) != null);
 		return cell;
 	}
-	
+	public int randomRespawnCell() {
+		int cell;
+		do {
+			cell = Random.Int( Dungeon.level.length() );
+		} while (!passable[cell] || Dungeon.visibleforAnyHero(cell) || Actor.findChar( cell ) != null);
+		return cell;
+	}
 	public int randomDestination( Char ch ) {
 		int cell;
 		do {
