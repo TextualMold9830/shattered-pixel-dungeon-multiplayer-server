@@ -807,4 +807,7 @@ public class Item implements Bundlable {
 		spriteSheet = newSpriteSheet;
 		sendUpdateItemFull(this);
 	}
+	public String getNameKey(){
+		return getClass().getName() + "name";
+	}
 }
