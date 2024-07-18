@@ -83,7 +83,7 @@ public class Chasm implements Hero.Doom {
 							@Override
 							protected void onSelect( int index ) {
 								if (index == 0 && elapsed > 0.2f) {
-									if (Dungeon.hero.pos == heroPos) {
+									if (Dungeon.heroes.pos == heroPos) {
 										jumpConfirmed = true;
 										hero.resume();
 									}
@@ -103,8 +103,8 @@ public class Chasm implements Hero.Doom {
 
 		Level.beforeTransition();
 
-		if (Dungeon.hero.isAlive()) {
-			Dungeon.hero.interrupt();
+		if (Dungeon.heroes.isAlive()) {
+			Dungeon.heroes.interrupt();
 			InterlevelScene.mode = InterlevelScene.Mode.FALL;
 			if (Dungeon.level instanceof RegularLevel) {
 				Room room = ((RegularLevel)Dungeon.level).room( pos );
@@ -114,7 +114,7 @@ public class Chasm implements Hero.Doom {
 			}
 			Game.switchScene( InterlevelScene.class );
 		} else {
-			Dungeon.hero.sprite.visible = false;
+			Dungeon.heroes.sprite.visible = false;
 		}
 	}
 
@@ -128,7 +128,7 @@ public class Chasm implements Hero.Doom {
 
 	public static void heroLand() {
 		
-		Hero hero = Dungeon.hero;
+		Hero hero = Dungeon.heroes;
 		
 		ElixirOfFeatherFall.FeatherBuff b = hero.buff(ElixirOfFeatherFall.FeatherBuff.class);
 		

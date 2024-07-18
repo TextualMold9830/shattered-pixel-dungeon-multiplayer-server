@@ -67,8 +67,8 @@ public class Bones {
 			return;
 		}
 
-		item = pickItem(Dungeon.hero);
-		heroClass = Dungeon.hero.heroClass;
+		item = pickItem(Dungeon.heroes);
+		heroClass = Dungeon.heroes.heroClass;
 
 		Bundle bundle = new Bundle();
 		bundle.put( LEVEL, depth );

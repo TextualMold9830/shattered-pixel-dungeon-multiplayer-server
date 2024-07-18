@@ -89,10 +89,10 @@ public class CellSelector extends ScrollArea {
 			//The extra check prevents large sprites from blocking the player from clicking adjacent tiles
 
 			//hero first
-			if (Dungeon.hero.sprite != null && Dungeon.hero.sprite.overlapsPoint( p.x, p.y )){
-				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.hero.pos);
+			if (Dungeon.heroes.sprite != null && Dungeon.heroes.sprite.overlapsPoint( p.x, p.y )){
+				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.heroes.pos);
 				if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
-					select(Dungeon.hero.pos, event.button);
+					select(Dungeon.heroes.pos, event.button);
 					return;
 				}
 			}
@@ -150,7 +150,7 @@ public class CellSelector extends ScrollArea {
 	}
 	
 	public void select( int cell, int button ) {
-		if (enabled && Dungeon.hero.ready && !GameScene.interfaceBlockingHero()
+		if (enabled && Dungeon.heroes.ready && !GameScene.interfaceBlockingHero()
 				&& listener != null && cell != -1) {
 
 			switch (button){
@@ -328,7 +328,7 @@ public class CellSelector extends ScrollArea {
 
 			} else if (!directionFromAction(action).isZero()) {
 
-				Dungeon.hero.resting = false;
+				Dungeon.heroes.resting = false;
 				lastCellMoved = -1;
 				if (heldAction1 == SPDAction.NONE){
 					heldAction1 = action;
@@ -341,8 +341,8 @@ public class CellSelector extends ScrollArea {
 				}
 
 				return true;
-			} else if (Dungeon.hero != null && Dungeon.hero.resting){
-				Dungeon.hero.resting = false;
+			} else if (Dungeon.heroes != null && Dungeon.heroes.resting){
+				Dungeon.heroes.resting = false;
 				return true;
 			}
 			
@@ -370,7 +370,7 @@ public class CellSelector extends ScrollArea {
 		if (newLeftStick != leftStickAction){
 			if (leftStickAction == SPDAction.NONE){
 				heldDelay = initialDelay();
-				Dungeon.hero.resting = false;
+				Dungeon.heroes.resting = false;
 			} else if (newLeftStick == SPDAction.NONE && heldDelay > 0f){
 				heldDelay = 0f;
 				moveFromActions(leftStickAction);
@@ -382,9 +382,9 @@ public class CellSelector extends ScrollArea {
 			heldDelay -= Game.elapsed;
 		}
 
-		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && Dungeon.hero.ready){
+		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && Dungeon.heroes.ready){
 			processKeyHold();
-		} else if (Dungeon.hero.ready) {
+		} else if (Dungeon.heroes.ready) {
 			lastCellMoved = -1;
 		}
 	}
@@ -393,7 +393,7 @@ public class CellSelector extends ScrollArea {
 	private int lastCellMoved = 0;
 
 	private boolean moveFromActions(GameAction... actions){
-		if (Dungeon.hero == null || !Dungeon.hero.ready){
+		if (Dungeon.heroes == null || !Dungeon.heroes.ready){
 			return false;
 		}
 
@@ -405,15 +405,15 @@ public class CellSelector extends ScrollArea {
 		for (GameAction action : actions) {
 			direction.offset(directionFromAction(action));
 		}
-		int cell = Dungeon.hero.pos;
+		int cell = Dungeon.heroes.pos;
 		//clamp to adjacent values (-1 to +1)
 		cell += GameMath.gate(-1, direction.x, +1);
 		cell += GameMath.gate(-1, direction.y, +1) * Dungeon.level.width();
 
-		if (cell != Dungeon.hero.pos && cell != lastCellMoved){
+		if (cell != Dungeon.heroes.pos && cell != lastCellMoved){
 			lastCellMoved = cell;
-			if (Dungeon.hero.handle( cell )) {
-				Dungeon.hero.next();
+			if (Dungeon.heroes.handle( cell )) {
+				Dungeon.heroes.next();
 			}
 			return true;
 
@@ -464,17 +464,17 @@ public class CellSelector extends ScrollArea {
 	public void processKeyHold() {
 		//prioritize moving by controller stick over moving via keys
 		if (!directionFromAction(leftStickAction).isZero() && heldDelay < 0) {
-			enabled = Dungeon.hero.ready = true;
+			enabled = Dungeon.heroes.ready = true;
 			Dungeon.observe();
 			if (moveFromActions(leftStickAction)) {
-				Dungeon.hero.ready = false;
+				Dungeon.heroes.ready = false;
 			}
 		} else if (!(directionFromAction(heldAction1).offset(directionFromAction(heldAction2)).isZero())
 				&& heldDelay <= 0){
-			enabled = Dungeon.hero.ready = true;
+			enabled = Dungeon.heroes.ready = true;
 			Dungeon.observe();
 			if (moveFromActions(heldAction1, heldAction2)) {
-				Dungeon.hero.ready = false;
+				Dungeon.heroes.ready = false;
 			}
 		}
 	}

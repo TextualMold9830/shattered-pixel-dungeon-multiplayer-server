@@ -77,8 +77,8 @@ public class Sheep extends NPC {
 	@Override
 	public boolean interact(Char c) {
 		sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
-		if (c == Dungeon.hero) {
-			Dungeon.hero.spendAndNext(1f);
+		if (c == Dungeon.heroes) {
+			Dungeon.heroes.spendAndNext(1f);
 			Sample.INSTANCE.play(Assets.Sounds.SHEEP, 1, Random.Float(0.91f, 1.1f));
 			//sheep summoned by woolly bomb can be dispelled by interacting
 			if (lifespan >= 20){

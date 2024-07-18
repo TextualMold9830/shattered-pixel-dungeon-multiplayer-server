@@ -161,7 +161,7 @@ public class ShadowClone extends ArmorAbility {
 		public ShadowAlly( int heroLevel ){
 			super();
 			int hpBonus = 15 + 5*heroLevel;
-			hpBonus = Math.round(0.1f * Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY) * hpBonus);
+			hpBonus = Math.round(0.1f * Dungeon.heroes.pointsInTalent(Talent.PERFECT_COPY) * hpBonus);
 			if (hpBonus > 0){
 				HT += hpBonus;
 				HP += hpBonus;
@@ -206,9 +206,9 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public int damageRoll() {
 			int damage = Char.combatRoll(10, 20);
-			int heroDamage = Dungeon.hero.damageRoll();
-			heroDamage /= Dungeon.hero.attackDelay(); //normalize hero damage based on atk speed
-			heroDamage = Math.round(0.08f * Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE) * heroDamage);
+			int heroDamage = Dungeon.heroes.damageRoll();
+			heroDamage /= Dungeon.heroes.attackDelay(); //normalize hero damage based on atk speed
+			heroDamage = Math.round(0.08f * Dungeon.heroes.pointsInTalent(Talent.SHADOW_BLADE) * heroDamage);
 			if (heroDamage > 0){
 				damage += heroDamage;
 			}
@@ -218,9 +218,9 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public int attackProc( Char enemy, int damage ) {
 			damage = super.attackProc( enemy, damage );
-			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)
-					&& Dungeon.hero.belongings.weapon() != null){
-				return Dungeon.hero.belongings.weapon().proc( this, enemy, damage );
+			if (Random.Int(4) < Dungeon.heroes.pointsInTalent(Talent.SHADOW_BLADE)
+					&& Dungeon.heroes.belongings.weapon() != null){
+				return Dungeon.heroes.belongings.weapon().proc( this, enemy, damage );
 			} else {
 				return damage;
 			}
@@ -229,8 +229,8 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public int drRoll() {
 			int dr = super.drRoll();
-			int heroRoll = Dungeon.hero.drRoll();
-			heroRoll = Math.round(0.12f * Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR) * heroRoll);
+			int heroRoll = Dungeon.heroes.drRoll();
+			heroRoll = Math.round(0.12f * Dungeon.heroes.pointsInTalent(Talent.CLONED_ARMOR) * heroRoll);
 			if (heroRoll > 0){
 				dr += heroRoll;
 			}
@@ -240,9 +240,9 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public boolean isImmune(Class effect) {
 			if (effect == Burning.class
-					&& Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
-					&& Dungeon.hero.belongings.armor() != null
-					&& Dungeon.hero.belongings.armor().hasGlyph(Brimstone.class, this)){
+					&& Random.Int(4) < Dungeon.heroes.pointsInTalent(Talent.CLONED_ARMOR)
+					&& Dungeon.heroes.belongings.armor() != null
+					&& Dungeon.heroes.belongings.armor().hasGlyph(Brimstone.class, this)){
 				return true;
 			}
 			return super.isImmune(effect);
@@ -251,9 +251,9 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public int defenseProc(Char enemy, int damage) {
 			damage = super.defenseProc(enemy, damage);
-			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
-					&& Dungeon.hero.belongings.armor() != null){
-				return Dungeon.hero.belongings.armor().proc( enemy, this, damage );
+			if (Random.Int(4) < Dungeon.heroes.pointsInTalent(Talent.CLONED_ARMOR)
+					&& Dungeon.heroes.belongings.armor() != null){
+				return Dungeon.heroes.belongings.armor().proc( enemy, this, damage );
 			} else {
 				return damage;
 			}
@@ -263,11 +263,11 @@ public class ShadowClone extends ArmorAbility {
 		public void damage(int dmg, Object src) {
 
 			//TODO improve this when I have proper damage source logic
-			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
-					&& Dungeon.hero.belongings.armor() != null
-					&& Dungeon.hero.belongings.armor().hasGlyph(AntiMagic.class, this)
+			if (Random.Int(4) < Dungeon.heroes.pointsInTalent(Talent.CLONED_ARMOR)
+					&& Dungeon.heroes.belongings.armor() != null
+					&& Dungeon.heroes.belongings.armor().hasGlyph(AntiMagic.class, this)
 					&& AntiMagic.RESISTS.contains(src.getClass())){
-				dmg -= AntiMagic.drRoll(Dungeon.hero, Dungeon.hero.belongings.armor().buffedLvl());
+				dmg -= AntiMagic.drRoll(Dungeon.heroes, Dungeon.heroes.belongings.armor().buffedLvl());
 				dmg = Math.max(dmg, 0);
 			}
 
@@ -281,7 +281,7 @@ public class ShadowClone extends ArmorAbility {
 			//moves 2 tiles at a time when returning to the hero
 			if (state == WANDERING
 					&& defendingPos == -1
-					&& Dungeon.level.distance(pos, Dungeon.hero.pos) > 1){
+					&& Dungeon.level.distance(pos, Dungeon.heroes.pos) > 1){
 				speed *= 2;
 			}
 
@@ -292,7 +292,7 @@ public class ShadowClone extends ArmorAbility {
 		public boolean canInteract(Char c) {
 			if (super.canInteract(c)){
 				return true;
-			} else if (Dungeon.level.distance(pos, c.pos) <= Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY)) {
+			} else if (Dungeon.level.distance(pos, c.pos) <= Dungeon.heroes.pointsInTalent(Talent.PERFECT_COPY)) {
 				return true;
 			} else {
 				return false;
@@ -301,7 +301,7 @@ public class ShadowClone extends ArmorAbility {
 
 		@Override
 		public boolean interact(Char c) {
-			if (!Dungeon.hero.hasTalent(Talent.PERFECT_COPY)){
+			if (!Dungeon.heroes.hasTalent(Talent.PERFECT_COPY)){
 				return super.interact(c);
 			}
 
@@ -322,8 +322,8 @@ public class ShadowClone extends ArmorAbility {
 			if (PathFinder.distance[pos] == Integer.MAX_VALUE){
 				return true;
 			}
-			appear(this, Dungeon.hero.pos);
-			appear(Dungeon.hero, curPos);
+			appear(this, Dungeon.heroes.pos);
+			appear(Dungeon.heroes, curPos);
 			Dungeon.observe();
 			GameScene.updateFog();
 			return true;
@@ -340,7 +340,7 @@ public class ShadowClone extends ArmorAbility {
 			ch.move( pos );
 			if (ch.pos == pos) ch.sprite.place( pos );
 
-			if (Dungeon.level.heroFOV[pos] || ch == Dungeon.hero ) {
+			if (Dungeon.level.heroFOV[pos] || ch == Dungeon.heroes) {
 				ch.sprite.emitter().burst(SmokeParticle.FACTORY, 10);
 			}
 		}
@@ -367,7 +367,7 @@ public class ShadowClone extends ArmorAbility {
 		public ShadowSprite() {
 			super();
 
-			texture( Dungeon.hero.heroClass.spritesheet() );
+			texture( Dungeon.heroes.heroClass.spritesheet() );
 
 			TextureFilm film = new TextureFilm( HeroSprite.tiers(), 6, 12, 15 );
 

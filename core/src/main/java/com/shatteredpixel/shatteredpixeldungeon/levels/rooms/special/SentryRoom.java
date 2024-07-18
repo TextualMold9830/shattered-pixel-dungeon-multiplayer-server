@@ -237,30 +237,30 @@ public class SentryRoom extends SpecialRoom {
 				throwItems();
 			}
 
-			if (Dungeon.hero != null){
-				if (fieldOfView[Dungeon.hero.pos]
-						&& Dungeon.level.map[Dungeon.hero.pos] == Terrain.EMPTY_SP
-						&& room.inside(Dungeon.level.cellToPoint(Dungeon.hero.pos))
-						&& !Dungeon.hero.belongings.lostInventory()){
+			if (Dungeon.heroes != null){
+				if (fieldOfView[Dungeon.heroes.pos]
+						&& Dungeon.level.map[Dungeon.heroes.pos] == Terrain.EMPTY_SP
+						&& room.inside(Dungeon.level.cellToPoint(Dungeon.heroes.pos))
+						&& !Dungeon.heroes.belongings.lostInventory()){
 
 					if (curChargeDelay > 0.001f){ //helps prevent rounding errors
 						if (curChargeDelay == initialChargeDelay) {
 							((SentrySprite) sprite).charge();
 						}
-						curChargeDelay -= Dungeon.hero.cooldown();
+						curChargeDelay -= Dungeon.heroes.cooldown();
 						//pity mechanic so mistaps don't get people instakilled
-						if (Dungeon.hero.cooldown() >= 0.34f){
-							Dungeon.hero.interrupt();
+						if (Dungeon.heroes.cooldown() >= 0.34f){
+							Dungeon.heroes.interrupt();
 						}
 					}
 
 					if (curChargeDelay <= .001f){
 						curChargeDelay = 1f;
-						sprite.zap(Dungeon.hero.pos);
+						sprite.zap(Dungeon.heroes.pos);
 						((SentrySprite) sprite).charge();
 					}
 
-					spend(Dungeon.hero.cooldown());
+					spend(Dungeon.heroes.cooldown());
 					return true;
 
 				} else {
@@ -268,7 +268,7 @@ public class SentryRoom extends SpecialRoom {
 					sprite.idle();
 				}
 
-				spend(Dungeon.hero.cooldown());
+				spend(Dungeon.heroes.cooldown());
 			} else {
 				spend(1f);
 			}
@@ -276,15 +276,15 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		public void onZapComplete(){
-			if (hit(this, Dungeon.hero, true)) {
-				Dungeon.hero.damage(Char.combatRoll(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
-				if (!Dungeon.hero.isAlive()) {
+			if (hit(this, Dungeon.heroes, true)) {
+				Dungeon.heroes.damage(Char.combatRoll(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
+				if (!Dungeon.heroes.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
 					GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
 				}
 			} else {
-				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.defenseVerb() );
+				Dungeon.heroes.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.heroes.defenseVerb() );
 			}
 		}
 

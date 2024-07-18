@@ -92,7 +92,7 @@ public class StatusPane extends Component {
 		heroInfo = new Button(){
 			@Override
 			protected void onClick () {
-				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
+				Camera.main.panTo( Dungeon.heroes.sprite.center(), 5f );
 				GameScene.show( new WndHero() );
 			}
 			
@@ -108,7 +108,7 @@ public class StatusPane extends Component {
 		};
 		add(heroInfo);
 
-		avatar = HeroSprite.avatar( Dungeon.hero.heroClass, lastTier );
+		avatar = HeroSprite.avatar( Dungeon.heroes.heroClass, lastTier );
 		add( avatar );
 
 		talentBlink = 0;
@@ -136,7 +136,7 @@ public class StatusPane extends Component {
 		heroInfoOnBar = new Button(){
 			@Override
 			protected void onClick () {
-				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
+				Camera.main.panTo( Dungeon.heroes.sprite.center(), 5f );
 				GameScene.show( new WndHero() );
 			}
 		};
@@ -157,7 +157,7 @@ public class StatusPane extends Component {
 		level.hardlight( 0xFFFFAA );
 		add( level );
 
-		buffs = new BuffIndicator( Dungeon.hero, large );
+		buffs = new BuffIndicator( Dungeon.heroes, large );
 		add( buffs );
 
 		busy = new BusyIndicator();
@@ -243,11 +243,11 @@ public class StatusPane extends Component {
 	public void update() {
 		super.update();
 		
-		int health = Dungeon.hero.HP;
-		int shield = Dungeon.hero.shielding();
-		int max = Dungeon.hero.HT;
+		int health = Dungeon.heroes.HP;
+		int shield = Dungeon.heroes.shielding();
+		int max = Dungeon.heroes.HT;
 
-		if (!Dungeon.hero.isAlive()) {
+		if (!Dungeon.heroes.isAlive()) {
 			avatar.tint(0x000000, 0.5f);
 		} else if ((health/(float)max) <= 0.3f) {
 			warning += Game.elapsed * 5f *(0.4f - (health/(float)max));
@@ -281,26 +281,26 @@ public class StatusPane extends Component {
 		}
 
 		if (large) {
-			exp.scale.x = (128 / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
+			exp.scale.x = (128 / exp.width) * Dungeon.heroes.exp / Dungeon.heroes.maxExp();
 
 			hpText.measure();
 			hpText.x = hp.x + (128 - hpText.width())/2f;
 
-			expText.text(Dungeon.hero.exp + "/" + Dungeon.hero.maxExp());
+			expText.text(Dungeon.heroes.exp + "/" + Dungeon.heroes.maxExp());
 			expText.measure();
 			expText.x = hp.x + (128 - expText.width())/2f;
 
 		} else {
-			exp.scale.x = (width / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
+			exp.scale.x = (width / exp.width) * Dungeon.heroes.exp / Dungeon.heroes.maxExp();
 		}
 
-		if (Dungeon.hero.lvl != lastLvl) {
+		if (Dungeon.heroes.lvl != lastLvl) {
 
 			if (lastLvl != -1) {
 				showStarParticles();
 			}
 
-			lastLvl = Dungeon.hero.lvl;
+			lastLvl = Dungeon.heroes.lvl;
 
 			if (large){
 				level.text( "lv. " + lastLvl );
@@ -316,10 +316,10 @@ public class StatusPane extends Component {
 			PixelScene.align(level);
 		}
 
-		int tier = Dungeon.hero.tier();
+		int tier = Dungeon.heroes.tier();
 		if (tier != lastTier) {
 			lastTier = tier;
-			avatar.copy( HeroSprite.avatar( Dungeon.hero.heroClass, tier ) );
+			avatar.copy( HeroSprite.avatar( Dungeon.heroes.heroClass, tier ) );
 		}
 
 		counter.setSweep((1f - Actor.now()%1f)%1f);

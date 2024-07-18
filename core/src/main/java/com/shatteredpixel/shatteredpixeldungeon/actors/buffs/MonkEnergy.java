@@ -201,7 +201,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 	//10 at base, 20 at level 30
 	public int energyCap(){
-		return Math.max(10, 5 + Dungeon.hero.lvl/2);
+		return Math.max(10, 5 + Dungeon.heroes.lvl/2);
 	}
 
 	public void abilityUsed( MonkAbility abil ){
@@ -263,7 +263,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public int indicatorColor() {
-		if (abilitiesEmpowered(Dungeon.hero)){
+		if (abilitiesEmpowered(Dungeon.heroes)){
 			return 0xAAEE22;
 		} else {
 			return 0xA08840;
@@ -290,7 +290,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		}
 
 		public String desc(){
-			if (Buff.affect(Dungeon.hero, MonkEnergy.class).abilitiesEmpowered(Dungeon.hero)){
+			if (Buff.affect(Dungeon.heroes, MonkEnergy.class).abilitiesEmpowered(Dungeon.heroes)){
 				return Messages.get(this, "empower_desc");
 			} else {
 				return Messages.get(this, "desc");
@@ -320,17 +320,17 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 			@Override
 			public int cooldown() {
-				return Dungeon.hero.buff(JustHitTracker.class) != null ? 0 : 5;
+				return Dungeon.heroes.buff(JustHitTracker.class) != null ? 0 : 5;
 			}
 
 			@Override
 			public String desc() {
-				if (Buff.affect(Dungeon.hero, MonkEnergy.class).abilitiesEmpowered(Dungeon.hero)){
+				if (Buff.affect(Dungeon.heroes, MonkEnergy.class).abilitiesEmpowered(Dungeon.heroes)){
 					//hero unarmed damage
-					return Messages.get(this, "empower_desc", 1, Dungeon.hero.STR()-8);
+					return Messages.get(this, "empower_desc", 1, Dungeon.heroes.STR()-8);
 				} else {
 					//hero unarmed damage
-					return Messages.get(this, "desc", 1, Dungeon.hero.STR()-8);
+					return Messages.get(this, "desc", 1, Dungeon.heroes.STR()-8);
 				}
 
 			}
@@ -493,7 +493,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					range += 3;
 				}
 
-				if (Dungeon.hero.rooted){
+				if (Dungeon.heroes.rooted){
 					PixelScene.shake( 1, 1f );
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_target_range"));
 					return;
@@ -550,12 +550,12 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 			@Override
 			public String desc() {
-				if (Buff.affect(Dungeon.hero, MonkEnergy.class).abilitiesEmpowered(Dungeon.hero)){
+				if (Buff.affect(Dungeon.heroes, MonkEnergy.class).abilitiesEmpowered(Dungeon.heroes)){
 					//4.5x hero unarmed damage (rounds the result)
-					return Messages.get(this, "empower_desc", 5, Math.round(4.5f*(Dungeon.hero.STR()-8)));
+					return Messages.get(this, "empower_desc", 5, Math.round(4.5f*(Dungeon.heroes.STR()-8)));
 				} else {
 					//3x hero unarmed damage
-					return Messages.get(this, "desc", 3, 3*(Dungeon.hero.STR()-8));
+					return Messages.get(this, "desc", 3, 3*(Dungeon.heroes.STR()-8));
 				}
 			}
 

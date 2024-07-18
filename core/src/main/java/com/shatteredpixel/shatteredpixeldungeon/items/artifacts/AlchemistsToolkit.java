@@ -113,13 +113,13 @@ public class AlchemistsToolkit extends Artifact {
 							Dungeon.energy -= 6;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
 							upgrade();
 						} else if (index == 1){
 							Dungeon.energy -= 6*maxLevels;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
 							upgrade(maxLevels);
 						}
 
@@ -143,7 +143,7 @@ public class AlchemistsToolkit extends Artifact {
 
 	@Override
 	public String status() {
-		if (isEquipped(Dungeon.hero) && warmUpDelay > 0 && !cursed){
+		if (isEquipped(Dungeon.heroes) && warmUpDelay > 0 && !cursed){
 			return Messages.format( "%d%%", Math.max(0, 100 - (int)warmUpDelay) );
 		} else {
 			return super.status();
@@ -173,7 +173,7 @@ public class AlchemistsToolkit extends Artifact {
 	public int consumeEnergy(int amount){
 		int result = amount - charge;
 		charge = Math.max(0, charge - amount);
-		Talent.onArtifactUsed(Dungeon.hero);
+		Talent.onArtifactUsed(Dungeon.heroes);
 		return Math.max(0, result);
 	}
 
@@ -181,7 +181,7 @@ public class AlchemistsToolkit extends Artifact {
 	public String desc() {
 		String result = Messages.get(this, "desc");
 
-		if (isEquipped(Dungeon.hero)) {
+		if (isEquipped(Dungeon.heroes)) {
 			if (cursed)                 result += "\n\n" + Messages.get(this, "desc_cursed");
 			else if (warmUpDelay > 0)   result += "\n\n" + Messages.get(this, "desc_warming");
 			else                        result += "\n\n" + Messages.get(this, "desc_hint");

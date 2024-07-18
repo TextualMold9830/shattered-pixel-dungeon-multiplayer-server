@@ -79,7 +79,7 @@ public class CorpseDust extends Item {
 
 	@Override
 	protected void onDetach() {
-		DustGhostSpawner spawner = Dungeon.hero.buff(DustGhostSpawner.class);
+		DustGhostSpawner spawner = Dungeon.heroes.buff(DustGhostSpawner.class);
 		if (spawner != null){
 			spawner.dispel();
 		}
@@ -120,12 +120,12 @@ public class CorpseDust extends Item {
 				ArrayList<Integer> candidates = new ArrayList<>();
 				//min distance scales based on hero's view distance
 				// wraiths must spawn at least 4/3/2/1 tiles away at view distance of 8(default)/7/4/1
-				int minDist = Math.round(Dungeon.hero.viewDistance/3f);
+				int minDist = Math.round(Dungeon.heroes.viewDistance/3f);
 				for (int i = 0; i < Dungeon.level.length(); i++){
 					if (Dungeon.level.heroFOV[i]
 							&& !Dungeon.level.solid[i]
 							&& Actor.findChar( i ) == null
-							&& Dungeon.level.distance(i, Dungeon.hero.pos) > minDist){
+							&& Dungeon.level.distance(i, Dungeon.heroes.pos) > minDist){
 						candidates.add(i);
 					}
 				}

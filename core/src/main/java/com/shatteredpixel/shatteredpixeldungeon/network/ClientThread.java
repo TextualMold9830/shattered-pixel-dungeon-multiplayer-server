@@ -32,6 +32,7 @@ import java.util.concurrent.FutureTask;
 
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.level;
+import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 
 class ClientThread implements Callable<String> {
@@ -276,8 +277,14 @@ class ClientThread implements Callable<String> {
         newHero.live();
 
         curClass.initHero(newHero);
+        for (int i : NEIGHBOURS8) {
+            if (Actor.findChar(level.entrance + i) == null && level.passable[level.entrance + i]) {
+                newHero.pos = level.entrance + i;
+                break;
+            }
+        }
+        //newHero.pos = Dungeon.getPosNear(level.entrance);
 
-        newHero.pos = Dungeon.getPosNear(level.entrance);
         newHero.updateSpriteState();
         if (newHero.pos == -1) {
             newHero.pos = level.entrance; //todo  FIXME

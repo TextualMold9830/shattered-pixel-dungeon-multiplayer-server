@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
@@ -179,15 +180,16 @@ public abstract class Actor implements Bundlable {
 			a.time -= min;
 		}
 
-		if (Dungeon.hero != null && all.contains( Dungeon.hero )) {
+		if (Dungeon.heroes != null && all.contains( Dungeon.heroes)) {
 			Statistics.duration += min;
 		}
 		now -= min;
 	}
 	
 	public static void init() {
-		
-		add( Dungeon.hero );
+		for (Hero hero: Dungeon.heroes) {
+			add(hero);
+		}
 		
 		for (Mob mob : Dungeon.level.mobs) {
 			add( mob );
@@ -284,9 +286,11 @@ public abstract class Actor implements Bundlable {
 					current = null;
 				} else {
 					doNext = acting.act();
-					if (doNext && (Dungeon.hero == null || !Dungeon.hero.isAlive())) {
-						doNext = false;
-						current = null;
+					for (Hero hero: Dungeon.heroes) {
+						if (doNext && (Dungeon.heroes == null || !hero.isAlive())) {
+							doNext = false;
+							current = null;
+						}
 					}
 				}
 			} else {

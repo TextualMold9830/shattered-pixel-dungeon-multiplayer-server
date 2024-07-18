@@ -122,7 +122,7 @@ public class ActionIndicator extends Tag {
 				needsRefresh = false;
 			}
 
-			if (!Dungeon.hero.ready) {
+			if (!Dungeon.heroes.ready) {
 				if (primaryVis != null) primaryVis.alpha(0.5f);
 				if (secondVis != null) secondVis.alpha(0.5f);
 			} else {
@@ -136,7 +136,7 @@ public class ActionIndicator extends Tag {
 	@Override
 	protected void onClick() {
 		super.onClick();
-		if (action != null && Dungeon.hero.ready) {
+		if (action != null && Dungeon.heroes.ready) {
 			action.doAction();
 		}
 	}

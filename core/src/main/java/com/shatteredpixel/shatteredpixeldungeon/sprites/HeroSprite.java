@@ -51,10 +51,10 @@ public class HeroSprite extends CharSprite {
 	public HeroSprite() {
 		super();
 		
-		texture( Dungeon.hero.heroClass.spritesheet() );
+		texture( Dungeon.heroes.heroClass.spritesheet() );
 		updateArmor();
 		
-		link( Dungeon.hero );
+		link( Dungeon.heroes);
 
 		if (ch.isAlive())
 			idle();
@@ -64,7 +64,7 @@ public class HeroSprite extends CharSprite {
 	
 	public void updateArmor() {
 
-		TextureFilm film = new TextureFilm( tiers(), Dungeon.hero.tier(), FRAME_WIDTH, FRAME_HEIGHT );
+		TextureFilm film = new TextureFilm( tiers(), Dungeon.heroes.tier(), FRAME_WIDTH, FRAME_HEIGHT );
 		
 		idle = new Animation( 1, true );
 		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
@@ -89,7 +89,7 @@ public class HeroSprite extends CharSprite {
 		read = new Animation( 20, false );
 		read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
 		
-		if (Dungeon.hero.isAlive())
+		if (Dungeon.heroes.isAlive())
 			idle();
 		else
 			die();

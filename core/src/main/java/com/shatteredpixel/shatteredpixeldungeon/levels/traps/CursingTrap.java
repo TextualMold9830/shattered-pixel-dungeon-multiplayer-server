@@ -63,8 +63,8 @@ public class CursingTrap extends Trap {
 			}
 		}
 
-		if (Dungeon.hero.pos == pos && !Dungeon.hero.flying){
-			curse(Dungeon.hero);
+		if (Dungeon.heroes.pos == pos && !Dungeon.heroes.flying){
+			curse(Dungeon.heroes);
 		}
 	}
 

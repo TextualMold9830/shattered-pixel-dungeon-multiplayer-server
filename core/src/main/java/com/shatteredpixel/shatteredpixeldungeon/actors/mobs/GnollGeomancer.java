@@ -179,16 +179,16 @@ public class GnollGeomancer extends Mob {
 
 	@Override
 	public boolean interact(Char c) {
-		if (c != Dungeon.hero || buff(RockArmor.class) == null) {
+		if (c != Dungeon.heroes || buff(RockArmor.class) == null) {
 			return super.interact(c);
 		} else {
-			final Pickaxe p = Dungeon.hero.belongings.getItem(Pickaxe.class);
+			final Pickaxe p = Dungeon.heroes.belongings.getItem(Pickaxe.class);
 
 			if (p == null){
 				return true;
 			}
 
-			Dungeon.hero.sprite.attack(pos, new Callback() {
+			Dungeon.heroes.sprite.attack(pos, new Callback() {
 				@Override
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
@@ -203,7 +203,7 @@ public class GnollGeomancer extends Mob {
 					dmg = Math.min(dmg, buff(RockArmor.class).shielding());
 
 					damage(dmg, p);
-					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
+					sprite.bloodBurstA(Dungeon.heroes.sprite.center(), dmg);
 					sprite.flash();
 
 					hits++;
@@ -218,17 +218,17 @@ public class GnollGeomancer extends Mob {
 						carveRockAndDash();
 
 						state = HUNTING;
-						enemy = Dungeon.hero;
+						enemy = Dungeon.heroes;
 						BossHealthBar.assignBoss(GnollGeomancer.this);
 
 						for (Mob m : Dungeon.level.mobs){
 							if (m instanceof GnollGuard){
-								m.aggro(Dungeon.hero);
+								m.aggro(Dungeon.heroes);
 								if (!((GnollGuard) m).hasSapper()){
 									m.beckon(pos);
 								}
 							} else if (m instanceof GnollSapper){
-								m.aggro(Dungeon.hero);
+								m.aggro(Dungeon.heroes);
 							}
 						}
 					}
@@ -244,8 +244,8 @@ public class GnollGeomancer extends Mob {
 					}
 
 					Sample.INSTANCE.play(Assets.Sounds.MINE, 1f, Random.Float(0.85f, 1.15f));
-					Invisibility.dispel(Dungeon.hero);
-					Dungeon.hero.spendAndNext(p.delayFactor(GnollGeomancer.this));
+					Invisibility.dispel(Dungeon.heroes);
+					Dungeon.heroes.spendAndNext(p.delayFactor(GnollGeomancer.this));
 				}
 			});
 
@@ -596,13 +596,13 @@ public class GnollGeomancer extends Mob {
 							aim = GnollGeomancer.prepRockThrowAttack(enemy, GnollGeomancer.this);
 						}
 
-						Dungeon.hero.interrupt();
+						Dungeon.heroes.interrupt();
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollGeomancer.this, 6-2*curbracket, true)) {
 						lastAbilityWasRockfall = true;
-						Dungeon.hero.interrupt();
+						Dungeon.heroes.interrupt();
 						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						return true;
@@ -685,7 +685,7 @@ public class GnollGeomancer extends Mob {
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
 						Char ch = Actor.findChar(rockPath.collisionPos);
-						if (ch == Dungeon.hero){
+						if (ch == Dungeon.heroes){
 							PixelScene.shake( 3, 0.7f );
 						} else {
 							PixelScene.shake(0.5f, 0.5f);
@@ -696,7 +696,7 @@ public class GnollGeomancer extends Mob {
 
 							if (ch.isAlive()){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
-							} else if (!ch.isAlive() && ch == Dungeon.hero) {
+							} else if (!ch.isAlive() && ch == Dungeon.heroes) {
 								Badges.validateDeathFromEnemyMagic();
 								Dungeon.fail( source.getClass() );
 								GLog.n( Messages.get( GnollGeomancer.class, "rock_kill") );
@@ -798,7 +798,7 @@ public class GnollGeomancer extends Mob {
 			ch.damage(Char.combatRoll(6, 12), this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
-			} else if (ch == Dungeon.hero){
+			} else if (ch == Dungeon.heroes){
 				Dungeon.fail( target );
 				GLog.n( Messages.get( GnollGeomancer.class, "rockfall_kill") );
 			}

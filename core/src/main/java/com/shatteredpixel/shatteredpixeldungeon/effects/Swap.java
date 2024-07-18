@@ -78,7 +78,7 @@ public class Swap extends Actor {
 			Dungeon.level.occupyCell(ch1 );
 			Dungeon.level.occupyCell(ch2 );
 
-			if (ch1 == Dungeon.hero || ch2 == Dungeon.hero) {
+			if (ch1 == Dungeon.heroes || ch2 == Dungeon.heroes) {
 				Dungeon.observe();
 				GameScene.updateFog();
 			}

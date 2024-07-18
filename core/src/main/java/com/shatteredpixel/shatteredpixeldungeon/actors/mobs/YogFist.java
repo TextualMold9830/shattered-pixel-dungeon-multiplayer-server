@@ -91,10 +91,10 @@ public abstract class YogFist extends Mob {
 	protected boolean act() {
 		if (paralysed <= 0 && rangedCooldown > 0) rangedCooldown--;
 
-		if (Dungeon.hero.invisible <= 0 && state == WANDERING){
-			beckon(Dungeon.hero.pos);
+		if (Dungeon.heroes.invisible <= 0 && state == WANDERING){
+			beckon(Dungeon.heroes.pos);
 			state = HUNTING;
-			enemy = Dungeon.hero;
+			enemy = Dungeon.heroes;
 		}
 
 		return super.act();
@@ -151,7 +151,7 @@ public abstract class YogFist extends Mob {
 		super.damage(dmg, src);
 		int dmgTaken = preHP - HP;
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (dmgTaken > 0 && lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/4f);
 			else                                                    lock.addTime(dmgTaken/2f);
@@ -502,7 +502,7 @@ public abstract class YogFist extends Mob {
 				enemy.damage( Char.combatRoll(10, 20), new LightBeam() );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
 
-				if (!enemy.isAlive() && enemy == Dungeon.hero) {
+				if (!enemy.isAlive() && enemy == Dungeon.heroes) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
 					GLog.n( Messages.get(Char.class, "kill", name()) );
@@ -521,7 +521,7 @@ public abstract class YogFist extends Mob {
 			super.damage(dmg, src);
 			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
 				HP = HT/2;
-				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*1.5f );
+				Buff.prolong( Dungeon.heroes, Blindness.class, Blindness.DURATION*1.5f );
 				int i;
 				do {
 					i = Random.Int(Dungeon.level.length());
@@ -534,7 +534,7 @@ public abstract class YogFist extends Mob {
 				GameScene.flash(0x80FFFFFF);
 				GLog.w( Messages.get( this, "teleport" ));
 			} else if (!isAlive()){
-				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*3f );
+				Buff.prolong( Dungeon.heroes, Blindness.class, Blindness.DURATION*3f );
 				GameScene.flash(0x80FFFFFF);
 			}
 		}
@@ -572,7 +572,7 @@ public abstract class YogFist extends Mob {
 					l.weaken(50);
 				}
 
-				if (!enemy.isAlive() && enemy == Dungeon.hero) {
+				if (!enemy.isAlive() && enemy == Dungeon.heroes) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
 					GLog.n( Messages.get(Char.class, "kill", name()) );
@@ -591,7 +591,7 @@ public abstract class YogFist extends Mob {
 			super.damage(dmg, src);
 			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
 				HP = HT/2;
-				Light l = Dungeon.hero.buff(Light.class);
+				Light l = Dungeon.heroes.buff(Light.class);
 				if (l != null){
 					l.detach();
 				}
@@ -607,7 +607,7 @@ public abstract class YogFist extends Mob {
 				GameScene.flash(0, false);
 				GLog.w( Messages.get( this, "teleport" ));
 			} else if (!isAlive()){
-				Light l = Dungeon.hero.buff(Light.class);
+				Light l = Dungeon.heroes.buff(Light.class);
 				if (l != null){
 					l.detach();
 				}

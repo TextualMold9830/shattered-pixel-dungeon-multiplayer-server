@@ -246,8 +246,8 @@ public class Armor extends EquipableItem {
 		if (seal.getGlyph() != null){
 			inscribe(seal.getGlyph());
 		}
-		if (isEquipped(Dungeon.hero)){
-			Buff.affect(Dungeon.hero, BrokenSeal.WarriorShield.class).setArmor(this);
+		if (isEquipped(Dungeon.heroes)){
+			Buff.affect(Dungeon.heroes, BrokenSeal.WarriorShield.class).setArmor(this);
 		}
 	}
 
@@ -422,8 +422,8 @@ public class Armor extends EquipableItem {
 
 				//the chance from +4/5, and then +6 can be set to 0% with metamorphed runic transference
 				int lossChanceStart = 4;
-				if (Dungeon.hero != null && Dungeon.hero.heroClass != HeroClass.WARRIOR && Dungeon.hero.hasTalent(Talent.RUNIC_TRANSFERENCE)){
-					lossChanceStart += 1+Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE);
+				if (Dungeon.heroes != null && Dungeon.heroes.heroClass != HeroClass.WARRIOR && Dungeon.heroes.hasTalent(Talent.RUNIC_TRANSFERENCE)){
+					lossChanceStart += 1+Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE);
 				}
 
 				if (level() >= lossChanceStart && Random.Float(10) < Math.pow(2, level()-4)) {
@@ -446,8 +446,8 @@ public class Armor extends EquipableItem {
 			damage = glyph.proc( this, attacker, defender, damage );
 		}
 		
-		if (!levelKnown && defender == Dungeon.hero) {
-			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.hero, this) );
+		if (!levelKnown && defender == Dungeon.heroes) {
+			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
 			if (usesLeftToID <= 0) {
@@ -482,13 +482,13 @@ public class Armor extends EquipableItem {
 
 			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(), DRMax(), STRReq());
 			
-			if (STRReq() > Dungeon.hero.STR()) {
+			if (STRReq() > Dungeon.heroes.STR()) {
 				info += " " + Messages.get(Armor.class, "too_heavy");
 			}
 		} else {
 			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0));
 
-			if (STRReq(0) > Dungeon.hero.STR()) {
+			if (STRReq(0) > Dungeon.heroes.STR()) {
 				info += " " + Messages.get(Armor.class, "probably_too_heavy");
 			}
 		}
@@ -511,7 +511,7 @@ public class Armor extends EquipableItem {
 			info += "\n\n" + Messages.get(Armor.class, "hardened_no_glyph");
 		}
 		
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (cursed && isEquipped( Dungeon.heroes)) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed");

@@ -69,7 +69,7 @@ public class HoldFast extends Buff {
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc", 2*Dungeon.hero.pointsInTalent(Talent.HOLD_FAST));
+		return Messages.get(this, "desc", 2*Dungeon.heroes.pointsInTalent(Talent.HOLD_FAST));
 	}
 
 	private static final String POS = "pos";

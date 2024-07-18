@@ -296,7 +296,7 @@ public class CityBossLevel extends Level {
 	@Override
 	public void occupyCell( Char ch ) {
 		if (map[bottomDoor] != Terrain.LOCKED_DOOR && map[topDoor] == Terrain.LOCKED_DOOR
-				&& ch.pos < bottomDoor && ch == Dungeon.hero) {
+				&& ch.pos < bottomDoor && ch == Dungeon.heroes) {
 			seal();
 		}
 
@@ -311,13 +311,13 @@ public class CityBossLevel extends Level {
 		//moves intelligent allies with the hero, preferring closer pos to entrance door
 		int doorPos = pointToCell(new Point(arena.left + arena.width()/2, arena.bottom));
 		Mob.holdAllies(this, doorPos);
-		Mob.restoreAllies(this, Dungeon.hero.pos, doorPos);
+		Mob.restoreAllies(this, Dungeon.heroes.pos, doorPos);
 
 		DwarfKing boss = new DwarfKing();
 		boss.state = boss.WANDERING;
 		boss.pos = pointToCell(arena.center());
 		GameScene.add( boss );
-		boss.beckon(Dungeon.hero.pos);
+		boss.beckon(Dungeon.heroes.pos);
 
 		if (heroFOV[boss.pos]) {
 			boss.notice();

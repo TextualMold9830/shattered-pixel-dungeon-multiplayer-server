@@ -63,7 +63,7 @@ public class WndQuickBag extends Window {
 
 		ArrayList<Item> items = new ArrayList<>();
 
-		for (Item i : bag == null ? Dungeon.hero.belongings : bag){
+		for (Item i : bag == null ? Dungeon.heroes.belongings : bag){
 			if (i.defaultAction() == null){
 				continue;
 			}
@@ -71,8 +71,8 @@ public class WndQuickBag extends Window {
 				continue;
 			}
 			if (i instanceof Artifact
-					&& !i.isEquipped(Dungeon.hero)
-					&& (!(i instanceof CloakOfShadows) || !Dungeon.hero.hasTalent(Talent.LIGHT_CLOAK))){
+					&& !i.isEquipped(Dungeon.heroes)
+					&& (!(i instanceof CloakOfShadows) || !Dungeon.heroes.hasTalent(Talent.LIGHT_CLOAK))){
 				continue;
 			}
 			items.add(i);
@@ -96,13 +96,13 @@ public class WndQuickBag extends Window {
 			InventorySlot slot = new InventorySlot(i){
 				@Override
 				protected void onClick() {
-					if (Dungeon.hero == null || !Dungeon.hero.isAlive() || !Dungeon.hero.belongings.contains(item)){
+					if (Dungeon.heroes == null || !Dungeon.heroes.isAlive() || !Dungeon.heroes.belongings.contains(item)){
 						Game.scene().addToFront(new WndUseItem(WndQuickBag.this, item));
 						return;
 					}
 
 					hide();
-					item.execute(Dungeon.hero);
+					item.execute(Dungeon.heroes);
 					if (item.usesTargeting && bag != null){
 						int idx = Dungeon.quickslot.getSlot(WndQuickBag.bag);
 						if (idx != -1){
@@ -160,9 +160,9 @@ public class WndQuickBag extends Window {
 	public static final Comparator<Item> quickBagComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
-			if (lhs.isEquipped(Dungeon.hero) && !rhs.isEquipped(Dungeon.hero)){
+			if (lhs.isEquipped(Dungeon.heroes) && !rhs.isEquipped(Dungeon.heroes)){
 				return -1;
-			} else if (!lhs.isEquipped(Dungeon.hero) && rhs.isEquipped(Dungeon.hero)){
+			} else if (!lhs.isEquipped(Dungeon.heroes) && rhs.isEquipped(Dungeon.heroes)){
 				return 1;
 			} else {
 				return Generator.Category.order(lhs) - Generator.Category.order(rhs);

@@ -198,8 +198,8 @@ public class AlchemyScene extends PixelScene {
 		Button invSelector = new Button(){
 			@Override
 			protected void onClick() {
-						if (Dungeon.hero != null) {
-							ArrayList<Bag> bags = Dungeon.hero.belongings.getBags();
+						if (Dungeon.heroes != null) {
+							ArrayList<Bag> bags = Dungeon.heroes.belongings.getBags();
 
 							String[] names = new String[bags.size()];
 							Image[] images = new Image[bags.size()];
@@ -224,7 +224,7 @@ public class AlchemyScene extends PixelScene {
 									ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
 
 									for(Item i : bag.items){
-										if (Dungeon.hero.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
+										if (Dungeon.heroes.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
 										if (!Recipe.usableInRecipe(i)) items.remove(i);
 									}
 
@@ -259,9 +259,9 @@ public class AlchemyScene extends PixelScene {
 													for (int i = 0; i < inputs.length; i++) {
 														if (inputs[i].item() == null) {
 															if (item instanceof LiquidMetal){
-																inputs[i].item(item.detachAll(Dungeon.hero.belongings.backpack));
+																inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
 															} else {
-																inputs[i].item(item.detach(Dungeon.hero.belongings.backpack));
+																inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
 															}
 															break;
 														}
@@ -311,7 +311,7 @@ public class AlchemyScene extends PixelScene {
 			protected void onClick() {
 				super.onClick();
 				if (lastRecipe != null){
-					populate(lastIngredients, Dungeon.hero.belongings);
+					populate(lastIngredients, Dungeon.heroes.belongings);
 				}
 			}
 
@@ -500,9 +500,9 @@ public class AlchemyScene extends PixelScene {
 					for (int i = 0; i < inputs.length; i++) {
 						if (inputs[i].item() == null) {
 							if (item instanceof LiquidMetal){
-								inputs[i].item(item.detachAll(Dungeon.hero.belongings.backpack));
+								inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
 							} else {
-								inputs[i].item(item.detach(Dungeon.hero.belongings.backpack));
+								inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
 							}
 							break;
 						}
@@ -641,7 +641,7 @@ public class AlchemyScene extends PixelScene {
 
 		boolean foundItems = true;
 		for (Item i : lastIngredients){
-			Item found = Dungeon.hero.belongings.getSimilar(i);
+			Item found = Dungeon.heroes.belongings.getSimilar(i);
 			if (found == null){ //atm no quantity check as items are always loaded individually
 				//currently found can be true if we need, say, 3x of an item but only have 2x of it
 				foundItems = false;
@@ -669,7 +669,7 @@ public class AlchemyScene extends PixelScene {
 
 		int resultQuantity = result.quantity();
 		if (!result.collect()){
-			Dungeon.level.drop(result, Dungeon.hero.pos);
+			Dungeon.level.drop(result, Dungeon.heroes.pos);
 		}
 
 		Statistics.itemsCrafted++;
@@ -750,7 +750,7 @@ public class AlchemyScene extends PixelScene {
 				if (inputs[i] != null && inputs[i].item() != null) {
 					Item item = inputs[i].item();
 					if (!item.collect()) {
-						Dungeon.level.drop(item, Dungeon.hero.pos);
+						Dungeon.level.drop(item, Dungeon.heroes.pos);
 					}
 					inputs[i].item(null);
 				}
@@ -814,7 +814,7 @@ public class AlchemyScene extends PixelScene {
 					Item item = InputButton.this.item;
 					if (item != null) {
 						if (!item.collect()) {
-							Dungeon.level.drop(item, Dungeon.hero.pos);
+							Dungeon.level.drop(item, Dungeon.heroes.pos);
 						}
 						InputButton.this.item(null);
 						updateState();

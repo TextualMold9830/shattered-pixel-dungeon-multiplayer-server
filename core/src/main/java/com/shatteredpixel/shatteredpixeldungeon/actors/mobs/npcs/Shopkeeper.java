@@ -80,7 +80,7 @@ public class Shopkeeper extends NPC {
 			turnsSinceHarmed ++;
 		}
 
-		sprite.turnTo( pos, Dungeon.hero.pos );
+		sprite.turnTo( pos, Dungeon.heroes.pos );
 		spend( TICK );
 		return super.act();
 	}
@@ -192,7 +192,7 @@ public class Shopkeeper extends NPC {
 		if (item.value() <= 0)                                              return false;
 		if (item.unique && !item.stackable)                                 return false;
 		if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
-		if (item.isEquipped(Dungeon.hero) && item.cursed)                   return false;
+		if (item.isEquipped(Dungeon.heroes) && item.cursed)                   return false;
 		return true;
 	}
 
@@ -218,7 +218,7 @@ public class Shopkeeper extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
-		if (c != Dungeon.hero) {
+		if (c != Dungeon.heroes) {
 			return true;
 		}
 		Game.runOnRenderThread(new Callback() {
@@ -247,8 +247,8 @@ public class Shopkeeper extends NPC {
 							Item returned = buybackItems.remove(index-2);
 							Dungeon.gold -= returned.value();
 							Statistics.goldCollected -= returned.value();
-							if (!returned.doPickUp(Dungeon.hero)){
-								Dungeon.level.drop(returned, Dungeon.hero.pos);
+							if (!returned.doPickUp(Dungeon.heroes)){
+								Dungeon.level.drop(returned, Dungeon.heroes.pos);
 							}
 						}
 					}
@@ -281,12 +281,12 @@ public class Shopkeeper extends NPC {
 	}
 
 	public String chatText(){
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
 			return Messages.get(this, "talk_ascent");
 		}
 		switch (Dungeon.depth){
 			case 6: default:
-				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + Dungeon.hero.heroClass.name());
+				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + Dungeon.heroes.heroClass.name());
 			case 11:
 				return Messages.get(this, "talk_caves");
 			case 16:

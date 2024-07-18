@@ -104,9 +104,9 @@ public class Endure extends ArmorAbility {
 				damageBonus += damage/2;
 
 				float damageMulti = 0.5f;
-				if (Dungeon.hero.hasTalent(Talent.SHRUG_IT_OFF)){
+				if (Dungeon.heroes.hasTalent(Talent.SHRUG_IT_OFF)){
 					//total damage reduction is 60%/68%/74%/80%, based on points in talent
-					damageMulti *= Math.pow(0.8f, Dungeon.hero.pointsInTalent(Talent.SHRUG_IT_OFF));
+					damageMulti *= Math.pow(0.8f, Dungeon.heroes.pointsInTalent(Talent.SHRUG_IT_OFF));
 				}
 
 				return damage*damageMulti;
@@ -120,7 +120,7 @@ public class Endure extends ArmorAbility {
 			}
 
 			enduring = false;
-			damageBonus *= 1f + 0.15f*Dungeon.hero.pointsInTalent(Talent.SUSTAINED_RETRIBUTION);
+			damageBonus *= 1f + 0.15f*Dungeon.heroes.pointsInTalent(Talent.SUSTAINED_RETRIBUTION);
 
 			int nearby = 0;
 			for (Char ch : Actor.chars()){
@@ -128,9 +128,9 @@ public class Endure extends ArmorAbility {
 					nearby ++;
 				}
 			}
-			damageBonus *= 1f + (nearby*0.05f*Dungeon.hero.pointsInTalent(Talent.EVEN_THE_ODDS));
+			damageBonus *= 1f + (nearby*0.05f*Dungeon.heroes.pointsInTalent(Talent.EVEN_THE_ODDS));
 
-			hitsLeft = 1+Dungeon.hero.pointsInTalent(Talent.SUSTAINED_RETRIBUTION);
+			hitsLeft = 1+Dungeon.heroes.pointsInTalent(Talent.SUSTAINED_RETRIBUTION);
 			damageBonus /= hitsLeft;
 
 			if (damageBonus > 0) {

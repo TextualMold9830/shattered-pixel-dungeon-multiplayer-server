@@ -46,13 +46,13 @@ public class TalentsPane extends ScrollPane {
 	RenderedTextBlock blockText;
 
 	public TalentsPane( TalentButton.Mode mode ) {
-		this( mode, Dungeon.hero.talents );
+		this( mode, Dungeon.heroes.talents );
 	}
 
 	public TalentsPane( TalentButton.Mode mode, ArrayList<LinkedHashMap<Talent, Integer>> talents ) {
 		super(new Component());
 
-		Ratmogrify.useRatroicEnergy = Dungeon.hero != null && Dungeon.hero.armorAbility instanceof Ratmogrify;
+		Ratmogrify.useRatroicEnergy = Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify;
 
 		int tiersAvailable = 1;
 
@@ -68,12 +68,12 @@ public class TalentsPane extends ScrollPane {
 			}
 		} else {
 			while (tiersAvailable < Talent.MAX_TALENT_TIERS
-					&& Dungeon.hero.lvl+1 >= Talent.tierLevelThresholds[tiersAvailable+1]){
+					&& Dungeon.heroes.lvl+1 >= Talent.tierLevelThresholds[tiersAvailable+1]){
 				tiersAvailable++;
 			}
-			if (tiersAvailable > 2 && Dungeon.hero.subClass == HeroSubClass.NONE){
+			if (tiersAvailable > 2 && Dungeon.heroes.subClass == HeroSubClass.NONE){
 				tiersAvailable = 2;
-			} else if (tiersAvailable > 3 && Dungeon.hero.armorAbility == null){
+			} else if (tiersAvailable > 3 && Dungeon.heroes.armorAbility == null){
 				tiersAvailable = 3;
 			}
 		}
@@ -200,9 +200,9 @@ public class TalentsPane extends ScrollPane {
 				stars.clear();
 			}
 
-			int totStars = Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] + Dungeon.hero.bonusTalentPoints(tier);
-			int openStars = Dungeon.hero.talentPointsAvailable(tier);
-			int usedStars = Dungeon.hero.talentPointsSpent(tier);
+			int totStars = Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] + Dungeon.heroes.bonusTalentPoints(tier);
+			int openStars = Dungeon.heroes.talentPointsAvailable(tier);
+			int usedStars = Dungeon.heroes.talentPointsSpent(tier);
 			for (int i = 0; i < totStars; i++){
 				Image im = new Speck().image(Speck.STAR);
 				stars.add(im);

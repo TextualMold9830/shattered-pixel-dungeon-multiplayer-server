@@ -114,7 +114,7 @@ public class InterlevelScene extends PixelScene {
 				scrollSpeed = 5;
 				break;
 			case DESCEND:
-				if (Dungeon.hero == null){
+				if (Dungeon.heroes == null){
 					loadingDepth = 1;
 					fadeTime = SLOW_FADE;
 				} else {
@@ -340,7 +340,7 @@ public class InterlevelScene extends PixelScene {
 
 	private void descend() throws IOException {
 
-		if (Dungeon.hero == null) {
+		if (Dungeon.heroes == null) {
 			Mob.clearHeldAllies();
 			Dungeon.init();
 			GameLog.wipe();
@@ -391,7 +391,7 @@ public class InterlevelScene extends PixelScene {
 		
 		Mob.holdAllies( Dungeon.level );
 		
-		Buff.affect( Dungeon.hero, Chasm.Falling.class );
+		Buff.affect( Dungeon.heroes, Chasm.Falling.class );
 		Dungeon.saveAll();
 
 		Level level;
@@ -451,7 +451,7 @@ public class InterlevelScene extends PixelScene {
 			Dungeon.switchLevel( Dungeon.loadLevel( GamesInProgress.curSlot ), -1 );
 		} else {
 			Level level = Dungeon.loadLevel( GamesInProgress.curSlot );
-			Dungeon.switchLevel( level, Dungeon.hero.pos );
+			Dungeon.switchLevel( level, Dungeon.heroes.pos );
 		}
 	}
 	
@@ -463,10 +463,10 @@ public class InterlevelScene extends PixelScene {
 		if (Dungeon.level.locked) {
 			ArrayList<Item> preservedItems = Dungeon.level.getItemsToPreserveFromSealedResurrect();
 
-			Dungeon.hero.resurrect();
+			Dungeon.heroes.resurrect();
 			level = Dungeon.newLevel();
-			Dungeon.hero.pos = level.randomRespawnCell(Dungeon.hero);
-			if (Dungeon.hero.pos == -1) Dungeon.hero.pos = level.entrance();
+			Dungeon.heroes.pos = level.randomRespawnCell(Dungeon.heroes);
+			if (Dungeon.heroes.pos == -1) Dungeon.heroes.pos = level.entrance();
 
 			for (Item i : preservedItems){
 				int pos = level.randomRespawnCell(null);
@@ -482,26 +482,26 @@ public class InterlevelScene extends PixelScene {
 			BArray.setFalse(level.heroFOV);
 			BArray.setFalse(level.visited);
 			BArray.setFalse(level.mapped);
-			int invPos = Dungeon.hero.pos;
+			int invPos = Dungeon.heroes.pos;
 			int tries = 0;
 			do {
-				Dungeon.hero.pos = level.randomRespawnCell(Dungeon.hero);
+				Dungeon.heroes.pos = level.randomRespawnCell(Dungeon.heroes);
 				tries++;
 
 			//prevents spawning on traps or plants, prefers farther locations first
-			} while (level.traps.get(Dungeon.hero.pos) != null
-					|| (level.plants.get(Dungeon.hero.pos) != null && tries < 500)
-					|| level.trueDistance(invPos, Dungeon.hero.pos) <= 30 - (tries/10));
+			} while (level.traps.get(Dungeon.heroes.pos) != null
+					|| (level.plants.get(Dungeon.heroes.pos) != null && tries < 500)
+					|| level.trueDistance(invPos, Dungeon.heroes.pos) <= 30 - (tries/10));
 
 			//directly trample grass
-			if (level.map[Dungeon.hero.pos] == Terrain.HIGH_GRASS || level.map[Dungeon.hero.pos] == Terrain.FURROWED_GRASS){
-				level.map[Dungeon.hero.pos] = Terrain.GRASS;
+			if (level.map[Dungeon.heroes.pos] == Terrain.HIGH_GRASS || level.map[Dungeon.heroes.pos] == Terrain.FURROWED_GRASS){
+				level.map[Dungeon.heroes.pos] = Terrain.GRASS;
 			}
-			Dungeon.hero.resurrect();
+			Dungeon.heroes.resurrect();
 			level.drop(new LostBackpack(), invPos);
 		}
 
-		Dungeon.switchLevel( level, Dungeon.hero.pos );
+		Dungeon.switchLevel( level, Dungeon.heroes.pos );
 	}
 
 	private void reset() throws IOException {

@@ -175,10 +175,10 @@ public class DM300 extends Mob {
 			//determine if DM can reach its enemy
 			boolean canReach;
 			if (enemy == null || !enemy.isAlive()){
-				if (Dungeon.level.adjacent(pos, Dungeon.hero.pos)){
+				if (Dungeon.level.adjacent(pos, Dungeon.heroes.pos)){
 					canReach = true;
 				} else {
-					canReach = (Dungeon.findStep(this, Dungeon.hero.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
+					canReach = (Dungeon.findStep(this, Dungeon.heroes.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
 				}
 			} else {
 				if (Dungeon.level.adjacent(pos, enemy.pos)){
@@ -189,13 +189,13 @@ public class DM300 extends Mob {
 			}
 
 			if (state != HUNTING){
-				if (Dungeon.hero.invisible <= 0 && canReach){
-					beckon(Dungeon.hero.pos);
+				if (Dungeon.heroes.invisible <= 0 && canReach){
+					beckon(Dungeon.heroes.pos);
 				}
 			} else {
 
-				if ((enemy == null || !enemy.isAlive()) && Dungeon.hero.invisible <= 0) {
-					enemy = Dungeon.hero;
+				if ((enemy == null || !enemy.isAlive()) && Dungeon.heroes.invisible <= 0) {
+					enemy = Dungeon.heroes;
 				}
 
 				//more aggressive ability usage when DM can't reach its target
@@ -285,10 +285,10 @@ public class DM300 extends Mob {
 				chargeAnnounced = true;
 			}
 
-			if (Dungeon.hero.invisible <= 0){
-				beckon(Dungeon.hero.pos);
+			if (Dungeon.heroes.invisible <= 0){
+				beckon(Dungeon.heroes.pos);
 				state = HUNTING;
-				enemy = Dungeon.hero;
+				enemy = Dungeon.heroes;
 			}
 
 		}
@@ -298,7 +298,7 @@ public class DM300 extends Mob {
 
 	@Override
 	public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
-		if (enemy == Dungeon.hero && supercharged){
+		if (enemy == Dungeon.heroes && supercharged){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		}
 		return super.attack(enemy, dmgMulti, dmgBonus, accMulti);
@@ -308,7 +308,7 @@ public class DM300 extends Mob {
 	protected Char chooseEnemy() {
 		Char enemy = super.chooseEnemy();
 		if (supercharged && enemy == null){
-			enemy = Dungeon.hero;
+			enemy = Dungeon.heroes;
 		}
 		return enemy;
 	}
@@ -366,7 +366,7 @@ public class DM300 extends Mob {
 	}
 
 	public void ventGas( Char target ){
-		Dungeon.hero.interrupt();
+		Dungeon.heroes.interrupt();
 
 		int gasVented = 0;
 
@@ -398,7 +398,7 @@ public class DM300 extends Mob {
 
 	public void dropRocks( Char target ) {
 
-		Dungeon.hero.interrupt();
+		Dungeon.heroes.interrupt();
 		final int rockCenter;
 
 		//knock back 2 tiles if adjacent
@@ -406,8 +406,8 @@ public class DM300 extends Mob {
 			int oppositeAdjacent = target.pos + (target.pos - pos);
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 2, false, false, this);
-			if (target == Dungeon.hero){
-				Dungeon.hero.interrupt();
+			if (target == Dungeon.heroes){
+				Dungeon.heroes.interrupt();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 2));
 
@@ -416,8 +416,8 @@ public class DM300 extends Mob {
 			int oppositeAdjacent = target.pos + (target.pos - pos);
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 1, false, false, this);
-			if (target == Dungeon.hero){
-				Dungeon.hero.interrupt();
+			if (target == Dungeon.heroes){
+				Dungeon.heroes.interrupt();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 1));
 
@@ -475,7 +475,7 @@ public class DM300 extends Mob {
 
 		int dmgTaken = preHP - HP;
 		if (dmgTaken > 0) {
-			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+			LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
 				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/2f);
 				else                                                    lock.addTime(dmgTaken);
@@ -579,7 +579,7 @@ public class DM300 extends Mob {
 		}
 		Statistics.bossScores[2] += 3000;
 
-		LloydsBeacon beacon = Dungeon.hero.belongings.getItem(LloydsBeacon.class);
+		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
 		if (beacon != null) {
 			beacon.upgrade();
 		}
@@ -673,7 +673,7 @@ public class DM300 extends Mob {
 		public void affectChar(Char ch) {
 			if (!(ch instanceof DM300)){
 				Buff.prolong(ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 5 : 3);
-				if (ch == Dungeon.hero) {
+				if (ch == Dungeon.heroes) {
 					Statistics.bossScores[2] -= 100;
 				}
 			}

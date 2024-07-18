@@ -86,7 +86,7 @@ public class HeroSelectScene extends PixelScene {
 	public void create() {
 		super.create();
 
-		Dungeon.hero = null;
+		Dungeon.heroes = null;
 
 		Badges.loadGlobal();
 		Journal.loadGlobal();
@@ -134,7 +134,7 @@ public class HeroSelectScene extends PixelScene {
 
 				if (GamesInProgress.selectedClass == null) return;
 
-				Dungeon.hero = null;
+				Dungeon.heroes = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				ActionIndicator.clearAction();
 				InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
@@ -673,7 +673,7 @@ public class HeroSelectScene extends PixelScene {
 										Dungeon.dailyReplay = true;
 									}
 
-									Dungeon.hero = null;
+									Dungeon.heroes = null;
 									Dungeon.daily = true;
 									ActionIndicator.clearAction();
 									InterlevelScene.mode = InterlevelScene.Mode.DESCEND;

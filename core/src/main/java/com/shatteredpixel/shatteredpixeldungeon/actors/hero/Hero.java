@@ -677,7 +677,7 @@ public class Hero extends Char {
 			return true;
 		}
 
-		KindOfWeapon wep = Dungeon.hero.belongings.attackingWeapon();
+		KindOfWeapon wep = Dungeon.heroes.belongings.attackingWeapon();
 
 		if (wep != null){
 			return wep.canReach(this, enemy.pos);
@@ -1185,8 +1185,8 @@ public class Hero extends Char {
 						//1 hunger spent total
 						if (Dungeon.level.map[action.dst] == Terrain.WALL_DECO){
 							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.hero )) {
-								DarkGold existing = Dungeon.hero.belongings.getItem(DarkGold.class);
+							if (gold.doPickUp( Dungeon.heroes)) {
+								DarkGold existing = Dungeon.heroes.belongings.getItem(DarkGold.class);
 								if (existing != null && existing.quantity()%5 == 0){
 									if (existing.quantity() >= 40) {
 										GLog.p(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
@@ -1357,7 +1357,7 @@ public class Hero extends Char {
 			Buff.affect(this, HoldFast.class).pos = pos;
 		}
 		if (hasTalent(Talent.PATIENT_STRIKE)){
-			Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+			Buff.affect(Dungeon.heroes, Talent.PatientStrikeTracker.class).pos = Dungeon.heroes.pos;
 		}
 		if (!fullRest) {
 			if (sprite != null) {
@@ -2013,9 +2013,9 @@ public class Hero extends Char {
 		Dungeon.observe();
 		GameScene.updateFog();
 				
-		Dungeon.hero.belongings.identify();
+		Dungeon.heroes.belongings.identify();
 
-		int pos = Dungeon.hero.pos;
+		int pos = Dungeon.heroes.pos;
 
 		ArrayList<Integer> passable = new ArrayList<>();
 		for (Integer ofs : PathFinder.NEIGHBOURS8) {
@@ -2026,7 +2026,7 @@ public class Hero extends Char {
 		}
 		Collections.shuffle( passable );
 
-		ArrayList<Item> items = new ArrayList<>(Dungeon.hero.belongings.backpack.items);
+		ArrayList<Item> items = new ArrayList<>(Dungeon.heroes.belongings.backpack.items);
 		for (Integer cell : passable) {
 			if (items.isEmpty()) {
 				break;

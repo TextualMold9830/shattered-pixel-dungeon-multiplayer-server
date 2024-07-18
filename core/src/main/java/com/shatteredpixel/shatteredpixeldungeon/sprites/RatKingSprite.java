@@ -53,7 +53,7 @@ public class RatKingSprite extends MobSprite {
 				break;
 		}
 
-		if (Dungeon.hero != null && Dungeon.hero.armorAbility instanceof Ratmogrify){
+		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
 			c = 24;
 			if (parent != null) aura(0xFFFF00);
 		}
@@ -82,7 +82,7 @@ public class RatKingSprite extends MobSprite {
 	@Override
 	public void link(Char ch) {
 		super.link(ch);
-		if (Dungeon.hero != null && Dungeon.hero.armorAbility instanceof Ratmogrify){
+		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
 			aura(0xFFFF00);
 		}
 	}

@@ -49,11 +49,11 @@ public abstract class Trinket extends Item {
 	protected abstract int upgradeEnergyCost();
 
 	protected static int trinketLevel(Class<? extends Trinket> trinketType ){
-		if (Dungeon.hero == null || Dungeon.hero.belongings == null){
+		if (Dungeon.heroes == null || Dungeon.heroes.belongings == null){
 			return -1;
 		}
 
-		Trinket trinket = Dungeon.hero.belongings.getItem(trinketType);
+		Trinket trinket = Dungeon.heroes.belongings.getItem(trinketType);
 
 		if (trinket != null){
 			return trinket.buffedLvl();

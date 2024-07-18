@@ -137,10 +137,10 @@ public class Artifact extends KindofMisc {
 
 	@Override
 	public String info() {
-		if (cursed && cursedKnown && !isEquipped( Dungeon.hero )) {
+		if (cursed && cursedKnown && !isEquipped( Dungeon.heroes)) {
 			return desc() + "\n\n" + Messages.get(Artifact.class, "curse_known");
 			
-		} else if (!isIdentified() && cursedKnown && !isEquipped( Dungeon.hero)) {
+		} else if (!isIdentified() && cursedKnown && !isEquipped( Dungeon.heroes)) {
 			return desc()+ "\n\n" + Messages.get(Artifact.class, "not_cursed");
 			
 		} else {
@@ -220,7 +220,7 @@ public class Artifact extends KindofMisc {
 		public boolean attachTo( Char target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
-				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
+				if (target instanceof Hero && Dungeon.heroes == null && cooldown() == 0 && target.cooldown() > 0) {
 					spend(TICK);
 				}
 				return true;

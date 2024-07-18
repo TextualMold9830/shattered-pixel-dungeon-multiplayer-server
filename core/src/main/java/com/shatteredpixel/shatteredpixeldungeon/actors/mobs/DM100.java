@@ -103,7 +103,7 @@ public class DM100 extends Mob implements Callback {
 					enemy.sprite.flash();
 				}
 				
-				if (enemy == Dungeon.hero) {
+				if (enemy == Dungeon.heroes) {
 					
 					PixelScene.shake( 2, 0.3f );
 					

@@ -110,17 +110,17 @@ public class RatKing extends NPC {
 	public boolean interact(Char c) {
 		sprite.turnTo( pos, c.pos );
 
-		if (c != Dungeon.hero){
+		if (c != Dungeon.heroes){
 			return super.interact(c);
 		}
 
-		KingsCrown crown = Dungeon.hero.belongings.getItem(KingsCrown.class);
+		KingsCrown crown = Dungeon.heroes.belongings.getItem(KingsCrown.class);
 		if (state == SLEEPING) {
 			notice();
 			yell( Messages.get(this, "not_sleeping") );
 			state = WANDERING;
 		} else if (crown != null){
-			if (Dungeon.hero.belongings.armor() == null){
+			if (Dungeon.heroes.belongings.armor() == null){
 				yell( Messages.get(RatKing.class, "crown_clothes") );
 			} else {
 				Badges.validateRatmogrify();
@@ -138,11 +138,11 @@ public class RatKing extends NPC {
 							@Override
 							protected void onSelect(int index) {
 								if (index == 0){
-									crown.upgradeArmor(Dungeon.hero, Dungeon.hero.belongings.armor(), new Ratmogrify());
+									crown.upgradeArmor(Dungeon.heroes, Dungeon.heroes.belongings.armor(), new Ratmogrify());
 									((RatKingSprite)sprite).resetAnims();
 									yell(Messages.get(RatKing.class, "crown_thankyou"));
 								} else if (index == 1) {
-									GameScene.show(new WndInfoArmorAbility(Dungeon.hero.heroClass, new Ratmogrify()));
+									GameScene.show(new WndInfoArmorAbility(Dungeon.heroes.heroClass, new Ratmogrify()));
 								} else {
 									yell(Messages.get(RatKing.class, "crown_fine"));
 								}
@@ -151,7 +151,7 @@ public class RatKing extends NPC {
 					}
 				});
 			}
-		} else if (Dungeon.hero.armorAbility instanceof Ratmogrify) {
+		} else if (Dungeon.heroes.armorAbility instanceof Ratmogrify) {
 			yell( Messages.get(RatKing.class, "crown_after") );
 		} else {
 			yell( Messages.get(this, "what_is_it") );
@@ -161,7 +161,7 @@ public class RatKing extends NPC {
 	
 	@Override
 	public String description() {
-		if (Dungeon.hero.armorAbility instanceof Ratmogrify){
+		if (Dungeon.heroes.armorAbility instanceof Ratmogrify){
 			return Messages.get(this, "desc_crown");
 		} else if (Holiday.getCurrentHoliday() == Holiday.APRIL_FOOLS){
 			return Messages.get(this, "desc_birthday");

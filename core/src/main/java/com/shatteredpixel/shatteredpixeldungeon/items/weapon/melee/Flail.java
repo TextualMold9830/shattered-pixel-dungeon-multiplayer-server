@@ -93,7 +93,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Char target){
-		if (Dungeon.hero.buff(SpinAbilityTracker.class) != null){
+		if (Dungeon.heroes.buff(SpinAbilityTracker.class) != null){
 			return 0;
 		} else {
 			return 1;

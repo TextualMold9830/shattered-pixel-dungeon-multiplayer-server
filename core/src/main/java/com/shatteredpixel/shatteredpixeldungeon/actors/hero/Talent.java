@@ -227,7 +227,7 @@ public enum Talent {
 	public static class RejuvenatingStepsCooldown extends FlavourBuff{
 		public int icon() { return BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0f, 0.35f, 0.15f); }
-		public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (15 - 5*Dungeon.hero.pointsInTalent(REJUVENATING_STEPS)), 1); }
+		public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (15 - 5*Dungeon.heroes.pointsInTalent(REJUVENATING_STEPS)), 1); }
 	};
 	public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}};
 	public static class SeerShotCooldown extends FlavourBuff{
@@ -372,7 +372,7 @@ public enum Talent {
 			if (Ratmogrify.useRatroicEnergy){
 				return 218;
 			}
-			HeroClass cls = Dungeon.hero != null ? Dungeon.hero.heroClass : GamesInProgress.selectedClass;
+			HeroClass cls = Dungeon.heroes != null ? Dungeon.heroes.heroClass : GamesInProgress.selectedClass;
 			switch (cls){
 				case WARRIOR: default:
 					return 26;
@@ -427,7 +427,7 @@ public enum Talent {
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.identify();
 			if (hero.belongings.misc instanceof Ring) hero.belongings.misc.identify();
-			for (Item item : Dungeon.hero.belongings){
+			for (Item item : Dungeon.heroes.belongings){
 				if (item instanceof Ring){
 					((Ring) item).setKnown();
 				}
@@ -446,10 +446,10 @@ public enum Talent {
 		}
 
 		if (talent == LIGHT_CLOAK && hero.heroClass == HeroClass.ROGUE){
-			for (Item item : Dungeon.hero.belongings.backpack){
+			for (Item item : Dungeon.heroes.belongings.backpack){
 				if (item instanceof CloakOfShadows){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
-						((CloakOfShadows) item).activate(Dungeon.hero);
+						((CloakOfShadows) item).activate(Dungeon.heroes);
 					}
 				}
 			}
@@ -638,7 +638,7 @@ public enum Talent {
 				MagesStaff staff = hero.belongings.getItem(MagesStaff.class);
 				if (staff != null) {
 					staff.gainCharge(2 + 2 * hero.pointsInTalent(INSCRIBED_POWER), true);
-					ScrollOfRecharging.charge(Dungeon.hero);
+					ScrollOfRecharging.charge(Dungeon.heroes);
 					SpellSprite.show(hero, SpellSprite.CHARGE);
 				}
 			} else {

@@ -98,9 +98,9 @@ public enum Rankings {
 
 		rec.cause = cause instanceof Class ? (Class)cause : cause.getClass();
 		rec.win		= win;
-		rec.heroClass	= Dungeon.hero.heroClass;
-		rec.armorTier	= Dungeon.hero.tier();
-		rec.herolevel	= Dungeon.hero.lvl;
+		rec.heroClass	= Dungeon.heroes.heroClass;
+		rec.armorTier	= Dungeon.heroes.tier();
+		rec.herolevel	= Dungeon.heroes.lvl;
 		if (Statistics.highestAscent == 0){
 			rec.depth = Statistics.deepestFloor;
 			rec.ascending = false;
@@ -165,18 +165,18 @@ public enum Rankings {
 	}
 
 	private int score( boolean win ) {
-		return (Statistics.goldCollected + Dungeon.hero.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
+		return (Statistics.goldCollected + Dungeon.heroes.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
 	}
 
 	//assumes a ranking is loaded, or game is ending
 	public int calculateScore(){
 
 		if (Dungeon.initialVersion > ShatteredPixelDungeon.v1_2_3){
-			Statistics.progressScore = Dungeon.hero.lvl * Statistics.deepestFloor * 65;
+			Statistics.progressScore = Dungeon.heroes.lvl * Statistics.deepestFloor * 65;
 			Statistics.progressScore = Math.min(Statistics.progressScore, 50_000);
 
 			if (Statistics.heldItemValue == 0) {
-				for (Item i : Dungeon.hero.belongings) {
+				for (Item i : Dungeon.heroes.belongings) {
 					Statistics.heldItemValue += i.value();
 					if (i instanceof CorpseDust && Statistics.deepestFloor >= 10){
 						// in case player kept the corpse dust, for a necromancer run
@@ -211,7 +211,7 @@ public enum Rankings {
 		//only progress and treasure score, and they are each up to 50% bigger
 		//win multiplier is a simple 2x if run was a win, challenge multi is the same as 1.3.0
 		} else {
-			Statistics.progressScore = Dungeon.hero.lvl * Statistics.deepestFloor * 100;
+			Statistics.progressScore = Dungeon.heroes.lvl * Statistics.deepestFloor * 100;
 			Statistics.treasureScore = Math.min(Statistics.goldCollected, 30_000);
 
 			Statistics.exploreScore = Statistics.totalBossScore = Statistics.totalQuestScore = 0;
@@ -243,14 +243,14 @@ public enum Rankings {
 	public static final String DAILY_REPLAY	= "daily_replay";
 
 	public void saveGameData(Record rec){
-		if (Dungeon.hero == null){
+		if (Dungeon.heroes == null){
 			rec.gameData = null;
 			return;
 		}
 
 		rec.gameData = new Bundle();
 
-		Belongings belongings = Dungeon.hero.belongings;
+		Belongings belongings = Dungeon.heroes.belongings;
 
 		//save the hero and belongings
 		ArrayList<Item> allItems = (ArrayList<Item>) belongings.backpack.items.clone();
@@ -270,11 +270,11 @@ public enum Rankings {
 		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
-		for(Buff b : Dungeon.hero.buffs()){
-			Dungeon.hero.remove(b);
+		for(Buff b : Dungeon.heroes.buffs()){
+			Dungeon.heroes.remove(b);
 		}
 
-		rec.gameData.put( HERO, Dungeon.hero );
+		rec.gameData.put( HERO, Dungeon.heroes);
 
 		//save stats
 		Bundle stats = new Bundle();
@@ -314,7 +314,7 @@ public enum Rankings {
 		Bundle data = rec.gameData;
 
 		Actor.clear();
-		Dungeon.hero = null;
+		Dungeon.heroes = null;
 		Dungeon.level = null;
 		Generator.fullReset();
 		Notes.reset();
@@ -331,8 +331,8 @@ public enum Rankings {
 
 		Badges.loadLocal(data.getBundle(BADGES));
 
-		Dungeon.hero = (Hero)data.get(HERO);
-		Dungeon.hero.belongings.identify();
+		Dungeon.heroes = (Hero)data.get(HERO);
+		Dungeon.heroes.belongings.identify();
 
 		Statistics.restoreFromBundle(data.getBundle(STATS));
 		

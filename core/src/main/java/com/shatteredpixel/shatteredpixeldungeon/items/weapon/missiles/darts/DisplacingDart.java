@@ -95,7 +95,7 @@ public class DisplacingDart extends TippedDart {
 			if (chosenPos != -1){
 				ScrollOfTeleportation.appear( defender, chosenPos );
 				Dungeon.level.occupyCell(defender );
-				if (defender == Dungeon.hero){
+				if (defender == Dungeon.heroes){
 					Dungeon.observe();
 					GameScene.updateFog();
 				} else if (!Dungeon.level.heroFOV[chosenPos]){

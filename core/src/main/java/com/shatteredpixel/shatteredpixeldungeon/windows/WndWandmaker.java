@@ -77,7 +77,7 @@ public class WndWandmaker extends Window {
 		ItemButton btnWand1 = new ItemButton(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero.belongings.contains(questItem) && item() != null) {
+				if (Dungeon.heroes.belongings.contains(questItem) && item() != null) {
 					GameScene.show(new RewardWindow(item()));
 				} else {
 					hide();
@@ -91,7 +91,7 @@ public class WndWandmaker extends Window {
 		ItemButton btnWand2 = new ItemButton(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero.belongings.contains(questItem) && item() != null) {
+				if (Dungeon.heroes.belongings.contains(questItem) && item() != null) {
 					GameScene.show(new RewardWindow(item()));
 				} else {
 					hide();
@@ -113,16 +113,16 @@ public class WndWandmaker extends Window {
 
 		hide();
 
-		questItem.detach( Dungeon.hero.belongings.backpack );
+		questItem.detach( Dungeon.heroes.belongings.backpack );
 
 		reward.identify(false);
-		if (reward.doPickUp( Dungeon.hero )) {
-			GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", reward.name())) );
+		if (reward.doPickUp( Dungeon.heroes)) {
+			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}
 		
-		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(Dungeon.hero.name())) );
+		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(Dungeon.heroes.name())) );
 		wandmaker.destroy();
 		
 		wandmaker.sprite.die();

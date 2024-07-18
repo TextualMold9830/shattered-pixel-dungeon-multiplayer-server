@@ -137,7 +137,7 @@ public class Pylon extends Mob {
 			ch.sprite.flash();
 			ch.damage(Char.combatRoll(10, 20), new Electricity());
 
-			if (ch == Dungeon.hero) {
+			if (ch == Dungeon.heroes) {
 				Statistics.qualifiedForBossChallengeBadge = false;
 				Statistics.bossScores[2] -= 100;
 				if (!ch.isAlive()) {
@@ -202,7 +202,7 @@ public class Pylon extends Mob {
 			dmg = 14 + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
 		}
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/2f);
 			else                                                    lock.addTime(dmg);

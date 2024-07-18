@@ -83,12 +83,12 @@ public class DirectableAlly extends NPC {
 	public void directTocell( int cell ){
 		if (!Dungeon.level.heroFOV[cell]
 				|| Actor.findChar(cell) == null
-				|| (Actor.findChar(cell) != Dungeon.hero && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
+				|| (Actor.findChar(cell) != Dungeon.heroes && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
 			defendPos( cell );
 			return;
 		}
 
-		if (Actor.findChar(cell) == Dungeon.hero){
+		if (Actor.findChar(cell) == Dungeon.heroes){
 			followHero();
 
 		} else if (Actor.findChar(cell).alignment == Char.Alignment.ENEMY){
@@ -135,7 +135,7 @@ public class DirectableAlly extends NPC {
 				enemySeen = false;
 
 				int oldPos = pos;
-				target = defendingPos != -1 ? defendingPos : Dungeon.hero.pos;
+				target = defendingPos != -1 ? defendingPos : Dungeon.heroes.pos;
 				//always move towards the hero when wandering
 				if (getCloser( target )) {
 					spend( 1 / speed() );

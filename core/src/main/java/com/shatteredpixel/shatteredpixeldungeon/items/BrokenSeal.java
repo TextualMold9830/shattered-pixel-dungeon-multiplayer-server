@@ -68,9 +68,9 @@ public class BrokenSeal extends Item {
 		if (glyph == null){
 			return false;
 		}
-		if (Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 2){
+		if (Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 2){
 			return true;
-		} else if (Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
+		} else if (Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
 			&& (Arrays.asList(Armor.Glyph.common).contains(glyph.getClass())
 				|| Arrays.asList(Armor.Glyph.uncommon).contains(glyph.getClass()))){
 			return true;
@@ -88,7 +88,7 @@ public class BrokenSeal extends Item {
 	}
 
 	public int maxShield( int armTier, int armLvl ){
-		return armTier + armLvl + Dungeon.hero.pointsInTalent(Talent.IRON_WILL);
+		return armTier + armLvl + Dungeon.heroes.pointsInTalent(Talent.IRON_WILL);
 	}
 
 	@Override
@@ -163,19 +163,19 @@ public class BrokenSeal extends Item {
 							//if index is 1, then the glyph transfer happens in affixSeal
 
 							GLog.p(Messages.get(BrokenSeal.class, "affix"));
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
 							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 							armor.affixSeal(seal);
-							seal.detach(Dungeon.hero.belongings.backpack);
+							seal.detach(Dungeon.heroes.belongings.backpack);
 						}
 					});
 
 				} else {
 					GLog.p(Messages.get(BrokenSeal.class, "affix"));
-					Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+					Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 					armor.affixSeal((BrokenSeal)curItem);
-					curItem.detach(Dungeon.hero.belongings.backpack);
+					curItem.detach(Dungeon.heroes.belongings.backpack);
 				}
 			}
 		}

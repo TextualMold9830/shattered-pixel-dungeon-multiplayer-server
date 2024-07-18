@@ -57,14 +57,14 @@ public class Imp extends NPC {
 	
 	@Override
 	protected boolean act() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
 		}
 		if (!Quest.given && Dungeon.level.visited[pos]) {
 			Notes.add( Notes.Landmark.IMP );
 			if (!seenBefore && Dungeon.level.heroFOV[pos]) {
-				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.name())));
+				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.heroes.name())));
 				seenBefore = true;
 			}
 		} else {
@@ -97,15 +97,15 @@ public class Imp extends NPC {
 	@Override
 	public boolean interact(Char c) {
 		
-		sprite.turnTo( pos, Dungeon.hero.pos );
+		sprite.turnTo( pos, Dungeon.heroes.pos );
 
-		if (c != Dungeon.hero){
+		if (c != Dungeon.heroes){
 			return true;
 		}
 
 		if (Quest.given) {
 			
-			DwarfToken tokens = Dungeon.hero.belongings.getItem( DwarfToken.class );
+			DwarfToken tokens = Dungeon.heroes.belongings.getItem( DwarfToken.class );
 			if (tokens != null && (tokens.quantity() >= 5 || (!Quest.alternative && tokens.quantity() >= 4))) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
@@ -115,8 +115,8 @@ public class Imp extends NPC {
 				});
 			} else {
 				tell( Quest.alternative ?
-						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.hero.name()))
-						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.hero.name())) );
+						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.heroes.name()))
+						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.heroes.name())) );
 			}
 			
 		} else {
@@ -140,7 +140,7 @@ public class Imp extends NPC {
 	
 	public void flee() {
 		
-		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.hero.name())) );
+		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.heroes.name())) );
 		
 		destroy();
 		sprite.die();

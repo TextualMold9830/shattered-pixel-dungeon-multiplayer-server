@@ -95,7 +95,7 @@ public class CrystalSpire extends Mob {
 		sprite.hideLost();
 
 		//mob logic
-		enemy = Dungeon.hero;
+		enemy = Dungeon.heroes;
 
 		//crystal can still track an invisible hero
 		enemySeen = enemy.isAlive() && fieldOfView[enemy.pos];
@@ -136,7 +136,7 @@ public class CrystalSpire extends Mob {
 					if (ch instanceof CrystalGuardian){
 						for (int j : PathFinder.NEIGHBOURS8){
 							if (!Dungeon.level.solid[i+j] && Actor.findChar(i+j) == null &&
-									Dungeon.level.trueDistance(i+j, Dungeon.hero.pos) > Dungeon.level.trueDistance(movePos, Dungeon.hero.pos)){
+									Dungeon.level.trueDistance(i+j, Dungeon.heroes.pos) > Dungeon.level.trueDistance(movePos, Dungeon.heroes.pos)){
 								movePos = i+j;
 							}
 						}
@@ -155,7 +155,7 @@ public class CrystalSpire extends Mob {
 							ch.pos = movePos;
 							Dungeon.level.occupyCell(ch);
 						}
-					} else if (ch == Dungeon.hero){
+					} else if (ch == Dungeon.heroes){
 						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 						Dungeon.fail(this);
 					}
@@ -192,8 +192,8 @@ public class CrystalSpire extends Mob {
 
 				abilityCooldown += ABILITY_CD;
 
-				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
-				Dungeon.hero.interrupt();
+				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.heroes.cooldown()), 3*TICK));
+				Dungeon.heroes.interrupt();
 			} else {
 				abilityCooldown -= 1;
 				spend(TICK);
@@ -210,7 +210,7 @@ public class CrystalSpire extends Mob {
 		targetedCells.clear();
 
 		ArrayList<Integer> aoeCells = new ArrayList<>();
-		aoeCells.add(Dungeon.hero.pos);
+		aoeCells.add(Dungeon.heroes.pos);
 		aoeCells.addAll(spreadDiamondAOE(aoeCells));
 		targetedCells.add(new ArrayList<>(aoeCells));
 
@@ -241,7 +241,7 @@ public class CrystalSpire extends Mob {
 		targetedCells.clear();
 
 		ArrayList<Integer> lineCells = new ArrayList<>();
-		Ballistica aim = new Ballistica(pos, Dungeon.hero.pos, Ballistica.WONT_STOP);
+		Ballistica aim = new Ballistica(pos, Dungeon.heroes.pos, Ballistica.WONT_STOP);
 		for (int i : aim.subPath(1, 7)){
 			if (!Dungeon.level.solid[i] || Dungeon.level.map[i] == Terrain.MINE_CRYSTAL){
 				lineCells.add(i);
@@ -306,14 +306,14 @@ public class CrystalSpire extends Mob {
 
 	@Override
 	public boolean interact(Char c) {
-		if (c == Dungeon.hero){
-			final Pickaxe p = Dungeon.hero.belongings.getItem(Pickaxe.class);
+		if (c == Dungeon.heroes){
+			final Pickaxe p = Dungeon.heroes.belongings.getItem(Pickaxe.class);
 
 			if (p == null){
 				return true;
 			}
 
-			Dungeon.hero.sprite.attack(pos, new Callback() {
+			Dungeon.heroes.sprite.attack(pos, new Callback() {
 				@Override
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
@@ -322,7 +322,7 @@ public class CrystalSpire extends Mob {
 
 					damage(dmg, p);
 					abilityCooldown -= dmg/10f;
-					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
+					sprite.bloodBurstA(Dungeon.heroes.sprite.center(), dmg);
 					sprite.flash();
 
 					BossHealthBar.bleed(HP <= HT/3);
@@ -408,7 +408,7 @@ public class CrystalSpire extends Mob {
 								if (ch instanceof CrystalGuardian){
 									if (((CrystalGuardian) ch).state == ((CrystalGuardian) ch).SLEEPING) {
 
-										((CrystalGuardian) ch).aggro(Dungeon.hero);
+										((CrystalGuardian) ch).aggro(Dungeon.heroes);
 										((CrystalGuardian) ch).beckon(pos);
 
 										//delays sleeping guardians that happen to be near to the crystal
@@ -419,7 +419,7 @@ public class CrystalSpire extends Mob {
 									} else if (((CrystalGuardian) ch).state != ((CrystalGuardian) ch).HUNTING && ((CrystalGuardian) ch).target != pos){
 										((CrystalGuardian) ch).beckon(pos);
 										if (((CrystalGuardian) ch).state != HUNTING) {
-											((CrystalGuardian) ch).aggro(Dungeon.hero);
+											((CrystalGuardian) ch).aggro(Dungeon.heroes);
 										}
 
 										//speeds up already woken guardians that aren't very close
@@ -432,8 +432,8 @@ public class CrystalSpire extends Mob {
 						}
 					}
 
-					Invisibility.dispel(Dungeon.hero);
-					Dungeon.hero.spendAndNext(p.delayFactor(CrystalSpire.this));
+					Invisibility.dispel(Dungeon.heroes);
+					Dungeon.heroes.spendAndNext(p.delayFactor(CrystalSpire.this));
 				}
 			});
 			return false;

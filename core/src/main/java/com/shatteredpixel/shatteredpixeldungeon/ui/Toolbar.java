@@ -119,7 +119,7 @@ public class Toolbar extends Component {
 					return;
 				}
 
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
 
 					String[] slotNames = new String[6];
 					Image[] slotIcons = new Image[6];
@@ -127,7 +127,7 @@ public class Toolbar extends Component {
 						Item item = Dungeon.quickslot.getItem(i);
 
 						if (item != null && !Dungeon.quickslot.isPlaceholder(i) &&
-								(!Dungeon.hero.belongings.lostInventory() || item.keptThroughLostInventory())){
+								(!Dungeon.heroes.belongings.lostInventory() || item.keptThroughLostInventory())){
 							slotNames[i] = Messages.titleCase(item.name());
 							slotIcons[i] = new ItemSprite(item);
 						} else {
@@ -153,7 +153,7 @@ public class Toolbar extends Component {
 							Item item = Dungeon.quickslot.getItem(idx);
 
 							if (item == null || Dungeon.quickslot.isPlaceholder(idx)
-									|| (Dungeon.hero.belongings.lostInventory() && !item.keptThroughLostInventory())
+									|| (Dungeon.heroes.belongings.lostInventory() && !item.keptThroughLostInventory())
 									|| alt){
 								//TODO would be nice to use a radial menu for this too
 								// Also a bunch of code could be moved out of here into subclasses of RadialMenu
@@ -177,7 +177,7 @@ public class Toolbar extends Component {
 								});
 							} else {
 
-								item.execute(Dungeon.hero);
+								item.execute(Dungeon.heroes);
 								if (item.usesTargeting) {
 									QuickSlotButton.useTargeting(idx);
 								}
@@ -198,9 +198,9 @@ public class Toolbar extends Component {
 		add(btnWait = new Tool(24, 0, 20, 26) {
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null &&  Dungeon.hero.ready && !GameScene.cancel()) {
+				if (Dungeon.heroes != null &&  Dungeon.heroes.ready && !GameScene.cancel()) {
 					examining = false;
-					Dungeon.hero.rest(false);
+					Dungeon.heroes.rest(false);
 				}
 			}
 			
@@ -220,9 +220,9 @@ public class Toolbar extends Component {
 			}
 
 			protected boolean onLongClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
 					examining = false;
-					Dungeon.hero.rest(true);
+					Dungeon.heroes.rest(true);
 				}
 				return true;
 			}
@@ -233,9 +233,9 @@ public class Toolbar extends Component {
 		add(new Button(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
 					examining = false;
-					Dungeon.hero.rest(true);
+					Dungeon.heroes.rest(true);
 				}
 			}
 
@@ -250,29 +250,29 @@ public class Toolbar extends Component {
 		add(new Button(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
-					Dungeon.hero.waitOrPickup = true;
-					if ((Dungeon.level.heaps.get(Dungeon.hero.pos) != null || Dungeon.hero.canSelfTrample())
-						&& Dungeon.hero.handle(Dungeon.hero.pos)){
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
+					Dungeon.heroes.waitOrPickup = true;
+					if ((Dungeon.level.heaps.get(Dungeon.heroes.pos) != null || Dungeon.heroes.canSelfTrample())
+						&& Dungeon.heroes.handle(Dungeon.heroes.pos)){
 						//trigger hold fast and patient strike here, even if the hero didn't specifically wait
-						if (Dungeon.hero.hasTalent(Talent.HOLD_FAST)){
-							Buff.affect(Dungeon.hero, HoldFast.class).pos = Dungeon.hero.pos;
+						if (Dungeon.heroes.hasTalent(Talent.HOLD_FAST)){
+							Buff.affect(Dungeon.heroes, HoldFast.class).pos = Dungeon.heroes.pos;
 						}
-						if (Dungeon.hero.hasTalent(Talent.PATIENT_STRIKE)){
-							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+						if (Dungeon.heroes.hasTalent(Talent.PATIENT_STRIKE)){
+							Buff.affect(Dungeon.heroes, Talent.PatientStrikeTracker.class).pos = Dungeon.heroes.pos;
 						}
-						Dungeon.hero.next();
+						Dungeon.heroes.next();
 					} else {
 						examining = false;
-						Dungeon.hero.rest(false);
+						Dungeon.heroes.rest(false);
 					}
 				}
 			}
 
 			protected boolean onLongClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
 					examining = false;
-					Dungeon.hero.rest(true);
+					Dungeon.heroes.rest(true);
 				}
 				return true;
 			}
@@ -287,13 +287,13 @@ public class Toolbar extends Component {
 		add(btnSearch = new Tool(44, 0, 20, 26) {
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready) {
+				if (Dungeon.heroes != null && Dungeon.heroes.ready) {
 					if (!examining && !GameScene.cancel()) {
 						GameScene.selectCell(informer);
 						examining = true;
 					} else if (examining) {
 						informer.onSelect(null);
-						Dungeon.hero.search(true);
+						Dungeon.heroes.search(true);
 					}
 				}
 			}
@@ -310,7 +310,7 @@ public class Toolbar extends Component {
 			
 			@Override
 			protected boolean onLongClick() {
-				Dungeon.hero.search(true);
+				Dungeon.heroes.search(true);
 				return true;
 			}
 		});
@@ -323,12 +323,12 @@ public class Toolbar extends Component {
 
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
+				if (Dungeon.heroes != null && (Dungeon.heroes.ready || !Dungeon.heroes.isAlive())) {
 					if (SPDSettings.interfaceSize() == 2) {
 						GameScene.toggleInvPane();
 					} else {
 						if (!GameScene.cancel()) {
-							GameScene.show(new WndBag(Dungeon.hero.belongings.backpack));
+							GameScene.show(new WndBag(Dungeon.heroes.belongings.backpack));
 						}
 					}
 				}
@@ -393,8 +393,8 @@ public class Toolbar extends Component {
 		add(new Button(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
-					ArrayList<Bag> bags = Dungeon.hero.belongings.getBags();
+				if (Dungeon.heroes != null && Dungeon.heroes.ready && !GameScene.cancel()) {
+					ArrayList<Bag> bags = Dungeon.heroes.belongings.getBags();
 					String[] names = new String[bags.size()];
 					Image[] images = new Image[bags.size()];
 					for (int i = 0; i < bags.size(); i++){
@@ -419,11 +419,11 @@ public class Toolbar extends Component {
 
 							for(Item i : bag.items){
 								if (i instanceof Bag) items.remove(i);
-								if (Dungeon.hero.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
+								if (Dungeon.heroes.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
 							}
 
 							if (idx == 0){
-								Belongings b = Dungeon.hero.belongings;
+								Belongings b = Dungeon.heroes.belongings;
 								if (b.ring() != null) items.add(0, b.ring());
 								if (b.misc() != null) items.add(0, b.misc());
 								if (b.artifact() != null) items.add(0, b.artifact());
@@ -460,7 +460,7 @@ public class Toolbar extends Component {
 									super.onSelect(idx, alt);
 									Item item = items.get(idx);
 									if (alt && item.defaultAction() != null) {
-										item.execute(Dungeon.hero);
+										item.execute(Dungeon.heroes);
 									} else {
 										InventoryPane.clearTargetingSlot();
 										Game.scene().addToFront(new WndUseItem(null, item));
@@ -644,8 +644,8 @@ public class Toolbar extends Component {
 	public void update() {
 		super.update();
 		
-		if (lastEnabled != (Dungeon.hero.ready && Dungeon.hero.isAlive())) {
-			lastEnabled = (Dungeon.hero.ready && Dungeon.hero.isAlive());
+		if (lastEnabled != (Dungeon.heroes.ready && Dungeon.heroes.isAlive())) {
+			lastEnabled = (Dungeon.heroes.ready && Dungeon.heroes.isAlive());
 			
 			for (Gizmo tool : members.toArray(new Gizmo[0])) {
 				if (tool instanceof Tool) {
@@ -654,7 +654,7 @@ public class Toolbar extends Component {
 			}
 		}
 		
-		if (!Dungeon.hero.isAlive()) {
+		if (!Dungeon.heroes.isAlive()) {
 			btnInventory.enable(true);
 		}
 	}

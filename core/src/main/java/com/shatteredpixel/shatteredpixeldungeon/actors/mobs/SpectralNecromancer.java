@@ -60,7 +60,7 @@ public class SpectralNecromancer extends Necromancer {
 
 	@Override
 	public void rollToDropLoot() {
-		if (Dungeon.hero.lvl > maxLvl + 2) return;
+		if (Dungeon.heroes.lvl > maxLvl + 2) return;
 
 		super.rollToDropLoot();
 
@@ -137,7 +137,7 @@ public class SpectralNecromancer extends Necromancer {
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.damage( Char.combatRoll(2, 10), new SummoningBlockDamage() );
-					if (blocker == Dungeon.hero && !blocker.isAlive()){
+					if (blocker == Dungeon.heroes && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
 						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );

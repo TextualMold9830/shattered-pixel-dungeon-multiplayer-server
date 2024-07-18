@@ -171,15 +171,15 @@ public class SmokeBomb extends ArmorAbility {
 
 			alignment = Alignment.ALLY;
 
-			HP = HT = 20*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT);
+			HP = HT = 20*Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT);
 		}
 
 		@Override
 		public int drRoll() {
 			int dr = super.drRoll();
 
-			dr += Char.combatRoll(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT),
-					3*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT));
+			dr += Char.combatRoll(Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT),
+					3*Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT));
 
 			return dr;
 		}

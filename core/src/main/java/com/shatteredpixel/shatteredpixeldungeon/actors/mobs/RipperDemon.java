@@ -124,7 +124,7 @@ public class RipperDemon extends Mob {
 			if (enemy != null) {
 				lastEnemyPos = enemy.pos;
 			} else {
-				lastEnemyPos = Dungeon.hero.pos;
+				lastEnemyPos = Dungeon.heroes.pos;
 			}
 		}
 
@@ -249,7 +249,7 @@ public class RipperDemon extends Mob {
 							GLog.w(Messages.get(RipperDemon.this, "leap"));
 							sprite.parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
 							((RipperSprite)sprite).leapPrep( leapPos );
-							Dungeon.hero.interrupt();
+							Dungeon.heroes.interrupt();
 						}
 						return true;
 					}

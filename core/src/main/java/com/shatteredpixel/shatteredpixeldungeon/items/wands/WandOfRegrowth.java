@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
@@ -90,7 +89,7 @@ public class WandOfRegrowth extends Wand {
 		ArrayList<Integer> cells = new ArrayList<>(cone.cells);
 
 		float furrowedChance = 0;
-		if (totChrgUsed >= chargeLimit(Dungeon.hero.lvl)){
+		if (totChrgUsed >= chargeLimit(Dungeon.heroes.lvl)){
 			furrowedChance = (chargesOverLimit+1)/5f;
 		}
 
@@ -188,12 +187,12 @@ public class WandOfRegrowth extends Wand {
 			grassToPlace--;
 		}
 
-		if (totChrgUsed < chargeLimit(Dungeon.hero.lvl)) {
+		if (totChrgUsed < chargeLimit(Dungeon.heroes.lvl)) {
 			chargesOverLimit = 0;
 			totChrgUsed += chrgUsed;
-			if (totChrgUsed > chargeLimit(Dungeon.hero.lvl)){
-				chargesOverLimit = totChrgUsed - chargeLimit(Dungeon.hero.lvl);
-				totChrgUsed = chargeLimit(Dungeon.hero.lvl);
+			if (totChrgUsed > chargeLimit(Dungeon.heroes.lvl)){
+				chargesOverLimit = totChrgUsed - chargeLimit(Dungeon.heroes.lvl);
+				totChrgUsed = chargeLimit(Dungeon.heroes.lvl);
 			}
 		} else {
 			chargesOverLimit += chrgUsed;
@@ -285,7 +284,7 @@ public class WandOfRegrowth extends Wand {
 	public String statsDesc() {
 		String desc = Messages.get(this, "stats_desc", chargesPerCast());
 		if (isIdentified()){
-			int chargeLeft = chargeLimit(Dungeon.hero.lvl) - totChrgUsed;
+			int chargeLeft = chargeLimit(Dungeon.heroes.lvl) - totChrgUsed;
 			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));
 		}
 		return desc;

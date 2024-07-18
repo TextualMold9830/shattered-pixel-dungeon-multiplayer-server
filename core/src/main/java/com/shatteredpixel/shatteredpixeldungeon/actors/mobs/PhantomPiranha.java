@@ -49,7 +49,7 @@ public class PhantomPiranha extends Piranha {
 	public void damage(int dmg, Object src) {
 		Char dmgSource = null;
 		if (src instanceof Char) dmgSource = (Char)src;
-		if (src instanceof Wand) dmgSource = Dungeon.hero;
+		if (src instanceof Wand) dmgSource = Dungeon.heroes;
 
 		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
 			dmg = Math.round(dmg/2f); //halve damage taken if we are going to teleport

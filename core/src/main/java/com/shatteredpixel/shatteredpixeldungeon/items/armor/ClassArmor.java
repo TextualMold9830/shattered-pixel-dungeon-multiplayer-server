@@ -297,11 +297,11 @@ abstract public class ClassArmor extends Armor {
 	public String desc() {
 		String desc = super.desc();
 
-		if (Dungeon.hero.belongings.contains(this)) {
-			ArmorAbility ability = Dungeon.hero.armorAbility;
+		if (Dungeon.heroes.belongings.contains(this)) {
+			ArmorAbility ability = Dungeon.heroes.armorAbility;
 			if (ability != null) {
 				desc += "\n\n" + ability.shortDesc();
-				float chargeUse = ability.chargeUse(Dungeon.hero);
+				float chargeUse = ability.chargeUse(Dungeon.heroes);
 				desc += " " + Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse));
 			} else {
 				desc += "\n\n" + "_" + Messages.get(this, "no_ability") + "_";
@@ -322,7 +322,7 @@ abstract public class ClassArmor extends Armor {
 		public boolean attachTo( Char target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
-				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
+				if (target instanceof Hero && Dungeon.heroes == null && cooldown() == 0 && target.cooldown() > 0) {
 					spend(TICK);
 				}
 				return true;

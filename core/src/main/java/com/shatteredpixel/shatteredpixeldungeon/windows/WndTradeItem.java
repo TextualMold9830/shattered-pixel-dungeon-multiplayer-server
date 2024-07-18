@@ -141,7 +141,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		pos = btnBuy.bottom();
 
-		final MasterThievesArmband.Thievery thievery = Dungeon.hero.buff(MasterThievesArmband.Thievery.class);
+		final MasterThievesArmband.Thievery thievery = Dungeon.heroes.buff(MasterThievesArmband.Thievery.class);
 		if (thievery != null && !thievery.isCursed() && thievery.chargesToUse(item) > 0) {
 			final float chance = thievery.stealChance(item);
 			final int chargesToUse = thievery.chargesToUse(item);
@@ -150,7 +150,7 @@ public class WndTradeItem extends WndInfoItem {
 				protected void onClick() {
 					if (chance >= 1){
 						thievery.steal(item);
-						Hero hero = Dungeon.hero;
+						Hero hero = Dungeon.heroes;
 						Item item = heap.pickUp();
 						hide();
 
@@ -168,7 +168,7 @@ public class WndTradeItem extends WndInfoItem {
 								super.onSelect(index);
 								if (index == 0){
 									if (thievery.steal(item)) {
-										Hero hero = Dungeon.hero;
+										Hero hero = Dungeon.heroes;
 										Item item = heap.pickUp();
 										WndTradeItem.this.hide();
 
@@ -219,7 +219,7 @@ public class WndTradeItem extends WndInfoItem {
 
 	public static void sell( Item item, Shopkeeper shop ) {
 		
-		Hero hero = Dungeon.hero;
+		Hero hero = Dungeon.heroes;
 		
 		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false )) {
 			return;
@@ -249,7 +249,7 @@ public class WndTradeItem extends WndInfoItem {
 			sell( item, shop );
 		} else {
 			
-			Hero hero = Dungeon.hero;
+			Hero hero = Dungeon.heroes;
 			
 			item = item.detach( hero.belongings.backpack );
 
@@ -275,7 +275,7 @@ public class WndTradeItem extends WndInfoItem {
 		int price = Shopkeeper.sellPrice( item );
 		Dungeon.gold -= price;
 		
-		if (!item.doPickUp( Dungeon.hero )) {
+		if (!item.doPickUp( Dungeon.heroes)) {
 			Dungeon.level.drop( item, heap.pos ).sprite.drop();
 		}
 	}

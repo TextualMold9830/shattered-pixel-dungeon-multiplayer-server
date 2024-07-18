@@ -338,7 +338,7 @@ public class WandOfWarding extends Wand {
 				Wand.wandProc(enemy, wandLevel, 1);
 			}
 
-			if (!enemy.isAlive() && enemy == Dungeon.hero) {
+			if (!enemy.isAlive() && enemy == Dungeon.heroes) {
 				Badges.validateDeathFromFriendlyMagic();
 				GLog.n(Messages.capitalize(Messages.get( this, "kill", name() )));
 				Dungeon.fail( WandOfWarding.class );
@@ -406,7 +406,7 @@ public class WandOfWarding extends Wand {
 
 		@Override
 		public boolean interact( Char c ) {
-			if (c != Dungeon.hero){
+			if (c != Dungeon.heroes){
 				return true;
 			}
 			Game.runOnRenderThread(new Callback() {

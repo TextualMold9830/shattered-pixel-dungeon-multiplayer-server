@@ -76,13 +76,13 @@ public class InventorySlot extends ItemSlot {
 
 		if (item != null) {
 
-			boolean equipped = item.isEquipped(Dungeon.hero) ||
-					item == Dungeon.hero.belongings.weapon ||
-					item == Dungeon.hero.belongings.armor ||
-					item == Dungeon.hero.belongings.artifact ||
-					item == Dungeon.hero.belongings.misc ||
-					item == Dungeon.hero.belongings.ring ||
-					item == Dungeon.hero.belongings.secondWep;
+			boolean equipped = item.isEquipped(Dungeon.heroes) ||
+					item == Dungeon.heroes.belongings.weapon ||
+					item == Dungeon.heroes.belongings.armor ||
+					item == Dungeon.heroes.belongings.artifact ||
+					item == Dungeon.heroes.belongings.misc ||
+					item == Dungeon.heroes.belongings.ring ||
+					item == Dungeon.heroes.belongings.secondWep;
 
 			bg.texture( TextureCache.createSolid( equipped ? EQUIPPED : NORMAL ) );
 			bg.resetColor();
@@ -100,7 +100,7 @@ public class InventorySlot extends ItemSlot {
 
 			if (item.name() == null) {
 				enable( false );
-			} else if (Dungeon.hero.belongings.lostInventory()
+			} else if (Dungeon.heroes.belongings.lostInventory()
 					&& !item.keptThroughLostInventory()){
 				enable(false);
 			}

@@ -90,7 +90,7 @@ public class WndRanking extends WndTabbed {
 			createControls();
 		} catch ( Exception e ) {
 			Game.reportException( new RuntimeException("Rankings Display Failed!",e));
-			Dungeon.hero = null;
+			Dungeon.heroes = null;
 			createControls();
 		}
 	}
@@ -105,7 +105,7 @@ public class WndRanking extends WndTabbed {
 	
 	private void createControls() {
 
-		if (Dungeon.hero != null) {
+		if (Dungeon.heroes != null) {
 			Icons[] icons =
 					{Icons.RANKINGS, Icons.TALENT, Icons.BACKPACK_LRG, Icons.BADGES, Icons.CHALLENGE_ON};
 			Group[] pages =
@@ -161,8 +161,8 @@ public class WndRanking extends WndTabbed {
 			super();
 			
 			String heroClass = record.heroClass.name();
-			if (Dungeon.hero != null){
-				heroClass = Dungeon.hero.className();
+			if (Dungeon.heroes != null){
+				heroClass = Dungeon.heroes.className();
 			}
 			
 			IconTitle title = new IconTitle();
@@ -172,7 +172,7 @@ public class WndRanking extends WndTabbed {
 			title.setRect( 0, 0, WIDTH, 0 );
 			add( title );
 
-			if (Dungeon.hero != null && Dungeon.seed != -1){
+			if (Dungeon.heroes != null && Dungeon.seed != -1){
 				GAP--;
 			}
 			
@@ -192,7 +192,7 @@ public class WndRanking extends WndTabbed {
 
 			NumberFormat num = NumberFormat.getInstance(Locale.US);
 
-			if (Dungeon.hero == null){
+			if (Dungeon.heroes == null){
 				pos = statSlot( this, Messages.get(this, "score"), num.format( record.score ), pos );
 				pos += GAP;
 
@@ -222,13 +222,13 @@ public class WndRanking extends WndTabbed {
 
 				pos += GAP;
 
-				int strBonus = Dungeon.hero.STR() - Dungeon.hero.STR;
+				int strBonus = Dungeon.heroes.STR() - Dungeon.heroes.STR;
 				if (strBonus > 0)
-					pos = statSlot(this, Messages.get(this, "str"), Dungeon.hero.STR + " + " + strBonus, pos);
+					pos = statSlot(this, Messages.get(this, "str"), Dungeon.heroes.STR + " + " + strBonus, pos);
 				else if (strBonus < 0)
-					pos = statSlot(this, Messages.get(this, "str"), Dungeon.hero.STR + " - " + -strBonus, pos);
+					pos = statSlot(this, Messages.get(this, "str"), Dungeon.heroes.STR + " - " + -strBonus, pos);
 				else
-					pos = statSlot(this, Messages.get(this, "str"), Integer.toString(Dungeon.hero.STR), pos);
+					pos = statSlot(this, Messages.get(this, "str"), Integer.toString(Dungeon.heroes.STR), pos);
 				pos = statSlot(this, Messages.get(this, "duration"), num.format((int) Statistics.duration), pos);
 				if (Statistics.highestAscent == 0) {
 					pos = statSlot(this, Messages.get(this, "depth"), num.format(Statistics.deepestFloor), pos);
@@ -261,7 +261,7 @@ public class WndRanking extends WndTabbed {
 
 			int buttontop = HEIGHT - 16;
 
-			if (Dungeon.hero != null && Dungeon.seed != -1 && !Dungeon.daily &&
+			if (Dungeon.heroes != null && Dungeon.seed != -1 && !Dungeon.daily &&
 					(DeviceCompat.isDebug() || Badges.isUnlocked(Badges.Badge.VICTORY))){
 				final Image icon = Icons.get(Icons.SEED);
 				RedButton btnSeed = new RedButton(Messages.get(this, "copy_seed")){
@@ -317,11 +317,11 @@ public class WndRanking extends WndTabbed {
 			camera = WndRanking.this.camera;
 
 			int tiers = 1;
-			if (Dungeon.hero.lvl >= 6) tiers++;
-			if (Dungeon.hero.lvl >= 12 && Dungeon.hero.subClass != HeroSubClass.NONE) tiers++;
-			if (Dungeon.hero.lvl >= 20 && Dungeon.hero.armorAbility != null) tiers++;
-			while (Dungeon.hero.talents.size() > tiers){
-				Dungeon.hero.talents.remove(Dungeon.hero.talents.size()-1);
+			if (Dungeon.heroes.lvl >= 6) tiers++;
+			if (Dungeon.heroes.lvl >= 12 && Dungeon.heroes.subClass != HeroSubClass.NONE) tiers++;
+			if (Dungeon.heroes.lvl >= 20 && Dungeon.heroes.armorAbility != null) tiers++;
+			while (Dungeon.heroes.talents.size() > tiers){
+				Dungeon.heroes.talents.remove(Dungeon.heroes.talents.size()-1);
 			}
 
 			TalentsPane p = new TalentsPane(TalentButton.Mode.INFO);
@@ -341,7 +341,7 @@ public class WndRanking extends WndTabbed {
 		public ItemsTab() {
 			super();
 			
-			Belongings stuff = Dungeon.hero.belongings;
+			Belongings stuff = Dungeon.heroes.belongings;
 			if (stuff.weapon != null) {
 				addItem( stuff.weapon );
 			}

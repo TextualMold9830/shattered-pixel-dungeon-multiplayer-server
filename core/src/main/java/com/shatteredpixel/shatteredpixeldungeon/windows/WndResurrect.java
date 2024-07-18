@@ -79,7 +79,7 @@ public class WndResurrect extends Window {
 				GameScene.selectItem( itemSelector );
 			}
 		};
-		btnItem1.item(Dungeon.hero.belongings.weapon());
+		btnItem1.item(Dungeon.heroes.belongings.weapon());
 		btnItem1.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.bottom() + BTN_GAP, BTN_SIZE, BTN_SIZE );
 		add( btnItem1 );
 
@@ -90,7 +90,7 @@ public class WndResurrect extends Window {
 				GameScene.selectItem( itemSelector );
 			}
 		};
-		btnItem2.item(Dungeon.hero.belongings.armor());
+		btnItem2.item(Dungeon.heroes.belongings.armor());
 		btnItem2.setRect( btnItem1.right() + BTN_GAP, btnItem1.top(), BTN_SIZE, BTN_SIZE );
 		add( btnItem2 );
 		
@@ -126,7 +126,7 @@ public class WndResurrect extends Window {
 
 		Statistics.ankhsUsed++;
 
-		ankh.detach(Dungeon.hero.belongings.backpack);
+		ankh.detach(Dungeon.heroes.belongings.backpack);
 
 		if (btnItem1.item() != null){
 			btnItem1.item().keptThoughLostInvent = true;

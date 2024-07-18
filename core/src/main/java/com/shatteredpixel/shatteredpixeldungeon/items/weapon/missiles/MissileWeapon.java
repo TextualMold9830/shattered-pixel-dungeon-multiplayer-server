@@ -75,7 +75,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	public int min() {
-		return Math.max(0, min( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero) ));
+		return Math.max(0, min( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.heroes) ));
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	public int max() {
-		return Math.max(0, max( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero) ));
+		return Math.max(0, max( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.heroes) ));
 	}
 	
 	@Override
@@ -121,16 +121,16 @@ abstract public class MissileWeapon extends Weapon {
 				
 				//try to put the upgraded into inventory, if it didn't already merge
 				if (upgraded.quantity() == 1 && !upgraded.collect()) {
-					Dungeon.level.drop(upgraded, Dungeon.hero.pos);
+					Dungeon.level.drop(upgraded, Dungeon.heroes.pos);
 				}
 				updateQuickslot();
 				return upgraded;
 			} else {
 				super.upgrade();
 				
-				Item similar = Dungeon.hero.belongings.getSimilar(this);
+				Item similar = Dungeon.heroes.belongings.getSimilar(this);
 				if (similar != null){
-					detach(Dungeon.hero.belongings.backpack);
+					detach(Dungeon.heroes.belongings.backpack);
 					Item result = similar.merge(this);
 					updateQuickslot();
 					return result;
@@ -166,10 +166,10 @@ abstract public class MissileWeapon extends Weapon {
 
 		boolean projecting = hasEnchant(Projecting.class, user);
 		if (!projecting && Random.Int(3) < user.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
-			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.hero)){
+			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.heroes)){
 				//do nothing
 			} else {
-				SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
+				SpiritBow bow = Dungeon.heroes.belongings.getItem(SpiritBow.class);
 				if (bow != null && bow.hasEnchant(Projecting.class, user)) {
 					projecting = true;
 				}
@@ -247,12 +247,12 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
-		if (attacker == Dungeon.hero && Random.Int(3) < Dungeon.hero.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
-			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.hero)){
+		if (attacker == Dungeon.heroes && Random.Int(3) < Dungeon.heroes.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
+			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.heroes)){
 				//do nothing
 			} else {
-				SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
-				if (bow != null && bow.enchantment != null && Dungeon.hero.buff(MagicImmune.class) == null) {
+				SpiritBow bow = Dungeon.heroes.belongings.getItem(SpiritBow.class);
+				if (bow != null && bow.enchantment != null && Dungeon.heroes.buff(MagicImmune.class) == null) {
 					damage = bow.enchantment.proc(this, attacker, defender, damage);
 				}
 			}
@@ -326,14 +326,14 @@ abstract public class MissileWeapon extends Weapon {
 		float usages = baseUses * (float)(Math.pow(3, level()));
 
 		//+50%/75% durability
-		if (Dungeon.hero.hasTalent(Talent.DURABLE_PROJECTILES)){
-			usages *= 1.25f + (0.25f*Dungeon.hero.pointsInTalent(Talent.DURABLE_PROJECTILES));
+		if (Dungeon.heroes.hasTalent(Talent.DURABLE_PROJECTILES)){
+			usages *= 1.25f + (0.25f*Dungeon.heroes.pointsInTalent(Talent.DURABLE_PROJECTILES));
 		}
 		if (holster) {
 			usages *= MagicalHolster.HOLSTER_DURABILITY_FACTOR;
 		}
 
-		usages *= RingOfSharpshooting.durabilityMultiplier( Dungeon.hero );
+		usages *= RingOfSharpshooting.durabilityMultiplier( Dungeon.heroes);
 
 		//at 100 uses, items just last forever.
 		if (usages >= 100f) return 0;
@@ -451,10 +451,10 @@ abstract public class MissileWeapon extends Weapon {
 				Math.round(augment.damageFactor(max())),
 				STRReq());
 
-		if (STRReq() > Dungeon.hero.STR()) {
+		if (STRReq() > Dungeon.heroes.STR()) {
 			info += " " + Messages.get(Weapon.class, "too_heavy");
-		} else if (Dungeon.hero.STR() > STRReq()){
-			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
+		} else if (Dungeon.heroes.STR() > STRReq()){
+			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.heroes.STR() - STRReq());
 		}
 
 		if (enchantment != null && (cursedKnown || !enchantment.curse())){
@@ -462,7 +462,7 @@ abstract public class MissileWeapon extends Weapon {
 			info += " " + Messages.get(enchantment, "desc");
 		}
 
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (cursed && isEquipped( Dungeon.heroes)) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");

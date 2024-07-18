@@ -72,7 +72,7 @@ public class ScrollOfTeleportation extends Scroll {
 		if (PathFinder.distance[ch.pos] == Integer.MAX_VALUE
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
 				|| Actor.findChar(pos) != null){
-			if (ch == Dungeon.hero){
+			if (ch == Dungeon.heroes){
 				GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );
 			}
 			return false;
@@ -81,7 +81,7 @@ public class ScrollOfTeleportation extends Scroll {
 		appear( ch, pos );
 		Dungeon.level.occupyCell( ch );
 		Buff.detach(ch, Roots.class);
-		if (ch == Dungeon.hero) {
+		if (ch == Dungeon.heroes) {
 			Dungeon.observe();
 			GameScene.updateFog();
 		}
@@ -124,12 +124,12 @@ public class ScrollOfTeleportation extends Scroll {
 			Dungeon.level.occupyCell( ch );
 			Buff.detach(ch, Roots.class);
 			
-			if (ch == Dungeon.hero) {
+			if (ch == Dungeon.heroes) {
 				GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 				
 				Dungeon.observe();
 				GameScene.updateFog();
-				Dungeon.hero.interrupt();
+				Dungeon.heroes.interrupt();
 			}
 			return true;
 			
@@ -262,12 +262,12 @@ public class ScrollOfTeleportation extends Scroll {
 
 		Buff.detach(ch, Roots.class);
 
-		if (ch == Dungeon.hero) {
+		if (ch == Dungeon.heroes) {
 			GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 
 			Dungeon.observe();
 			GameScene.updateFog();
-			Dungeon.hero.interrupt();
+			Dungeon.heroes.interrupt();
 		}
 
 		return true;
@@ -282,7 +282,7 @@ public class ScrollOfTeleportation extends Scroll {
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
-		if (Dungeon.level.heroFOV[ch.pos] && ch != Dungeon.hero ) {
+		if (Dungeon.level.heroFOV[ch.pos] && ch != Dungeon.heroes) {
 			CellEmitter.get(ch.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 
@@ -297,7 +297,7 @@ public class ScrollOfTeleportation extends Scroll {
 			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
 		}
 
-		if (Dungeon.level.heroFOV[pos] || ch == Dungeon.hero ) {
+		if (Dungeon.level.heroFOV[pos] || ch == Dungeon.heroes) {
 			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}

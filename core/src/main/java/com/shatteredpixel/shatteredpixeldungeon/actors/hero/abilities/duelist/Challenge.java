@@ -150,15 +150,15 @@ public class Challenge extends ArmorAbility {
 		}
 
 		if (blinkpos != hero.pos){
-			Dungeon.hero.pos = blinkpos;
-			Dungeon.level.occupyCell(Dungeon.hero);
+			Dungeon.heroes.pos = blinkpos;
+			Dungeon.level.occupyCell(Dungeon.heroes);
 			//prevents the hero from being interrupted by seeing new enemies
 			Dungeon.observe();
 			GameScene.updateFog();
-			Dungeon.hero.checkVisibleMobs();
+			Dungeon.heroes.checkVisibleMobs();
 
-			Dungeon.hero.sprite.place( Dungeon.hero.pos );
-			CellEmitter.get( Dungeon.hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+			Dungeon.heroes.sprite.place( Dungeon.heroes.pos );
+			CellEmitter.get( Dungeon.heroes.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 			Sample.INSTANCE.play( Assets.Sounds.PUFF );
 		}
 
@@ -253,12 +253,12 @@ public class Challenge extends ArmorAbility {
 		@Override
 		public void detach() {
 			super.detach();
-			if (target != Dungeon.hero){
-				if (!target.isAlive() || target.alignment == Dungeon.hero.alignment){
+			if (target != Dungeon.heroes){
+				if (!target.isAlive() || target.alignment == Dungeon.heroes.alignment){
 					Sample.INSTANCE.play(Assets.Sounds.BOSS);
 
-					if (Dungeon.hero.hasTalent(Talent.INVIGORATING_VICTORY)){
-						DuelParticipant heroBuff = Dungeon.hero.buff(DuelParticipant.class);
+					if (Dungeon.heroes.hasTalent(Talent.INVIGORATING_VICTORY)){
+						DuelParticipant heroBuff = Dungeon.heroes.buff(DuelParticipant.class);
 
 						int hpToHeal = 0;
 						if (heroBuff != null){
@@ -266,22 +266,22 @@ public class Challenge extends ArmorAbility {
 						}
 
 						//heals for 30%/50%/65%/75% of taken damage plus 5/10/15/20 bonus, based on talent points
-						hpToHeal = (int)Math.round(hpToHeal * (1f - Math.pow(0.707f, Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY))));
-						hpToHeal += 5*Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY);
-						hpToHeal = Math.min(hpToHeal, Dungeon.hero.HT - Dungeon.hero.HP);
+						hpToHeal = (int)Math.round(hpToHeal * (1f - Math.pow(0.707f, Dungeon.heroes.pointsInTalent(Talent.INVIGORATING_VICTORY))));
+						hpToHeal += 5*Dungeon.heroes.pointsInTalent(Talent.INVIGORATING_VICTORY);
+						hpToHeal = Math.min(hpToHeal, Dungeon.heroes.HT - Dungeon.heroes.HP);
 						if (hpToHeal > 0){
-							Dungeon.hero.HP += hpToHeal;
-							Dungeon.hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
-							Dungeon.hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
+							Dungeon.heroes.HP += hpToHeal;
+							Dungeon.heroes.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
+							Dungeon.heroes.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
 						}
 					}
 				}
 
 			} else {
-				if (Dungeon.hero.isAlive()) {
+				if (Dungeon.heroes.isAlive()) {
 					GameScene.flash(0x80FFFFFF);
 
-					if (Dungeon.hero.hasTalent(Talent.ELIMINATION_MATCH)){
+					if (Dungeon.heroes.hasTalent(Talent.ELIMINATION_MATCH)){
 						Buff.affect(target, EliminationMatchTracker.class, 3);
 					}
 				}

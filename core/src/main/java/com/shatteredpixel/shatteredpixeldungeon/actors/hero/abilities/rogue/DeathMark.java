@@ -111,21 +111,21 @@ public class DeathMark extends ArmorAbility {
 			return;
 		}
 
-		if (Dungeon.hero.hasTalent(Talent.FEAR_THE_REAPER)) {
-			if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 2) {
-				Buff.prolong(ch, Terror.class, 5f).object = Dungeon.hero.id();
+		if (Dungeon.heroes.hasTalent(Talent.FEAR_THE_REAPER)) {
+			if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) >= 2) {
+				Buff.prolong(ch, Terror.class, 5f).object = Dungeon.heroes.id();
 			}
 			Buff.prolong(ch, Cripple.class, 5f);
 
-			if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 3) {
+			if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) >= 3) {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
 				PathFinder.buildDistanceMap(ch.pos, passable, 3);
 
 				for (Char near : Actor.chars()) {
 					if (near != ch && near.alignment == Char.Alignment.ENEMY
 							&& PathFinder.distance[near.pos] != Integer.MAX_VALUE) {
-						if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
-							Buff.prolong(near, Terror.class, 5f).object = Dungeon.hero.id();
+						if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
+							Buff.prolong(near, Terror.class, 5f).object = Dungeon.heroes.id();
 						}
 						Buff.prolong(near, Cripple.class, 5f);
 					}
@@ -198,10 +198,10 @@ public class DeathMark extends ArmorAbility {
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(this);
-				int shld = Math.round(initialHP * (0.125f*Dungeon.hero.pointsInTalent(Talent.DEATHLY_DURABILITY)));
+				int shld = Math.round(initialHP * (0.125f*Dungeon.heroes.pointsInTalent(Talent.DEATHLY_DURABILITY)));
 				if (shld > 0 && target.alignment != Char.Alignment.ALLY){
-					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
-					Buff.affect(Dungeon.hero, Barrier.class).setShield(shld);
+					Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
+					Buff.affect(Dungeon.heroes, Barrier.class).setShield(shld);
 				}
 			}
 		}

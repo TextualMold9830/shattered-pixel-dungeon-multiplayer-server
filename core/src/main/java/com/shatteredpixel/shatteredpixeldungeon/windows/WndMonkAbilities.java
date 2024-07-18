@@ -63,7 +63,7 @@ public class WndMonkAbilities extends Window {
 						abilityBeingUsed = abil;
 						GameScene.selectCell(listener);
 					} else {
-						abil.doAbility(Dungeon.hero, null);
+						abil.doAbility(Dungeon.heroes, null);
 					}
 				}
 			};
@@ -86,7 +86,7 @@ public class WndMonkAbilities extends Window {
 
 		@Override
 		public void onSelect(Integer cell) {
-			abilityBeingUsed.doAbility(Dungeon.hero, cell);
+			abilityBeingUsed.doAbility(Dungeon.heroes, cell);
 		}
 
 		@Override

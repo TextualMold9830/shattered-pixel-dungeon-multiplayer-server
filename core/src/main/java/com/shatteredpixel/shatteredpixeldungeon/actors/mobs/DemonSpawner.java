@@ -91,7 +91,7 @@ public class DemonSpawner extends Mob {
 			Notes.add( Notes.Landmark.DEMON_SPAWNER );
 		}
 
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null && spawnCooldown > 20){
+		if (Dungeon.heroes.buff(AscensionChallenge.class) != null && spawnCooldown > 20){
 			spawnCooldown = 20;
 		}
 

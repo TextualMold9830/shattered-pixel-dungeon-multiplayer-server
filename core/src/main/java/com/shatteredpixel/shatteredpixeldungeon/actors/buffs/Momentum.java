@@ -66,7 +66,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 			freerunCooldown--;
 		}
 
-		if (freerunCooldown == 0 && !freerunning() && target.invisible > 0 && Dungeon.hero.pointsInTalent(Talent.SPEEDY_STEALTH) >= 1){
+		if (freerunCooldown == 0 && !freerunning() && target.invisible > 0 && Dungeon.heroes.pointsInTalent(Talent.SPEEDY_STEALTH) >= 1){
 			momentumStacks = Math.min(momentumStacks + 2, 10);
 			movedLastTurn = true;
 			ActionIndicator.setAction(this);
@@ -74,7 +74,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		}
 
 		if (freerunTurns > 0){
-			if (target.invisible == 0 || Dungeon.hero.pointsInTalent(Talent.SPEEDY_STEALTH) < 2) {
+			if (target.invisible == 0 || Dungeon.heroes.pointsInTalent(Talent.SPEEDY_STEALTH) < 2) {
 				freerunTurns--;
 			}
 		} else if (!movedLastTurn){
@@ -109,7 +109,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	public float speedMultiplier(){
 		if (freerunning()){
 			return 2;
-		} else if (target.invisible > 0 && Dungeon.hero.pointsInTalent(Talent.SPEEDY_STEALTH) == 3){
+		} else if (target.invisible > 0 && Dungeon.heroes.pointsInTalent(Talent.SPEEDY_STEALTH) == 3){
 			return 2;
 		} else {
 			return 1;
@@ -118,7 +118,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	
 	public int evasionBonus( int heroLvl, int excessArmorStr ){
 		if (freerunTurns > 0) {
-			return heroLvl/2 + excessArmorStr*Dungeon.hero.pointsInTalent(Talent.EVASIVE_ARMOR);
+			return heroLvl/2 + excessArmorStr*Dungeon.heroes.pointsInTalent(Talent.EVASIVE_ARMOR);
 		} else {
 			return 0;
 		}

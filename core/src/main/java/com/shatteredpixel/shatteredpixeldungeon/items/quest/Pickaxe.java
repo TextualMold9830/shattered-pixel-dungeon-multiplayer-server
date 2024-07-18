@@ -128,8 +128,8 @@ public class Pickaxe extends MeleeWeapon {
 							GameScene.updateMap( pos );
 							
 							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.hero )) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", gold.name())) );
+							if (gold.doPickUp( Dungeon.heroes)) {
+								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", gold.name())) );
 							} else {
 								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
 							}
@@ -179,7 +179,7 @@ public class Pickaxe extends MeleeWeapon {
 
 	@Override
 	public String defaultAction() {
-		if (Dungeon.hero.heroClass == HeroClass.DUELIST && isEquipped(Dungeon.hero)){
+		if (Dungeon.heroes.heroClass == HeroClass.DUELIST && isEquipped(Dungeon.heroes)){
 			return AC_ABILITY;
 		} else if (Blacksmith.Quest.oldMiningQuest()) {
 			return AC_MINE;

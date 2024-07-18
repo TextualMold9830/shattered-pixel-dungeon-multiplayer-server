@@ -78,7 +78,7 @@ public class GreatCrab extends Crab {
 				&& state != SLEEPING
 				&& paralysed == 0
 				&& src instanceof Wand
-				&& enemy == Dungeon.hero
+				&& enemy == Dungeon.heroes
 				&& enemy.invisible == 0){
 			GLog.n( Messages.get(this, "noticed") );
 			sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "def_verb") );
@@ -118,7 +118,7 @@ public class GreatCrab extends Crab {
 			//of two potential wander positions, picks the one closest to the hero
 			int pos1 = super.randomDestination();
 			int pos2 = super.randomDestination();
-			PathFinder.buildDistanceMap(Dungeon.hero.pos, Dungeon.level.passable);
+			PathFinder.buildDistanceMap(Dungeon.heroes.pos, Dungeon.level.passable);
 			if (PathFinder.distance[pos2] < PathFinder.distance[pos1]){
 				return pos2;
 			} else {

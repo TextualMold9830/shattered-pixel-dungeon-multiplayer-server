@@ -87,7 +87,7 @@ public class GnollRockfallTrap extends RockfallTrap {
 				//guards take full paralysis, otherwise just a little
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
 
-				if (!ch.isAlive() && ch == Dungeon.hero){
+				if (!ch.isAlive() && ch == Dungeon.heroes){
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 				}

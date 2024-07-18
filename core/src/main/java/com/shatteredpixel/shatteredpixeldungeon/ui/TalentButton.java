@@ -112,10 +112,10 @@ public class TalentButton extends Button {
 
 		Window toAdd;
 		if (mode == Mode.UPGRADE
-				&& Dungeon.hero != null
-				&& Dungeon.hero.isAlive()
-				&& Dungeon.hero.talentPointsAvailable(tier) > 0
-				&& Dungeon.hero.pointsInTalent(talent) < talent.maxPoints()){
+				&& Dungeon.heroes != null
+				&& Dungeon.heroes.isAlive()
+				&& Dungeon.heroes.talentPointsAvailable(tier) > 0
+				&& Dungeon.heroes.pointsInTalent(talent) < talent.maxPoints()){
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
@@ -128,7 +128,7 @@ public class TalentButton extends Button {
 					upgradeTalent();
 				}
 			});
-		} else if (mode == Mode.METAMORPH_CHOOSE && Dungeon.hero != null && Dungeon.hero.isAlive()) {
+		} else if (mode == Mode.METAMORPH_CHOOSE && Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
@@ -149,7 +149,7 @@ public class TalentButton extends Button {
 					GameScene.show(new ScrollOfMetamorphosis.WndMetamorphReplace(talent, tier));
 				}
 			});
-		} else if (mode == Mode.METAMORPH_REPLACE && Dungeon.hero != null && Dungeon.hero.isAlive()) {
+		} else if (mode == Mode.METAMORPH_REPLACE && Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
@@ -166,27 +166,27 @@ public class TalentButton extends Button {
 				public void call() {
 					Talent replacing = ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.replacing;
 
-					for (LinkedHashMap<Talent, Integer> tier : Dungeon.hero.talents){
+					for (LinkedHashMap<Talent, Integer> tier : Dungeon.heroes.talents){
 						if (tier.containsKey(replacing)){
 							LinkedHashMap<Talent, Integer> newTier = new LinkedHashMap<>();
 							for (Talent t : tier.keySet()){
 								if (t == replacing){
 									newTier.put(talent, tier.get(replacing));
 
-									if (!Dungeon.hero.metamorphedTalents.containsValue(replacing)){
-										Dungeon.hero.metamorphedTalents.put(replacing, talent);
+									if (!Dungeon.heroes.metamorphedTalents.containsValue(replacing)){
+										Dungeon.heroes.metamorphedTalents.put(replacing, talent);
 
 									//if what we're replacing is already a value, we need to simplify the data structure
 									} else {
 										//a->b->a, we can just remove the entry entirely
-										if (Dungeon.hero.metamorphedTalents.get(talent) == replacing){
-											Dungeon.hero.metamorphedTalents.remove(talent);
+										if (Dungeon.heroes.metamorphedTalents.get(talent) == replacing){
+											Dungeon.heroes.metamorphedTalents.remove(talent);
 
 										//a->b->c, we need to simplify to a->c
 										} else {
-											for (Talent t2 : Dungeon.hero.metamorphedTalents.keySet()){
-												if (Dungeon.hero.metamorphedTalents.get(t2) == replacing){
-													Dungeon.hero.metamorphedTalents.put(t2, talent);
+											for (Talent t2 : Dungeon.heroes.metamorphedTalents.keySet()){
+												if (Dungeon.heroes.metamorphedTalents.get(t2) == replacing){
+													Dungeon.heroes.metamorphedTalents.put(t2, talent);
 												}
 											}
 										}
@@ -196,7 +196,7 @@ public class TalentButton extends Button {
 									newTier.put(t, tier.get(t));
 								}
 							}
-							Dungeon.hero.talents.set(ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.tier-1, newTier);
+							Dungeon.heroes.talents.set(ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.tier-1, newTier);
 							break;
 						}
 					}
@@ -245,8 +245,8 @@ public class TalentButton extends Button {
 	}
 
 	public void upgradeTalent(){
-		if (Dungeon.hero.talentPointsAvailable(tier) > 0 && parent != null) {
-			Dungeon.hero.upgradeTalent(talent);
+		if (Dungeon.heroes.talentPointsAvailable(tier) > 0 && parent != null) {
+			Dungeon.heroes.upgradeTalent(talent);
 			float oldWidth = fill.width();
 			pointsInTalent++;
 			layout();

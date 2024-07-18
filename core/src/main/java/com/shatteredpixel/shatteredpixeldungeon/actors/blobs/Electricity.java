@@ -75,7 +75,7 @@ public class Electricity extends Blob {
 						}
 						if (cur[cell] % 2 == 1) {
 							ch.damage(Math.round(Random.Float(2 + Dungeon.scalingDepth() / 5f)), this);
-							if (!ch.isAlive() && ch == Dungeon.hero){
+							if (!ch.isAlive() && ch == Dungeon.heroes){
 								Dungeon.fail( this );
 								GLog.n( Messages.get(this, "ondeath") );
 							}

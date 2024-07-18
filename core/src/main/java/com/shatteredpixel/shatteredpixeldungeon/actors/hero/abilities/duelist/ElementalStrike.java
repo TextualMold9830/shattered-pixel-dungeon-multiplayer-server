@@ -239,7 +239,7 @@ public class ElementalStrike extends ArmorAbility {
 			Buff.affect(hero, DirectedPowerTracker.class, 0f).enchBoost = enchBoost;
 		}
 
-		float powerMulti = 1f + 0.30f*Dungeon.hero.pointsInTalent(Talent.STRIKING_FORCE);
+		float powerMulti = 1f + 0.30f*Dungeon.heroes.pointsInTalent(Talent.STRIKING_FORCE);
 
 		//*** Kinetic ***
 		if (ench instanceof Kinetic){
@@ -293,7 +293,7 @@ public class ElementalStrike extends ArmorAbility {
 			}
 		}
 
-		float powerMulti = 1f + 0.30f*Dungeon.hero.pointsInTalent(Talent.STRIKING_FORCE);
+		float powerMulti = 1f + 0.30f*Dungeon.heroes.pointsInTalent(Talent.STRIKING_FORCE);
 
 		//*** Blazing ***
 		if (ench instanceof Blazing){
@@ -323,13 +323,13 @@ public class ElementalStrike extends ArmorAbility {
 			// each hero level is worth 20 normal uses, but just 5 if no enemies are present
 			// cap of 40/10 uses
 			int highGrassType = Terrain.HIGH_GRASS;
-			if (Buff.affect(Dungeon.hero, ElementalStrikeFurrowCounter.class).count() >= 40){
+			if (Buff.affect(Dungeon.heroes, ElementalStrikeFurrowCounter.class).count() >= 40){
 				highGrassType = Terrain.FURROWED_GRASS;
 			} else {
-				if (Dungeon.hero.visibleEnemies() == 0 && targetsHit == 0) {
-					Buff.count(Dungeon.hero, ElementalStrikeFurrowCounter.class, 4f);
+				if (Dungeon.heroes.visibleEnemies() == 0 && targetsHit == 0) {
+					Buff.count(Dungeon.heroes, ElementalStrikeFurrowCounter.class, 4f);
 				} else {
-					Buff.count(Dungeon.hero, ElementalStrikeFurrowCounter.class, 1f);
+					Buff.count(Dungeon.heroes, ElementalStrikeFurrowCounter.class, 1f);
 				}
 			}
 
@@ -357,7 +357,7 @@ public class ElementalStrike extends ArmorAbility {
 	//effects that affect the characters within the cone AOE
 	private void perCharEffect(ConeAOE cone, Hero hero, Char primaryTarget, Weapon.Enchantment ench) {
 
-		float powerMulti = 1f + 0.30f * Dungeon.hero.pointsInTalent(Talent.STRIKING_FORCE);
+		float powerMulti = 1f + 0.30f * Dungeon.heroes.pointsInTalent(Talent.STRIKING_FORCE);
 
 		ArrayList<Char> affected = new ArrayList<>();
 
@@ -557,7 +557,7 @@ public class ElementalStrike extends ArmorAbility {
 	public String desc() {
 		String desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
-			KindOfWeapon w = Dungeon.hero.belongings.weapon();
+			KindOfWeapon w = Dungeon.heroes.belongings.weapon();
 			if (w instanceof MeleeWeapon && ((MeleeWeapon) w).enchantment != null){
 				desc += "\n\n" + Messages.get(((MeleeWeapon) w).enchantment, "elestrike_desc");
 			} else {

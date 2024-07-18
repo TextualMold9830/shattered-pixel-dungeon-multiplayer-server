@@ -249,9 +249,9 @@ public class Item implements Bundlable {
 				if (isSimilar( item )) {
 					item.merge( this );
 					item.updateQuickslot();
-					if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
+					if (Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
 						Badges.validateItemLevelAquired( this );
-						Talent.onItemCollected(Dungeon.hero, item);
+						Talent.onItemCollected(Dungeon.heroes, item);
 						if (isIdentified()) Catalog.setSeen(getClass());
 					}
 					if (TippedDart.lostDarts > 0){
@@ -264,7 +264,7 @@ public class Item implements Bundlable {
 								{ actPriority = VFX_PRIO; }
 								@Override
 								protected boolean act() {
-									Dungeon.level.drop(d, Dungeon.hero.pos).sprite.drop();
+									Dungeon.level.drop(d, Dungeon.heroes.pos).sprite.drop();
 									Actor.remove(this);
 									return true;
 								}
@@ -276,9 +276,9 @@ public class Item implements Bundlable {
 			}
 		}
 
-		if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
+		if (Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
 			Badges.validateItemLevelAquired( this );
-			Talent.onItemCollected( Dungeon.hero, this );
+			Talent.onItemCollected( Dungeon.heroes, this );
 			if (isIdentified()) Catalog.setSeen(getClass());
 		}
 
@@ -291,7 +291,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean collect() {
-		return collect( Dungeon.hero.belongings.backpack );
+		return collect( Dungeon.heroes.belongings.backpack );
 	}
 	
 	//returns a new item if the split was sucessful and there are now 2 items, otherwise null
@@ -395,8 +395,8 @@ public class Item implements Bundlable {
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
 	public int buffedLvl(){
 		//only the hero can be affected by Degradation
-		if (Dungeon.hero.buff( Degrade.class ) != null
-			&& (isEquipped( Dungeon.hero ) || Dungeon.hero.belongings.contains( this ))) {
+		if (Dungeon.heroes.buff( Degrade.class ) != null
+			&& (isEquipped( Dungeon.heroes) || Dungeon.heroes.belongings.contains( this ))) {
 			return Degrade.reduceLevel(level());
 		} else {
 			return level();
@@ -471,9 +471,9 @@ public class Item implements Bundlable {
 
 	public Item identify( boolean byHero ) {
 
-		if (byHero && Dungeon.hero != null && Dungeon.hero.isAlive()){
+		if (byHero && Dungeon.heroes != null && Dungeon.heroes.isAlive()){
 			Catalog.setSeen(getClass());
-			if (!isIdentified()) Talent.onItemIdentified(Dungeon.hero, this);
+			if (!isIdentified()) Talent.onItemIdentified(Dungeon.heroes, this);
 		}
 
 		levelKnown = true;
@@ -614,7 +614,7 @@ public class Item implements Bundlable {
 		cursed	= bundle.getBoolean( CURSED );
 
 		//only want to populate slot on first load.
-		if (Dungeon.hero == null) {
+		if (Dungeon.heroes == null) {
 			if (bundle.contains(QUICKSLOT)) {
 				Dungeon.quickslot.setSlot(bundle.getInt(QUICKSLOT), this);
 			}
@@ -810,4 +810,5 @@ public class Item implements Bundlable {
 	public String getNameKey(){
 		return getClass().getName() + "name";
 	}
+
 }

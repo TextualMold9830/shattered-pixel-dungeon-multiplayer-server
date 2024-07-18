@@ -451,7 +451,7 @@ public class DwarfKing extends Mob {
 	@Override
 	public void damage(int dmg, Object src) {
 		//hero counts as unarmed if they aren't attacking with a weapon and aren't benefiting from force
-		if (src == Dungeon.hero && (!RingOfForce.fightingUnarmed(Dungeon.hero) || Dungeon.hero.buff(RingOfForce.Force.class) != null)){
+		if (src == Dungeon.heroes && (!RingOfForce.fightingUnarmed(Dungeon.heroes) || Dungeon.heroes.buff(RingOfForce.Force.class) != null)){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		//Corrosion, corruption, and regrowth do no direct damage and so have their own custom logic
 		//Transfusion damages DK and so doesn't need custom logic
@@ -475,7 +475,7 @@ public class DwarfKing extends Mob {
 		int preHP = HP;
 		super.damage(dmg, src);
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/5f);
 			else                                                    lock.addTime(dmg/3f);
@@ -516,7 +516,7 @@ public class DwarfKing extends Mob {
 			summonsMade = 1; //monk/warlock on 3rd summon
 			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
-			yell(  Messages.get(this, "enraged", Dungeon.hero.name()) );
+			yell(  Messages.get(this, "enraged", Dungeon.heroes.name()) );
 			BossHealthBar.bleed(true);
 			Game.runOnRenderThread(new Callback() {
 				@Override
@@ -572,7 +572,7 @@ public class DwarfKing extends Mob {
 			m.die(null);
 		}
 
-		LloydsBeacon beacon = Dungeon.hero.belongings.getItem(LloydsBeacon.class);
+		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
 		if (beacon != null) {
 			beacon.upgrade();
 		}
@@ -617,7 +617,7 @@ public class DwarfKing extends Mob {
 
 		@Override
 		protected void zap() {
-			if (enemy == Dungeon.hero){
+			if (enemy == Dungeon.heroes){
 				Statistics.bossScores[3] -= 400;
 			}
 			super.zap();
@@ -701,7 +701,7 @@ public class DwarfKing extends Mob {
 							target.damage(target.HT/12, new KingDamager());
 						}
 					}
-					if (!ch.isAlive() && ch == Dungeon.hero) {
+					if (!ch.isAlive() && ch == Dungeon.heroes) {
 						Dungeon.fail(DwarfKing.class);
 						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", Messages.get(DwarfKing.class, "name"))));
 					}

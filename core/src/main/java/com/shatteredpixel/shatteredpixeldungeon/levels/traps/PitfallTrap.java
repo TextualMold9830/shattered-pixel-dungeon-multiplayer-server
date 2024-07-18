@@ -53,7 +53,7 @@ public class PitfallTrap extends Trap {
 			return;
 		}
 
-		DelayedPit p = Buff.append(Dungeon.hero, DelayedPit.class, 1);
+		DelayedPit p = Buff.append(Dungeon.heroes, DelayedPit.class, 1);
 		p.depth = Dungeon.depth;
 		p.branch = Dungeon.branch;
 		p.pos = pos;
@@ -64,7 +64,7 @@ public class PitfallTrap extends Trap {
 			}
 		}
 
-		if (pos == Dungeon.hero.pos){
+		if (pos == Dungeon.heroes.pos){
 			GLog.n(Messages.get(this, "triggered_hero"));
 		} else if (Dungeon.level.heroFOV[pos]){
 			GLog.n(Messages.get(this, "triggered"));
@@ -116,7 +116,7 @@ public class PitfallTrap extends Trap {
 					//don't trigger on flying chars, or immovable neutral chars
 					if (ch != null && !ch.flying
 						&& !(ch.alignment == Char.Alignment.NEUTRAL && Char.hasProp(ch, Char.Property.IMMOVABLE))) {
-						if (ch == Dungeon.hero) {
+						if (ch == Dungeon.heroes) {
 							Chasm.heroFall(cell);
 							herofell = true;
 						} else {

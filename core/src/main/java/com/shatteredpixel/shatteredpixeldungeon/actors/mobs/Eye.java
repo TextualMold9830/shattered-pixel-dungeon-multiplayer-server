@@ -193,7 +193,7 @@ public class Eye extends Mob {
 					CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 				}
 
-				if (!ch.isAlive() && ch == Dungeon.hero) {
+				if (!ch.isAlive() && ch == Dungeon.heroes) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "deathgaze_kill") );

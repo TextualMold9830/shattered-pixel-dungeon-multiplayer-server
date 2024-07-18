@@ -119,7 +119,7 @@ public class SummonElemental extends Spell {
 			curUser.sprite.operate(curUser.pos);
 			curUser.spendAndNext(Actor.TICK);
 
-			detach(Dungeon.hero.belongings.backpack);
+			detach(Dungeon.heroes.belongings.backpack);
 			if (Random.Float() < talentChance){
 				Talent.onScrollUsed(curUser, curUser.pos, talentFactor);
 			}
@@ -189,7 +189,7 @@ public class SummonElemental extends Spell {
 				return;
 			}
 
-			item.detach(Dungeon.hero.belongings.backpack);
+			item.detach(Dungeon.heroes.belongings.backpack);
 			if (item instanceof PotionOfLiquidFlame) {
 				Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				curUser.sprite.emitter().burst( FlameParticle.FACTORY, 12 );

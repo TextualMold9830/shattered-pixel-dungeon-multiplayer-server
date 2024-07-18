@@ -63,7 +63,7 @@ public class GuardianTrap extends Trap {
 			guardian.pos = Dungeon.level.randomRespawnCell( guardian );
 			if (guardian.pos != -1) {
 				GameScene.add(guardian);
-				guardian.beckon(Dungeon.hero.pos);
+				guardian.beckon(Dungeon.heroes.pos);
 			}
 		}
 

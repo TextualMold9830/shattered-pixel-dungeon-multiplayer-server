@@ -104,7 +104,7 @@ public class HornOfPlenty extends Artifact {
 					satietyPerCharge /= 3;
 				}
 
-				Hunger hunger = Buff.affect(Dungeon.hero, Hunger.class);
+				Hunger hunger = Buff.affect(Dungeon.heroes, Hunger.class);
 				int chargesToUse = Math.max( 1, hunger.hunger() / satietyPerCharge);
 				if (chargesToUse > charge) chargesToUse = charge;
 
@@ -126,11 +126,11 @@ public class HornOfPlenty extends Artifact {
 				Sample.INSTANCE.play(Assets.Sounds.EAT);
 				GLog.i( Messages.get(this, "eat") );
 
-				if (Dungeon.hero.hasTalent(Talent.IRON_STOMACH)
-						|| Dungeon.hero.hasTalent(Talent.ENERGIZING_MEAL)
-						|| Dungeon.hero.hasTalent(Talent.MYSTICAL_MEAL)
-						|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)
-						|| Dungeon.hero.hasTalent(Talent.FOCUSED_MEAL)){
+				if (Dungeon.heroes.hasTalent(Talent.IRON_STOMACH)
+						|| Dungeon.heroes.hasTalent(Talent.ENERGIZING_MEAL)
+						|| Dungeon.heroes.hasTalent(Talent.MYSTICAL_MEAL)
+						|| Dungeon.heroes.hasTalent(Talent.INVIGORATING_MEAL)
+						|| Dungeon.heroes.hasTalent(Talent.FOCUSED_MEAL)){
 					hero.spend(Food.TIME_TO_EAT - 2);
 				} else {
 					hero.spend(Food.TIME_TO_EAT);
@@ -187,7 +187,7 @@ public class HornOfPlenty extends Artifact {
 	public String desc() {
 		String desc = super.desc();
 
-		if ( isEquipped( Dungeon.hero ) ){
+		if ( isEquipped( Dungeon.heroes) ){
 			if (!cursed) {
 				if (level() < levelCap)
 					desc += "\n\n" +Messages.get(this, "desc_hint");
@@ -326,7 +326,7 @@ public class HornOfPlenty extends Artifact {
 				if (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null){
 					GLog.w( Messages.get(HornOfPlenty.class, "reject") );
 				} else {
-					Hero hero = Dungeon.hero;
+					Hero hero = Dungeon.heroes;
 					hero.sprite.operate( hero.pos );
 					hero.busy();
 					hero.spend( Food.TIME_TO_EAT );

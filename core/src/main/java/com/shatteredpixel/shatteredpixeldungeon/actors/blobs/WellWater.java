@@ -61,7 +61,7 @@ public abstract class WellWater extends Blob {
 		
 		Heap heap;
 		
-		if (pos == Dungeon.hero.pos && affectHero( Dungeon.hero )) {
+		if (pos == Dungeon.heroes.pos && affectHero( Dungeon.heroes)) {
 			
 			cur[pos] = 0;
 			return true;

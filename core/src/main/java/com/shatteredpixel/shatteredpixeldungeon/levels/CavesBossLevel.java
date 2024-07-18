@@ -260,7 +260,7 @@ public class CavesBossLevel extends Level {
 	public void occupyCell(Char ch) {
 		//seal the level when the hero moves near to a pylon, the level isn't already sealed, and the gate hasn't been destroyed
 		int gatePos = pointToCell(new Point(gate.left, gate.top));
-		if (ch == Dungeon.hero && !locked && solid[gatePos]){
+		if (ch == Dungeon.heroes && !locked && solid[gatePos]){
 			for (int pos : pylonPositions){
 				if (Dungeon.level.distance(ch.pos, pos) <= 3){
 					seal();
@@ -370,7 +370,7 @@ public class CavesBossLevel extends Level {
 		} else if (!pylons.isEmpty()) {
 			Pylon closest = null;
 			for (Pylon p : pylons){
-				if (closest == null || trueDistance(p.pos, Dungeon.hero.pos) < trueDistance(closest.pos, Dungeon.hero.pos)){
+				if (closest == null || trueDistance(p.pos, Dungeon.heroes.pos) < trueDistance(closest.pos, Dungeon.heroes.pos)){
 					closest = p;
 				}
 			}
@@ -831,7 +831,7 @@ public class CavesBossLevel extends Level {
 							ch.damage( Char.combatRoll(6, 12), new Electricity());
 							ch.sprite.flash();
 
-							if (ch == Dungeon.hero){
+							if (ch == Dungeon.heroes){
 								if (energySourceSprite != null && energySourceSprite instanceof PylonSprite){
 									//took damage while DM-300 was supercharged
 									Statistics.qualifiedForBossChallengeBadge = false;

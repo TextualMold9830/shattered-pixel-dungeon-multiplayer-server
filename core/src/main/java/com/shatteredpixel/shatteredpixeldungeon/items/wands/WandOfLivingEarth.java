@@ -209,7 +209,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 		if (guardian != null){
 			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
-			guardian.setInfo(Dungeon.hero, buffedLvl(), armor);
+			guardian.setInfo(Dungeon.heroes, buffedLvl(), armor);
 		} else {
 			attacker.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 			Buff.affect(attacker, RockArmor.class).addArmor( buffedLvl(), armor);
@@ -402,8 +402,8 @@ public class WandOfLivingEarth extends DamageWand {
 			@Override
 			public boolean act(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
-					Buff.affect(Dungeon.hero, RockArmor.class).addArmor(wandLevel, HP);
-					Dungeon.hero.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
+					Buff.affect(Dungeon.heroes, RockArmor.class).addArmor(wandLevel, HP);
+					Dungeon.heroes.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
 					destroy();
 					sprite.die();
 					return true;

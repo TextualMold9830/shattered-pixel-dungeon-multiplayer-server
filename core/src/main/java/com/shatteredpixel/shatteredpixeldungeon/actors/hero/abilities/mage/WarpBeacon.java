@@ -62,8 +62,8 @@ public class WarpBeacon extends ArmorAbility {
 
 	@Override
 	public String targetingPrompt() {
-		if (Dungeon.hero.buff(WarpBeaconTracker.class) == null
-				&& Dungeon.hero.hasTalent(Talent.REMOTE_BEACON)){
+		if (Dungeon.heroes.buff(WarpBeaconTracker.class) == null
+				&& Dungeon.heroes.hasTalent(Talent.REMOTE_BEACON)){
 			return Messages.get(this, "prompt");
 		}
 		return super.targetingPrompt();
@@ -103,7 +103,7 @@ public class WarpBeacon extends ArmorAbility {
 						float chargeNeeded = chargeUse(hero);
 
 						if (tracker.depth != Dungeon.depth){
-							chargeNeeded *= 1.833f - 0.333f*Dungeon.hero.pointsInTalent(Talent.LONGRANGE_WARP);
+							chargeNeeded *= 1.833f - 0.333f*Dungeon.heroes.pointsInTalent(Talent.LONGRANGE_WARP);
 						}
 
 						if (armor.charge < chargeNeeded){

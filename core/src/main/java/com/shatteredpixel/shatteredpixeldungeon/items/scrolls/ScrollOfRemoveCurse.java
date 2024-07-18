@@ -81,7 +81,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	}
 
 	public static boolean uncursable( Item item ){
-		if (item.isEquipped(Dungeon.hero) && Dungeon.hero.buff(Degrade.class) != null) {
+		if (item.isEquipped(Dungeon.heroes) && Dungeon.heroes.buff(Degrade.class) != null) {
 			return true;
 		} if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.cursedKnown) || item.cursed)){
 			return true;

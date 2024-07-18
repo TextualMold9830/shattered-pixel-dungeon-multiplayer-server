@@ -83,7 +83,7 @@ public class Ghost extends NPC {
 
 	@Override
 	protected boolean act() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
 		}
@@ -129,7 +129,7 @@ public class Ghost extends NPC {
 		
 		Sample.INSTANCE.play( Assets.Sounds.GHOST );
 
-		if (c != Dungeon.hero){
+		if (c != Dungeon.heroes){
 			return super.interact(c);
 		}
 		
@@ -170,13 +170,13 @@ public class Ghost extends NPC {
 			switch (Quest.type){
 				case 1: default:
 					questBoss = new FetidRat();
-					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.heroes.name())); break;
 				case 2:
 					questBoss = new GnollTrickster();
-					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.heroes.name())); break;
 				case 3:
 					questBoss = new GreatCrab();
-					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.heroes.name())); break;
 			}
 
 			questBoss.pos = Dungeon.level.randomRespawnCell( this );

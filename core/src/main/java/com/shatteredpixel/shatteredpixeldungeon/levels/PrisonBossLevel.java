@@ -328,7 +328,7 @@ public class PrisonBossLevel extends Level {
 			}
 		}
 		
-		for (HeavyBoomerang.CircleBack b : Dungeon.hero.buffs(HeavyBoomerang.CircleBack.class)){
+		for (HeavyBoomerang.CircleBack b : Dungeon.heroes.buffs(HeavyBoomerang.CircleBack.class)){
 			if (b.activeDepth() == Dungeon.depth
 					&& (safeArea == null || !safeArea.inside(cellToPoint(b.returnPos())))){
 				storedItems.add(b.cancel());
@@ -410,7 +410,7 @@ public class PrisonBossLevel extends Level {
 				//moves intelligent allies with the hero, preferring closer pos to cell door
 				int doorPos = pointToCell(tenguCellDoor);
 				Mob.holdAllies(this, doorPos);
-				Mob.restoreAllies(this, Dungeon.hero.pos, doorPos);
+				Mob.restoreAllies(this, Dungeon.heroes.pos, doorPos);
 				
 				tengu.state = tengu.HUNTING;
 				tengu.pos = tenguPos;
@@ -449,7 +449,7 @@ public class PrisonBossLevel extends Level {
 
 			case FIGHT_PAUSE:
 				
-				Dungeon.hero.interrupt();
+				Dungeon.heroes.interrupt();
 				
 				clearEntities( pauseSafeArea );
 				
@@ -472,11 +472,11 @@ public class PrisonBossLevel extends Level {
 				
 				unseal();
 				
-				Dungeon.hero.interrupt();
-				Dungeon.hero.pos = tenguCell.left+4 + (tenguCell.top+2)*width();
-				Dungeon.hero.sprite.interruptMotion();
-				Dungeon.hero.sprite.place(Dungeon.hero.pos);
-				Camera.main.snapTo(Dungeon.hero.sprite.center());
+				Dungeon.heroes.interrupt();
+				Dungeon.heroes.pos = tenguCell.left+4 + (tenguCell.top+2)*width();
+				Dungeon.heroes.sprite.interruptMotion();
+				Dungeon.heroes.sprite.place(Dungeon.heroes.pos);
+				Camera.main.snapTo(Dungeon.heroes.sprite.center());
 				
 				tengu.pos = pointToCell(tenguCellCenter);
 				tengu.sprite.place(tengu.pos);
@@ -495,12 +495,12 @@ public class PrisonBossLevel extends Level {
 				for (Mob m : allies){
 					do{
 						m.pos = randomTenguCellPos();
-					} while (findMob(m.pos) != null || m.pos == Dungeon.hero.pos);
+					} while (findMob(m.pos) != null || m.pos == Dungeon.heroes.pos);
 					if (m.sprite != null) m.sprite.place(m.pos);
 					mobs.add(m);
 				}
 				
-				tengu.die(Dungeon.hero);
+				tengu.die(Dungeon.heroes);
 				
 				clearEntities(tenguCell);
 				cleanMapState();
@@ -535,7 +535,7 @@ public class PrisonBossLevel extends Level {
 	
 	@Override
 	public void occupyCell(Char ch) {
-		if (ch == Dungeon.hero){
+		if (ch == Dungeon.heroes){
 			switch (state){
 				case START:
 					if (cellToPoint(ch.pos).y > tenguCell.top){
@@ -625,7 +625,7 @@ public class PrisonBossLevel extends Level {
 	public void placeTrapsInTenguCell(float fill){
 		
 		Point tenguPoint = cellToPoint(tengu.pos);
-		Point heroPoint = cellToPoint(Dungeon.hero.pos);
+		Point heroPoint = cellToPoint(Dungeon.heroes.pos);
 		
 		PathFinder.setMapSize(7, 7);
 		

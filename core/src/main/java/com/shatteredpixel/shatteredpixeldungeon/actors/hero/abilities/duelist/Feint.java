@@ -84,7 +84,7 @@ public class Feint extends ArmorAbility {
 			return;
 		}
 
-		if (Dungeon.hero.rooted){
+		if (Dungeon.heroes.rooted){
 			PixelScene.shake( 1, 1f );
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
@@ -192,14 +192,14 @@ public class Feint extends ArmorAbility {
 				}
 				Buff.affect(enemy, FeintConfusion.class, 1);
 				if (enemy.sprite != null) enemy.sprite.showLost();
-				if (Dungeon.hero.hasTalent(Talent.FEIGNED_RETREAT)) {
-					Buff.prolong(Dungeon.hero, Haste.class, 2f * Dungeon.hero.pointsInTalent(Talent.FEIGNED_RETREAT));
+				if (Dungeon.heroes.hasTalent(Talent.FEIGNED_RETREAT)) {
+					Buff.prolong(Dungeon.heroes, Haste.class, 2f * Dungeon.heroes.pointsInTalent(Talent.FEIGNED_RETREAT));
 				}
-				if (Dungeon.hero.hasTalent(Talent.EXPOSE_WEAKNESS)) {
-					Buff.prolong(enemy, Vulnerable.class, 2f * Dungeon.hero.pointsInTalent(Talent.EXPOSE_WEAKNESS));
+				if (Dungeon.heroes.hasTalent(Talent.EXPOSE_WEAKNESS)) {
+					Buff.prolong(enemy, Vulnerable.class, 2f * Dungeon.heroes.pointsInTalent(Talent.EXPOSE_WEAKNESS));
 				}
-				if (Dungeon.hero.hasTalent(Talent.COUNTER_ABILITY)) {
-					Buff.prolong(Dungeon.hero, Talent.CounterAbilityTacker.class, 3f);
+				if (Dungeon.heroes.hasTalent(Talent.COUNTER_ABILITY)) {
+					Buff.prolong(Dungeon.heroes, Talent.CounterAbilityTacker.class, 3f);
 				}
 			}
 			return 0;

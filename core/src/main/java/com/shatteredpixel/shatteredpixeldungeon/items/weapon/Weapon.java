@@ -115,8 +115,8 @@ abstract public class Weapon extends KindOfWeapon {
 			damage = enchantment.proc( this, attacker, defender, damage );
 		}
 		
-		if (!levelKnown && attacker == Dungeon.hero) {
-			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.hero, this) );
+		if (!levelKnown && attacker == Dungeon.heroes) {
+			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
 			if (usesLeftToID <= 0) {

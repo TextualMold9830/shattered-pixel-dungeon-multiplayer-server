@@ -98,7 +98,7 @@ public class WndChooseAbility extends Window {
 			IconButton abilityInfo = new IconButton(Icons.get(Icons.INFO)){
 				@Override
 				protected void onClick() {
-					GameScene.show(new WndInfoArmorAbility(Dungeon.hero.heroClass, ability));
+					GameScene.show(new WndInfoArmorAbility(Dungeon.heroes.heroClass, ability));
 				}
 			};
 			abilityInfo.setRect(WIDTH-20, abilityButton.top() + (abilityButton.height()-20)/2, 20, 20);

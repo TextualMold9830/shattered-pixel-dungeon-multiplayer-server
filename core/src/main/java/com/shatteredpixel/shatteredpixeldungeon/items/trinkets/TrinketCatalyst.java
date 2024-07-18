@@ -193,10 +193,10 @@ public class TrinketCatalyst extends Item {
 						RewardWindow.this.hide();
 						WndTrinket.this.hide();
 
-						TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
+						TrinketCatalyst cata = Dungeon.heroes.belongings.getItem(TrinketCatalyst.class);
 
 						if (cata != null) {
-							cata.detach(Dungeon.hero.belongings.backpack);
+							cata.detach(Dungeon.heroes.belongings.backpack);
 							((AlchemyScene)ShatteredPixelDungeon.scene()).craftItem(null, item);
 						}
 					}

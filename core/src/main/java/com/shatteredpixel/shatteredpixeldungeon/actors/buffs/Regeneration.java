@@ -49,7 +49,7 @@ public class Regeneration extends Buff {
 				}
 			}
 
-			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.hero.buff( ChaliceOfBlood.chaliceRegen.class);
+			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.heroes.buff( ChaliceOfBlood.chaliceRegen.class);
 
 			float delay = REGENERATION_DELAY;
 			if (regenBuff != null && target.buff(MagicImmune.class) == null) {
@@ -77,7 +77,7 @@ public class Regeneration extends Buff {
 	}
 
 	public static boolean regenOn(){
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (lock != null && !lock.regenOn()){
 			return false;
 		}

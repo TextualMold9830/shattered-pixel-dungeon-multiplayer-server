@@ -104,7 +104,7 @@ public class Bleeding extends Buff {
 							target.sprite.blood(), Math.min( 10 * dmg / target.HT, 10 ) );
 				}
 				
-				if (target == Dungeon.hero && !target.isAlive()) {
+				if (target == Dungeon.heroes && !target.isAlive()) {
 					if (source == Chasm.class){
 						Badges.validateDeathFromFalling();
 					} else if (source == Sacrificial.class){
@@ -115,7 +115,7 @@ public class Bleeding extends Buff {
 				}
 
 				if (source == Sickle.HarvestBleedTracker.class && !target.isAlive()){
-					MeleeWeapon.onAbilityKill(Dungeon.hero, target);
+					MeleeWeapon.onAbilityKill(Dungeon.heroes, target);
 				}
 				
 				spend( TICK );

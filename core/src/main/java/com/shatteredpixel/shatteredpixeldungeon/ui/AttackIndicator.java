@@ -100,9 +100,9 @@ public class AttackIndicator extends Tag {
 			active = true;
 			if (bg.width > 0 && sprite != null)sprite.visible = true;
 
-			if (Dungeon.hero.isAlive()) {
+			if (Dungeon.heroes.isAlive()) {
 
-				enable(Dungeon.hero.ready);
+				enable(Dungeon.heroes.ready);
 
 			} else {
 				visible( false );
@@ -114,10 +114,10 @@ public class AttackIndicator extends Tag {
 	private synchronized void checkEnemies() {
 
 		candidates.clear();
-		int v = Dungeon.hero.visibleEnemies();
+		int v = Dungeon.heroes.visibleEnemies();
 		for (int i=0; i < v; i++) {
-			Mob mob = Dungeon.hero.visibleEnemy( i );
-			if ( Dungeon.hero.canAttack( mob) ) {
+			Mob mob = Dungeon.heroes.visibleEnemy( i );
+			if ( Dungeon.heroes.canAttack( mob) ) {
 				candidates.add( mob );
 			}
 		}
@@ -180,9 +180,9 @@ public class AttackIndicator extends Tag {
 	@Override
 	protected void onClick() {
 		super.onClick();
-		if (enabled && Dungeon.hero.ready) {
-			if (Dungeon.hero.handle( lastTarget.pos )) {
-				Dungeon.hero.next();
+		if (enabled && Dungeon.heroes.ready) {
+			if (Dungeon.heroes.handle( lastTarget.pos )) {
+				Dungeon.heroes.next();
 			}
 		}
 	}

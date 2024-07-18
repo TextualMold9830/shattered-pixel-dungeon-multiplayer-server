@@ -73,8 +73,8 @@ public class GoldenMimic extends Mimic {
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
 		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
-			enemy = Dungeon.hero;
-			target = Dungeon.hero.pos;
+			enemy = Dungeon.heroes;
+			target = Dungeon.heroes.pos;
 			GLog.w(Messages.get(this, "reveal") );
 			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 0.85f);

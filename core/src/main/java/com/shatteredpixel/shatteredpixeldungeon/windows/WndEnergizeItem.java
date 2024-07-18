@@ -108,7 +108,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 	public static void energize( Item item ) {
 
-		Hero hero = Dungeon.hero;
+		Hero hero = Dungeon.heroes;
 
 		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false )) {
 			return;
@@ -136,7 +136,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			energize( item );
 		} else {
 
-			Hero hero = Dungeon.hero;
+			Hero hero = Dungeon.heroes;
 
 			item = item.detach( hero.belongings.backpack );
 

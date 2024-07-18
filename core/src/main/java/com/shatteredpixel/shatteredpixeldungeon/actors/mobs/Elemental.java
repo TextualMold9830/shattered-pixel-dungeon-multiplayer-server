@@ -321,8 +321,8 @@ public abstract class Elemental extends Mob {
 					}
 
 					GLog.n(Messages.get(this, "charging"));
-					spend(GameMath.gate(attackDelay(), (int)Math.ceil(Dungeon.hero.cooldown()), 3*attackDelay()));
-					Dungeon.hero.interrupt();
+					spend(GameMath.gate(attackDelay(), (int)Math.ceil(Dungeon.heroes.cooldown()), 3*attackDelay()));
+					Dungeon.heroes.interrupt();
 					return true;
 				} else {
 					rangedCooldown = 1;
@@ -515,7 +515,7 @@ public abstract class Elemental extends Mob {
 			
 			for (Char ch : affected) {
 				ch.damage( Math.round( damage * 0.4f ), new Shocking() );
-				if (ch == Dungeon.hero && !ch.isAlive()){
+				if (ch == Dungeon.heroes && !ch.isAlive()){
 					Dungeon.fail(this);
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 				}
@@ -535,7 +535,7 @@ public abstract class Elemental extends Mob {
 		@Override
 		protected void rangedProc( Char enemy ) {
 			Buff.affect( enemy, Blindness.class, Blindness.DURATION/2f );
-			if (enemy == Dungeon.hero) {
+			if (enemy == Dungeon.heroes) {
 				GameScene.flash(0x80FFFFFF);
 			}
 		}

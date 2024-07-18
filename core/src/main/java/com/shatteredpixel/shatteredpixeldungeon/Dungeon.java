@@ -37,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -192,8 +191,8 @@ public class Dungeon {
 
 	public static int challenges;
 	public static int mobsToChampion;
-
-	public static Hero hero;
+	@Nullable
+	public static Hero[] heroes = new Hero[8];
 	public static Level level;
 
 	public static QuickSlot quickslot = new QuickSlot();
@@ -223,8 +222,6 @@ public class Dungeon {
 	public static String customSeedText = "";
 	public static long seed;
 
-	@Nullable
-	public static Hero[] heroes;
 	public static void init() {
 
 		initialVersion = version = Game.versionCode;
@@ -287,12 +284,16 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 
-		hero = new Hero();
-		hero.live();
-		
+		heroes = new Hero[8];
+		for (Hero hero : heroes) {
+			if (hero != null) {
+				hero.live();
+			}
+		}
+
 		Badges.reset();
-		
-		GamesInProgress.selectedClass.initHero( hero );
+		//TODO: Check this
+		//GamesInProgress.selectedClass.initHero(heroes);
 	}
 
 	public static boolean isChallenged( int mask ) {
@@ -448,18 +449,22 @@ public class Dungeon {
 	//value used for scaling of damage values and other effects.
 	//is usually the dungeon depth, but can be set to 26 when ascending
 	public static int scalingDepth(){
-		if (Dungeon.hero != null && Dungeon.hero.buff(AscensionChallenge.class) != null){
-			return 26;
-		} else {
-			return depth;
+		for (Hero hero : heroes) {
+			if (hero != null && hero.buff(AscensionChallenge.class) != null) {
+				return 26;
+			}
 		}
+		return depth;
+
 	}
 
 	public static boolean interfloorTeleportAllowed(){
-		if (Dungeon.level.locked
-				|| Dungeon.level instanceof MiningLevel
-				|| (Dungeon.hero != null && Dungeon.hero.belongings.getItem(Amulet.class) != null)){
-			return false;
+		for (Hero hero : heroes) {
+			if (Dungeon.level.locked
+					|| Dungeon.level instanceof MiningLevel
+					|| (hero != null && hero.belongings.getItem(Amulet.class) != null)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -482,36 +487,45 @@ public class Dungeon {
 		PathFinder.setMapSize(level.width(), level.height());
 		
 		Dungeon.level = level;
-		hero.pos = pos;
+		for (Hero hero : heroes) {
 
-		if (hero.buff(AscensionChallenge.class) != null){
-			hero.buff(AscensionChallenge.class).onLevelSwitch();
+
+			hero.pos = pos;
+
+			if (hero.buff(AscensionChallenge.class) != null) {
+				hero.buff(AscensionChallenge.class).onLevelSwitch();
+			}
 		}
-
 		Mob.restoreAllies( level, pos );
 
 		Actor.init();
 
 		level.addRespawner();
-		
-		for(Mob m : level.mobs){
-			if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)){
-				//displace mob
-				for(int i : NEIGHBOURS8){
-					if (Actor.findChar(m.pos+i) == null && level.passable[m.pos + i]){
-						m.pos += i;
-						break;
+		for (Hero hero: heroes) {
+			if (hero != null) {
+				for (Mob m : level.mobs) {
+					if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)) {
+						//displace mob
+						for (int i : NEIGHBOURS8) {
+							if (Actor.findChar(m.pos + i) == null && level.passable[m.pos + i]) {
+								m.pos += i;
+								break;
+							}
+						}
 					}
 				}
 			}
 		}
-		
-		Light light = hero.buff( Light.class );
-		hero.viewDistance = light == null ? level.viewDistance : Math.max( Light.DISTANCE, level.viewDistance );
-		
-		hero.curAction = hero.lastAction = null;
+		for(Hero hero: heroes) {
+			if (hero != null) {
+				Light light = hero.buff(Light.class);
+				hero.viewDistance = light == null ? level.viewDistance : Math.max(Light.DISTANCE, level.viewDistance);
 
-		observe();
+				hero.curAction = hero.lastAction = null;
+
+				observe(hero);
+			}
+		}
 		try {
 			saveAll();
 		} catch (IOException e) {
@@ -641,7 +655,7 @@ public class Dungeon {
 			bundle.put( DAILY_REPLAY, dailyReplay );
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
-			bundle.put( HERO, hero );
+			bundle.put( HERO, heroes);
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 
@@ -711,7 +725,7 @@ public class Dungeon {
 	}
 	
 	public static void saveAll() throws IOException {
-		if (hero != null && (hero.isAlive() || WndResurrect.instance != null)) {
+		if (heroes != null && (heroes.isAlive() || WndResurrect.instance != null)) {
 			
 			Actor.fixTime();
 			updateLevelExplored();
@@ -802,8 +816,8 @@ public class Dungeon {
 		
 		Notes.restoreFromBundle( bundle );
 		
-		hero = null;
-		hero = (Hero)bundle.get( HERO );
+		heroes = null;
+		heroes = (Hero[]) bundle.get( HERO );
 		
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
@@ -900,7 +914,7 @@ public class Dungeon {
 		updateLevelExplored();
 		Statistics.gameWon = true;
 
-		hero.belongings.identify();
+		heroes.belongings.identify();
 
 		Rankings.INSTANCE.submit( true, cause );
 	}
@@ -912,128 +926,129 @@ public class Dungeon {
 	}
 
 	//default to recomputing based on max hero vision, in case vision just shrank/grew
-	public static void observe(){
-		int dist = Math.max(Dungeon.hero.viewDistance, 8);
-		dist *= 1f + 0.25f*Dungeon.hero.pointsInTalent(Talent.FARSIGHT);
-
-		if (Dungeon.hero.buff(MagicalSight.class) != null){
-			dist = Math.max( dist, MagicalSight.DISTANCE );
-		}
-
-		observe( dist+1 );
-	}
+//	public static void observe(Hero hero){
+//		int dist = Math.max(hero.viewDistance, 8);
+//		dist *= 1f + 0.25f*hero.pointsInTalent(Talent.FARSIGHT);
+//
+//		if (hero.buff(MagicalSight.class) != null){
+//			dist = Math.max( dist, MagicalSight.DISTANCE );
+//		}
+//
+//		observe( dist+1 );
+//	}
 	
 	public static void observe( int dist ) {
-
 		if (level == null) {
 			return;
 		}
-		
-		level.updateFieldOfView(hero, level.heroFOV);
+		for (Hero hero : heroes) {
+			if (hero != null) {
+				level.updateFieldOfView(hero, level.heroFOV);
 
-		int x = hero.pos % level.width();
-		int y = hero.pos / level.width();
-	
-		//left, right, top, bottom
-		int l = Math.max( 0, x - dist );
-		int r = Math.min( x + dist, level.width() - 1 );
-		int t = Math.max( 0, y - dist );
-		int b = Math.min( y + dist, level.height() - 1 );
-	
-		int width = r - l + 1;
-		int height = b - t + 1;
-		
-		int pos = l + t * level.width();
-	
-		for (int i = t; i <= b; i++) {
-			BArray.or( level.visited, level.heroFOV, pos, width, level.visited );
-			pos+=level.width();
-		}
-
-		//always visit adjacent tiles, even if they aren't seen
-		for (int i : PathFinder.NEIGHBOURS9){
-			level.visited[hero.pos+i] = true;
-		}
-	
-		GameScene.updateFog(l, t, width, height);
-
-		boolean stealthyMimics = MimicTooth.stealthyMimics();
-		if (hero.buff(MindVision.class) != null){
-			for (Mob m : level.mobs.toArray(new Mob[0])){
-				if (stealthyMimics && m instanceof Mimic && m.alignment == Char.Alignment.NEUTRAL){
-					continue;
-				}
-
-				BArray.or( level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, m.pos - 1, 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited );
-				//updates adjacent cells too
-				GameScene.updateFog(m.pos, 2);
-			}
-		}
-
-		if (hero.buff(Awareness.class) != null){
-			for (Heap h : level.heaps.valueList()){
-				BArray.or( level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, h.pos - 1, 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
-				GameScene.updateFog(h.pos, 2);
-			}
-		}
-
-		for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)){
-			Char ch = (Char) Actor.findById(c.charID);
-			if (ch == null || !ch.isAlive()) continue;
-			BArray.or( level.visited, level.heroFOV, ch.pos - 1 - level.width(), 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, ch.pos - 1, 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, ch.pos - 1 + level.width(), 3, level.visited );
-			GameScene.updateFog(ch.pos, 2);
-		}
-
-		for (TalismanOfForesight.HeapAwareness h : hero.buffs(TalismanOfForesight.HeapAwareness.class)){
-			if (Dungeon.depth != h.depth || Dungeon.branch != h.branch) continue;
-			BArray.or( level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, h.pos - 1, 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
-			GameScene.updateFog(h.pos, 2);
-		}
-
-		for (RevealedArea a : hero.buffs(RevealedArea.class)){
-			if (Dungeon.depth != a.depth || Dungeon.branch != a.branch) continue;
-			BArray.or( level.visited, level.heroFOV, a.pos - 1 - level.width(), 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, a.pos - 1, 3, level.visited );
-			BArray.or( level.visited, level.heroFOV, a.pos - 1 + level.width(), 3, level.visited );
-			GameScene.updateFog(a.pos, 2);
-		}
-
-		for (Char ch : Actor.chars()){
-			if (ch instanceof WandOfWarding.Ward
-					|| ch instanceof WandOfRegrowth.Lotus
-					|| ch instanceof SpiritHawk.HawkAlly){
-				x = ch.pos % level.width();
-				y = ch.pos / level.width();
+				int x = hero.pos % level.width();
+				int y = hero.pos / level.width();
 
 				//left, right, top, bottom
-				dist = ch.viewDistance+1;
-				l = Math.max( 0, x - dist );
-				r = Math.min( x + dist, level.width() - 1 );
-				t = Math.max( 0, y - dist );
-				b = Math.min( y + dist, level.height() - 1 );
+				int l = Math.max(0, x - dist);
+				int r = Math.min(x + dist, level.width() - 1);
+				int t = Math.max(0, y - dist);
+				int b = Math.min(y + dist, level.height() - 1);
 
-				width = r - l + 1;
-				height = b - t + 1;
+				int width = r - l + 1;
+				int height = b - t + 1;
 
-				pos = l + t * level.width();
+				int pos = l + t * level.width();
 
 				for (int i = t; i <= b; i++) {
-					BArray.or( level.visited, level.heroFOV, pos, width, level.visited );
-					pos+=level.width();
+					BArray.or(level.visited, level.heroFOV, pos, width, level.visited);
+					pos += level.width();
 				}
-				GameScene.updateFog(ch.pos, dist);
-			}
-		}
 
-		GameScene.afterObserve();
+				//always visit adjacent tiles, even if they aren't seen
+				for (int i : PathFinder.NEIGHBOURS9) {
+					level.visited[hero.pos + i] = true;
+				}
+
+				GameScene.updateFog(l, t, width, height);
+
+				boolean stealthyMimics = MimicTooth.stealthyMimics();
+				if (hero.buff(MindVision.class) != null) {
+					for (Mob m : level.mobs.toArray(new Mob[0])) {
+						if (stealthyMimics && m instanceof Mimic && m.alignment == Char.Alignment.NEUTRAL) {
+							continue;
+						}
+
+						BArray.or(level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited);
+						BArray.or(level.visited, level.heroFOV, m.pos - 1, 3, level.visited);
+						BArray.or(level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited);
+						//updates adjacent cells too
+						GameScene.updateFog(m.pos, 2);
+					}
+				}
+
+				if (hero.buff(Awareness.class) != null) {
+					for (Heap h : level.heaps.valueList()) {
+						BArray.or(level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited);
+						BArray.or(level.visited, level.heroFOV, h.pos - 1, 3, level.visited);
+						BArray.or(level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited);
+						GameScene.updateFog(h.pos, 2);
+					}
+				}
+
+				for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)) {
+					Char ch = (Char) Actor.findById(c.charID);
+					if (ch == null || !ch.isAlive()) continue;
+					BArray.or(level.visited, level.heroFOV, ch.pos - 1 - level.width(), 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, ch.pos - 1, 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, ch.pos - 1 + level.width(), 3, level.visited);
+					GameScene.updateFog(ch.pos, 2);
+				}
+
+				for (TalismanOfForesight.HeapAwareness h : hero.buffs(TalismanOfForesight.HeapAwareness.class)) {
+					if (Dungeon.depth != h.depth || Dungeon.branch != h.branch) continue;
+					BArray.or(level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, h.pos - 1, 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited);
+					GameScene.updateFog(h.pos, 2);
+				}
+
+				for (RevealedArea a : hero.buffs(RevealedArea.class)) {
+					if (Dungeon.depth != a.depth || Dungeon.branch != a.branch) continue;
+					BArray.or(level.visited, level.heroFOV, a.pos - 1 - level.width(), 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, a.pos - 1, 3, level.visited);
+					BArray.or(level.visited, level.heroFOV, a.pos - 1 + level.width(), 3, level.visited);
+					GameScene.updateFog(a.pos, 2);
+				}
+
+				for (Char ch : Actor.chars()) {
+					if (ch instanceof WandOfWarding.Ward
+							|| ch instanceof WandOfRegrowth.Lotus
+							|| ch instanceof SpiritHawk.HawkAlly) {
+						x = ch.pos % level.width();
+						y = ch.pos / level.width();
+
+						//left, right, top, bottom
+						dist = ch.viewDistance + 1;
+						l = Math.max(0, x - dist);
+						r = Math.min(x + dist, level.width() - 1);
+						t = Math.max(0, y - dist);
+						b = Math.min(y + dist, level.height() - 1);
+
+						width = r - l + 1;
+						height = b - t + 1;
+
+						pos = l + t * level.width();
+
+						for (int i = t; i <= b; i++) {
+							BArray.or(level.visited, level.heroFOV, pos, width, level.visited);
+							pos += level.width();
+						}
+						GameScene.updateFog(ch.pos, dist);
+					}
+				}
+			}
+			GameScene.afterObserve();
+		}
 	}
 
 	//we store this to avoid having to re-allocate the array with each pathfind
@@ -1168,8 +1183,8 @@ public class Dungeon {
 	}
 	private static void switchLevelChangePosition(int pos, @NotNull Hero hero)
 	{
+		//FIXME
 		hero.pos = pos != -1 ? (Level.getNearClearCell(pos)) : Level.getNearClearCell(level.exit);
-
 		sendDepth(hero.networkID, depth);
 
 		Light light = hero.buff( Light.class );
@@ -1180,7 +1195,7 @@ public class Dungeon {
 	public static void observe(@NotNull Hero hero) {
 		observe(hero, true);
 	}
-
+	//TODO: Check this
 	public static void observe(@NotNull Hero hero, boolean send){
 
 		if (level == null) {
@@ -1250,4 +1265,5 @@ public class Dungeon {
 		}
 		return result;
 	}
+
 }

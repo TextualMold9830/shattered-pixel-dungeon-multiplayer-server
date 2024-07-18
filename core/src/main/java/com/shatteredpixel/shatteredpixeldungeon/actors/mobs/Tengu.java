@@ -152,7 +152,7 @@ public class Tengu extends Mob {
 		int newBracket =  HP / hpBracket;
 		dmg = beforeHitHP - HP;
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(2*dmg/3f);
 			else                                                    lock.addTime(dmg);
@@ -212,7 +212,7 @@ public class Tengu extends Mob {
 	@Override
 	public void die( Object cause ) {
 		
-		if (Dungeon.hero.subClass == HeroSubClass.NONE) {
+		if (Dungeon.heroes.subClass == HeroSubClass.NONE) {
 			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();
 		}
 		
@@ -225,7 +225,7 @@ public class Tengu extends Mob {
 		}
 		Statistics.bossScores[1] += 2000;
 		
-		LloydsBeacon beacon = Dungeon.hero.belongings.getItem(LloydsBeacon.class);
+		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
 		if (beacon != null) {
 			beacon.upgrade();
 		}
@@ -263,7 +263,7 @@ public class Tengu extends Mob {
 					newPos = ((PrisonBossLevel)Dungeon.level).randomTenguCellPos();
 					tries--;
 				} while ( tries > 0 && (level.trueDistance(newPos, enemy.pos) <= 3.5f
-						|| level.trueDistance(newPos, Dungeon.hero.pos) <= 3.5f
+						|| level.trueDistance(newPos, Dungeon.heroes.pos) <= 3.5f
 						|| Actor.findChar(newPos) != null));
 
 				if (tries <= 0) newPos = pos;
@@ -290,8 +290,8 @@ public class Tengu extends Mob {
 						(level.solid[newPos] ||
 								level.distance(newPos, enemy.pos) < 5 ||
 								level.distance(newPos, enemy.pos) > 7 ||
-								level.distance(newPos, Dungeon.hero.pos) < 5 ||
-								level.distance(newPos, Dungeon.hero.pos) > 7 ||
+								level.distance(newPos, Dungeon.heroes.pos) < 5 ||
+								level.distance(newPos, Dungeon.heroes.pos) > 7 ||
 								level.distance(newPos, pos) < 5 ||
 								Actor.findChar(newPos) != null ||
 								Dungeon.level.heaps.get(newPos) != null));
@@ -335,14 +335,14 @@ public class Tengu extends Mob {
 			BossHealthBar.assignBoss(this);
 			if (HP <= HT/2) BossHealthBar.bleed(true);
 			if (HP == HT) {
-				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.name()));
+				yell(Messages.get(this, "notice_gotcha", Dungeon.heroes.name()));
 				for (Char ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayBoss();
 					}
 				}
 			} else {
-				yell(Messages.get(this, "notice_have", Dungeon.hero.name()));
+				yell(Messages.get(this, "notice_have", Dungeon.heroes.name()));
 			}
 		}
 	}
@@ -407,7 +407,7 @@ public class Tengu extends Mob {
 					chooseEnemy();
 					if (enemy == null){
 						//if nothing else can be targeted, target hero
-						enemy = Dungeon.hero;
+						enemy = Dungeon.heroes;
 					}
 					target = enemy.pos;
 				}
@@ -633,7 +633,7 @@ public class Tengu extends Mob {
 								ch.damage(dmg, Bomb.class);
 							}
 
-							if (ch == Dungeon.hero){
+							if (ch == Dungeon.heroes){
 								Statistics.qualifiedForBossChallengeBadge = false;
 								Statistics.bossScores[1] -= 100;
 
@@ -867,7 +867,7 @@ public class Tengu extends Mob {
 							if (ch != null && !ch.isImmune(Fire.class) && !(ch instanceof Tengu)) {
 								Buff.affect( ch, Burning.class ).reignite( ch );
 							}
-							if (ch == Dungeon.hero){
+							if (ch == Dungeon.heroes){
 								Statistics.qualifiedForBossChallengeBadge = false;
 								Statistics.bossScores[1] -= 100;
 							}
@@ -983,7 +983,7 @@ public class Tengu extends Mob {
 				target.sprite.parent.add(new Lightning(shockerPos - 1 - Dungeon.level.width(), shockerPos + 1 + Dungeon.level.width(), null));
 				target.sprite.parent.add(new Lightning(shockerPos - 1 + Dungeon.level.width(), shockerPos + 1 - Dungeon.level.width(), null));
 				
-				if (Dungeon.level.distance(Dungeon.hero.pos, shockerPos) <= 1){
+				if (Dungeon.level.distance(Dungeon.heroes.pos, shockerPos) <= 1){
 					Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 				}
 				
@@ -994,7 +994,7 @@ public class Tengu extends Mob {
 				target.sprite.parent.add(new Lightning(shockerPos - Dungeon.level.width(), shockerPos + Dungeon.level.width(), null));
 				target.sprite.parent.add(new Lightning(shockerPos - 1, shockerPos + 1, null));
 				
-				if (Dungeon.level.distance(Dungeon.hero.pos, shockerPos) <= 1){
+				if (Dungeon.level.distance(Dungeon.heroes.pos, shockerPos) <= 1){
 					Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 				}
 				
@@ -1062,7 +1062,7 @@ public class Tengu extends Mob {
 							if (ch != null && !(ch instanceof Tengu)){
 								ch.damage(2 + Dungeon.scalingDepth(), new Electricity());
 								
-								if (ch == Dungeon.hero){
+								if (ch == Dungeon.heroes){
 									Statistics.qualifiedForBossChallengeBadge = false;
 									Statistics.bossScores[1] -= 100;
 									if (!ch.isAlive()) {

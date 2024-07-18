@@ -65,7 +65,7 @@ public class TrapMechanism extends Trinket {
 	private int shuffles = 0;
 
 	public static Level.Feeling getNextFeeling(){
-		TrapMechanism mech = Dungeon.hero.belongings.getItem(TrapMechanism.class);
+		TrapMechanism mech = Dungeon.heroes.belongings.getItem(TrapMechanism.class);
 		if (mech == null) {
 			return Level.Feeling.NONE;
 		}

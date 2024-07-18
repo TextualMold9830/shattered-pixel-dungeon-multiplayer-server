@@ -115,8 +115,8 @@ public class CrystalMimic extends Mimic {
 			Buff.affect(this, Haste.class, 1f);
 		}
 		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
-			enemy = Dungeon.hero;
-			target = Dungeon.hero.pos;
+			enemy = Dungeon.heroes;
+			target = Dungeon.heroes.pos;
 			GLog.w(Messages.get(this, "reveal") );
 			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 1.25f);
@@ -125,8 +125,8 @@ public class CrystalMimic extends Mimic {
 
 	@Override
 	public int attackProc(Char enemy, int damage) {
-		if (alignment == Alignment.NEUTRAL && enemy == Dungeon.hero){
-			steal( Dungeon.hero );
+		if (alignment == Alignment.NEUTRAL && enemy == Dungeon.heroes){
+			steal( Dungeon.heroes);
 
 		} else {
 			ArrayList<Integer> candidates = new ArrayList<>();
@@ -185,7 +185,7 @@ public class CrystalMimic extends Mimic {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void escaped() {
-			if (!Dungeon.level.heroFOV[pos] && Dungeon.level.distance(Dungeon.hero.pos, pos) >= 6) {
+			if (!Dungeon.level.heroFOV[pos] && Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
 				GLog.n(Messages.get(CrystalMimic.class, "escaped"));
 				destroy();
 				sprite.killAndErase();

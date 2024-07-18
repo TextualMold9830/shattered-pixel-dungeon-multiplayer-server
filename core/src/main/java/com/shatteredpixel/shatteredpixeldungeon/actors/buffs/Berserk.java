@@ -307,7 +307,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				return 0f;
 			case RECOVERING:
 				if (levelRecovery > 0) {
-					return 1f - levelRecovery/(LEVEL_RECOVER_START-Dungeon.hero.pointsInTalent(Talent.DEATHLESS_FURY));
+					return 1f - levelRecovery/(LEVEL_RECOVER_START-Dungeon.heroes.pointsInTalent(Talent.DEATHLESS_FURY));
 				} else {
 					return 1f - turnRecovery/(float)TURN_RECOVERY_START;
 				}
