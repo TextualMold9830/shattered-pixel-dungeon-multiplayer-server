@@ -97,6 +97,7 @@ import java.util.*;
 import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.*;
 import static com.watabou.utils.PathFinder.NEIGHBOURS8;
+import static sun.reflect.annotation.AnnotationParser.toArray;
 
 public class Dungeon {
 
@@ -655,7 +656,11 @@ public class Dungeon {
 			bundle.put( DAILY_REPLAY, dailyReplay );
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
-			bundle.put( HERO, heroes);
+			//Hero bundling
+			//.put( HERO, Arrays.asList(heroes));
+			for (int i = 0; i < heroes.length; i++) {
+				bundle.put(HERO+i, heroes[i]);
+			}
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 
@@ -725,7 +730,8 @@ public class Dungeon {
 	}
 	
 	public static void saveAll() throws IOException {
-		if (heroes != null && (heroes.isAlive() || WndResurrect.instance != null)) {
+
+		if (heroes[0] != null && (heroes[0].isAlive() || WndResurrect.instance != null)) {
 			
 			Actor.fixTime();
 			updateLevelExplored();
@@ -817,8 +823,10 @@ public class Dungeon {
 		Notes.restoreFromBundle( bundle );
 		
 		heroes = null;
-		heroes = (Hero[]) bundle.get( HERO );
-		
+		//Settings heroes back
+		for (int i = 0; i < heroes.length; i++) {
+			heroes[i] = (Hero) bundle.get( HERO + i );
+		}
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
 
@@ -913,9 +921,11 @@ public class Dungeon {
 
 		updateLevelExplored();
 		Statistics.gameWon = true;
-
-		heroes.belongings.identify();
-
+		for (Hero hero : heroes) {
+			if (hero != null) {
+				hero.belongings.identify();
+			}
+		}
 		Rankings.INSTANCE.submit( true, cause );
 	}
 

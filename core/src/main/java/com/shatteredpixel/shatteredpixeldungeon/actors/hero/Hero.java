@@ -143,6 +143,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -166,6 +167,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -2403,5 +2405,27 @@ public class Hero extends Char {
 
 	public static interface Doom {
 		public void onDeath();
+	}
+	public void sendSelf(){
+		if ( !all().contains(this) ){
+			return;
+		}
+		SendData.sendActor(this);
+	}
+
+	public CharSprite getSprite() {
+		return sprite;
+	}
+
+	public void setSprite(CharSprite sprite) {
+		this.sprite = sprite;
+		sendSelf();
+	}
+
+	public JSONObject getEmoJsonObject() {
+		if (sprite == null){
+			return new JSONObject();
+		}
+		return sprite.getEmoJsonObject();
 	}
 }

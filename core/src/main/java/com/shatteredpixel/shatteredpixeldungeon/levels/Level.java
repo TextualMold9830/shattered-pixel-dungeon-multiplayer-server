@@ -565,23 +565,26 @@ public abstract class Level implements Bundlable {
 
 	//some buff effects have special logic or are cancelled from the hero before transitioning levels
 	public static void beforeTransition(){
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				//time freeze effects need to resolve their pressed cells before transitioning
+				TimekeepersHourglass.timeFreeze timeFreeze = hero.buff(TimekeepersHourglass.timeFreeze.class);
+				if (timeFreeze != null) timeFreeze.disarmPresses();
+				Swiftthistle.TimeBubble timeBubble = hero.buff(Swiftthistle.TimeBubble.class);
+				if (timeBubble != null) timeBubble.disarmPresses();
 
-		//time freeze effects need to resolve their pressed cells before transitioning
-		TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.heroes.buff(TimekeepersHourglass.timeFreeze.class);
-		if (timeFreeze != null) timeFreeze.disarmPresses();
-		Swiftthistle.TimeBubble timeBubble = Dungeon.heroes.buff(Swiftthistle.TimeBubble.class);
-		if (timeBubble != null) timeBubble.disarmPresses();
+				//iron stomach does not persist through chasm falling
+				Talent.WarriorFoodImmunity foodImmune = hero.buff(Talent.WarriorFoodImmunity.class);
+				if (foodImmune != null) foodImmune.detach();
 
-		//iron stomach does not persist through chasm falling
-		Talent.WarriorFoodImmunity foodImmune = Dungeon.heroes.buff(Talent.WarriorFoodImmunity.class);
-		if (foodImmune != null) foodImmune.detach();
-
-		//spend the hero's partial turns,  so the hero cannot take partial turns between floors
-		Dungeon.heroes.spendToWhole();
-		for (Actor a : Actor.all()){
-			//also adjust any other actors that are now ahead of the hero due to this
-			if (a.cooldown() < Dungeon.heroes.cooldown()){
-				a.spendToWhole();
+				//spend the hero's partial turns,  so the hero cannot take partial turns between floors
+				hero.spendToWhole();
+				for (Actor a : Actor.all()) {
+					//also adjust any other actors that are now ahead of the hero due to this
+					if (a.cooldown() < hero.cooldown()) {
+						a.spendToWhole();
+					}
+				}
 			}
 		}
 	}
@@ -589,15 +592,23 @@ public abstract class Level implements Bundlable {
 	public void seal(){
 		if (!locked) {
 			locked = true;
-			Buff.affect(Dungeon.heroes, LockedFloor.class);
+			for (Hero hero: Dungeon.heroes) {
+				if(hero != null) {
+					Buff.affect(hero, LockedFloor.class);
+				}
+			}
 		}
 	}
 
 	public void unseal(){
 		if (locked) {
 			locked = false;
-			if (Dungeon.heroes.buff(LockedFloor.class) != null){
-				Dungeon.heroes.buff(LockedFloor.class).detach();
+			for(Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+				if (hero.buff(LockedFloor.class) != null) {
+					hero.buff(LockedFloor.class).detach();
+				}
+				}
 			}
 		}
 	}
@@ -612,8 +623,12 @@ public abstract class Level implements Bundlable {
 				items.addAll(b.getStuckItems());
 			}
 		}
-		for (HeavyBoomerang.CircleBack b : Dungeon.heroes.buffs(HeavyBoomerang.CircleBack.class)){
-			if (b.activeDepth() == Dungeon.depth) items.add(b.cancel());
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				for (HeavyBoomerang.CircleBack b :hero.buffs(HeavyBoomerang.CircleBack.class)) {
+					if (b.activeDepth() == Dungeon.depth) items.add(b.cancel());
+				}
+			}
 		}
 		return items;
 	}
@@ -1108,6 +1123,7 @@ public abstract class Level implements Bundlable {
 				|| findMob(result) != null);
 		return result;
 	}
+	//FIXME
 	
 	public void occupyCell( Char ch ){
 		if (!ch.isImmune(Web.class) && Blob.volumeAt(ch.pos, Web.class) > 0){
@@ -1162,6 +1178,7 @@ public abstract class Level implements Bundlable {
 	
 	//a 'soft' press ignores hidden traps
 	//a 'hard' press triggers all things
+	//FIXME
 	private void pressCell( int cell, boolean hard ) {
 
 		Trap trap = null;

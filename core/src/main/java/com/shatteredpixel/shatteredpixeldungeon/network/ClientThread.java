@@ -290,7 +290,7 @@ class ClientThread implements Callable<String> {
             newHero.pos = level.entrance; //todo  FIXME
         }
         Actor.add(newHero);
-        Actor.occupyCell(newHero);
+        Dungeon.level.occupyCell(newHero);
         newHero.sprite.place(newHero.pos);
 
         synchronized (heroes) { //todo fix it. It is not work

@@ -1669,4 +1669,10 @@ public class GameScene extends PixelScene {
 			return null;
 		}
 	};
+	public static void addHeroSprite(Hero hero){
+		CharSprite sprite  = hero.getSprite();
+		sprite.visible = true;
+		sprite.link(hero);
+	}
+
 }
