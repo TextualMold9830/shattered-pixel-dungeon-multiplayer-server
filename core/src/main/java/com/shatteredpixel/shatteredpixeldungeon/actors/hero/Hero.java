@@ -679,7 +679,7 @@ public class Hero extends Char {
 			return true;
 		}
 
-		KindOfWeapon wep = Dungeon.heroes.belongings.attackingWeapon();
+		KindOfWeapon wep = belongings.attackingWeapon();
 
 		if (wep != null){
 			return wep.canReach(this, enemy.pos);
@@ -756,7 +756,7 @@ public class Hero extends Char {
 		if (!ready) {
 			//do a full observe (including fog update) if not resting.
 			if (!resting || buff(MindVision.class) != null || buff(Awareness.class) != null) {
-				Dungeon.observe();
+				Dungeon.observe(this);
 			} else {
 				//otherwise just directly re-calculate FOV
 				Dungeon.level.updateFieldOfView(this, fieldOfView);
@@ -1187,8 +1187,8 @@ public class Hero extends Char {
 						//1 hunger spent total
 						if (Dungeon.level.map[action.dst] == Terrain.WALL_DECO){
 							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.heroes)) {
-								DarkGold existing = Dungeon.heroes.belongings.getItem(DarkGold.class);
+							if (gold.doPickUp( Hero.this)) {
+								DarkGold existing = belongings.getItem(DarkGold.class);
 								if (existing != null && existing.quantity()%5 == 0){
 									if (existing.quantity() >= 40) {
 										GLog.p(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
@@ -1264,7 +1264,7 @@ public class Hero extends Char {
 							ready();
 						}
 
-						Dungeon.observe();
+						Dungeon.observe(Hero.this);
 					}
 				});
 			} else {
@@ -1359,7 +1359,7 @@ public class Hero extends Char {
 			Buff.affect(this, HoldFast.class).pos = pos;
 		}
 		if (hasTalent(Talent.PATIENT_STRIKE)){
-			Buff.affect(Dungeon.heroes, Talent.PatientStrikeTracker.class).pos = Dungeon.heroes.pos;
+			Buff.affect(this, Talent.PatientStrikeTracker.class).pos = this.pos;
 		}
 		if (!fullRest) {
 			if (sprite != null) {
@@ -1559,7 +1559,7 @@ public class Hero extends Char {
 		
 		if (newMob) {
 			if (resting){
-				Dungeon.observe();
+				Dungeon.observe(this);
 			}
 			interrupt();
 		}
@@ -1987,10 +1987,10 @@ public class Hero extends Char {
 		
 		Actor.fixTime();
 		super.die( cause );
-		reallyDie( cause );
+		reallyDie( this, cause );
 	}
 	
-	public static void reallyDie( Object cause ) {
+	public static void reallyDie(Hero hero, Object cause ) {
 		
 		int length = Dungeon.level.length();
 		int[] map = Dungeon.level.map;
@@ -2012,12 +2012,12 @@ public class Hero extends Char {
 		
 		Bones.leave();
 		
-		Dungeon.observe();
+		Dungeon.observe(hero);
 		GameScene.updateFog();
 				
-		Dungeon.heroes.belongings.identify();
+		hero.belongings.identify();
 
-		int pos = Dungeon.heroes.pos;
+		int pos = hero.pos;
 
 		ArrayList<Integer> passable = new ArrayList<>();
 		for (Integer ofs : PathFinder.NEIGHBOURS8) {
@@ -2028,7 +2028,7 @@ public class Hero extends Char {
 		}
 		Collections.shuffle( passable );
 
-		ArrayList<Item> items = new ArrayList<>(Dungeon.heroes.belongings.backpack.items);
+		ArrayList<Item> items = new ArrayList<>(hero.belongings.backpack.items);
 		for (Integer cell : passable) {
 			if (items.isEmpty()) {
 				break;
@@ -2056,8 +2056,8 @@ public class Hero extends Char {
 		if (cause instanceof Hero.Doom) {
 			((Hero.Doom)cause).onDeath();
 		}
-
-		Dungeon.deleteGame( GamesInProgress.curSlot, true );
+		// TODO: check this
+		//Dungeon.deleteGame( GamesInProgress.curSlot, true );
 	}
 
 	//effectively cache this buff to prevent having to call buff(...) a bunch.
