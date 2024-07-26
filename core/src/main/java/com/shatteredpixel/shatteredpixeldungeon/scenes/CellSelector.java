@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -461,20 +462,20 @@ public class CellSelector extends ScrollArea {
 		return SPDAction.NONE;
 	}
 
-	public void processKeyHold() {
+	public void processKeyHold(Hero hero) {
 		//prioritize moving by controller stick over moving via keys
 		if (!directionFromAction(leftStickAction).isZero() && heldDelay < 0) {
-			enabled = Dungeon.heroes.ready = true;
-			Dungeon.observe();
+			enabled = hero.ready = true;
+			Dungeon.observe(hero);
 			if (moveFromActions(leftStickAction)) {
-				Dungeon.heroes.ready = false;
+				hero.ready = false;
 			}
 		} else if (!(directionFromAction(heldAction1).offset(directionFromAction(heldAction2)).isZero())
 				&& heldDelay <= 0){
-			enabled = Dungeon.heroes.ready = true;
-			Dungeon.observe();
+			enabled = hero.ready = true;
+			Dungeon.observe(hero);
 			if (moveFromActions(heldAction1, heldAction2)) {
-				Dungeon.heroes.ready = false;
+				hero.ready = false;
 			}
 		}
 	}
