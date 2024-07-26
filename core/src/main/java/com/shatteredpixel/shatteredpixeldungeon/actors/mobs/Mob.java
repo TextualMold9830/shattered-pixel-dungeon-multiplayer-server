@@ -326,6 +326,7 @@ public abstract class Mob extends Char {
 						}
 					
 					if (enemies.isEmpty()) {
+						//TODO: check this
 						//try to find the hero third
 						HashSet<Char> candidates = new HashSet<>();
 						int distance =Integer.MAX_VALUE;
@@ -367,7 +368,7 @@ public abstract class Mob extends Char {
 				for (Mob mob : Dungeon.level.mobs)
 					if (mob.alignment == Alignment.ALLY && fieldOfView[mob.pos] && mob.invisible <= 0)
 						enemies.add(mob);
-
+				//TODO: check this
 				//and look for the hero
 				HashSet<Char> candidates = new HashSet<>();
 				int distance = Integer.MAX_VALUE;
