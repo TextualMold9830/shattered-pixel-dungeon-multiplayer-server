@@ -327,9 +327,24 @@ public abstract class Mob extends Char {
 					
 					if (enemies.isEmpty()) {
 						//try to find the hero third
-						if (fieldOfView[Dungeon.heroes.pos] && Dungeon.heroes.invisible <= 0) {
-							enemies.add(Dungeon.heroes);
+						HashSet<Char> candidates = new HashSet<>();
+						int distance =Integer.MAX_VALUE;
+						for (Hero hero: Dungeon.heroes) {
+							if(hero != null) {
+								
+								if (fieldOfView[hero.pos] && hero.invisible <= 0) {
+									int dist = Dungeon.level.distance(hero.pos, pos);
+									if (dist < distance) {
+										candidates.clear();
+										distance = dist;
+									}
+									if (dist == distance) {
+										candidates.add(hero);
+									}
+								}
+							}
 						}
+						enemies.addAll(candidates);
 					}
 				}
 				
@@ -354,9 +369,24 @@ public abstract class Mob extends Char {
 						enemies.add(mob);
 
 				//and look for the hero
-				if (fieldOfView[Dungeon.heroes.pos] && Dungeon.heroes.invisible <= 0) {
-					enemies.add(Dungeon.heroes);
+				HashSet<Char> candidates = new HashSet<>();
+				int distance = Integer.MAX_VALUE;
+				for (Hero hero: Dungeon.heroes) {
+					if(hero != null) {
+
+						if (fieldOfView[hero.pos] && hero.invisible <= 0) {
+							int dist = Dungeon.level.distance(hero.pos, pos);
+							if (dist < distance) {
+								candidates.clear();
+								distance = dist;
+							}
+							if (dist == distance) {
+								candidates.add(hero);
+							}
+						}
+					}
 				}
+				enemies.addAll(candidates);
 				
 			}
 
