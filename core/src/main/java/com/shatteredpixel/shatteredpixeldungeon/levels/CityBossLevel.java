@@ -296,7 +296,7 @@ public class CityBossLevel extends Level {
 	@Override
 	public void occupyCell( Char ch ) {
 		if (map[bottomDoor] != Terrain.LOCKED_DOOR && map[topDoor] == Terrain.LOCKED_DOOR
-				&& ch.pos < bottomDoor && ch == Dungeon.heroes) {
+				&& ch.pos < bottomDoor && ch instanceof Hero) {
 			seal();
 		}
 

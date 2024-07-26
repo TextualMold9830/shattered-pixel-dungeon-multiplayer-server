@@ -88,7 +88,7 @@ public class DirectableAlly extends NPC {
 			return;
 		}
 
-		if (Actor.findChar(cell) == Dungeon.heroes){
+		if (Actor.findChar(cell) instanceof Hero){
 			followHero();
 
 		} else if (Actor.findChar(cell).alignment == Char.Alignment.ENEMY){

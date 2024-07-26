@@ -54,7 +54,7 @@ public class Pushing extends Actor {
 		this.to = to;
 		this.callback = null;
 
-		if (ch == Dungeon.heroes){
+		if (ch instanceof Hero){
 			Camera.main.panFollow(ch.sprite, 20f);
 		}
 	}

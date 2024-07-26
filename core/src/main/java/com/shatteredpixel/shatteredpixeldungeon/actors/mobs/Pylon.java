@@ -137,7 +137,7 @@ public class Pylon extends Mob {
 			ch.sprite.flash();
 			ch.damage(Char.combatRoll(10, 20), new Electricity());
 
-			if (ch == Dungeon.heroes) {
+			if (ch instanceof Hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
 				Statistics.bossScores[2] -= 100;
 				if (!ch.isAlive()) {

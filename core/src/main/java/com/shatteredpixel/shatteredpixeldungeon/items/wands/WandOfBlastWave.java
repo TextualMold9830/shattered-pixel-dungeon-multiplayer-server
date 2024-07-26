@@ -162,7 +162,7 @@ public class WandOfBlastWave extends DamageWand {
 					ch.damage(Char.combatRoll(finalDist, 2*finalDist), new Knockback());
 					if (ch.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
-					} else if (ch == Dungeon.heroes){
+					} else if (ch instanceof Hero){
 						if (cause instanceof WandOfBlastWave){
 							Badges.validateDeathFromFriendlyMagic();
 						}
@@ -173,7 +173,7 @@ public class WandOfBlastWave extends DamageWand {
 					Door.leave(oldPos);
 				}
 				Dungeon.level.occupyCell(ch);
-				if (ch == Dungeon.heroes){
+				if (ch instanceof Hero){
 					Dungeon.observe();
 					GameScene.updateFog();
 				}

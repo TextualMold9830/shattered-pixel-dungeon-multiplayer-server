@@ -247,7 +247,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
-		if (attacker == Dungeon.heroes && Random.Int(3) < Dungeon.heroes.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
+		if (attacker instanceof Hero && Random.Int(3) < Dungeon.heroes.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
 			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.heroes)){
 				//do nothing
 			} else {

@@ -72,7 +72,7 @@ public class ScrollOfTeleportation extends Scroll {
 		if (PathFinder.distance[ch.pos] == Integer.MAX_VALUE
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
 				|| Actor.findChar(pos) != null){
-			if (ch == Dungeon.heroes){
+			if (ch instanceof Hero){
 				GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );
 			}
 			return false;
@@ -81,7 +81,7 @@ public class ScrollOfTeleportation extends Scroll {
 		appear( ch, pos );
 		Dungeon.level.occupyCell( ch );
 		Buff.detach(ch, Roots.class);
-		if (ch == Dungeon.heroes) {
+		if (ch instanceof Hero) {
 			Dungeon.observe();
 			GameScene.updateFog();
 		}
@@ -124,7 +124,7 @@ public class ScrollOfTeleportation extends Scroll {
 			Dungeon.level.occupyCell( ch );
 			Buff.detach(ch, Roots.class);
 			
-			if (ch == Dungeon.heroes) {
+			if (ch instanceof Hero) {
 				GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 				
 				Dungeon.observe();
@@ -262,7 +262,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 		Buff.detach(ch, Roots.class);
 
-		if (ch == Dungeon.heroes) {
+		if (ch instanceof Hero) {
 			GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 
 			Dungeon.observe();
@@ -297,7 +297,7 @@ public class ScrollOfTeleportation extends Scroll {
 			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
 		}
 
-		if (Dungeon.level.heroFOV[pos] || ch == Dungeon.heroes) {
+		if (Dungeon.level.heroFOV[pos] || ch instanceof Hero) {
 			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}

@@ -685,7 +685,7 @@ public class GnollGeomancer extends Mob {
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
 						Char ch = Actor.findChar(rockPath.collisionPos);
-						if (ch == Dungeon.heroes){
+						if (ch instanceof Hero){
 							PixelScene.shake( 3, 0.7f );
 						} else {
 							PixelScene.shake(0.5f, 0.5f);
@@ -696,7 +696,7 @@ public class GnollGeomancer extends Mob {
 
 							if (ch.isAlive()){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
-							} else if (!ch.isAlive() && ch == Dungeon.heroes) {
+							} else if (!ch.isAlive() && ch instanceof Hero) {
 								Badges.validateDeathFromEnemyMagic();
 								Dungeon.fail( source.getClass() );
 								GLog.n( Messages.get( GnollGeomancer.class, "rock_kill") );
@@ -798,7 +798,7 @@ public class GnollGeomancer extends Mob {
 			ch.damage(Char.combatRoll(6, 12), this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
-			} else if (ch == Dungeon.heroes){
+			} else if (ch instanceof Hero){
 				Dungeon.fail( target );
 				GLog.n( Messages.get( GnollGeomancer.class, "rockfall_kill") );
 			}

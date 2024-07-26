@@ -119,14 +119,14 @@ public abstract class Shaman extends Mob {
 			
 			if (Random.Int( 2 ) == 0) {
 				debuff( enemy );
-				if (enemy == Dungeon.heroes) Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
+				if (enemy instanceof Hero) Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
 			}
 			
 			int dmg = Char.combatRoll( 6, 15 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.damage( dmg, new EarthenBolt() );
 			
-			if (!enemy.isAlive() && enemy == Dungeon.heroes) {
+			if (!enemy.isAlive() && enemy instanceof Hero) {
 				Badges.validateDeathFromEnemyMagic();
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "bolt_kill") );

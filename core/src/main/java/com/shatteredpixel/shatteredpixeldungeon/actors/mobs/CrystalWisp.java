@@ -126,7 +126,7 @@ public class CrystalWisp extends Mob{
 			int dmg = Char.combatRoll( 5, 10 );
 			enemy.damage( dmg, new LightBeam() );
 
-			if (!enemy.isAlive() && enemy == Dungeon.heroes) {
+			if (!enemy.isAlive() && enemy instanceof Hero) {
 				Badges.validateDeathFromEnemyMagic();
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "beam_kill") );

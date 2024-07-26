@@ -122,7 +122,7 @@ public class Guard extends Mob {
 		enemy.sprite.place(pullPos);
 		Dungeon.level.occupyCell(enemy);
 		Cripple.prolong(enemy, Cripple.class, 4f);
-		if (enemy == Dungeon.heroes) {
+		if (enemy instanceof Hero) {
 			Dungeon.heroes.interrupt();
 			Dungeon.observe();
 			GameScene.updateFog();

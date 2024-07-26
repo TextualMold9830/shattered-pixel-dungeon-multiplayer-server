@@ -446,7 +446,7 @@ public class Armor extends EquipableItem {
 			damage = glyph.proc( this, attacker, defender, damage );
 		}
 		
-		if (!levelKnown && defender == Dungeon.heroes) {
+		if (!levelKnown && defender instanceof Hero) {
 			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;

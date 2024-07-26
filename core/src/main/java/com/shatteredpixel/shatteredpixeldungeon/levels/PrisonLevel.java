@@ -141,7 +141,7 @@ public class PrisonLevel extends RegularLevel {
 	@Override
 	public void occupyCell(Char ch) {
 		super.occupyCell(ch);
-		if (ch == Dungeon.heroes) {
+		if (ch instanceof Hero) {
 			updateWandmakerQuestMusic();
 		}
 	}

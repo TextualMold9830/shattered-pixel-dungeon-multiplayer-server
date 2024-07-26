@@ -48,7 +48,7 @@ public class Flashbang extends Bomb {
 				if (power > 0){
 					Buff.prolong(ch, Blindness.class, power);
 					Buff.prolong(ch, Cripple.class, power);
-					if (ch == Dungeon.heroes){
+					if (ch instanceof Hero){
 						GameScene.flash(0x80FFFFFF);
 					}
 				}

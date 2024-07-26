@@ -1134,7 +1134,7 @@ public abstract class Level implements Bundlable {
 		if (!ch.flying){
 
 			if ( (map[ch.pos] == Terrain.GRASS || map[ch.pos] == Terrain.EMBERS)
-					&& ch == Dungeon.heroes && Dungeon.heroes.hasTalent(Talent.REJUVENATING_STEPS)
+					&& ch instanceof Hero && Dungeon.heroes.hasTalent(Talent.REJUVENATING_STEPS)
 					&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
 
 				if (!Regeneration.regenOn()){
@@ -1150,7 +1150,7 @@ public abstract class Level implements Bundlable {
 			}
 			
 			if (pit[ch.pos]){
-				if (ch == Dungeon.heroes) {
+				if (ch instanceof Hero) {
 					Chasm.heroFall(ch.pos);
 				} else if (ch instanceof Mob) {
 					Chasm.mobFall( (Mob)ch );
@@ -1324,7 +1324,7 @@ public abstract class Level implements Bundlable {
 		
 		int sense = 1;
 		//Currently only the hero can get mind vision
-		if (c.isAlive() && c == Dungeon.heroes) {
+		if (c.isAlive() && c instanceof Hero) {
 			for (Buff b : c.buffs( MindVision.class )) {
 				sense = Math.max( ((MindVision)b).distance, sense );
 			}
@@ -1370,7 +1370,7 @@ public abstract class Level implements Bundlable {
 		}
 
 		//Currently only the hero can get mind vision or awareness
-		if (c.isAlive() && c == Dungeon.heroes) {
+		if (c.isAlive() && c instanceof Hero) {
 
 			if (heroMindFov == null || heroMindFov.length != length()){
 				heroMindFov = new boolean[length];
@@ -1461,7 +1461,7 @@ public abstract class Level implements Bundlable {
 
 		}
 
-		if (c == Dungeon.heroes) {
+		if (c instanceof Hero) {
 			for (Heap heap : heaps.valueList())
 				if (!heap.seen && fieldOfView[heap.pos])
 					heap.seen = true;

@@ -339,7 +339,7 @@ public abstract class Wand extends Item {
 		if (charger != null && charger.target != null) {
 
 			//inside staff, still need to apply degradation
-			if (charger.target == Dungeon.heroes
+			if (charger.target instanceof Hero
 					&& !Dungeon.heroes.belongings.contains(this)
 					&& Dungeon.heroes.buff( Degrade.class ) != null){
 				lvl = Degrade.reduceLevel(lvl);
@@ -415,7 +415,7 @@ public abstract class Wand extends Item {
 		}
 
 		//inside staff
-		if (charger != null && charger.target == Dungeon.heroes && !Dungeon.heroes.belongings.contains(this)){
+		if (charger != null && charger.target instanceof Hero && !Dungeon.heroes.belongings.contains(this)){
 			if (Dungeon.heroes.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= maxCharges){
 				int shieldToGive = Math.round(buffedLvl()*0.67f*Dungeon.heroes.pointsInTalent(Talent.EXCESS_CHARGE));
 				Buff.affect(Dungeon.heroes, Barrier.class).setShield(shieldToGive);
@@ -442,14 +442,14 @@ public abstract class Wand extends Item {
 
 		//If hero owns wand but it isn't in belongings it must be in the staff
 		if (Dungeon.heroes.hasTalent(Talent.EMPOWERED_STRIKE)
-				&& charger != null && charger.target == Dungeon.heroes
+				&& charger != null && charger.target instanceof Hero
 				&& !Dungeon.heroes.belongings.contains(this)){
 
 			Buff.prolong(Dungeon.heroes, Talent.EmpoweredStrikeTracker.class, 10f);
 		}
 
 		if (Dungeon.heroes.hasTalent(Talent.LINGERING_MAGIC)
-				&& charger != null && charger.target == Dungeon.heroes){
+				&& charger != null && charger.target instanceof Hero){
 
 			Buff.prolong(Dungeon.heroes, Talent.LingeringMagicTracker.class, 5f);
 		}

@@ -535,7 +535,7 @@ public class PrisonBossLevel extends Level {
 	
 	@Override
 	public void occupyCell(Char ch) {
-		if (ch == Dungeon.heroes){
+		if (ch instanceof Hero){
 			switch (state){
 				case START:
 					if (cellToPoint(ch.pos).y > tenguCell.top){

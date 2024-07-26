@@ -252,7 +252,7 @@ public abstract class Char extends Actor {
 		}
 
 		//warp instantly with allies in this case
-		if (c == Dungeon.heroes && Dungeon.heroes.hasTalent(Talent.ALLY_WARP)){
+		if (c instanceof Hero && Dungeon.heroes.hasTalent(Talent.ALLY_WARP)){
 			PathFinder.buildDistanceMap(c.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
 			if (PathFinder.distance[pos] == Integer.MAX_VALUE){
 				return true;
@@ -281,7 +281,7 @@ public abstract class Char extends Actor {
 		
 		c.spend( 1 / c.speed() );
 
-		if (c == Dungeon.heroes){
+		if (c instanceof Hero){
 			if (Dungeon.heroes.subClass == HeroSubClass.FREERUNNER){
 				Buff.affect(Dungeon.heroes, Momentum.class).gainStack();
 			}
@@ -391,7 +391,7 @@ public abstract class Char extends Actor {
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
 				dmg = prep.damageRoll(this);
-				if (this == Dungeon.heroes && Dungeon.heroes.hasTalent(Talent.BOUNTY_HUNTER)) {
+				if (this instanceof Hero && Dungeon.heroes.hasTalent(Talent.BOUNTY_HUNTER)) {
 					Buff.affect(Dungeon.heroes, Talent.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
@@ -512,9 +512,9 @@ public abstract class Char extends Actor {
 			}
 
 			if (!enemy.isAlive() && visibleFight) {
-				if (enemy == Dungeon.heroes) {
+				if (enemy instanceof Hero) {
 					
-					if (this == Dungeon.heroes) {
+					if (this instanceof Hero) {
 						return true;
 					}
 
@@ -525,7 +525,7 @@ public abstract class Char extends Actor {
 					Dungeon.fail( this );
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 					
-				} else if (this == Dungeon.heroes) {
+				} else if (this instanceof Hero) {
 					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
 				}
 			}
@@ -833,7 +833,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Pickaxe)                                 icon = FloatingText.PICK_DMG;
 
 			//special case for sniper when using ranged attacks
-			if (src == Dungeon.heroes
+			if (src instanceof Hero
 					&& Dungeon.heroes.subClass == HeroSubClass.SNIPER
 					&& !Dungeon.level.adjacent(Dungeon.heroes.pos, pos)
 					&& Dungeon.heroes.belongings.attackingWeapon() instanceof MissileWeapon){

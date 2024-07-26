@@ -155,7 +155,7 @@ public class CrystalSpire extends Mob {
 							ch.pos = movePos;
 							Dungeon.level.occupyCell(ch);
 						}
-					} else if (ch == Dungeon.heroes){
+					} else if (ch instanceof Hero){
 						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 						Dungeon.fail(this);
 					}
@@ -306,7 +306,7 @@ public class CrystalSpire extends Mob {
 
 	@Override
 	public boolean interact(Char c) {
-		if (c == Dungeon.heroes){
+		if (c instanceof Hero){
 			final Pickaxe p = Dungeon.heroes.belongings.getItem(Pickaxe.class);
 
 			if (p == null){

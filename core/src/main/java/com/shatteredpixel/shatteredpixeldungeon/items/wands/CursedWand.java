@@ -233,10 +233,10 @@ public class CursedWand {
 					toDamage.damage(damage, new CursedWand());
 					toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 
-					if (toDamage == Dungeon.heroes){
+					if (toDamage instanceof Hero){
 						Sample.INSTANCE.play(Assets.Sounds.CURSED);
 						if (!toDamage.isAlive()) {
-							if (user == Dungeon.heroes && origin != null) {
+							if (user instanceof Hero && origin != null) {
 								Badges.validateDeathFromFriendlyMagic();
 								Dungeon.fail( origin );
 								GLog.n( Messages.get( CursedWand.class, "ondeath", origin.name() ) );
@@ -322,7 +322,7 @@ public class CursedWand {
 			//inter-level teleportation
 			//of scroll of teleportation if positive only, or inter-floor teleport disallowed
 			case 2:
-				if (!positiveOnly && Dungeon.depth > 1 && Dungeon.interfloorTeleportAllowed() && user == Dungeon.heroes) {
+				if (!positiveOnly && Dungeon.depth > 1 && Dungeon.interfloorTeleportAllowed() && user instanceof Hero) {
 
 					//each depth has 1 more weight than the previous depth.
 					float[] depths = new float[Dungeon.depth-1];
@@ -345,7 +345,7 @@ public class CursedWand {
 			//summon monsters
 			//or mirror images if positive only
 			case 3:
-				if (positiveOnly && user == Dungeon.heroes){
+				if (positiveOnly && user instanceof Hero){
 					ScrollOfMirrorImage.spawnImages(Dungeon.heroes, 2);
 				} else {
 					new SummoningTrap().set(targetPos).activate();
