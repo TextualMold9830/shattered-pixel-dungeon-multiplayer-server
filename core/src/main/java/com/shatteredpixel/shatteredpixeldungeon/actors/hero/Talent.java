@@ -227,7 +227,7 @@ public enum Talent {
 	public static class RejuvenatingStepsCooldown extends FlavourBuff{
 		public int icon() { return BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0f, 0.35f, 0.15f); }
-		public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (15 - 5*Dungeon.heroes.pointsInTalent(REJUVENATING_STEPS)), 1); }
+		public float iconFadePercent(Hero hero) { return GameMath.gate(0, visualcooldown() / (15 - 5*hero.pointsInTalent(REJUVENATING_STEPS)), 1); }
 	};
 	public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}};
 	public static class SeerShotCooldown extends FlavourBuff{
@@ -367,12 +367,12 @@ public enum Talent {
 		this.maxPoints = maxPoints;
 	}
 
-	public int icon(){
+	public int icon(Hero hero){
 		if (this == HEROIC_ENERGY){
 			if (Ratmogrify.useRatroicEnergy){
 				return 218;
 			}
-			HeroClass cls = Dungeon.heroes != null ? Dungeon.heroes.heroClass : GamesInProgress.selectedClass;
+			HeroClass cls = hero != null ? hero.heroClass : GamesInProgress.selectedClass;
 			switch (cls){
 				case WARRIOR: default:
 					return 26;
@@ -427,7 +427,7 @@ public enum Talent {
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.identify();
 			if (hero.belongings.misc instanceof Ring) hero.belongings.misc.identify();
-			for (Item item : Dungeon.heroes.belongings){
+			for (Item item : hero.belongings){
 				if (item instanceof Ring){
 					((Ring) item).setKnown();
 				}
@@ -446,17 +446,17 @@ public enum Talent {
 		}
 
 		if (talent == LIGHT_CLOAK && hero.heroClass == HeroClass.ROGUE){
-			for (Item item : Dungeon.heroes.belongings.backpack){
+			for (Item item : hero.belongings.backpack){
 				if (item instanceof CloakOfShadows){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
-						((CloakOfShadows) item).activate(Dungeon.heroes);
+						((CloakOfShadows) item).activate(hero);
 					}
 				}
 			}
 		}
 
 		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT){
-			Dungeon.observe();
+			Dungeon.observe(hero);
 		}
 
 		if (talent == TWIN_UPGRADES || talent == DESPERATE_POWER || talent == STRONGMAN){
@@ -613,7 +613,7 @@ public enum Talent {
 					GameScene.updateMap(grassCell);
 				}
 			}
-			Dungeon.observe();
+			Dungeon.observe(hero);
 		}
 		if (hero.hasTalent(LIQUID_AGILITY)){
 			Buff.prolong(hero, RestoredAgilityTracker.class, hero.cooldown() + Math.max(0, factor-1));
@@ -638,7 +638,7 @@ public enum Talent {
 				MagesStaff staff = hero.belongings.getItem(MagesStaff.class);
 				if (staff != null) {
 					staff.gainCharge(2 + 2 * hero.pointsInTalent(INSCRIBED_POWER), true);
-					ScrollOfRecharging.charge(Dungeon.heroes);
+					ScrollOfRecharging.charge(hero);
 					SpellSprite.show(hero, SpellSprite.CHARGE);
 				}
 			} else {
