@@ -219,7 +219,7 @@ public abstract class Char extends Actor {
 		} else if (c instanceof Hero
 				&& alignment == Alignment.ALLY
 				&& !hasProp(this, Property.IMMOVABLE)
-				&& Dungeon.level.distance(pos, c.pos) <= 2*Dungeon.heroes.pointsInTalent(Talent.ALLY_WARP)){
+				&& Dungeon.level.distance(pos, c.pos) <= 2* ((Hero) c).pointsInTalent(Talent.ALLY_WARP)){
 			return true;
 		} else {
 			return false;
@@ -252,7 +252,7 @@ public abstract class Char extends Actor {
 		}
 
 		//warp instantly with allies in this case
-		if (c instanceof Hero && Dungeon.heroes.hasTalent(Talent.ALLY_WARP)){
+		if (c instanceof Hero && ((Hero) c).hasTalent(Talent.ALLY_WARP)){
 			PathFinder.buildDistanceMap(c.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
 			if (PathFinder.distance[pos] == Integer.MAX_VALUE){
 				return true;
@@ -261,7 +261,7 @@ public abstract class Char extends Actor {
 			c.pos = oldPos;
 			ScrollOfTeleportation.appear(this, newPos);
 			ScrollOfTeleportation.appear(c, oldPos);
-			Dungeon.observe();
+			Dungeon.observe((Hero) c);
 			GameScene.updateFog();
 			return true;
 		}
@@ -282,11 +282,11 @@ public abstract class Char extends Actor {
 		c.spend( 1 / c.speed() );
 
 		if (c instanceof Hero){
-			if (Dungeon.heroes.subClass == HeroSubClass.FREERUNNER){
-				Buff.affect(Dungeon.heroes, Momentum.class).gainStack();
+			if (((Hero) c).subClass == HeroSubClass.FREERUNNER){
+				Buff.affect(c, Momentum.class).gainStack();
 			}
 
-			Dungeon.heroes.busy();
+			((Hero) c).busy();
 		}
 		
 		return true;
@@ -391,8 +391,8 @@ public abstract class Char extends Actor {
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
 				dmg = prep.damageRoll(this);
-				if (this instanceof Hero && Dungeon.heroes.hasTalent(Talent.BOUNTY_HUNTER)) {
-					Buff.affect(Dungeon.heroes, Talent.BountyHunterTracker.class, 0.0f);
+				if (this instanceof Hero && ((Hero) this).hasTalent(Talent.BOUNTY_HUNTER)) {
+					Buff.affect(this, Talent.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
 				dmg = damageRoll();
@@ -834,9 +834,9 @@ public abstract class Char extends Actor {
 
 			//special case for sniper when using ranged attacks
 			if (src instanceof Hero
-					&& Dungeon.heroes.subClass == HeroSubClass.SNIPER
-					&& !Dungeon.level.adjacent(Dungeon.heroes.pos, pos)
-					&& Dungeon.heroes.belongings.attackingWeapon() instanceof MissileWeapon){
+					&& ((Hero) src).subClass == HeroSubClass.SNIPER
+					&& !Dungeon.level.adjacent(((Hero) src).pos, pos)
+					&& ((Hero) src).belongings.attackingWeapon() instanceof MissileWeapon){
 				icon = FloatingText.PHYS_DMG_NO_BLOCK;
 			}
 
@@ -1094,7 +1094,7 @@ public abstract class Char extends Actor {
 
 		pos = step;
 		
-		if (this != Dungeon.heroes) {
+		if (!(this instanceof Hero)) {
 			sprite.visible = Dungeon.level.heroFOV[pos];
 		}
 		
