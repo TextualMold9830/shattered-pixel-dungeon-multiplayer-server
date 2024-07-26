@@ -140,7 +140,7 @@ public class Item implements Bundlable {
 	}
 
 	public boolean doPickUp(Hero hero, int pos) {
-		if (collect( hero.belongings.backpack )) {
+		if (collect( hero.belongings.backpack, hero )) {
 			
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
@@ -220,7 +220,7 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public boolean collect( Bag container ) {
+	public boolean collect( Bag container, Hero hero) {
 
 		if (quantity <= 0){
 			return true;
@@ -234,7 +234,7 @@ public class Item implements Bundlable {
 
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				if (collect( (Bag)item )){
+				if (collect( (Bag)item, hero )){
 					return true;
 				}
 			}
@@ -249,22 +249,22 @@ public class Item implements Bundlable {
 				if (isSimilar( item )) {
 					item.merge( this );
 					item.updateQuickslot();
-					if (Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
+					if (Dungeon.heroes != null && hero.isAlive()) {
 						Badges.validateItemLevelAquired( this );
-						Talent.onItemCollected(Dungeon.heroes, item);
+						Talent.onItemCollected(hero, item);
 						if (isIdentified()) Catalog.setSeen(getClass());
 					}
 					if (TippedDart.lostDarts > 0){
 						Dart d = new Dart();
 						d.quantity(TippedDart.lostDarts);
 						TippedDart.lostDarts = 0;
-						if (!d.collect()){
+						if (!d.collect(hero)){
 							//have to handle this in an actor as we can't manipulate the heap during pickup
 							Actor.add(new Actor() {
 								{ actPriority = VFX_PRIO; }
 								@Override
 								protected boolean act() {
-									Dungeon.level.drop(d, Dungeon.heroes.pos).sprite.drop();
+									Dungeon.level.drop(d, hero.pos).sprite.drop();
 									Actor.remove(this);
 									return true;
 								}
@@ -276,9 +276,9 @@ public class Item implements Bundlable {
 			}
 		}
 
-		if (Dungeon.heroes != null && Dungeon.heroes.isAlive()) {
+		if (hero != null && hero.isAlive()) {
 			Badges.validateItemLevelAquired( this );
-			Talent.onItemCollected( Dungeon.heroes, this );
+			Talent.onItemCollected( hero, this );
 			if (isIdentified()) Catalog.setSeen(getClass());
 		}
 
@@ -290,8 +290,8 @@ public class Item implements Bundlable {
 
 	}
 	
-	public boolean collect() {
-		return collect( Dungeon.heroes.belongings.backpack );
+	public boolean collect(Hero hero) {
+		return collect( hero.belongings.backpack, hero );
 	}
 	
 	//returns a new item if the split was sucessful and there are now 2 items, otherwise null
@@ -393,10 +393,10 @@ public class Item implements Bundlable {
 	
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
-	public int buffedLvl(){
+	public int buffedLvl(Hero hero){
 		//only the hero can be affected by Degradation
-		if (Dungeon.heroes.buff( Degrade.class ) != null
-			&& (isEquipped( Dungeon.heroes) || Dungeon.heroes.belongings.contains( this ))) {
+		if (hero.buff( Degrade.class ) != null
+			&& (isEquipped(hero) || hero.belongings.contains( this ))) {
 			return Degrade.reduceLevel(level());
 		} else {
 			return level();
@@ -445,8 +445,8 @@ public class Item implements Bundlable {
 		return levelKnown ? level() : 0;
 	}
 
-	public int buffedVisiblyUpgraded() {
-		return levelKnown ? buffedLvl() : 0;
+	public int buffedVisiblyUpgraded(Hero hero) {
+		return levelKnown ? buffedLvl(hero) : 0;
 	}
 	
 	public boolean visiblyCursed() {
@@ -465,15 +465,15 @@ public class Item implements Bundlable {
 		return false;
 	}
 
-	public final Item identify(){
-		return identify(true);
+	public final Item identify(Hero hero){
+		return identify(true, hero);
 	}
 
-	public Item identify( boolean byHero ) {
+	public Item identify( boolean byHero, Hero hero ) {
 
-		if (byHero && Dungeon.heroes != null && Dungeon.heroes.isAlive()){
+		if (byHero && Dungeon.heroes != null && hero.isAlive()){
 			Catalog.setSeen(getClass());
-			if (!isIdentified()) Talent.onItemIdentified(Dungeon.heroes, this);
+			if (!isIdentified()) Talent.onItemIdentified(hero, this);
 		}
 
 		levelKnown = true;
