@@ -723,7 +723,7 @@ public abstract class Mob extends Char {
 			int restoration = Math.min(damage, HP+shielding());
 			
 			//physical damage that doesn't come from the hero is less effective
-			if (enemy != Dungeon.heroes){
+			if (!(enemy instanceof Hero)){
 				restoration = Math.round(restoration * 0.4f*Dungeon.heroes.pointsInTalent(Talent.SOUL_SIPHON)/3f);
 			}
 			if (restoration > 0) {
@@ -799,12 +799,14 @@ public abstract class Mob extends Char {
 		super.destroy();
 		
 		Dungeon.level.mobs.remove( this );
-
-		if (Dungeon.heroes.buff(MindVision.class) != null){
-			Dungeon.observe();
-			GameScene.updateFog(pos, 2);
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.buff(MindVision.class) != null) {
+					Dungeon.observe(hero);
+					GameScene.updateFog(pos, 2);
+				}
+			}
 		}
-
 		if (Dungeon.heroes.isAlive()) {
 			
 			if (alignment == Alignment.ENEMY) {
