@@ -370,33 +370,33 @@ public class Belongings implements Iterable<Item> {
 	//triggers when a run ends, so ignores lost inventory effects
 	public void identify() {
 		for (Item item : this) {
-			item.identify(false);
+			item.identify(false, owner);
 		}
 	}
 	
 	public void observe() {
 		if (weapon() != null) {
-			weapon().identify();
+			weapon().identify(owner);
 			Badges.validateItemLevelAquired(weapon());
 		}
 		if (armor() != null) {
-			armor().identify();
+			armor().identify(owner);
 			Badges.validateItemLevelAquired(armor());
 		}
 		if (artifact() != null) {
-			artifact().identify();
+			artifact().identify(owner);
 			Badges.validateItemLevelAquired(artifact());
 		}
 		if (misc() != null) {
-			misc().identify();
+			misc().identify(owner);
 			Badges.validateItemLevelAquired(misc());
 		}
 		if (ring() != null) {
-			ring().identify();
+			ring().identify(owner);
 			Badges.validateItemLevelAquired(ring());
 		}
 		if (secondWep() != null){
-			secondWep().identify();
+			secondWep().identify(owner);
 			Badges.validateItemLevelAquired(secondWep());
 		}
 		for (Item item : backpack) {
