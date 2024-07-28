@@ -141,17 +141,17 @@ public class GamesInProgress {
 		info.daily = Dungeon.daily;
 		info.dailyReplay = Dungeon.dailyReplay;
 		
-		info.level = Dungeon.heroes.lvl;
-		info.str = Dungeon.heroes.STR;
-		info.strBonus = Dungeon.heroes.STR() - Dungeon.heroes.STR;
-		info.exp = Dungeon.heroes.exp;
-		info.hp = Dungeon.heroes.HP;
-		info.ht = Dungeon.heroes.HT;
-		info.shld = Dungeon.heroes.shielding();
-		info.heroClass = Dungeon.heroes.heroClass;
-		info.subClass = Dungeon.heroes.subClass;
-		info.armorTier = Dungeon.heroes.tier();
-		
+//		info.level = Dungeon.heroes.lvl;
+//		info.str = Dungeon.heroes.STR;
+//		info.strBonus = Dungeon.heroes.STR() - Dungeon.heroes.STR;
+//		info.exp = Dungeon.heroes.exp;
+//		info.hp = Dungeon.heroes.HP;
+//		info.ht = Dungeon.heroes.HT;
+//		info.shld = Dungeon.heroes.shielding();
+//		info.heroClass = Dungeon.heroes.heroClass;
+//		info.subClass = Dungeon.heroes.subClass;
+//		info.armorTier = Dungeon.heroes.tier();
+//
 		info.goldCollected = Statistics.goldCollected;
 		info.maxDepth = Statistics.deepestFloor;
 

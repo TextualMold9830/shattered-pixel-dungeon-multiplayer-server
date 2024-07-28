@@ -45,12 +45,14 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Signal;
 
 public class CellSelector extends ScrollArea {
+	public Hero owner;
 
 	public Listener listener = null;
 	
 	public boolean enabled;
 	
 	private float dragThreshold;
+	@Deprecated
 	
 	public CellSelector( DungeonTilemap map ) {
 		super( map );
@@ -90,10 +92,10 @@ public class CellSelector extends ScrollArea {
 			//The extra check prevents large sprites from blocking the player from clicking adjacent tiles
 
 			//hero first
-			if (Dungeon.heroes.sprite != null && Dungeon.heroes.sprite.overlapsPoint( p.x, p.y )){
-				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.heroes.pos);
+			if (owner.sprite != null && owner.sprite.overlapsPoint( p.x, p.y )){
+				PointF c = DungeonTilemap.tileCenterToWorld(owner.pos);
 				if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
-					select(Dungeon.heroes.pos, event.button);
+					select(owner.pos, event.button);
 					return;
 				}
 			}
@@ -151,7 +153,7 @@ public class CellSelector extends ScrollArea {
 	}
 	
 	public void select( int cell, int button ) {
-		if (enabled && Dungeon.heroes.ready && !GameScene.interfaceBlockingHero()
+		if (enabled && owner.ready && !GameScene.interfaceBlockingHero()
 				&& listener != null && cell != -1) {
 
 			switch (button){
@@ -329,7 +331,7 @@ public class CellSelector extends ScrollArea {
 
 			} else if (!directionFromAction(action).isZero()) {
 
-				Dungeon.heroes.resting = false;
+				owner.resting = false;
 				lastCellMoved = -1;
 				if (heldAction1 == SPDAction.NONE){
 					heldAction1 = action;
@@ -342,8 +344,8 @@ public class CellSelector extends ScrollArea {
 				}
 
 				return true;
-			} else if (Dungeon.heroes != null && Dungeon.heroes.resting){
-				Dungeon.heroes.resting = false;
+			} else if (owner != null && owner.resting){
+				owner.resting = false;
 				return true;
 			}
 			
@@ -371,7 +373,7 @@ public class CellSelector extends ScrollArea {
 		if (newLeftStick != leftStickAction){
 			if (leftStickAction == SPDAction.NONE){
 				heldDelay = initialDelay();
-				Dungeon.heroes.resting = false;
+				owner.resting = false;
 			} else if (newLeftStick == SPDAction.NONE && heldDelay > 0f){
 				heldDelay = 0f;
 				moveFromActions(leftStickAction);
@@ -383,9 +385,9 @@ public class CellSelector extends ScrollArea {
 			heldDelay -= Game.elapsed;
 		}
 
-		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && Dungeon.heroes.ready){
-			processKeyHold();
-		} else if (Dungeon.heroes.ready) {
+		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && owner.ready){
+			processKeyHold(owner);
+		} else if (owner.ready) {
 			lastCellMoved = -1;
 		}
 	}
@@ -394,7 +396,7 @@ public class CellSelector extends ScrollArea {
 	private int lastCellMoved = 0;
 
 	private boolean moveFromActions(GameAction... actions){
-		if (Dungeon.heroes == null || !Dungeon.heroes.ready){
+		if (Dungeon.heroes == null || !owner.ready){
 			return false;
 		}
 
@@ -406,15 +408,15 @@ public class CellSelector extends ScrollArea {
 		for (GameAction action : actions) {
 			direction.offset(directionFromAction(action));
 		}
-		int cell = Dungeon.heroes.pos;
+		int cell = owner.pos;
 		//clamp to adjacent values (-1 to +1)
 		cell += GameMath.gate(-1, direction.x, +1);
 		cell += GameMath.gate(-1, direction.y, +1) * Dungeon.level.width();
 
-		if (cell != Dungeon.heroes.pos && cell != lastCellMoved){
+		if (cell != owner.pos && cell != lastCellMoved){
 			lastCellMoved = cell;
-			if (Dungeon.heroes.handle( cell )) {
-				Dungeon.heroes.next();
+			if (owner.handle( cell )) {
+				owner.next();
 			}
 			return true;
 
@@ -523,4 +525,14 @@ public class CellSelector extends ScrollArea {
 
 		public abstract String prompt();
 	}
+	public CellSelector(Hero owner ) {
+        super(GameScene.tiles);
+		camera = GameScene.tiles.camera();
+
+		mouseZoom = camera.zoom;
+		KeyEvent.addKeyListener( keyListener );
+        this.owner=owner;
+		dragThreshold = PixelScene.defaultZoom * DungeonTilemap.SIZE / 2;
+	}
+
 }

@@ -700,11 +700,14 @@ public abstract class Mob extends Char {
 			Badges.validateRogueUnlock();
 			//TODO this is somewhat messy, it would be nicer to not have to manually handle delays here
 			// playing the strong hit sound might work best as another property of weapon?
-			if (Dungeon.heroes.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow
-				|| Dungeon.heroes.belongings.attackingWeapon() instanceof Dart){
-				Sample.INSTANCE.playDelayed(Assets.Sounds.HIT_STRONG, 0.125f);
-			} else {
-				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+			if(enemy instanceof Hero) {
+				Hero hero = (Hero) enemy;
+				if (hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow
+						|| hero.belongings.attackingWeapon() instanceof Dart) {
+					Sample.INSTANCE.playDelayed(Assets.Sounds.HIT_STRONG, 0.125f);
+				} else {
+					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+				}
 			}
 			if (enemy.buff(Preparation.class) != null) {
 				Wound.hit(this);
@@ -722,7 +725,7 @@ public abstract class Mob extends Char {
 
 		if (buff(SoulMark.class) != null) {
 			int restoration = Math.min(damage, HP+shielding());
-			
+			//FIXME
 			//physical damage that doesn't come from the hero is less effective
 			if (!(enemy instanceof Hero)){
 				restoration = Math.round(restoration * 0.4f*Dungeon.heroes.pointsInTalent(Talent.SOUL_SIPHON)/3f);
@@ -796,11 +799,11 @@ public abstract class Mob extends Char {
 	
 	@Override
 	public void destroy() {
-		
+
 		super.destroy();
-		
-		Dungeon.level.mobs.remove( this );
-		for(Hero hero: Dungeon.heroes) {
+
+		Dungeon.level.mobs.remove(this);
+		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
 				if (hero.buff(MindVision.class) != null) {
 					Dungeon.observe(hero);
@@ -808,32 +811,36 @@ public abstract class Mob extends Char {
 				}
 			}
 		}
-		if (Dungeon.heroes.isAlive()) {
-			
-			if (alignment == Alignment.ENEMY) {
-				Statistics.enemiesSlain++;
-				Badges.validateMonstersSlain();
-				Statistics.qualifiedForNoKilling = false;
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.isAlive()) {
 
-				AscensionChallenge.processEnemyKill(this);
-				
-				int exp = Dungeon.heroes.lvl <= maxLvl ? EXP : 0;
+					if (alignment == Alignment.ENEMY) {
+						Statistics.enemiesSlain++;
+						Badges.validateMonstersSlain();
+						Statistics.qualifiedForNoKilling = false;
 
-				//during ascent, under-levelled enemies grant 10 xp each until level 30
-				// after this enemy kills which reduce the amulet curse still grant 10 effective xp
-				// for the purposes of on-exp effects, see AscensionChallenge.processEnemyKill
-				if (Dungeon.heroes.buff(AscensionChallenge.class) != null &&
-						exp == 0 && maxLvl > 0 && EXP > 0 && Dungeon.heroes.lvl < Hero.MAX_LEVEL){
-					exp = Math.round(10 * spawningWeight());
-				}
+						AscensionChallenge.processEnemyKill(this);
 
-				if (exp > 0) {
-					Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(exp), FloatingText.EXPERIENCE);
-				}
-				Dungeon.heroes.earnExp(exp, getClass());
+						int exp = hero.lvl <= maxLvl ? EXP : 0;
 
-				if (Dungeon.heroes.subClass == HeroSubClass.MONK){
-					Buff.affect(Dungeon.heroes, MonkEnergy.class).gainEnergy(this);
+						//during ascent, under-levelled enemies grant 10 xp each until level 30
+						// after this enemy kills which reduce the amulet curse still grant 10 effective xp
+						// for the purposes of on-exp effects, see AscensionChallenge.processEnemyKill
+						if (hero.buff(AscensionChallenge.class) != null &&
+								exp == 0 && maxLvl > 0 && EXP > 0 && hero.lvl < Hero.MAX_LEVEL) {
+							exp = Math.round(10 * spawningWeight());
+						}
+
+						if (exp > 0) {
+							hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(exp), FloatingText.EXPERIENCE);
+						}
+						hero.earnExp(exp, getClass());
+
+						if (hero.subClass == HeroSubClass.MONK) {
+							Buff.affect(hero, MonkEnergy.class).gainEnergy(this);
+						}
+					}
 				}
 			}
 		}
@@ -866,9 +873,7 @@ public abstract class Mob extends Char {
 
 		}
 
-		if (Dungeon.heroes.isAlive() && !Dungeon.level.heroFOV[pos]) {
 			GLog.i( Messages.get(this, "died") );
-		}
 
 		boolean soulMarked = buff(SoulMark.class) != null;
 
