@@ -366,9 +366,12 @@ public class DM300 extends Mob {
 		next();
 	}
 
-	public void ventGas( Char target ){
-		Dungeon.heroes.interrupt();
-
+	public void ventGas( Char target ) {
+		for (Hero hero : Dungeon.heroes) {
+			if(hero != null) {
+			hero.interrupt();
+		}
+	}
 		int gasVented = 0;
 
 		Ballistica trajectory = new Ballistica(pos, target.pos, Ballistica.STOP_TARGET);
@@ -408,7 +411,7 @@ public class DM300 extends Mob {
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 2, false, false, this);
 			if (target instanceof Hero){
-				Dungeon.heroes.interrupt();
+				((Hero) target).interrupt();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 2));
 
@@ -418,7 +421,7 @@ public class DM300 extends Mob {
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 1, false, false, this);
 			if (target instanceof Hero){
-				Dungeon.heroes.interrupt();
+				((Hero) target).interrupt();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 1));
 
@@ -579,11 +582,11 @@ public class DM300 extends Mob {
 			Badges.validateBossChallengeCompleted();
 		}
 		Statistics.bossScores[2] += 3000;
-
-		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
-		if (beacon != null) {
-			beacon.upgrade();
-		}
+		//Why is this here? Lloyds beacon got removed
+		//LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
+//		if (beacon != null) {
+//			beacon.upgrade();
+//		}
 
 		yell( Messages.get(this, "defeated") );
 	}

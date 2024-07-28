@@ -138,7 +138,7 @@ public class BrokenSeal extends Item {
 		public boolean itemSelectable(Item item) {
 			return item instanceof Armor;
 		}
-
+		//FIXME
 		@Override
 		public void onSelect( Item item ) {
 			BrokenSeal seal = (BrokenSeal) curItem;

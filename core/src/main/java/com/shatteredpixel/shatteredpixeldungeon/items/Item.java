@@ -67,7 +67,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
-
+//FIXME
 public class Item implements Bundlable {
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";

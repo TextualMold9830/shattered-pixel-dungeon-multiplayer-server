@@ -1441,7 +1441,8 @@ public class GameScene extends PixelScene {
 		);
 		scene.add(menu);
 	}
-	
+
+	//FIXME
 	public static void bossSlain() {
 		if (Dungeon.heroes.isAlive()) {
 			Banner bossSlain = new Banner( BannerSprites.get( BannerSprites.Type.BOSS_SLAIN ) );
