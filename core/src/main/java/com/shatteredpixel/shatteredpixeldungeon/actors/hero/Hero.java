@@ -176,6 +176,8 @@ import java.util.LinkedHashMap;
 public class Hero extends Char {
 	public int networkID = -1;
 	public String name;
+	public boolean[] heroFOV;
+
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
 

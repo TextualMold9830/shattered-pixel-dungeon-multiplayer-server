@@ -112,7 +112,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Level implements Bundlable {
-	
+
 	public static enum Feeling {
 		NONE,
 		CHASM,
@@ -138,8 +138,6 @@ public abstract class Level implements Bundlable {
 	public boolean[] discoverable;
 
 	public int viewDistance = Dungeon.isChallenged( Challenges.DARKNESS ) ? 2 : 8;
-	
-	public boolean[] heroFOV;
 	
 	public boolean[] passable;
 	public boolean[] losBlocking;
