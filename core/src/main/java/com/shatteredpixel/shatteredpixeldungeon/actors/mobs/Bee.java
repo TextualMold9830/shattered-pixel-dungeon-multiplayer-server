@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.BeeSprite;
 import com.watabou.utils.Bundle;
@@ -170,11 +171,26 @@ public class Bee extends Mob {
 				if (!enemies.isEmpty()){
 					return Random.element(enemies);
 				} else {
-					if (alignment != Alignment.ALLY && Dungeon.level.distance(Dungeon.heroes.pos, potPos) <= 3){
-						return Dungeon.heroes;
+					int dist = Integer.MAX_VALUE;
+					HashSet<Hero> targets = new HashSet<>();
+					for (Hero hero: Dungeon.heroes) {
+						if ((hero != null) && hero.isAlive()){
+							int currDist = Dungeon.level.distance(hero.pos, potPos);
+							if (currDist < dist){
+								targets.clear();
+								targets.add(hero);
+								dist = currDist;
+							} else if (currDist == dist){
+								targets.add(hero);
+							}
+						}
+					}
+					if (alignment != Alignment.ALLY && dist <= 3 && !targets.isEmpty()){
+						return Random.element(targets);
 					} else {
 						return null;
 					}
+
 				}
 				
 			} else {

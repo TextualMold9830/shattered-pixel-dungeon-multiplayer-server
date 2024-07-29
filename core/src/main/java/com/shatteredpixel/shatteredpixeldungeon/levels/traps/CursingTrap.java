@@ -23,6 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -62,9 +64,9 @@ public class CursingTrap extends Trap {
 					curse(item);
 			}
 		}
-
-		if (Dungeon.heroes.pos == pos && !Dungeon.heroes.flying){
-			curse(Dungeon.heroes);
+		Char target = Actor.findChar(pos);
+		if ((target != null) && (!target.flying) && (target instanceof Hero)){
+			curse((Hero)target);
 		}
 	}
 
