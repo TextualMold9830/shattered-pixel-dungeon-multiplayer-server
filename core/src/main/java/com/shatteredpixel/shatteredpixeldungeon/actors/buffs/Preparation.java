@@ -272,7 +272,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
 			final Char enemy = Actor.findChar( cell );
-			if (enemy == null || Dungeon.heroes.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell] || enemy instanceof Hero){
+			if (enemy == null || Dungeon.heroes.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.visibleforAnyHero(cell) || enemy instanceof Hero){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {
 

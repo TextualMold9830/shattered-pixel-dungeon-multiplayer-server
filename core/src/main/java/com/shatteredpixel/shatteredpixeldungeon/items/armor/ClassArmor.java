@@ -271,7 +271,7 @@ abstract public class ClassArmor extends Armor {
 								}
 
 								if (armor.levelKnown && armor.cursedKnown) {
-									identify();
+									identify(hero);
 								} else {
 									levelKnown = armor.levelKnown;
 									cursedKnown = true;

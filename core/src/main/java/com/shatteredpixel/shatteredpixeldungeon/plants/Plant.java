@@ -63,7 +63,7 @@ public abstract class Plant implements Bundlable {
 			((Hero) ch).interrupt();
 		}
 
-		if (Dungeon.level.heroFOV[pos] && Dungeon.heroes.hasTalent(Talent.NATURES_AID)){
+		if (Dungeon.visibleforAnyHero(pos) && Dungeon.heroes.hasTalent(Talent.NATURES_AID)){
 			// 3/5 turns based on talent points spent
 			Barkskin.conditionallyAppend(Dungeon.heroes, 2, 1 + 2*(Dungeon.heroes.pointsInTalent(Talent.NATURES_AID)));
 		}
@@ -77,7 +77,7 @@ public abstract class Plant implements Bundlable {
 	public void wither() {
 		Dungeon.level.uproot( pos );
 
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			CellEmitter.get( pos ).burst( LeafParticle.GENERAL, 6 );
 		}
 

@@ -54,7 +54,7 @@ public class Sungrass extends Plant {
 			}
 		}
 		
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			CellEmitter.get( pos ).start( ShaftParticle.FACTORY, 0.2f, 3 );
 		}
 	}

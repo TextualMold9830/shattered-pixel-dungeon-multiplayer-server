@@ -49,7 +49,7 @@ public class GuardianTrap extends Trap {
 			mob.beckon( pos );
 		}
 
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			GLog.w( Messages.get(this, "alarm") );
 			CellEmitter.center(pos).start( Speck.factory(Speck.SCREAM), 0.3f, 3 );
 		}

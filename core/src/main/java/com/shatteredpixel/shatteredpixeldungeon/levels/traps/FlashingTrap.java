@@ -60,7 +60,7 @@ public class FlashingTrap extends Trap {
 			}
 		}
 		
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			GameScene.flash(0x80FFFFFF);
 			Sample.INSTANCE.play( Assets.Sounds.BLAST );
 		}

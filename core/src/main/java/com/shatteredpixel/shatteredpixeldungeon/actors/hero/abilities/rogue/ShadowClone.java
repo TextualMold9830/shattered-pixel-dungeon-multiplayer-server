@@ -333,14 +333,14 @@ public class ShadowClone extends ArmorAbility {
 
 			ch.sprite.interruptMotion();
 
-			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[ch.pos]){
+			if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.heroFOV[ch.pos]){
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 			}
 
 			ch.move( pos );
 			if (ch.pos == pos) ch.sprite.place( pos );
 
-			if (Dungeon.level.heroFOV[pos] || ch instanceof Hero) {
+			if (Dungeon.visibleforAnyHero(pos) || ch instanceof Hero) {
 				ch.sprite.emitter().burst(SmokeParticle.FACTORY, 10);
 			}
 		}

@@ -80,7 +80,7 @@ public class PotionOfPurity extends Potion {
 
 
 		splash( cell );
-		if (Dungeon.level.heroFOV[cell]) {
+		if (Dungeon.visibleforAnyHero(cell)) {
 			Sample.INSTANCE.play(Assets.Sounds.SHATTER);
 
 			identify();

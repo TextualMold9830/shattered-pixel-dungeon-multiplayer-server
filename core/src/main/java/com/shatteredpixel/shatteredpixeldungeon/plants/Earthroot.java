@@ -53,7 +53,7 @@ public class Earthroot extends Plant {
 			}
 		}
 		
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			CellEmitter.bottom( pos ).start( EarthParticle.FACTORY, 0.05f, 8 );
 			PixelScene.shake( 1, 0.4f );
 		}

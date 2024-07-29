@@ -294,7 +294,7 @@ public abstract class Char extends Actor {
 	
 	protected boolean moveSprite( int from, int to ) {
 		
-		if (sprite.isVisible() && sprite.parent != null && (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to])) {
+		if (sprite.isVisible() && sprite.parent != null && (Dungeon.visibleforAnyHero(from) || Dungeon.visibleforAnyHero(to))) {
 			sprite.move( from, to );
 			return true;
 		} else {
@@ -352,9 +352,10 @@ public abstract class Char extends Actor {
 	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 
 		if (enemy == null) return false;
-		
-		boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
-
+		boolean visibleFight = false;
+		if (enemy instanceof Hero) {
+			visibleFight = ((Hero) enemy).heroFOV[pos] || ((Hero) enemy).heroFOV[enemy.pos];
+		}
 		if (enemy.isInvulnerable(getClass())) {
 
 			if (visibleFight) {
@@ -1095,7 +1096,7 @@ public abstract class Char extends Actor {
 		pos = step;
 		
 		if (!(this instanceof Hero)) {
-			sprite.visible = Dungeon.level.heroFOV[pos];
+			sprite.visible = Dungeon.visibleforAnyHero(pos);
 		}
 		
 		Dungeon.level.occupyCell(this );

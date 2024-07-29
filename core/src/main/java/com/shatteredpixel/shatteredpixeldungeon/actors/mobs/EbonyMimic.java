@@ -69,7 +69,7 @@ public class EbonyMimic extends Mimic {
 	public void stopHiding(){
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = Dungeon.heroes;
 			target = Dungeon.heroes.pos;
 			GLog.w(Messages.get(this, "reveal") );

@@ -91,7 +91,7 @@ public class Succubus extends Mob {
 				HP += 5 + damage;
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.visibleforAnyHero(pos)) {
 				Sample.INSTANCE.play( Assets.Sounds.CHARMS );
 			}
 		} else if (Random.Int( 3 ) == 0) {

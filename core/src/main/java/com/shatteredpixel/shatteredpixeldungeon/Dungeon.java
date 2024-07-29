@@ -953,7 +953,7 @@ public class Dungeon {
 		}
 		for (Hero hero : heroes) {
 			if (hero != null) {
-				level.updateFieldOfView(hero, level.heroFOV);
+				level.updateFieldOfView(hero, hero.heroFOV);
 
 				int x = hero.pos % level.width();
 				int y = hero.pos / level.width();

@@ -45,7 +45,7 @@ public class HolyBomb extends Bomb {
 	public void explode(int cell) {
 		super.explode(cell);
 		
-		if (Dungeon.level.heroFOV[cell]) {
+		if (Dungeon.visibleforAnyHero(cell)) {
 			new Flare(10, 64).show(Dungeon.heroes.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
 		}
 		

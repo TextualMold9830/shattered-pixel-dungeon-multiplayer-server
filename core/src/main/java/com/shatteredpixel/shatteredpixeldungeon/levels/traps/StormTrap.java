@@ -40,7 +40,7 @@ public class StormTrap extends Trap {
 	@Override
 	public void activate() {
 		
-		if (Dungeon.level.heroFOV[pos]){
+		if (Dungeon.visibleforAnyHero(pos)){
 			Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		}
 		

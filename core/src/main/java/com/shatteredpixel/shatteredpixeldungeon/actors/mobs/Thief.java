@@ -198,7 +198,7 @@ public class Thief extends Mob {
 		@Override
 		protected void escaped() {
 			if (item != null
-					&& !Dungeon.level.heroFOV[pos]
+					&& !Dungeon.visibleforAnyHero(pos)
 					&& Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
 
 				int count = 32;
@@ -214,8 +214,8 @@ public class Thief extends Mob {
 
 					pos = newPos;
 					sprite.place( pos );
-					sprite.visible = Dungeon.level.heroFOV[pos];
-					if (Dungeon.level.heroFOV[pos]) CellEmitter.get(pos).burst(Speck.factory(Speck.WOOL), 6);
+					sprite.visible = Dungeon.visibleforAnyHero(pos);
+					if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get(pos).burst(Speck.factory(Speck.WOOL), 6);
 
 				}
 

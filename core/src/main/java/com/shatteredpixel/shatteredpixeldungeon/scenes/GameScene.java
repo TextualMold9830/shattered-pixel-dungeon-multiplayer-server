@@ -767,7 +767,7 @@ public class GameScene extends PixelScene {
 
 		if (!Emitter.freezeEmitters) water.offset(0, -5 * Game.elapsed);
 
-		if (!Actor.processing() && Dungeon.heroes.isAlive()) {
+			if (!Actor.processing() && Dungeon.heroes.isAlive()) {
 			if (actorThread == null || !actorThread.isAlive()) {
 
 				actorThread = new Thread() {
@@ -1386,71 +1386,19 @@ public class GameScene extends PixelScene {
 			}
 		}
 	}
-
+	@Deprecated
 	public static void gameOver() {
-		if (scene == null) return;
 
-		Banner gameOver = new Banner( BannerSprites.get( BannerSprites.Type.GAME_OVER ) );
-		gameOver.show( 0x000000, 2f );
-		scene.showBanner( gameOver );
-
-		StyledButton restart = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(StartScene.class, "new"), 9){
-			@Override
-			protected void onClick() {
-				GamesInProgress.selectedClass = Dungeon.heroes.heroClass;
-				GamesInProgress.curSlot = GamesInProgress.firstEmpty();
-				ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
-			}
-
-			@Override
-			public void update() {
-				alpha(gameOver.am);
-				super.update();
-			}
-		};
-		restart.icon(Icons.get(Icons.ENTER));
-		restart.alpha(0);
-		restart.camera = uiCamera;
-		float offset = Camera.main.centerOffset.y;
-		restart.setSize(Math.max(80, restart.reqWidth()), 20);
-		restart.setPos(
-				align(uiCamera, (restart.camera.width - restart.width()) / 2),
-				align(uiCamera, (restart.camera.height - restart.height()) / 2 + restart.height()/2 + 16 - offset)
-		);
-		scene.add(restart);
-
-		StyledButton menu = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(WndKeyBindings.class, "menu"), 9){
-			@Override
-			protected void onClick() {
-				GameScene.show(new WndGame());
-			}
-
-			@Override
-			public void update() {
-				alpha(gameOver.am);
-				super.update();
-			}
-		};
-		menu.icon(Icons.get(Icons.PREFS));
-		menu.alpha(0);
-		menu.camera = uiCamera;
-		menu.setSize(Math.max(80, menu.reqWidth()), 20);
-		menu.setPos(
-				align(uiCamera, (menu.camera.width - menu.width()) / 2),
-				restart.bottom() + 2
-		);
-		scene.add(menu);
 	}
 
 	//FIXME
 	public static void bossSlain() {
-		if (Dungeon.heroes.isAlive()) {
 			Banner bossSlain = new Banner( BannerSprites.get( BannerSprites.Type.BOSS_SLAIN ) );
 			bossSlain.show( 0xFFFFFF, 0.3f, 5f );
 			scene.showBanner( bossSlain );
 			
 			Sample.INSTANCE.play( Assets.Sounds.BOSS );
-		}
+
 	}
 	
 	public static void handleCell( int cell ) {
@@ -1570,7 +1518,7 @@ public class GameScene extends PixelScene {
 				if (cell == hero.pos) {
 					objects.add(Dungeon.heroes);
 
-				} else if (Dungeon.level.heroFOV[cell]) {
+				} else if (Dungeon.visibleforAnyHero(cell)) {
 					Mob mob = (Mob) Actor.findChar(cell);
 					if (mob != null) objects.add(mob);
 				}

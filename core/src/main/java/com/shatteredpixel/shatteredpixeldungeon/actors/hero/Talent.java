@@ -389,6 +389,14 @@ public enum Talent {
 			return icon;
 		}
 	}
+	public int icon(){
+		if (this == HEROIC_ENERGY){
+			if (Ratmogrify.useRatroicEnergy){
+				return 218;
+			}
+			}
+			return icon;
+		}
 
 	public int maxPoints(){
 		return maxPoints;

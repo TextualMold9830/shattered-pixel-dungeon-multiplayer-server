@@ -87,7 +87,7 @@ public class Ghost extends NPC {
 			die(null);
 			return true;
 		}
-		if (Dungeon.level.heroFOV[pos] && !Quest.completed()){
+		if (Dungeon.visibleforAnyHero(pos) && !Quest.completed()){
 			Notes.add( Notes.Landmark.GHOST );
 		}
 		return super.act();

@@ -105,7 +105,7 @@ public class PhantomPiranha extends Piranha {
 		}
 
 		if (!outFOVCandidates.isEmpty()){
-			if (Dungeon.level.heroFOV[pos]) GLog.i(Messages.get(this, "teleport_away"));
+			if (Dungeon.visibleforAnyHero(pos)) GLog.i(Messages.get(this, "teleport_away"));
 			ScrollOfTeleportation.appear(this, Random.element(outFOVCandidates));
 			return true;
 		} else if (!inFOVCandidates.isEmpty()){

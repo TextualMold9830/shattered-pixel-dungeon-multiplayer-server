@@ -178,7 +178,7 @@ public class YogDzewa extends Mob {
 			if (Dungeon.heroes.viewDistance >= Dungeon.level.distance(pos, Dungeon.heroes.pos)) {
 				Dungeon.observe();
 			}
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.visibleforAnyHero(pos)) {
 				notice();
 			}
 		}
@@ -242,7 +242,7 @@ public class YogDzewa extends Mob {
 						} else {
 							ch.damage(Char.combatRoll(20, 30), new Eye.DeathGaze());
 						}
-						if (Dungeon.level.heroFOV[pos]) {
+						if (Dungeon.visibleforAnyHero(pos)) {
 							ch.sprite.flash();
 							CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
 						}

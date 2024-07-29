@@ -885,7 +885,7 @@ public abstract class Mob extends Char {
 			Wraith w = Wraith.spawnAt(pos, Wraith.class);
 			if (w != null) {
 				Buff.affect(w, Corruption.class);
-				if (Dungeon.level.heroFOV[pos]) {
+				if (Dungeon.visibleForAnyHero(pos)) {
 					CellEmitter.get(pos).burst(ShadowParticle.CURSE, 6);
 					Sample.INSTANCE.play(Assets.Sounds.CURSED);
 				}

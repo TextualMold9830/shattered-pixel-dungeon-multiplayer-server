@@ -52,7 +52,7 @@ public class CursingTrap extends Trap {
 
 	@Override
 	public void activate() {
-		if (Dungeon.level.heroFOV[ pos ]) {
+		if (Dungeon.visibleforAnyHero( pos )) {
 			CellEmitter.get(pos).burst(ShadowParticle.UP, 5);
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
 		}

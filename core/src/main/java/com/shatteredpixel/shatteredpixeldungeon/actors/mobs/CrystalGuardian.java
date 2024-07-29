@@ -69,7 +69,7 @@ public class CrystalGuardian extends Mob{
 		if (recovering){
 			throwItems();
 			HP = Math.min(HT, HP+5);
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.visibleforAnyHero(pos)) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (HP == HT){
@@ -189,7 +189,7 @@ public class CrystalGuardian extends Mob{
 		if (Dungeon.level.map[pos] == Terrain.MINE_CRYSTAL){
 			Level.set(pos, Terrain.EMPTY);
 			GameScene.updateMap(pos);
-			if (Dungeon.level.heroFOV[pos]){
+			if (Dungeon.visibleforAnyHero(pos)){
 				Splash.at(pos, 0xFFFFFF, 5);
 				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 			}

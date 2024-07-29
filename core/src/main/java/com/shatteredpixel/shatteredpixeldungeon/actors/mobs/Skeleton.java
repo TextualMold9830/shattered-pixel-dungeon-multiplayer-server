@@ -79,7 +79,7 @@ public class Skeleton extends Mob {
 			}
 		}
 		
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.visibleforAnyHero(pos)) {
 			Sample.INSTANCE.play( Assets.Sounds.BONES );
 		}
 		

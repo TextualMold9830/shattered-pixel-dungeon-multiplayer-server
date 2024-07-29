@@ -137,7 +137,7 @@ public class Eye extends Mob {
 
 			spend( attackDelay() );
 			
-			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[beam.collisionPos] ) {
+			if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.heroFOV[beam.collisionPos] ) {
 				sprite.zap( beam.collisionPos );
 				return false;
 			} else {
@@ -188,7 +188,7 @@ public class Eye extends Mob {
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 				ch.damage( dmg, new DeathGaze() );
 
-				if (Dungeon.level.heroFOV[pos]) {
+				if (Dungeon.visibleforAnyHero(pos)) {
 					ch.sprite.flash();
 					CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 				}

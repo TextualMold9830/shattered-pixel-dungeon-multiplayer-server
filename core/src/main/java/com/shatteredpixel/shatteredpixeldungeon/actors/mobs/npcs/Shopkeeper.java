@@ -101,7 +101,7 @@ public class Shopkeeper extends NPC {
 	public void processHarm(){
 
 		//do nothing if the shopkeeper is out of the hero's FOV
-		if (!Dungeon.level.heroFOV[pos]){
+		if (!Dungeon.visibleforAnyHero(pos)){
 			return;
 		}
 

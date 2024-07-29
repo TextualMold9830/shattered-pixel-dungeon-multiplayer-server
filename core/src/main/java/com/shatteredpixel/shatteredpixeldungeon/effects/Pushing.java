@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Camera;
@@ -69,7 +70,7 @@ public class Pushing extends Actor {
 		Actor.remove( Pushing.this );
 
 		if (sprite != null && sprite.parent != null) {
-			if (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to]){
+			if (Dungeon.visibleforAnyHero(from) || Dungeon.visibleforAnyHero(to)){
 				sprite.visible = true;
 			}
 			if (effect == null) {

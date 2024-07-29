@@ -114,7 +114,7 @@ public class CrystalMimic extends Mimic {
 		} else {
 			Buff.affect(this, Haste.class, 1f);
 		}
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = Dungeon.heroes;
 			target = Dungeon.heroes.pos;
 			GLog.w(Messages.get(this, "reveal") );
@@ -185,7 +185,7 @@ public class CrystalMimic extends Mimic {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void escaped() {
-			if (!Dungeon.level.heroFOV[pos] && Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
+			if (!Dungeon.visibleforAnyHero(pos) && Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
 				GLog.n(Messages.get(CrystalMimic.class, "escaped"));
 				destroy();
 				sprite.killAndErase();

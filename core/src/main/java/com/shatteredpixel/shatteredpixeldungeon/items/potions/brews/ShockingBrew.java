@@ -41,7 +41,7 @@ public class ShockingBrew extends Brew {
 	@Override
 	public void shatter(int cell) {
 		splash( cell );
-		if (Dungeon.level.heroFOV[cell]) {
+		if (Dungeon.visibleforAnyHero(cell)) {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 			Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 		}

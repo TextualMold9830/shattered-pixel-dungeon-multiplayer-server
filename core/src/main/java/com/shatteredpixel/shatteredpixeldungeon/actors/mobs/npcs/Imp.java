@@ -63,7 +63,7 @@ public class Imp extends NPC {
 		}
 		if (!Quest.given && Dungeon.level.visited[pos]) {
 			Notes.add( Notes.Landmark.IMP );
-			if (!seenBefore && Dungeon.level.heroFOV[pos]) {
+			if (!seenBefore && Dungeon.visibleforAnyHero(pos)) {
 				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.heroes.name())));
 				seenBefore = true;
 			}

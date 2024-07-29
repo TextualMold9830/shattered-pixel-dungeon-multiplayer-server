@@ -146,7 +146,7 @@ public class Bomb extends Item {
 			
 			ArrayList<Char> affected = new ArrayList<>();
 			
-			if (Dungeon.level.heroFOV[cell]) {
+			if (Dungeon.visibleforAnyHero(cell)) {
 				CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
 			}
 			

@@ -56,7 +56,7 @@ public class RegrowthBomb extends Bomb {
 	public void explode(int cell) {
 		super.explode(cell);
 		
-		if (Dungeon.level.heroFOV[cell]) {
+		if (Dungeon.visibleforAnyHero(cell)) {
 			Splash.at(cell, 0x00FF00, 30);
 		}
 		

@@ -81,7 +81,7 @@ public class DirectableAlly extends NPC {
 	}
 
 	public void directTocell( int cell ){
-		if (!Dungeon.level.heroFOV[cell]
+		if (!Dungeon.visibleforAnyHero(cell)
 				|| Actor.findChar(cell) == null
 				|| (Actor.findChar(cell) != Dungeon.heroes && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
 			defendPos( cell );

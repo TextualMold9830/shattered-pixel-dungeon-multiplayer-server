@@ -487,7 +487,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			final Char enemy = Actor.findChar( cell );
 			if (enemy == null
 					|| enemy == target
-					|| !Dungeon.level.heroFOV[cell]
+					|| !Dungeon.visibleforAnyHero(cell)
 					|| target.isCharmedBy( enemy )) {
 				GLog.w(Messages.get(Combo.class, "bad_target"));
 

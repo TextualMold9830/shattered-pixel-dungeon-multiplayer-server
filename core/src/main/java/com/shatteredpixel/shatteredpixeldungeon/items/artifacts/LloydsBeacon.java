@@ -246,7 +246,7 @@ public class LloydsBeacon extends Artifact {
 												((Mob) ch).state = ((Mob) ch).WANDERING;
 											}
 											ch.sprite.place(ch.pos);
-											ch.sprite.visible = Dungeon.level.heroFOV[pos];
+											ch.sprite.visible = Dungeon.visibleforAnyHero(pos);
 
 										}
 									}

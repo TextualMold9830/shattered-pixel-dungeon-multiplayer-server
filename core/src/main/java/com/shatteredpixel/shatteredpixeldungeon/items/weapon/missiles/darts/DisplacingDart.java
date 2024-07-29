@@ -65,7 +65,7 @@ public class DisplacingDart extends TippedDart {
 						&& (!Char.hasProp(defender, Char.Property.LARGE) || Dungeon.level.openSpace[pos])
 						&& Actor.findChar(pos) == null){
 
-					if (Dungeon.level.heroFOV[pos]){
+					if (Dungeon.visibleforAnyHero(pos)){
 						visiblePositions.add(pos);
 					} else {
 						nonVisiblePositions.add(pos);

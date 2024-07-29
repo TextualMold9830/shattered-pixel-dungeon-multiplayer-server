@@ -66,7 +66,7 @@ public class PitfallTrap extends Trap {
 
 		if (pos == Dungeon.heroes.pos){
 			GLog.n(Messages.get(this, "triggered_hero"));
-		} else if (Dungeon.level.heroFOV[pos]){
+		} else if (Dungeon.visibleforAnyHero(pos)){
 			GLog.n(Messages.get(this, "triggered"));
 		}
 

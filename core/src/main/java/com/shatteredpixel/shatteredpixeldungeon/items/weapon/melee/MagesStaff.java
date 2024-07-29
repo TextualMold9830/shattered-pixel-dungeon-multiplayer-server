@@ -156,11 +156,11 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public int buffedVisiblyUpgraded() {
+	public int buffedVisiblyUpgraded(Hero hero) {
 		if (wand != null){
-			return Math.max(super.buffedVisiblyUpgraded(), wand.buffedVisiblyUpgraded());
+			return Math.max(super.buffedVisiblyUpgraded(hero), wand.buffedVisiblyUpgraded(hero));
 		} else {
-			return super.buffedVisiblyUpgraded();
+			return super.buffedVisiblyUpgraded(hero);
 		}
 	}
 

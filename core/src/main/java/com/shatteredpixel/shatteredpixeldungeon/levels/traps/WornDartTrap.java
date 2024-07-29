@@ -75,7 +75,7 @@ public class WornDartTrap extends Trap {
 
 				if (target != null) {
 					final Char finalTarget = target;
-					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
+					if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.heroFOV[target.pos]) {
 						((MissileSprite) ShatteredPixelDungeon.scene().recycle(MissileSprite.class)).
 								reset(pos, finalTarget.sprite, new Dart(), new Callback() {
 									@Override

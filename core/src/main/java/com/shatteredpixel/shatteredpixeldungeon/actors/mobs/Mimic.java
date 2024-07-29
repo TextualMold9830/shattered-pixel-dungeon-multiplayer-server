@@ -130,7 +130,7 @@ public class Mimic extends Mob {
 		if (alignment == Alignment.NEUTRAL && state != PASSIVE){
 			alignment = Alignment.ENEMY;
 			if (sprite != null) sprite.idle();
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.visibleforAnyHero(pos)) {
 				GLog.w(Messages.get(this, "reveal") );
 				CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC);
@@ -206,7 +206,7 @@ public class Mimic extends Mob {
 	public void stopHiding(){
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = Dungeon.heroes;
 			target = Dungeon.heroes.pos;
 			GLog.w(Messages.get(this, "reveal") );

@@ -51,11 +51,11 @@ public class SPDSettings extends GameSettings {
 	public void maxPlayers(int maxPlayers){
 		put(KEY_MAX_PLAYERS, maxPlayers);
 	}
-	public static String KEY_SERVER_NAME;
+	public static String KEY_SERVER_NAME = "server_name";
 
 	public static String serverName = "SPD-server";
 	public static String serverName(){
-		return getString(serverName, "SPD-server");
+		return getString(KEY_SERVER_NAME, "SPD-server");
 	}
 	public static void serverName(String serverName){
 		put(KEY_SERVER_NAME, serverName);

@@ -69,7 +69,7 @@ public class Artifact extends KindofMisc {
 
 			if (super.doEquip( hero )){
 
-				identify();
+				identify(hero);
 				return true;
 
 			} else {
@@ -120,12 +120,12 @@ public class Artifact extends KindofMisc {
 	}
 
 	@Override
-	public int buffedVisiblyUpgraded() {
+	public int buffedVisiblyUpgraded(Hero hero) {
 		return visiblyUpgraded();
 	}
 
 	@Override
-	public int buffedLvl() {
+	public int buffedLvl(Hero hero) {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}

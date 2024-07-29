@@ -116,7 +116,7 @@ public class Goo extends Mob {
 				else                                                    lock.removeTime(healInc*1.5f);
 			}
 
-			if (Dungeon.level.heroFOV[pos] ){
+			if (Dungeon.visibleforAnyHero(pos) ){
 				sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healInc), FloatingText.HEALING );
 			}
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && healInc < 3) {
@@ -186,7 +186,7 @@ public class Goo extends Mob {
 			return true;
 		} else if (pumpedUp >= 2 || Random.Int( (HP*2 <= HT) ? 2 : 5 ) > 0) {
 
-			boolean visible = Dungeon.level.heroFOV[pos];
+			boolean visible = Dungeon.visibleforAnyHero(pos);
 
 			if (visible) {
 				if (pumpedUp >= 2) {
@@ -218,7 +218,7 @@ public class Goo extends Mob {
 
 			((GooSprite)sprite).pumpUp( pumpedUp );
 
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.visibleforAnyHero(pos)) {
 				sprite.showStatus( CharSprite.WARNING, Messages.get(this, "!!!") );
 				GLog.n( Messages.get(this, "pumpup") );
 			}
