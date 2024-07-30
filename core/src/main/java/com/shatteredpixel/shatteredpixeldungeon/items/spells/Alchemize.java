@@ -152,7 +152,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndTradeItem.sell(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnSell.setRect(0, pos + GAP, width, BTN_HEIGHT);
@@ -169,7 +169,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndTradeItem.sellOne(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnSell1.setRect(0, pos + GAP, width, BTN_HEIGHT);
@@ -180,7 +180,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndTradeItem.sell(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnSellAll.setRect(0, btnSell1.bottom() + 1, width, BTN_HEIGHT);
@@ -200,7 +200,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndEnergizeItem.energize(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnEnergize.setRect(0, pos + GAP, width, BTN_HEIGHT);
@@ -217,7 +217,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndEnergizeItem.energizeOne(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnEnergize1.setRect(0, pos + GAP, width, BTN_HEIGHT);
@@ -228,7 +228,7 @@ public class Alchemize extends Spell {
 						protected void onClick() {
 							WndEnergizeItem.energize(item);
 							hide();
-							consumeAlchemize();
+							consumeAlchemize(owner.getOwnerHero());
 						}
 					};
 					btnEnergizeAll.setRect(0, btnEnergize1.bottom() + 1, width, BTN_HEIGHT);
@@ -244,15 +244,15 @@ public class Alchemize extends Spell {
 
 		}
 
-		private void consumeAlchemize(){
+		private void consumeAlchemize(Hero hero){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			if (curItem.quantity() <= 1){
-				curItem.detachAll(Dungeon.heroes.belongings.backpack);
+				curItem.detachAll(hero.belongings.backpack);
 				if (owner != null) {
 					owner.hide();
 				}
 			} else {
-				curItem.detach(Dungeon.heroes.belongings.backpack);
+				curItem.detach(hero.belongings.backpack);
 				if (owner != null){
 					owner.hide();
 				}
