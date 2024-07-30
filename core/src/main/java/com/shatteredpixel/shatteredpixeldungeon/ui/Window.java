@@ -22,7 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShadowBox;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.input.KeyBindings;
@@ -35,6 +38,9 @@ import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.PointerArea;
 import com.watabou.utils.Point;
 import com.watabou.utils.Signal;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Window extends Group implements Signal.Listener<KeyEvent> {
 
@@ -51,7 +57,54 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	public static final int WHITE = 0xFFFFFF;
 	public static final int TITLE_COLOR = 0xFFFF44;
 	public static final int SHPX_COLOR = 0x33BB33;
-	
+	private static final Map<Integer, Map<Integer, Window>> windows = new HashMap<>(SPDSettings.maxPlayers());
+	private static final Map<Integer, Integer> idCounter = new HashMap<>(SPDSettings.maxPlayers()); // contains last used Window.id for each hero
+
+	private Hero ownerHero;
+	//Each window CURRENTLY open for ownerHero has a unique id. Two windows can have the same id only with different ownerHero.
+	private int id;
+	public final int getId() {
+		return id;
+	}
+
+	private void setId(int id) {
+		this.id = id;
+	}
+	public final Hero getOwnerHero() {
+		return ownerHero;
+	}
+
+	private void setOwnerHero(Hero ownerHero) {
+		this.ownerHero = ownerHero;
+	}
+	public Window(Hero hero) {
+		attachToHero(hero);
+	}
+	public static boolean hasWindow(Hero hero) {
+		Map<Integer, Window> heroWindows = windows.getOrDefault(HeroHelp.getHeroID(hero), null);
+		return (heroWindows != null) && !heroWindows.isEmpty();
+	}
+	protected synchronized final void attachToHero(Hero hero) {
+		if (getId() > 0) {
+			if (hero != getOwnerHero()) {
+				throw new AssertionError("Attaching window to different heroes");
+			}
+			return;
+		}
+		int heroId = HeroHelp.getHeroID(hero);
+
+		setOwnerHero(hero);
+		if (!idCounter.containsKey(heroId)) {
+			idCounter.put(heroId, 0);
+		}
+		if (!windows.containsKey(heroId)) {
+			windows.put(heroId, new HashMap<>(3));
+		}
+		setId(idCounter.get(heroId) + 1);
+		idCounter.put(heroId, getId());
+		windows.get(heroId).put(getId(), this);
+	}
+	@Deprecated
 	public Window() {
 		this( 0, 0, Chrome.get( Chrome.Type.WINDOW ) );
 	}
