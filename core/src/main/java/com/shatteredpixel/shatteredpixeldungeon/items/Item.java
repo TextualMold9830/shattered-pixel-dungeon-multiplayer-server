@@ -68,6 +68,7 @@ import java.util.Objects;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
+//TODO: needs total rewrite
 public class Item implements Bundlable {
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
@@ -138,10 +139,47 @@ public class Item implements Bundlable {
 	public final boolean doPickUp( Hero hero ) {
 		return doPickUp( hero, hero.pos );
 	}
-
+	//TODO: check this
 	public boolean doPickUp(Hero hero, int pos) {
-		if (collect( hero.belongings.backpack, hero )) {
-			
+		if (collect( hero.belongings.backpack)) {
+			if (stackable) {
+				for (Item item:hero.belongings.backpack) {
+					if (isSimilar( item )) {
+						item.merge( this );
+						item.updateQuickslot();
+						if (Dungeon.heroes != null && hero.isAlive()) {
+							Badges.validateItemLevelAquired( this );
+							Talent.onItemCollected(hero, item);
+							if (isIdentified()) Catalog.setSeen(getClass());
+						}
+						if (TippedDart.lostDarts > 0){
+							Dart d = new Dart();
+							d.quantity(TippedDart.lostDarts);
+							TippedDart.lostDarts = 0;
+							if (!d.collect(hero)){
+								//have to handle this in an actor as we can't manipulate the heap during pickup
+								Actor.add(new Actor() {
+									{ actPriority = VFX_PRIO; }
+									@Override
+									protected boolean act() {
+										Dungeon.level.drop(d, hero.pos).sprite.drop();
+										Actor.remove(this);
+										return true;
+									}
+								});
+							}
+						}
+						return true;
+					}
+				}
+			}
+
+			if (hero != null && hero.isAlive()) {
+				Badges.validateItemLevelAquired( this );
+				Talent.onItemCollected( hero, this );
+				if (isIdentified()) Catalog.setSeen(getClass());
+			}
+
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
 			hero.spendAndNext( TIME_TO_PICK_UP );
@@ -220,7 +258,7 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public boolean collect( Bag container, Hero hero) {
+	public boolean collect( Bag container) {
 
 		if (quantity <= 0){
 			return true;
@@ -234,7 +272,7 @@ public class Item implements Bundlable {
 
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				if (collect( (Bag)item, hero )){
+				if (collect( (Bag)item)){
 					return true;
 				}
 			}
@@ -244,43 +282,6 @@ public class Item implements Bundlable {
 			return false;
 		}
 		
-		if (stackable) {
-			for (Item item:items) {
-				if (isSimilar( item )) {
-					item.merge( this );
-					item.updateQuickslot();
-					if (Dungeon.heroes != null && hero.isAlive()) {
-						Badges.validateItemLevelAquired( this );
-						Talent.onItemCollected(hero, item);
-						if (isIdentified()) Catalog.setSeen(getClass());
-					}
-					if (TippedDart.lostDarts > 0){
-						Dart d = new Dart();
-						d.quantity(TippedDart.lostDarts);
-						TippedDart.lostDarts = 0;
-						if (!d.collect(hero)){
-							//have to handle this in an actor as we can't manipulate the heap during pickup
-							Actor.add(new Actor() {
-								{ actPriority = VFX_PRIO; }
-								@Override
-								protected boolean act() {
-									Dungeon.level.drop(d, hero.pos).sprite.drop();
-									Actor.remove(this);
-									return true;
-								}
-							});
-						}
-					}
-					return true;
-				}
-			}
-		}
-
-		if (hero != null && hero.isAlive()) {
-			Badges.validateItemLevelAquired( this );
-			Talent.onItemCollected( hero, this );
-			if (isIdentified()) Catalog.setSeen(getClass());
-		}
 
 		items.add( this );
 		Dungeon.quickslot.replacePlaceholder(this);
@@ -291,7 +292,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean collect(Hero hero) {
-		return collect( hero.belongings.backpack, hero );
+		return collect( hero.belongings.backpack);
 	}
 	
 	//returns a new item if the split was sucessful and there are now 2 items, otherwise null
