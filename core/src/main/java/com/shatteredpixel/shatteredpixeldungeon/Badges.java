@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -33,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.remains.RemainsItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -377,29 +379,29 @@ public class Badges {
 		displayBadge( badge );
 	}
 	
-	public static void validateLevelReached() {
+	public static void validateLevelReached(Hero hero) {
 		Badge badge = null;
 		
-		if (!local.contains( Badge.LEVEL_REACHED_1 ) && Dungeon.heroes.lvl >= 6) {
+		if (!local.contains( Badge.LEVEL_REACHED_1 ) && hero.lvl >= 6) {
 			badge = Badge.LEVEL_REACHED_1;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.LEVEL_REACHED_2 ) && Dungeon.heroes.lvl >= 12) {
+		if (!local.contains( Badge.LEVEL_REACHED_2 ) && hero.lvl >= 12) {
 			if (badge != null) unlock(badge);
 			badge = Badge.LEVEL_REACHED_2;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.LEVEL_REACHED_3 ) && Dungeon.heroes.lvl >= 18) {
+		if (!local.contains( Badge.LEVEL_REACHED_3 ) && hero.lvl >= 18) {
 			if (badge != null) unlock(badge);
 			badge = Badge.LEVEL_REACHED_3;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.LEVEL_REACHED_4 ) && Dungeon.heroes.lvl >= 24) {
+		if (!local.contains( Badge.LEVEL_REACHED_4 ) && hero.lvl >= 24) {
 			if (badge != null) unlock(badge);
 			badge = Badge.LEVEL_REACHED_4;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.LEVEL_REACHED_5 ) && Dungeon.heroes.lvl >= 30) {
+		if (!local.contains( Badge.LEVEL_REACHED_5 ) && hero.lvl >= 30) {
 			if (badge != null) unlock(badge);
 			badge = Badge.LEVEL_REACHED_5;
 			local.add( badge );
@@ -408,29 +410,29 @@ public class Badges {
 		displayBadge( badge );
 	}
 	
-	public static void validateStrengthAttained() {
+	public static void validateStrengthAttained(Hero hero) {
 		Badge badge = null;
 		
-		if (!local.contains( Badge.STRENGTH_ATTAINED_1 ) && Dungeon.heroes.STR >= 12) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_1 ) && hero.STR >= 12) {
 			badge = Badge.STRENGTH_ATTAINED_1;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_2 ) && Dungeon.heroes.STR >= 14) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_2 ) && hero.STR >= 14) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_2;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_3 ) && Dungeon.heroes.STR >= 16) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_3 ) && hero.STR >= 16) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_3;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_4 ) && Dungeon.heroes.STR >= 18) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_4 ) && hero.STR >= 18) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_4;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_5 ) && Dungeon.heroes.STR >= 20) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_5 ) && hero.STR >= 20) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_5;
 			local.add( badge );
@@ -735,7 +737,7 @@ public class Badges {
 		thirdBossSubclassBadges.put(HeroSubClass.MONK, Badge.BOSS_SLAIN_3_MONK);
 	}
 	
-	public static void validateBossSlain() {
+	public static void validateBossSlain(Hero hero) {
 		Badge badge = null;
 		switch (Dungeon.depth) {
 		case 5:
@@ -757,7 +759,7 @@ public class Badges {
 			displayBadge( badge );
 			
 			if (badge == Badge.BOSS_SLAIN_1) {
-				badge = firstBossClassBadges.get(Dungeon.heroes.heroClass);
+				badge = firstBossClassBadges.get(hero.heroClass);
 				if (badge == null) return;
 				local.add( badge );
 				unlock(badge);
@@ -778,7 +780,7 @@ public class Badges {
 				}
 			} else if (badge == Badge.BOSS_SLAIN_3) {
 
-				badge = thirdBossSubclassBadges.get(Dungeon.heroes.subClass);
+				badge = thirdBossSubclassBadges.get(hero.subClass);
 				if (badge == null) return;
 				local.add( badge );
 				unlock(badge);
@@ -798,7 +800,7 @@ public class Badges {
 				}
 			}
 
-			if (Statistics.qualifiedForBossRemainsBadge && Dungeon.heroes.belongings.getItem(RemainsItem.class) != null){
+			if (Statistics.qualifiedForBossRemainsBadge && hero.belongings.getItem(RemainsItem.class) != null){
 				badge = Badge.BOSS_SLAIN_REMAINS;
 				local.add( badge );
 				displayBadge( badge );
@@ -833,10 +835,10 @@ public class Badges {
 		}
 	}
 	
-	public static void validateMastery() {
+	public static void validateMastery(Hero hero) {
 		
 		Badge badge = null;
-		switch (Dungeon.heroes.heroClass) {
+		switch (hero.heroClass) {
 			case WARRIOR:
 				badge = Badge.MASTERY_WARRIOR;
 				break;
@@ -860,40 +862,40 @@ public class Badges {
 	public static void validateRatmogrify(){
 		unlock(Badge.FOUND_RATMOGRIFY);
 	}
-	
+	@Deprecated
 	public static void validateMageUnlock(){
 		if (Statistics.upgradesUsed >= 1 && !isUnlocked(Badge.UNLOCK_MAGE)){
 			displayBadge( Badge.UNLOCK_MAGE );
 		}
 	}
-	
+	@Deprecated
 	public static void validateRogueUnlock(){
 		if (Statistics.sneakAttacks >= 10 && !isUnlocked(Badge.UNLOCK_ROGUE)){
 			displayBadge( Badge.UNLOCK_ROGUE );
 		}
 	}
-	
+	@Deprecated
 	public static void validateHuntressUnlock(){
 		if (Statistics.thrownAttacks >= 10 && !isUnlocked(Badge.UNLOCK_HUNTRESS)){
 			displayBadge( Badge.UNLOCK_HUNTRESS );
 		}
 	}
-
+	@Deprecated
 	public static void validateDuelistUnlock(){
-		if (!isUnlocked(Badge.UNLOCK_DUELIST) && Dungeon.heroes != null
-				&& Dungeon.heroes.belongings.weapon instanceof MeleeWeapon
-				&& ((MeleeWeapon) Dungeon.heroes.belongings.weapon).tier >= 2
-				&& ((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq() <= Dungeon.heroes.STR()){
-
-			if (Dungeon.heroes.belongings.weapon.isIdentified() &&
-					((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq() <= Dungeon.heroes.STR()) {
-				displayBadge(Badge.UNLOCK_DUELIST);
-
-			} else if (!Dungeon.heroes.belongings.weapon.isIdentified() &&
-					((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq(0) <= Dungeon.heroes.STR()){
-				displayBadge(Badge.UNLOCK_DUELIST);
-			}
-		}
+//		if (!isUnlocked(Badge.UNLOCK_DUELIST) && Dungeon.heroes != null
+//				&& Dungeon.heroes.belongings.weapon instanceof MeleeWeapon
+//				&& ((MeleeWeapon) Dungeon.heroes.belongings.weapon).tier >= 2
+//				&& ((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq() <= Dungeon.heroes.STR()){
+//
+//			if (Dungeon.heroes.belongings.weapon.isIdentified() &&
+//					((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq() <= Dungeon.heroes.STR()) {
+//				displayBadge(Badge.UNLOCK_DUELIST);
+//
+//			} else if (!Dungeon.heroes.belongings.weapon.isIdentified() &&
+//					((MeleeWeapon) Dungeon.heroes.belongings.weapon).STRReq(0) <= Dungeon.heroes.STR()){
+//				displayBadge(Badge.UNLOCK_DUELIST);
+//			}
+//		}
 	}
 	
 	public static void validateMasteryCombo( int n ) {
@@ -904,13 +906,13 @@ public class Badges {
 		}
 	}
 	
-	public static void validateVictory() {
+	public static void validateVictory(Hero hero) {
 
 		Badge badge = Badge.VICTORY;
 		local.add( badge );
 		displayBadge( badge );
 
-		badge = victoryClassBadges.get(Dungeon.heroes.heroClass);
+		badge = victoryClassBadges.get(hero.heroClass);
 		if (badge == null) return;
 		local.add( badge );
 		unlock(badge);
@@ -999,10 +1001,10 @@ public class Badges {
 		displayBadge( badge );
 	}
 	
-	public static void validateHappyEnd() {
+	public static void validateHappyEnd(Hero hero) {
 		displayBadge( Badge.HAPPY_END );
 
-		if( Dungeon.heroes.belongings.getItem(RemainsItem.class) != null ){
+		if( hero.belongings.getItem(RemainsItem.class) != null ){
 			displayBadge( Badge.HAPPY_END_REMAINS );
 		}
 	}

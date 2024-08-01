@@ -47,7 +47,7 @@ public class ElixirOfMight extends Elixir {
 	
 	@Override
 	public void apply( Hero hero ) {
-		identify();
+		identify(hero);
 		
 		hero.STR++;
 		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
@@ -59,14 +59,13 @@ public class ElixirOfMight extends Elixir {
 		hero.updateHT( true );
 		GLog.p( Messages.get(this, "msg", hero.STR()) );
 
-		Badges.validateStrengthAttained();
+		Badges.validateStrengthAttained(hero);
 		Badges.validateDuelistUnlock();
 	}
-	
-	public String desc() {
-		return Messages.get(this, "desc", HTBoost.boost(Dungeon.heroes.HT));
+	@Override
+	public String desc(Hero hero){
+		return Messages.get(this, "desc", HTBoost.boost(hero.HT));
 	}
-	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
