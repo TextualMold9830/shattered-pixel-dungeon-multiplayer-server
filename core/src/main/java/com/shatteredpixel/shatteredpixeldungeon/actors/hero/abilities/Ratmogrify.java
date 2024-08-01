@@ -82,7 +82,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		Char ch = Actor.findChar(target);
 
-		if (ch == null || !Dungeon.level.heroFOV[target]) {
+		if (ch == null || !hero.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		} else if (ch == hero){
@@ -135,7 +135,7 @@ public class Ratmogrify extends ArmorAbility {
 			GLog.w(Messages.get(this, "too_strong"));
 			return;
 		} else {
-			TransmogRat rat = new TransmogRat();
+			TransmogRat rat = new TransmogRat(hero);
 			rat.setup((Mob)ch);
 			rat.pos = ch.pos;
 
@@ -205,6 +205,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		private Mob original;
 		private boolean allied;
+		private Hero owner;
 
 		public void setup(Mob original) {
 			this.original = original;
@@ -279,8 +280,8 @@ public class Ratmogrify extends ArmorAbility {
 		@Override
 		public int damageRoll() {
 			int damage = original.damageRoll();
-			if (!allied && Dungeon.heroes.hasTalent(Talent.RATSISTANCE)){
-				damage *= Math.pow(0.9f, Dungeon.heroes.pointsInTalent(Talent.RATSISTANCE));
+			if (!allied && owner.hasTalent(Talent.RATSISTANCE)){
+				damage *= Math.pow(0.9f, owner.pointsInTalent(Talent.RATSISTANCE));
 			}
 			return damage;
 		}
@@ -307,12 +308,14 @@ public class Ratmogrify extends ArmorAbility {
 
 		private static final String ORIGINAL = "original";
 		private static final String ALLIED = "allied";
+		private static final String OWNER = "owner";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(ORIGINAL, original);
 			bundle.put(ALLIED, allied);
+			bundle.put(OWNER, owner);
 		}
 
 		@Override
@@ -325,6 +328,12 @@ public class Ratmogrify extends ArmorAbility {
 
 			allied = bundle.getBoolean(ALLIED);
 			if (allied) alignment = Alignment.ALLY;
+			owner = (Hero) bundle.get(OWNER);
+
+		}
+
+		public TransmogRat(Hero owner) {
+			this.owner = owner;
 		}
 	}
 }
