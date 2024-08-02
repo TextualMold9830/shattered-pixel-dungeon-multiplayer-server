@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.getNearClearCell;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 
 public class InterLevelSceneServer {
@@ -197,7 +198,7 @@ public class InterLevelSceneServer {
             } else {
                 hero.pos = getNearClearCell(pos);
             }
-            WandOfBlink.appear(hero, hero.pos);
+            ScrollOfTeleportation.appear(hero, hero.pos);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

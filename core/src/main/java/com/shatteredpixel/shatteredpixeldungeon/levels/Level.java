@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -111,7 +112,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static com.watabou.utils.PathFinder.NEIGHBOURS8;
+
 public abstract class Level implements Bundlable {
+
 
 	public static enum Feeling {
 		NONE,
@@ -309,9 +313,11 @@ public abstract class Level implements Bundlable {
 		
 		visited     = new boolean[length];
 		mapped      = new boolean[length];
-		
-		heroFOV     = new boolean[length];
-		
+		for(Hero hero: Dungeon.heroes) {
+			if(hero != null) {
+				hero.heroFOV = new boolean[length];
+			}
+			}
 		passable	= new boolean[length];
 		losBlocking	= new boolean[length];
 		flamable	= new boolean[length];
@@ -962,6 +968,7 @@ public abstract class Level implements Bundlable {
 			}
 		}
 	}
+	//FIXME
 	
 	public Heap drop( Item item, int cell ) {
 
@@ -995,7 +1002,7 @@ public abstract class Level implements Bundlable {
 			
 			int n;
 			do {
-				n = cell + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
+				n = cell + NEIGHBOURS8[Random.Int( 8 )];
 			} while (!passable[n] && !avoid[n]);
 			return drop( item, n );
 			
@@ -1132,7 +1139,7 @@ public abstract class Level implements Bundlable {
 		if (!ch.flying){
 
 			if ( (map[ch.pos] == Terrain.GRASS || map[ch.pos] == Terrain.EMBERS)
-					&& ch instanceof Hero && Dungeon.heroes.hasTalent(Talent.REJUVENATING_STEPS)
+					&& ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REJUVENATING_STEPS)
 					&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
 
 				if (!Regeneration.regenOn()){
@@ -1610,5 +1617,113 @@ public abstract class Level implements Bundlable {
 			default:
 				return "";
 		}
+	}
+	//TODO: replace this
+	public static int getNearClearCell(int startPos){
+		if (Actor.findChar( startPos ) == null){
+			return startPos;
+		}
+		//need to create random circle
+		else for (int i:NEIGHBOURS8) {
+			if ((Actor.findChar( startPos+i ) == null)&&(Dungeon.level.passable[startPos+i])){
+				return startPos+i;
+			}
+		}
+
+		int count = 10;
+		int pos;
+		do {
+			pos = Dungeon.level.randomRespawnCell();
+			if (count-- <= 0) {
+				break;
+			}
+		} while (pos == -1);
+		return pos;
+	};
+	public boolean[] updateFieldOfView( Char c ) {
+
+		int cx = c.pos % WIDTH;
+		int cy = c.pos / WIDTH;
+
+		boolean sighted = c.buff( Blindness.class ) == null && c.buff( Shadows.class ) == null && c.isAlive();
+		if (sighted) {
+			ShadowCaster.castShadow( cx, cy, c.fieldOfView, c.viewDistance );
+		} else {
+			Arrays.fill( c.fieldOfView, false );
+		}
+
+		int sense = 1;
+		if (c.isAlive()) {
+			for (Buff b : c.buffs( MindVision.class )) {
+				sense = Math.max( ((MindVision)b).distance, sense );
+			}
+		}
+
+		if ((sighted && sense > 1) || !sighted) {
+
+			int ax = Math.max( 0, cx - sense );
+			int bx = Math.min( cx + sense, WIDTH - 1 );
+			int ay = Math.max( 0, cy - sense );
+			int by = Math.min( cy + sense, HEIGHT - 1 );
+
+			int len = bx - ax + 1;
+			int pos = ax + ay * WIDTH;
+			for (int y = ay; y <= by; y++, pos+=WIDTH) {
+				Arrays.fill( c.fieldOfView, pos, pos + len, true );
+			}
+
+			for (int i=0; i < LENGTH; i++) {
+				c.fieldOfView[i] &= discoverable[i];
+			}
+		}
+
+		if (c.isAlive()) {
+			if (c.buff( MindVision.class ) != null) {
+				for (Mob mob : mobs) {
+					int p = mob.pos;
+					c.fieldOfView[p] = true;
+					c.fieldOfView[p + 1] = true;
+					c.fieldOfView[p - 1] = true;
+					c.fieldOfView[p + Dungeon.level.width() + 1] = true;
+					c.fieldOfView[p + WIDTH - 1] = true;
+					c.fieldOfView[p - WIDTH + 1] = true;
+					c.fieldOfView[p - WIDTH - 1] = true;
+					c.fieldOfView[p + WIDTH] = true;
+					c.fieldOfView[p - WIDTH] = true;
+				}
+				//TODO: replace with sight talent
+			} else if (c instanceof Hero && ((Hero)c).heroClass == HeroClass.HUNTRESS) {
+				for (Mob mob : mobs) {
+					int p = mob.pos;
+					if (distance( c.pos, p) == 2) {
+						c.fieldOfView[p] = true;
+						c.fieldOfView[p + 1] = true;
+						c.fieldOfView[p - 1] = true;
+						c.fieldOfView[p + Dungeon.level.width() + 1] = true;
+						c.fieldOfView[p + Dungeon.level.width() - 1] = true;
+						c.fieldOfView[p - Dungeon.level.width() + 1] = true;
+						c.fieldOfView[p - Dungeon.level.width() - 1] = true;
+						c.fieldOfView[p + Dungeon.level.width()] = true;
+						c.fieldOfView[p - Dungeon.level.width()] = true;
+					}
+				}
+			}
+			if (c.buff( Awareness.class ) != null) {
+				for (Heap heap : heaps.values()) {
+					int p = heap.pos;
+					c.fieldOfView[p] = true;
+					c.fieldOfView[p + 1] = true;
+					c.fieldOfView[p - 1] = true;
+					c.fieldOfView[p + Dungeon.level.width() + 1] = true;
+					c.fieldOfView[p + Dungeon.level.width() - 1] = true;
+					c.fieldOfView[p - Dungeon.level.width() + 1] = true;
+					c.fieldOfView[p - Dungeon.level.width() - 1] = true;
+					c.fieldOfView[p + Dungeon.level.width()] = true;
+					c.fieldOfView[p - Dungeon.level.width()] = true;
+				}
+			}
+		}
+
+		return c.fieldOfView;
 	}
 }

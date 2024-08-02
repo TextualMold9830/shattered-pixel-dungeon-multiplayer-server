@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -1140,7 +1141,7 @@ public abstract class Char extends Actor {
 		
 		float result = 1f;
 		for (Class c : resists){
-			if (c.isAssignableFrom(effect)){
+			if (ClassReflection.isAssignableFrom(c, effect)){
 				result *= 0.5f;
 			}
 		}

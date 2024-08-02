@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor.Glyph;
@@ -37,8 +38,10 @@ public class Affection extends Glyph {
 	
 	@Override
 	public int proc( Armor armor, Char attacker, Char defender, int damage) {
-
-		int level = Math.max(0, armor.buffedLvl());
+		if (defender instanceof Hero) {
+			Math.max(0, armor.buffedLvl((Hero) defender));
+		}
+		int level = 0;
 		
 		// lvl 0 - 15%
 		// lvl 1 ~ 19%

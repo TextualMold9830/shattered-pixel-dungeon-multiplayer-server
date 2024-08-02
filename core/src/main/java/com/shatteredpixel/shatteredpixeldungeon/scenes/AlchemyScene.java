@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -590,7 +591,7 @@ public class AlchemyScene extends PixelScene {
 
 	}
 	
-	private void combine( int slot ){
+	private void combine( int slot, Hero hero ){
 		
 		ArrayList<Item> ingredients = filterInput(Item.class);
 		if (ingredients.isEmpty()) return;
@@ -610,7 +611,7 @@ public class AlchemyScene extends PixelScene {
 		if (recipe != null){
 			int cost = recipe.cost(ingredients);
 			if (toolkit != null){
-				cost = toolkit.consumeEnergy(cost);
+				cost = toolkit.consumeEnergy(cost, hero);
 			}
 			Dungeon.energy -= cost;
 

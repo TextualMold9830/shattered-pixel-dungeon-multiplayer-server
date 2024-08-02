@@ -1862,7 +1862,7 @@ public class Hero extends Char {
 			
 			Item.updateQuickslot();
 			
-			Badges.validateLevelReached();
+			Badges.validateLevelReached(this);
 		}
 	}
 	

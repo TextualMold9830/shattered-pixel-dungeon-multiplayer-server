@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -175,8 +176,12 @@ public class YogDzewa extends Mob {
 		//end of char/mob logic
 
 		if (phase == 0){
-			if (Dungeon.heroes.viewDistance >= Dungeon.level.distance(pos, Dungeon.heroes.pos)) {
-				Dungeon.observe();
+			for	(Hero hero : Dungeon.heroes) {
+				if(hero != null) {
+					if (hero.viewDistance >= Dungeon.level.distance(pos, hero.pos)) {
+						Dungeon.observe(hero);
+					}
+				}
 			}
 			if (Dungeon.visibleforAnyHero(pos)) {
 				notice();
@@ -209,7 +214,7 @@ public class YogDzewa extends Mob {
 			boolean terrainAffected = false;
 			HashSet<Char> affected = new HashSet<>();
 			//delay fire on a rooted hero
-			if (!Dungeon.heroes.rooted) {
+			if (!enemy.rooted) {
 				for (int i : targetedCells) {
 					Ballistica b = new Ballistica(pos, i, Ballistica.WONT_STOP);
 					//shoot beams
@@ -227,7 +232,11 @@ public class YogDzewa extends Mob {
 					}
 				}
 				if (terrainAffected) {
-					Dungeon.observe();
+					for (Hero hero : Dungeon.heroes) {
+						if(hero != null) {
+							Dungeon.observe(hero);
+						}
+					}
 				}
 				Invisibility.dispel(this);
 				for (Char ch : affected) {
@@ -258,17 +267,17 @@ public class YogDzewa extends Mob {
 				targetedCells.clear();
 			}
 
-			if (abilityCooldown <= 0){
+			if (abilityCooldown <= 0) {
 
-				int beams = 1 + (HT - HP)/400;
+				int beams = 1 + (HT - HP) / 400;
 				HashSet<Integer> affectedCells = new HashSet<>();
-				for (int i = 0; i < beams; i++){
+				for (int i = 0; i < beams; i++) {
 
-					int targetPos = Dungeon.heroes.pos;
-					if (i != 0){
+					int targetPos = enemy.pos;
+					if (i != 0) {
 						do {
-							targetPos = Dungeon.heroes.pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
-						} while (Dungeon.level.trueDistance(pos, Dungeon.heroes.pos)
+							targetPos = enemy.pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
+						} while (Dungeon.level.trueDistance(pos, enemy.pos)
 								> Dungeon.level.trueDistance(pos, targetPos));
 					}
 					targetedCells.add(targetPos);
@@ -278,27 +287,31 @@ public class YogDzewa extends Mob {
 
 				//remove one beam if multiple shots would cause every cell next to the hero to be targeted
 				boolean allAdjTargeted = true;
-				for (int i : PathFinder.NEIGHBOURS9){
-					if (!affectedCells.contains(Dungeon.heroes.pos + i) && Dungeon.level.passable[Dungeon.heroes.pos + i]){
+				for (int i : PathFinder.NEIGHBOURS9) {
+					if (!affectedCells.contains(enemy.pos + i) && Dungeon.level.passable[enemy.pos + i]) {
 						allAdjTargeted = false;
 						break;
 					}
 				}
-				if (allAdjTargeted){
-					targetedCells.remove(targetedCells.size()-1);
+				if (allAdjTargeted) {
+					targetedCells.remove(targetedCells.size() - 1);
 				}
-				for (int i : targetedCells){
+				for (int i : targetedCells) {
 					Ballistica b = new Ballistica(pos, i, Ballistica.WONT_STOP);
-					for (int p : b.path){
+					for (int p : b.path) {
 						sprite.parent.add(new TargetedCell(p, 0xFF0000));
 						affectedCells.add(p);
 					}
 				}
 
 				//don't want to overly punish players with slow move or attack speed
-				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.heroes.cooldown()), 3*TICK));
-				Dungeon.heroes.interrupt();
+				for (Hero hero : Dungeon.heroes) {
+					if(hero != null) {
+					spend(GameMath.gate(TICK, (int) Math.ceil(hero.cooldown()), 3 * TICK));
+					hero.interrupt();
 
+				}
+			}
 				abilityCooldown += Random.NormalFloat(MIN_ABILITY_CD, MAX_ABILITY_CD);
 				abilityCooldown -= (phase - 1);
 
@@ -315,7 +328,7 @@ public class YogDzewa extends Mob {
 				int spawnPos = -1;
 				for (int i : PathFinder.NEIGHBOURS8){
 					if (Actor.findChar(pos+i) == null){
-						if (spawnPos == -1 || Dungeon.level.trueDistance(Dungeon.heroes.pos, spawnPos) > Dungeon.level.trueDistance(Dungeon.heroes.pos, pos+i)){
+						if (spawnPos == -1 || Dungeon.level.trueDistance(enemy.pos, spawnPos) > Dungeon.level.trueDistance(enemy.pos, pos+i)){
 							spawnPos = pos + i;
 						}
 					}
@@ -325,7 +338,7 @@ public class YogDzewa extends Mob {
 				if (spawnPos == -1){
 					for (int i : PathFinder.NEIGHBOURS8){
 						if (Actor.findChar(pos+i) instanceof Sheep){
-							if (spawnPos == -1 || Dungeon.level.trueDistance(Dungeon.heroes.pos, spawnPos) > Dungeon.level.trueDistance(Dungeon.heroes.pos, pos+i)){
+							if (spawnPos == -1 || Dungeon.level.trueDistance(enemy.pos, spawnPos) > Dungeon.level.trueDistance(enemy.pos, pos+i)){
 								spawnPos = pos + i;
 							}
 						}
@@ -339,7 +352,7 @@ public class YogDzewa extends Mob {
 					summon.pos = spawnPos;
 					GameScene.add( summon );
 					Actor.add( new Pushing( summon, pos, summon.pos ) );
-					summon.beckon(Dungeon.heroes.pos);
+					summon.beckon(enemy.pos);
 					Dungeon.level.occupyCell(summon);
 
 					summonCooldown += Random.NormalFloat(MIN_SUMMON_CD, MAX_SUMMON_CD);
@@ -420,13 +433,16 @@ public class YogDzewa extends Mob {
 			if (summonCooldown < 5) summonCooldown = 5;
 
 		}
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
 
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/3f);
-			else                                                    lock.addTime(dmgTaken/2f);
+				LockedFloor lock = hero.buff(LockedFloor.class);
+				if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+					if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmgTaken / 3f);
+					else lock.addTime(dmgTaken / 2f);
+				}
+			}
 		}
-
 	}
 
 	public void addFist(YogFist fist){
@@ -470,11 +486,16 @@ public class YogDzewa extends Mob {
 			viewDistance = Math.min(viewDistance, 2);
 		}
 		level.viewDistance = viewDistance;
-		if (Dungeon.heroes != null) {
-			if (Dungeon.heroes.buff(Light.class) == null) {
-				Dungeon.heroes.viewDistance = level.viewDistance;
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+
+				if (Dungeon.heroes != null) {
+					if (hero.buff(Light.class) == null) {
+						hero.viewDistance = level.viewDistance;
+					}
+					Dungeon.observe(hero);
+				}
 			}
-			Dungeon.observe();
 		}
 	}
 
