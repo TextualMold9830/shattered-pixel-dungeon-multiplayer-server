@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
@@ -38,9 +39,13 @@ import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.PointerArea;
 import com.watabou.utils.Point;
 import com.watabou.utils.Signal;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Window extends Group implements Signal.Listener<KeyEvent> {
 
@@ -184,8 +189,12 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 
 		shadow.boxRect( camera.x / camera.zoom, camera.y / camera.zoom, chrome.width(), chrome.height );
 	}
+	public Window( int width, int height, NinePatch chrome, Hero owner ) {
+		this(width, height, chrome);
+		setOwnerHero(owner);
+	}
 
-	public Point getOffset(){
+		public Point getOffset(){
 		return new Point(xOffset, yOffset);
 	}
 
@@ -229,20 +238,18 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 
 		offset(newXOfs, newYOfs);
 	}
-	
+	//TODO: check this
 	public void hide() {
-		if (parent != null) {
-			parent.erase(this);
-		}
 		destroy();
 	}
-	
-	@Override
+//TODO: might want to add super.destroy();
 	public void destroy() {
-		super.destroy();
-		
-		Camera.remove( camera );
-		KeyEvent.removeKeyListener( this );
+		if (getOwnerHero() != null) {
+			Window removed = windows.get(HeroHelp.getHeroID(getOwnerHero())).remove(getId());
+			if ((removed != null) && (removed != this)) {
+				throw new AssertionError("Removed window is not current Window");
+			}
+		}
 	}
 
 	@Override
@@ -260,5 +267,26 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	public void onBackPressed() {
 		hide();
 	}
+	public static void OnButtonPressed(@NotNull Hero hero, int ID, int button, @Nullable JSONObject res) {
+		final int heroId = HeroHelp.getHeroID(hero);
+		Window window;
+		try {
+			window = windows.get(heroId).get(ID);
+			Objects.requireNonNull(window);
+		} catch (NullPointerException e) {
+			Log.i("Window", "No such window.");
+			return;
+		}
+		if (button == -1) {
+			window.onBackPressed();
+		} else {
+			window.onSelect(button, res);
+		}
+	}
+	public void onSelect(int button, JSONObject args) {
+		onSelect(button);
+	}
 
+	protected void onSelect(int button) {
+	}
 }

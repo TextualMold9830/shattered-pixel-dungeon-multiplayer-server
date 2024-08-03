@@ -53,7 +53,7 @@ public class WndInfoTalent extends Window {
 		add( titlebar );
 
 		boolean metaDesc = (buttonCallback != null && buttonCallback.metamorphDesc()) ||
-				(Dungeon.heroes != null && Dungeon.heroes.metamorphedTalents.containsValue(talent));
+				(getOwnerHero() != null && getOwnerHero().metamorphedTalents.containsValue(talent));
 
 		RenderedTextBlock txtInfo = PixelScene.renderTextBlock(talent.desc(metaDesc), 6);
 		txtInfo.maxWidth(WIDTH);

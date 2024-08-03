@@ -139,7 +139,7 @@ public class WndHero extends WndTabbed {
 			}
 			clear();
 			
-			Hero hero = Dungeon.heroes;
+			Hero hero = getOwnerHero();
 
 			IconTitle title = new IconTitle();
 			title.icon( HeroSprite.avatar(hero.heroClass, hero.tier()) );

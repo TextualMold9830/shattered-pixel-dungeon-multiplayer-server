@@ -70,11 +70,11 @@ public class WndImp extends Window {
 		
 		hide();
 		
-		tokens.detachAll( Dungeon.heroes.belongings.backpack );
+		tokens.detachAll( getOwnerHero().belongings.backpack );
 		if (reward == null) return;
 
-		reward.identify(false);
-		if (reward.doPickUp( Dungeon.heroes)) {
+		reward.identify(false, getOwnerHero());
+		if (reward.doPickUp(getOwnerHero())) {
 			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, imp.pos ).sprite.drop();

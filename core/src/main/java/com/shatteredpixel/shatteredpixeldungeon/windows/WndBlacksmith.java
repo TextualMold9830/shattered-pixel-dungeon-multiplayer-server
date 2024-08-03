@@ -89,10 +89,10 @@ public class WndBlacksmith extends Window {
 					@Override
 					protected void onSelect(int index) {
 						if (index == 0){
-							if (Blacksmith.Quest.pickaxe.doPickUp( Dungeon.heroes)) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", Blacksmith.Quest.pickaxe.name()) ));
+							if (Blacksmith.Quest.pickaxe.doPickUp( getOwnerHero())) {
+								GLog.i( Messages.capitalize(Messages.get(getOwnerHero(), "you_now_have", Blacksmith.Quest.pickaxe.name()) ));
 							} else {
-								Dungeon.level.drop( Blacksmith.Quest.pickaxe, Dungeon.heroes.pos ).sprite.drop();
+								Dungeon.level.drop( Blacksmith.Quest.pickaxe,getOwnerHero().pos ).sprite.drop();
 							}
 							Blacksmith.Quest.favor -= pickaxeCost;
 							Blacksmith.Quest.pickaxe = null;
@@ -177,7 +177,7 @@ public class WndBlacksmith extends Window {
 					@Override
 					protected void onSelect(int index) {
 						if (index == 0){
-							new Gold(Blacksmith.Quest.favor).doPickUp(Dungeon.heroes, Dungeon.heroes.pos);
+							new Gold(Blacksmith.Quest.favor).doPickUp(getOwnerHero(), getOwnerHero().pos);
 							Blacksmith.Quest.favor = 0;
 							WndBlacksmith.this.hide();
 						}
@@ -266,18 +266,18 @@ public class WndBlacksmith extends Window {
 					}
 
 					Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-					ScrollOfUpgrade.upgrade( Dungeon.heroes);
-					Item.evoke( Dungeon.heroes);
+					ScrollOfUpgrade.upgrade(getOwnerHero());
+					Item.evoke(getOwnerHero());
 
-					if (second.isEquipped( Dungeon.heroes)) {
-						((EquipableItem)second).doUnequip( Dungeon.heroes, false );
+					if (second.isEquipped( getOwnerHero())) {
+						((EquipableItem)second).doUnequip( getOwnerHero(), false );
 					}
-					second.detach( Dungeon.heroes.belongings.backpack );
+					second.detach( getOwnerHero().belongings.backpack );
 
 					if (second instanceof Armor){
 						BrokenSeal seal = ((Armor) second).checkSeal();
 						if (seal != null){
-							Dungeon.level.drop( seal, Dungeon.heroes.pos );
+							Dungeon.level.drop( seal, getOwnerHero().pos );
 						}
 					}
 
@@ -394,7 +394,7 @@ public class WndBlacksmith extends Window {
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				Item.evoke( Dungeon.heroes);
+				Item.evoke( getOwnerHero());
 
 				if (!Blacksmith.Quest.rewardsAvailable()){
 					Notes.remove( Notes.Landmark.TROLL );
@@ -434,8 +434,8 @@ public class WndBlacksmith extends Window {
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				ScrollOfUpgrade.upgrade( Dungeon.heroes);
-				Item.evoke( Dungeon.heroes);
+				ScrollOfUpgrade.upgrade( getOwnerHero());
+				Item.evoke( getOwnerHero());
 
 				Badges.validateItemLevelAquired( item );
 
@@ -513,13 +513,13 @@ public class WndBlacksmith extends Window {
 							((Armor) item).inscribe(Blacksmith.Quest.smithGlyph);
 						}
 
-						item.identify(false);
+						item.identify(false, null);
 						Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-						Item.evoke( Dungeon.heroes);
-						if (item.doPickUp( Dungeon.heroes)) {
-							GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", item.name())) );
+						Item.evoke( getOwnerHero());
+						if (item.doPickUp( getOwnerHero())) {
+							GLog.i( Messages.capitalize(Messages.get(getOwnerHero(), "you_now_have", item.name())) );
 						} else {
-							Dungeon.level.drop( item, Dungeon.heroes.pos ).sprite.drop();
+							Dungeon.level.drop( item, getOwnerHero().pos ).sprite.drop();
 						}
 						WndSmith.this.hide();
 						Blacksmith.Quest.smithRewards = null;

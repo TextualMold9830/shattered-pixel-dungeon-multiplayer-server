@@ -87,7 +87,7 @@ public class WndChooseSubclass extends Window {
 			IconButton clsInfo = new IconButton(Icons.get(Icons.INFO)){
 				@Override
 				protected void onClick() {
-					GameScene.show(new WndInfoSubclass(Dungeon.heroes.heroClass, subCls));
+					GameScene.show(new WndInfoSubclass(getOwnerHero().heroClass, subCls));
 				}
 			};
 			clsInfo.setRect(WIDTH-20, btnCls.top() + (btnCls.height()-20)/2, 20, 20);

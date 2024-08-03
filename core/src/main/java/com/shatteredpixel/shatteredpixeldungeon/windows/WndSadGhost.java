@@ -116,8 +116,8 @@ public class WndSadGhost extends Window {
 			((Armor) reward).inscribe(Ghost.Quest.glyph);
 		}
 		
-		reward.identify(false);
-		if (reward.doPickUp( Dungeon.heroes)) {
+		reward.identify(false, getOwnerHero());
+		if (reward.doPickUp( getOwnerHero())) {
 			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, ghost.pos ).sprite.drop();

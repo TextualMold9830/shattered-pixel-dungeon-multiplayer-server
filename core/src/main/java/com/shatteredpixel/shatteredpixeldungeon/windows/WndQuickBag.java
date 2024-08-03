@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -46,8 +47,8 @@ public class WndQuickBag extends Window {
 
 	private static Item bag;
 
-	public WndQuickBag(Bag bag){
-		super(0, 0, Chrome.get(Chrome.Type.TOAST_TR));
+	public WndQuickBag(Bag bag, Hero owner){
+		super(0, 0, Chrome.get(Chrome.Type.TOAST_TR), owner);
 
 		if( WndBag.INSTANCE != null ){
 			WndBag.INSTANCE.hide();
@@ -63,7 +64,7 @@ public class WndQuickBag extends Window {
 
 		ArrayList<Item> items = new ArrayList<>();
 
-		for (Item i : bag == null ? Dungeon.heroes.belongings : bag){
+		for (Item i : bag == null ? owner.belongings : bag){
 			if (i.defaultAction() == null){
 				continue;
 			}
@@ -71,8 +72,8 @@ public class WndQuickBag extends Window {
 				continue;
 			}
 			if (i instanceof Artifact
-					&& !i.isEquipped(Dungeon.heroes)
-					&& (!(i instanceof CloakOfShadows) || !Dungeon.heroes.hasTalent(Talent.LIGHT_CLOAK))){
+					&& !i.isEquipped(owner)
+					&& (!(i instanceof CloakOfShadows) || !owner.hasTalent(Talent.LIGHT_CLOAK))){
 				continue;
 			}
 			items.add(i);
@@ -96,13 +97,13 @@ public class WndQuickBag extends Window {
 			InventorySlot slot = new InventorySlot(i){
 				@Override
 				protected void onClick() {
-					if (Dungeon.heroes == null || !Dungeon.heroes.isAlive() || !Dungeon.heroes.belongings.contains(item)){
+					if (Dungeon.heroes == null || !owner.isAlive() || !owner.belongings.contains(item)){
 						Game.scene().addToFront(new WndUseItem(WndQuickBag.this, item));
 						return;
 					}
 
 					hide();
-					item.execute(Dungeon.heroes);
+					item.execute(owner);
 					if (item.usesTargeting && bag != null){
 						int idx = Dungeon.quickslot.getSlot(WndQuickBag.bag);
 						if (idx != -1){
@@ -156,7 +157,7 @@ public class WndQuickBag extends Window {
 		offset(0, (int) (bottom/2 - 30 - height/2));
 
 	}
-
+//FIXME
 	public static final Comparator<Item> quickBagComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {

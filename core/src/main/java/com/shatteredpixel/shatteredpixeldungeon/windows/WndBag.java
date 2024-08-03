@@ -128,7 +128,7 @@ public class WndBag extends WndTabbed {
 		resize( windowWidth, windowHeight );
 
 		int i = 1;
-		for (Bag b : Dungeon.heroes.belongings.getBags()) {
+		for (Bag b : getOwnerHero().belongings.getBags()) {
 			if (b != null) {
 				BagTab tab = new BagTab( b, i++ );
 				add( tab );
@@ -139,31 +139,31 @@ public class WndBag extends WndTabbed {
 		layoutTabs();
 	}
 	
-	public static WndBag lastBag( ItemSelector selector ) {
+	public static WndBag lastBag( ItemSelector selector, Hero hero ) {
 		
-		if (lastBag != null && Dungeon.heroes.belongings.backpack.contains( lastBag )) {
+		if (lastBag != null && hero.belongings.backpack.contains( lastBag )) {
 			
 			return new WndBag( lastBag, selector );
 			
 		} else {
 			
-			return new WndBag( Dungeon.heroes.belongings.backpack, selector );
+			return new WndBag( hero.belongings.backpack, selector );
 			
 		}
 	}
 
-	public static WndBag getBag( ItemSelector selector ) {
+	public static WndBag getBag( ItemSelector selector, Hero hero ) {
 		if (selector.preferredBag() == Belongings.Backpack.class){
-			return new WndBag( Dungeon.heroes.belongings.backpack, selector );
+			return new WndBag( hero.belongings.backpack, selector );
 
 		} else if (selector.preferredBag() != null){
-			Bag bag = Dungeon.heroes.belongings.getItem( selector.preferredBag() );
+			Bag bag = hero.belongings.getItem( selector.preferredBag() );
 			if (bag != null)    return new WndBag( bag, selector );
 			//if a specific preferred bag isn't present, then the relevant items will be in backpack
-			else                return new WndBag( Dungeon.heroes.belongings.backpack, selector );
+			else                return new WndBag( hero.belongings.backpack, selector );
 		}
 
-		return lastBag( selector );
+		return lastBag( selector, hero );
 	}
 	
 	protected void placeTitle( Bag bag, int width ){
@@ -232,11 +232,11 @@ public class WndBag extends WndTabbed {
 		PixelScene.align(txtTitle);
 		add( txtTitle );
 	}
-	
+	//FIXME
 	protected void placeItems( Bag container ) {
 		
 		// Equipped items
-		Belongings stuff = Dungeon.heroes.belongings;
+		Belongings stuff = getOwnerHero().belongings;
 		placeItem( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
 		placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
 		placeItem( stuff.artifact != null ? stuff.artifact : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) );
@@ -246,7 +246,7 @@ public class WndBag extends WndTabbed {
 		int equipped = 5;
 
 		//the container itself if it's not the root backpack
-		if (container != Dungeon.heroes.belongings.backpack){
+		if (container != getOwnerHero().belongings.backpack){
 			placeItem(container);
 			count--; //don't count this one, as it's not actually inside of itself
 		} else if (stuff.secondWep != null) {
@@ -280,7 +280,7 @@ public class WndBag extends WndTabbed {
 		InventorySlot slot = new InventorySlot( item ){
 			@Override
 			protected void onClick() {
-				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.heroes)){
+				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(getOwnerHero())){
 
 					hide();
 
@@ -298,7 +298,7 @@ public class WndBag extends WndTabbed {
 
 			@Override
 			protected void onRightClick() {
-				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.heroes)){
+				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(getOwnerHero())){
 
 					hide();
 
@@ -465,11 +465,27 @@ public class WndBag extends WndTabbed {
 	}
 
 	public abstract static class ItemSelector {
+		public Hero owner = null;
 		public abstract String textPrompt();
 		public Class<?extends Bag> preferredBag(){
 			return null; //defaults to last bag opened
 		}
 		public abstract boolean itemSelectable( Item item );
 		public abstract void onSelect( Item item );
+
+		public ItemSelector() {
+		}
+
+		public Hero getOwner() {
+			return owner;
+		}
+
+		public void setOwner(Hero owner) {
+			this.owner = owner;
+		}
+
+		public ItemSelector(Hero owner) {
+			setOwner(owner);
+		}
 	}
 }
