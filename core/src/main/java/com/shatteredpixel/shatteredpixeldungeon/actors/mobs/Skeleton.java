@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Skeleton extends Mob {
 	
 	{
@@ -58,11 +60,11 @@ public class Skeleton extends Mob {
 	}
 	
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		
 		super.die( cause );
 		
-		if (cause == Chasm.class) return;
+		if (cause.getCause() == Chasm.class) return;
 		
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {

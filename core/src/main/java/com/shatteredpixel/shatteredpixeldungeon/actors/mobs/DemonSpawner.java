@@ -37,6 +37,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class DemonSpawner extends Mob {
@@ -135,7 +137,7 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause src) {
 		if (dmg >= 20){
 			//takes 20/21/22/23/24/25/26/27/28/29/30 dmg
 			// at   20/22/25/29/34/40/47/55/64/74/85 incoming dmg
@@ -146,7 +148,7 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		if (spawnRecorded){
 			Statistics.spawnersAlive--;
 			Notes.remove(Notes.Landmark.DEMON_SPAWNER);

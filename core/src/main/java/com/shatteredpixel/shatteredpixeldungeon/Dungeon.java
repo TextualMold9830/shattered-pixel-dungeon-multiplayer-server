@@ -1140,7 +1140,7 @@ public class Dungeon {
 				return;
 			}
 			int ID = Arrays.asList(heroes).indexOf(hero);
-			hero.die(null);
+			hero.die(new Char.DamageCause(null));
 			if (ID == -1) {
 				return;
 			}

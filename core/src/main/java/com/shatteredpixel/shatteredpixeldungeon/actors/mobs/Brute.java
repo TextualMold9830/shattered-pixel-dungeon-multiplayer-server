@@ -37,6 +37,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Brute extends Mob {
 	
 	{
@@ -72,10 +74,10 @@ public class Brute extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		super.die(cause);
 
-		if (cause == Chasm.class){
+		if (cause.getCause() == Chasm.class){
 			hasRaged = true; //don't let enrage trigger for chasm deaths
 		}
 	}
@@ -133,7 +135,8 @@ public class Brute extends Mob {
 			absorbDamage( Math.round(4*AscensionChallenge.statModifier(target)));
 			
 			if (shielding() <= 0){
-				target.die(null);
+				//todo save damage source and use it here
+				target.die(new DamageCause(null));
 			}
 			
 			spend( TICK );

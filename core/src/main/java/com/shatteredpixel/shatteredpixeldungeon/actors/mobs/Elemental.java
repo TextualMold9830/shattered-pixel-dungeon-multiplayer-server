@@ -62,6 +62,8 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public abstract class Elemental extends Mob {
@@ -399,7 +401,7 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public void die(Object cause) {
+		public void die(@NotNull DamageCause cause) {
 			super.die(cause);
 			if (alignment == Alignment.ENEMY) {
 				Dungeon.level.drop( new Embers(), pos ).sprite.drop();

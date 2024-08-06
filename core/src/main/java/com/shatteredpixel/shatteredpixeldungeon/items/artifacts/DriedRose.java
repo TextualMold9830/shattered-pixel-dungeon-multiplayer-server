@@ -79,6 +79,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class DriedRose extends Artifact {
@@ -659,7 +661,8 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			//TODO improve this when I have proper damage source logic
 			if (rose != null && rose.armor != null && rose.armor.hasGlyph(AntiMagic.class, this)
 					&& AntiMagic.RESISTS.contains(src.getClass())){
@@ -667,7 +670,7 @@ public class DriedRose extends Artifact {
 				dmg = Math.max(dmg, 0);
 			}
 			
-			super.damage( dmg, src );
+			super.damage( dmg, source );
 			
 			//for the rose status indicator
 			Item.updateQuickslot();
@@ -763,7 +766,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		public void die(Object cause) {
+		public void die(@NotNull DamageCause cause) {
 			sayDefeated();
 			super.die(cause);
 		}

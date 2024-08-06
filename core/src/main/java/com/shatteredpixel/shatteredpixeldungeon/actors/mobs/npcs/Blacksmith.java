@@ -47,6 +47,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -61,7 +63,7 @@ public class Blacksmith extends NPC {
 	@Override
 	protected boolean act() {
 		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
-			die(null);
+			die(new DamageCause( null));
 			Notes.remove( Notes.Landmark.TROLL );
 			return true;
 		}
@@ -247,7 +249,7 @@ public class Blacksmith extends NPC {
 	}
 	
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, @NotNull DamageCause src ) {
 		//do nothing
 	}
 

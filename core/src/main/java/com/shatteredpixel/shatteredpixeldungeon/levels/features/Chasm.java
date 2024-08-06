@@ -150,7 +150,7 @@ public class Chasm implements Hero.Doom {
 	}
 
 	public static void mobFall( Mob mob ) {
-		if (mob.isAlive()) mob.die( Chasm.class );
+		if (mob.isAlive()) mob.die( new Char.DamageCause( Chasm.class, null ));
 		
 		if (mob.sprite != null) ((MobSprite)mob.sprite).fall();
 	}

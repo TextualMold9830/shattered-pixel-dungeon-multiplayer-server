@@ -37,6 +37,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class SpectralNecromancer extends Necromancer {
@@ -72,11 +74,11 @@ public class SpectralNecromancer extends Necromancer {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		for (int ID : wraithIDs){
 			Actor a = Actor.findById(ID);
 			if (a instanceof Wraith && ((Wraith) a).alignment == alignment){
-				((Wraith) a).die(null);
+				((Wraith) a).die(new DamageCause(null, cause.getDamageOwner()));
 			}
 		}
 

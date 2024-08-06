@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -124,7 +125,7 @@ public class WndSadGhost extends Window {
 		}
 		
 		ghost.yell( Messages.get(this, "farewell") );
-		ghost.die( null );
+		ghost.die( new Char.DamageCause(null) );
 		
 		Ghost.Quest.complete();
 	}

@@ -85,6 +85,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -793,8 +795,8 @@ public abstract class Mob extends Char {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
-
+	public void damage(int dmg, @NotNull DamageCause source ) {
+		Object src = source.getCause();
 		if (!isInvulnerable(src.getClass())) {
 			if (state == SLEEPING) {
 				state = WANDERING;
@@ -804,7 +806,7 @@ public abstract class Mob extends Char {
 			}
 		}
 		
-		super.damage( dmg, src );
+		super.damage( dmg, source );
 	}
 	
 	
@@ -858,8 +860,8 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public void die( Object cause ) {
-
+	public void die(@NotNull DamageCause damageCause ) {
+		Object cause = damageCause.getCause();
 		if (cause == Chasm.class){
 			//50% chance to round up, 50% to round down
 			if (EXP % 2 == 1) EXP += Random.Int(2);
@@ -870,19 +872,17 @@ public abstract class Mob extends Char {
 			rollToDropLoot();
 			//TODO: check this
 			if (cause instanceof Hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment){
-				if (cause instanceof Hero) {
-					if (((Hero) cause).hasTalent(Talent.LETHAL_MOMENTUM)
-							&& Random.Float() < 0.34f + 0.33f * ((Hero) cause).pointsInTalent(Talent.LETHAL_MOMENTUM)) {
-						Buff.affect((Hero)cause, Talent.LethalMomentumTracker.class, 0f);
-					}
-					if (((Hero) cause).heroClass != HeroClass.DUELIST
-							&& ((Hero) cause).hasTalent(Talent.LETHAL_HASTE)
-							&& ((Hero)cause).buff(Talent.LethalHasteCooldown.class) == null) {
-						Buff.affect((Hero) cause, Talent.LethalHasteCooldown.class, 100f);
-						Buff.affect((Hero) cause, Haste.class, 1.67f + ((Hero) cause).pointsInTalent(Talent.LETHAL_HASTE));
-					}
+				if (((Hero) cause).hasTalent(Talent.LETHAL_MOMENTUM)
+						&& Random.Float() < 0.34f + 0.33f * ((Hero) cause).pointsInTalent(Talent.LETHAL_MOMENTUM)) {
+					Buff.affect((Hero)cause, Talent.LethalMomentumTracker.class, 0f);
 				}
-			}
+				if (((Hero) cause).heroClass != HeroClass.DUELIST
+						&& ((Hero) cause).hasTalent(Talent.LETHAL_HASTE)
+						&& ((Hero)cause).buff(Talent.LethalHasteCooldown.class) == null) {
+					Buff.affect((Hero) cause, Talent.LethalHasteCooldown.class, 100f);
+					Buff.affect((Hero) cause, Haste.class, 1.67f + ((Hero) cause).pointsInTalent(Talent.LETHAL_HASTE));
+				}
+				}
 
 		}
 
@@ -890,7 +890,7 @@ public abstract class Mob extends Char {
 
 		boolean soulMarked = buff(SoulMark.class) != null;
 
-		super.die( cause );
+		super.die( damageCause );
 
 		if (!(this instanceof Wraith)
 				&& soulMarked

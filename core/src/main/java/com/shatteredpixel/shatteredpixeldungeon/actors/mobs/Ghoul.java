@@ -41,6 +41,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class Ghoul extends Mob {
@@ -150,7 +152,8 @@ public class Ghoul extends Mob {
 	private boolean beingLifeLinked = false;
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause damageCause) {
+		Object cause = damageCause.getCause();
 		if (cause != Chasm.class && cause != GhoulLifeLink.class && !Dungeon.level.pit[pos]){
 			Ghoul nearby = GhoulLifeLink.searchForHost(this);
 			if (nearby != null){
@@ -164,7 +167,7 @@ public class Ghoul extends Mob {
 			}
 		}
 
-		super.die(cause);
+		super.die(damageCause);
 	}
 
 	@Override
@@ -260,7 +263,7 @@ public class Ghoul extends Mob {
 			if (Dungeon.level.pit[ghoul.pos]){
 				super.detach();
 				ghoul.beingLifeLinked = false;
-				ghoul.die(this);
+				ghoul.die(new DamageCause( this, null)); //todo save actor who pushed this char?
 				return true;
 			}
 
@@ -333,7 +336,7 @@ public class Ghoul extends Mob {
 				timeToNow();
 			} else {
 				ghoul.beingLifeLinked = false;
-				ghoul.die(this);
+				ghoul.die(new DamageCause(this, null)); //todo fixme?
 			}
 		}
 

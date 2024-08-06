@@ -36,6 +36,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.PiranhaSprite;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Piranha extends Mob {
 	
 	{
@@ -102,11 +104,11 @@ public class Piranha extends Mob {
 	}
 
 	public void dieOnLand(){
-		die( null );
+		die( new DamageCause(null) ); //todo fixme?
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		super.die( cause );
 		
 		Statistics.piranhasKilled++;

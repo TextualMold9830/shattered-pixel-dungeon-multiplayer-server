@@ -48,6 +48,8 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Goo extends Mob {
 
 	{
@@ -259,13 +261,14 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		if (!BossHealthBar.isAssigned()){
 			BossHealthBar.assignBoss( this );
 			Dungeon.level.seal();
 		}
 		boolean bleeding = (HP*2 <= HT);
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 		if ((HP*2 <= HT) && !bleeding){
 			BossHealthBar.bleed(true);
 			sprite.showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
@@ -280,7 +283,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		
 		super.die( cause );
 		

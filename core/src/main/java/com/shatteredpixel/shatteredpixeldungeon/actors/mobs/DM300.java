@@ -48,7 +48,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.LloydsBeacon;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
@@ -73,6 +72,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -466,13 +467,14 @@ public class DM300 extends Mob {
 	private boolean invulnWarned = false;
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		if (!BossHealthBar.isAssigned()){
 			notice();
 		}
 
 		int preHP = HP;
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 		if (isInvulnerable(src.getClass())){
 			return;
 		}
@@ -560,7 +562,7 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 
 		super.die( cause );
 

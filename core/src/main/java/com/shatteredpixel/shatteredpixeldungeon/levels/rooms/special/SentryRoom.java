@@ -53,6 +53,8 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SentryRoom extends SpecialRoom {
 
 	@Override
@@ -299,7 +301,7 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void damage(int dmg, @NotNull DamageCause src ) {
 			//do nothing
 		}
 

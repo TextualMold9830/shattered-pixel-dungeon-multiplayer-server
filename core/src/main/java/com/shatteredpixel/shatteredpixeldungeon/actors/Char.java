@@ -135,6 +135,8 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -469,7 +471,7 @@ public abstract class Char extends Actor {
 				return true;
 			}
 
-			enemy.damage( effectiveDamage, this );
+			enemy.damage( effectiveDamage,  this );
 
 			if (buff(FireImbue.class) != null)  buff(FireImbue.class).proc(enemy);
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
@@ -477,7 +479,7 @@ public abstract class Char extends Actor {
 			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
 				enemy.HP = 0;
 				if (!enemy.isAlive()) {
-					enemy.die(this);
+					enemy.die(new DamageCause(this, this));
 				} else {
 					//helps with triggering any on-damage effects that need to activate
 					enemy.damage(-1, this);
@@ -495,7 +497,7 @@ public abstract class Char extends Actor {
 						(enemy.HP/(float)enemy.HT) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
 					enemy.HP = 0;
 					if (!enemy.isAlive()) {
-						enemy.die(this);
+						enemy.die(new DamageCause(this));
 					} else {
 						//helps with triggering any on-damage effects that need to activate
 						enemy.damage(-1, this);
@@ -687,9 +689,12 @@ public abstract class Char extends Actor {
 		needsShieldUpdate = false;
 		return cachedShield;
 	}
-	
-	public void damage( int dmg, Object src ) {
-		
+
+	public void damage(int dmg, @NotNull Char source ) {
+		damage(dmg, new DamageCause(source));
+	}
+	public void damage(int dmg, @NotNull DamageCause source ) {
+		Object src = source.getCause();
 		if (!isAlive() || dmg < 0) {
 			return;
 		}
@@ -711,7 +716,7 @@ public abstract class Char extends Actor {
 			for (LifeLink link : links){
 				Char ch = (Char)Actor.findById(link.object);
 				if (ch != null) {
-					ch.damage(dmg, link);
+					ch.damage(dmg, new DamageCause(link, source.getDamageOwner()));
 					if (!ch.isAlive()) {
 						link.detach();
 					}
@@ -863,7 +868,7 @@ public abstract class Char extends Actor {
 		if (HP < 0) HP = 0;
 
 		if (!isAlive()) {
-			die( src );
+			die( source );
 		} else if (HP == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
@@ -913,10 +918,30 @@ public abstract class Char extends Actor {
 			}
 		}
 	}
-	
-	public void die( Object src ) {
+
+	public static final class DamageCause {
+		private final Object cause;
+		private final Char damageOwner;
+
+		public DamageCause(Char damageSource){
+			this.cause = this.damageOwner = damageSource;
+		}
+		public DamageCause(Object cause, Char damageSource){
+			this.cause = cause;
+			this.damageOwner = damageSource;
+		}
+
+		public Object getCause() {
+			return cause;
+		}
+		public  Char getDamageOwner(){
+			return damageOwner;
+		}
+	}
+
+	public void die(@NotNull DamageCause src ) {
 		destroy();
-		if (src != Chasm.class) sprite.die();
+		if (src.getCause() != Chasm.class) sprite.die();
 	}
 
 	//we cache this info to prevent having to call buff(...) in isAlive.

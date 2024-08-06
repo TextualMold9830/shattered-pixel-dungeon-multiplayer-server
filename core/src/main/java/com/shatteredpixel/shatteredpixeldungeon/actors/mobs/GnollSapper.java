@@ -33,6 +33,8 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class GnollSapper extends Mob {
 
 	{
@@ -89,7 +91,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		super.die(cause);
 		losePartner();
 	}
@@ -105,7 +107,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause src) {
 		super.damage(dmg, src);
 		abilityCooldown -= dmg/10f;
 	}

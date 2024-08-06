@@ -56,6 +56,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class Wandmaker extends NPC {
@@ -69,7 +71,7 @@ public class Wandmaker extends NPC {
 	@Override
 	protected boolean act() {
 		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
-			die(null);
+			die(new DamageCause( null));
 			return true;
 		}
 		if (Dungeon.level.visited[pos] && Quest.wand1 != null){
@@ -84,7 +86,7 @@ public class Wandmaker extends NPC {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, @NotNull DamageCause src ) {
 		//do nothing
 	}
 

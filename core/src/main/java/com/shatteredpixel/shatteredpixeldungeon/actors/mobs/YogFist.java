@@ -63,6 +63,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class YogFist extends Mob {
 
 	{
@@ -146,9 +148,10 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		int preHP = HP;
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 		int dmgTaken = preHP - HP;
 
 		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
@@ -316,7 +319,8 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			int grassCells = 0;
 			for (int i : PathFinder.NEIGHBOURS9) {
 				if (Dungeon.level.map[pos+i] == Terrain.FURROWED_GRASS
@@ -331,7 +335,7 @@ public abstract class YogFist extends Mob {
 				return;
 			}
 
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 		}
 
 		@Override
@@ -396,7 +400,8 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			if (!isInvulnerable(src.getClass())
 					&& !(src instanceof Bleeding)
 					&& buff(Sickle.HarvestBleedTracker.class) == null){
@@ -413,7 +418,7 @@ public abstract class YogFist extends Mob {
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 			} else{
-				super.damage(dmg, src);
+				super.damage(dmg, source);
 			}
 		}
 
@@ -456,7 +461,8 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			if (!isInvulnerable(src.getClass()) && !(src instanceof Viscosity.DeferedDamage)){
 				dmg = Math.round( dmg * resist( src.getClass() ));
 				if (dmg >= 0) {
@@ -464,7 +470,7 @@ public abstract class YogFist extends Mob {
 					sprite.showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg));
 				}
 			} else{
-				super.damage(dmg, src);
+				super.damage(dmg, source);
 			}
 		}
 
@@ -519,9 +525,10 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			int beforeHP = HP;
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
 				HP = HT/2;
 				if (src instanceof Char) {
@@ -593,9 +600,10 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 			int beforeHP = HP;
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 			if (isAlive() && beforeHP > HT/2 && HP < HT/2) {
 				HP = HT / 2;
 				for (Hero hero : Dungeon.heroes) {

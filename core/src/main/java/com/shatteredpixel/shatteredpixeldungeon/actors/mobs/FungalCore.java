@@ -24,6 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalCoreSprite;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FungalCore extends Mob {
 
 	{
@@ -49,7 +51,7 @@ public class FungalCore extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		super.die(cause);
 		Blacksmith.Quest.beatBoss();
 	}

@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 import com.watabou.utils.Bundle;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ArmoredStatue extends Statue {
 
 	{
@@ -99,7 +101,8 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		//TODO improve this when I have proper damage source logic
 		if (armor != null && armor.hasGlyph(AntiMagic.class, this)
 				&& AntiMagic.RESISTS.contains(src.getClass())){
@@ -107,7 +110,7 @@ public class ArmoredStatue extends Statue {
 			dmg = Math.max(dmg, 0);
 		}
 
-		super.damage( dmg, src );
+		super.damage( dmg, source );
 
 		//for the rose status indicator
 		Item.updateQuickslot();
@@ -136,7 +139,7 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		armor.identify(false);
 		Dungeon.level.drop( armor, pos ).sprite.drop();
 		super.die( cause );

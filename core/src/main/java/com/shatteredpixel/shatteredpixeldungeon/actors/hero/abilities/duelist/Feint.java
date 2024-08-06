@@ -52,6 +52,8 @@ import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.Callback;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Feint extends ArmorAbility {
 
 	{
@@ -180,7 +182,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void damage(int dmg, @NotNull DamageCause src ) {
 
 		}
 

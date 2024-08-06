@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class PhantomPiranha extends Piranha {
@@ -46,7 +48,8 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		Char dmgSource = null;
 		if (src instanceof Char) dmgSource = (Char)src;
 		if (src instanceof Wand) dmgSource = Dungeon.heroes;
@@ -54,7 +57,7 @@ public class PhantomPiranha extends Piranha {
 		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
 			dmg = Math.round(dmg/2f); //halve damage taken if we are going to teleport
 		}
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 
 		if (isAlive() && !(src instanceof Corruption)) {
 			if (dmgSource != null) {

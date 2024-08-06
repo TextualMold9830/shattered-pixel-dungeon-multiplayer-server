@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -118,8 +119,8 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 					power = 0f;
 					BuffIndicator.refreshHero();
 					if (!target.isAlive()){
-						target.die(this);
-						if (!target.isAlive()) Dungeon.fail(this);
+						target.die( new Char.DamageCause(this, target));
+						if (!target.isAlive() && target instanceof Hero) Dungeon.fail(this);
 					}
 				}
 
@@ -127,8 +128,8 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				state = State.RECOVERING;
 				power = 0f;
 				if (!target.isAlive()){
-					target.die(this);
-					if (!target.isAlive()) Dungeon.fail(this);
+					target.die(new Char.DamageCause(this, target));
+					if (!target.isAlive() && (target instanceof Hero)) Dungeon.fail(this);
 				}
 
 			}

@@ -166,6 +166,8 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -1435,7 +1437,8 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, @NotNull DamageCause source ) {
+		Object src = source.getCause();
 		if (buff(TimekeepersHourglass.timeStasis.class) != null)
 			return;
 
@@ -1924,7 +1927,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		
 		curAction = null;
 
@@ -1975,8 +1978,8 @@ public class Hero extends Char {
 					}
 				});
 
-				if (cause instanceof Hero.Doom) {
-					((Hero.Doom)cause).onDeath();
+				if (cause.getCause() instanceof Hero.Doom) {
+					((Hero.Doom)cause.getCause()).onDeath();
 				}
 
 				SacrificialFire.Marked sacMark = buff(SacrificialFire.Marked.class);
@@ -1990,7 +1993,7 @@ public class Hero extends Char {
 		
 		Actor.fixTime();
 		super.die( cause );
-		reallyDie( this, cause );
+		reallyDie( this, cause.getCause() );
 	}
 	
 	public static void reallyDie(Hero hero, Object cause ) {

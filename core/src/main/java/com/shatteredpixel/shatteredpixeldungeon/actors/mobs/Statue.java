@@ -37,6 +37,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Statue extends Mob {
 	
 	{
@@ -129,7 +131,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, @NotNull DamageCause src ) {
 
 		if (state == PASSIVE) {
 			state = HUNTING;
@@ -155,7 +157,7 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		weapon.identify(false);
 		Dungeon.level.drop( weapon, pos ).sprite.drop();
 		super.die( cause );

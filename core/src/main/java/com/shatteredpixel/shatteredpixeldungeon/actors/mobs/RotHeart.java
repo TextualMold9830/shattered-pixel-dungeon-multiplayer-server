@@ -32,6 +32,8 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RotHeartSprite;
 import com.watabou.utils.PathFinder;
 
+import org.jetbrains.annotations.NotNull;
+
 public class RotHeart extends Mob {
 
 	{
@@ -56,13 +58,14 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		//TODO: when effect properties are done, change this to FIRE
 		if (src instanceof Burning) {
 			destroy();
 			sprite.die();
 		} else {
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 		}
 	}
 
@@ -96,13 +99,13 @@ public class RotHeart extends Mob {
 		super.destroy();
 		for (Mob mob : Dungeon.level.mobs.toArray(new Mob[Dungeon.level.mobs.size()])){
 			if (mob instanceof RotLasher){
-				mob.die(null);
+				mob.die(new DamageCause(null));
 			}
 		}
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		super.die(cause);
 		Dungeon.level.drop( new Rotberry.Seed(), pos ).sprite.drop();
 		Statistics.questScores[1] = 2000;

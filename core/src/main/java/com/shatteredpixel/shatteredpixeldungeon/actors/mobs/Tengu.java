@@ -78,6 +78,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -130,7 +132,8 @@ public class Tengu extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
@@ -142,7 +145,7 @@ public class Tengu extends Mob {
 		int curbracket = HP / hpBracket;
 
 		int beforeHitHP = HP;
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 
 		//cannot be hit through multiple brackets at a time
 		if (HP <= (curbracket-1)*hpBracket){
@@ -210,7 +213,7 @@ public class Tengu extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		
 		if (Dungeon.heroes.subClass == HeroSubClass.NONE) {
 			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();

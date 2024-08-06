@@ -173,7 +173,7 @@ public class Ratmogrify extends ArmorAbility {
 
 			//for rare cases where a buff was keeping a mob alive (e.g. gnoll brutes)
 			if (!rat.isAlive()){
-				rat.die(this);
+				rat.die(new Char.DamageCause(this, hero));
 			}
 		}
 

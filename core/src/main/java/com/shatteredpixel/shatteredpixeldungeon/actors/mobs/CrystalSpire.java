@@ -53,6 +53,8 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class CrystalSpire extends Mob {
@@ -286,8 +288,8 @@ public class CrystalSpire extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
-		if (!(src instanceof Pickaxe) ){
+	public void damage(int dmg, @NotNull DamageCause src) {
+		if (!(src.getCause() instanceof Pickaxe) ){
 			dmg = 0;
 		}
 		super.damage(dmg, src);

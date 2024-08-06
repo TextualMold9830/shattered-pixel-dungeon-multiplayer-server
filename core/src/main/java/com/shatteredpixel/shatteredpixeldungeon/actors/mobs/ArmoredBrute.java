@@ -82,7 +82,8 @@ public class ArmoredBrute extends Brute {
 			absorbDamage( Math.round(AscensionChallenge.statModifier(target)) );
 			
 			if (shielding() <= 0){
-				target.die(null);
+				//todo save damage source as owner
+				target.die(new DamageCause(null));
 			}
 			
 			spend( 3*TICK );

@@ -55,6 +55,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Ghost extends NPC {
 
 	{
@@ -84,7 +86,7 @@ public class Ghost extends NPC {
 	@Override
 	protected boolean act() {
 		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
-			die(null);
+			die(new DamageCause( null));
 			return true;
 		}
 		if (Dungeon.visibleforAnyHero(pos) && !Quest.completed()){
@@ -109,7 +111,7 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, @NotNull DamageCause src ) {
 		//do nothing
 	}
 

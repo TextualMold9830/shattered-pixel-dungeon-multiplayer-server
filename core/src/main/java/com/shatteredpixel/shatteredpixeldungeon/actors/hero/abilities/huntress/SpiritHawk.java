@@ -212,7 +212,7 @@ public class SpiritHawk extends ArmorAbility {
 		@Override
 		protected boolean act() {
 			if (timeRemaining <= 0){
-				die(null);
+				die(new DamageCause( null));
 				owner.interrupt();
 				return true;
 			}

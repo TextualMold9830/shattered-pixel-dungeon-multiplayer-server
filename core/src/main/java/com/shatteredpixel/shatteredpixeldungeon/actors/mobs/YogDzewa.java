@@ -59,6 +59,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -344,7 +346,7 @@ public class YogDzewa extends Mob {
 						}
 					}
 					if (spawnPos != -1){
-						Actor.findChar(spawnPos).die(null);
+						Actor.findChar(spawnPos).die(new DamageCause(null));
 					}
 				}
 
@@ -392,10 +394,10 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
-
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		int preHP = HP;
-		super.damage( dmg, src );
+		super.damage( dmg, source );
 
 		if (phase == 0 || findFist() != null) return;
 
@@ -469,7 +471,7 @@ public class YogDzewa extends Mob {
 		}
 
 		if (Actor.findChar(fist.pos) instanceof Sheep){
-			Actor.findChar(fist.pos).die(null);
+			Actor.findChar(fist.pos).die( new DamageCause(null));
 		}
 
 		GameScene.add(fist, 4);
@@ -529,7 +531,7 @@ public class YogDzewa extends Mob {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 
 		for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
 			if (mob instanceof Larva || mob instanceof YogRipper || mob instanceof YogEye || mob instanceof YogScorpio) {

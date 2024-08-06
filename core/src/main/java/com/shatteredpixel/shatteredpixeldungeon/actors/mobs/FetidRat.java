@@ -33,6 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.FetidRatSprite;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FetidRat extends Rat {
 
 	{
@@ -79,7 +81,7 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die(@NotNull DamageCause cause ) {
 		super.die( cause );
 
 		Ghost.Quest.process();

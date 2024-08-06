@@ -348,7 +348,7 @@ public class WandOfWarding extends Wand {
 			switch(tier){
 				case 1: case 2: case 3: default:
 					if (totalZaps >= (2*tier-1)){
-						die(this);
+						die(new DamageCause( this));
 					}
 					break;
 				case 4:
@@ -420,7 +420,7 @@ public class WandOfWarding extends Wand {
 						@Override
 						protected void onSelect(int index) {
 							if (index == 0){
-								die(null);
+								die(  new DamageCause( null));
 							}
 						}
 					});

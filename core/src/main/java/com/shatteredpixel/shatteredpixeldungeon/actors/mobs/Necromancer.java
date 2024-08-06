@@ -45,6 +45,8 @@ import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Necromancer extends Mob {
 	
 	{
@@ -108,7 +110,7 @@ public class Necromancer extends Mob {
 	}
 	
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 		if (storedSkeletonID != -1){
 			Actor ch = Actor.findById(storedSkeletonID);
 			storedSkeletonID = -1;
@@ -118,7 +120,7 @@ public class Necromancer extends Mob {
 		}
 		
 		if (mySkeleton != null && mySkeleton.isAlive() && mySkeleton.alignment == alignment){
-			mySkeleton.die(null);
+			mySkeleton.die(new DamageCause(null, cause.getDamageOwner()));
 		}
 		
 		super.die(cause);

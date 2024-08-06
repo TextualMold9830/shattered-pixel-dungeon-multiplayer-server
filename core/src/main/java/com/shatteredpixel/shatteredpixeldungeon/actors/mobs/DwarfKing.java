@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -70,6 +71,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -449,9 +452,10 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		//hero counts as unarmed if they aren't attacking with a weapon and aren't benefiting from force
-		if (src instanceof Hero && (!RingOfForce.fightingUnarmed(Dungeon.heroes) || Dungeon.heroes.buff(RingOfForce.Force.class) != null)){
+		if (src instanceof Hero && (!RingOfForce.fightingUnarmed((Hero)src) || ((Hero)src).buff(RingOfForce.Force.class) != null)){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		//Corrosion, corruption, and regrowth do no direct damage and so have their own custom logic
 		//Transfusion damages DK and so doesn't need custom logic
@@ -461,7 +465,7 @@ public class DwarfKing extends Mob {
 		}
 
 		if (isInvulnerable(src.getClass())){
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 			return;
 		} else if (phase == 3 && !(src instanceof Viscosity.DeferedDamage)){
 			if (dmg >= 0) {
@@ -473,7 +477,7 @@ public class DwarfKing extends Mob {
 			return;
 		}
 		int preHP = HP;
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 
 		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
@@ -500,7 +504,7 @@ public class DwarfKing extends Mob {
 				for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])) {
 					if (m.alignment == alignment) {
 						if (m instanceof Ghoul || m instanceof Monk || m instanceof Warlock || m instanceof Golem) {
-							m.die(null);
+							m.die(new DamageCause(null));
 						}
 					}
 				}
@@ -540,7 +544,7 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(@NotNull DamageCause cause) {
 
 		GameScene.bossSlain();
 
@@ -569,7 +573,7 @@ public class DwarfKing extends Mob {
 		Dungeon.level.unseal();
 
 		for (Mob m : getSubjects()){
-			m.die(null);
+			m.die(new DamageCause(null));
 		}
 
 		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
@@ -676,11 +680,13 @@ public class DwarfKing extends Mob {
 					}
 				}
 
-				//kill sheep that are right on top of the spawner instead of failing to spawn
-				if (Actor.findChar(pos) instanceof Sheep){
-					Actor.findChar(pos).die(null);
+				{
+					//kill sheep that are right on top of the spawner instead of failing to spawn
+					Actor actorHere = Actor.findChar(pos);
+					if (actorHere instanceof Sheep) {
+						((Sheep)actorHere).die(new DamageCause(null));
+					}
 				}
-
 				if (Actor.findChar(pos) == null) {
 					Mob m = Reflection.newInstance(summon);
 					m.pos = pos;

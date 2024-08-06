@@ -53,6 +53,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class ShadowClone extends ArmorAbility {
@@ -260,7 +262,8 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
+		public void damage(int dmg, @NotNull DamageCause source) {
+			Object src = source.getCause();
 
 			//TODO improve this when I have proper damage source logic
 			if (Random.Int(4) < Dungeon.heroes.pointsInTalent(Talent.CLONED_ARMOR)
@@ -271,7 +274,7 @@ public class ShadowClone extends ArmorAbility {
 				dmg = Math.max(dmg, 0);
 			}
 
-			super.damage(dmg, src);
+			super.damage(dmg, source);
 		}
 
 		@Override

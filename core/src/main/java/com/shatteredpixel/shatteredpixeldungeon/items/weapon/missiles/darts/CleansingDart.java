@@ -55,7 +55,7 @@ public class CleansingDart extends TippedDart {
 			}
 			//for when cleansed effects were keeping defender alive (e.g. raging brutes)
 			if (!defender.isAlive()){
-				defender.die(attacker);
+				defender.die(new Char.DamageCause( attacker));
 				return super.proc(attacker, defender, damage);
 			}
 			if (defender instanceof Mob) {

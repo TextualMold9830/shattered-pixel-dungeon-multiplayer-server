@@ -30,6 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalSpinnerSprite;
 import com.watabou.utils.PathFinder;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FungalSpinner extends Spinner {
 
 	{
@@ -48,7 +50,7 @@ public class FungalSpinner extends Spinner {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause src) {
 		int grassCells = 0;
 		for (int i : PathFinder.NEIGHBOURS9) {
 			if (Dungeon.level.map[pos+i] == Terrain.FURROWED_GRASS

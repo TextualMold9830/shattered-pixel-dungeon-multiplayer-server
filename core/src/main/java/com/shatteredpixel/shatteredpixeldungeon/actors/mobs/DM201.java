@@ -31,6 +31,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.DM201Sprite;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DM201 extends DM200 {
 
 	{
@@ -51,12 +53,13 @@ public class DM201 extends DM200 {
 	private boolean threatened = false;
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void damage(int dmg, @NotNull DamageCause source) {
+		Object src = source.getCause();
 		if ((src instanceof Char && !Dungeon.level.adjacent(pos, ((Char)src).pos))
 				|| enemy == null || !Dungeon.level.adjacent(pos, enemy.pos)){
 			threatened = true;
 		}
-		super.damage(dmg, src);
+		super.damage(dmg, source);
 	}
 
 	public void onZapComplete(){
