@@ -178,10 +178,10 @@ public class AlchemistsToolkit extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String result = Messages.get(this, "desc");
 
-		if (isEquipped(Dungeon.heroes)) {
+		if (isEquipped(hero)) {
 			if (cursed)                 result += "\n\n" + Messages.get(this, "desc_cursed");
 			else if (warmUpDelay > 0)   result += "\n\n" + Messages.get(this, "desc_warming");
 			else                        result += "\n\n" + Messages.get(this, "desc_hint");
