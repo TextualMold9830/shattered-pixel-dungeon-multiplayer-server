@@ -24,10 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.watabou.utils.Bundle;
 
 public class DirectableAlly extends NPC {
+	public Hero owner;
 
 	{
 		alignment = Char.Alignment.ALLY;
@@ -83,7 +85,7 @@ public class DirectableAlly extends NPC {
 	public void directTocell( int cell ){
 		if (!Dungeon.visibleforAnyHero(cell)
 				|| Actor.findChar(cell) == null
-				|| (Actor.findChar(cell) != Dungeon.heroes && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
+				|| (Actor.findChar(cell) != owner && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
 			defendPos( cell );
 			return;
 		}
@@ -121,7 +123,7 @@ public class DirectableAlly extends NPC {
 			if ( enemyInFOV
 					&& attacksAutomatically
 					&& !movingToDefendPos
-					&& (defendingPos == -1 || !Dungeon.level.heroFOV[defendingPos] || canAttack(enemy))) {
+					&& (defendingPos == -1 || !owner.heroFOV[defendingPos] || canAttack(enemy))) {
 
 				enemySeen = true;
 
@@ -135,7 +137,7 @@ public class DirectableAlly extends NPC {
 				enemySeen = false;
 
 				int oldPos = pos;
-				target = defendingPos != -1 ? defendingPos : Dungeon.heroes.pos;
+				target = defendingPos != -1 ? defendingPos : owner.pos;
 				//always move towards the hero when wandering
 				if (getCloser( target )) {
 					spend( 1 / speed() );
@@ -160,7 +162,7 @@ public class DirectableAlly extends NPC {
 
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			if (enemyInFOV && defendingPos != -1 && Dungeon.level.heroFOV[defendingPos] && !canAttack(enemy)){
+			if (enemyInFOV && defendingPos != -1 && owner.heroFOV[defendingPos] && !canAttack(enemy)){
 				target = defendingPos;
 				state = WANDERING;
 				return true;
@@ -170,4 +172,7 @@ public class DirectableAlly extends NPC {
 
 	}
 
+	public DirectableAlly(Hero owner) {
+		this.owner = owner;
+	}
 }
