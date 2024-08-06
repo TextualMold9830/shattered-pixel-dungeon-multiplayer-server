@@ -754,6 +754,7 @@ public abstract class Level implements Bundlable {
 	}
 
 	public boolean spawnMob(int disLimit){
+		//TODO: check this
 		PathFinder.buildDistanceMap(Dungeon.heroes.pos, BArray.or(passable, avoid, null));
 
 		Mob mob = createMob();
@@ -764,7 +765,7 @@ public abstract class Level implements Bundlable {
 			tries--;
 		} while ((mob.pos == -1 || PathFinder.distance[mob.pos] < disLimit) && tries > 0);
 
-		if (Dungeon.heroes.isAlive() && mob.pos != -1 && PathFinder.distance[mob.pos] >= disLimit) {
+		if (mob.pos != -1 && PathFinder.distance[mob.pos] >= disLimit) {
 			GameScene.add( mob );
 			if (!mob.buffs(ChampionEnemy.class).isEmpty()){
 				GLog.w(Messages.get(ChampionEnemy.class, "warn"));
@@ -786,7 +787,7 @@ public abstract class Level implements Bundlable {
 
 			cell = Random.Int( length() );
 
-		} while ((Dungeon.level == this && heroFOV[cell])
+		} while ((Dungeon.level == this && Dungeon.visibleforAnyHero(cell))
 				|| !passable[cell]
 				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
 				|| Actor.findChar( cell ) != null);
@@ -987,7 +988,8 @@ public abstract class Level implements Bundlable {
 		if (heap == null) {
 			
 			heap = new Heap();
-			heap.seen = Dungeon.level == this && heroFOV[cell];
+			//TODO: check this
+			heap.seen = Dungeon.level == this && Dungeon.visibleforAnyHero(cell);
 			heap.pos = cell;
 			heap.drop(item);
 			if (map[cell] == Terrain.CHASM || (Dungeon.level != null && pit[cell])) {
@@ -1148,10 +1150,10 @@ public abstract class Level implements Bundlable {
 					set(ch.pos, Terrain.FURROWED_GRASS);
 				} else {
 					set(ch.pos, Terrain.HIGH_GRASS);
-					Buff.count(ch, Talent.RejuvenatingStepsFurrow.class, 3 - Dungeon.heroes.pointsInTalent(Talent.REJUVENATING_STEPS));
+					Buff.count(ch, Talent.RejuvenatingStepsFurrow.class, 3 - ((Hero) ch).pointsInTalent(Talent.REJUVENATING_STEPS));
 				}
 				GameScene.updateMap(ch.pos);
-				Buff.affect(ch, Talent.RejuvenatingStepsCooldown.class, 15f - 5f*Dungeon.heroes.pointsInTalent(Talent.REJUVENATING_STEPS));
+				Buff.affect(ch, Talent.RejuvenatingStepsCooldown.class, 15f - 5f* ((Hero) ch).pointsInTalent(Talent.REJUVENATING_STEPS));
 			}
 			
 			if (pit[ch.pos]){
@@ -1214,7 +1216,7 @@ public abstract class Level implements Bundlable {
 			Door.enter( cell );
 			break;
 		}
-
+		//FIXME
 		TimekeepersHourglass.timeFreeze timeFreeze =
 				Dungeon.heroes.buff(TimekeepersHourglass.timeFreeze.class);
 
@@ -1383,7 +1385,7 @@ public abstract class Level implements Bundlable {
 				BArray.setFalse(heroMindFov);
 			}
 
-			Dungeon.heroes.mindVisionEnemies.clear();
+			((Hero) c).mindVisionEnemies.clear();
 			boolean stealthyMimics = MimicTooth.stealthyMimics();
 			if (c.buff( MindVision.class ) != null) {
 				for (Mob mob : mobs) {
@@ -1642,11 +1644,12 @@ public abstract class Level implements Bundlable {
 	};
 	public boolean[] updateFieldOfView( Char c ) {
 
-		int cx = c.pos % WIDTH;
-		int cy = c.pos / WIDTH;
+		int cx = c.pos % width();
+		int cy = c.pos / width();
 
 		boolean sighted = c.buff( Blindness.class ) == null && c.buff( Shadows.class ) == null && c.isAlive();
 		if (sighted) {
+			//FIXME
 			ShadowCaster.castShadow( cx, cy, c.fieldOfView, c.viewDistance );
 		} else {
 			Arrays.fill( c.fieldOfView, false );
@@ -1662,17 +1665,17 @@ public abstract class Level implements Bundlable {
 		if ((sighted && sense > 1) || !sighted) {
 
 			int ax = Math.max( 0, cx - sense );
-			int bx = Math.min( cx + sense, WIDTH - 1 );
+			int bx = Math.min( cx + sense, width() - 1 );
 			int ay = Math.max( 0, cy - sense );
-			int by = Math.min( cy + sense, HEIGHT - 1 );
+			int by = Math.min( cy + sense, width() - 1 );
 
 			int len = bx - ax + 1;
-			int pos = ax + ay * WIDTH;
-			for (int y = ay; y <= by; y++, pos+=WIDTH) {
+			int pos = ax + ay * width();
+			for (int y = ay; y <= by; y++, pos+=width) {
 				Arrays.fill( c.fieldOfView, pos, pos + len, true );
 			}
 
-			for (int i=0; i < LENGTH; i++) {
+			for (int i=0; i < length(); i++) {
 				c.fieldOfView[i] &= discoverable[i];
 			}
 		}
@@ -1684,15 +1687,16 @@ public abstract class Level implements Bundlable {
 					c.fieldOfView[p] = true;
 					c.fieldOfView[p + 1] = true;
 					c.fieldOfView[p - 1] = true;
-					c.fieldOfView[p + Dungeon.level.width() + 1] = true;
-					c.fieldOfView[p + WIDTH - 1] = true;
-					c.fieldOfView[p - WIDTH + 1] = true;
-					c.fieldOfView[p - WIDTH - 1] = true;
-					c.fieldOfView[p + WIDTH] = true;
-					c.fieldOfView[p - WIDTH] = true;
+					c.fieldOfView[p + width() + 1] = true;
+					c.fieldOfView[p + width() - 1] = true;
+					c.fieldOfView[p - width() + 1] = true;
+					c.fieldOfView[p - width() - 1] = true;
+					c.fieldOfView[p + width()] = true;
+					c.fieldOfView[p - width()] = true;
 				}
-				//TODO: replace with sight talent
-			} else if (c instanceof Hero && ((Hero)c).heroClass == HeroClass.HUNTRESS) {
+				//TODO: replace with sight talent 2 tiles distance for 1 point, 3 tiles for 2 points
+			} else if (c instanceof Hero && ((Hero)c).hasTalent(Talent.HEIGHTENED_SENSES)) {
+
 				for (Mob mob : mobs) {
 					int p = mob.pos;
 					if (distance( c.pos, p) == 2) {

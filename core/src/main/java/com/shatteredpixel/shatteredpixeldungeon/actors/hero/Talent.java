@@ -576,7 +576,7 @@ public enum Talent {
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
 				if (shield != null) {
 					// 50/75% of total shield
-					int shieldToGive = Math.round(factor * shield.maxShield() * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
+					int shieldToGive = Math.round(factor * shield.maxShield(hero) * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
 					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 					shield.supercharge(shieldToGive);
 				}

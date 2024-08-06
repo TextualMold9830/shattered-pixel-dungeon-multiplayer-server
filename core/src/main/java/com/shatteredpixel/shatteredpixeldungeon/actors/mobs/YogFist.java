@@ -91,9 +91,8 @@ public abstract class YogFist extends Mob {
 	@Override
 	protected boolean act() {
 		if (paralysed <= 0 && rangedCooldown > 0) rangedCooldown--;
-
-		if (Dungeon.heroes.invisible <= 0 && state == WANDERING){
-			beckon(Dungeon.heroes.pos);
+		if (enemy.invisible <= 0 && state == WANDERING){
+				beckon( enemy.pos);
 			state = HUNTING;
 			enemy = Dungeon.heroes;
 		}
@@ -299,9 +298,12 @@ public abstract class YogFist extends Mob {
 					CellEmitter.get(cell).burst(LeafParticle.GENERAL, 10);
 				}
 			}
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
 
-			Dungeon.observe();
-
+					Dungeon.observe(hero);
+				}
+			}
 			for (int i : PathFinder.NEIGHBOURS9) {
 				int cell = pos + i;
 				if (canSpreadGrass(cell)){
@@ -522,7 +524,9 @@ public abstract class YogFist extends Mob {
 			super.damage(dmg, src);
 			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
 				HP = HT/2;
-				Buff.prolong( Dungeon.heroes, Blindness.class, Blindness.DURATION*1.5f );
+				if (src instanceof Char) {
+					Buff.prolong((Char) src, Blindness.class, Blindness.DURATION * 1.5f);
+				}
 				int i;
 				do {
 					i = Random.Int(Dungeon.level.length());
@@ -535,7 +539,9 @@ public abstract class YogFist extends Mob {
 				GameScene.flash(0x80FFFFFF);
 				GLog.w( Messages.get( this, "teleport" ));
 			} else if (!isAlive()){
-				Buff.prolong( Dungeon.heroes, Blindness.class, Blindness.DURATION*3f );
+				if (src instanceof Char) {
+					Buff.prolong((Char) src, Blindness.class, Blindness.DURATION * 3f);
+				}
 				GameScene.flash(0x80FFFFFF);
 			}
 		}
@@ -590,16 +596,21 @@ public abstract class YogFist extends Mob {
 		public void damage(int dmg, Object src) {
 			int beforeHP = HP;
 			super.damage(dmg, src);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
-				Light l = Dungeon.heroes.buff(Light.class);
-				if (l != null){
-					l.detach();
+			if (isAlive() && beforeHP > HT/2 && HP < HT/2) {
+				HP = HT / 2;
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+
+					Light l = hero.buff(Light.class);
+					if (l != null) {
+						l.detach();
+					}
 				}
+			}
 				int i;
 				do {
 					i = Random.Int(Dungeon.level.length());
-				} while (Dungeon.level.heroFOV[i]
+				} while (Dungeon.visibleforAnyHero(i)
 						|| Dungeon.level.solid[i]
 						|| Actor.findChar(i) != null
 						|| PathFinder.getStep(i, Dungeon.level.exit(), Dungeon.level.passable) == -1);
@@ -607,11 +618,15 @@ public abstract class YogFist extends Mob {
 				state = WANDERING;
 				GameScene.flash(0, false);
 				GLog.w( Messages.get( this, "teleport" ));
-			} else if (!isAlive()){
-				Light l = Dungeon.heroes.buff(Light.class);
-				if (l != null){
-					l.detach();
+			} else if (!isAlive()) {
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					Light l = hero.buff(Light.class);
+					if (l != null) {
+						l.detach();
+					}
 				}
+			}
 				GameScene.flash(0, false);
 			}
 		}

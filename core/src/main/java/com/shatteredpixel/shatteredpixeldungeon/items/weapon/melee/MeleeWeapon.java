@@ -71,9 +71,9 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	@Override
-	public String defaultAction() {
-		if (Dungeon.heroes != null && (Dungeon.heroes.heroClass == HeroClass.DUELIST
-			|| Dungeon.heroes.hasTalent(Talent.SWIFT_EQUIP))){
+	public String defaultAction(Hero hero) {
+		if (hero != null && (hero.heroClass == HeroClass.DUELIST
+			|| hero.hasTalent(Talent.SWIFT_EQUIP))){
 			return AC_ABILITY;
 		} else {
 			return super.defaultAction();
@@ -267,12 +267,13 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	private static boolean evaluatingTwinUpgrades = false;
+	//IDE Warns this is not override. Why???
 	@Override
-	public int buffedLvl() {
-		if (!evaluatingTwinUpgrades && isEquipped(Dungeon.heroes) && Dungeon.heroes.hasTalent(Talent.TWIN_UPGRADES)){
+	public int buffedLvl(Hero hero) {
+		if (!evaluatingTwinUpgrades && isEquipped(hero) && hero.hasTalent(Talent.TWIN_UPGRADES)){
 			KindOfWeapon other = null;
-			if (Dungeon.heroes.belongings.weapon() != this) other = Dungeon.heroes.belongings.weapon();
-			if (Dungeon.heroes.belongings.secondWep() != this) other = Dungeon.heroes.belongings.secondWep();
+			if (hero.belongings.weapon() != this) other = hero.belongings.weapon();
+			if (hero.belongings.secondWep() != this) other = hero.belongings.secondWep();
 
 			if (other instanceof MeleeWeapon) {
 				evaluatingTwinUpgrades = true;
@@ -280,7 +281,7 @@ public class MeleeWeapon extends Weapon {
 				evaluatingTwinUpgrades = false;
 
 				//weaker weapon needs to be 2/1/0 tiers lower, based on talent level
-				if ((tier + (3 - Dungeon.heroes.pointsInTalent(Talent.TWIN_UPGRADES))) <= ((MeleeWeapon) other).tier
+				if ((tier + (3 - hero.pointsInTalent(Talent.TWIN_UPGRADES))) <= ((MeleeWeapon) other).tier
 						&& otherLevel > super.buffedLvl()) {
 					return otherLevel;
 				}
@@ -327,20 +328,20 @@ public class MeleeWeapon extends Weapon {
 	}
 	
 	@Override
-	public String info() {
+	public String info(Hero hero) {
 
 		String info = desc();
 
 		if (levelKnown) {
-			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
-			if (STRReq() > Dungeon.heroes.STR()) {
+			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq());
+			if (STRReq() > hero.STR()) {
 				info += " " + Messages.get(Weapon.class, "too_heavy");
-			} else if (Dungeon.heroes.STR() > STRReq()){
-				info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.heroes.STR() - STRReq());
+			} else if (hero.STR() > STRReq()){
+				info += " " + Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq());
 			}
 		} else {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
-			if (STRReq(0) > Dungeon.heroes.STR()) {
+			if (STRReq(0) > hero.STR()) {
 				info += " " + Messages.get(MeleeWeapon.class, "probably_too_heavy");
 			}
 		}
@@ -366,7 +367,7 @@ public class MeleeWeapon extends Weapon {
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
 
-		if (cursed && isEquipped( Dungeon.heroes)) {
+		if (cursed && isEquipped(hero)) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");
@@ -379,8 +380,8 @@ public class MeleeWeapon extends Weapon {
 		}
 
 		//the mage's staff has no ability as it can only be gained by the mage
-		if (Dungeon.heroes.heroClass == HeroClass.DUELIST && !(this instanceof MagesStaff)){
-			info += "\n\n" + abilityInfo();
+		if (hero.heroClass == HeroClass.DUELIST && !(this instanceof MagesStaff)){
+			info += "\n\n" + abilityInfo(hero);
 		}
 		
 		return info;
@@ -390,15 +391,15 @@ public class MeleeWeapon extends Weapon {
 		return Messages.get(this, "stats_desc");
 	}
 
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		return Messages.get(this, "ability_desc");
 	}
 
 	@Override
-	public String status() {
-		if (isEquipped(Dungeon.heroes)
-				&& Dungeon.heroes.buff(Charger.class) != null) {
-			Charger buff = Dungeon.heroes.buff(Charger.class);
+	public String status(Hero hero) {
+		if (isEquipped(hero)
+				&& hero.buff(Charger.class) != null) {
+			Charger buff = hero.buff(Charger.class);
 			return buff.charges + "/" + buff.chargeCap();
 		} else {
 			return super.status();
@@ -565,22 +566,23 @@ public class MeleeWeapon extends Weapon {
 			return 0x5500BB;
 		}
 
+
 		@Override
-		public void doAction() {
-			if (Dungeon.heroes.subClass != HeroSubClass.CHAMPION){
+		public void doAction(Hero hero) {
+			if (hero.subClass != HeroSubClass.CHAMPION){
 				return;
 			}
 
-			if (Dungeon.heroes.belongings.secondWep == null && Dungeon.heroes.belongings.backpack.items.size() >= Dungeon.heroes.belongings.backpack.capacity()){
+			if (hero.belongings.secondWep == null && hero.belongings.backpack.items.size() >= hero.belongings.backpack.capacity()){
 				GLog.w(Messages.get(MeleeWeapon.class, "swap_full"));
 				return;
 			}
 
-			KindOfWeapon temp = Dungeon.heroes.belongings.weapon;
-			Dungeon.heroes.belongings.weapon = Dungeon.heroes.belongings.secondWep;
-			Dungeon.heroes.belongings.secondWep = temp;
+			KindOfWeapon temp = hero.belongings.weapon;
+			hero.belongings.weapon = hero.belongings.secondWep;
+			hero.belongings.secondWep = temp;
 
-			Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
+			hero.sprite.operate(hero.pos);
 			Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 
 			ActionIndicator.setAction(this);

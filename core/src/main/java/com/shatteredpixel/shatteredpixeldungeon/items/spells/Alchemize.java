@@ -55,7 +55,7 @@ public class Alchemize extends Spell {
 	
 	@Override
 	protected void onCast(Hero hero) {
-		parentWnd = GameScene.selectItem( itemSelector );
+		parentWnd = GameScene.selectItem( itemSelector, hero );
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class Alchemize extends Spell {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			ingredients.get(0).quantity(ingredients.get(0).quantity()-1);
 			ingredients.get(1).quantity(ingredients.get(1).quantity()-1);
 			return sampleOutput(null);
@@ -122,7 +122,7 @@ public class Alchemize extends Spell {
 		public void onSelect( Item item ) {
 			if (item != null) {
 				if (parentWnd != null) {
-					parentWnd = GameScene.selectItem(itemSelector);
+					parentWnd = GameScene.selectItem(itemSelector, getOwner());
 				}
 				GameScene.show( new WndAlchemizeItem( item, parentWnd ) );
 			}
@@ -150,7 +150,7 @@ public class Alchemize extends Spell {
 					RedButton btnSell = new RedButton(Messages.get(this, "sell", item.value())) {
 						@Override
 						protected void onClick() {
-							WndTradeItem.sell(item);
+							WndTradeItem.sell(item, owner.getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
@@ -167,7 +167,7 @@ public class Alchemize extends Spell {
 					RedButton btnSell1 = new RedButton(Messages.get(this, "sell_1", priceAll / item.quantity())) {
 						@Override
 						protected void onClick() {
-							WndTradeItem.sellOne(item);
+							WndTradeItem.sellOne(item, owner.getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
@@ -178,7 +178,7 @@ public class Alchemize extends Spell {
 					RedButton btnSellAll = new RedButton(Messages.get(this, "sell_all", priceAll)) {
 						@Override
 						protected void onClick() {
-							WndTradeItem.sell(item);
+							WndTradeItem.sell(item, owner.getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
@@ -198,7 +198,7 @@ public class Alchemize extends Spell {
 					RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 						@Override
 						protected void onClick() {
-							WndEnergizeItem.energize(item);
+							WndEnergizeItem.energize(item, owner.getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
@@ -226,7 +226,7 @@ public class Alchemize extends Spell {
 					RedButton btnEnergizeAll = new RedButton(Messages.get(this, "energize_all", energyAll)) {
 						@Override
 						protected void onClick() {
-							WndEnergizeItem.energize(item);
+							WndEnergizeItem.energize(item, owner.getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
@@ -256,7 +256,7 @@ public class Alchemize extends Spell {
 				if (owner != null){
 					owner.hide();
 				}
-				GameScene.selectItem(itemSelector);
+				GameScene.selectItem(itemSelector, getOwnerHero());
 			}
 			if (curItem instanceof Alchemize && Random.Float() < ((Alchemize)curItem).talentChance){
 				Talent.onScrollUsed(curUser, curUser.pos, ((Alchemize) curItem).talentFactor);

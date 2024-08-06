@@ -175,13 +175,13 @@ public abstract class Scroll extends Item {
 					&& !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic)){
 				GLog.n( Messages.get(this, "cursed") );
 			} else {
-				doRead();
+				doRead(hero);
 			}
 			
 		}
 	}
 	
-	public abstract void doRead();
+	public abstract void doRead(Hero hero);
 
 	protected void readAnimation() {
 		Invisibility.dispel();
@@ -199,29 +199,20 @@ public abstract class Scroll extends Item {
 		return anonymous || (handler != null && handler.isKnown( this ));
 	}
 	
-	public void setKnown() {
+	public void setKnown(Hero hero) {
 		if (!anonymous) {
 			if (!isKnown()) {
 				handler.know(this);
 				updateQuickslot();
 			}
 			
-			if (Dungeon.heroes.isAlive()) {
+			if (hero.isAlive()) {
 				Catalog.setSeen(getClass());
 			}
 		}
 	}
 	
-	@Override
-	public Item identify( boolean byHero ) {
-		super.identify(byHero);
 
-		if (!isKnown()) {
-			setKnown();
-		}
-		return this;
-	}
-	
 	@Override
 	public String name() {
 		return isKnown() ? super.name() : Messages.get(this, rune);
@@ -279,7 +270,7 @@ public abstract class Scroll extends Item {
 		}
 		
 		@Override
-		public void doRead() {}
+		public void doRead(Hero hero) {}
 		
 		@Override
 		public String info() {
@@ -322,13 +313,13 @@ public abstract class Scroll extends Item {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			Scroll s = (Scroll) ingredients.get(0);
 			
 			s.quantity(s.quantity() - 1);
-			s.identify();
+			s.identify(hero);
 			
 			return Reflection.newInstance(stones.get(s.getClass())).quantity(2);
 		}

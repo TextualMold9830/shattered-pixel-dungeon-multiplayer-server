@@ -150,9 +150,8 @@ public class Ring extends KindofMisc {
 				handler.know(this);
 			}
 
-			if (Dungeon.heroes.isAlive()) {
+//			if (Dungeon.heroes.isAlive()) {
 				Catalog.setSeen(getClass());
-			}
 		}
 	}
 	
@@ -162,11 +161,11 @@ public class Ring extends KindofMisc {
 	}
 	
 	@Override
-	public String info(){
+	public String info(Hero hero){
 		
 		String desc = isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 		
-		if (cursed && isEquipped( Dungeon.heroes)) {
+		if (cursed && isEquipped( hero)) {
 			desc += "\n\n" + Messages.get(Ring.class, "cursed_worn");
 			
 		} else if (cursed && cursedKnown) {
@@ -288,7 +287,7 @@ public class Ring extends KindofMisc {
 		//becomes IDed after 1 level
 		levelsToID -= levelPercent;
 		if (levelsToID <= 0){
-			identify();
+			identify(hero);
 			GLog.p( Messages.get(Ring.class, "identify") );
 			Badges.validateItemLevelAquired( this );
 		}

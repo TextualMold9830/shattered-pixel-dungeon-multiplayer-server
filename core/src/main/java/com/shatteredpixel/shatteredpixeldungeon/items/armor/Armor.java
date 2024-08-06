@@ -187,7 +187,7 @@ public class Armor extends EquipableItem {
 			if (detaching.level() > 0){
 				degrade();
 			}
-			if (detaching.canTransferGlyph()){
+			if (detaching.canTransferGlyph(hero)){
 				inscribe(null);
 			} else {
 				detaching.setGlyph(null);
@@ -216,7 +216,7 @@ public class Armor extends EquipableItem {
 				GLog.n( Messages.get(Armor.class, "equip_cursed") );
 			}
 			
-			((HeroSprite)hero.sprite).updateArmor();
+			((HeroSprite)hero.sprite).updateArmor(hero);
 			activate(hero);
 			Talent.onItemEquipped(hero, this);
 			hero.spendAndNext( timeToEquip( hero ) );
@@ -235,7 +235,7 @@ public class Armor extends EquipableItem {
 		if (seal != null) Buff.affect(ch, BrokenSeal.WarriorShield.class).setArmor(this);
 	}
 
-	public void affixSeal(BrokenSeal seal){
+	public void affixSeal(BrokenSeal seal, Hero hero){
 		this.seal = seal;
 		if (seal.level() > 0){
 			//doesn't trigger upgrading logic such as affecting curses/glyphs
@@ -246,8 +246,8 @@ public class Armor extends EquipableItem {
 		if (seal.getGlyph() != null){
 			inscribe(seal.getGlyph());
 		}
-		if (isEquipped(Dungeon.heroes)){
-			Buff.affect(Dungeon.heroes, BrokenSeal.WarriorShield.class).setArmor(this);
+		if (isEquipped(hero)){
+			Buff.affect(hero, BrokenSeal.WarriorShield.class).setArmor(this);
 		}
 	}
 
@@ -265,7 +265,7 @@ public class Armor extends EquipableItem {
 		if (super.doUnequip( hero, collect, single )) {
 
 			hero.belongings.armor = null;
-			((HeroSprite)hero.sprite).updateArmor();
+			((HeroSprite)hero.sprite).updateArmor(hero);
 
 			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
 			if (sealBuff != null) sealBuff.setArmor(null);
@@ -284,8 +284,8 @@ public class Armor extends EquipableItem {
 		return hero.belongings.armor() == this;
 	}
 
-	public final int DRMax(){
-		return DRMax(buffedLvl());
+	public final int DRMax(Hero hero){
+		return DRMax(buffedLvl(hero));
 	}
 
 	public int DRMax(int lvl){
@@ -301,8 +301,8 @@ public class Armor extends EquipableItem {
 		}
 	}
 
-	public final int DRMin(){
-		return DRMin(buffedLvl());
+	public final int DRMin(Hero hero){
+		return DRMin(buffedLvl(hero));
 	}
 
 	public int DRMin(int lvl){
@@ -333,8 +333,10 @@ public class Armor extends EquipableItem {
 				evasion += momentum.evasionBonus(((Hero) owner).lvl, Math.max(0, -aEnc));
 			}
 		}
-		
-		return evasion + augment.evasionFactor(buffedLvl());
+		float evasionFactor = 0;
+		augment.evasionFactor(buffedLvl(owner));
+		//TODO: check this
+		return evasion + evasionFactor;
 	}
 	
 	public float speedFactor( Char owner, float speed ){
@@ -362,9 +364,9 @@ public class Armor extends EquipableItem {
 					}
 				}
 			}
-			if (!enemyNear) speed *= (1.2f + 0.04f * buffedLvl()) * glyph.procChanceMultiplier(owner);
+			if (!enemyNear) speed *= (1.2f + 0.04f * buffedLvl(owner)) * glyph.procChanceMultiplier(owner);
 		} else if (hasGlyph(Flow.class, owner) && Dungeon.level.water[owner.pos]){
-			speed *= (2f + 0.5f*buffedLvl()) * glyph.procChanceMultiplier(owner);
+			speed *= (2f + 0.5f*buffedLvl(owner)) * glyph.procChanceMultiplier(owner);
 		}
 		
 		if (hasGlyph(Bulk.class, owner) &&
@@ -380,7 +382,7 @@ public class Armor extends EquipableItem {
 	public float stealthFactor( Char owner, float stealth ){
 		
 		if (hasGlyph(Obfuscation.class, owner)){
-			stealth += (1 + buffedLvl()/3f) * glyph.procChanceMultiplier(owner);
+			stealth += (1 + buffedLvl(owner)/3f) * glyph.procChanceMultiplier(owner);
 		}
 		
 		return stealth;
@@ -396,11 +398,11 @@ public class Armor extends EquipableItem {
 	}
 	
 	@Override
-	public Item upgrade() {
-		return upgrade( false );
+	public Item upgrade(Hero hero) {
+		return upgrade( false, hero );
 	}
 	
-	public Item upgrade( boolean inscribe ) {
+	public Item upgrade( boolean inscribe, Hero hero ) {
 
 		if (inscribe){
 			if (glyph == null){
@@ -422,8 +424,8 @@ public class Armor extends EquipableItem {
 
 				//the chance from +4/5, and then +6 can be set to 0% with metamorphed runic transference
 				int lossChanceStart = 4;
-				if (Dungeon.heroes != null && Dungeon.heroes.heroClass != HeroClass.WARRIOR && Dungeon.heroes.hasTalent(Talent.RUNIC_TRANSFERENCE)){
-					lossChanceStart += 1+Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE);
+				if (hero != null && hero.heroClass != HeroClass.WARRIOR && hero.hasTalent(Talent.RUNIC_TRANSFERENCE)){
+					lossChanceStart += 1 + hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE);
 				}
 
 				if (level() >= lossChanceStart && Random.Float(10) < Math.pow(2, level()-4)) {
@@ -447,11 +449,11 @@ public class Armor extends EquipableItem {
 		}
 		
 		if (!levelKnown && defender instanceof Hero) {
-			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
+			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor((Hero) defender, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
 			if (usesLeftToID <= 0) {
-				identify();
+				identify((Hero) defender);
 				GLog.p( Messages.get(Armor.class, "identify") );
 				Badges.validateItemLevelAquired( this );
 			}
@@ -475,20 +477,20 @@ public class Armor extends EquipableItem {
 	}
 	
 	@Override
-	public String info() {
+	public String info(Hero hero) {
 		String info = desc();
 		
 		if (levelKnown) {
 
-			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(), DRMax(), STRReq());
+			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(hero), DRMax(hero), STRReq());
 			
-			if (STRReq() > Dungeon.heroes.STR()) {
+			if (STRReq() > hero.STR()) {
 				info += " " + Messages.get(Armor.class, "too_heavy");
 			}
 		} else {
 			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0));
 
-			if (STRReq(0) > Dungeon.heroes.STR()) {
+			if (STRReq(0) > hero.STR()) {
 				info += " " + Messages.get(Armor.class, "probably_too_heavy");
 			}
 		}
@@ -511,12 +513,12 @@ public class Armor extends EquipableItem {
 			info += "\n\n" + Messages.get(Armor.class, "hardened_no_glyph");
 		}
 		
-		if (cursed && isEquipped( Dungeon.heroes)) {
+		if (cursed && isEquipped(hero)) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed");
 		} else if (seal != null) {
-			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level()));
+			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level(), hero));
 		} else if (!isIdentified() && cursedKnown){
 			if (glyph != null && glyph.curse()) {
 				info += "\n\n" + Messages.get(Armor.class, "weak_cursed");

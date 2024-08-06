@@ -28,8 +28,21 @@ import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.Game;
+import com.watabou.plugins.PluginManifest;
 
+import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public abstract class PlatformSupport {
 	
@@ -159,5 +172,11 @@ public abstract class PlatformSupport {
 
 		return fonts.get(generator).get(key);
 	}
-
+	//Small hack, may remove this
+	public List<PluginManifest> loadPlugins(){
+		return null;
+	}
+	public boolean supportsPlugins(){
+		return true;
+	}
 }

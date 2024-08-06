@@ -116,11 +116,11 @@ abstract public class Weapon extends KindOfWeapon {
 		}
 		
 		if (!levelKnown && attacker instanceof Hero) {
-			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
+			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor((Hero) attacker, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
 			if (usesLeftToID <= 0) {
-				identify();
+				identify((Hero) attacker);
 				GLog.p( Messages.get(Weapon.class, "identify") );
 				Badges.validateItemLevelAquired( this );
 			}
@@ -176,7 +176,7 @@ abstract public class Weapon extends KindOfWeapon {
 		usesLeftToID = USES_TO_ID;
 		availableUsesToID = USES_TO_ID/2f;
 	}
-	
+
 	@Override
 	public float accuracyFactor(Char owner, Char target) {
 		

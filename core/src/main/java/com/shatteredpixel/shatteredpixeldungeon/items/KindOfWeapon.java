@@ -220,19 +220,19 @@ abstract public class KindOfWeapon extends EquipableItem {
 		}
 	}
 
-	public int min(){
-		return min(buffedLvl());
+	public int min(Char owner){
+		return min(buffedLvl(owner));
 	}
 
-	public int max(){
-		return max(buffedLvl());
+	public int max(Char owner){
+		return max(buffedLvl(owner));
 	}
 
 	abstract public int min(int lvl);
 	abstract public int max(int lvl);
 
 	public int damageRoll( Char owner ) {
-		return Char.combatRoll( min(), max() );
+		return Char.combatRoll( min(owner), max(owner) );
 	}
 	
 	public float accuracyFactor( Char owner, Char target ) {

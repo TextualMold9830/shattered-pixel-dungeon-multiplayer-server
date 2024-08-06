@@ -310,9 +310,9 @@ public class GameScene extends PixelScene {
 		add(mobs);
 		for (Hero notSprite : Dungeon.heroes) {
 			if (notSprite != null) {
-				hero = new HeroSprite();
+				hero = new HeroSprite(notSprite);
 				hero.place(notSprite.pos);
-				hero.updateArmor();
+				hero.updateArmor(notSprite);
 				mobs.add(hero);
 			}
 		}
@@ -766,8 +766,8 @@ public class GameScene extends PixelScene {
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
 		if (!Emitter.freezeEmitters) water.offset(0, -5 * Game.elapsed);
-
-			if (!Actor.processing() && Dungeon.heroes.isAlive()) {
+			//TODO: check this
+			if (!Actor.processing()) {
 			if (actorThread == null || !actorThread.isAlive()) {
 
 				actorThread = new Thread() {
@@ -971,7 +971,7 @@ public class GameScene extends PixelScene {
 	
 	private synchronized void addMobSprite( Mob mob ) {
 		CharSprite sprite = mob.sprite();
-		sprite.visible = Dungeon.level.heroFOV[mob.pos];
+		sprite.visible = Dungeon.visibleforAnyHero(mob.pos);
 		mobs.add( sprite );
 		sprite.link( mob );
 		sortMobSprites();
@@ -1360,7 +1360,7 @@ public class GameScene extends PixelScene {
 						//mimics stay visible in fog of war after being first seen
 						mob.sprite.visible = true;
 					} else {
-						mob.sprite.visible = Dungeon.level.heroFOV[mob.pos];
+						mob.sprite.visible = Dungeon.visibleforAnyHero(mob.pos);
 					}
 				}
 				if (mob instanceof Ghoul){
@@ -1410,6 +1410,7 @@ public class GameScene extends PixelScene {
 			cellSelector.listener.onSelect(null);
 		}
 		cellSelector.listener = listener;
+		//FIXME
 		cellSelector.enabled = Dungeon.heroes.ready;
 		if (scene != null) {
 			scene.prompt(listener.prompt());
@@ -1426,16 +1427,17 @@ public class GameScene extends PixelScene {
 		}
 	}
 	
-	public static WndBag selectItem( WndBag.ItemSelector listener ) {
+	public static WndBag selectItem( WndBag.ItemSelector listener, Hero hero ) {
 		cancel();
 
 		if (scene != null) {
 			//TODO can the inventory pane work in these cases? bad to fallback to mobile window
 			if (scene.inventory != null && scene.inventory.visible && !showingWindow()){
+				listener.setOwner(hero);
 				scene.inventory.setSelector(listener);
 				return null;
 			} else {
-				WndBag wnd = WndBag.getBag( listener );
+				WndBag wnd = WndBag.getBag( listener, hero );
 				show(wnd);
 				return wnd;
 			}
@@ -1472,7 +1474,7 @@ public class GameScene extends PixelScene {
 			updateTags = true;
 		}
 	}
-	
+	//FIXME
 	public static void checkKeyHold(){
 		cellSelector.processKeyHold();
 	}
@@ -1568,7 +1570,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	
+	//FIXME
 	private static final CellSelector.Listener defaultCellListener = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {

@@ -28,12 +28,25 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.Game;
+import com.watabou.plugins.PluginManifest;
 import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Point;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
 
 public class DesktopPlatformSupport extends PlatformSupport {
 
@@ -43,7 +56,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 
 	@Override
 	public void updateDisplaySize() {
-		if (previousSizes == null){
+		if (previousSizes == null) {
 			previousSizes = new Point[2];
 			previousSizes[1] = SPDSettings.windowResolution();
 		} else {
@@ -51,25 +64,25 @@ public class DesktopPlatformSupport extends PlatformSupport {
 		}
 		previousSizes[0] = new Point(Game.width, Game.height);
 		if (!SPDSettings.fullscreen()) {
-			SPDSettings.windowResolution( previousSizes[0] );
+			SPDSettings.windowResolution(previousSizes[0]);
 		}
 	}
-	
+
 	@Override
 	public void updateSystemUI() {
-		Gdx.app.postRunnable( new Runnable() {
+		Gdx.app.postRunnable(new Runnable() {
 			@Override
-			public void run () {
-				if (SPDSettings.fullscreen()){
-					Gdx.graphics.setFullscreenMode( Gdx.graphics.getDisplayMode() );
+			public void run() {
+				if (SPDSettings.fullscreen()) {
+					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				} else {
 					Point p = SPDSettings.windowResolution();
-					Gdx.graphics.setWindowedMode( p.x, p.y );
+					Gdx.graphics.setWindowedMode(p.x, p.y);
 				}
 			}
-		} );
+		});
 	}
-	
+
 	@Override
 	public boolean connectedToUnmeteredNetwork() {
 		return true; //no easy way to check this in desktop, just assume user doesn't care
@@ -82,16 +95,16 @@ public class DesktopPlatformSupport extends PlatformSupport {
 	}
 
 	/* FONT SUPPORT */
-	
+
 	//custom pixel font, for use with Latin and Cyrillic languages
 	private static FreeTypeFontGenerator basicFontGenerator;
 	//droid sans fallback, for asian fonts
 	private static FreeTypeFontGenerator asianFontGenerator;
-	
+
 	@Override
 	public void setupFontGenerators(int pageSize, boolean systemfont) {
 		//don't bother doing anything if nothing has changed
-		if (fonts != null && this.pageSize == pageSize && this.systemfont == systemfont){
+		if (fonts != null && this.pageSize == pageSize && this.systemfont == systemfont) {
 			return;
 		}
 		this.pageSize = pageSize;
@@ -106,26 +119,26 @@ public class DesktopPlatformSupport extends PlatformSupport {
 			basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixel_font.ttf"));
 			asianFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/droid_sans.ttf"));
 		}
-		
+
 		fonts.put(basicFontGenerator, new HashMap<>());
 		fonts.put(asianFontGenerator, new HashMap<>());
-		
+
 		packer = new PixmapPacker(pageSize, pageSize, Pixmap.Format.RGBA8888, 1, false);
 	}
-	
+
 	private static Matcher asianMatcher = Pattern.compile("\\p{InHangul_Syllables}|" +
 			"\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}|" +
 			"\\p{InHiragana}|\\p{InKatakana}").matcher("");
 
 	@Override
-	protected FreeTypeFontGenerator getGeneratorForString( String input ){
-		if (asianMatcher.reset(input).find()){
+	protected FreeTypeFontGenerator getGeneratorForString(String input) {
+		if (asianMatcher.reset(input).find()) {
 			return asianFontGenerator;
 		} else {
 			return basicFontGenerator;
 		}
 	}
-	
+
 	//splits on newlines, underscores, and chinese/japaneses characters
 	private Pattern regularsplitter = Pattern.compile(
 			"(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
@@ -133,7 +146,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
 					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
 					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})");
-	
+
 	//additionally splits on words, so that each word can be arranged individually
 	private Pattern regularsplitterMultiline = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
@@ -141,7 +154,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
 					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
 					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})");
-	
+
 	@Override
 	public String[] splitforTextBlock(String text, boolean multiline) {
 		if (multiline) {
@@ -149,5 +162,39 @@ public class DesktopPlatformSupport extends PlatformSupport {
 		} else {
 			return regularsplitter.split(text);
 		}
+	}
+
+	@Override
+	public List<PluginManifest> loadPlugins() {
+		if (!Files.isDirectory(Paths.get("plugins/"))) {
+			List<PluginManifest> manifests = new ArrayList<>();
+			File[] files;
+			try {
+				files = new File("plugins/").listFiles();
+				for (File file : files) {
+					if (file.getName().endsWith("jar")) {
+						JarFile jar = new JarFile(file.getName());
+						ZipEntry manifest = jar.getEntry("plugin_manifest.txt");
+						if (manifest != null) {
+							URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+							InputStream input = loader.getResourceAsStream("plugin_manifest.txt");
+							ByteArrayOutputStream result = new ByteArrayOutputStream();
+							Gdx.files.getExternalStoragePath();
+							//might change buffer, 2kb should be fine. Can a manifest even be that big?
+							byte[] buffer = new byte[2048];
+							for (int length; (length = input.read(buffer)) != -1; ) {
+								result.write(buffer, 0, length);
+							}
+							loader.close();
+							manifests.add(new PluginManifest(result.toString()));
+						}
+					}
+				}
+			} catch (IOException e) {
+				Gdx.app.error("PluginLoader", e.toString());
+			}
+		}
+		return null;
+
 	}
 }

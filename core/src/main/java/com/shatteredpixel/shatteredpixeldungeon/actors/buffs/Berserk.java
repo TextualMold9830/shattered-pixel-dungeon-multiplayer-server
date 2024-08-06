@@ -179,14 +179,14 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				&& power >= 1f
 				&& target.buff(WarriorShield.class) != null
 				&& ((Hero)target).hasTalent(Talent.DEATHLESS_FURY)){
-			startBerserking();
+			startBerserking((Hero) target);
 			ActionIndicator.clearAction(this);
 		}
 
 		return state == State.BERSERK && target.shielding() > 0;
 	}
 
-	private void startBerserking(){
+	private void startBerserking(Hero hero){
 		state = State.BERSERK;
 		SpellSprite.show(target, SpellSprite.BERSERK);
 		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
@@ -211,7 +211,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		}
 
 		WarriorShield shield = target.buff(WarriorShield.class);
-		int shieldAmount = Math.round(shield.maxShield() * shieldMultiplier);
+		int shieldAmount = Math.round(shield.maxShield(hero) * shieldMultiplier);
 		shield.supercharge(shieldAmount);
 		target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shieldAmount), FloatingText.SHIELDING );
 
@@ -268,8 +268,8 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	@Override
 	public void doAction() {
 		WarriorShield shield = target.buff(WarriorShield.class);
-		if (shield != null && shield.maxShield() > 0) {
-			startBerserking();
+		if (shield != null && target instanceof Hero && shield.maxShield((Hero) target) > 0) {
+			startBerserking((Hero) target);
 			ActionIndicator.clearAction(this);
 		} else {
 			GLog.w(Messages.get(this, "no_seal"));
@@ -307,7 +307,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				return 0f;
 			case RECOVERING:
 				if (levelRecovery > 0) {
-					return 1f - levelRecovery/(LEVEL_RECOVER_START-Dungeon.heroes.pointsInTalent(Talent.DEATHLESS_FURY));
+					return 1f - levelRecovery/(LEVEL_RECOVER_START-((Hero)target).pointsInTalent(Talent.DEATHLESS_FURY));
 				} else {
 					return 1f - turnRecovery/(float)TURN_RECOVERY_START;
 				}

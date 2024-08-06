@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
@@ -69,7 +70,7 @@ public abstract class Recipe {
 	
 	public abstract int cost(ArrayList<Item> ingredients);
 	
-	public abstract Item brew(ArrayList<Item> ingredients);
+	public abstract Item brew(ArrayList<Item> ingredients, Hero hero);
 	
 	public abstract Item sampleOutput(ArrayList<Item> ingredients);
 	
@@ -126,7 +127,7 @@ public abstract class Recipe {
 		}
 		
 		@Override
-		public final Item brew(ArrayList<Item> ingredients) {
+		public final Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			int[] needed = inQuantity.clone();

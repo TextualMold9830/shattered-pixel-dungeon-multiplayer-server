@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -122,5 +123,10 @@ public class WndInfoItem extends Window {
 		add( info );
 
 		resize( width, (int)(info.bottom() + 2) );
+	}
+
+	public WndInfoItem(Item item, Hero hero) {
+		this(item);
+		setOwnerHero(hero);
 	}
 }

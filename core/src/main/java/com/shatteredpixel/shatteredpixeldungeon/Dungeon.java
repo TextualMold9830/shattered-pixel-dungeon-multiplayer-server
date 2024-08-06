@@ -1275,5 +1275,12 @@ public class Dungeon {
 		}
 		return result;
 	}
-
+	//TODO: might remove this
+	public static void observe(){
+		for (Hero hero: Dungeon.heroes) {
+            if (hero != null) {
+                observe(hero);
+            }
+        }
+	}
 }

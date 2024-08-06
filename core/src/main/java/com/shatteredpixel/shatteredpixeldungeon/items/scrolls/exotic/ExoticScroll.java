@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
@@ -90,7 +91,7 @@ public abstract class ExoticScroll extends Scroll {
 	}
 	
 	@Override
-	public void setKnown() {
+	public void setKnown(Hero hero) {
 		if (!isKnown()) {
 			handler.know(exoToReg.get(this.getClass()));
 			updateQuickslot();
@@ -135,7 +136,7 @@ public abstract class ExoticScroll extends Scroll {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			for (Item i : ingredients){
 				i.quantity(i.quantity()-1);
 			}

@@ -79,7 +79,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 		return ownerHero;
 	}
 
-	private void setOwnerHero(Hero ownerHero) {
+	public void setOwnerHero(Hero ownerHero) {
 		this.ownerHero = ownerHero;
 	}
 	public Window(Hero hero) {

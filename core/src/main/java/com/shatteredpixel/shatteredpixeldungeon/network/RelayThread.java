@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,6 +9,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
+import static com.shatteredpixel.shatteredpixeldungeon.network.ClientThread.CHARSET;
 
 
 public class RelayThread extends Thread {
@@ -29,19 +31,19 @@ public class RelayThread extends Thread {
         this.callback = callback;
     }
     private static int getRelayPort(){
-        if (!PixelDungeon.useCustomRelay()){
-            return Settings.defaultRelayServerPort;
+        if (!SPDSettings.useCustomRelay()){
+            return SPDSettings.defaultRelayServerPort;
         }
-        int port = PixelDungeon.customRelayPort();
-       return (port != 0)? port: Settings.defaultRelayServerPort;
+        int port = SPDSettings.customRelayPort();
+       return (port != 0)? port: SPDSettings.defaultRelayServerPort;
     }
 
     private static String getRelayAddress(){
-        if (!PixelDungeon.useCustomRelay()){
-            return Settings.defaultRelayServerAddress;
+        if (!SPDSettings.useCustomRelay()){
+            return SPDSettings.defaultRelayServerAddress;
         }
-        String address = PixelDungeon.customRelayAddress();
-        return (!"".equals(address))? address : Settings.defaultRelayServerAddress;
+        String address = SPDSettings.customRelayAddress();
+        return (!"".equals(address))? address : SPDSettings.defaultRelayServerAddress;
     }
 
     public void run() {
@@ -70,7 +72,7 @@ public class RelayThread extends Thread {
 
             JSONObject name = new JSONObject();
             name.put("action", "name");
-            name.put("name", PixelDungeon.serverName());
+            name.put("name", SPDSettings.serverName());
             writer.write(name.toString());
             writer.write('\n');
             writer.flush();

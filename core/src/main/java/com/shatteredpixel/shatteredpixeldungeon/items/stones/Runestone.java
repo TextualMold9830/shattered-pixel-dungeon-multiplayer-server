@@ -24,8 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+
+import java.util.ArrayList;
 
 public abstract class Runestone extends Item {
 	
@@ -33,21 +37,19 @@ public abstract class Runestone extends Item {
 		stackable = true;
 		defaultAction = AC_THROW;
 	}
-
-	@Override
-	protected void onThrow(int cell) {
+	//FIXME
+	protected void onThrow(int cell, Hero hero) {
 		///inventory stones are thrown like normal items, other stones don't trigger when thrown into pits
 		if (this instanceof InventoryStone ||
 				(Dungeon.level.pit[cell] && Actor.findChar(cell) == null)){
 			super.onThrow( cell );
 		} else {
-			activate(cell);
+			activate(cell, hero);
 			if (Actor.findChar(cell) == null) Dungeon.level.pressCell( cell );
 			Invisibility.dispel();
 		}
 	}
-	
-	protected abstract void activate(int cell);
+	protected abstract void activate(int cell, Hero user);
 	
 	@Override
 	public boolean isUpgradable() {
@@ -76,7 +78,7 @@ public abstract class Runestone extends Item {
 		}
 		
 		@Override
-		protected void activate(int cell) {
+		protected void activate(int cell, Hero user) {
 			//does nothing
 		}
 		

@@ -163,7 +163,7 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, stones);
 
 		if (hero.belongings.armor != null){
-			hero.belongings.armor.affixSeal(new BrokenSeal());
+			hero.belongings.armor.affixSeal(new BrokenSeal(), hero);
 		}
 
 		new PotionOfHealing().identify(hero);

@@ -50,7 +50,7 @@ public class WndTradeItem extends WndInfoItem {
 	//selling
 	public WndTradeItem( final Item item, WndBag owner ) {
 
-		super(item);
+		super(item, owner.getOwnerHero());
 
 		selling = true;
 
@@ -73,7 +73,7 @@ public class WndTradeItem extends WndInfoItem {
 			RedButton btnSell = new RedButton( Messages.get(this, "sell", item.value()) ) {
 				@Override
 				protected void onClick() {
-					sell( item, finalShop);
+					sell( item, finalShop, owner.getOwnerHero());
 					hide();
 				}
 			};
@@ -89,7 +89,7 @@ public class WndTradeItem extends WndInfoItem {
 			RedButton btnSell1 = new RedButton( Messages.get(this, "sell_1", priceAll / item.quantity()) ) {
 				@Override
 				protected void onClick() {
-					sellOne( item, finalShop );
+					sellOne( item, finalShop, owner.getOwnerHero() );
 					hide();
 				}
 			};
@@ -99,7 +99,7 @@ public class WndTradeItem extends WndInfoItem {
 			RedButton btnSellAll = new RedButton( Messages.get(this, "sell_all", priceAll ) ) {
 				@Override
 				protected void onClick() {
-					sell( item, finalShop );
+					sell( item, finalShop, owner.getOwnerHero() );
 					hide();
 				}
 			};

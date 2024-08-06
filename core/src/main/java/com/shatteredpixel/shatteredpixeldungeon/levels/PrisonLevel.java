@@ -229,7 +229,8 @@ public class PrisonLevel extends RegularLevel {
 		
 		@Override
 		public void update() {
-			if (visible = (pos < Dungeon.level.heroFOV.length && Dungeon.visibleforAnyHero(pos))) {
+			//TODO: check this
+			if (visible == Dungeon.visibleforAnyHero(pos)) {
 				super.update();
 			}
 		}

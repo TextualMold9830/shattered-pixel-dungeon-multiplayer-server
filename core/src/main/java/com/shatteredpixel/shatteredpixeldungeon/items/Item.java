@@ -231,10 +231,14 @@ public class Item implements Bundlable {
 	}
 
 	//can be overridden if default action is variable
+	//TODO: might want to change this
 	public String defaultAction(){
 		return defaultAction;
 	}
-	
+	public String defaultAction(Hero hero){
+		return defaultAction;
+	}
+
 	public void execute( Hero hero ) {
 		String action = defaultAction();
 		if (action != null) {
@@ -394,14 +398,21 @@ public class Item implements Bundlable {
 	
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
-	public int buffedLvl(Hero hero){
+	public int buffedLvl(Char owner) {
 		//only the hero can be affected by Degradation
-		if (hero.buff( Degrade.class ) != null
-			&& (isEquipped(hero) || hero.belongings.contains( this ))) {
-			return Degrade.reduceLevel(level());
-		} else {
-			return level();
+		if (owner instanceof Hero) {
+			if (owner.buff(Degrade.class) != null
+					&& (isEquipped((Hero) owner) || ((Hero) owner).belongings.contains(this))) {
+				return Degrade.reduceLevel(level());
+			} else {
+				return level();
+			}
 		}
+		return level();
+	}
+	//TODO: might want to remove this?
+	public int buffedLvl(){
+		return level();
 	}
 
 	public void level( int value ){
@@ -410,7 +421,7 @@ public class Item implements Bundlable {
 		updateQuickslot();
 	}
 	
-	public Item upgrade() {
+	public Item upgrade(Hero hero) {
 		
 		this.level++;
 
@@ -418,10 +429,22 @@ public class Item implements Bundlable {
 		
 		return this;
 	}
-	
-	final public Item upgrade( int n ) {
+	public Item upgrade(){
+		this.level++;
+		updateQuickslot();
+		return this;
+	}
+	public Item upgrade(int n){
 		for (int i=0; i < n; i++) {
 			upgrade();
+		}
+		return this;
+	}
+
+	
+	final public Item upgrade( int n, Hero hero ) {
+		for (int i=0; i < n; i++) {
+			upgrade(hero);
 		}
 		
 		return this;
@@ -467,12 +490,15 @@ public class Item implements Bundlable {
 	}
 
 	public final Item identify(Hero hero){
-		return identify(true, hero);
+		if (hero != null) {
+			return identify(true, hero);
+		}
+		return identify(false, null);
 	}
 
 	public Item identify( boolean byHero, Hero hero ) {
 
-		if (byHero && Dungeon.heroes != null && hero.isAlive()){
+		if (byHero && hero != null && hero.isAlive()){
 			Catalog.setSeen(getClass());
 			if (!isIdentified()) Talent.onItemIdentified(hero, this);
 		}
@@ -481,6 +507,12 @@ public class Item implements Bundlable {
 		cursedKnown = true;
 		Item.updateQuickslot();
 		
+		return this;
+	}
+	public Item identify(boolean byHero){
+		levelKnown = true;
+		cursedKnown = true;
+		Item.updateQuickslot();
 		return this;
 	}
 	
@@ -573,6 +605,9 @@ public class Item implements Bundlable {
 	public String status() {
 		return quantity != 1 ? Integer.toString( quantity ) : null;
 	}
+	public String status(Hero hero){
+		return status();
+	};
 
 	public static void updateQuickslot() {
 		GameScene.updateItemDisplays = true;
@@ -607,7 +642,8 @@ public class Item implements Bundlable {
 		
 		int level = bundle.getInt( LEVEL );
 		if (level > 0) {
-			upgrade( level );
+			this.level(level);
+			//upgrade( level );
 		} else if (level < 0) {
 			degrade( -level );
 		}

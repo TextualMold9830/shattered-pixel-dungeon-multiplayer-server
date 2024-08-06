@@ -64,13 +64,13 @@ public class BrokenSeal extends Item {
 
 	private Armor.Glyph glyph;
 
-	public boolean canTransferGlyph(){
+	public boolean canTransferGlyph(Hero hero){
 		if (glyph == null){
 			return false;
 		}
-		if (Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 2){
+		if (hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 2){
 			return true;
-		} else if (Dungeon.heroes.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
+		} else if (hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
 			&& (Arrays.asList(Armor.Glyph.common).contains(glyph.getClass())
 				|| Arrays.asList(Armor.Glyph.uncommon).contains(glyph.getClass()))){
 			return true;
@@ -87,8 +87,8 @@ public class BrokenSeal extends Item {
 		this.glyph = glyph;
 	}
 
-	public int maxShield( int armTier, int armLvl ){
-		return armTier + armLvl + Dungeon.heroes.pointsInTalent(Talent.IRON_WILL);
+	public int maxShield( int armTier, int armLvl, Hero hero ){
+		return armTier + armLvl + hero.pointsInTalent(Talent.IRON_WILL);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class BrokenSeal extends Item {
 
 		if (action.equals(AC_AFFIX)){
 			curItem = this;
-			GameScene.selectItem(armorSelector);
+			GameScene.selectItem(armorSelector, hero);
 		} else if (action.equals(AC_INFO)) {
 			GameScene.show(new WndUseItem(null, this));
 		}
@@ -161,21 +161,21 @@ public class BrokenSeal extends Item {
 						protected void onSelect(int index) {
 							if (index == 0) seal.setGlyph(null);
 							//if index is 1, then the glyph transfer happens in affixSeal
-
 							GLog.p(Messages.get(BrokenSeal.class, "affix"));
-							Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
+
+							getOwnerHero().sprite.operate(getOwnerHero().pos);
 							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-							armor.affixSeal(seal);
-							seal.detach(Dungeon.heroes.belongings.backpack);
+							armor.affixSeal(seal, getOwnerHero());
+							seal.detach(getOwnerHero().belongings.backpack);
 						}
 					});
 
 				} else {
 					GLog.p(Messages.get(BrokenSeal.class, "affix"));
-					Dungeon.heroes.sprite.operate(Dungeon.heroes.pos);
+					getOwner().sprite.operate(getOwner().pos);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-					armor.affixSeal((BrokenSeal)curItem);
-					curItem.detach(Dungeon.heroes.belongings.backpack);
+					armor.affixSeal((BrokenSeal)curItem, getOwner());
+					curItem.detach(getOwner().belongings.backpack);
 				}
 			}
 		}
@@ -202,21 +202,24 @@ public class BrokenSeal extends Item {
 
 		@Override
 		public synchronized boolean act() {
-			if (Regeneration.regenOn() && shielding() < maxShield()) {
-				partialShield += 1/30f;
+			if (target instanceof Hero) {
+				if (Regeneration.regenOn() && shielding() < maxShield((Hero) target)) {
+					partialShield += 1 / 30f;
+				}
+
+				while (partialShield >= 1) {
+					incShield();
+					partialShield--;
+				}
+
+				if (shielding() <= 0 && maxShield((Hero) target) <= 0) {
+					detach();
+				}
+
+				spend(TICK);
+				return true;
 			}
-			
-			while (partialShield >= 1){
-				incShield();
-				partialShield--;
-			}
-			
-			if (shielding() <= 0 && maxShield() <= 0){
-				detach();
-			}
-			
-			spend(TICK);
-			return true;
+			return false;
 		}
 		
 		public synchronized void supercharge(int maxShield){
@@ -229,14 +232,14 @@ public class BrokenSeal extends Item {
 			armor = arm;
 		}
 
-		public synchronized int maxShield() {
+		public synchronized int maxShield(Hero hero) {
 			//metamorphed iron will logic
 			if (((Hero)target).heroClass != HeroClass.WARRIOR && ((Hero) target).hasTalent(Talent.IRON_WILL)){
 				return ((Hero) target).pointsInTalent(Talent.IRON_WILL);
 			}
 
 			if (armor != null && armor.isEquipped((Hero)target) && armor.checkSeal() != null) {
-				return armor.checkSeal().maxShield(armor.tier, armor.level());
+				return armor.checkSeal().maxShield(armor.tier, armor.level(), hero);
 			} else {
 				return 0;
 			}

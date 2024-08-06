@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.BArray;
 
@@ -31,18 +32,25 @@ public class WarpingTrap extends TeleportationTrap {
 		color = TEAL;
 		shape = STARS;
 	}
-
 	@Override
 	public void activate() {
-		if (Dungeon.level.distance(Dungeon.heroes.pos, pos) <= 1){
-			BArray.setFalse(Dungeon.level.visited);
-			BArray.setFalse(Dungeon.level.mapped);
+		for (Hero hero : Dungeon.heroes) {
+			if(hero != null) {
+				//TODO: check this
+			if (Dungeon.level.distance(hero.pos, pos) <= 1) {
+				BArray.setFalse(Dungeon.level.visited);
+				BArray.setFalse(Dungeon.level.mapped);
+				break;
+			}
+
+			super.activate();
+			}
 		}
-
-		super.activate();
-
 		GameScene.updateFog(); //just in case hero wasn't moved
-		Dungeon.observe();
-
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				Dungeon.observe(hero);
+			}
+		}
 	}
 }

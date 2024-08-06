@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -69,8 +70,8 @@ public class CityBossLevel extends Level {
 	private static final Rect arena = new Rect(1, 25, 14, 38);
 	private static final Rect end = new Rect(0, 0, 15, 22);
 
-	private static final int bottomDoor = 7 + (arena.bottom-1)*15;
-	private static final int topDoor = 7 + arena.top*15;
+	private static final int bottomDoor = 7 + (arena.bottom - 1) * 15;
+	private static final int topDoor = 7 + arena.top * 15;
 
 	public static final int throne;
 	private static final int[] pedestals = new int[4];
@@ -78,24 +79,24 @@ public class CityBossLevel extends Level {
 	static {
 		Point c = arena.center();
 		throne = c.x + (c.y) * WIDTH;
-		pedestals[0] = c.x-3 + (c.y-3) * WIDTH;
-		pedestals[1] = c.x+3 + (c.y-3) * WIDTH;
-		pedestals[2] = c.x+3 + (c.y+3) * WIDTH;
-		pedestals[3] = c.x-3 + (c.y+3) * WIDTH;
+		pedestals[0] = c.x - 3 + (c.y - 3) * WIDTH;
+		pedestals[1] = c.x + 3 + (c.y - 3) * WIDTH;
+		pedestals[2] = c.x + 3 + (c.y + 3) * WIDTH;
+		pedestals[3] = c.x - 3 + (c.y + 3) * WIDTH;
 	}
 
 	private ImpShopRoom impShop;
 
 	@Override
 	public void playLevelMusic() {
-		if (locked){
-			if (BossHealthBar.isBleeding()){
+		if (locked) {
+			if (BossHealthBar.isBleeding()) {
 				Music.INSTANCE.play(Assets.Music.CITY_BOSS_FINALE, true);
 			} else {
 				Music.INSTANCE.play(Assets.Music.CITY_BOSS, true);
 			}
-		//if top door isn't unlocked
-		} else if (map[topDoor] == Terrain.LOCKED_DOOR){
+			//if top door isn't unlocked
+		} else if (map[topDoor] == Terrain.LOCKED_DOOR) {
 			Music.INSTANCE.end();
 		} else {
 			Music.INSTANCE.playTracks(CityLevel.CITY_TRACK_LIST, CityLevel.CITY_TRACK_CHANCES, false);
@@ -115,16 +116,16 @@ public class CityBossLevel extends Level {
 	private static final String IMP_SHOP = "imp_shop";
 
 	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		bundle.put( IMP_SHOP, impShop );
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		bundle.put(IMP_SHOP, impShop);
 	}
 
 	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-		impShop = (ImpShopRoom) bundle.get( IMP_SHOP );
-		if (map[topDoor] != Terrain.LOCKED_DOOR && Imp.Quest.isCompleted() && !impShop.shopSpawned()){
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		impShop = (ImpShopRoom) bundle.get(IMP_SHOP);
+		if (map[topDoor] != Terrain.LOCKED_DOOR && Imp.Quest.isCompleted() && !impShop.shopSpawned()) {
 			spawnShop();
 		}
 	}
@@ -139,19 +140,19 @@ public class CityBossLevel extends Level {
 		Painter.fill(this, entry, 1, Terrain.BOOKSHELF);
 		Painter.fill(this, entry, 2, Terrain.EMPTY);
 
-		Painter.fill(this, entry.left+3, entry.top+3, 1, 5, Terrain.BOOKSHELF);
-		Painter.fill(this, entry.right-4, entry.top+3, 1, 5, Terrain.BOOKSHELF);
+		Painter.fill(this, entry.left + 3, entry.top + 3, 1, 5, Terrain.BOOKSHELF);
+		Painter.fill(this, entry.right - 4, entry.top + 3, 1, 5, Terrain.BOOKSHELF);
 
 		Point c = entry.center();
 
-		Painter.fill(this, c.x-1, c.y-2, 3, 1, Terrain.STATUE);
-		Painter.fill(this, c.x-1, c.y, 3, 1, Terrain.STATUE);
-		Painter.fill(this, c.x-1, c.y+2, 3, 1, Terrain.STATUE);
-		Painter.fill(this, c.x, entry.top+1, 1, 6, Terrain.EMPTY_SP);
+		Painter.fill(this, c.x - 1, c.y - 2, 3, 1, Terrain.STATUE);
+		Painter.fill(this, c.x - 1, c.y, 3, 1, Terrain.STATUE);
+		Painter.fill(this, c.x - 1, c.y + 2, 3, 1, Terrain.STATUE);
+		Painter.fill(this, c.x, entry.top + 1, 1, 6, Terrain.EMPTY_SP);
 
 		Painter.set(this, c.x, entry.top, Terrain.DOOR);
 
-		int entrance = c.x + (c.y+2)*width();
+		int entrance = c.x + (c.y + 2) * width();
 		Painter.set(this, entrance, Terrain.ENTRANCE);
 		transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 
@@ -162,10 +163,10 @@ public class CityBossLevel extends Level {
 		Painter.fill(this, arena, 6, Terrain.CUSTOM_DECO);
 
 		c = arena.center();
-		Painter.set(this, c.x-3, c.y, Terrain.STATUE);
-		Painter.set(this, c.x-4, c.y, Terrain.STATUE);
-		Painter.set(this, c.x+3, c.y, Terrain.STATUE);
-		Painter.set(this, c.x+4, c.y, Terrain.STATUE);
+		Painter.set(this, c.x - 3, c.y, Terrain.STATUE);
+		Painter.set(this, c.x - 4, c.y, Terrain.STATUE);
+		Painter.set(this, c.x + 3, c.y, Terrain.STATUE);
+		Painter.set(this, c.x + 4, c.y, Terrain.STATUE);
 
 		Painter.set(this, pedestals[0], Terrain.PEDESTAL);
 		Painter.set(this, pedestals[1], Terrain.PEDESTAL);
@@ -176,37 +177,37 @@ public class CityBossLevel extends Level {
 
 		//exit hallway
 		Painter.fill(this, end, Terrain.CHASM);
-		Painter.fill(this, end.left+4, end.top+5, 7, 18, Terrain.EMPTY);
-		Painter.fill(this, end.left+4, end.top+5, 7, 4, Terrain.EXIT);
+		Painter.fill(this, end.left + 4, end.top + 5, 7, 18, Terrain.EMPTY);
+		Painter.fill(this, end.left + 4, end.top + 5, 7, 4, Terrain.EXIT);
 
-		int exitCell = end.left+7 + (end.top+8)*width();
+		int exitCell = end.left + 7 + (end.top + 8) * width();
 		LevelTransition exit = new LevelTransition(this, exitCell, LevelTransition.Type.REGULAR_EXIT);
-		exit.set(end.left+4, end.top+4, end.left+4+6, end.top+4+4);
+		exit.set(end.left + 4, end.top + 4, end.left + 4 + 6, end.top + 4 + 4);
 		transitions.add(exit);
 
 		impShop = new ImpShopRoom();
-		impShop.set(end.left+3, end.top+12, end.left+11, end.top+20);
+		impShop.set(end.left + 3, end.top + 12, end.left + 11, end.top + 20);
 		Painter.set(this, impShop.center(), Terrain.PEDESTAL);
 
-		Painter.set(this, impShop.left+2, impShop.top, Terrain.STATUE);
-		Painter.set(this, impShop.left+6, impShop.top, Terrain.STATUE);
+		Painter.set(this, impShop.left + 2, impShop.top, Terrain.STATUE);
+		Painter.set(this, impShop.left + 6, impShop.top, Terrain.STATUE);
 
-		Painter.fill(this, end.left+5, end.bottom+1, 5, 1, Terrain.EMPTY);
-		Painter.fill(this, end.left+6, end.bottom+2, 3, 1, Terrain.EMPTY);
+		Painter.fill(this, end.left + 5, end.bottom + 1, 5, 1, Terrain.EMPTY);
+		Painter.fill(this, end.left + 6, end.bottom + 2, 3, 1, Terrain.EMPTY);
 
 		impShop.paint(this);
 		new CityPainter().paint(this, null);
 
 		//pillars last, no deco on these
-		Painter.fill(this, end.left+1, end.top+2, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.left+1, end.top+7, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.left+1, end.top+12, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.left+1, end.top+17, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.left + 1, end.top + 2, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.left + 1, end.top + 7, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.left + 1, end.top + 12, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.left + 1, end.top + 17, 2, 2, Terrain.WALL);
 
-		Painter.fill(this, end.right-3, end.top+2, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.right-3, end.top+7, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.right-3, end.top+12, 2, 2, Terrain.WALL);
-		Painter.fill(this, end.right-3, end.top+17, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.right - 3, end.top + 2, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.right - 3, end.top + 7, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.right - 3, end.top + 12, 2, 2, Terrain.WALL);
+		Painter.fill(this, end.right - 3, end.top + 17, 2, 2, Terrain.WALL);
 
 		CustomTilemap customVisuals = new CustomGroundVisuals();
 		customVisuals.setRect(0, 0, width(), height());
@@ -220,7 +221,7 @@ public class CityBossLevel extends Level {
 	}
 
 	//returns a random pedestal that doesn't already have a summon inbound on it
-	public int getSummoningPos(){
+	public int getSummoningPos() {
 		Mob king = getKing();
 		HashSet<DwarfKing.Summoning> summons = king.buffs(DwarfKing.Summoning.class);
 		ArrayList<Integer> positions = new ArrayList<>();
@@ -236,15 +237,15 @@ public class CityBossLevel extends Level {
 				positions.add(pedestal);
 			}
 		}
-		if (positions.isEmpty()){
+		if (positions.isEmpty()) {
 			return -1;
 		} else {
 			return Random.element(positions);
 		}
 	}
 
-	private Mob getKing(){
-		for (Mob m : mobs){
+	private Mob getKing() {
+		for (Mob m : mobs) {
 			if (m instanceof DwarfKing) return m;
 		}
 		return null;
@@ -261,32 +262,32 @@ public class CityBossLevel extends Level {
 	@Override
 	protected void createItems() {
 		Random.pushGenerator(Random.Long());
-			ArrayList<Item> bonesItems = Bones.get();
-			if (bonesItems != null) {
-				int pos;
-				do {
-					pos = randomRespawnCell(null);
-				} while (pos == entrance());
-				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
-				}
+		ArrayList<Item> bonesItems = Bones.get();
+		if (bonesItems != null) {
+			int pos;
+			do {
+				pos = randomRespawnCell(null);
+			} while (pos == entrance());
+			for (Item i : bonesItems) {
+				drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 			}
+		}
 		Random.popGenerator();
 	}
 
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell(Char ch) {
 		ArrayList<Integer> candidates = new ArrayList<>();
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.NEIGHBOURS8) {
 			int cell = entrance() + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])) {
 				candidates.add(cell);
 			}
 		}
 
-		if (candidates.isEmpty()){
+		if (candidates.isEmpty()) {
 			return -1;
 		} else {
 			return Random.element(candidates);
@@ -294,13 +295,13 @@ public class CityBossLevel extends Level {
 	}
 
 	@Override
-	public void occupyCell( Char ch ) {
+	public void occupyCell(Char ch) {
 		if (map[bottomDoor] != Terrain.LOCKED_DOOR && map[topDoor] == Terrain.LOCKED_DOOR
 				&& ch.pos < bottomDoor && ch instanceof Hero) {
 			seal();
 		}
 
-		super.occupyCell( ch );
+		super.occupyCell(ch);
 	}
 
 	@Override
@@ -309,25 +310,41 @@ public class CityBossLevel extends Level {
 		Statistics.qualifiedForBossChallengeBadge = true;
 
 		//moves intelligent allies with the hero, preferring closer pos to entrance door
-		int doorPos = pointToCell(new Point(arena.left + arena.width()/2, arena.bottom));
+		int doorPos = pointToCell(new Point(arena.left + arena.width() / 2, arena.bottom));
 		Mob.holdAllies(this, doorPos);
-		Mob.restoreAllies(this, Dungeon.heroes.pos, doorPos);
-
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+			Mob.restoreAllies(this, hero.pos, doorPos);
+			}
+		}
 		DwarfKing boss = new DwarfKing();
 		boss.state = boss.WANDERING;
 		boss.pos = pointToCell(arena.center());
 		GameScene.add( boss );
-		boss.beckon(Dungeon.heroes.pos);
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				boss.beckon(hero.pos);
 
-		if (heroFOV[boss.pos]) {
-			boss.notice();
-			boss.sprite.alpha( 0 );
-			boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );
+			}
 		}
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.heroFOV[boss.pos]) {
+					boss.notice();
+					boss.sprite.alpha( 0 );
+					boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );
+				}
+			}
+		}
+
 
 		set( bottomDoor, Terrain.LOCKED_DOOR );
 		GameScene.updateMap( bottomDoor );
-		Dungeon.observe();
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				Dungeon.observe(hero);
+			}
+		}
 
 		Game.runOnRenderThread(new Callback() {
 			@Override
@@ -350,7 +367,11 @@ public class CityBossLevel extends Level {
 		if (Imp.Quest.isCompleted()) {
 			spawnShop();
 		}
-		Dungeon.observe();
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				Dungeon.observe(hero);
+			}
+		}
 
 		Game.runOnRenderThread(new Callback() {
 			@Override

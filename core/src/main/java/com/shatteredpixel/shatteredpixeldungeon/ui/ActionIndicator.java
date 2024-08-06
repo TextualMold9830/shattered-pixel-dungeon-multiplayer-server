@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.input.GameAction;
@@ -85,7 +86,6 @@ public class ActionIndicator extends Tag {
 	@Override
 	public void update() {
 		super.update();
-
 		synchronized (ActionIndicator.class) {
 			if (!visible && action != null) {
 				visible = true;
@@ -121,7 +121,7 @@ public class ActionIndicator extends Tag {
 				layout();
 				needsRefresh = false;
 			}
-
+			//FIXME
 			if (!Dungeon.heroes.ready) {
 				if (primaryVis != null) primaryVis.alpha(0.5f);
 				if (secondVis != null) secondVis.alpha(0.5f);
@@ -134,6 +134,7 @@ public class ActionIndicator extends Tag {
 	}
 
 	@Override
+	//FIXME
 	protected void onClick() {
 		super.onClick();
 		if (action != null && Dungeon.heroes.ready) {
@@ -198,7 +199,7 @@ public class ActionIndicator extends Tag {
 
 		int indicatorColor();
 
-		void doAction();
+		void doAction(Hero hero);
 
 	}
 

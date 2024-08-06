@@ -229,7 +229,7 @@ public class Hero extends Char {
 	//This list is maintained so that some logic checks can be skipped
 	// for enemies we know we aren't seeing normally, resulting in better performance
 	public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
-
+	public int gold = 0;
 	public Hero() {
 		super();
 
@@ -573,7 +573,7 @@ public class Hero extends Char {
 		int dr = super.drRoll();
 
 		if (belongings.armor() != null) {
-			int armDr = Char.combatRoll( belongings.armor().DRMin(), belongings.armor().DRMax());
+			int armDr = Char.combatRoll( belongings.armor().DRMin(this), belongings.armor().DRMax(this));
 			if (STR() < belongings.armor().STRReq()){
 				armDr -= 2*(belongings.armor().STRReq() - STR());
 			}

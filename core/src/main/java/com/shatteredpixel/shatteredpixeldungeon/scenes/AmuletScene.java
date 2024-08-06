@@ -78,7 +78,7 @@ public class AmuletScene extends PixelScene {
 			@Override
 			protected void onClick() {
 				Dungeon.win( Amulet.class );
-				Dungeon.deleteGame( GamesInProgress.curSlot, true );
+				Dungeon.deleteGame( true );
 				Badges.saveGlobal();
 				btnExit.enable(false);
 				btnStay.enable(false);

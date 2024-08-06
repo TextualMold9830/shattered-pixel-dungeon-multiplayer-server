@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -174,7 +175,7 @@ public class WandOfBlastWave extends DamageWand {
 				}
 				Dungeon.level.occupyCell(ch);
 				if (ch instanceof Hero){
-					Dungeon.observe();
+					Dungeon.observe((Hero) ch);
 					GameScene.updateFog();
 				}
 			}
@@ -271,6 +272,7 @@ public class WandOfBlastWave extends DamageWand {
 			}
 		}
 
+		//FIXME
 		public static void blast(int pos) {
 			Group parent = Dungeon.heroes.sprite.parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
