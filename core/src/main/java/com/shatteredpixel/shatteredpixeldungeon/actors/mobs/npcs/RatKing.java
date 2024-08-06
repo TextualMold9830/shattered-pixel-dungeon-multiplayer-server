@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -110,17 +111,17 @@ public class RatKing extends NPC {
 	public boolean interact(Char c) {
 		sprite.turnTo( pos, c.pos );
 
-		if (c != Dungeon.heroes){
+		if (!(c instanceof Hero)){
 			return super.interact(c);
 		}
-
-		KingsCrown crown = Dungeon.heroes.belongings.getItem(KingsCrown.class);
+		Hero hero = (Hero) c;
+		KingsCrown crown = hero.belongings.getItem(KingsCrown.class);
 		if (state == SLEEPING) {
 			notice();
 			yell( Messages.get(this, "not_sleeping") );
 			state = WANDERING;
 		} else if (crown != null){
-			if (Dungeon.heroes.belongings.armor() == null){
+			if (hero.belongings.armor() == null){
 				yell( Messages.get(RatKing.class, "crown_clothes") );
 			} else {
 				Badges.validateRatmogrify();
@@ -138,11 +139,11 @@ public class RatKing extends NPC {
 							@Override
 							protected void onSelect(int index) {
 								if (index == 0){
-									crown.upgradeArmor(Dungeon.heroes, Dungeon.heroes.belongings.armor(), new Ratmogrify());
+									crown.upgradeArmor(hero, hero.belongings.armor(), new Ratmogrify());
 									((RatKingSprite)sprite).resetAnims();
 									yell(Messages.get(RatKing.class, "crown_thankyou"));
 								} else if (index == 1) {
-									GameScene.show(new WndInfoArmorAbility(Dungeon.heroes.heroClass, new Ratmogrify()));
+									GameScene.show(new WndInfoArmorAbility(hero.heroClass, new Ratmogrify()));
 								} else {
 									yell(Messages.get(RatKing.class, "crown_fine"));
 								}
@@ -151,7 +152,7 @@ public class RatKing extends NPC {
 					}
 				});
 			}
-		} else if (Dungeon.heroes.armorAbility instanceof Ratmogrify) {
+		} else if (hero.armorAbility instanceof Ratmogrify) {
 			yell( Messages.get(RatKing.class, "crown_after") );
 		} else {
 			yell( Messages.get(this, "what_is_it") );
@@ -159,9 +160,8 @@ public class RatKing extends NPC {
 		return true;
 	}
 	
-	@Override
-	public String description() {
-		if (Dungeon.heroes.armorAbility instanceof Ratmogrify){
+	public String description(Hero hero) {
+		if (hero.armorAbility instanceof Ratmogrify){
 			return Messages.get(this, "desc_crown");
 		} else if (Holiday.getCurrentHoliday() == Holiday.APRIL_FOOLS){
 			return Messages.get(this, "desc_birthday");
