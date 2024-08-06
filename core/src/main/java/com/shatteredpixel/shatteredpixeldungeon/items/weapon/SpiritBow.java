@@ -134,18 +134,18 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	public String info() {
+	public String info(Hero hero) {
 		String info = desc();
 		
 		info += "\n\n" + Messages.get( SpiritBow.class, "stats",
-				Math.round(augment.damageFactor(min())),
-				Math.round(augment.damageFactor(max())),
+				Math.round(augment.damageFactor(min(hero))),
+				Math.round(augment.damageFactor(max(hero))),
 				STRReq());
 		
-		if (STRReq() > Dungeon.heroes.STR()) {
+		if (STRReq() > hero.STR()) {
 			info += " " + Messages.get(Weapon.class, "too_heavy");
-		} else if (Dungeon.heroes.STR() > STRReq()){
-			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.heroes.STR() - STRReq());
+		} else if (hero.STR() > STRReq()){
+			info += " " + Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq());
 		}
 		
 		switch (augment) {
@@ -166,7 +166,7 @@ public class SpiritBow extends Weapon {
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
 		
-		if (cursed && isEquipped( Dungeon.heroes)) {
+		if (cursed && isEquipped(hero)) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");
@@ -183,7 +183,8 @@ public class SpiritBow extends Weapon {
 	public int STRReq(int lvl) {
 		return STRReq(1, lvl); //tier 1
 	}
-	
+
+	//FIXME
 	@Override
 	public int min(int lvl) {
 		int dmg = 1 + Dungeon.heroes.lvl/5
@@ -268,6 +269,7 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
+	//FIXME
 	public int level() {
 		int level = Dungeon.heroes == null ? 0 : Dungeon.heroes.lvl/5;
 		if (curseInfusionBonus) level += 1 + level/6;
@@ -296,7 +298,7 @@ public class SpiritBow extends Weapon {
 
 			hitSound = Assets.Sounds.HIT_ARROW;
 		}
-
+		//FIXME
 		@Override
 		public Emitter emitter() {
 			if (Dungeon.heroes.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){

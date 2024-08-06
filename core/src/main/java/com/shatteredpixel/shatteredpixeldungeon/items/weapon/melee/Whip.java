@@ -61,7 +61,7 @@ public class Whip extends MeleeWeapon {
 		for (Char ch : Actor.chars()){
 			if (ch.alignment == Char.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
-					&& Dungeon.level.heroFOV[ch.pos]
+					&& hero.heroFOV[ch.pos]
 					&& hero.canAttack(ch)){
 				targets.add(ch);
 				if (closest == null || Dungeon.level.trueDistance(hero.pos, closest.pos) > Dungeon.level.trueDistance(hero.pos, ch.pos)){
@@ -98,10 +98,10 @@ public class Whip extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 2 + Math.round(0.5f*buffedLvl()) : 2;
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
 		}

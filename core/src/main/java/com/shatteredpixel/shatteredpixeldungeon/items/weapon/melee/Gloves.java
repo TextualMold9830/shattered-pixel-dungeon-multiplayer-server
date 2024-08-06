@@ -58,7 +58,7 @@ public class Gloves extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 2 + Math.round(0.5f*buffedLvl()) : 2;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));

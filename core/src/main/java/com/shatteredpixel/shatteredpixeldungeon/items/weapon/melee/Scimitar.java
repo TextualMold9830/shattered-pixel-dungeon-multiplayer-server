@@ -57,7 +57,7 @@ public class Scimitar extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", 4+buffedLvl());
 		} else {

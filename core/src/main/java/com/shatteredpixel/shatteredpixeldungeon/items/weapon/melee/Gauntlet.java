@@ -56,7 +56,7 @@ public class Gauntlet extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 4 + Math.round(0.75f*buffedLvl()) : 4;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));

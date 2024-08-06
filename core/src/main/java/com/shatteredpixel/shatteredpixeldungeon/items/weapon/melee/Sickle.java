@@ -66,7 +66,7 @@ public class Sickle extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int bleedAmt = levelKnown ? Math.round(15f + 2.5f*buffedLvl()) : 15;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));
@@ -82,7 +82,7 @@ public class Sickle extends MeleeWeapon {
 		}
 
 		Char enemy = Actor.findChar(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}

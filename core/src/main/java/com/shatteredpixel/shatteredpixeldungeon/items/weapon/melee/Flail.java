@@ -93,7 +93,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Char target){
-		if (Dungeon.heroes.buff(SpinAbilityTracker.class) != null){
+		if (hero.buff(SpinAbilityTracker.class) != null){
 			return 0;
 		} else {
 			return 1;
@@ -125,7 +125,7 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 8 + 2*buffedLvl() : 8;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));

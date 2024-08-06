@@ -68,7 +68,7 @@ public class Sai extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 3 + Math.round(0.67f*buffedLvl()) : 3;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
@@ -83,7 +83,7 @@ public class Sai extends MeleeWeapon {
 		}
 
 		Char enemy = Actor.findChar(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
@@ -134,7 +134,7 @@ public class Sai extends MeleeWeapon {
 		public static int DURATION = 5;
 		private float comboTime = 0f;
 		public int hits = 0;
-
+		//FIXME
 		@Override
 		public int icon() {
 			if (Dungeon.heroes.belongings.weapon() instanceof Gloves

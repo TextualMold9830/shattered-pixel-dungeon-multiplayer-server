@@ -61,7 +61,7 @@ public class WornShortsword extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero ) {
 		int dmgBoost = levelKnown ? 3 + buffedLvl() : 3;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));

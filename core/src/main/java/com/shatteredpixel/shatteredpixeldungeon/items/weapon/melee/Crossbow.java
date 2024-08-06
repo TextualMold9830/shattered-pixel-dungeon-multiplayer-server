@@ -77,7 +77,7 @@ public class Crossbow extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", 3+buffedLvl());
 		} else {

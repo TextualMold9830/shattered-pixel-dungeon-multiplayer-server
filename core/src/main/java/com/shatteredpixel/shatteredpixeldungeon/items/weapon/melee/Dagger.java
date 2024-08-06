@@ -65,10 +65,10 @@ public class Dagger extends MeleeWeapon {
 			Char enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
-				int diff = max() - min();
+				int diff = max(owner) - min(owner);
 				int damage = augment.damageFactor(Char.combatRoll(
-						min() + Math.round(diff*0.75f),
-						max()));
+						min(owner) + Math.round(diff*0.75f),
+						max(owner)));
 				int exStr = hero.STR() - STRReq();
 				if (exStr > 0) {
 					damage += Char.combatRoll(0, exStr);
@@ -94,7 +94,7 @@ public class Dagger extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", 2+buffedLvl());
 		} else {
@@ -107,10 +107,10 @@ public class Dagger extends MeleeWeapon {
 			return;
 		}
 
-		PathFinder.buildDistanceMap(Dungeon.heroes.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), maxDist);
-		if (PathFinder.distance[target] == Integer.MAX_VALUE || !Dungeon.level.heroFOV[target] || hero.rooted) {
+		PathFinder.buildDistanceMap(hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), maxDist);
+		if (PathFinder.distance[target] == Integer.MAX_VALUE || !hero.heroFOV[target] || hero.rooted) {
 			GLog.w(Messages.get(wep, "ability_target_range"));
-			if (Dungeon.heroes.rooted) PixelScene.shake( 1, 1f );
+			if (hero.rooted) PixelScene.shake( 1, 1f );
 			return;
 		}
 
@@ -122,15 +122,15 @@ public class Dagger extends MeleeWeapon {
 		wep.beforeAbilityUsed(hero, null);
 		Buff.affect(hero, Invisibility.class, invisTurns-1); //1 fewer turns as ability is instant
 
-		Dungeon.heroes.sprite.turnTo( Dungeon.heroes.pos, target);
-		Dungeon.heroes.pos = target;
-		Dungeon.level.occupyCell(Dungeon.heroes);
+		hero.sprite.turnTo( hero.pos, target);
+		hero.pos = target;
+		Dungeon.level.occupyCell(hero);
 		Dungeon.observe();
 		GameScene.updateFog();
-		Dungeon.heroes.checkVisibleMobs();
+		hero.checkVisibleMobs();
 
-		Dungeon.heroes.sprite.place( Dungeon.heroes.pos );
-		CellEmitter.get( Dungeon.heroes.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+		hero.sprite.place( hero.pos );
+		CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
 		hero.next();

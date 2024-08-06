@@ -68,10 +68,10 @@ public class Spear extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 7 + Math.round(1.5f*buffedLvl()) : 7;
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
 		}
@@ -83,7 +83,7 @@ public class Spear extends MeleeWeapon {
 		}
 
 		Char enemy = Actor.findChar(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
