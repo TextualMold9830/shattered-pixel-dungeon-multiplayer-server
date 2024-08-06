@@ -25,7 +25,7 @@ import org.json.JSONObject;
 public class Wound {
 
     private static final float TIME_TO_FADE = 0.8f;
-
+    @Deprecated
     protected Wound() {
         throw new RuntimeException();
     }
