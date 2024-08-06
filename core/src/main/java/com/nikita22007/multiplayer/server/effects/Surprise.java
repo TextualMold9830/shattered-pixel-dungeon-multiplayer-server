@@ -23,11 +23,12 @@ public class Surprise {
         throw new RuntimeException();
     }
 
-    public static void reset(int p) {
+    public static void reset(int p, float angle) {
         JSONObject actionObj = new JSONObject();
         try {
             actionObj.put("action_type", "surprise_visual");
             actionObj.put("pos", p);
+            actionObj.put("andge", angle);
             actionObj.put("time_to_fade", TIME_TO_FADE);
         } catch (JSONException ignore) {
         }
@@ -38,10 +39,10 @@ public class Surprise {
     }
 
     public static void hit(Char ch, float angle) {
-        reset(ch.pos);
+        reset(ch.pos, angle);
     }
 
     public static void hit(int pos) {
-        reset(pos);
+        reset(pos, 0);
     }
 }
