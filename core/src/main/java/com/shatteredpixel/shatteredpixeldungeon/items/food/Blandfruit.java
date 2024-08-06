@@ -275,7 +275,7 @@ public class Blandfruit extends Food {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			ingredients.get(0).quantity(ingredients.get(0).quantity() - 1);

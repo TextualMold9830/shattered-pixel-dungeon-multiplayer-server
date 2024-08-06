@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
-import com.shatteredpixel.shatteredpixeldungeon.Bones;
+
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -478,17 +478,6 @@ public abstract class RegularLevel extends Level {
 		Random.popGenerator();
 
 		Random.pushGenerator(Random.Long());
-		ArrayList<Item> bonesItems = Bones.get();
-		if (bonesItems != null) {
-			int cell = randomDropCell();
-			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-				map[cell] = Terrain.GRASS;
-				losBlocking[cell] = false;
-			}
-			for (Item i : bonesItems) {
-				drop(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
-			}
-		}
 		Random.popGenerator();
 
 		Random.pushGenerator(Random.Long());
