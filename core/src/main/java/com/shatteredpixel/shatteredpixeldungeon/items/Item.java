@@ -509,12 +509,6 @@ public class Item implements Bundlable {
 		
 		return this;
 	}
-	public Item identify(boolean byHero){
-		levelKnown = true;
-		cursedKnown = true;
-		Item.updateQuickslot();
-		return this;
-	}
 	
 	public void onHeroGainExp( float levelPercent, Hero hero ){
 		//do nothing by default
