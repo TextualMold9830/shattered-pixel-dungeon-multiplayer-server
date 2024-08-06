@@ -87,14 +87,14 @@ public abstract class TippedDart extends Dart {
 				protected void onSelect(int index) {
 					if (index == 0){
 						detachAll(hero.belongings.backpack);
-						new Dart().quantity(quantity).collect();
+						new Dart().quantity(quantity).collect(getOwnerHero());
 						
 						hero.spend( 1f );
 						hero.busy();
 						hero.sprite.operate(hero.pos);
 					} else if (index == 1){
 						detach(hero.belongings.backpack);
-						if (!new Dart().collect()) Dungeon.level.drop(new Dart(), hero.pos).sprite.drop();
+						if (!new Dart().collect(getOwnerHero())) Dungeon.level.drop(new Dart(), hero.pos).sprite.drop();
 
 						//reset durability if there are darts left in the stack
 						durability = MAX_DURABILITY;
@@ -112,9 +112,9 @@ public abstract class TippedDart extends Dart {
 	//exact same damage as regular darts, despite being higher tier.
 
 	@Override
-	protected void rangedHit(Char enemy, int cell) {
+	protected void rangedHit(Char enemy, int cell, Hero hero) {
 		targetPos = cell;
-		super.rangedHit( enemy, cell);
+		super.rangedHit( enemy, cell, hero);
 		
 		//need to spawn a dart
 		if (durability <= 0){
@@ -150,10 +150,10 @@ public abstract class TippedDart extends Dart {
 	private static int targetPos = -1;
 
 	@Override
-	public float durabilityPerUse() {
-		float use = super.durabilityPerUse(false);
+	public float durabilityPerUse(Hero hero) {
+		float use = super.durabilityPerUse(hero);
 		
-		use /= (1 + Dungeon.heroes.pointsInTalent(Talent.DURABLE_TIPS));
+		use /= (1 + hero.pointsInTalent(Talent.DURABLE_TIPS));
 
 		//checks both destination and source position
 		float lotusPreserve = 0f;
@@ -168,7 +168,7 @@ public abstract class TippedDart extends Dart {
 			}
 			targetPos = -1;
 		}
-		int p = curUser == null ? Dungeon.heroes.pos : curUser.pos;
+		int p = curUser == null ? hero.pos : curUser.pos;
 		for (Char ch : Actor.chars()){
 			if (ch instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
@@ -182,7 +182,7 @@ public abstract class TippedDart extends Dart {
 		float usages = Math.round(MAX_DURABILITY/use);
 
 		//grants 3+lvl extra uses with charged shot
-		if (bow != null && Dungeon.heroes.buff(Crossbow.ChargedShot.class) != null){
+		if (bow != null && hero.buff(Crossbow.ChargedShot.class) != null){
 			usages += 3 + bow.buffedLvl();
 		}
 

@@ -154,7 +154,7 @@ public class Bomb extends Item {
 			for (int n : PathFinder.NEIGHBOURS9) {
 				int c = cell + n;
 				if (c >= 0 && c < Dungeon.level.length()) {
-					if (Dungeon.level.heroFOV[c]) {
+					if (Dungeon.visibleforAnyHero(c)) {
 						CellEmitter.get(c).burst(SmokeParticle.FACTORY, 4);
 					}
 					
@@ -405,7 +405,7 @@ public class Bomb extends Item {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Item result = null;
 			
 			for (Item i : ingredients){

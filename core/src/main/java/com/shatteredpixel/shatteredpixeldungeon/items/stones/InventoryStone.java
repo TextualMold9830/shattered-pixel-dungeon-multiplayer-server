@@ -52,13 +52,13 @@ public abstract class InventoryStone extends Runestone {
 	public void execute(Hero hero, String action) {
 		super.execute(hero, action);
 		if (action.equals(AC_USE)){
-			activate(curUser.pos);
+			activate(curUser.pos, hero);
 		}
 	}
 	
 	@Override
-	protected void activate(int cell) {
-		GameScene.selectItem( itemSelector );
+	protected void activate(int cell, Hero hero) {
+		GameScene.selectItem( itemSelector, hero );
 	}
 	
 	protected void useAnimation() {

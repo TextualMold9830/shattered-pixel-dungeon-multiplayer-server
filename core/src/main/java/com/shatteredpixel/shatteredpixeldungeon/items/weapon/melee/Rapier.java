@@ -74,10 +74,10 @@ public class Rapier extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 4+buffedLvl() : 4;
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
 		}
@@ -90,7 +90,7 @@ public class Rapier extends MeleeWeapon {
 
 		Char enemy = Actor.findChar(target);
 		//duelist can lunge out of her FOV, but this wastes the ability instead of cancelling if there is no target
-		if (Dungeon.level.heroFOV[target]) {
+		if (hero.heroFOV[target]) {
 			if (enemy == null || enemy == hero || hero.isCharmedBy(enemy)) {
 				GLog.w(Messages.get(wep, "ability_no_target"));
 				return;

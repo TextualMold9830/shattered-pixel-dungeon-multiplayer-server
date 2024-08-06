@@ -56,7 +56,7 @@ public class WarScythe extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int bleedAmt = levelKnown ? Math.round(30f + 4.5f*buffedLvl()) : 30;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));

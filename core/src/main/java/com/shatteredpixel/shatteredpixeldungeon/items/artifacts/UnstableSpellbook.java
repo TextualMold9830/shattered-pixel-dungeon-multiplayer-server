@@ -156,11 +156,11 @@ public class UnstableSpellbook extends Artifact {
 								curItem = scroll;
 								charge--;
 								scroll.anonymize();
-								scroll.doRead();
-								Talent.onArtifactUsed(Dungeon.heroes);
+								scroll.doRead(getOwnerHero());
+								Talent.onArtifactUsed(getOwnerHero());
 							} else {
-								fScroll.doRead();
-								Talent.onArtifactUsed(Dungeon.heroes);
+								fScroll.doRead(getOwnerHero());
+								Talent.onArtifactUsed(getOwnerHero());
 							}
 							updateQuickslot();
 						}

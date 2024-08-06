@@ -228,6 +228,7 @@ public class ItemSlot extends Button {
 		status.text( item.status() );
 
 		//thrown weapons on their last use show quantity in orange, unless they are single-use
+		//FIXME
 		if (item instanceof MissileWeapon
 				&& ((MissileWeapon) item).durabilityLeft() <= 50f
 				&& ((MissileWeapon) item).durabilityLeft() <= ((MissileWeapon) item).durabilityPerUse()){
@@ -248,6 +249,7 @@ public class ItemSlot extends Button {
 			if (item.levelKnown){
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
 				extra.text( Messages.format( TXT_STRENGTH, str ) );
+				//FIXME
 				if (str > Dungeon.heroes.STR()) {
 					extra.hardlight( DEGRADED );
 				} else if (item instanceof Weapon && ((Weapon) item).masteryPotionBonus){
