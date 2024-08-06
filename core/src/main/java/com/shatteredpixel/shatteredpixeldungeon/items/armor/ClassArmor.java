@@ -128,7 +128,7 @@ abstract public class ClassArmor extends Armor {
 		classArmor.curseInfusionBonus = armor.curseInfusionBonus;
 		classArmor.masteryPotionBonus = armor.masteryPotionBonus;
 		if (armor.levelKnown && armor.cursedKnown) {
-			classArmor.identify();
+			classArmor.identify(false);
 		} else {
 			classArmor.levelKnown = armor.levelKnown;
 			classArmor.cursedKnown = true;
@@ -210,6 +210,7 @@ abstract public class ClassArmor extends Armor {
 				@Override
 				protected void onSelect(int index) {
 					if (index == 0){
+						//FIXME
 						GameScene.selectItem(new WndBag.ItemSelector() {
 							@Override
 							public String textPrompt() {
@@ -230,7 +231,7 @@ abstract public class ClassArmor extends Armor {
 								if (hero.belongings.armor == armor){
 									hero.belongings.armor = null;
 									if (hero.sprite instanceof HeroSprite) {
-										((HeroSprite) hero.sprite).updateArmor();
+										((HeroSprite) hero.sprite).updateArmor(hero);
 									}
 								}
 								level(armor.trueLevel());
@@ -260,7 +261,7 @@ abstract public class ClassArmor extends Armor {
 									// we assume the player wants the glyph on the destination armor
 									// they can always manually detach first if they don't.
 									// otherwise we automate glyph transfer just like upgrades
-									if (armor.glyph == null && seal.canTransferGlyph()){
+									if (armor.glyph == null && seal.canTransferGlyph(hero)){
 										//do nothing, keep our glyph
 									} else {
 										inscribe(armor.glyph);
@@ -294,14 +295,14 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if (Dungeon.heroes.belongings.contains(this)) {
-			ArmorAbility ability = Dungeon.heroes.armorAbility;
+		if (hero.belongings.contains(this)) {
+			ArmorAbility ability = hero.armorAbility;
 			if (ability != null) {
 				desc += "\n\n" + ability.shortDesc();
-				float chargeUse = ability.chargeUse(Dungeon.heroes);
+				float chargeUse = ability.chargeUse(hero);
 				desc += " " + Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse));
 			} else {
 				desc += "\n\n" + "_" + Messages.get(this, "no_ability") + "_";
