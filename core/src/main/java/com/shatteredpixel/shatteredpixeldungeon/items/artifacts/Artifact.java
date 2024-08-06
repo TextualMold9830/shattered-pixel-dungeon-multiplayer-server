@@ -125,7 +125,7 @@ public class Artifact extends KindofMisc {
 	}
 
 	@Override
-	public int buffedLvl(Hero hero) {
+	public int buffedLvl() {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}
