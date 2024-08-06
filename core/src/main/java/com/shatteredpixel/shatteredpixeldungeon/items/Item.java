@@ -841,5 +841,14 @@ public class Item implements Bundlable {
 	public String getNameKey(){
 		return getClass().getName() + "name";
 	}
+	//Only use when owner can't be found in any other way
+	public final Hero findOwner() {
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null && hero.belongings.contains(this)) {
+				return hero;
+		}
+	}
+		return null;
+	}
 
 }
