@@ -39,7 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.WeakFloorRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -106,14 +106,14 @@ public class Chasm implements Hero.Doom {
 
 		if (Dungeon.heroes.isAlive()) {
 			Dungeon.heroes.interrupt();
-			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.FALL;
+			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.FALL;
 			if (Dungeon.level instanceof RegularLevel) {
 				Room room = ((RegularLevel)Dungeon.level).room( pos );
-				InterlevelSceneSercer.fallIntoPit = room != null && room instanceof WeakFloorRoom;
+				InterLevelSceneServer.fallIntoPit = room != null && room instanceof WeakFloorRoom;
 			} else {
-				InterlevelSceneSercer.fallIntoPit = false;
+				InterLevelSceneServer.fallIntoPit = false;
 			}
-			Game.switchScene( InterlevelSceneSercer.class );
+			Game.switchScene( InterLevelSceneServer.class );
 		} else {
 			Dungeon.heroes.sprite.visible = false;
 		}

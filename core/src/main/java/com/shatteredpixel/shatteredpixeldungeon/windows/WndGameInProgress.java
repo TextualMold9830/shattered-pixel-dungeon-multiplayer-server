@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.StartScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -123,8 +123,8 @@ public class WndGameInProgress extends Window {
 				Dungeon.heroes = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				ActionIndicator.clearAction();
-				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.CONTINUE;
-				ShatteredPixelDungeon.switchScene(InterlevelSceneSercer.class);
+				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.CONTINUE;
+				ShatteredPixelDungeon.switchScene(InterLevelSceneServer.class);
 			}
 		};
 		

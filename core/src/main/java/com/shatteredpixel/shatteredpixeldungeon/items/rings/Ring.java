@@ -293,7 +293,7 @@ public class Ring extends KindofMisc {
 		}
 	}
 
-	@Override
+	//@Override
 	public int buffedLvl(Hero hero) {
 		int lvl = super.buffedLvl();
 		if (hero.buff(EnhancedRings.class) != null){

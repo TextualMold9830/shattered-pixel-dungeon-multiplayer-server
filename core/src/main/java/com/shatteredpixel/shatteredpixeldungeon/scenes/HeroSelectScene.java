@@ -137,9 +137,9 @@ public class HeroSelectScene extends PixelScene {
 				Dungeon.heroes = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				ActionIndicator.clearAction();
-				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.DESCEND;
+				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
 
-				Game.switchScene( InterlevelSceneSercer.class );
+				Game.switchScene( InterLevelSceneServer.class );
 			}
 		};
 		startBtn.icon(Icons.get(Icons.ENTER));
@@ -676,9 +676,9 @@ public class HeroSelectScene extends PixelScene {
 									Dungeon.heroes = null;
 									Dungeon.daily = true;
 									ActionIndicator.clearAction();
-									InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.DESCEND;
+									InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
 
-									Game.switchScene( InterlevelSceneSercer.class );
+									Game.switchScene( InterLevelSceneServer.class );
 								}
 							}
 						});

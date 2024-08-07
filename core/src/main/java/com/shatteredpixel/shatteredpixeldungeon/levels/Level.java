@@ -88,7 +88,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -554,14 +554,14 @@ public abstract class Level implements Bundlable {
 		}
 
 		beforeTransition();
-		InterlevelSceneSercer.curTransition = transition;
+		InterLevelSceneServer.curTransition = transition;
 		if (transition.type == LevelTransition.Type.REGULAR_EXIT
 				|| transition.type == LevelTransition.Type.BRANCH_EXIT) {
-			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.DESCEND;
+			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
 		} else {
-			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.ASCEND;
+			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.ASCEND;
 		}
-		Game.switchScene(InterlevelSceneSercer.class);
+		Game.switchScene(InterLevelSceneServer.class);
 		return true;
 	}
 

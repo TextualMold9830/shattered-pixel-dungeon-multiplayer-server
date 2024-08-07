@@ -427,7 +427,7 @@ public class GameScene extends PixelScene {
 
 		layoutTags();
 
-		switch (InterlevelSceneSercer.mode) {
+		switch (InterLevelSceneServer.mode) {
 			case RESURRECT:
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
@@ -495,7 +495,7 @@ public class GameScene extends PixelScene {
 
 			}
 		}
-		switch (InterlevelSceneSercer.mode) {
+		switch (InterLevelSceneServer.mode) {
 			case FALL:
 			case DESCEND:
 			case CONTINUE:
@@ -509,9 +509,9 @@ public class GameScene extends PixelScene {
 		}
 		Camera.main.panTo(hero.center(), 2.5f);
 
-		if (InterlevelSceneSercer.mode != InterlevelSceneSercer.Mode.NONE) {
+		if (InterLevelSceneServer.mode != InterLevelSceneServer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
-					&& (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.DESCEND || InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.FALL)) {
+					&& (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.DESCEND || InterLevelSceneServer.mode == InterLevelSceneServer.Mode.FALL)) {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 
@@ -538,9 +538,9 @@ public class GameScene extends PixelScene {
 					}
 				}
 
-			} else if (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.RESET) {
+			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESET) {
 				GLog.h(Messages.get(this, "warp"));
-			} else if (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.RESURRECT) {
+			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESURRECT) {
 				GLog.h(Messages.get(this, "resurrect"), Dungeon.depth);
 			} else {
 				GLog.h(Messages.get(this, "return"), Dungeon.depth);
@@ -618,7 +618,7 @@ public class GameScene extends PixelScene {
 					DimensionalSundial.sundialWarned = false;
 				}
 
-				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.NONE;
+				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
 
 
 			}

@@ -97,8 +97,8 @@ public class PixelScene extends Scene {
 		GameScene.scene = null;
 
 		//flush the texture cache whenever moving from ingame to menu, helps reduce memory load
-		if (!inGameScene && InterlevelSceneSercer.lastRegion != -1){
-			InterlevelSceneSercer.lastRegion = -1;
+		if (!inGameScene && InterLevelSceneServer.lastRegion != -1){
+			InterLevelSceneServer.lastRegion = -1;
 			TextureCache.clear();
 			//good time to clear holiday cache as well
 			Holiday.clearCachedHoliday();

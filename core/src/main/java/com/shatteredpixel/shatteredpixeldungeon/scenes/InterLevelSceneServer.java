@@ -56,7 +56,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterlevelSceneSercer {
+public class InterLevelSceneServer {
 	
 	//slow fade on entering a new region
 	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total
@@ -512,7 +512,7 @@ public class InterlevelSceneSercer {
 		Dungeon.switchLevel( level, level.entrance() );
 	}
 	
-	@Override
+	//@Override
 	protected void onBackPressed() {
 		//Do nothing
 	}

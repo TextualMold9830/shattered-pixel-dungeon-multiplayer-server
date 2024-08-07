@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -134,8 +134,8 @@ public class WndResurrect extends Window {
 			btnItem2.item().keptThoughLostInvent = true;
 		}
 
-		InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RESURRECT;
-		Game.switchScene( InterlevelSceneSercer.class );
+		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RESURRECT;
+		Game.switchScene( InterLevelSceneServer.class );
 	}
 
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

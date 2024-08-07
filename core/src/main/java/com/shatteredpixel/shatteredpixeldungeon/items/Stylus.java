@@ -68,7 +68,7 @@ public class Stylus extends Item {
 		if (action.equals(AC_INSCRIBE)) {
 
 			curUser = hero;
-			GameScene.selectItem( itemSelector );
+			GameScene.selectItem( itemSelector, hero );
 			
 		}
 	}
@@ -131,7 +131,7 @@ public class Stylus extends Item {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			if (item != null) {
 				Stylus.this.inscribe( (Armor)item );
 			}

@@ -86,7 +86,7 @@ public class RockfallTrap extends Trap {
 		boolean seen = false;
 		for (int cell : rockCells){
 
-			if (Dungeon.level.heroFOV[ cell ]){
+			if (Dungeon.visibleforAnyHero(cell)){
 				CellEmitter.get( cell - Dungeon.level.width() ).start(Speck.factory(Speck.ROCK), 0.07f, 10);
 				seen = true;
 			}

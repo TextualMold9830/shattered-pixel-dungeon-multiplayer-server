@@ -38,7 +38,7 @@ public class WeakeningTrap extends Trap{
 
 	@Override
 	public void activate() {
-		if (Dungeon.level.heroFOV[ pos ]){
+		if (Dungeon.visibleforAnyHero(pos)){
 			CellEmitter.get(pos).burst(ShadowParticle.UP, 5);
 		}
 

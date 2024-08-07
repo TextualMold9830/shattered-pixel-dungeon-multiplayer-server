@@ -108,7 +108,11 @@ public class Amulet extends Item {
 
 			@Override
 			public void afterCreate() {
-				Badges.validateVictory();
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null) {
+						Badges.validateVictory(hero);
+					}
+				}
 				Badges.validateChampion(Challenges.activeChallenges());
 				try {
 					Dungeon.saveAll();
@@ -131,10 +135,10 @@ public class Amulet extends Item {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if (Dungeon.heroes.buff(AscensionChallenge.class) == null){
+		if (hero.buff(AscensionChallenge.class) == null){
 			desc += "\n\n" + Messages.get(this, "desc_origins");
 		} else {
 			desc += "\n\n" + Messages.get(this, "desc_ascent");

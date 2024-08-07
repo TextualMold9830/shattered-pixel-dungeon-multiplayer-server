@@ -140,7 +140,7 @@ public class BrokenSeal extends Item {
 		}
 		//FIXME
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			BrokenSeal seal = (BrokenSeal) curItem;
 			if (item != null && item instanceof Armor) {
 				Armor armor = (Armor)item;

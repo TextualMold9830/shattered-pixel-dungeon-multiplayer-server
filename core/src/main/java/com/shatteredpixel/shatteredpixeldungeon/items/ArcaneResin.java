@@ -69,7 +69,7 @@ public class ArcaneResin extends Item {
 		if (action.equals(AC_APPLY)) {
 
 			curUser = hero;
-			GameScene.selectItem( itemSelector );
+			GameScene.selectItem( itemSelector, hero );
 
 		}
 	}
@@ -107,7 +107,7 @@ public class ArcaneResin extends Item {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			if (item != null && item instanceof Wand) {
 				Wand w = (Wand)item;
 
@@ -126,7 +126,7 @@ public class ArcaneResin extends Item {
 					if (resinToUse < quantity()){
 						quantity(quantity()-resinToUse);
 					} else {
-						detachAll(Dungeon.heroes.belongings.backpack);
+						detachAll(hero.belongings.backpack);
 					}
 
 					w.resinBonus++;
@@ -161,7 +161,7 @@ public class ArcaneResin extends Item {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Item result = sampleOutput(ingredients);
 
 			ingredients.get(0).quantity(0);
@@ -175,7 +175,7 @@ public class ArcaneResin extends Item {
 			int level = w.level() - w.resinBonus;
 
 			Item output = new ArcaneResin().quantity(2*(level+1));
-
+			//FIXME
 			if (Dungeon.heroes.heroClass != HeroClass.MAGE && Dungeon.heroes.hasTalent(Talent.WAND_PRESERVATION)){
 				output.quantity(output.quantity() + Dungeon.heroes.pointsInTalent(Talent.WAND_PRESERVATION));
 			}

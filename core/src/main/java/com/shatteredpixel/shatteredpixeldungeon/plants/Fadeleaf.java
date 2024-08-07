@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.Game;
 
@@ -51,11 +51,11 @@ public class Fadeleaf extends Plant {
 			if (((Hero) ch).subClass == HeroSubClass.WARDEN && Dungeon.interfloorTeleportAllowed()){
 
 				Level.beforeTransition();
-				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
-				InterlevelSceneSercer.returnDepth = Math.max(1, (Dungeon.depth - 1));
-				InterlevelSceneSercer.returnBranch = 0;
-				InterlevelSceneSercer.returnPos = -2;
-				Game.switchScene( InterlevelSceneSercer.class );
+				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
+				InterLevelSceneServer.returnDepth = Math.max(1, (Dungeon.depth - 1));
+				InterLevelSceneServer.returnBranch = 0;
+				InterLevelSceneServer.returnPos = -2;
+				Game.switchScene( InterLevelSceneServer.class );
 				
 			} else {
 				ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);

@@ -73,7 +73,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	public int tier;
 	
-	@Override
+	//@Override
 	public int min(Hero hero) {
 		return Math.max(0, min( buffedLvl(hero) + RingOfSharpshooting.levelDamageBonus(hero) ));
 	}
@@ -84,7 +84,7 @@ abstract public class MissileWeapon extends Weapon {
 				(tier == 1 ? lvl : 2*lvl);      //level scaling
 	}
 	
-	@Override
+	//@Override
 	public int max(Hero hero) {
 		return Math.max(0, max( buffedLvl(hero) + RingOfSharpshooting.levelDamageBonus(hero) ));
 	}
@@ -108,9 +108,9 @@ abstract public class MissileWeapon extends Weapon {
 		}
 	}
 	
-	@Override
+	//@Override
 	//FIXME some logic here assumes the items are in the player's inventory. Might need to adjust
-	public void upgrade(Hero hero) {
+	public Item upgrade(Hero hero) {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
 			if (quantity > 1) {

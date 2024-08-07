@@ -212,9 +212,9 @@ public abstract class Plant implements Bundlable {
 		}
 
 		@Override
-		public String desc() {
+		public String desc(Hero hero) {
 			String desc = Messages.get(plantClass, "desc");
-			if (Dungeon.heroes.subClass == HeroSubClass.WARDEN){
+			if (hero.subClass == HeroSubClass.WARDEN){
 				desc += "\n\n" + Messages.get(plantClass, "warden_desc");
 			}
 			return desc;

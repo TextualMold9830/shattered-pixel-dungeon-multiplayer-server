@@ -267,7 +267,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doAction(Hero hero) {
 		WarriorShield shield = target.buff(WarriorShield.class);
 		if (shield != null && target instanceof Hero && shield.maxShield((Hero) target) > 0) {
 			startBerserking((Hero) target);

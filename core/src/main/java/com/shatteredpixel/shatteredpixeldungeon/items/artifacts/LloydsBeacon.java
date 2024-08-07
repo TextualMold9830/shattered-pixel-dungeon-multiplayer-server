@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite.Glowing;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
@@ -177,10 +177,10 @@ public class LloydsBeacon extends Artifact {
 			} else {
 
 				Level.beforeTransition();
-				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
-				InterlevelSceneSercer.returnDepth = returnDepth;
-				InterlevelSceneSercer.returnPos = returnPos;
-				Game.switchScene( InterlevelSceneSercer.class );
+				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
+				InterLevelSceneServer.returnDepth = returnDepth;
+				InterLevelSceneServer.returnPos = returnPos;
+				Game.switchScene( InterLevelSceneServer.class );
 			}
 			
 			

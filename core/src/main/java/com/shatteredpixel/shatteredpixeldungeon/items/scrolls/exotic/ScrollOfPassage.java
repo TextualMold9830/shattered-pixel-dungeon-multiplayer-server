@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
@@ -52,10 +52,10 @@ public class ScrollOfPassage extends ExoticScroll {
 		}
 
 		Level.beforeTransition();
-		InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
-		InterlevelSceneSercer.returnDepth = Math.max(1, (Dungeon.depth - 1 - (Dungeon.depth-2)%5));
-		InterlevelSceneSercer.returnBranch = 0;
-		InterlevelSceneSercer.returnPos = -1;
-		Game.switchScene( InterlevelSceneSercer.class );
+		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
+		InterLevelSceneServer.returnDepth = Math.max(1, (Dungeon.depth - 1 - (Dungeon.depth-2)%5));
+		InterLevelSceneServer.returnBranch = 0;
+		InterLevelSceneServer.returnPos = -1;
+		Game.switchScene( InterLevelSceneServer.class );
 	}
 }
