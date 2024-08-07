@@ -1185,7 +1185,6 @@ public abstract class Level implements Bundlable {
 	
 	//a 'soft' press ignores hidden traps
 	//a 'hard' press triggers all things
-	//FIXME
 	private void pressCell( int cell, boolean hard ) {
 
 		Trap trap = null;
@@ -1216,13 +1215,17 @@ public abstract class Level implements Bundlable {
 			Door.enter( cell );
 			break;
 		}
-		//FIXME
-		TimekeepersHourglass.timeFreeze timeFreeze =
-				Dungeon.heroes.buff(TimekeepersHourglass.timeFreeze.class);
-
-		Swiftthistle.TimeBubble bubble =
-				Dungeon.heroes.buff(Swiftthistle.TimeBubble.class);
-
+		TimekeepersHourglass.timeFreeze timeFreeze = null;
+		Swiftthistle.TimeBubble bubble = null;
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			if (timeFreeze == null) {
+				timeFreeze = hero.buff(TimekeepersHourglass.timeFreeze.class);
+			}
+			if (bubble == null) {
+				bubble = hero.buff(Swiftthistle.TimeBubble.class);
+			}
+		}
 		if (trap != null) {
 			if (bubble != null){
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);
@@ -1235,8 +1238,10 @@ public abstract class Level implements Bundlable {
 				timeFreeze.setDelayedPress(cell);
 				
 			} else {
-				if (Dungeon.heroes.pos == cell) {
-					Dungeon.heroes.interrupt();
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null && hero.pos == cell) {
+						hero.interrupt();
+					}
 				}
 				trap.trigger();
 
