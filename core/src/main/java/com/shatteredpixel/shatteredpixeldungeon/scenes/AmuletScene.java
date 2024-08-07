@@ -25,7 +25,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -154,8 +153,8 @@ public class AmuletScene extends PixelScene {
 	@Override
 	protected void onBackPressed() {
 		if (btnExit.isActive()) {
-			InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
-			Game.switchScene(InterlevelScene.class);
+			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.CONTINUE;
+			Game.switchScene(InterlevelSceneSercer.class);
 		}
 	}
 	

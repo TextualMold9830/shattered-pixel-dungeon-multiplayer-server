@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
@@ -100,7 +99,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ResumeIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RightClickMenu;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StatusPane;
-import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Tag;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toast;
@@ -115,7 +113,6 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoMob;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoPlant;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoTrap;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
@@ -430,7 +427,7 @@ public class GameScene extends PixelScene {
 
 		layoutTags();
 
-		switch (InterlevelScene.mode) {
+		switch (InterlevelSceneSercer.mode) {
 			case RESURRECT:
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
@@ -498,7 +495,7 @@ public class GameScene extends PixelScene {
 
 			}
 		}
-		switch (InterlevelScene.mode) {
+		switch (InterlevelSceneSercer.mode) {
 			case FALL:
 			case DESCEND:
 			case CONTINUE:
@@ -512,9 +509,9 @@ public class GameScene extends PixelScene {
 		}
 		Camera.main.panTo(hero.center(), 2.5f);
 
-		if (InterlevelScene.mode != InterlevelScene.Mode.NONE) {
+		if (InterlevelSceneSercer.mode != InterlevelSceneSercer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
-					&& (InterlevelScene.mode == InterlevelScene.Mode.DESCEND || InterlevelScene.mode == InterlevelScene.Mode.FALL)) {
+					&& (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.DESCEND || InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.FALL)) {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 
@@ -541,9 +538,9 @@ public class GameScene extends PixelScene {
 					}
 				}
 
-			} else if (InterlevelScene.mode == InterlevelScene.Mode.RESET) {
+			} else if (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.RESET) {
 				GLog.h(Messages.get(this, "warp"));
-			} else if (InterlevelScene.mode == InterlevelScene.Mode.RESURRECT) {
+			} else if (InterlevelSceneSercer.mode == InterlevelSceneSercer.Mode.RESURRECT) {
 				GLog.h(Messages.get(this, "resurrect"), Dungeon.depth);
 			} else {
 				GLog.h(Messages.get(this, "return"), Dungeon.depth);
@@ -621,7 +618,7 @@ public class GameScene extends PixelScene {
 					DimensionalSundial.sundialWarned = false;
 				}
 
-				InterlevelScene.mode = InterlevelScene.Mode.NONE;
+				InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.NONE;
 
 
 			}

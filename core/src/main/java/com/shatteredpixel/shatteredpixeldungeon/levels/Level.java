@@ -44,7 +44,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -89,7 +88,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -555,14 +554,14 @@ public abstract class Level implements Bundlable {
 		}
 
 		beforeTransition();
-		InterlevelScene.curTransition = transition;
+		InterlevelSceneSercer.curTransition = transition;
 		if (transition.type == LevelTransition.Type.REGULAR_EXIT
 				|| transition.type == LevelTransition.Type.BRANCH_EXIT) {
-			InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.DESCEND;
 		} else {
-			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
+			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.ASCEND;
 		}
-		Game.switchScene(InterlevelScene.class);
+		Game.switchScene(InterlevelSceneSercer.class);
 		return true;
 	}
 

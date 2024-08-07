@@ -70,7 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
@@ -330,11 +330,11 @@ public class CursedWand {
 					int depth = 1+Random.chances(depths);
 
 					Level.beforeTransition();
-					InterlevelScene.mode = InterlevelScene.Mode.RETURN;
-					InterlevelScene.returnDepth = depth;
-					InterlevelScene.returnBranch = 0;
-					InterlevelScene.returnPos = -1;
-					Game.switchScene(InterlevelScene.class);
+					InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
+					InterlevelSceneSercer.returnDepth = depth;
+					InterlevelSceneSercer.returnBranch = 0;
+					InterlevelSceneSercer.returnPos = -1;
+					Game.switchScene(InterlevelSceneSercer.class);
 
 				} else {
 					ScrollOfTeleportation.teleportChar(user);

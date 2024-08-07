@@ -21,14 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -135,8 +134,8 @@ public class WndResurrect extends Window {
 			btnItem2.item().keptThoughLostInvent = true;
 		}
 
-		InterlevelScene.mode = InterlevelScene.Mode.RESURRECT;
-		Game.switchScene( InterlevelScene.class );
+		InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RESURRECT;
+		Game.switchScene( InterlevelSceneSercer.class );
 	}
 
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

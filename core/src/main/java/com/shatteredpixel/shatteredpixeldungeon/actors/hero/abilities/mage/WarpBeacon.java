@@ -38,7 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportat
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -178,11 +178,11 @@ public class WarpBeacon extends ArmorAbility {
 							//transition before dispel, to cancel out trap effects
 							Level.beforeTransition();
 							Invisibility.dispel();
-							InterlevelScene.mode = InterlevelScene.Mode.RETURN;
-							InterlevelScene.returnDepth = tracker.depth;
-							InterlevelScene.returnBranch = tracker.branch;
-							InterlevelScene.returnPos = tracker.pos;
-							Game.switchScene( InterlevelScene.class );
+							InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
+							InterlevelSceneSercer.returnDepth = tracker.depth;
+							InterlevelSceneSercer.returnBranch = tracker.branch;
+							InterlevelSceneSercer.returnPos = tracker.pos;
+							Game.switchScene( InterlevelSceneSercer.class );
 						}
 
 					} else if (index == 1){

@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPas
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelSceneSercer;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -166,11 +166,11 @@ public class BeaconOfReturning extends Spell {
 
 			Level.beforeTransition();
 			Invisibility.dispel();
-			InterlevelScene.mode = InterlevelScene.Mode.RETURN;
-			InterlevelScene.returnDepth = returnDepth;
-			InterlevelScene.returnBranch = returnBranch;
-			InterlevelScene.returnPos = returnPos;
-			Game.switchScene( InterlevelScene.class );
+			InterlevelSceneSercer.mode = InterlevelSceneSercer.Mode.RETURN;
+			InterlevelSceneSercer.returnDepth = returnDepth;
+			InterlevelSceneSercer.returnBranch = returnBranch;
+			InterlevelSceneSercer.returnPos = returnPos;
+			Game.switchScene( InterlevelSceneSercer.class );
 		}
 		detach(hero.belongings.backpack);
 		if (Random.Float() < talentChance){
