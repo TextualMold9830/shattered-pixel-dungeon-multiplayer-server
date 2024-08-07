@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Identification;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -50,7 +51,7 @@ public class ScrollOfDivination extends ExoticScroll {
 	}
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
 		curUser.sprite.parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
@@ -81,7 +82,7 @@ public class ScrollOfDivination extends ExoticScroll {
 					}
 					probs[0]--;
 					Potion p = Reflection.newInstance(Random.element(potions));
-					p.identify();
+					p.identify(hero);
 					IDed.add(p);
 					potions.remove(p.getClass());
 					break;
@@ -92,7 +93,7 @@ public class ScrollOfDivination extends ExoticScroll {
 					}
 					probs[1]--;
 					Scroll s = Reflection.newInstance(Random.element(scrolls));
-					s.identify();
+					s.identify(hero);
 					IDed.add(s);
 					scrolls.remove(s.getClass());
 					break;
@@ -115,18 +116,19 @@ public class ScrollOfDivination extends ExoticScroll {
 		if (left == 4){
 			GLog.n( Messages.get(this, "nothing_left") );
 		} else {
-			GameScene.show(new WndDivination(IDed));
+			GameScene.show(new WndDivination(IDed, hero));
 		}
 
 		readAnimation();
-		identify();
+		identify(hero);
 	}
 	
 	private class WndDivination extends Window {
 		
 		private static final int WIDTH = 120;
 		
-		WndDivination(ArrayList<Item> IDed ){
+		WndDivination(ArrayList<Item> IDed, Hero hero ){
+			super(hero);
 			IconTitle cur = new IconTitle(new ItemSprite(ScrollOfDivination.this),
 					Messages.titleCase(Messages.get(ScrollOfDivination.class, "name")));
 			cur.setRect(0, 0, WIDTH, 0);

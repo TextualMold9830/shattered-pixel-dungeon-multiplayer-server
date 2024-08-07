@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -36,7 +37,7 @@ public class ScrollOfMysticalEnergy extends ExoticScroll {
 	}
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
 		//append buff
@@ -46,7 +47,7 @@ public class ScrollOfMysticalEnergy extends ExoticScroll {
 		Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
 		
 		SpellSprite.show( curUser, SpellSprite.CHARGE, 0, 1, 1 );
-		identify();
+		identify(hero);
 		ScrollOfRecharging.charge(curUser);
 		
 		readAnimation();

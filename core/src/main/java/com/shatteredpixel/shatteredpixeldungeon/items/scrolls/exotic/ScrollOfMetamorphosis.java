@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -57,18 +58,18 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 	protected static boolean identifiedByUse = false;
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach(curUser.belongings.backpack);
 			identifiedByUse = true;
 		} else {
 			identifiedByUse = false;
 		}
-		GameScene.show(new WndMetamorphChoose());
+		GameScene.show(new WndMetamorphChoose(hero));
 	}
 
-	public static void onMetamorph( Talent oldTalent, Talent newTalent ){
+	public static void onMetamorph( Talent oldTalent, Talent newTalent, Hero hero ){
 		if (curItem instanceof ScrollOfMetamorphosis) {
 			((ScrollOfMetamorphosis) curItem).readAnimation();
 			Sample.INSTANCE.play(Assets.Sounds.READ);
@@ -76,8 +77,8 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 		curUser.sprite.emitter().start(Speck.factory(Speck.CHANGE), 0.2f, 10);
 		Transmuting.show(curUser, oldTalent, newTalent);
 
-		if (Dungeon.heroes.hasTalent(newTalent)) {
-			Talent.onTalentUpgraded(Dungeon.heroes, newTalent);
+		if (hero.hasTalent(newTalent)) {
+			Talent.onTalentUpgraded(hero, newTalent);
 		}
 	}
 
@@ -110,8 +111,8 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 
 		TalentsPane pane;
 
-		public WndMetamorphChoose(){
-			super();
+		public WndMetamorphChoose(Hero hero){
+			super(hero);
 
 			INSTANCE = this;
 
@@ -132,11 +133,11 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 			top = text.bottom() + 2;
 
 			ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
-			Talent.initClassTalents(Dungeon.heroes.heroClass, talents, Dungeon.heroes.metamorphedTalents);
+			Talent.initClassTalents(hero.heroClass, talents, hero.metamorphedTalents);
 
 			for (LinkedHashMap<Talent, Integer> tier : talents){
 				for (Talent talent : tier.keySet()){
-					tier.put(talent, Dungeon.heroes.pointsInTalent(talent));
+					tier.put(talent, hero.pointsInTalent(talent));
 				}
 			}
 
@@ -194,8 +195,8 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 			}
 		}
 
-		public WndMetamorphReplace(Talent replacing, int tier){
-			super();
+		public WndMetamorphReplace(Talent replacing, int tier, Hero hero){
+			super(hero);
 
 			if (!identifiedByUse && curItem instanceof ScrollOfMetamorphosis) {
 				curItem.detach(curUser.belongings.backpack);
@@ -208,7 +209,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 			this.tier = tier;
 
 			LinkedHashMap<Talent, Integer> options = new LinkedHashMap<>();
-			Set<Talent> curTalentsAtTier = Dungeon.heroes.talents.get(tier-1).keySet();
+			Set<Talent> curTalentsAtTier = hero.talents.get(tier-1).keySet();
 
 			for (HeroClass cls : HeroClass.values()){
 				ArrayList<LinkedHashMap<Talent, Integer>> clsTalents = new ArrayList<>();
@@ -227,7 +228,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 					}
 				}
 				if (!replacingIsInSet && !clsTalentsAtTier.isEmpty()) {
-					options.put(Random.element(clsTalentsAtTier), Dungeon.heroes.pointsInTalent(replacing));
+					options.put(Random.element(clsTalentsAtTier), hero.pointsInTalent(replacing));
 				}
 			}
 

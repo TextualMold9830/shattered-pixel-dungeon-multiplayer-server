@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -48,9 +49,9 @@ public class ScrollOfSirensSong extends ExoticScroll {
 	protected static boolean identifiedByUse = false;
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach(curUser.belongings.backpack);
 			identifiedByUse = true;
 		} else {
@@ -86,7 +87,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 				Sample.INSTANCE.playDelayed( Assets.Sounds.LULLABY, 0.1f );
 
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-					if (Dungeon.level.heroFOV[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
+					if (findOwner().heroFOV[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
 						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.id();
 						mob.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 					}

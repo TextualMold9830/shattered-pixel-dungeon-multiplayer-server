@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Transmuting;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -92,7 +93,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	}
 	
 	@Override
-	protected void onItemSelected(Item item) {
+	protected void onItemSelected(Item item, Hero hero) {
 		
 		Item result = changeItem(item);
 		
@@ -103,34 +104,34 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		} else {
 			if (result != item) {
 				int slot = Dungeon.quickslot.getSlot(item);
-				if (item.isEquipped(Dungeon.heroes)) {
+				if (item.isEquipped(hero)) {
 					item.cursed = false; //to allow it to be unequipped
 					if (item instanceof Artifact && result instanceof Ring){
 						//if we turned an equipped artifact into a ring, ring goes into inventory
-						((EquipableItem) item).doUnequip(Dungeon.heroes, false);
-						if (!result.collect()){
+						((EquipableItem) item).doUnequip(hero, false);
+						if (!result.collect(hero)){
 							Dungeon.level.drop(result, curUser.pos).sprite.drop();
 						}
-					} else if (item instanceof KindOfWeapon && Dungeon.heroes.belongings.secondWep() == item){
-						((EquipableItem) item).doUnequip(Dungeon.heroes, false);
-						((KindOfWeapon) result).equipSecondary(Dungeon.heroes);
+					} else if (item instanceof KindOfWeapon && hero.belongings.secondWep() == item){
+						((EquipableItem) item).doUnequip(hero, false);
+						((KindOfWeapon) result).equipSecondary(hero);
 					} else {
-						((EquipableItem) item).doUnequip(Dungeon.heroes, false);
-						((EquipableItem) result).doEquip(Dungeon.heroes);
+						((EquipableItem) item).doUnequip(hero, false);
+						((EquipableItem) result).doEquip(hero);
 					}
-					Dungeon.heroes.spend(-Dungeon.heroes.cooldown()); //cancel equip/unequip time
+					hero.spend(-hero.cooldown()); //cancel equip/unequip time
 				} else {
-					item.detach(Dungeon.heroes.belongings.backpack);
-					if (!result.collect()) {
+					item.detach(hero.belongings.backpack);
+					if (!result.collect(hero)) {
 						Dungeon.level.drop(result, curUser.pos).sprite.drop();
-					} else if (result.stackable && Dungeon.heroes.belongings.getSimilar(result) != null){
-						result = Dungeon.heroes.belongings.getSimilar(result);
+					} else if (result.stackable && hero.belongings.getSimilar(result) != null){
+						result = hero.belongings.getSimilar(result);
 					}
 				}
 				if (slot != -1
 						&& result.defaultAction() != null
 						&& !Dungeon.quickslot.isNonePlaceholder(slot)
-						&& Dungeon.heroes.belongings.contains(result)){
+						&& hero.belongings.contains(result)){
 					Dungeon.quickslot.setSlot(slot, result);
 				}
 			}
@@ -194,7 +195,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				n = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
 			} while (Challenges.isItemBlocked(n) || n.getClass() == wandClass);
 			n.level(0);
-			n.identify();
+			//TODO: check this
+			n.identify(staff.findOwner());
 			staff.imbueWand(n, null);
 		}
 		
@@ -277,10 +279,10 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
 			if (a instanceof DriedRose){
 				if (((DriedRose) a).ghostWeapon() != null){
-					Dungeon.level.drop(((DriedRose) a).ghostWeapon(), Dungeon.heroes.pos);
+					Dungeon.level.drop(((DriedRose) a).ghostWeapon(), a.findOwner().pos);
 				}
 				if (((DriedRose) a).ghostArmor() != null){
-					Dungeon.level.drop(((DriedRose) a).ghostArmor(), Dungeon.heroes.pos);
+					Dungeon.level.drop(((DriedRose) a).ghostArmor(), a.findOwner().pos);
 				}
 			}
 

@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -44,7 +45,7 @@ public class ScrollOfPsionicBlast extends ExoticScroll {
 	}
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
 		GameScene.flash( 0x80FFFFFF );
@@ -56,7 +57,7 @@ public class ScrollOfPsionicBlast extends ExoticScroll {
 
 		//calculate targets first, in case damaging/blinding a target affects hero vision
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Dungeon.level.heroFOV[mob.pos]) {
+			if (hero.heroFOV[mob.pos]) {
 				targets.add(mob);
 			}
 		}
@@ -82,7 +83,7 @@ public class ScrollOfPsionicBlast extends ExoticScroll {
 			GLog.n( Messages.get(this, "ondeath") );
 		}
 
-		identify();
+		identify(hero);
 		
 	
 	}

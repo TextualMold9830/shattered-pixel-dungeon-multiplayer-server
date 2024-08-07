@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -56,15 +57,15 @@ public class ScrollOfEnchantment extends ExoticScroll {
 	protected static boolean identifiedByUse = false;
 	
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach(curUser.belongings.backpack);
 			identifiedByUse = true;
 		} else {
 			identifiedByUse = false;
 		}
-		GameScene.selectItem( itemSelector );
+		GameScene.selectItem( itemSelector, hero );
 	}
 
 	public static boolean enchantable( Item item ){
@@ -85,7 +86,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 						identifiedByUse = false;
 						break;
 					case 1:
-						GameScene.selectItem(itemSelector);
+						GameScene.selectItem(itemSelector, getOwnerHero());
 						break;
 				}
 			}
@@ -111,7 +112,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 		}
 
 		@Override
-		public void onSelect(final Item item) {
+		public void onSelect(final Item item, Hero hero) {
 			
 			if (item instanceof Weapon){
 				if (!identifiedByUse) {
