@@ -204,10 +204,10 @@ public class Ring extends KindofMisc {
 	}
 	
 	@Override
-	public Item identify( boolean byHero ) {
+	public Item identify( boolean byHero, Hero hero ) {
 		setKnown();
 		levelsToID = 0;
-		return super.identify(byHero);
+		return super.identify(byHero, hero);
 	}
 	
 	@Override

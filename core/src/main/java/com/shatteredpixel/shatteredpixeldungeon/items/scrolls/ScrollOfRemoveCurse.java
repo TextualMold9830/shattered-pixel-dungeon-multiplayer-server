@@ -49,7 +49,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	}
 
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		TormentedSpirit spirit = null;
 		for (int i : PathFinder.NEIGHBOURS8){
@@ -58,7 +58,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 			}
 		}
 		if (spirit != null){
-			identify();
+			identify(hero);
 			Sample.INSTANCE.play( Assets.Sounds.READ );
 			readAnimation();
 
@@ -71,17 +71,17 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 			GLog.p(Messages.get(this, "spirit"));
 			spirit.cleanse();
 		} else {
-			super.doRead();
+			super.doRead(hero);
 		}
 	}
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return uncursable(item);
+		return uncursable(item, findOwner());
 	}
 
-	public static boolean uncursable( Item item ){
-		if (item.isEquipped(Dungeon.heroes) && Dungeon.heroes.buff(Degrade.class) != null) {
+	public static boolean uncursable( Item item, Hero hero ){
+		if (item.isEquipped(hero) && hero.buff(Degrade.class) != null) {
 			return true;
 		} if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.cursedKnown) || item.cursed)){
 			return true;
@@ -95,7 +95,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	}
 
 	@Override
-	protected void onItemSelected(Item item) {
+	protected void onItemSelected(Item item, Hero hero) {
 		new Flare( 6, 32 ).show( curUser.sprite, 2f );
 
 		boolean procced = uncurse( curUser, item );

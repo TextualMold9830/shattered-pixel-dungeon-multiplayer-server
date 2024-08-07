@@ -83,8 +83,8 @@ public class Invisibility extends FlavourBuff {
 
 	public static void dispel() {
 		if (Dungeon.heroes == null) return;
-
-		dispel(Dungeon.heroes);
+		//TODO: check this
+		dispel();
 	}
 
 	public static void dispel(Char ch){

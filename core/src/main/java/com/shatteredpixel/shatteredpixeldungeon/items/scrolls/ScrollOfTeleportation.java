@@ -55,7 +55,7 @@ public class ScrollOfTeleportation extends Scroll {
 	}
 
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
 		Sample.INSTANCE.play( Assets.Sounds.READ );
@@ -63,7 +63,7 @@ public class ScrollOfTeleportation extends Scroll {
 		if (teleportPreferringUnseen( curUser )){
 			readAnimation();
 		}
-		identify();
+		identify(hero);
 
 	}
 	
@@ -127,9 +127,9 @@ public class ScrollOfTeleportation extends Scroll {
 			if (ch instanceof Hero) {
 				GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 				
-				Dungeon.observe();
+				Dungeon.observe((Hero) ch);
 				GameScene.updateFog();
-				Dungeon.heroes.interrupt();
+				((Hero) ch).interrupt();
 			}
 			return true;
 			
@@ -229,7 +229,7 @@ public class ScrollOfTeleportation extends Scroll {
 		}
 
 		PathFinder.buildDistanceMap(ch.pos, passable);
-
+		//FIXME
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
 					&& !Dungeon.level.secret[i]
@@ -265,9 +265,9 @@ public class ScrollOfTeleportation extends Scroll {
 		if (ch instanceof Hero) {
 			GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 
-			Dungeon.observe();
+			Dungeon.observe((Hero) ch);
 			GameScene.updateFog();
-			Dungeon.heroes.interrupt();
+			((Hero) ch).interrupt();
 		}
 
 		return true;

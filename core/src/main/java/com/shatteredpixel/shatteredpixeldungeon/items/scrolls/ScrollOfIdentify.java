@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Identification;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -42,11 +43,11 @@ public class ScrollOfIdentify extends InventoryScroll {
 	}
 
 	@Override
-	protected void onItemSelected( Item item ) {
+	protected void onItemSelected(Item item, Hero hero) {
 		
 		curUser.sprite.parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
 		
-		item.identify();
+		item.identify(hero);
 		GLog.i( Messages.get(this, "it_is", item.title()) );
 		
 		Badges.validateItemLevelAquired( item );

@@ -110,7 +110,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	//FIXME some logic here assumes the items are in the player's inventory. Might need to adjust
-	public Item upgrade(Hero hero) {
+	public void upgrade(Hero hero) {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
 			if (quantity > 1) {

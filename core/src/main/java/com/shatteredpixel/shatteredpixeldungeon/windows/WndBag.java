@@ -471,7 +471,9 @@ public class WndBag extends WndTabbed {
 			return null; //defaults to last bag opened
 		}
 		public abstract boolean itemSelectable( Item item );
-		public abstract void onSelect( Item item );
+		@Deprecated
+		public void onSelect( Item item ){};
+		public abstract void onSelect( Item item, Hero hero );
 
 		public ItemSelector() {
 		}

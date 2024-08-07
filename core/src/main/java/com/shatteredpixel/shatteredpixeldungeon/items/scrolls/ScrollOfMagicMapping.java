@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
@@ -40,7 +41,7 @@ public class ScrollOfMagicMapping extends Scroll {
 	}
 
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
 		int length = Dungeon.level.length();
@@ -61,7 +62,7 @@ public class ScrollOfMagicMapping extends Scroll {
 					
 					Dungeon.level.discover( i );
 					
-					if (Dungeon.level.heroFOV[i]) {
+					if (hero.heroFOV[i]) {
 						GameScene.discoverTile( i, terr );
 						discover( i );
 						
@@ -80,7 +81,7 @@ public class ScrollOfMagicMapping extends Scroll {
 		SpellSprite.show( curUser, SpellSprite.MAP );
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 
-		identify();
+		identify(hero);
 
 		readAnimation();
 	}

@@ -398,7 +398,7 @@ public class Armor extends EquipableItem {
 	}
 	
 	@Override
-	public Item upgrade(Hero hero) {
+	public void upgrade(Hero hero) {
 		return upgrade( false, hero );
 	}
 	

@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
@@ -137,7 +138,7 @@ public class Eye extends Mob {
 
 			spend( attackDelay() );
 			
-			if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.heroFOV[beam.collisionPos] ) {
+			if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(beam.collisionPos) ) {
 				sprite.zap( beam.collisionPos );
 				return false;
 			} else {

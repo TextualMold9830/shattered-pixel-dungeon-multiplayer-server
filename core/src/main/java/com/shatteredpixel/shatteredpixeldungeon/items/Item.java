@@ -421,13 +421,11 @@ public class Item implements Bundlable {
 		updateQuickslot();
 	}
 	
-	public Item upgrade(Hero hero) {
-		
-		this.level++;
+	public static void upgrade(Hero hero, Item item) {
+		item.level++;
 
 		updateQuickslot();
 		
-		return this;
 	}
 	public Item upgrade(){
 		this.level++;

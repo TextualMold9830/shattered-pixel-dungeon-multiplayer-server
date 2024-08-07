@@ -80,6 +80,7 @@ public class WaterOfHealth extends WellWater {
 			CellEmitter.get( pos ).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 			Sample.INSTANCE.play( Assets.Sounds.DRINK );
 			return item;
+			//FIXME
 		} else if (ScrollOfRemoveCurse.uncursable(item)) {
 			if (ScrollOfRemoveCurse.uncurse( null, item )){
 				CellEmitter.get( pos ).start( ShadowParticle.UP, 0.05f, 10 );

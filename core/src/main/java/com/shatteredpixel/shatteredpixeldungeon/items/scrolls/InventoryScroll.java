@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -36,20 +37,20 @@ public abstract class InventoryScroll extends Scroll {
 	protected static boolean identifiedByUse = false;
 
 	@Override
-	public void doRead() {
+	public void doRead(Hero hero) {
 		
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach( curUser.belongings.backpack );
 			identifiedByUse = true;
 		} else {
 			identifiedByUse = false;
 		}
 		
-		GameScene.selectItem( itemSelector );
+		GameScene.selectItem( itemSelector, hero );
 	}
 	
-	private void confirmCancelation() {
+	private void confirmCancelation(Hero hero) {
 		GameScene.show( new WndOptions(new ItemSprite(this),
 				Messages.titleCase(name()),
 				Messages.get(this, "warning"),
@@ -63,7 +64,7 @@ public abstract class InventoryScroll extends Scroll {
 					identifiedByUse = false;
 					break;
 				case 1:
-					GameScene.selectItem( itemSelector );
+					GameScene.selectItem( itemSelector, hero );
 					break;
 				}
 			}
@@ -81,7 +82,7 @@ public abstract class InventoryScroll extends Scroll {
 		return true;
 	}
 	
-	protected abstract void onItemSelected( Item item );
+	protected abstract void onItemSelected( Item item, Hero hero );
 	
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
@@ -101,7 +102,7 @@ public abstract class InventoryScroll extends Scroll {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -114,14 +115,14 @@ public abstract class InventoryScroll extends Scroll {
 				if (!identifiedByUse) {
 					curItem = detach(curUser.belongings.backpack);
 				}
-				((InventoryScroll)curItem).onItemSelected( item );
+				((InventoryScroll)curItem).onItemSelected( item, hero );
 				((InventoryScroll)curItem).readAnimation();
 				
 				Sample.INSTANCE.play( Assets.Sounds.READ );
 				
 			} else if (identifiedByUse && !((Scroll)curItem).anonymous) {
 				
-				((InventoryScroll)curItem).confirmCancelation();
+				((InventoryScroll)curItem).confirmCancelation(hero);
 				
 			} else if (((Scroll)curItem).anonymous) {
 
