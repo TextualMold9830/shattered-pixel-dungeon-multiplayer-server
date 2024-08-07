@@ -935,8 +935,11 @@ public class Dungeon {
 		}
 	}
 
+	public static void observe(Hero hero) {
+		observe(hero, true);
+	}
 	//default to recomputing based on max hero vision, in case vision just shrank/grew
-	public static void observe(Hero hero){
+	public static void observe(Hero hero, boolean send){
 		int dist = Math.max(hero.viewDistance, 8);
 		dist *= 1f + 0.25f*hero.pointsInTalent(Talent.FARSIGHT);
 
@@ -944,11 +947,11 @@ public class Dungeon {
 			dist = Math.max( dist, MagicalSight.DISTANCE );
 		}
 
-		observe( hero, dist+1 );
+		observe( hero, dist+1, send );
 	}
 
 
-	public static void observe(Hero hero, int dist ) {
+	public static void observe(Hero hero, int dist, boolean send ) {
 		if (level == null) {
 			return;
 		}
@@ -1059,8 +1062,7 @@ public class Dungeon {
 
 
 		addToSendLevelVisitedStateFull(level, hero.networkID);
-		//if (send) {
-		if (true) {
+		if (send) {
 			int networkID = getHeroID(hero);
 			addToSendHeroVisibleCells(hero.fieldOfView,networkID);
 			SendData.flush(networkID);
