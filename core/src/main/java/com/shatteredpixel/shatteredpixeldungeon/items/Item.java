@@ -442,7 +442,7 @@ public class Item implements Bundlable {
 	
 	final public Item upgrade( int n, Hero hero ) {
 		for (int i=0; i < n; i++) {
-			upgrade(hero);
+			upgrade(hero, this);
 		}
 		
 		return this;
