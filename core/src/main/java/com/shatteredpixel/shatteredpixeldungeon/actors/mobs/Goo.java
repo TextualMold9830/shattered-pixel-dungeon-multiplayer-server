@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey;
@@ -111,13 +112,14 @@ public class Goo extends Mob {
 		if (Dungeon.level.water[pos] && HP < HT) {
 			HP += healInc;
 			Statistics.qualifiedForBossChallengeBadge = false;
-
-			LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-			if (lock != null){
-				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.removeTime(healInc);
-				else                                                    lock.removeTime(healInc*1.5f);
+			for (Hero hero: Dungeon.heroes){
+				if (hero == null) continue;
+				LockedFloor lock = hero.buff(LockedFloor.class);
+				if (lock != null){
+					if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.removeTime(healInc);
+					else                                                    lock.removeTime(healInc*1.5f);
+				}
 			}
-
 			if (Dungeon.visibleforAnyHero(pos) ){
 				sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healInc), FloatingText.HEALING );
 			}
@@ -275,10 +277,13 @@ public class Goo extends Mob {
 			((GooSprite)sprite).spray(true);
 			yell(Messages.get(this, "gluuurp"));
 		}
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg);
-			else                                                    lock.addTime(dmg*1.5f);
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			LockedFloor lock = hero.buff(LockedFloor.class);
+			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmg);
+				else lock.addTime(dmg * 1.5f);
+			}
 		}
 	}
 
@@ -301,8 +306,10 @@ public class Goo extends Mob {
 			} while (!Dungeon.level.passable[pos + ofs]);
 			Dungeon.level.drop( new GooBlob(), pos + ofs ).sprite.drop( pos );
 		}
-		
-		Badges.validateBossSlain();
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			Badges.validateBossSlain(hero);
+		}
 		if (Statistics.qualifiedForBossChallengeBadge){
 			Badges.validateBossChallengeCompleted();
 		}
