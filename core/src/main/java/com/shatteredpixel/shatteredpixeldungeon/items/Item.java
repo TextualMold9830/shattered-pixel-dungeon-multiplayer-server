@@ -420,13 +420,7 @@ public class Item implements Bundlable {
 
 		updateQuickslot();
 	}
-	
-	public static void upgrade(Hero hero, Item item) {
-		item.level++;
 
-		updateQuickslot();
-		
-	}
 	public Item upgrade(){
 		this.level++;
 		updateQuickslot();
@@ -436,15 +430,6 @@ public class Item implements Bundlable {
 		for (int i=0; i < n; i++) {
 			upgrade();
 		}
-		return this;
-	}
-
-	
-	final public Item upgrade( int n, Hero hero ) {
-		for (int i=0; i < n; i++) {
-			upgrade(hero, this);
-		}
-		
 		return this;
 	}
 	
