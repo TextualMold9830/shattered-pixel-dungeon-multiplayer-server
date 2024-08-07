@@ -8,14 +8,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +21,7 @@ import java.io.IOException;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.getNearClearCell;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 
-public class InterLevelSceneServer {
+public class InterLevelSceneServerOld {
     private static final float TIME_TO_FADE = 0.3f;
 
     private static final String TXT_DESCENDING	= "Descending...";
@@ -45,7 +42,8 @@ public class InterLevelSceneServer {
     private static final String TXT_CHASM	= "Your steps echo across the dungeon.";
     private static final String TXT_WATER	= "You hear the water splashing around you.";
     private static final String TXT_GRASS	= "The smell of vegetation is thick in the air.";
-    private static final String TXT_SECRETS	= "The atmosphere hints that this floor hides many secrets.";
+    private static final String TXT_SECRETS	= "The atmosphere hints th\n" +
+            "\t\t\t\tif (hero == null) continue;at this floor hides many secrets.";
     @Deprecated
     private static void ShowStoryIfNeed(int depth)
     {
@@ -241,7 +239,7 @@ public class InterLevelSceneServer {
                     hero.resurrect(Dungeon.depth);
                     Dungeon.depth--;
                     Level level = Dungeon.newLevel();
-                    Dungeon.switchLevelToAll(level, level.entrance);
+                    Dungeon.switchLevelForAll(level, level.entrance);
                 } else {
                     hero.resurrect(-1);
                     Dungeon.resetLevel();

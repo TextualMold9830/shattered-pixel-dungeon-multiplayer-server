@@ -56,7 +56,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterlevelScene extends PixelScene {
+public class InterlevelSceneSercer {
 	
 	//slow fade on entering a new region
 	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total
@@ -64,9 +64,9 @@ public class InterlevelScene extends PixelScene {
 	private static final float NORM_FADE = 0.67f; //.33 in, .67 steady, .33 out, 1.33 seconds total
 	//fast fade when ascending, or descending to a floor you've been on
 	private static final float FAST_FADE = 0.50f; //.33 in, .33 steady, .33 out, 1 second total
-	
+
 	private static float fadeTime;
-	
+
 	public enum Mode {
 		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE
 	}
@@ -93,11 +93,6 @@ public class InterlevelScene extends PixelScene {
 
 	public static int lastRegion = -1;
 
-	{
-		inGameScene = true;
-	}
-	
-	@Override
 	public void create() {
 		super.create();
 		
@@ -265,6 +260,7 @@ public class InterlevelScene extends PixelScene {
 			};
 			thread.start();
 		}
+		thread.join();
 		waitingTime = 0f;
 	}
 	
