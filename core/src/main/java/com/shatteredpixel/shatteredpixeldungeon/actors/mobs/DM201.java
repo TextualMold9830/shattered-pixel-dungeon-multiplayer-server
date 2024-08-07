@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DM201Sprite;
@@ -96,10 +97,10 @@ public class DM201 extends DM200 {
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void rollToDropLoot(Hero hero) {
 		if (Dungeon.heroes.lvl > maxLvl + 2) return;
 
-		super.rollToDropLoot();
+		super.rollToDropLoot(hero);
 
 		int ofs;
 		do {

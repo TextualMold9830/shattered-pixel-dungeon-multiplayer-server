@@ -89,21 +89,21 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public float lootChance() {
+	public float lootChance(Hero hero) {
 		//each drop makes future drops 1/3 as likely
 		// so loot chance looks like: 1/33, 1/100, 1/300, 1/900, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.THEIF_MISC.count);
+		return super.lootChance(hero) * (float)Math.pow(1/3f, Dungeon.LimitedDrops.THEIF_MISC.count);
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void rollToDropLoot(Hero hero) {
 		if (item != null) {
 			Dungeon.level.drop( item, pos ).sprite.drop();
 			//updates position
 			if (item instanceof Honeypot.ShatteredPot) ((Honeypot.ShatteredPot)item).dropPot( this, pos );
 			item = null;
 		}
-		super.rollToDropLoot();
+		super.rollToDropLoot(hero);
 	}
 
 	@Override

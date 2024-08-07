@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CausticSlimeSprite;
 import com.watabou.utils.PathFinder;
@@ -49,10 +50,10 @@ public class CausticSlime extends Slime {
 	}
 	
 	@Override
-	public void rollToDropLoot() {
+	public void rollToDropLoot(Hero hero) {
 		if (Dungeon.heroes.lvl > maxLvl + 2) return;
 		
-		super.rollToDropLoot();
+		super.rollToDropLoot(hero);
 		
 		int ofs;
 		do {

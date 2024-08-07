@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -258,7 +259,7 @@ public class Mimic extends Mob {
 	}
 	
 	@Override
-	public void rollToDropLoot(){
+	public void rollToDropLoot(Hero hero){
 		
 		if (items != null) {
 			for (Item item : items) {
@@ -266,7 +267,7 @@ public class Mimic extends Mob {
 			}
 			items = null;
 		}
-		super.rollToDropLoot();
+		super.rollToDropLoot(hero);
 	}
 
 	@Override

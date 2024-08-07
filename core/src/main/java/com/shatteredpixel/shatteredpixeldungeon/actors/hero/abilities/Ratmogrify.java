@@ -292,7 +292,7 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		@Override
-		public void rollToDropLoot() {
+		public void rollToDropLoot(Hero hero) {
 			original.pos = pos;
 			original.rollToDropLoot();
 		}

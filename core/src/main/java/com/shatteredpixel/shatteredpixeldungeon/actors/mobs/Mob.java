@@ -861,7 +861,24 @@ public abstract class Mob extends Char {
 	
 	@Override
 	public void die(@NotNull DamageCause damageCause ) {
-		Object cause = damageCause.getCause();
+		final Object cause = damageCause.getCause();
+		final Char damageSource = damageCause.getDamageOwner();
+		final Hero damageSourceHero;
+		if (damageSource instanceof Hero){
+			damageSourceHero = (Hero) damageSource;
+		} else if (cause instanceof Hero) {
+			//In most cases, that should be covered by the previous branch
+			damageSourceHero = (Hero) cause;
+		} else if (cause instanceof Item){
+			//This is usually covered through Item.currUser and damageSource
+			damageSourceHero = ((Item)cause).findOwner();
+		} else if (cause instanceof Weapon.Enchantment) {
+			//This is usually covered through Item.currUser and damageSource
+			damageSourceHero = null; //search items?
+ 		} else {
+			damageSourceHero = null;
+		}
+		
 		if (cause == Chasm.class){
 			//50% chance to round up, 50% to round down
 			if (EXP % 2 == 1) EXP += Random.Int(2);
@@ -869,18 +886,18 @@ public abstract class Mob extends Char {
 		}
 
 		if (alignment == Alignment.ENEMY){
-			rollToDropLoot();
+			rollToDropLoot(damageSourceHero);
 			//TODO: check this
-			if (cause instanceof Hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment){
-				if (((Hero) cause).hasTalent(Talent.LETHAL_MOMENTUM)
-						&& Random.Float() < 0.34f + 0.33f * ((Hero) cause).pointsInTalent(Talent.LETHAL_MOMENTUM)) {
-					Buff.affect((Hero)cause, Talent.LethalMomentumTracker.class, 0f);
+			if ((damageSourceHero != null) && (damageSource instanceof Hero || cause instanceof Hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment)){
+				if (damageSourceHero.hasTalent(Talent.LETHAL_MOMENTUM)
+						&& Random.Float() < 0.34f + 0.33f * damageSourceHero.pointsInTalent(Talent.LETHAL_MOMENTUM)) {
+					Buff.affect(damageSourceHero, Talent.LethalMomentumTracker.class, 0f);
 				}
-				if (((Hero) cause).heroClass != HeroClass.DUELIST
-						&& ((Hero) cause).hasTalent(Talent.LETHAL_HASTE)
-						&& ((Hero)cause).buff(Talent.LethalHasteCooldown.class) == null) {
-					Buff.affect((Hero) cause, Talent.LethalHasteCooldown.class, 100f);
-					Buff.affect((Hero) cause, Haste.class, 1.67f + ((Hero) cause).pointsInTalent(Talent.LETHAL_HASTE));
+				if (damageSourceHero.heroClass != HeroClass.DUELIST
+						&& damageSourceHero.hasTalent(Talent.LETHAL_HASTE)
+						&& (damageSourceHero.buff(Talent.LethalHasteCooldown.class) == null)) {
+					Buff.affect(damageSourceHero, Talent.LethalHasteCooldown.class, 100f);
+					Buff.affect(damageSourceHero, Haste.class, 1.67f + damageSourceHero.pointsInTalent(Talent.LETHAL_HASTE));
 				}
 				}
 
@@ -892,9 +909,9 @@ public abstract class Mob extends Char {
 
 		super.die( damageCause );
 
-		if (!(this instanceof Wraith)
+		if ((damageSourceHero != null) && !(this instanceof Wraith)
 				&& soulMarked
-				&& Random.Float() < (0.4f*Dungeon.heroes.pointsInTalent(Talent.NECROMANCERS_MINIONS)/3f)){
+				&& Random.Float() < (0.4f*damageSourceHero.pointsInTalent(Talent.NECROMANCERS_MINIONS)/3f)){
 			Wraith w = Wraith.spawnAt(pos, Wraith.class);
 			if (w != null) {
 				Buff.affect(w, Corruption.class);
@@ -906,18 +923,18 @@ public abstract class Mob extends Char {
 		}
 	}
 
-	public float lootChance(){
+	public float lootChance(Hero hero){
 		float lootChance = this.lootChance;
 
-		float dropBonus = RingOfWealth.dropChanceMultiplier( Dungeon.heroes);
+		float dropBonus = RingOfWealth.dropChanceMultiplier( hero);
 
-		Talent.BountyHunterTracker bhTracker = Dungeon.heroes.buff(Talent.BountyHunterTracker.class);
+		Talent.BountyHunterTracker bhTracker = hero.buff(Talent.BountyHunterTracker.class);
 		if (bhTracker != null){
-			Preparation prep = Dungeon.heroes.buff(Preparation.class);
+			Preparation prep = hero.buff(Preparation.class);
 			if (prep != null){
 				// 2/4/8/16% per prep level, multiplied by talent points
 				float bhBonus = 0.02f * (float)Math.pow(2, prep.attackLevel()-1);
-				bhBonus *= Dungeon.heroes.pointsInTalent(Talent.BOUNTY_HUNTER);
+				bhBonus *= hero.pointsInTalent(Talent.BOUNTY_HUNTER);
 				dropBonus += bhBonus;
 			}
 		}
@@ -925,12 +942,18 @@ public abstract class Mob extends Char {
 		return lootChance * dropBonus;
 	}
 	
-	public void rollToDropLoot(){
-		if (Dungeon.heroes.lvl > maxLvl + 2) return;
+	public void rollToDropLoot(Hero hero){
+		if (hero == null){
+			for (Hero anyHero: Dungeon.heroes) {
+				if (anyHero != null && anyHero.lvl > maxLvl + 2) return;
+			}
+		} else {
+			if (hero.lvl > maxLvl + 2) return;
+		}
 
 		MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
 		if (stolen == null || !stolen.itemWasStolen()) {
-			if (Random.Float() < lootChance()) {
+			if (Random.Float() < lootChance(hero)) {
 				Item loot = createLoot();
 				if (loot != null) {
 					Dungeon.level.drop(loot, pos).sprite.drop();
@@ -939,11 +962,11 @@ public abstract class Mob extends Char {
 		}
 		
 		//ring of wealth logic
-		if (Ring.getBuffedBonus(Dungeon.heroes, RingOfWealth.Wealth.class) > 0) {
+		if (hero != null && Ring.getBuffedBonus(hero, RingOfWealth.Wealth.class) > 0) {
 			int rolls = 1;
 			if (properties.contains(Property.BOSS)) rolls = 15;
 			else if (properties.contains(Property.MINIBOSS)) rolls = 5;
-			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(Dungeon.heroes, rolls);
+			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(hero, rolls);
 			if (bonus != null && !bonus.isEmpty()) {
 				for (Item b : bonus) Dungeon.level.drop(b, pos).sprite.drop();
 				RingOfWealth.showFlareForBonusDrop(sprite);
@@ -957,9 +980,9 @@ public abstract class Mob extends Char {
 		}
 
 		//soul eater talent
-		if (buff(SoulMark.class) != null &&
-				Random.Int(10) < Dungeon.heroes.pointsInTalent(Talent.SOUL_EATER)){
-			Talent.onFoodEaten(Dungeon.heroes, 0, null);
+		if (hero != null && buff(SoulMark.class) != null &&
+				Random.Int(10) < hero.pointsInTalent(Talent.SOUL_EATER)){
+			Talent.onFoodEaten(hero, 0, null);
 		}
 
 	}

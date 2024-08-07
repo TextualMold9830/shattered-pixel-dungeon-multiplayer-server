@@ -146,9 +146,9 @@ public class MasterThievesArmband extends Artifact {
 								exp += 2;
 							}
 
-							float lootChance = ((Mob) ch).lootChance() * lootMultiplier;
+							float lootChance = ((Mob) ch).lootChance(curUser) * lootMultiplier;
 
-							if (Dungeon.heroes.lvl > ((Mob) ch).maxLvl + 2) {
+							if (curUser.lvl > ((Mob) ch).maxLvl + 2) {
 								lootChance = 0;
 							} else if (ch.buff(StolenTracker.class) != null){
 								lootChance = 0;
@@ -181,7 +181,7 @@ public class MasterThievesArmband extends Artifact {
 
 							charge--;
 							exp += 3;
-							Talent.onArtifactUsed(Dungeon.heroes);
+							Talent.onArtifactUsed(curUser);
 							while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
 								exp -= 10 + Math.round(3.33f * level());
 								GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
