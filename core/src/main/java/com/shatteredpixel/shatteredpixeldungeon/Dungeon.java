@@ -488,7 +488,7 @@ public class Dungeon {
 		
 		Dungeon.level = level;
 		for (Hero hero : heroes) {
-
+			if (hero == null) continue;
 
 			hero.pos = pos;
 
@@ -655,6 +655,7 @@ public class Dungeon {
 			bundle.put( DAILY_REPLAY, dailyReplay );
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
+			//todo fixme
 			//Hero bundling
 			//.put( HERO, Arrays.asList(heroes));
 			for (int i = 0; i < heroes.length; i++) {
@@ -729,7 +730,7 @@ public class Dungeon {
 	}
 	
 	public static void saveAll() throws IOException {
-
+		//todo fixme
 		if (heroes[0] != null && (heroes[0].isAlive() || WndResurrect.instance != null)) {
 			
 			Actor.fixTime();
@@ -820,7 +821,9 @@ public class Dungeon {
 		}
 		
 		Notes.restoreFromBundle( bundle );
-		
+
+		//todo
+		//fixme
 		heroes = null;
 		//Settings heroes back
 		for (int i = 0; i < heroes.length; i++) {
