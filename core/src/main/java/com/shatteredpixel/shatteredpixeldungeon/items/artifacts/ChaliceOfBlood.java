@@ -86,7 +86,7 @@ public class ChaliceOfBlood extends Artifact {
 						@Override
 						protected void onSelect(int index) {
 							if (index == 0)
-								prick(Dungeon.heroes);
+								prick(getOwnerHero());
 						}
 					}
 				);
@@ -180,10 +180,10 @@ public class ChaliceOfBlood extends Artifact {
 	}
 	
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if (isEquipped (Dungeon.heroes)){
+		if (isEquipped (hero)){
 			desc += "\n\n";
 			if (cursed)
 				desc += Messages.get(this, "desc_cursed");

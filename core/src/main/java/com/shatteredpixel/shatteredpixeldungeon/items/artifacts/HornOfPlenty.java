@@ -104,7 +104,7 @@ public class HornOfPlenty extends Artifact {
 					satietyPerCharge /= 3;
 				}
 
-				Hunger hunger = Buff.affect(Dungeon.heroes, Hunger.class);
+				Hunger hunger = Buff.affect(hero, Hunger.class);
 				int chargesToUse = Math.max( 1, hunger.hunger() / satietyPerCharge);
 				if (chargesToUse > charge) chargesToUse = charge;
 
@@ -126,11 +126,11 @@ public class HornOfPlenty extends Artifact {
 				Sample.INSTANCE.play(Assets.Sounds.EAT);
 				GLog.i( Messages.get(this, "eat") );
 
-				if (Dungeon.heroes.hasTalent(Talent.IRON_STOMACH)
-						|| Dungeon.heroes.hasTalent(Talent.ENERGIZING_MEAL)
-						|| Dungeon.heroes.hasTalent(Talent.MYSTICAL_MEAL)
-						|| Dungeon.heroes.hasTalent(Talent.INVIGORATING_MEAL)
-						|| Dungeon.heroes.hasTalent(Talent.FOCUSED_MEAL)){
+				if (hero.hasTalent(Talent.IRON_STOMACH)
+						|| hero.hasTalent(Talent.ENERGIZING_MEAL)
+						|| hero.hasTalent(Talent.MYSTICAL_MEAL)
+						|| hero.hasTalent(Talent.INVIGORATING_MEAL)
+						|| hero.hasTalent(Talent.FOCUSED_MEAL)){
 					hero.spend(Food.TIME_TO_EAT - 2);
 				} else {
 					hero.spend(Food.TIME_TO_EAT);
@@ -150,7 +150,7 @@ public class HornOfPlenty extends Artifact {
 
 		} else if (action.equals(AC_STORE)){
 
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 
 		}
 	}
@@ -184,10 +184,10 @@ public class HornOfPlenty extends Artifact {
 	}
 	
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if ( isEquipped( Dungeon.heroes) ){
+		if ( isEquipped( hero ) ){
 			if (!cursed) {
 				if (level() < levelCap)
 					desc += "\n\n" +Messages.get(this, "desc_hint");
@@ -321,12 +321,11 @@ public class HornOfPlenty extends Artifact {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			if (item != null && item instanceof Food) {
 				if (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null){
 					GLog.w( Messages.get(HornOfPlenty.class, "reject") );
 				} else {
-					Hero hero = Dungeon.heroes;
 					hero.sprite.operate( hero.pos );
 					hero.busy();
 					hero.spend( Food.TIME_TO_EAT );

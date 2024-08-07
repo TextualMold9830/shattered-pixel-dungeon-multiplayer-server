@@ -144,7 +144,7 @@ public class SandalsOfNature extends Artifact {
 
 		if (action.equals(AC_FEED)){
 
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 
 		} else if (action.equals(AC_ROOT) && !cursed){
 
@@ -194,10 +194,10 @@ public class SandalsOfNature extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = Messages.get(this, "desc_" + (level()+1));
 
-		if ( isEquipped ( Dungeon.heroes) ) {
+		if ( isEquipped ( hero) ) {
 			desc += "\n\n";
 
 			if (!cursed) {
@@ -295,12 +295,11 @@ public class SandalsOfNature extends Artifact {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			if (item != null && item instanceof Plant.Seed) {
 				if (level() < 3) seeds.add(0, item.getClass());
 				curSeedEffect = item.getClass();
 
-				Hero hero = Dungeon.heroes;
 				hero.sprite.operate( hero.pos );
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
 				hero.busy();
@@ -345,7 +344,7 @@ public class SandalsOfNature extends Artifact {
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
 
 					charge -= seedChargeReqs.get(curSeedEffect);
-					Talent.onArtifactUsed(Dungeon.heroes);
+					Talent.onArtifactUsed(findOwner());
 					updateQuickslot();
 					curUser.spendAndNext(1f);
 				}

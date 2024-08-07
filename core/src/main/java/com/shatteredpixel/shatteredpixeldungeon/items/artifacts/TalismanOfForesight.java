@@ -115,10 +115,10 @@ public class TalismanOfForesight extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if ( isEquipped( Dungeon.heroes) ){
+		if ( isEquipped( hero) ){
 			if (!cursed) {
 				desc += "\n\n" + Messages.get(this, "desc_worn");
 
@@ -225,10 +225,10 @@ public class TalismanOfForesight extends Artifact {
 					partialCharge--;
 				}
 				Invisibility.dispel(curUser);
-				Talent.onArtifactUsed(Dungeon.heroes);
+				Talent.onArtifactUsed(findOwner());
 				updateQuickslot();
 				Dungeon.observe();
-				Dungeon.heroes.checkVisibleMobs();
+				findOwner().checkVisibleMobs();
 				GameScene.updateFog();
 
 				curUser.sprite.zap(target);
@@ -320,7 +320,7 @@ public class TalismanOfForesight extends Artifact {
 			for (int y = ay; y <= by; y++) {
 				for (int x = ax, p = ax + y * Dungeon.level.width(); x <= bx; x++, p++) {
 
-					if (Dungeon.level.heroFOV[p]
+					if (findOwner().heroFOV[p]
 							&& Dungeon.level.secret[p]
 							&& Dungeon.level.map[p] != Terrain.SECRET_DOOR) {
 						if (Dungeon.level.traps.get(p) != null && Dungeon.level.traps.get(p).canBeSearched) {

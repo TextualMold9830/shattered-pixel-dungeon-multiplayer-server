@@ -239,10 +239,10 @@ public class MasterThievesArmband extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if ( isEquipped (Dungeon.heroes) ){
+		if ( isEquipped (hero) ){
 			if (cursed){
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			} else {
@@ -299,7 +299,7 @@ public class MasterThievesArmband extends Artifact {
 				exp += 4 * chargesUsed;
 				GLog.i(Messages.get(MasterThievesArmband.class, "stole_item", item.name()));
 
-				Talent.onArtifactUsed(Dungeon.heroes);
+				Talent.onArtifactUsed(findOwner());
 				while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
 					exp -= 10 + Math.round(3.33f * level());
 					GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
