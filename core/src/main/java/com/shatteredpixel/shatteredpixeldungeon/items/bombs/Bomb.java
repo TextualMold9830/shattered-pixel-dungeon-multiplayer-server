@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -191,9 +192,13 @@ public class Bomb extends Item {
 				}
 
 				dmg -= ch.drRoll();
-
-				if (dmg > 0) {
-					ch.damage(dmg, this);
+				if (dmg > 0){
+					if (curItem == this) {
+						ch.damage(dmg, new Char.DamageCause(this, curUser));
+					} else {
+						Log.e("Bomb explosion curr item is not this");
+						ch.damage(dmg, new Char.DamageCause(this, null));
+					}
 				}
 				
 				if (ch instanceof Hero && !ch.isAlive()) {

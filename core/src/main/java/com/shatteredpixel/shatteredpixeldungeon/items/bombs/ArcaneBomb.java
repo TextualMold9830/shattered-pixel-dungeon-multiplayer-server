@@ -21,12 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.GooWarn;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -82,7 +84,12 @@ public class ArcaneBomb extends Bomb {
 			// 100%/83%/67% bomb damage based on distance, but pierces armor.
 			int damage = Math.round(Char.combatRoll( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
 			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.pos));
-			ch.damage(Math.round(damage*multiplier), this);
+			if (curItem == this) {
+				ch.damage(Math.round(damage * multiplier), new Char.DamageCause(this, curUser));
+			} else {
+				Log.e("Acracne bomb explosion curr item is not this");
+				ch.damage(Math.round(damage * multiplier), new Char.DamageCause(this, null));
+			}
 			if (ch instanceof Hero && !ch.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);

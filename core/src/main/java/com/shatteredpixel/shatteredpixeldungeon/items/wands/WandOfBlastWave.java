@@ -84,7 +84,7 @@ public class WandOfBlastWave extends DamageWand {
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(), this);
+				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
 
 				if (ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
@@ -99,7 +99,7 @@ public class WandOfBlastWave extends DamageWand {
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), this);
+			ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
 
 			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
 				Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
@@ -160,7 +160,15 @@ public class WandOfBlastWave extends DamageWand {
 				int oldPos = ch.pos;
 				ch.pos = newPos;
 				if (finalCollided && ch.isActive()) {
-					ch.damage(Char.combatRoll(finalDist, 2*finalDist), new Knockback());
+					final Char.DamageCause damageCause;
+					if (cause instanceof Char){
+						damageCause = new Char.DamageCause(new Knockback(), (Char)cause);
+					} else if (cause instanceof Char.DamageCause){
+						damageCause = new Char.DamageCause(new Knockback(), ((Char.DamageCause)cause).getDamageOwner());
+					} else {
+						damageCause = new Char.DamageCause(new Knockback(), null);
+					}
+					ch.damage(Char.combatRoll(finalDist, 2*finalDist), damageCause);
 					if (ch.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
 					} else if (ch instanceof Hero){

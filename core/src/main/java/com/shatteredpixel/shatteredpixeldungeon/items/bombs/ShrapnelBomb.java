@@ -21,9 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
@@ -70,7 +72,12 @@ public class ShrapnelBomb extends Bomb {
 			int damage = Math.round(Char.combatRoll( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
 			damage = Math.round(damage * (1f - .05f*Dungeon.level.distance(cell, ch.pos)));
 			damage -= ch.drRoll();
-			ch.damage(damage, this);
+			if (curItem == this) {
+				ch.damage(damage, new Char.DamageCause(this, curUser));
+			} else {
+				Log.e("Shrapnel bomb explosion curr item is not this");
+				ch.damage(damage, new Char.DamageCause(this, null));
+			}
 			if (ch instanceof Hero && !ch.isAlive()) {
 				Dungeon.fail(this);
 			}

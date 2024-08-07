@@ -230,7 +230,7 @@ public class CursedWand {
 					toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 					toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
 
-					toDamage.damage(damage, new CursedWand());
+					toDamage.damage(damage, new Char.DamageCause( new CursedWand(),user));
 					toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 
 					if (toDamage instanceof Hero){

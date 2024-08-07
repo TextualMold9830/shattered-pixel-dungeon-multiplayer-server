@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -71,7 +72,12 @@ public class ShockBomb extends Bomb {
 			if (power > 0){
 				//32% to 8% regular bomb damage
 				int damage = Math.round(Char.combatRoll(5 + Dungeon.scalingDepth(), 10 + 2*Dungeon.scalingDepth()) * (power/50f));
-				ch.damage(damage, this);
+				if (curItem == this) {
+					ch.damage(damage, new Char.DamageCause(this, curUser));
+				} else {
+					Log.e("Shock bomb explosion curr item is not this");
+					ch.damage(damage, new Char.DamageCause(this, null));
+				}
 				if (ch.isAlive()) Buff.prolong(ch, Paralysis.class, power);
 				arcs.add(new Lightning.Arc(DungeonTilemap.tileCenterToWorld(cell), ch.sprite.center()));
 			}

@@ -123,7 +123,7 @@ public class InterLevelSceneServer {
                 SendData.sendInterLevelSceneFadeOut(i);
             }
             for (Hero hero_ : heroes) {
-                if (hero_ != null && hero.isAlive()) {
+                if (hero_ != null && hero_.isAlive()) {
                     Chasm.heroLand(hero_);
                 }
             }

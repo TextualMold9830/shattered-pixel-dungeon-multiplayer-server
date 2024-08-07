@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -68,7 +69,12 @@ public class HolyBomb extends Bomb {
 				
 				//bomb deals an additional 50% damage to unholy enemies in a 5x5 range
 				int damage = Math.round(Char.combatRoll( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ) * 0.5f);
-				ch.damage(damage, new HolyDamage());
+				if (curItem == this) {
+					ch.damage(damage, new Char.DamageCause(new HolyDamage(), curUser));
+				} else {
+					Log.e("Acracne bomb explosion curr item is not this");
+					ch.damage(damage, new Char.DamageCause(new HolyDamage(), null));
+				}
 			}
 		}
 		

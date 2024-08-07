@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.features;
 
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -126,9 +127,7 @@ public class Chasm implements Hero.Doom {
 		GLog.n( Messages.get(Chasm.class, "ondeath") );
 	}
 
-	public static void heroLand() {
-		
-		Hero hero = Dungeon.heroes;
+	public static void heroLand(Hero hero) {
 		
 		ElixirOfFeatherFall.FeatherBuff b = hero.buff(ElixirOfFeatherFall.FeatherBuff.class);
 		
@@ -146,7 +145,7 @@ public class Chasm implements Hero.Doom {
 		//The lower the hero's HP, the more bleed and the less upfront damage.
 		//Hero has a 50% chance to bleed out at 66% HP, and begins to risk instant-death at 25%
 		Buff.affect( hero, Bleeding.class).set( Math.round(hero.HT / (6f + (6f*(hero.HP/(float)hero.HT)))), Chasm.class);
-		hero.damage( Math.max( hero.HP / 2, Char.combatRoll( hero.HP / 2, hero.HT / 4 )), new Chasm() );
+		hero.damage( Math.max( hero.HP / 2, Char.combatRoll( hero.HP / 2, hero.HT / 4 )), new Char.DamageCause(new Chasm(), null) );
 	}
 
 	public static void mobFall( Mob mob ) {
@@ -163,7 +162,11 @@ public class Chasm implements Hero.Doom {
 		
 		@Override
 		public boolean act() {
-			heroLand();
+			if (target instanceof Hero) {
+				heroLand((Hero) target);
+			} else {
+				Log.e("Falling actor is not hero");
+			}
 			detach();
 			return true;
 		}

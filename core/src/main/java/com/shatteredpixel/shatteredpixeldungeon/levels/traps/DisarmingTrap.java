@@ -72,14 +72,15 @@ public class DisarmingTrap extends Trap{
 			}
 		}
 
-		if (Actor.findChar(pos) instanceof Statue){
-			Actor.findChar(pos).die(new Char.DamageCause( this, null));
+		Char actorAtPos = Actor.findChar(pos);
+		if (actorAtPos instanceof Statue){
+			actorAtPos.die(new Char.DamageCause( this, null));
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			CellEmitter.get(pos).burst(Speck.factory(Speck.LIGHT), 4);
 		}
 
-		if (Dungeon.heroes.pos == pos && !Dungeon.heroes.flying){
-			Hero hero = Dungeon.heroes;
+		if (actorAtPos instanceof Hero && !actorAtPos.flying){
+			Hero hero = (Hero) actorAtPos;
 			KindOfWeapon weapon = hero.belongings.weapon;
 
 			if (weapon != null && !weapon.cursed) {

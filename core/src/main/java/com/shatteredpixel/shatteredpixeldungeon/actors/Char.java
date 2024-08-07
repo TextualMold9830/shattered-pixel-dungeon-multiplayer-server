@@ -123,6 +123,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GnollRockfallTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
@@ -690,6 +691,12 @@ public abstract class Char extends Actor {
 		return cachedShield;
 	}
 
+	public void damage(int dmg, @NotNull Buff buff ) {
+		damage(dmg, new DamageCause(buff, null));
+	}
+	public void damage(int dmg, @NotNull Trap trap ) {
+		damage(dmg, new DamageCause(trap, null));
+	}
 	public void damage(int dmg, @NotNull Char source ) {
 		damage(dmg, new DamageCause(source));
 	}

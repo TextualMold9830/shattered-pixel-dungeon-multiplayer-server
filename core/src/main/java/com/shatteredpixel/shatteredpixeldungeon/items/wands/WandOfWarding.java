@@ -406,7 +406,7 @@ public class WandOfWarding extends Wand {
 
 		@Override
 		public boolean interact( Char c ) {
-			if (c != Dungeon.heroes){
+			if (!(c instanceof Hero)){
 				return true;
 			}
 			Game.runOnRenderThread(new Callback() {
@@ -420,7 +420,7 @@ public class WandOfWarding extends Wand {
 						@Override
 						protected void onSelect(int index) {
 							if (index == 0){
-								die(  new DamageCause( null));
+								die(  new DamageCause( null)); //use `(Hero)c`?
 							}
 						}
 					});
