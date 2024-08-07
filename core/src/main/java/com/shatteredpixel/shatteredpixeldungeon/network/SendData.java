@@ -29,6 +29,12 @@ public class SendData {
 
     //---------------------------Level
 
+    public static void addToSendLevelVisitedStateFull(Level level, int ID) {
+        if ((ID != -1) && (clients[ID] != null)) {
+            clients[ID].packet.packAndAddLevelCells(level);
+        }
+    }
+
     public static void addToSendLevelVisitedState(Level level, int ID, boolean[] diff) {
         if ((ID != -1) && (clients[ID] != null)) {
             for (int i = 0; i< diff.length; i++) {
