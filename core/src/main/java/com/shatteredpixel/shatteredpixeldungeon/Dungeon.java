@@ -86,7 +86,7 @@ import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
-import org.jetbrains.annotations.NotNull;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -97,7 +97,6 @@ import java.util.*;
 import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.*;
 import static com.watabou.utils.PathFinder.NEIGHBOURS8;
-import static sun.reflect.annotation.AnnotationParser.toArray;
 
 public class Dungeon {
 
@@ -1157,58 +1156,75 @@ public class Dungeon {
 			hero.next();
 		}
 	}
-	public static void switchLevel(final Level level, int pos, @NotNull Hero hero ) {
-		switchLevelToAll(level, pos);  //todo change this for multilevels support
-		/*
-		switchLevel(level);
-        swichLevelChangePosition(pos,hero);
-		 */
-	}
 
-	public static void switchLevel(final Level level) {
-		//todo rewrite
-		//todo add cheking Hero pos is  clear
-		if (Dungeon.level == level) {
-			return;
+	public static void switchLevel( final Level level, int pos, Hero hero ){
+		if (Dungeon.level != level){
+			switchLevelForAll(level, pos);
 		}
+	}
+	public static void switchLevelForAll(final Level level, int pos ) {
+
+		//Position of -2 specifically means trying to place the hero the exit
+		if (pos == -2){
+			LevelTransition t = level.getTransition(LevelTransition.Type.REGULAR_EXIT);
+			if (t != null) pos = t.cell();
+		}
+
+		//Place hero at the entrance if they are out of the map (often used for pox = -1)
+		// or if they are in solid terrain (except in the mining level, where that happens normally)
+		if (pos < 0 || pos >= level.length()
+				|| (!(level instanceof MiningLevel) && !level.passable[pos] && !level.avoid[pos])){
+			pos = level.getTransition(null).cell();
+		}
+
+		PathFinder.setMapSize(level.width(), level.height());
+
 		Dungeon.level = level;
+		for (Hero hero: heroes) {
+			if (hero == null) continue;
+			hero.pos = pos;
+
+			if (hero.buff(AscensionChallenge.class) != null) {
+				hero.buff(AscensionChallenge.class).onLevelSwitch();
+			}
+		}
+		Mob.restoreAllies( level, pos );
+
 		Actor.init();
 
-		Actor respawner = level.respawner;
-		if (respawner != null) {
-			Actor.add(level.respawner);
-		}
-		for (Hero hero:heroes) {
-			if (hero == null){
-				continue;
-			}
-			if (hero.networkID == -1){
-				continue;
-			}
+		level.addRespawner();
 
-			sendLevel(level, hero.networkID);
-			sendAllChars(hero.networkID);
-			sendHeroNewID(hero, hero.networkID);
-		}
-	}
-	public static void switchLevelToAll(final Level level,int pos ){
-		switchLevel(level);
-		for (Hero hero:heroes) {
-			if (hero!=null){
-				switchLevelChangePosition(pos,hero);
+		for(Mob m : level.mobs){
+			for (Hero hero: heroes) {
+				if (hero == null) continue;
+				if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)) {
+					//displace mob
+					for (int i : PathFinder.NEIGHBOURS8) {
+						if (Actor.findChar(m.pos + i) == null && level.passable[m.pos + i]) {
+							m.pos += i;
+							break;
+						}
+					}
+				}
 			}
 		}
-	}
-	private static void switchLevelChangePosition(int pos, @NotNull Hero hero)
-	{
 
-		hero.pos = pos != -1 ? (Level.getNearClearCell(pos)) : Level.getNearClearCell(level.exit);
-		sendDepth(hero.networkID, depth);
+		for (Hero hero: heroes) {
+			if (hero == null) continue;
+			Light light = hero.buff(Light.class);
+			hero.viewDistance = light == null ? level.viewDistance : Math.max(Light.DISTANCE, level.viewDistance);
 
-		Light light = hero.buff( Light.class );
-		hero.viewDistance = light == null ? level.viewDistance : Math.max( Light.DISTANCE, level.viewDistance );
+			hero.curAction = hero.lastAction = null;
 
-		observe(hero);
+			observe(hero);
+		}
+		try {
+			saveAll();
+		} catch (IOException e) {
+			ShatteredPixelDungeon.reportException(e);
+			/*This only catches IO errors. Yes, this means things can go wrong, and they can go wrong catastrophically.
+			But when they do the user will get a nice 'report this issue' dialogue, and I can fix the bug.*/
+		}
 	}
 
 	public static int getNearClearCell(int startPos){

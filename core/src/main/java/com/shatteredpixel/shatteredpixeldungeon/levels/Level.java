@@ -116,7 +116,6 @@ import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 public abstract class Level implements Bundlable {
 
-
 	public static enum Feeling {
 		NONE,
 		CHASM,
@@ -317,7 +316,7 @@ public abstract class Level implements Bundlable {
 			if(hero != null) {
 				hero.heroFOV = new boolean[length];
 			}
-			}
+		}
 		passable	= new boolean[length];
 		losBlocking	= new boolean[length];
 		flamable	= new boolean[length];
@@ -690,14 +689,16 @@ public abstract class Level implements Bundlable {
 		return null;
 	}
 
-	public Respawner respawner;
+	private Respawner respawner;
 
 	public Actor addRespawner() {
 		if (respawner == null){
 			respawner = new Respawner();
 			Actor.addDelayed(respawner, respawnCooldown());
 		} else {
-			Actor.add(respawner);
+			if (!Actor.all().contains(respawner)) {
+				Actor.add(respawner);
+			}
 			if (respawner.cooldown() > respawnCooldown()){
 				respawner.resetCooldown();
 			}
@@ -793,13 +794,7 @@ public abstract class Level implements Bundlable {
 				|| Actor.findChar( cell ) != null);
 		return cell;
 	}
-	public int randomRespawnCell() {
-		int cell;
-		do {
-			cell = Random.Int( Dungeon.level.length() );
-		} while (!passable[cell] || Dungeon.visibleforAnyHero(cell) || Actor.findChar( cell ) != null);
-		return cell;
-	}
+
 	public int randomDestination( Char ch ) {
 		int cell;
 		do {
@@ -1630,17 +1625,19 @@ public abstract class Level implements Bundlable {
 		if (Actor.findChar( startPos ) == null){
 			return startPos;
 		}
-		//need to create random circle
+		//todo make it use random
 		else for (int i:NEIGHBOURS8) {
 			if ((Actor.findChar( startPos+i ) == null)&&(Dungeon.level.passable[startPos+i])){
 				return startPos+i;
 			}
 		}
 
+		//choose random cell if circle is full
+		//todo replace this
 		int count = 10;
 		int pos;
 		do {
-			pos = Dungeon.level.randomRespawnCell();
+			pos = Dungeon.level.randomRespawnCell(null);
 			if (count-- <= 0) {
 				break;
 			}
