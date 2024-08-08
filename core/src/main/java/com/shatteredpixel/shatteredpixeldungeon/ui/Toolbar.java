@@ -42,7 +42,6 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuickBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
@@ -62,7 +61,6 @@ public class Toolbar extends Component {
 
 	private Tool btnWait;
 	private Tool btnSearch;
-	private Tool btnInventory;
 	private QuickslotTool[] btnQuick;
 	private SlotSwapTool btnSwap;
 	
@@ -83,8 +81,6 @@ public class Toolbar extends Component {
 		super();
 
 		instance = this;
-
-		height = btnInventory.height();
 	}
 
 	@Override
@@ -315,79 +311,6 @@ public class Toolbar extends Component {
 			}
 		});
 		btnSearch.icon( 192, 0, 16, 16 );
-		
-		add(btnInventory = new Tool(0, 0, 24, 26) {
-			private CurrencyIndicator ind;
-
-			private Image arrow;
-
-			@Override
-			protected void onClick() {
-				if (Dungeon.heroes != null && (Dungeon.heroes.ready || !Dungeon.heroes.isAlive())) {
-					if (SPDSettings.interfaceSize() == 2) {
-						GameScene.toggleInvPane();
-					} else {
-						if (!GameScene.cancel()) {
-							GameScene.show(new WndBag(Dungeon.heroes.belongings.backpack));
-						}
-					}
-				}
-			}
-			
-			@Override
-			public GameAction keyAction() {
-				return SPDAction.INVENTORY;
-			}
-
-			@Override
-			public GameAction secondaryTooltipAction() {
-				return SPDAction.INVENTORY_SELECTOR;
-			}
-
-			@Override
-			protected String hoverText() {
-				return Messages.titleCase(Messages.get(WndKeyBindings.class, "inventory"));
-			}
-			
-			@Override
-			protected boolean onLongClick() {
-				GameScene.show(new WndQuickBag(null));
-				return true;
-			}
-
-			@Override
-			protected void createChildren() {
-				super.createChildren();
-				arrow = Icons.get(Icons.COMPASS);
-				arrow.originToCenter();
-				arrow.visible = SPDSettings.interfaceSize() == 2;
-				arrow.tint(0x3D2E18, 1f);
-				add(arrow);
-
-				ind = new CurrencyIndicator();
-				add(ind);
-			}
-
-			@Override
-			protected void layout() {
-				super.layout();
-				ind.fill(this);
-				bringToFront(ind);
-
-				arrow.x = left() + (width - arrow.width())/2;
-				arrow.y = bottom()-arrow.height-1;
-				arrow.angle = bottom() == camera().height ? 0 : 180;
-			}
-
-			@Override
-			public void enable(boolean value) {
-				if (value != active){
-					arrow.alpha( value ? 1f : 0.4f );
-				}
-				super.enable(value);
-			}
-		});
-		btnInventory.icon( 160, 0, 16, 16 );
 
 		//hidden button for inventory selector keybind
 		add(new Button(){
