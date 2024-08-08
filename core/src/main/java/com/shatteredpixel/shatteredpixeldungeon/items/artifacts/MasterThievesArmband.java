@@ -298,8 +298,8 @@ public class MasterThievesArmband extends Artifact {
 				charge -= chargesUsed;
 				exp += 4 * chargesUsed;
 				GLog.i(Messages.get(MasterThievesArmband.class, "stole_item", item.name()));
-
-				Talent.onArtifactUsed(findOwner());
+				assert target instanceof Hero;
+				Talent.onArtifactUsed((Hero)target);
 				while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
 					exp -= 10 + Math.round(3.33f * level());
 					GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));

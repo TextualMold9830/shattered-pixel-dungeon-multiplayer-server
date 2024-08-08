@@ -225,10 +225,10 @@ public class TalismanOfForesight extends Artifact {
 					partialCharge--;
 				}
 				Invisibility.dispel(curUser);
-				Talent.onArtifactUsed(findOwner());
+				Talent.onArtifactUsed(curUser);
 				updateQuickslot();
 				Dungeon.observe();
-				findOwner().checkVisibleMobs();
+				curUser.checkVisibleMobs();
 				GameScene.updateFog();
 
 				curUser.sprite.zap(target);
