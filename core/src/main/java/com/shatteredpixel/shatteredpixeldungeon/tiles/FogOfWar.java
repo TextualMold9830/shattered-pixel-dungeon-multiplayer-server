@@ -322,7 +322,7 @@ public class FogOfWar extends Image {
 	public void draw() {
 
 		if (!toUpdate.isEmpty()){
-			updateTexture(Dungeon.level.heroFOV, Dungeon.level.visited, Dungeon.level.mapped);
+			updateTexture(Dungeon.level.fieldOfView, Dungeon.level.visited, Dungeon.level.mapped);
 		}
 
 		super.draw();

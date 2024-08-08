@@ -177,7 +177,6 @@ import java.util.LinkedHashMap;
 public class Hero extends Char {
 	public int networkID = -1;
 	public String name;
-	public boolean[] heroFOV;
 
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
@@ -750,7 +749,7 @@ public class Hero extends Char {
 	public boolean act() {
 		
 		//calls to dungeon.observe will also update hero's local FOV.
-		fieldOfView = heroFOV;
+		fieldOfView = fieldOfView;
 
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();

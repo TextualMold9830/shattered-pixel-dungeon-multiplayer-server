@@ -90,7 +90,7 @@ public class Challenge extends ArmorAbility {
 		}
 
 		Char targetCh = Actor.findChar(target);
-		if (targetCh == null || !hero.heroFOV[target]){
+		if (targetCh == null || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}

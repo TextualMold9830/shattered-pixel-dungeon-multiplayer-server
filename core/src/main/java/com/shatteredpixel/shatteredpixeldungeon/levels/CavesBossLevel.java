@@ -321,7 +321,7 @@ public class CavesBossLevel extends Level {
 		int i = 14 + 13*width();
 		for (int j = 0; j < 5; j++){
 			set( i+j, Terrain.EMPTY );
-			if (Dungeon.level.heroFOV[i+j]){
+			if (Dungeon.level.fieldOfView[i+j]){
 				CellEmitter.get(i+j).burst(BlastParticle.FACTORY, 10);
 			}
 		}

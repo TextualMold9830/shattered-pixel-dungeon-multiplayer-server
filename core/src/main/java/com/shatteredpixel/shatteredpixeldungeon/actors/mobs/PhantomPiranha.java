@@ -99,7 +99,7 @@ public class PhantomPiranha extends Piranha {
 		ArrayList<Integer> outFOVCandidates = new ArrayList<>();
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (Dungeon.level.water[i] && Actor.findChar(i) == null){
-				if (Dungeon.level.heroFOV[i]){
+				if (Dungeon.level.fieldOfView[i]){
 					inFOVCandidates.add(i);
 				} else {
 					outFOVCandidates.add(i);

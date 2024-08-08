@@ -328,7 +328,7 @@ public class DM300 extends Mob {
 				return;
 			}
 
-			if (Dungeon.level.heroFOV[step]) {
+			if (Dungeon.level.fieldOfView[step]) {
 				if (buff(Barrier.class) == null) {
 					GLog.w(Messages.get(this, "shield"));
 				}

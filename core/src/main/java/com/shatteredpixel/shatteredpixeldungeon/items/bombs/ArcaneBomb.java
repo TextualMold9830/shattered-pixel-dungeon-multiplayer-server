@@ -70,7 +70,7 @@ public class ArcaneBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				if (Dungeon.level.heroFOV[i]) {
+				if (Dungeon.level.fieldOfView[i]) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
 				Char ch = Actor.findChar(i);

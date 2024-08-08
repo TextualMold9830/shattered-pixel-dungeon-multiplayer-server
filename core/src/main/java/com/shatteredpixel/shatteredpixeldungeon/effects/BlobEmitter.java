@@ -60,7 +60,7 @@ public class BlobEmitter extends Emitter {
 			for (int j = blob.area.top; j < blob.area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
 				//TODO: check this
-				if (//cell < Dungeon.level.heroFOV.length
+				if (//cell < Dungeon.level.fieldOfView.length
 						 (Dungeon.visibleforAnyHero(cell) || blob.alwaysVisible)
 						&& map[cell] > 0) {
 					float x = (i + Random.Float(bound.left, bound.right)) * size;

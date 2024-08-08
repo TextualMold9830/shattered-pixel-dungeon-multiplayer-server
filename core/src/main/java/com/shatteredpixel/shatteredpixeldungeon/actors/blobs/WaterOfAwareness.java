@@ -56,7 +56,7 @@ public class WaterOfAwareness extends WellWater {
 				
 				Dungeon.level.discover( i );
 				
-				if (Dungeon.level.heroFOV[i]) {
+				if (Dungeon.level.fieldOfView[i]) {
 					GameScene.discoverTile( i, terr );
 				}
 			}

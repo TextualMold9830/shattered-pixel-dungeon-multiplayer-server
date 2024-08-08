@@ -108,7 +108,7 @@ public class Dagger extends MeleeWeapon {
 		}
 
 		PathFinder.buildDistanceMap(hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), maxDist);
-		if (PathFinder.distance[target] == Integer.MAX_VALUE || !hero.heroFOV[target] || hero.rooted) {
+		if (PathFinder.distance[target] == Integer.MAX_VALUE || !hero.fieldOfView[target] || hero.rooted) {
 			GLog.w(Messages.get(wep, "ability_target_range"));
 			if (hero.rooted) PixelScene.shake( 1, 1f );
 			return;

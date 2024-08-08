@@ -200,7 +200,7 @@ public class Pickaxe extends MeleeWeapon {
 		}
 
 		Char enemy = Actor.findChar(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.heroFOV[target]) {
+		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.fieldOfView[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
 		}

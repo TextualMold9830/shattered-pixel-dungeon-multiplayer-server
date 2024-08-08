@@ -71,7 +71,7 @@ public class PotionOfPurity extends Potion {
 					blob.clear(i);
 				}
 				
-				if (Dungeon.level.heroFOV[i]) {
+				if (Dungeon.level.fieldOfView[i]) {
 					CellEmitter.get( i ).burst( Speck.factory( Speck.DISCOVER ), 2 );
 				}
 				

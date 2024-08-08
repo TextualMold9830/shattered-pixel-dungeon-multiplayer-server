@@ -320,7 +320,7 @@ public class TalismanOfForesight extends Artifact {
 			for (int y = ay; y <= by; y++) {
 				for (int x = ax, p = ax + y * Dungeon.level.width(); x <= bx; x++, p++) {
 
-					if (findOwner().heroFOV[p]
+					if (findOwner().fieldOfView[p]
 							&& Dungeon.level.secret[p]
 							&& Dungeon.level.map[p] != Terrain.SECRET_DOOR) {
 						if (Dungeon.level.traps.get(p) != null && Dungeon.level.traps.get(p).canBeSearched) {

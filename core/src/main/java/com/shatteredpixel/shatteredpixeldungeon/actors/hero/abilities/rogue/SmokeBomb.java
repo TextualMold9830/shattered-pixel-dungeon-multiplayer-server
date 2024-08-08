@@ -94,7 +94,7 @@ public class SmokeBomb extends ArmorAbility {
 			PathFinder.buildDistanceMap(hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), 6);
 
 			if ( PathFinder.distance[target] == Integer.MAX_VALUE ||
-					!hero.heroFOV[target] ||
+					!hero.fieldOfView[target] ||
 					(target != hero.pos && Actor.findChar( target ) != null)) {
 
 				GLog.w( Messages.get(this, "fov") );

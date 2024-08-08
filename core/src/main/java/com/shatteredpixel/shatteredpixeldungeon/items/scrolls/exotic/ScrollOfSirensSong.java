@@ -87,7 +87,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 				Sample.INSTANCE.playDelayed( Assets.Sounds.LULLABY, 0.1f );
 
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-					if (findOwner().heroFOV[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
+					if (findOwner().fieldOfView[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
 						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.id();
 						mob.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 					}

@@ -49,7 +49,7 @@ public class HolyBomb extends Bomb {
 
 		for (Hero hero: Dungeon.heroes) {
 			if (hero == null) continue;
-			if (hero.heroFOV[cell]) {
+			if (hero.fieldOfView[cell]) {
 				new Flare(10, 64).show(hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
 			}
 		}

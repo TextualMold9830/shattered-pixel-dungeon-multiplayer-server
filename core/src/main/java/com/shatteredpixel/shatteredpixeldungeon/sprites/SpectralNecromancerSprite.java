@@ -76,7 +76,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 	public void update() {
 		super.update();
 		if (summoningParticles != null && ((Necromancer) ch).summoningPos != -1){
-			summoningParticles.visible = Dungeon.level.heroFOV[((Necromancer) ch).summoningPos];
+			summoningParticles.visible = Dungeon.level.fieldOfView[((Necromancer) ch).summoningPos];
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 			}
 			summoningParticles = CellEmitter.get(((Necromancer) ch).summoningPos);
 			summoningParticles.pour(ShadowParticle.MISSILE, 0.1f);
-			summoningParticles.visible = Dungeon.level.heroFOV[((Necromancer) ch).summoningPos];
+			summoningParticles.visible = Dungeon.level.fieldOfView[((Necromancer) ch).summoningPos];
 			if (visible || summoningParticles.visible ) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP, 1f, 0.8f );
 		}
 	}

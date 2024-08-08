@@ -88,7 +88,7 @@ public class GrimTrap extends Trap {
 					}
 
 					final int finalDmg = damage;
-					if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.heroFOV[target.pos]) {
+					if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[target.pos]) {
 						((MagicMissile)finalTarget.sprite.parent.recycle(MagicMissile.class)).reset(
 								MagicMissile.SHADOW,
 								DungeonTilemap.tileCenterToWorld(pos),

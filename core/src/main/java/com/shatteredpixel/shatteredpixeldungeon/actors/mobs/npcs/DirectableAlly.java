@@ -123,7 +123,7 @@ public class DirectableAlly extends NPC {
 			if ( enemyInFOV
 					&& attacksAutomatically
 					&& !movingToDefendPos
-					&& (defendingPos == -1 || !owner.heroFOV[defendingPos] || canAttack(enemy))) {
+					&& (defendingPos == -1 || !owner.fieldOfView[defendingPos] || canAttack(enemy))) {
 
 				enemySeen = true;
 
@@ -162,7 +162,7 @@ public class DirectableAlly extends NPC {
 
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			if (enemyInFOV && defendingPos != -1 && owner.heroFOV[defendingPos] && !canAttack(enemy)){
+			if (enemyInFOV && defendingPos != -1 && owner.fieldOfView[defendingPos] && !canAttack(enemy)){
 				target = defendingPos;
 				state = WANDERING;
 				return true;

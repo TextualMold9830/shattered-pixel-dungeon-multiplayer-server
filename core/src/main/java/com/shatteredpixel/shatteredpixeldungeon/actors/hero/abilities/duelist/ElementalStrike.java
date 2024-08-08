@@ -494,7 +494,7 @@ public class ElementalStrike extends ArmorAbility {
 				if (Random.Float() < 0.5f*powerMulti){
 					int oldpos = ch.pos;
 					if (ScrollOfTeleportation.teleportChar(ch)){
-						if (hero.heroFOV[oldpos]) {
+						if (hero.fieldOfView[oldpos]) {
 							CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 						}
 

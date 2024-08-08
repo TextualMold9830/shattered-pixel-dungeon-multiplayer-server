@@ -314,7 +314,7 @@ public abstract class Level implements Bundlable {
 		mapped      = new boolean[length];
 		for(Hero hero: Dungeon.heroes) {
 			if(hero != null) {
-				hero.heroFOV = new boolean[length];
+				hero.fieldOfView = new boolean[length];
 			}
 		}
 		passable	= new boolean[length];

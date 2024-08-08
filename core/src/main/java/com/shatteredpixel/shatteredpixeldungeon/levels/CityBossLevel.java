@@ -317,7 +317,7 @@ public class CityBossLevel extends Level {
 		}
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
-				if (hero.heroFOV[boss.pos]) {
+				if (hero.fieldOfView[boss.pos]) {
 					boss.notice();
 					boss.sprite.alpha( 0 );
 					boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );

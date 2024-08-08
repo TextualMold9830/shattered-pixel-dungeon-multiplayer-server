@@ -471,7 +471,7 @@ public class InterLevelSceneServer {
 
 		} else {
 			level = Dungeon.level;
-			BArray.setFalse(hero.heroFOV);
+			BArray.setFalse(hero.fieldOfView);
 			BArray.setFalse(level.visited);
 			BArray.setFalse(level.mapped);
 			int invPos = hero.pos;

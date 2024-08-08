@@ -61,7 +61,7 @@ public class Whip extends MeleeWeapon {
 		for (Char ch : Actor.chars()){
 			if (ch.alignment == Char.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
-					&& hero.heroFOV[ch.pos]
+					&& hero.fieldOfView[ch.pos]
 					&& hero.canAttack(ch)){
 				targets.add(ch);
 				if (closest == null || Dungeon.level.trueDistance(hero.pos, closest.pos) > Dungeon.level.trueDistance(hero.pos, ch.pos)){

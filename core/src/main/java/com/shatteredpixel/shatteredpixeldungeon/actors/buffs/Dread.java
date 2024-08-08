@@ -59,7 +59,7 @@ public class Dread extends Buff {
 	@Override
 	public boolean act() {
 
-		if (!Dungeon.level.heroFOV[target.pos]
+		if (!Dungeon.level.fieldOfView[target.pos]
 				&& Dungeon.level.distance(target.pos, Dungeon.heroes.pos) >= 6) {
 			if (target instanceof Mob){
 				((Mob) target).EXP /= 2;

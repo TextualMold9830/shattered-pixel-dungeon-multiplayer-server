@@ -358,7 +358,7 @@ public abstract class Char extends Actor {
 		if (enemy == null) return false;
 		boolean visibleFight = false;
 		if (enemy instanceof Hero) {
-			visibleFight = ((Hero) enemy).heroFOV[pos] || ((Hero) enemy).heroFOV[enemy.pos];
+			visibleFight = ((Hero) enemy).fieldOfView[pos] || ((Hero) enemy).fieldOfView[enemy.pos];
 		}
 		if (enemy.isInvulnerable(getClass())) {
 

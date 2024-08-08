@@ -133,7 +133,7 @@ public class Shopkeeper extends NPC {
 						}
 					}
 
-					if (affected && Dungeon.level.heroFOV[i]) {
+					if (affected && Dungeon.level.fieldOfView[i]) {
 						CellEmitter.get( i ).burst( Speck.factory( Speck.DISCOVER ), 2 );
 					}
 

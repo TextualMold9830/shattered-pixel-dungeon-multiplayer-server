@@ -197,7 +197,7 @@ public class Spinner extends Mob {
 			
 			webCoolDown = 10;
 
-			if (Dungeon.level.heroFOV[enemy.pos]){
+			if (Dungeon.level.fieldOfView[enemy.pos]){
 				Dungeon.heroes.interrupt();
 			}
 		}

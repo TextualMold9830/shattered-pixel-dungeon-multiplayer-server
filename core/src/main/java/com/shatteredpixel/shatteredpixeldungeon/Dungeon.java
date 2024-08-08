@@ -957,7 +957,7 @@ public class Dungeon {
 		if (level == null) {
 			return;
 		}
-		level.updateFieldOfView(hero, hero.heroFOV);
+		level.updateFieldOfView(hero, hero.fieldOfView);
 
 		int x = hero.pos % level.width();
 		int y = hero.pos / level.width();
@@ -974,7 +974,7 @@ public class Dungeon {
 		int pos = l + t * level.width();
 
 		for (int i = t; i <= b; i++) {
-			BArray.or(level.visited, hero.heroFOV, pos, width, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, pos, width, level.visited);
 			pos += level.width();
 		}
 
@@ -992,9 +992,9 @@ public class Dungeon {
 					continue;
 				}
 
-				BArray.or(level.visited, hero.heroFOV, m.pos - 1 - level.width(), 3, level.visited);
-				BArray.or(level.visited, hero.heroFOV, m.pos - 1, 3, level.visited);
-				BArray.or(level.visited, hero.heroFOV, m.pos - 1 + level.width(), 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, m.pos - 1 - level.width(), 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, m.pos - 1, 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, m.pos - 1 + level.width(), 3, level.visited);
 				//updates adjacent cells too
 				GameScene.updateFog(m.pos, 2);
 			}
@@ -1002,9 +1002,9 @@ public class Dungeon {
 
 		if (hero.buff(Awareness.class) != null) {
 			for (Heap h : level.heaps.valueList()) {
-				BArray.or(level.visited, hero.heroFOV, h.pos - 1 - level.width(), 3, level.visited);
-				BArray.or(level.visited, hero.heroFOV, h.pos - 1, 3, level.visited);
-				BArray.or(level.visited, hero.heroFOV, h.pos - 1 + level.width(), 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, h.pos - 1 - level.width(), 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, h.pos - 1, 3, level.visited);
+				BArray.or(level.visited, hero.fieldOfView, h.pos - 1 + level.width(), 3, level.visited);
 				GameScene.updateFog(h.pos, 2);
 			}
 		}
@@ -1012,25 +1012,25 @@ public class Dungeon {
 		for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)) {
 			Char ch = (Char) Actor.findById(c.charID);
 			if (ch == null || !ch.isAlive()) continue;
-			BArray.or(level.visited, hero.heroFOV, ch.pos - 1 - level.width(), 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, ch.pos - 1, 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, ch.pos - 1 + level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, ch.pos - 1 - level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, ch.pos - 1, 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, ch.pos - 1 + level.width(), 3, level.visited);
 			GameScene.updateFog(ch.pos, 2);
 		}
 
 		for (TalismanOfForesight.HeapAwareness h : hero.buffs(TalismanOfForesight.HeapAwareness.class)) {
 			if (Dungeon.depth != h.depth || Dungeon.branch != h.branch) continue;
-			BArray.or(level.visited, hero.heroFOV, h.pos - 1 - level.width(), 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, h.pos - 1, 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, h.pos - 1 + level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, h.pos - 1 - level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, h.pos - 1, 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, h.pos - 1 + level.width(), 3, level.visited);
 			GameScene.updateFog(h.pos, 2);
 		}
 
 		for (RevealedArea a : hero.buffs(RevealedArea.class)) {
 			if (Dungeon.depth != a.depth || Dungeon.branch != a.branch) continue;
-			BArray.or(level.visited, hero.heroFOV, a.pos - 1 - level.width(), 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, a.pos - 1, 3, level.visited);
-			BArray.or(level.visited, hero.heroFOV, a.pos - 1 + level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, a.pos - 1 - level.width(), 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, a.pos - 1, 3, level.visited);
+			BArray.or(level.visited, hero.fieldOfView, a.pos - 1 + level.width(), 3, level.visited);
 			GameScene.updateFog(a.pos, 2);
 		}
 
@@ -1054,7 +1054,7 @@ public class Dungeon {
 				pos = l + t * level.width();
 
 				for (int i = t; i <= b; i++) {
-					BArray.or(level.visited, hero.heroFOV, pos, width, level.visited);
+					BArray.or(level.visited, hero.fieldOfView, pos, width, level.visited);
 					pos += level.width();
 				}
 				GameScene.updateFog(ch.pos, dist);

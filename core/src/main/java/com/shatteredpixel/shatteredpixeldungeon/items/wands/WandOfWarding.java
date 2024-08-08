@@ -61,7 +61,7 @@ public class WandOfWarding extends Wand {
 	@Override
 	public int collisionProperties(int target) {
 		if (cursed)                                 return super.collisionProperties(target);
-		else if (!Dungeon.level.heroFOV[target])    return Ballistica.PROJECTILE;
+		else if (!Dungeon.level.fieldOfView[target])    return Ballistica.PROJECTILE;
 		else                                        return Ballistica.STOP_TARGET;
 	}
 

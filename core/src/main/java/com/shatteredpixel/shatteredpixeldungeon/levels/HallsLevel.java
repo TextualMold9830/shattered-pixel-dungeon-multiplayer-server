@@ -217,7 +217,7 @@ public class HallsLevel extends RegularLevel {
 				return;
 			}
 			
-			if (visible = (pos < Dungeon.level.heroFOV.length && Dungeon.visibleforAnyHero(pos))) {
+			if (visible = (pos < Dungeon.level.fieldOfView.length && Dungeon.visibleforAnyHero(pos))) {
 				
 				super.update();
 				

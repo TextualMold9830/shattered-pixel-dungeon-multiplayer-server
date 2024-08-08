@@ -271,7 +271,7 @@ public abstract class Elemental extends Mob {
 			if (targetingPos != -1 && state == HUNTING){
 				//account for bolt hitting walls, in case position suddenly changed
 				targetingPos = new Ballistica( pos, targetingPos, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
-				if (sprite != null && (sprite.visible || Dungeon.level.heroFOV[targetingPos])) {
+				if (sprite != null && (sprite.visible || Dungeon.level.fieldOfView[targetingPos])) {
 					sprite.zap( targetingPos );
 					return false;
 				} else {
@@ -335,7 +335,7 @@ public abstract class Elemental extends Mob {
 
 			} else {
 
-				if (sprite != null && (sprite.visible || Dungeon.level.heroFOV[targetingPos])) {
+				if (sprite != null && (sprite.visible || Dungeon.level.fieldOfView[targetingPos])) {
 					sprite.zap( targetingPos );
 					return false;
 				} else {

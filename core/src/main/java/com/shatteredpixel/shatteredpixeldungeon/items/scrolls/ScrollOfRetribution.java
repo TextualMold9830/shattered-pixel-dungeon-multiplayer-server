@@ -60,7 +60,7 @@ public class ScrollOfRetribution extends Scroll {
 
 		//calculate targets first, in case damaging/blinding a target affects hero vision
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (hero.heroFOV[mob.pos]) {
+			if (hero.fieldOfView[mob.pos]) {
 				targets.add(mob);
 			}
 		}

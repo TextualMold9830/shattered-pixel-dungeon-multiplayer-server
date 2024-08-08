@@ -50,7 +50,7 @@ public class Dazzling extends Weapon.Enchantment {
 					}
 				}
 			}
-			if (Dungeon.level.heroFOV[attacker.pos] || Dungeon.level.heroFOV[defender.pos]){
+			if (Dungeon.level.fieldOfView[attacker.pos] || Dungeon.level.fieldOfView[defender.pos]){
 				Sample.INSTANCE.play( Assets.Sounds.BLAST );
 			}
 		}
