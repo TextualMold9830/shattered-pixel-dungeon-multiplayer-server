@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
@@ -96,7 +97,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		};
 
 		public int blinkDistance(){
-			return blinkRanges[ordinal()][Dungeon.heroes.pointsInTalent(Talent.ASSASSINS_REACH)];
+			return blinkRanges[ordinal()][((Hero)target).pointsInTalent(Talent.ASSASSINS_REACH)];
 		}
 		
 		public boolean canKO(Char defender){
@@ -262,7 +263,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 	
 	@Override
-	public void doAction() {
+	public void doAction(Hero hero) {
 		GameScene.selectCell(attack);
 	}
 	
@@ -272,20 +273,20 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
 			final Char enemy = Actor.findChar( cell );
-			if (enemy == null || Dungeon.heroes.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.visibleforAnyHero(cell) || enemy instanceof Hero){
+			if (enemy == null || target.isCharmedBy(enemy) || enemy instanceof NPC || !target.fieldOfView[cell] || enemy == target){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {
 
 				//just attack them then!
-				if (Dungeon.heroes.canAttack(enemy)){
-					Dungeon.heroes.curAction = new HeroAction.Attack( enemy );
-					Dungeon.heroes.next();
+				if (((Hero)target).canAttack(enemy)){
+					((Hero)target).curAction = new HeroAction.Attack( enemy );
+					target.next();
 					return;
 				}
 				
 				AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 
-				PathFinder.buildDistanceMap(Dungeon.heroes.pos,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance());
+				PathFinder.buildDistanceMap(target.pos,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance());
 				int dest = -1;
 				for (int i : PathFinder.NEIGHBOURS8){
 					//cannot blink into a cell that's occupied or impassable, only over them
@@ -298,33 +299,34 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 						dest = cell+i;
 					//if two cells have the same pathfinder distance, prioritize the one with the closest true distance to the hero
 					} else if (PathFinder.distance[dest] == PathFinder.distance[cell+i]){
-						if (Dungeon.level.trueDistance(Dungeon.heroes.pos, dest) > Dungeon.level.trueDistance(Dungeon.heroes.pos, cell+i)){
+						if (Dungeon.level.trueDistance(target.pos, dest) > Dungeon.level.trueDistance(target.pos, cell+i)){
 							dest = cell+i;
 						}
 					}
 
 				}
 
-				if (dest == -1 || PathFinder.distance[dest] == Integer.MAX_VALUE || Dungeon.heroes.rooted){
+				if (dest == -1 || PathFinder.distance[dest] == Integer.MAX_VALUE || target.rooted){
 					GLog.w(Messages.get(Preparation.class, "out_of_reach"));
-					if (Dungeon.heroes.rooted) PixelScene.shake( 1, 1f );
+					if (target.rooted) PixelScene.shake( 1, 1f );
 					return;
 				}
 				
-				Dungeon.heroes.pos = dest;
-				Dungeon.level.occupyCell(Dungeon.heroes);
+				target.pos = dest;
+				Dungeon.level.occupyCell(target);
+				Hero hero = (Hero) target;
 				//prevents the hero from being interrupted by seeing new enemies
-				Dungeon.observe();
+				Dungeon.observe(hero);
 				GameScene.updateFog();
-				Dungeon.heroes.checkVisibleMobs();
+				hero.checkVisibleMobs();
 				
-				Dungeon.heroes.sprite.place( Dungeon.heroes.pos );
-				Dungeon.heroes.sprite.turnTo( Dungeon.heroes.pos, cell);
-				CellEmitter.get( Dungeon.heroes.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+				hero.sprite.place( hero.pos );
+				hero.sprite.turnTo( hero.pos, cell);
+				CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
-				Dungeon.heroes.curAction = new HeroAction.Attack( enemy );
-				Dungeon.heroes.next();
+				hero.curAction = new HeroAction.Attack( enemy );
+				hero.next();
 			}
 		}
 		
