@@ -53,7 +53,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			RedButton btnEnergize = new RedButton( Messages.get(this, "energize", item.energyVal()) ) {
 				@Override
 				protected void onClick() {
-					energize( item );
+					energize( item, getOwnerHero() );
 					hide();
 				}
 			};

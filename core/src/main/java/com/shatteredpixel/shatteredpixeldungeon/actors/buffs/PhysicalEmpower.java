@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -46,7 +47,7 @@ public class PhysicalEmpower extends Buff {
 
 	@Override
 	public float iconFadePercent() {
-		float max = 1 + Dungeon.heroes.pointsInTalent(Talent.STRENGTHENING_MEAL);
+		float max = 1 + ((Hero) target).pointsInTalent(Talent.STRENGTHENING_MEAL);
 		return Math.max(0, (max-left) / max);
 	}
 

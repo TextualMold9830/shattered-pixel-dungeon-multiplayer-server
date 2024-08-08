@@ -178,6 +178,7 @@ public class Hero extends Char {
 	public int networkID = -1;
 	public String name;
 	public boolean[] heroFOV;
+	public int energy;
 
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
