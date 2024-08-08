@@ -349,8 +349,8 @@ public class Potion extends Item {
 	}
 	
 	@Override
-	public Item identify( boolean byHero ) {
-		super.identify(byHero);
+	public Item identify( boolean byHero, Hero hero ) {
+		super.identify(byHero, hero);
 
 		if (!isKnown()) {
 			setKnown();
