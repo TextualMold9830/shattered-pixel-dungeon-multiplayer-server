@@ -536,13 +536,13 @@ public class Item implements Bundlable {
 		return desc(hero);
 	}
 	public String info(){
-		return Messages.get(this, "desc");
+		return desc();
 	}
 	
 	public String desc(Hero hero) {
-		return Messages.get(this, "desc");
+		return desc();
 	}
-	public String desc(){
+	protected String desc(){
 		return Messages.get(this, "desc");
 	}
 	
