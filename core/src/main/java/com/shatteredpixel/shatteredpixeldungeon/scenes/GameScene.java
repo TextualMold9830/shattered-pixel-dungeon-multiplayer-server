@@ -92,7 +92,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.InventoryPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.LootIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.MenuPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
@@ -190,7 +189,6 @@ public class GameScene extends PixelScene {
 	private Group overFogEffects;
 	private Group healthIndicators;
 
-	private InventoryPane inventory;
 	private static boolean invVisible = true;
 
 	private Toolbar toolbar;
@@ -414,14 +412,7 @@ public class GameScene extends PixelScene {
 		toolbar.camera = uiCamera;
 		add(toolbar);
 
-		if (uiSize == 2) {
-			inventory = new InventoryPane();
-			inventory.camera = uiCamera;
-			inventory.setPos(uiCamera.width - inventory.width(), uiCamera.height - inventory.height());
-			add(inventory);
-
-			toolbar.setRect(0, uiCamera.height - toolbar.height() - inventory.height(), uiCamera.width, toolbar.height());
-		} else {
+		{
 			toolbar.setRect(0, uiCamera.height - toolbar.height(), uiCamera.width, toolbar.height());
 		}
 
@@ -637,7 +628,6 @@ public class GameScene extends PixelScene {
 				}
 				toolbar.visible = toolbar.active = false;
 				status.visible = status.active = false;
-				if (inventory != null) inventory.visible = inventory.active = false;
 			}
 
 			if (!SPDSettings.intro() &&
@@ -647,7 +637,6 @@ public class GameScene extends PixelScene {
 				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
 			}
 
-			if (!invVisible) toggleInvPane();
 			fadeIn();
 
 			//re-show WndResurrect if needed
@@ -735,6 +724,7 @@ public class GameScene extends PixelScene {
 	//this caps the speed of resting for higher refresh rate displays
 	private float notifyDelay = 1 / 60f;
 
+	//todo send it
 	public static boolean updateItemDisplays = false;
 
 	public static boolean tagDisappeared = false;
@@ -747,7 +737,6 @@ public class GameScene extends PixelScene {
 		if (updateItemDisplays) {
 			updateItemDisplays = false;
 			QuickSlotButton.refresh();
-			InventoryPane.refresh();
 			if (ActionIndicator.action instanceof MeleeWeapon.Charger) {
 				//Champion weapon swap uses items, needs refreshing whenever item displays are updated
 				ActionIndicator.refresh();
@@ -862,10 +851,7 @@ public class GameScene extends PixelScene {
 		if (scene == null) return;
 
 		//move the camera center up a bit if we're on full UI and it is taking up lots of space
-		if (scene.inventory != null && scene.inventory.visible
-				&& (uiCamera.width < 460 && uiCamera.height < 300)){
-			Camera.main.setCenterOffset(0, Math.min(300-uiCamera.height, 460-uiCamera.width) / Camera.main.zoom);
-		} else {
+		{
 			Camera.main.setCenterOffset(0, 0);
 		}
 		//Camera.main.panTo(Dungeon.hero.sprite.center(), 5f);
@@ -1015,10 +1001,6 @@ public class GameScene extends PixelScene {
 			};
 			prompt.camera = uiCamera;
 			prompt.setPos( (uiCamera.width - prompt.width()) / 2, uiCamera.height - 60 );
-
-			if (inventory != null && inventory.visible && prompt.right() > inventory.left() - 10){
-				prompt.setPos(inventory.left() - prompt.width() - 10, prompt.top());
-			}
 
 			add( prompt );
 		}
@@ -1174,16 +1156,11 @@ public class GameScene extends PixelScene {
 						scene.status.alpha(2*progress);
 						scene.status.visible = scene.status.active = true;
 						scene.toolbar.visible = scene.toolbar.active = false;
-						if (scene.inventory != null) scene.inventory.visible = scene.inventory.active = false;
 					} else {
 						scene.status.alpha(1f);
 						scene.status.visible = scene.status.active = true;
 						scene.toolbar.alpha((progress - 0.5f)*2);
 						scene.toolbar.visible = scene.toolbar.active = true;
-						if (scene.inventory != null){
-							scene.inventory.visible = scene.inventory.active = true;
-							scene.inventory.alpha((progress - 0.5f)*2);
-						}
 					}
 				}
 			});
@@ -1264,23 +1241,6 @@ public class GameScene extends PixelScene {
 	public static void show( Window wnd ) {
 		if (scene != null) {
 			cancel();
-
-			//If a window is already present (or was just present)
-			// then inherit the offset it had
-			if (scene.inventory != null && scene.inventory.visible){
-				Point offsetToInherit = null;
-				for (Gizmo g : scene.members){
-					if (g instanceof Window) offsetToInherit = ((Window) g).getOffset();
-				}
-				if (lastOffset != null) {
-					offsetToInherit = lastOffset;
-				}
-				if (offsetToInherit != null) {
-					wnd.offset(offsetToInherit);
-					wnd.boundOffsetWithMargin(3);
-				}
-			}
-
 			scene.addToFront(wnd);
 		}
 	}
@@ -1300,31 +1260,11 @@ public class GameScene extends PixelScene {
 
 		if (showingWindow()) return true;
 
-		if (scene.inventory != null && scene.inventory.isSelecting()){
-			return true;
-		}
-
 		return false;
 	}
 
-	public static void toggleInvPane(){
-		if (scene != null && scene.inventory != null){
-			if (scene.inventory.visible){
-				scene.inventory.visible = scene.inventory.active = invVisible = false;
-				scene.toolbar.setPos(scene.toolbar.left(), uiCamera.height-scene.toolbar.height());
-			} else {
-				scene.inventory.visible = scene.inventory.active = invVisible = true;
-				scene.toolbar.setPos(scene.toolbar.left(), scene.inventory.top()-scene.toolbar.height());
-			}
-			layoutTags();
-		}
-	}
-
 	public static void centerNextWndOnInvPane(){
-		if (scene != null && scene.inventory != null && scene.inventory.visible){
-			lastOffset = new Point((int)scene.inventory.centerX() - uiCamera.width/2,
-					(int)scene.inventory.centerY() - uiCamera.height/2);
-		}
+
 	}
 
 	public static void updateFog(){
@@ -1428,12 +1368,7 @@ public class GameScene extends PixelScene {
 		cancel();
 
 		if (scene != null) {
-			//TODO can the inventory pane work in these cases? bad to fallback to mobile window
-			if (scene.inventory != null && scene.inventory.visible && !showingWindow()){
-				listener.setOwner(hero);
-				scene.inventory.setSelector(listener);
-				return null;
-			} else {
+			{
 				WndBag wnd = WndBag.getBag( listener, hero );
 				show(wnd);
 				return wnd;
@@ -1464,7 +1399,6 @@ public class GameScene extends PixelScene {
 	public static void ready() {
 		selectCell( defaultCellListener );
 		QuickSlotButton.cancel();
-		InventoryPane.cancelTargeting();
 		if (scene != null && scene.toolbar != null) scene.toolbar.examining = false;
 		if (tagDisappeared) {
 			tagDisappeared = false;
