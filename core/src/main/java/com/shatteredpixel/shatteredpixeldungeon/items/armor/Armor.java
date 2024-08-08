@@ -72,6 +72,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -396,7 +398,12 @@ public class Armor extends EquipableItem {
 		if (curseInfusionBonus) level += 1 + level/6;
 		return level;
 	}
-	
+
+	@Override
+	public Item upgrade() {
+		return upgrade( false, findOwner() );
+	}
+
 	public Item upgrade( boolean inscribe, Hero hero ) {
 
 		if (inscribe){
