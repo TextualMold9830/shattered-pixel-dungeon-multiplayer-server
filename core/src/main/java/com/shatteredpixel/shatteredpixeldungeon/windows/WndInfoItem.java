@@ -127,6 +127,6 @@ public class WndInfoItem extends Window {
 
 	public WndInfoItem(Item item, Hero hero) {
 		this(item);
-		setOwnerHero(hero);
+		attachToHero(hero);
 	}
 }
