@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
@@ -232,7 +233,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doAction(Hero hero) {
 		freerunTurns = 2*momentumStacks;
 		//cooldown is functionally 10+2*stacks when active effect ends
 		freerunCooldown = 10 + 4*momentumStacks;

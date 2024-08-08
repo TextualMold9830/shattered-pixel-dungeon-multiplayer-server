@@ -121,7 +121,7 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doAction(Hero hero) {
 		
 		Hero hero = Dungeon.heroes;
 		if (hero == null) return;

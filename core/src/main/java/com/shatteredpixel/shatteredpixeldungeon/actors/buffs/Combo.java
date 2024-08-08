@@ -203,7 +203,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doAction(Hero hero) {
 		GameScene.show(new WndCombo(this));
 	}
 
