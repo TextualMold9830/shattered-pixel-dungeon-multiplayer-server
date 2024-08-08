@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -45,11 +46,13 @@ public class HolyBomb extends Bomb {
 	@Override
 	public void explode(int cell) {
 		super.explode(cell);
-		
-		if (Dungeon.visibleforAnyHero(cell)) {
-			new Flare(10, 64).show(Dungeon.heroes.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
+
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			if (hero.heroFOV[cell]) {
+				new Flare(10, 64).show(hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
+			}
 		}
-		
 		ArrayList<Char> affected = new ArrayList<>();
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
