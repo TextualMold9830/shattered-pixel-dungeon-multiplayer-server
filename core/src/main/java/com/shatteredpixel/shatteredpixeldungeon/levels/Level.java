@@ -756,7 +756,7 @@ public abstract class Level implements Bundlable {
 
 	public boolean spawnMob(int disLimit){
 		//TODO: check this
-		PathFinder.buildDistanceMap(Dungeon.heroes.pos, BArray.or(passable, avoid, null));
+		Level.buildDistanceMap(Dungeon.heroes, BArray.or(passable, avoid, null));
 
 		Mob mob = createMob();
 		mob.state = mob.WANDERING;
@@ -1645,5 +1645,18 @@ public abstract class Level implements Bundlable {
 		} while (pos == -1);
 		return pos;
 	};
+
+	public static void buildDistanceMap(Hero[] heroes, boolean[] passable){
+		int[] targets = new int[heroes.length];
+		int j = 0;
+		for (Hero hero: heroes){
+			if (hero == null){
+				continue;
+			}
+			targets[j++] = hero.pos;
+		}
+		targets =  Arrays.copyOfRange(targets, 0, j);
+		PathFinder.buildDistanceMap(targets, passable);
+	}
 
 }

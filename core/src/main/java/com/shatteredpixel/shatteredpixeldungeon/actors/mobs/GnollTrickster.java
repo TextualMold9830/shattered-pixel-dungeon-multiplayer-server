@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GnollTricksterSprite;
@@ -135,7 +136,7 @@ public class GnollTrickster extends Gnoll {
 			//of two potential wander positions, picks the one closest to the hero
 			int pos1 = super.randomDestination();
 			int pos2 = super.randomDestination();
-			PathFinder.buildDistanceMap(Dungeon.heroes.pos, Dungeon.level.passable);
+			Level.buildDistanceMap(Dungeon.heroes, Dungeon.level.passable);
 			if (PathFinder.distance[pos2] < PathFinder.distance[pos1]){
 				return pos2;
 			} else {

@@ -387,6 +387,10 @@ public class PathFinder {
 		int head = 0;
 		int tail = 0;
 
+		if (to.length == 0){
+			return;
+		}
+
 		// Add to queue
 		for (int cel : to) {
 			queue[tail++] = cel;

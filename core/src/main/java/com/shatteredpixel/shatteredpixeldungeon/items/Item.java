@@ -56,6 +56,8 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
+
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -478,6 +480,7 @@ public class Item implements Bundlable {
 		return identify(false, null);
 	}
 
+	@Contract("true,null->fail")
 	public Item identify( boolean byHero, Hero hero ) {
 
 		if (byHero && hero != null && hero.isAlive()){
