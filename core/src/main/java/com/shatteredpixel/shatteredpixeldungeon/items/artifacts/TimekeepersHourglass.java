@@ -116,17 +116,17 @@ public class TimekeepersHourglass extends Artifact {
 									Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 
 									activeBuff = new timeStasis();
-									Talent.onArtifactUsed(Dungeon.heroes);
-									activeBuff.attachTo(Dungeon.heroes);
+									Talent.onArtifactUsed(getOwnerHero());
+									activeBuff.attachTo(getOwnerHero());
 								} else if (index == 1) {
 									GLog.i( Messages.get(TimekeepersHourglass.class, "onfreeze") );
 									GameScene.flash(0x80FFFFFF);
 									Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 
-									Invisibility.dispel(Dungeon.heroes);
+									Invisibility.dispel(getOwnerHero());
 									activeBuff = new timeFreeze();
-									Talent.onArtifactUsed(Dungeon.heroes);
-									activeBuff.attachTo(Dungeon.heroes);
+									Talent.onArtifactUsed(getOwnerHero());
+									activeBuff.attachTo(getOwnerHero());
 									charge--;
 									((timeFreeze)activeBuff).processTime(0f);
 								}
@@ -187,10 +187,10 @@ public class TimekeepersHourglass extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 
-		if (isEquipped( Dungeon.heroes)){
+		if (isEquipped( hero)){
 			if (!cursed) {
 				if (level() < levelCap )
 					desc += "\n\n" + Messages.get(this, "desc_hint");
