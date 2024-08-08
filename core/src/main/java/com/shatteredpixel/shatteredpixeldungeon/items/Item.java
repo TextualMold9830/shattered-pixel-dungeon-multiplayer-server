@@ -618,8 +618,7 @@ public class Item implements Bundlable {
 		
 		int level = bundle.getInt( LEVEL );
 		if (level > 0) {
-			this.level(level);
-			//upgrade( level );
+			upgrade( level );
 		} else if (level < 0) {
 			degrade( -level );
 		}
