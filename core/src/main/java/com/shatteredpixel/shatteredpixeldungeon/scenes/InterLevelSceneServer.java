@@ -51,7 +51,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterLevelSceneServer extends Scene {
+public class InterLevelSceneServer {
 	
 	//slow fade on entering a new region
 	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total
@@ -88,7 +88,7 @@ public class InterLevelSceneServer extends Scene {
 
 	public static int lastRegion = -1;
 
-	public void create() {
+	public void create(Hero hero) {
 		super.create();
 		
 		String loadingAsset;
@@ -225,8 +225,7 @@ public class InterLevelSceneServer extends Scene {
 								restore();
 								break;
 							case RESURRECT:
-								//FIXME
-								resurrect();
+								resurrect(hero);
 								break;
 							case RETURN:
 								returnTo();
