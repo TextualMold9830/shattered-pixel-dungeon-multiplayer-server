@@ -575,7 +575,7 @@ public class GameScene extends PixelScene {
 						StatusPane.talentBlink = 10f;
 						WndHero.lastIdx = 1;
 					}
-
+				}
 				}
 				switch (Dungeon.level.feeling) {
 					case CHASM:
@@ -606,11 +606,12 @@ public class GameScene extends PixelScene {
 						GLog.w(Messages.get(ChampionEnemy.class, "warn"));
 					}
 				}
-
+			for (Hero hero: Dungeon.heroes) {
+				if (hero == null) continue;
 				if (hero.buff(AscensionChallenge.class) != null) {
 					hero.buff(AscensionChallenge.class).saySwitch();
 				}
-
+			}
 				DimensionalSundial.sundialWarned = true;
 				if (DimensionalSundial.spawnMultiplierAtCurrentTime() > 1) {
 					GLog.w(Messages.get(DimensionalSundial.class, "warning"));
@@ -621,7 +622,6 @@ public class GameScene extends PixelScene {
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
 
 
-			}
 
 			//Tutorial
 			if (SPDSettings.intro()) {
