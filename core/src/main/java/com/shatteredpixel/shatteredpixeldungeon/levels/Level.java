@@ -1264,8 +1264,9 @@ public abstract class Level implements Bundlable {
 		}
 	}
 
+	//Do not use this variables in other methods than updateFieldOfView
+	//less memory allocation
 	private static boolean[] heroMindFov;
-
 	private static boolean[] modifiableBlocking;
 
 	public void updateFieldOfView( Char c, boolean[] fieldOfView ) {
