@@ -140,7 +140,7 @@ public class ArmoredStatue extends Statue {
 
 	@Override
 	public void die(@NotNull DamageCause cause ) {
-		armor.identify(false);
+		armor.identify(null);
 		Dungeon.level.drop( armor, pos ).sprite.drop();
 		super.die( cause );
 	}
