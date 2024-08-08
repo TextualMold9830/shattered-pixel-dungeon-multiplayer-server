@@ -111,7 +111,7 @@ public class SpiritHawk extends ArmorAbility {
 				ScrollOfTeleportation.appear(ally, ally.pos);
 				Dungeon.observe();
 
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 				hero.spendAndNext(Actor.TICK);
 
 			} else {

@@ -86,7 +86,7 @@ public class Feint extends ArmorAbility {
 			return;
 		}
 
-		if (Dungeon.heroes.rooted){
+		if (hero){
 			PixelScene.shake( 1, 1f );
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
@@ -107,7 +107,7 @@ public class Feint extends ArmorAbility {
 				}
 				hero.pos = target;
 				Dungeon.level.occupyCell(hero);
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 				hero.spendAndNext(1f);
 			}
 		});

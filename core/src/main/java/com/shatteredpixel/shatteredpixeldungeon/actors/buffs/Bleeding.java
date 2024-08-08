@@ -117,6 +117,7 @@ public class Bleeding extends Buff {
 				}
 
 				if (source == Sickle.HarvestBleedTracker.class && !target.isAlive()){
+					//FIXME
 					MeleeWeapon.onAbilityKill(Dungeon.heroes, target);
 				}
 				

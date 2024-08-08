@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Foresight extends FlavourBuff {
@@ -46,7 +47,7 @@ public class Foresight extends FlavourBuff {
 			//this way we get a nice VFX sweep on initial activation
 			if (target instanceof Hero){
 				Dungeon.level.mapped[target.pos] = false;
-				Dungeon.heroes.search(false);
+				((Hero) target).search(false);
 			}
 			return true;
 		} else {

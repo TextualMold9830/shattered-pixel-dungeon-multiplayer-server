@@ -213,6 +213,15 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		PARRY  (6, 0xFFFF00),
 		CRUSH  (8, 0xFFCC00),
 		FURY   (10, 0xFF0000);
+		private Hero hero;
+
+		ComboMove(Hero hero) {
+			this.hero = hero;
+		}
+
+		public Hero getHero() {
+			return hero;
+		}
 
 		public int comboReq, tintColor;
 
@@ -226,33 +235,34 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		public String desc(int count){
+			Hero hero = getHero();
 			switch (this){
 				case CLOBBER: default:
-					if (count >= 7 && Dungeon.heroes.pointsInTalent(Talent.ENHANCED_COMBO) >= 1){
+					if (count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1){
 						return Messages.get(this, name() + ".empower_desc");
 					} else {
 						return Messages.get(this, name() + ".desc");
 					}
 				case SLAM:
-					if (count >= 3 && Dungeon.heroes.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
+					if (count >= 3 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
 						return Messages.get(this, name() + ".empower_desc", count/3, count*20);
 					} else {
 						return Messages.get(this, name() + ".desc", count*20);
 					}
 				case PARRY:
-					if (count >= 9 && Dungeon.heroes.pointsInTalent(Talent.ENHANCED_COMBO) >= 2){
+					if (count >= 9 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 2){
 						return Messages.get(this, name() + ".empower_desc");
 					} else {
 						return Messages.get(this, name() + ".desc");
 					}
 				case CRUSH:
-					if (count >= 3 && Dungeon.heroes.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
+					if (count >= 3 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
 						return Messages.get(this, name() + ".empower_desc", count/3, count*25);
 					} else {
 						return Messages.get(this,  name() + ".desc", count*25);
 					}
 				case FURY:
-					if (count >= 3 && Dungeon.heroes.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
+					if (count >= 3 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 3){
 						return Messages.get(this, name() + ".empower_desc", count/3);
 					} else {
 						return Messages.get(this,  name() + ".desc");
@@ -289,10 +299,10 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		if (move == ComboMove.PARRY){
 			parryUsed = true;
 			comboTime = 5f;
-			Invisibility.dispel();
+			Invisibility.dispel(target);
 			Buff.affect(target, ParryTracker.class, Actor.TICK);
 			((Hero)target).spendAndNext(Actor.TICK);
-			Dungeon.heroes.busy();
+			((Hero)target).busy();
 		} else {
 			moveBeingUsed = move;
 			GameScene.selectCell(listener);
@@ -414,7 +424,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							if (!ch.isAlive()) {
 								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null) {
 									BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
-									int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
+									int shieldAmt = Math.round(shield.maxShield(hero) * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 									shield.supercharge(shieldAmt);
 									hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 								}
@@ -428,7 +438,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			}
 		}
 
-		Invisibility.dispel();
+		Invisibility.dispel(hero);
 
 		//Post-attack behaviour
 		switch(moveBeingUsed){
@@ -471,7 +481,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		if (!enemy.isAlive() || (!wasAlly && enemy.alignment == target.alignment)) {
 			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null){
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
-				int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
+				int shieldAmt = Math.round(shield.maxShield(hero) * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 				shield.supercharge(shieldAmt);
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 			}
@@ -501,11 +511,11 @@ public class Combo extends Buff implements ActionIndicator.Action {
 						final int leapPos = c.path.get(c.dist-1);
 						if (!Dungeon.level.passable[leapPos] && !(target.flying && Dungeon.level.avoid[leapPos])){
 							GLog.w(Messages.get(Combo.class, "bad_target"));
-						} else if (Dungeon.heroes.rooted) {
+						} else if (getOwner().rooted) {
 							PixelScene.shake( 1, 1f );
 							GLog.w(Messages.get(Combo.class, "bad_target"));
 						} else {
-							Dungeon.heroes.busy();
+							getOwner().busy();
 							target.sprite.jump(target.pos, leapPos, new Callback() {
 								@Override
 								public void call() {
@@ -528,7 +538,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				}
 
 			} else {
-				Dungeon.heroes.busy();
+				getOwner().busy();
 				target.sprite.attack(cell, new Callback() {
 					@Override
 					public void call() {

@@ -118,7 +118,7 @@ public class HeroicLeap extends ArmorAbility {
 					WandOfBlastWave.BlastWave.blast(dest);
 					PixelScene.shake(2, 0.5f);
 
-					Invisibility.dispel();
+					Invisibility.dispel(hero);
 					hero.spendAndNext(Actor.TICK);
 
 					if (hero.buff(DoubleJumpTracker.class) != null){

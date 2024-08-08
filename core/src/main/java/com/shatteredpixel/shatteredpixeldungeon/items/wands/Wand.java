@@ -453,8 +453,11 @@ public abstract class Wand extends Item {
 
 			Buff.prolong(Dungeon.heroes, Talent.LingeringMagicTracker.class, 5f);
 		}
-
-		Invisibility.dispel();
+		//TODO: might want to move this somewhere
+		Hero owner = findOwner();
+		if (owner != null) {
+			Invisibility.dispel(owner);
+		}
 		updateQuickslot();
 
 		curUser.spendAndNext( TIME_TO_ZAP );
@@ -646,9 +649,9 @@ public abstract class Wand extends Item {
 						//regular. If hero owns wand but it isn't in belongings it must be in the staff
 						if (curUser.heroClass == HeroClass.MAGE && !curUser.belongings.contains(curWand)){
 							//grants 3/5 shielding
-							int shieldToGive = 1 + 2 * Dungeon.heroes.pointsInTalent(Talent.BACKUP_BARRIER);
-							Buff.affect(Dungeon.heroes, Barrier.class).setShield(shieldToGive);
-							Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+							int shieldToGive = 1 + 2 * getOwner().pointsInTalent(Talent.BACKUP_BARRIER);
+							Buff.affect(getOwner(), Barrier.class).setShield(shieldToGive);
+							getOwner().sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 
 						//metamorphed. Triggers if wand is highest level hero has
 						} else if (curUser.heroClass != HeroClass.MAGE) {
@@ -660,9 +663,9 @@ public abstract class Wand extends Item {
 							}
 							if (highest){
 								//grants 3/5 shielding
-								int shieldToGive = 1 + 2 * Dungeon.heroes.pointsInTalent(Talent.BACKUP_BARRIER);
-								Buff.affect(Dungeon.heroes, Barrier.class).setShield(shieldToGive);
-								Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+								int shieldToGive = 1 + 2 * getOwner().pointsInTalent(Talent.BACKUP_BARRIER);
+								Buff.affect(getOwner(), Barrier.class).setShield(shieldToGive);
+								getOwner().sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 							}
 						}
 					}

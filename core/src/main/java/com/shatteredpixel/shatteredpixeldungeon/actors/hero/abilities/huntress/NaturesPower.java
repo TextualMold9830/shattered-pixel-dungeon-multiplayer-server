@@ -52,7 +52,7 @@ public class NaturesPower extends ArmorAbility {
 
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
-		Invisibility.dispel();
+		Invisibility.dispel(hero);
 		hero.spendAndNext(Actor.TICK);
 
 	}

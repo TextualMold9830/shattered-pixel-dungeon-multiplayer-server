@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
 
@@ -69,7 +70,7 @@ public class Charm extends FlavourBuff {
 
 	public void recover(Object src) {
 		if (ignoreHeroAllies && src instanceof Char){
-			if (src != Dungeon.heroes && ((Char) src).alignment == Char.Alignment.ALLY){
+			if (!(src instanceof Hero) && ((Char) src).alignment == Char.Alignment.ALLY){
 				return;
 			}
 		}

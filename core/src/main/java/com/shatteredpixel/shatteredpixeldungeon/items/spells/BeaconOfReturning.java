@@ -165,7 +165,7 @@ public class BeaconOfReturning extends Spell {
 			}
 
 			Level.beforeTransition();
-			Invisibility.dispel();
+			Invisibility.dispel(hero);
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
 			InterLevelSceneServer.returnDepth = returnDepth;
 			InterLevelSceneServer.returnBranch = returnBranch;

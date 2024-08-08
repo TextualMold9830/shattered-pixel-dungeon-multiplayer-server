@@ -80,11 +80,10 @@ public class Invisibility extends FlavourBuff {
 		if (on) target.sprite.add( CharSprite.State.INVISIBLE );
 		else if (target.invisible == 0) target.sprite.remove( CharSprite.State.INVISIBLE );
 	}
-
+	@Deprecated
 	public static void dispel() {
-		if (Dungeon.heroes == null) return;
-		//TODO: check this
-		dispel();
+		//if (hero != null) return;
+		//dispel();
 	}
 
 	public static void dispel(Char ch){

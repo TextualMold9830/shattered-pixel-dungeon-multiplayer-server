@@ -67,7 +67,8 @@ public abstract class InventoryStone extends Runestone {
 		curUser.sprite.operate(curUser.pos);
 
 		Sample.INSTANCE.play( Assets.Sounds.READ );
-		Invisibility.dispel();
+		//TODO: I belive this is called somewhere else
+		//Invisibility.dispel()
 	}
 
 	private String inventoryTitle(){

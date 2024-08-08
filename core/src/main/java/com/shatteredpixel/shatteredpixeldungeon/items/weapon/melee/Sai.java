@@ -114,7 +114,7 @@ public class Sai extends MeleeWeapon {
 					wep.onAbilityKill(hero, enemy);
 				}
 
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 				hero.spendAndNext(hero.attackDelay());
 				if (recentHits >= 2 && hit){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);

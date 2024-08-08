@@ -128,7 +128,7 @@ public class Pickaxe extends MeleeWeapon {
 							GameScene.updateMap( pos );
 							
 							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.heroes)) {
+							if (gold.doPickUp(hero)) {
 								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", gold.name())) );
 							} else {
 								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
@@ -178,8 +178,8 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
-	public String defaultAction() {
-		if (Dungeon.heroes.heroClass == HeroClass.DUELIST && isEquipped(Dungeon.heroes)){
+	public String defaultAction(Hero hero) {
+		if (hero.heroClass == HeroClass.DUELIST && isEquipped(hero)){
 			return AC_ABILITY;
 		} else if (Blacksmith.Quest.oldMiningQuest()) {
 			return AC_MINE;
@@ -200,7 +200,7 @@ public class Pickaxe extends MeleeWeapon {
 		}
 
 		Char enemy = Actor.findChar(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
 		}
@@ -236,7 +236,7 @@ public class Pickaxe extends MeleeWeapon {
 					}
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 				hero.spendAndNext(hero.attackDelay());
 				afterAbilityUsed(hero);
 			}
@@ -244,9 +244,9 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo() {
+	public String abilityInfo(Hero hero) {
 		int dmgBoost = 8 + 2*buffedLvl();
-		return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+		return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 	}
 
 	private static final String BLOODSTAINED = "bloodStained";

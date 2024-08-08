@@ -144,7 +144,7 @@ public class Shockwave extends ArmorAbility {
 							}
 						}
 
-						Invisibility.dispel();
+						Invisibility.dispel(hero);
 						hero.spendAndNext(Actor.TICK);
 
 					}

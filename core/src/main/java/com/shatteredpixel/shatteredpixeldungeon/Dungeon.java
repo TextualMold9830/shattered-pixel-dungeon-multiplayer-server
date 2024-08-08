@@ -1244,7 +1244,7 @@ public class Dungeon {
 		int count = 10;
 		int pos;
 		do {
-			pos = Dungeon.level.randomRespawnCell();
+			pos = Dungeon.level.randomRespawnCell(Actor.findChar(startPos));
 			if (count-- <= 0) {
 				break;
 			}

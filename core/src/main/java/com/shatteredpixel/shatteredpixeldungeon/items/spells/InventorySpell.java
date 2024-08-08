@@ -88,7 +88,7 @@ public abstract class InventorySpell extends Spell {
 				(curUser.sprite).operate( curUser.pos );
 				
 				Sample.INSTANCE.play( Assets.Sounds.READ );
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 
 				if (Random.Float() < ((Spell)curItem).talentChance){
 					Talent.onScrollUsed(curUser, curUser.pos, ((Spell)curItem).talentFactor);

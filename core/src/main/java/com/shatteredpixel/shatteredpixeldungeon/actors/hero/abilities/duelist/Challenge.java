@@ -90,7 +90,7 @@ public class Challenge extends ArmorAbility {
 		}
 
 		Char targetCh = Actor.findChar(target);
-		if (targetCh == null || !Dungeon.level.heroFOV[target]){
+		if (targetCh == null || !hero.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}
@@ -150,15 +150,15 @@ public class Challenge extends ArmorAbility {
 		}
 
 		if (blinkpos != hero.pos){
-			Dungeon.heroes.pos = blinkpos;
-			Dungeon.level.occupyCell(Dungeon.heroes);
+			hero.pos = blinkpos;
+			Dungeon.level.occupyCell(hero);
 			//prevents the hero from being interrupted by seeing new enemies
 			Dungeon.observe();
 			GameScene.updateFog();
-			Dungeon.heroes.checkVisibleMobs();
+			hero.checkVisibleMobs();
 
-			Dungeon.heroes.sprite.place( Dungeon.heroes.pos );
-			CellEmitter.get( Dungeon.heroes.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+			hero.sprite.place( hero.pos );
+			CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 			Sample.INSTANCE.play( Assets.Sounds.PUFF );
 		}
 
@@ -182,7 +182,7 @@ public class Challenge extends ArmorAbility {
 
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();
-		Invisibility.dispel();
+		Invisibility.dispel(hero);
 		hero.sprite.zap(target);
 
 		hero.next();
@@ -253,7 +253,7 @@ public class Challenge extends ArmorAbility {
 		@Override
 		public void detach() {
 			super.detach();
-			if (target != Dungeon.heroes){
+			if (!(target instanceof Hero)){
 				if (!target.isAlive() || target.alignment == Dungeon.heroes.alignment){
 					Sample.INSTANCE.play(Assets.Sounds.BOSS);
 

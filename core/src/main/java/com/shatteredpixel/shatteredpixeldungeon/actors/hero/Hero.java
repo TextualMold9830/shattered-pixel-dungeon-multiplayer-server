@@ -459,7 +459,7 @@ public class Hero extends Char {
 		//TODO improve this!
 		belongings.thrownWeapon = wep;
 		boolean hit = attack( enemy );
-		Invisibility.dispel();
+		Invisibility.dispel(this);
 		belongings.thrownWeapon = null;
 
 		if (hit && subClass == HeroSubClass.GLADIATOR && wasEnemy){
@@ -2121,7 +2121,7 @@ public class Hero extends Char {
 
 		boolean hit = attack( enemy );
 		
-		Invisibility.dispel();
+		Invisibility.dispel(this);
 		spend( attackDelay() );
 
 		if (hit && subClass == HeroSubClass.GLADIATOR && wasEnemy){

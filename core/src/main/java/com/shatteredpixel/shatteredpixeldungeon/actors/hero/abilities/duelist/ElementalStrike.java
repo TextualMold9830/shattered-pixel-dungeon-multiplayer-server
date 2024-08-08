@@ -214,7 +214,7 @@ public class ElementalStrike extends ArmorAbility {
 
 				perCharEffect(cone, hero, enemy, finalEnchantment);
 
-				Invisibility.dispel();
+				Invisibility.dispel(hero);
 				hero.spendAndNext(hero.attackDelay());
 			}
 		});
@@ -239,7 +239,7 @@ public class ElementalStrike extends ArmorAbility {
 			Buff.affect(hero, DirectedPowerTracker.class, 0f).enchBoost = enchBoost;
 		}
 
-		float powerMulti = 1f + 0.30f*Dungeon.heroes.pointsInTalent(Talent.STRIKING_FORCE);
+		float powerMulti = 1f + 0.30f*hero.pointsInTalent(Talent.STRIKING_FORCE);
 
 		//*** Kinetic ***
 		if (ench instanceof Kinetic){
@@ -494,7 +494,7 @@ public class ElementalStrike extends ArmorAbility {
 				if (Random.Float() < 0.5f*powerMulti){
 					int oldpos = ch.pos;
 					if (ScrollOfTeleportation.teleportChar(ch)){
-						if (Dungeon.level.heroFOV[oldpos]) {
+						if (hero.heroFOV[oldpos]) {
 							CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 						}
 

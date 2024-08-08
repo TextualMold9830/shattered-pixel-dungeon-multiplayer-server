@@ -103,7 +103,7 @@ public class WarpBeacon extends ArmorAbility {
 						float chargeNeeded = chargeUse(hero);
 
 						if (tracker.depth != Dungeon.depth){
-							chargeNeeded *= 1.833f - 0.333f*Dungeon.heroes.pointsInTalent(Talent.LONGRANGE_WARP);
+							chargeNeeded *= 1.833f - 0.333f * hero.pointsInTalent(Talent.LONGRANGE_WARP);
 						}
 
 						if (armor.charge < chargeNeeded){
@@ -162,7 +162,7 @@ public class WarpBeacon extends ArmorAbility {
 								ScrollOfTeleportation.appear(hero, tracker.pos);
 							}
 
-							Invisibility.dispel();
+							Invisibility.dispel(hero);
 							Dungeon.observe();
 							GameScene.updateFog();
 							hero.checkVisibleMobs();
@@ -177,7 +177,7 @@ public class WarpBeacon extends ArmorAbility {
 
 							//transition before dispel, to cancel out trap effects
 							Level.beforeTransition();
-							Invisibility.dispel();
+							Invisibility.dispel(hero);
 							InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
 							InterLevelSceneServer.returnDepth = tracker.depth;
 							InterLevelSceneServer.returnBranch = tracker.branch;
@@ -218,7 +218,7 @@ public class WarpBeacon extends ArmorAbility {
 
 			hero.sprite.operate(target);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
-			Invisibility.dispel();
+			Invisibility.dispel(hero);
 			hero.spendAndNext(Actor.TICK);
 		}
 	}

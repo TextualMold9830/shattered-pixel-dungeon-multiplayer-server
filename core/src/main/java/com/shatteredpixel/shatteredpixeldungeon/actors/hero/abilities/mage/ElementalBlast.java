@@ -425,7 +425,7 @@ public class ElementalBlast extends ArmorAbility {
 		);
 
 		hero.sprite.operate( hero.pos );
-		Invisibility.dispel();
+		Invisibility.dispel(hero);
 		hero.busy();
 
 		armor.charge -= chargeUse(hero);

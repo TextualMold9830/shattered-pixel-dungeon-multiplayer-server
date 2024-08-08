@@ -45,7 +45,11 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Signal;
 
 public class CellSelector extends ScrollArea {
-	public Hero owner;
+	private Hero owner;
+
+	public Hero getOwner() {
+		return owner;
+	}
 
 	public Listener listener = null;
 	
@@ -519,7 +523,13 @@ public class CellSelector extends ScrollArea {
 	}
 	
 	public static abstract class Listener {
-		public abstract void onSelect( Integer cell );
+		private Hero owner;
+
+		public Hero getOwner() {
+			return owner;
+		}
+
+		public abstract void onSelect(Integer cell );
 
 		public void onRightClick( Integer cell ){} //do nothing by default
 
