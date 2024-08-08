@@ -151,21 +151,21 @@ public class Mimic extends Mob {
 
 	@Override
 	public boolean interact(Char c) {
-		if (alignment != Alignment.NEUTRAL || c != Dungeon.heroes){
+		if (alignment != Alignment.NEUTRAL || !(c instanceof Hero)){
 			return super.interact(c);
 		}
 		stopHiding();
-
-		Dungeon.heroes.busy();
-		Dungeon.heroes.sprite.operate(pos);
-		if (Dungeon.heroes.invisible <= 0
-				&& Dungeon.heroes.buff(Swiftthistle.TimeBubble.class) == null
-				&& Dungeon.heroes.buff(TimekeepersHourglass.timeFreeze.class) == null){
-			return doAttack(Dungeon.heroes);
+		Hero hero = (Hero) c;
+		hero.busy();
+		hero.sprite.operate(pos);
+		if (hero.invisible <= 0
+				&& hero.buff(Swiftthistle.TimeBubble.class) == null
+				&& hero.buff(TimekeepersHourglass.timeFreeze.class) == null){
+			return doAttack(hero);
 		} else {
 			sprite.idle();
 			alignment = Alignment.ENEMY;
-			Dungeon.heroes.spendAndNext(1f);
+			hero.spendAndNext(1f);
 			return true;
 		}
 	}
