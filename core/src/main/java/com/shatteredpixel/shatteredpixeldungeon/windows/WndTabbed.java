@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -48,6 +49,26 @@ public class WndTabbed extends Window {
 	
 	public WndTabbed() {
 		super( 0, 0, Chrome.get( Chrome.Type.TAB_SET ) );
+
+		KeyEvent.addKeyListener(tabListener = new Signal.Listener<KeyEvent>() {
+			@Override
+			public boolean onSignal(KeyEvent keyEvent) {
+
+				if (!keyEvent.pressed && KeyBindings.getActionForKey(keyEvent) == SPDAction.CYCLE){
+					int idx = tabs.indexOf(selected);
+					idx++;
+					if (idx >= tabs.size()) idx = 0;
+					select(idx);
+
+					return true;
+				}
+
+				return false;
+			}
+		});
+	}
+	public WndTabbed(Hero hero) {
+		super( 0, 0, Chrome.get( Chrome.Type.TAB_SET ), hero );
 
 		KeyEvent.addKeyListener(tabListener = new Signal.Listener<KeyEvent>() {
 			@Override

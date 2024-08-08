@@ -85,6 +85,57 @@ public class WndBag extends WndTabbed {
 	public WndBag( Bag bag ) {
 		this(bag, null);
 	}
+	public WndBag( Bag bag, ItemSelector selector, Hero hero ) {
+
+		super(hero);
+
+		if( INSTANCE != null ){
+			INSTANCE.hide();
+		}
+		INSTANCE = this;
+
+		this.selector = selector;
+
+		lastBag = bag;
+
+		slotWidth = PixelScene.landscape() ? SLOT_WIDTH_L : SLOT_WIDTH_P;
+		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
+
+		nCols = PixelScene.landscape() ? COLS_L : COLS_P;
+		nRows = (int)Math.ceil(25/(float)nCols); //we expect to lay out 25 slots in all cases
+
+		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
+		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
+
+		if (PixelScene.landscape()){
+			while (slotHeight >= 24 && (windowHeight + 20 + chrome.marginTop()) > PixelScene.uiCamera.height){
+				slotHeight--;
+				windowHeight -= nRows;
+			}
+		} else {
+			while (slotWidth >= 26 && (windowWidth + chrome.marginHor()) > PixelScene.uiCamera.width){
+				slotWidth--;
+				windowWidth -= nCols;
+			}
+		}
+
+		placeTitle( bag, windowWidth );
+
+		placeItems( bag );
+
+		resize( windowWidth, windowHeight );
+
+		int i = 1;
+		for (Bag b : getOwnerHero().belongings.getBags()) {
+			if (b != null) {
+				BagTab tab = new BagTab( b, i++ );
+				add( tab );
+				tab.select( b == bag );
+			}
+		}
+
+		layoutTabs();
+	}
 
 	public WndBag( Bag bag, ItemSelector selector ) {
 		

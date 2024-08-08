@@ -60,9 +60,9 @@ public class WndHero extends WndTabbed {
 
 	public static int lastIdx = 0;
 
-	public WndHero() {
+	public WndHero(Hero hero) {
 		
-		super();
+		super(hero);
 		
 		resize( WIDTH, HEIGHT );
 		
@@ -277,7 +277,7 @@ public class WndHero extends WndTabbed {
 		
 		private void setupList() {
 			Component content = buffList.content();
-			for (Buff buff : Dungeon.heroes.buffs()) {
+			for (Buff buff : getOwnerHero().buffs()) {
 				if (buff.icon() != BuffIndicator.NONE) {
 					BuffSlot slot = new BuffSlot(buff);
 					slot.setRect(0, pos, WIDTH, slot.icon.height());

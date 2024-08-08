@@ -88,7 +88,7 @@ public class Bag extends Item implements Iterable<Item> {
 		if (action.equals( AC_OPEN ) && !items.isEmpty()) {
 			assert DeviceCompat.isDebug();
 			//GameScene.show( new WndQuickBag( this, hero ) );
-			GameScene.show( new WndBag( this, hero ) );
+			GameScene.show( new WndBag( this,  null, hero ) );
 		}
 	}
 	
