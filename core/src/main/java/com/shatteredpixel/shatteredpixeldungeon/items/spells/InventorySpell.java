@@ -37,7 +37,7 @@ public abstract class InventorySpell extends Spell {
 	
 	@Override
 	protected void onCast(Hero hero) {
-		GameScene.selectItem( itemSelector );
+		GameScene.selectItem( itemSelector, hero );
 	}
 
 	private String inventoryTitle(){
@@ -50,7 +50,7 @@ public abstract class InventorySpell extends Spell {
 		return true;
 	}
 	
-	protected abstract void onItemSelected( Item item );
+	protected abstract void onItemSelected( Item item, Hero hero );
 	
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
@@ -70,7 +70,7 @@ public abstract class InventorySpell extends Spell {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -82,7 +82,7 @@ public abstract class InventorySpell extends Spell {
 
 				curItem = detach(curUser.belongings.backpack);
 				
-				((InventorySpell)curItem).onItemSelected( item );
+				((InventorySpell)curItem).onItemSelected( item, hero );
 				curUser.spend( 1f );
 				curUser.busy();
 				(curUser.sprite).operate( curUser.pos );

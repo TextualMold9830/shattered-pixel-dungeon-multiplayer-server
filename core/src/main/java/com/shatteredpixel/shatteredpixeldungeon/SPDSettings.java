@@ -37,10 +37,11 @@ public class SPDSettings extends GameSettings {
 	// Multiplayer
 	public static final String KEY_KILL_ON_DISCONNECT = "kill_on_disconnect";
 	public static boolean killOnDisconnect = false;
-	public static void KillOnDisconnect(boolean killOnDisconnect){
+	public static void killOnDisconnect(boolean killOnDisconnect){
+		SPDSettings.killOnDisconnect = killOnDisconnect;
 		put(KEY_KILL_ON_DISCONNECT, killOnDisconnect);
 	}
-	public static boolean KillOnDisconnect(){
+	public static boolean killOnDisconnect(){
 		return getBoolean(KEY_KILL_ON_DISCONNECT, false);
 	}
 	public static String KEY_MAX_PLAYERS =	"max_players";
@@ -50,6 +51,7 @@ public class SPDSettings extends GameSettings {
 	}
 	public void maxPlayers(int maxPlayers){
 		put(KEY_MAX_PLAYERS, maxPlayers);
+		SPDSettings.maxPlayers = maxPlayers;
 	}
 	public static String KEY_SERVER_NAME = "server_name";
 
@@ -61,7 +63,26 @@ public class SPDSettings extends GameSettings {
 		put(KEY_SERVER_NAME, serverName);
 	}
 	//Version info
-	
+	public static int defaultRelayServerPort =25556;
+	public static String defaultRelayServerAddress = "195.43.142.107";
+	public static String KEY_USE_CUSTOM_RELAY = "use_custom_relay";
+	public static boolean useCustomRelay = false;
+	public static void useCustomRelay(boolean useCustomRelay){
+		SPDSettings.useCustomRelay = useCustomRelay;
+		put(KEY_USE_CUSTOM_RELAY, useCustomRelay);
+	}
+	public static boolean useCustomRelay(){
+		return getBoolean(KEY_USE_CUSTOM_RELAY, false);
+	}
+	public static String KEY_CUSTOM_RELAY_PORT = "custom_relay_port";
+	public static int customRelayPort(){
+		return getInt(KEY_CUSTOM_RELAY_PORT, 25556);
+	}
+	public static String KEY_CUSTOM_RELAY_ADDRESS = "custom_relay_address";
+	public static String customRelayAddress = "";
+	public static String customRelayAddress(){
+		return getString(KEY_CUSTOM_RELAY_ADDRESS, "");
+	}
 	public static final String KEY_VERSION      = "version";
 	
 	public static void version( int value)  {

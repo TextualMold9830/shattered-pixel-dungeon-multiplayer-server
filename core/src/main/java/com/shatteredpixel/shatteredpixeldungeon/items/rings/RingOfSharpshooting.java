@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -32,13 +33,13 @@ public class RingOfSharpshooting extends Ring {
 		icon = ItemSpriteSheet.Icons.RING_SHARPSHOOT;
 	}
 
-	public String statsInfo() {
+	public String statsInfo(Hero hero) {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
 					soloBuffedBonus(), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, soloBonus()) - 1f)));
-			if (isEquipped(Dungeon.heroes) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.heroes)){
+			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						combinedBuffedBonus(Dungeon.heroes), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, combinedBonus(Dungeon.heroes)) - 1f)));
+						combinedBuffedBonus(hero), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, combinedBonus(hero)) - 1f)));
 			}
 			return info;
 		} else {

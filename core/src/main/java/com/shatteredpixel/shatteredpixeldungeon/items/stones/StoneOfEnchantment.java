@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -47,7 +48,7 @@ public class StoneOfEnchantment extends InventoryStone {
 	}
 	
 	@Override
-	protected void onItemSelected(Item item) {
+	protected void onItemSelected(Item item, Hero hero) {
 		curItem.detach( curUser.belongings.backpack );
 		
 		if (item instanceof Weapon) {

@@ -224,7 +224,7 @@ public class Armor extends EquipableItem {
 			
 		} else {
 			
-			collect( hero.belongings.backpack );
+			collect( hero );
 			return false;
 			
 		}

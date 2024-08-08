@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -42,7 +43,7 @@ public class StoneOfFlock extends Runestone {
 	}
 	
 	@Override
-	protected void activate(int cell) {
+	protected void activate(int cell, Hero hero) {
 
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		ArrayList<Integer> spawnPoints = new ArrayList<>();

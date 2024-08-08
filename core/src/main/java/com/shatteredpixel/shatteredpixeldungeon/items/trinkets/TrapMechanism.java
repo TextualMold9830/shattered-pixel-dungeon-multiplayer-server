@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -64,8 +65,8 @@ public class TrapMechanism extends Trinket {
 	private ArrayList<Boolean> levelFeels = new ArrayList<>();
 	private int shuffles = 0;
 
-	public static Level.Feeling getNextFeeling(){
-		TrapMechanism mech = Dungeon.heroes.belongings.getItem(TrapMechanism.class);
+	public static Level.Feeling getNextFeeling(Hero hero){
+		TrapMechanism mech = hero.belongings.getItem(TrapMechanism.class);
 		if (mech == null) {
 			return Level.Feeling.NONE;
 		}

@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -49,7 +50,7 @@ public class MagicalInfusion extends InventorySpell {
 	}
 
 	@Override
-	protected void onItemSelected( Item item ) {
+	protected void onItemSelected( Item item, Hero hero ) {
 
 		ScrollOfUpgrade.upgrade(curUser);
 

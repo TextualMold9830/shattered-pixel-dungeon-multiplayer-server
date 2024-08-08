@@ -80,7 +80,7 @@ public abstract class InventoryStone extends Runestone {
 		return true;
 	}
 	
-	protected abstract void onItemSelected( Item item );
+	protected abstract void onItemSelected( Item item, Hero hero );
 	
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
@@ -100,7 +100,7 @@ public abstract class InventoryStone extends Runestone {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -110,7 +110,7 @@ public abstract class InventoryStone extends Runestone {
 			
 			if (item != null) {
 
-				((InventoryStone)curItem).onItemSelected( item );
+				((InventoryStone)curItem).onItemSelected( item, hero );
 				
 			}
 		}

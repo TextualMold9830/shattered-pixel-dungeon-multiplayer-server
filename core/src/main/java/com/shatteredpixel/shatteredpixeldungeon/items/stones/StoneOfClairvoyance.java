@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
@@ -40,7 +41,7 @@ public class StoneOfClairvoyance extends Runestone {
 	}
 	
 	@Override
-	protected void activate(final int cell) {
+	protected void activate(final int cell, Hero hero) {
 		Point c = Dungeon.level.cellToPoint(cell);
 		
 		int[] rounding = ShadowCaster.rounding[DIST];

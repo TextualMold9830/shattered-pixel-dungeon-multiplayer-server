@@ -109,7 +109,7 @@ public class UnstableSpell extends Spell {
 
 		s.anonymize();
 		curItem = s;
-		s.doRead();
+		s.doRead(hero);
 
 		if (Random.Float() < talentChance){
 			Talent.onScrollUsed(curUser, curUser.pos, talentFactor);
@@ -153,7 +153,7 @@ public class UnstableSpell extends Spell {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 
 			for (Item i : ingredients){
 				i.quantity(i.quantity()-1);

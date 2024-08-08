@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Transmuting;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -61,7 +62,7 @@ public class Recycle extends InventorySpell {
 	}
 
 	@Override
-	protected void onItemSelected(Item item) {
+	protected void onItemSelected(Item item, Hero hero) {
 		Item result;
 		do {
 			if (item instanceof Potion) {
@@ -85,7 +86,7 @@ public class Recycle extends InventorySpell {
 		
 		item.detach(curUser.belongings.backpack);
 		GLog.p(Messages.get(this, "recycled", result.name()));
-		if (!result.collect()){
+		if (!result.collect(hero)){
 			Dungeon.level.drop(result, curUser.pos).sprite.drop();
 		}
 		Transmuting.show(curUser, item, result);

@@ -40,23 +40,18 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.watabou.noosa.*;
 import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Blending;
-import com.watabou.noosa.Camera;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.NoosaScript;
-import com.watabou.noosa.NoosaScriptNoLighting;
-import com.watabou.noosa.SkinnedBlock;
 import com.watabou.utils.DeviceCompat;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterLevelSceneServer {
+public class InterLevelSceneServer extends Scene {
 	
 	//slow fade on entering a new region
 	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total

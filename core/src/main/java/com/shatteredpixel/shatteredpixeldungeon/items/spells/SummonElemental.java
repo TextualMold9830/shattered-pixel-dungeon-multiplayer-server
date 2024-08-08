@@ -82,7 +82,7 @@ public class SummonElemental extends Spell {
 		super.execute(hero, action);
 
 		if (action.equals(AC_IMBUE)){
-			GameScene.selectItem(selector);
+			GameScene.selectItem(selector, hero);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class SummonElemental extends Spell {
 			curUser.sprite.operate(curUser.pos);
 			curUser.spendAndNext(Actor.TICK);
 
-			detach(Dungeon.heroes.belongings.backpack);
+			detach(hero.belongings.backpack);
 			if (Random.Float() < talentChance){
 				Talent.onScrollUsed(curUser, curUser.pos, talentFactor);
 			}
@@ -183,13 +183,13 @@ public class SummonElemental extends Spell {
 		}
 
 		@Override
-		public void onSelect(Item item) {
+		public void onSelect(Item item, Hero hero) {
 
 			if (item == null){
 				return;
 			}
 
-			item.detach(Dungeon.heroes.belongings.backpack);
+			item.detach(hero.belongings.backpack);
 			if (item instanceof PotionOfLiquidFlame) {
 				Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				curUser.sprite.emitter().burst( FlameParticle.FACTORY, 12 );

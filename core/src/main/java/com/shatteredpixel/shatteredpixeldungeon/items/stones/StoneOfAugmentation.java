@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -49,9 +50,9 @@ public class StoneOfAugmentation extends InventoryStone {
 	}
 
 	@Override
-	protected void onItemSelected(Item item) {
+	protected void onItemSelected(Item item, Hero hero) {
 		
-		GameScene.show(new WndAugment( item));
+		GameScene.show(new WndAugment( item, hero));
 		
 	}
 	
@@ -89,8 +90,8 @@ public class StoneOfAugmentation extends InventoryStone {
 		private static final int BUTTON_WIDTH	= WIDTH - MARGIN * 2;
 		private static final int BUTTON_HEIGHT	= 20;
 		
-		public WndAugment( final Item toAugment ) {
-			super();
+		public WndAugment( final Item toAugment, Hero hero ) {
+			super(hero);
 			
 			IconTitle titlebar = new IconTitle( toAugment );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
@@ -142,7 +143,7 @@ public class StoneOfAugmentation extends InventoryStone {
 				@Override
 				protected void onClick() {
 					hide();
-					StoneOfAugmentation.this.collect();
+					StoneOfAugmentation.this.collect(getOwnerHero());
 				}
 			};
 			btnCancel.setRect( MARGIN, pos + MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT );
@@ -153,7 +154,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		@Override
 		public void onBackPressed() {
-			StoneOfAugmentation.this.collect();
+			StoneOfAugmentation.this.collect(getOwnerHero());
 			super.onBackPressed();
 		}
 	}

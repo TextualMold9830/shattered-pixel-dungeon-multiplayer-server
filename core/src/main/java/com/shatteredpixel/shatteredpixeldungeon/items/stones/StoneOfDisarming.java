@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
@@ -44,7 +45,7 @@ public class StoneOfDisarming extends Runestone {
 	}
 
 	@Override
-	protected void activate(final int cell) {
+	protected void activate(final int cell, Hero hero) {
 		boolean[] FOV = new boolean[Dungeon.level.length()];
 		Point c = Dungeon.level.cellToPoint(cell);
 		ShadowCaster.castShadow(c.x, c.y, Dungeon.level.width(), FOV, Dungeon.level.losBlocking, DIST);

@@ -119,7 +119,7 @@ public class Alchemize extends Spell {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect( Item item, Hero hero ) {
 			if (item != null) {
 				if (parentWnd != null) {
 					parentWnd = GameScene.selectItem(itemSelector, getOwner());

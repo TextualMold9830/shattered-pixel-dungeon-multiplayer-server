@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
@@ -45,7 +46,7 @@ public class StoneOfShock extends Runestone {
 	}
 	
 	@Override
-	protected void activate(int cell) {
+	protected void activate(int cell, Hero hero) {
 		
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		

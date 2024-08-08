@@ -94,7 +94,7 @@ public class SmokeBomb extends ArmorAbility {
 			PathFinder.buildDistanceMap(hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), 6);
 
 			if ( PathFinder.distance[target] == Integer.MAX_VALUE ||
-					!Dungeon.level.heroFOV[target] ||
+					!hero.heroFOV[target] ||
 					(target != hero.pos && Actor.findChar( target ) != null)) {
 
 				GLog.w( Messages.get(this, "fov") );
@@ -122,7 +122,7 @@ public class SmokeBomb extends ArmorAbility {
 						}
 					}
 
-					NinjaLog n = new NinjaLog();
+					NinjaLog n = new NinjaLog(hero);
 					n.pos = hero.pos;
 					GameScene.add(n);
 					Dungeon.level.occupyCell(n);
@@ -162,7 +162,7 @@ public class SmokeBomb extends ArmorAbility {
 	}
 
 	public static class NinjaLog extends NPC {
-
+		public Hero owner;
 		{
 			spriteClass = NinjaLogSprite.class;
 			defenseSkill = 0;
@@ -171,15 +171,15 @@ public class SmokeBomb extends ArmorAbility {
 
 			alignment = Alignment.ALLY;
 
-			HP = HT = 20*Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT);
+			HP = HT = 20*owner.pointsInTalent(Talent.BODY_REPLACEMENT);
 		}
 
 		@Override
 		public int drRoll() {
 			int dr = super.drRoll();
 
-			dr += Char.combatRoll(Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT),
-					3*Dungeon.heroes.pointsInTalent(Talent.BODY_REPLACEMENT));
+			dr += Char.combatRoll(owner.pointsInTalent(Talent.BODY_REPLACEMENT),
+					3*owner.pointsInTalent(Talent.BODY_REPLACEMENT));
 
 			return dr;
 		}
@@ -193,6 +193,9 @@ public class SmokeBomb extends ArmorAbility {
 			immunities.add( AllyBuff.class );
 		}
 
+		public NinjaLog(Hero owner) {
+			this.owner = owner;
+		}
 	}
 
 	public static class NinjaLogSprite extends MobSprite {

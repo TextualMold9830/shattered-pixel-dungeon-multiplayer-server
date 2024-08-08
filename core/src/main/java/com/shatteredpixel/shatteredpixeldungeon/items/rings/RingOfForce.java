@@ -115,14 +115,14 @@ public class RingOfForce extends Ring {
 		));
 	}
 
-	@Override
-	public String statsInfo() {
-		float tier = tier(Dungeon.heroes.STR());
+	//@Override
+	public String statsInfo(Hero hero) {
+		float tier = tier(hero.STR());
 		if (isIdentified()) {
 			int level = soloBuffedBonus();
 			String info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);
-			if (isEquipped(Dungeon.heroes) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.heroes)){
-				level = combinedBuffedBonus(Dungeon.heroes);
+			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
+				level = combinedBuffedBonus(hero);
 				info += "\n\n" + Messages.get(this, "combined_stats", min(level, tier), max(level, tier), level);
 			}
 			return info;
@@ -147,8 +147,8 @@ public class RingOfForce extends Ring {
 	}
 
 	@Override
-	public String defaultAction() {
-		if (Dungeon.heroes != null && Dungeon.heroes.heroClass == HeroClass.DUELIST){
+	public String defaultAction(Hero hero) {
+		if (Dungeon.heroes != null && hero.heroClass == HeroClass.DUELIST){
 			return AC_ABILITY;
 		} else {
 			return super.defaultAction();
@@ -197,14 +197,14 @@ public class RingOfForce extends Ring {
 	}
 
 	@Override
-	public String info() {
+	public String info(Hero hero) {
 		String info = super.info();
 
-		if (Dungeon.heroes.heroClass == HeroClass.DUELIST
-			&& (anonymous || isIdentified() || isEquipped(Dungeon.heroes))){
+		if (hero.heroClass == HeroClass.DUELIST
+			&& (anonymous || isIdentified() || isEquipped(hero))){
 			//0 if unidentified, solo level if unequipped, combined level if equipped
-			int level = isIdentified() ? (isEquipped(Dungeon.heroes) ? getBuffedBonus(Dungeon.heroes, Force.class) : soloBuffedBonus()) : 0;
-			float tier = tier(Dungeon.heroes.STR());
+			int level = isIdentified() ? (isEquipped(hero) ? getBuffedBonus(hero, Force.class) : soloBuffedBonus()) : 0;
+			float tier = tier(hero.STR());
 			int dmgBoost = Math.round(1+tier+(level*((3+tier)/8f)));
 			if (isIdentified()) {
 				info += "\n\n" + Messages.get(this, "ability_desc", min(level, tier)+dmgBoost, max(level, tier)+dmgBoost);

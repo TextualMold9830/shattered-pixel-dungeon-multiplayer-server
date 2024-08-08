@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,7 +32,7 @@ public class StoneOfBlast extends Runestone {
 	}
 	
 	@Override
-	protected void activate(int cell) {
+	protected void activate(int cell, Hero hero) {
 		new Bomb.ConjuredBomb().explode(cell);
 	}
 	

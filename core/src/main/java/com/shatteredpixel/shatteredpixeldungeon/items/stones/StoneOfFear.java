@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -39,7 +40,7 @@ public class StoneOfFear extends Runestone {
 	}
 	
 	@Override
-	protected void activate(int cell) {
+	protected void activate(int cell, Hero hero) {
 
 		Char ch = Actor.findChar( cell );
 
@@ -47,7 +48,7 @@ public class StoneOfFear extends Runestone {
 			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.id();
 		}
 
-		new Flare( 5, 16 ).color( 0xFF0000, true ).show(Dungeon.heroes.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f );
+		new Flare( 5, 16 ).color( 0xFF0000, true ).show(hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f );
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		
 	}

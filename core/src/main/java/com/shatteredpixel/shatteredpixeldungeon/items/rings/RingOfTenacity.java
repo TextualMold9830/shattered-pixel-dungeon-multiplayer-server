@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -32,11 +33,11 @@ public class RingOfTenacity extends Ring {
 		icon = ItemSpriteSheet.Icons.RING_TENACITY;
 	}
 
-	public String statsInfo() {
+	public String statsInfo(Hero hero) {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
 					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, soloBuffedBonus()))));
-			if (isEquipped(Dungeon.heroes) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.heroes)){
+			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
 						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, combinedBuffedBonus(Dungeon.heroes)))));
 			}

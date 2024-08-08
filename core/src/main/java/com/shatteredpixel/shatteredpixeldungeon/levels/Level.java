@@ -268,7 +268,8 @@ public abstract class Level implements Bundlable {
 						if (Random.Float() < MossyClump.overrideNormalLevelChance()){
 							feeling = MossyClump.getNextFeeling();
 						} else if (Random.Float() < TrapMechanism.overrideNormalLevelChance()) {
-							feeling = TrapMechanism.getNextFeeling();
+							//FIXME
+							//feeling = TrapMechanism.getNextFeeling();
 						} else {
 							feeling = Feeling.NONE;
 						}

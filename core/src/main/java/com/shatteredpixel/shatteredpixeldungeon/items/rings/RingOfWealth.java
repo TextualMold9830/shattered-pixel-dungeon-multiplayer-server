@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -61,13 +62,13 @@ public class RingOfWealth extends Ring {
 	private float triesToDrop = Float.MIN_VALUE;
 	private int dropsToRare = Integer.MIN_VALUE;
 	
-	public String statsInfo() {
+	public String statsInfo(Hero hero) {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
 					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
-			if (isEquipped(Dungeon.heroes) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.heroes)){
+			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(Dungeon.heroes)) - 1f)));
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(hero)) - 1f)));
 			}
 			return info;
 		} else {
