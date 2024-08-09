@@ -93,7 +93,7 @@ public class Bag extends Item implements Iterable<Item> {
 	}
 	
 	@Override
-	public boolean collect( Bag container, Hero hero ) {
+	public boolean collect( Bag container ) {
 
 		grabItems(container);
 
@@ -102,7 +102,7 @@ public class Bag extends Item implements Iterable<Item> {
 			Dungeon.quickslot.replacePlaceholder(item);
 		}
 
-		if (super.collect( container, hero )) {
+		if (super.collect( container )) {
 			
 			owner = container.owner;
 			

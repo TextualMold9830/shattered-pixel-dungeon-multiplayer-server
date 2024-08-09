@@ -68,6 +68,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendAllBadgeBossSlain;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
 public class Item implements Bundlable {
@@ -142,7 +143,7 @@ public class Item implements Bundlable {
 	}
 
 	public boolean doPickUp(Hero hero, int pos) {
-		if (collect( hero.belongings.backpack, hero )) {
+		if (collect( hero.belongings.backpack )) {
 			
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
@@ -226,7 +227,7 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public boolean collect( Bag container, Hero hero) {
+	public boolean collect( Bag container) {
 
 		if (quantity <= 0){
 			return true;
@@ -240,7 +241,7 @@ public class Item implements Bundlable {
 
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				if (collect( (Bag)item, hero )){
+				if (collect( (Bag)item )){
 					return true;
 				}
 			}
@@ -249,13 +250,13 @@ public class Item implements Bundlable {
 		if (!container.canHold(this)){
 			return false;
 		}
-		
+		Hero hero = (container.owner instanceof Hero)? (Hero)container.owner : null;
 		if (stackable) {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
 					item.updateQuickslot();
-					if (Dungeon.heroes != null && hero.isAlive()) {
+					if (hero != null && hero.isAlive()) {
 						Badges.validateItemLevelAquired( this );
 						Talent.onItemCollected(hero, item);
 						if (isIdentified()) Catalog.setSeen(getClass());
@@ -297,7 +298,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean collect(Hero hero) {
-		return collect( hero.belongings.backpack, hero );
+		return collect( hero.belongings.backpack );
 	}
 	
 	//returns a new item if the split was sucessful and there are now 2 items, otherwise null
