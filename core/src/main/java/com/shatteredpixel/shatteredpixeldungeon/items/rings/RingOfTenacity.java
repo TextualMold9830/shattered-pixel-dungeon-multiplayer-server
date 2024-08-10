@@ -39,7 +39,7 @@ public class RingOfTenacity extends Ring {
 					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, soloBuffedBonus()))));
 			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, combinedBuffedBonus(Dungeon.heroes)))));
+						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, combinedBuffedBonus(hero)))));
 			}
 			return info;
 		} else {

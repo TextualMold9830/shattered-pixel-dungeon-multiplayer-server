@@ -53,24 +53,27 @@ public class PitfallTrap extends Trap {
 			GLog.w(Messages.get(this, "no_pit"));
 			return;
 		}
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
 
-		DelayedPit p = Buff.append(Dungeon.heroes, DelayedPit.class, 1);
-		p.depth = Dungeon.depth;
-		p.branch = Dungeon.branch;
-		p.pos = pos;
+				DelayedPit p = Buff.append(hero, DelayedPit.class, 1);
+				p.depth = Dungeon.depth;
+				p.branch = Dungeon.branch;
+				p.pos = pos;
 
-		for (int i : PathFinder.NEIGHBOURS9){
-			if (!Dungeon.level.solid[pos+i] || Dungeon.level.passable[pos+i]){
-				CellEmitter.floor(pos+i).burst(PitfallParticle.FACTORY4, 8);
+				for (int i : PathFinder.NEIGHBOURS9) {
+					if (!Dungeon.level.solid[pos + i] || Dungeon.level.passable[pos + i]) {
+						CellEmitter.floor(pos + i).burst(PitfallParticle.FACTORY4, 8);
+					}
+				}
+
+				if (pos == hero.pos) {
+					GLog.n(Messages.get(this, "triggered_hero"));
+				} else if (Dungeon.visibleforAnyHero(pos)) {
+					GLog.n(Messages.get(this, "triggered"));
+				}
 			}
 		}
-
-		if (pos == Dungeon.heroes.pos){
-			GLog.n(Messages.get(this, "triggered_hero"));
-		} else if (Dungeon.visibleforAnyHero(pos)){
-			GLog.n(Messages.get(this, "triggered"));
-		}
-
 	}
 
 	public static class DelayedPit extends FlavourBuff {

@@ -69,10 +69,15 @@ public class DisintegrationTrap extends Trap {
 		if (heap != null) heap.explode();
 		
 		if (target != null) {
-			if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[target.pos]) {
-				Sample.INSTANCE.play(Assets.Sounds.RAY);
-				ShatteredPixelDungeon.scene().add(new Beam.DeathRay(DungeonTilemap.tileCenterToWorld(pos), target.sprite.center()));
+			for (Hero hero : Dungeon.heroes) {
+				if (hero != null) {
+					if (hero.fieldOfView[pos] || hero.fieldOfView[target.pos]) {
+						Sample.INSTANCE.play(Assets.Sounds.RAY);
+						ShatteredPixelDungeon.scene().add(new Beam.DeathRay(DungeonTilemap.tileCenterToWorld(pos), target.sprite.center()));
+					}
+				}
 			}
+		}
 			target.damage( Char.combatRoll(30, 50) + scalingDepth(), new Char.DamageCause(this, null) ); ///todo modify activate?
 			if (target instanceof Hero){
 				Hero hero = (Hero)target;
@@ -85,4 +90,3 @@ public class DisintegrationTrap extends Trap {
 		}
 
 	}
-}

@@ -84,7 +84,7 @@ public class Chasm implements Hero.Doom {
 							@Override
 							protected void onSelect( int index ) {
 								if (index == 0 && elapsed > 0.2f) {
-									if (Dungeon.heroes.pos == heroPos) {
+									if (getOwnerHero().pos == heroPos) {
 										jumpConfirmed = true;
 										hero.resume();
 									}
@@ -96,7 +96,7 @@ public class Chasm implements Hero.Doom {
 		});
 	}
 	
-	public static void heroFall( int pos ) {
+	public static void heroFall( int pos, Hero hero ) {
 		
 		jumpConfirmed = false;
 				
@@ -104,8 +104,8 @@ public class Chasm implements Hero.Doom {
 
 		Level.beforeTransition();
 
-		if (Dungeon.heroes.isAlive()) {
-			Dungeon.heroes.interrupt();
+		if (hero.isAlive()) {
+			hero.interrupt();
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.FALL;
 			if (Dungeon.level instanceof RegularLevel) {
 				Room room = ((RegularLevel)Dungeon.level).room( pos );
@@ -113,9 +113,9 @@ public class Chasm implements Hero.Doom {
 			} else {
 				InterLevelSceneServer.fallIntoPit = false;
 			}
-			Game.switchScene( InterLevelSceneServer.class );
+			//Game.switchScene( InterLevelSceneServer.class );
 		} else {
-			Dungeon.heroes.sprite.visible = false;
+			hero.sprite.visible = false;
 		}
 	}
 

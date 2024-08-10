@@ -88,7 +88,8 @@ public class GrimTrap extends Trap {
 					}
 
 					final int finalDmg = damage;
-					if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[target.pos]) {
+					// The } mess my brain, this should be changed
+					if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(target.pos)) {
 						((MagicMissile)finalTarget.sprite.parent.recycle(MagicMissile.class)).reset(
 								MagicMissile.SHADOW,
 								DungeonTilemap.tileCenterToWorld(pos),
@@ -116,6 +117,7 @@ public class GrimTrap extends Trap {
 						finalTarget.damage(finalDmg, GrimTrap.this);
 						return true;
 					}
+
 				} else {
 					CellEmitter.get(pos).burst(ShadowParticle.UP, 10);
 					Sample.INSTANCE.play(Assets.Sounds.BURNING);
