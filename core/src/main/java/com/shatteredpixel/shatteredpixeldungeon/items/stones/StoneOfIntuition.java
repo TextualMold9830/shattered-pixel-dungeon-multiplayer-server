@@ -104,7 +104,7 @@ public class StoneOfIntuition extends InventoryStone {
 						if (item instanceof Ring){
 							((Ring) item).setKnown();
 						} else {
-							item.identify();
+							item.identify(null);
 						}
 						GLog.p( Messages.get(WndGuess.class, "correct") );
 						curUser.sprite.parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
