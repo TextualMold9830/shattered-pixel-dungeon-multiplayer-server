@@ -216,7 +216,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	protected void onThrow( int cell ) {
+	protected void onThrow( int cell, Hero hero ) {
 		Char enemy = Actor.findChar( cell );
 		if (enemy == null || enemy == curUser) {
 			parent = null;
@@ -236,9 +236,8 @@ abstract public class MissileWeapon extends Weapon {
 			super.onThrow( cell );
 		} else {
 			if (!curUser.shoot( enemy, this )) {
-				rangedMiss( cell );
+				rangedMiss( cell, hero );
 			} else {
-				//FIXME
 				rangedHit( enemy, cell, hero );
 
 			}
@@ -307,6 +306,9 @@ abstract public class MissileWeapon extends Weapon {
 	protected void rangedMiss( int cell ) {
 		parent = null;
 		super.onThrow(cell);
+	}
+	protected void rangedMiss( int cell, Hero hero ) {
+		rangedMiss(cell);
 	}
 
 	public float durabilityLeft(){

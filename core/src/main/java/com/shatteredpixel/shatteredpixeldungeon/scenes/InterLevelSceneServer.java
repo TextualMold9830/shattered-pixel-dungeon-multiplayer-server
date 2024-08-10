@@ -89,7 +89,7 @@ public class InterLevelSceneServer {
 	public static int lastRegion = -1;
 
 	public void create(Hero hero) {
-		super.create();
+		//super.create();
 		
 		String loadingAsset;
 		int loadingDepth;

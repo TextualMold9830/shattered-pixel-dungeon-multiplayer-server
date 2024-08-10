@@ -45,21 +45,21 @@ public class PotionOfCleansing extends ExoticPotion {
 	
 	@Override
 	public void apply( Hero hero ) {
-		identify();
+		identify(hero);
 		
 		cleanse( hero );
 		new Flare( 6, 32 ).color(0xFF4CD2, true).show( curUser.sprite, 2f );
 	}
 	
 	@Override
-	public void shatter(int cell) {
+	public void shatter(int cell, Hero hero) {
 		if (Actor.findChar(cell) == null){
 			super.shatter(cell);
 		} else {
 			splash( cell );
 			if (Dungeon.visibleforAnyHero(cell)) {
 				Sample.INSTANCE.play(Assets.Sounds.SHATTER);
-				identify();
+				identify(hero);
 			}
 			
 			if (Actor.findChar(cell) != null){

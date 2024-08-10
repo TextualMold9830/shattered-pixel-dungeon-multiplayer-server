@@ -157,7 +157,7 @@ public class UnstableBrew extends Brew {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 
 			for (Item i : ingredients){
 				i.quantity(i.quantity()-1);

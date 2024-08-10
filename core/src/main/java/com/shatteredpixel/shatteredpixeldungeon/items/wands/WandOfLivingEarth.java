@@ -68,9 +68,9 @@ public class WandOfLivingEarth extends DamageWand {
 	}
 	
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 		Char ch = Actor.findChar(bolt.collisionPos);
-		int damage = damageRoll();
+		int damage = damageRoll(hero);
 		int armorToAdd = damage;
 
 		EarthGuardian guardian = null;
@@ -107,7 +107,7 @@ public class WandOfLivingEarth extends DamageWand {
 		} else if ( guardian == null && buff != null && buff.armor >= buff.armorToGuardian()){
 
 			//create a new guardian
-			guardian = new EarthGuardian();
+			guardian = new EarthGuardian(hero);
 			guardian.setInfo(curUser, buffedLvl(), buff.armor);
 
 			//if the collision pos is occupied (likely will be), then spawn the guardian in the
@@ -306,6 +306,7 @@ public class WandOfLivingEarth extends DamageWand {
 	}
 
 	public static class EarthGuardian extends NPC {
+		private Hero owner;
 
 		{
 			spriteClass = EarthGuardianSprite.class;
@@ -316,12 +317,16 @@ public class WandOfLivingEarth extends DamageWand {
 
 			properties.add(Property.INORGANIC);
 
-			WANDERING = new Wandering();
+			WANDERING = new Wandering(owner);
 
 			//before other mobs
 			actPriority = MOB_PRIO + 1;
 
 			HP = HT = 0;
+		}
+
+		public EarthGuardian(Hero owner) {
+			this.owner = owner;
 		}
 
 		private int wandLevel = -1;
@@ -397,13 +402,14 @@ public class WandOfLivingEarth extends DamageWand {
 			wandLevel = bundle.getInt(WAND_LEVEL);
 		}
 
-		private class Wandering extends Mob.Wandering{
+		private class Wandering extends Mob.Wandering {
+			private Hero owner;
 
 			@Override
 			public boolean act(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
-					Buff.affect(Dungeon.heroes, RockArmor.class).addArmor(wandLevel, HP);
-					Dungeon.heroes.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
+					Buff.affect(owner, RockArmor.class).addArmor(wandLevel, HP);
+					owner.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
 					destroy();
 					sprite.die();
 					return true;
@@ -412,7 +418,11 @@ public class WandOfLivingEarth extends DamageWand {
 				}
 			}
 
+			public Wandering(Hero owner) {
+				this.owner = owner;
+			}
 		}
+
 
 	}
 }

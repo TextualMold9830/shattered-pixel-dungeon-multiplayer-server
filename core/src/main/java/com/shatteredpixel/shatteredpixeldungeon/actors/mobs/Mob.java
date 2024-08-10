@@ -1324,8 +1324,9 @@ public abstract class Mob extends Char {
 	private static ArrayList<Mob> heldAllies = new ArrayList<>();
 
 	public static void holdAllies( Level level ) {
+		//Will fix later
 		//TODO: check this
-		holdAllies(level, Dungeon.heroes.pos);
+		//holdAllies(level, Dungeon.heroes.pos);
 	}
 
 	public static void holdAllies( Level level, int holdFromPos ){

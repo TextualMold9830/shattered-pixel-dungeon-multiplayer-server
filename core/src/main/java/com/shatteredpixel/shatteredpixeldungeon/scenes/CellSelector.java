@@ -390,7 +390,7 @@ public class CellSelector extends ScrollArea {
 		}
 
 		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && owner.ready){
-			processKeyHold(owner);
+			processKeyHold();
 		} else if (owner.ready) {
 			lastCellMoved = -1;
 		}
@@ -468,7 +468,8 @@ public class CellSelector extends ScrollArea {
 		return SPDAction.NONE;
 	}
 
-	public void processKeyHold(Hero hero) {
+	public void processKeyHold() {
+		Hero hero = getOwner();
 		//prioritize moving by controller stick over moving via keys
 		if (!directionFromAction(leftStickAction).isZero() && heldDelay < 0) {
 			enabled = hero.ready = true;

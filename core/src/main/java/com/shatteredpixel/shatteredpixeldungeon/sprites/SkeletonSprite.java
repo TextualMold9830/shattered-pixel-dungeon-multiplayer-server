@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 
@@ -53,9 +54,13 @@ public class SkeletonSprite extends MobSprite {
 	@Override
 	public void die() {
 		super.die();
-		if (Dungeon.level.fieldOfView[ch.pos]) {
-			emitter().burst( Speck.factory( Speck.BONE ), 6 );
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+			if (hero.fieldOfView[ch.pos]) {
+				emitter().burst(Speck.factory(Speck.BONE), 6);
+			}
 		}
+	}
 	}
 	
 	@Override

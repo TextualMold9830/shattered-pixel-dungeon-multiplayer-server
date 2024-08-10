@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
@@ -37,11 +38,11 @@ public class PotionOfFrost extends Potion {
 	}
 	
 	@Override
-	public void shatter( int cell ) {
+	public void shatter(int cell, Hero hero) {
 
 		splash( cell );
 		if (Dungeon.visibleforAnyHero(cell)) {
-			identify();
+			identify(hero);
 
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 		}

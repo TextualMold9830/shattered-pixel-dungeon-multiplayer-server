@@ -38,7 +38,7 @@ public class PotionOfMindVision extends Potion {
 
 	@Override
 	public void apply( Hero hero ) {
-		identify();
+		identify(hero);
 		Buff.affect( hero, MindVision.class, MindVision.DURATION );
 		SpellSprite.show(hero, SpellSprite.VISION, 1, 0.77f, 0.9f);
 		Dungeon.observe();

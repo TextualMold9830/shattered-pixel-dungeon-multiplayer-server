@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 
@@ -51,7 +52,7 @@ public class RotDart extends TippedDart {
 	}
 	
 	@Override
-	public float durabilityPerUse() {
+	public float durabilityPerUse(Hero hero) {
 		return MAX_DURABILITY/5f; //always 5 uses
 	}
 }

@@ -562,7 +562,7 @@ public abstract class Level implements Bundlable {
 		} else {
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.ASCEND;
 		}
-		Game.switchScene(InterLevelSceneServer.class);
+		//Game.switchScene(InterLevelSceneServer.class);
 		return true;
 	}
 
@@ -1153,7 +1153,7 @@ public abstract class Level implements Bundlable {
 			
 			if (pit[ch.pos]){
 				if (ch instanceof Hero) {
-					Chasm.heroFall(ch.pos);
+					Chasm.heroFall(ch.pos, (Hero) ch);
 				} else if (ch instanceof Mob) {
 					Chasm.mobFall( (Mob)ch );
 				}
@@ -1461,7 +1461,7 @@ public abstract class Level implements Bundlable {
 			//set mind vision chars
 			for (Mob mob : mobs) {
 				if (heroMindFov[mob.pos] && !fieldOfView[mob.pos]){
-					Dungeon.heroes.mindVisionEnemies.add(mob);
+					//Dungeon.heroes.mindVisionEnemies.add(mob);
 				}
 			}
 

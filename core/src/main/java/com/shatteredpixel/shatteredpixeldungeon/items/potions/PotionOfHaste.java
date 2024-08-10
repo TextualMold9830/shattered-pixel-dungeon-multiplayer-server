@@ -37,7 +37,7 @@ public class PotionOfHaste extends Potion {
 	
 	@Override
 	public void apply(Hero hero) {
-		identify();
+		identify(hero);
 		
 		GLog.w( Messages.get(this, "energetic") );
 		Buff.prolong( hero, Haste.class, Haste.DURATION);

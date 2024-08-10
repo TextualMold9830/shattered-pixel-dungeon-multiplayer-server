@@ -67,9 +67,9 @@ public class WandOfBlastWave extends DamageWand {
 	}
 
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
-		BlastWave.blast(bolt.collisionPos);
+		BlastWave.blast(bolt.collisionPos, hero);
 
 		//presses all tiles in the AOE first, with the exception of tengu dart traps
 		for (int i : PathFinder.NEIGHBOURS9){
@@ -84,7 +84,7 @@ public class WandOfBlastWave extends DamageWand {
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
+				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
 				if (ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
@@ -99,7 +99,7 @@ public class WandOfBlastWave extends DamageWand {
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
+			ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
 			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
 				Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
@@ -281,8 +281,8 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		//FIXME
-		public static void blast(int pos) {
-			Group parent = Dungeon.heroes.sprite.parent;
+		public static void blast(int pos, Hero hero) {
+			Group parent = hero.sprite.parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
 			parent.bringToFront(b);
 			b.reset(pos);

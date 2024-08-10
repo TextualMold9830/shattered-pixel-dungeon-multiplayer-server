@@ -41,11 +41,11 @@ public class PotionOfLevitation extends Potion {
 	}
 
 	@Override
-	public void shatter( int cell ) {
+	public void shatter( int cell, Hero hero ) {
 
 		splash( cell );
 		if (Dungeon.visibleforAnyHero(cell)) {
-			identify();
+			identify(hero);
 
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 			Sample.INSTANCE.play( Assets.Sounds.GAS );
@@ -56,7 +56,7 @@ public class PotionOfLevitation extends Potion {
 	
 	@Override
 	public void apply( Hero hero ) {
-		identify();
+		identify(hero);
 		Buff.affect( hero, Levitation.class, Levitation.DURATION );
 		GLog.i( Messages.get(this, "float") );
 	}

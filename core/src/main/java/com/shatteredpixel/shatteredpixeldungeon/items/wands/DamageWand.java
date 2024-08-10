@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.noosa.audio.Sample;
 
@@ -44,13 +45,13 @@ public abstract class DamageWand extends Wand{
 
 	public abstract int max(int lvl);
 
-	public int damageRoll(){
-		return damageRoll(buffedLvl());
+	public int damageRoll(Hero hero){
+		return damageRoll(buffedLvl(hero), hero);
 	}
 
-	public int damageRoll(int lvl){
+	public int damageRoll(int lvl, Hero hero){
 		int dmg = Char.combatRoll(min(lvl), max(lvl));
-		WandEmpower emp = Dungeon.heroes.buff(WandEmpower.class);
+		WandEmpower emp = hero.buff(WandEmpower.class);
 		if (emp != null){
 			dmg += emp.dmgBoost;
 			emp.left--;

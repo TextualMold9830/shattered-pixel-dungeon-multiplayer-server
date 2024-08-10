@@ -1346,8 +1346,7 @@ public class GameScene extends PixelScene {
 			cellSelector.listener.onSelect(null);
 		}
 		cellSelector.listener = listener;
-		//FIXME
-		cellSelector.enabled = Dungeon.heroes.ready;
+		cellSelector.enabled = listener.getOwner().ready;
 		if (scene != null) {
 			scene.prompt(listener.prompt());
 		}
@@ -1482,7 +1481,7 @@ public class GameScene extends PixelScene {
 
 	public static void examineObject(Object o){
 		if (o instanceof Hero){
-			GameScene.show( new WndHero() );
+			GameScene.show( new WndHero((Hero) o) );
 		} else if ( o instanceof Mob && ((Mob) o).isActive() ){
 			GameScene.show(new WndInfoMob((Mob) o));
 			if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)){
@@ -1504,8 +1503,9 @@ public class GameScene extends PixelScene {
 	private static final CellSelector.Listener defaultCellListener = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {
-			if (Dungeon.heroes.handle( cell )) {
-				Dungeon.heroes.next();
+
+			if (getOwner().handle( cell )) {
+				getOwner().next();
 			}
 		}
 

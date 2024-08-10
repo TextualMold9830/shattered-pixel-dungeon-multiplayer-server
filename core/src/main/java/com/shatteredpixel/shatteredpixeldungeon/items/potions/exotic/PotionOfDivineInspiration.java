@@ -55,7 +55,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 	protected void drink(final Hero hero) {
 
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach( hero.belongings.backpack );
 			identifiedByUse = true;
 		} else {
@@ -115,8 +115,8 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					curUser.spendAndNext(1f);
 
 					boolean unspentTalents = false;
-					for (int i = 1; i <= Dungeon.heroes.talents.size(); i++){
-						if (Dungeon.heroes.talentPointsAvailable(i) > 0){
+					for (int i = 1; i <= getOwnerHero().talents.size(); i++){
+						if (getOwnerHero().talentPointsAvailable(i) > 0){
 							unspentTalents = true;
 							break;
 						}

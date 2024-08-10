@@ -55,14 +55,14 @@ public class PotionOfMastery extends ExoticPotion {
 	protected void drink(final Hero hero) {
 
 		if (!isKnown()) {
-			identify();
+			identify(hero);
 			curItem = detach( hero.belongings.backpack );
 			identifiedByUse = true;
 		} else {
 			identifiedByUse = false;
 		}
 
-		GameScene.selectItem(itemSelector);
+		GameScene.selectItem(itemSelector, hero);
 	}
 
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
@@ -80,7 +80,7 @@ public class PotionOfMastery extends ExoticPotion {
 		}
 
 		@Override
-		public void onSelect(Item item) {
+		public void onSelect(Item item, Hero hero) {
 
 			if (item == null && identifiedByUse){
 				GameScene.show( new WndOptions(new ItemSprite(PotionOfMastery.this),
@@ -96,7 +96,7 @@ public class PotionOfMastery extends ExoticPotion {
 								identifiedByUse = false;
 								break;
 							case 1:
-								GameScene.selectItem(itemSelector);
+								GameScene.selectItem(itemSelector, hero);
 								break;
 						}
 					}

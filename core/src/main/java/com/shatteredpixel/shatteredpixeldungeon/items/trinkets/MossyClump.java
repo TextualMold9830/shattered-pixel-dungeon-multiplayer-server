@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -64,28 +65,33 @@ public class MossyClump extends Trinket {
 	private ArrayList<Boolean> levelFeels = new ArrayList<>();
 	private int shuffles = 0;
 
-	public static Level.Feeling getNextFeeling(){
-		MossyClump clump = Dungeon.heroes.belongings.getItem(MossyClump.class);
-		if (clump == null) {
-			return Level.Feeling.NONE;
-		}
-		if (clump.levelFeels.isEmpty()){
-			Random.pushGenerator(Dungeon.seed+1);
-				clump.levelFeels.add(true);
-				clump.levelFeels.add(true);
-				clump.levelFeels.add(true);
-				clump.levelFeels.add(false);
-				clump.levelFeels.add(false);
-				clump.levelFeels.add(false);
+	public static Level.Feeling getNextFeeling() {
+		ArrayList<Boolean> feelings = new ArrayList<>();
+		for (Hero hero : Dungeon.heroes) {
+			if(hero != null) {
+			MossyClump clump = hero.belongings.getItem(MossyClump.class);
+			if (clump == null) {
+				continue;
+			}
+			if (feelings.isEmpty()) {
+				Random.pushGenerator(Dungeon.seed + 1);
+				feelings.add(true);
+				feelings.add(true);
+				feelings.add(true);
+				feelings.add(false);
+				feelings.add(false);
+				feelings.add(false);
 				for (int i = 0; i <= clump.shuffles; i++) {
 					Random.shuffle(clump.levelFeels);
 				}
 				clump.shuffles++;
-			Random.popGenerator();
+				Random.popGenerator();
+			}
 		}
-
-		return clump.levelFeels.remove(0) ? Level.Feeling.GRASS : Level.Feeling.WATER;
 	}
+		return feelings.remove(0) ? Level.Feeling.GRASS : Level.Feeling.WATER;
+	}
+
 
 	private static final String FEELS = "feels";
 	private static final String SHUFFLES = "shuffles";

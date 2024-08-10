@@ -294,7 +294,7 @@ public class Potion extends Item {
 	}
 	
 	@Override
-	protected void onThrow( int cell ) {
+	protected void onThrow( int cell, Hero hero ) {
 		if (Dungeon.level.map[cell] == Terrain.WELL || Dungeon.level.pit[cell]) {
 			
 			super.onThrow( cell );
@@ -305,7 +305,7 @@ public class Potion extends Item {
 			if (!(this instanceof AquaBrew)){
 				Dungeon.level.pressCell( cell );
 			}
-			shatter( cell );
+			shatter( cell, hero );
 
 			if (!anonymous && Random.Float() < talentChance){
 				Talent.onPotionUsed(curUser, cell, talentFactor);
@@ -319,6 +319,13 @@ public class Potion extends Item {
 	}
 	
 	public void shatter( int cell ) {
+		splash( cell );
+		if (Dungeon.visibleforAnyHero(cell)) {
+			GLog.i( Messages.get(Potion.class, "shatter") );
+			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
+		}
+	}
+	public void shatter( int cell, Hero hero ) {
 		splash( cell );
 		if (Dungeon.visibleforAnyHero(cell)) {
 			GLog.i( Messages.get(Potion.class, "shatter") );

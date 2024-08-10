@@ -121,7 +121,7 @@ public class PitfallTrap extends Trap {
 					if (ch != null && !ch.flying
 						&& !(ch.alignment == Char.Alignment.NEUTRAL && Char.hasProp(ch, Char.Property.IMMOVABLE))) {
 						if (ch instanceof Hero) {
-							Chasm.heroFall(cell);
+							Chasm.heroFall(cell, (Hero) ch);
 							herofell = true;
 						} else {
 							Chasm.mobFall((Mob) ch);

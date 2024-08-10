@@ -147,6 +147,7 @@ class ClientThread implements Callable<String> {
                             GLog.n("Empty slot: %s", slot);
                             break;
                         }
+                        //FIXME
                         Item item = clientHero.belongings.getItemInSlot(slot);
                         if (item == null) {
                             GLog.n("No item in this slot. Slot: %s", slot);

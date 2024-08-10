@@ -52,7 +52,7 @@ public class PotionOfPurity extends Potion {
 	}
 
 	@Override
-	public void shatter( int cell ) {
+	public void shatter( int cell, Hero hero ) {
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), DISTANCE );
 		
@@ -71,7 +71,7 @@ public class PotionOfPurity extends Potion {
 					blob.clear(i);
 				}
 				
-				if (Dungeon.level.fieldOfView[i]) {
+				if (hero.fieldOfView[i]) {
 					CellEmitter.get( i ).burst( Speck.factory( Speck.DISCOVER ), 2 );
 				}
 				
@@ -83,7 +83,7 @@ public class PotionOfPurity extends Potion {
 		if (Dungeon.visibleforAnyHero(cell)) {
 			Sample.INSTANCE.play(Assets.Sounds.SHATTER);
 
-			identify();
+			identify(hero);
 			GLog.i(Messages.get(this, "freshness"));
 		}
 		
@@ -94,7 +94,7 @@ public class PotionOfPurity extends Potion {
 		GLog.w( Messages.get(this, "protected") );
 		Buff.prolong( hero, BlobImmunity.class, BlobImmunity.DURATION );
 		SpellSprite.show(hero, SpellSprite.PURITY);
-		identify();
+		identify(hero);
 	}
 	
 	@Override

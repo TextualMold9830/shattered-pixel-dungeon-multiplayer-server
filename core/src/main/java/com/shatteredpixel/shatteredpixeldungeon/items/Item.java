@@ -217,6 +217,9 @@ public class Item implements Bundlable {
 			heap.sprite.drop( cell );
 		}
 	}
+	protected void onThrow( int cell, Hero hero ) {
+		onThrow(cell);
+	}
 	
 	//takes two items and merges them (if possible)
 	public Item merge( Item other ){
