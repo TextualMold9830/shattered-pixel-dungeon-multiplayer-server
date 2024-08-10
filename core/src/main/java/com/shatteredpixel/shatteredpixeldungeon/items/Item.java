@@ -387,6 +387,9 @@ public class Item implements Bundlable {
 	}
 
 	protected void onDetach(){}
+	protected void onDetach(Hero hero){
+		onDetach();
+	}
 
 	//returns the true level of the item, ignoring all modifiers aside from upgrades
 	public final int trueLevel(){

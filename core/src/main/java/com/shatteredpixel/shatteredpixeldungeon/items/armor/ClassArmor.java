@@ -128,7 +128,7 @@ abstract public class ClassArmor extends Armor {
 		classArmor.curseInfusionBonus = armor.curseInfusionBonus;
 		classArmor.masteryPotionBonus = armor.masteryPotionBonus;
 		if (armor.levelKnown && armor.cursedKnown) {
-			classArmor.identify(false);
+			classArmor.identify(false, owner);
 		} else {
 			classArmor.levelKnown = armor.levelKnown;
 			classArmor.cursedKnown = true;
@@ -223,7 +223,7 @@ abstract public class ClassArmor extends Armor {
 							}
 
 							@Override
-							public void onSelect(Item item) {
+							public void onSelect(Item item, Hero hero) {
 								if (item == null || item == ClassArmor.this) return;
 
 								Armor armor = (Armor)item;
@@ -286,7 +286,7 @@ abstract public class ClassArmor extends Armor {
 								hero.busy();
 
 							}
-						});
+						}, hero);
 					}
 				}
 			});

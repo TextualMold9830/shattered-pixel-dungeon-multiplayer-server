@@ -79,9 +79,8 @@ public class CorpseDust extends Item {
 	}
 
 	@Override
-	protected void onDetach() {
-		//TODO: this shouldn't work
-		DustGhostSpawner spawner = findOwner().buff(DustGhostSpawner.class);
+	protected void onDetach(Hero hero) {
+		DustGhostSpawner spawner = hero.buff(DustGhostSpawner.class);
 		if (spawner != null){
 			spawner.dispel();
 		}
