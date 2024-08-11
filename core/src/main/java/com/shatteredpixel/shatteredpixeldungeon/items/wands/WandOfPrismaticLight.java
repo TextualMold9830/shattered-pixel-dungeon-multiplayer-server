@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -65,7 +66,7 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	@Override
-	public void onZap(Ballistica beam) {
+	public void onZap(Ballistica beam, Hero hero) {
 		affectMap(beam);
 		
 		if (Dungeon.level.viewDistance < 6 ){
@@ -79,12 +80,12 @@ public class WandOfPrismaticLight extends DamageWand {
 		Char ch = Actor.findChar(beam.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
-			affectTarget(ch);
+			affectTarget(ch, hero);
 		}
 	}
 
-	private void affectTarget(Char ch){
-		int dmg = damageRoll();
+	private void affectTarget(Char ch, Hero hero){
+		int dmg = damageRoll(hero);
 
 		//three in (5+lvl) chance of failing
 		if (Random.Int(5+buffedLvl()) >= 3) {

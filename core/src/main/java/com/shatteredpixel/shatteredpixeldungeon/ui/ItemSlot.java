@@ -231,7 +231,7 @@ public class ItemSlot extends Button {
 		//FIXME
 		if (item instanceof MissileWeapon
 				&& ((MissileWeapon) item).durabilityLeft() <= 50f
-				&& ((MissileWeapon) item).durabilityLeft() <= ((MissileWeapon) item).durabilityPerUse()){
+				&& ((MissileWeapon) item).durabilityLeft() <= ((MissileWeapon) item).durabilityPerUse(null)){
 			status.hardlight(WARNING);
 		} else {
 			status.resetColor();

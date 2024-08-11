@@ -126,7 +126,7 @@ public class CrystalMimic extends Mimic {
 	@Override
 	public int attackProc(Char enemy, int damage) {
 		if (alignment == Alignment.NEUTRAL && enemy instanceof Hero){
-			steal( Dungeon.heroes);
+			steal((Hero) enemy);
 
 		} else {
 			ArrayList<Integer> candidates = new ArrayList<>();

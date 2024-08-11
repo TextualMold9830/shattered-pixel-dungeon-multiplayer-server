@@ -67,7 +67,7 @@ public class WandOfLightning extends DamageWand {
 	}
 	
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 
 		//lightning deals less damage per-target, the more targets that are hit.
 		float multiplier = 0.4f + (0.6f/affected.size());
@@ -84,14 +84,14 @@ public class WandOfLightning extends DamageWand {
 			}
 			wandProc(ch, chargesPerCast());
 			if (ch == curUser && ch.isAlive()) {
-				ch.damage(Math.round(damageRoll() * multiplier * 0.5f), new Char.DamageCause(this, curUser));
+				ch.damage(Math.round(damageRoll(hero) * multiplier * 0.5f), new Char.DamageCause(this, curUser));
 				if (!curUser.isAlive()) {
 					Badges.validateDeathFromFriendlyMagic();
 					Dungeon.fail( this );
 					GLog.n(Messages.get(this, "ondeath"));
 				}
 			} else {
-				ch.damage(Math.round(damageRoll() * multiplier), new Char.DamageCause(this, curUser));
+				ch.damage(Math.round(damageRoll(hero) * multiplier), new Char.DamageCause(this, curUser));
 			}
 		}
 	}

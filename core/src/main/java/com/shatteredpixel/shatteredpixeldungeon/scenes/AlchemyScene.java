@@ -631,7 +631,7 @@ public class AlchemyScene extends PixelScene {
 			energyAdd.setPos(energyLeft.right(), energyAdd.top());
 			align(energyAdd);
 			
-			result = recipe.brew(ingredients);
+			result = recipe.brew(ingredients, hero);
 		}
 		
 		if (result != null){
@@ -642,7 +642,7 @@ public class AlchemyScene extends PixelScene {
 
 		boolean foundItems = true;
 		for (Item i : lastIngredients){
-			Item found = Dungeon.heroes.belongings.getSimilar(i);
+			Item found = hero.belongings.getSimilar(i);
 			if (found == null){ //atm no quantity check as items are always loaded individually
 				//currently found can be true if we need, say, 3x of an item but only have 2x of it
 				foundItems = false;

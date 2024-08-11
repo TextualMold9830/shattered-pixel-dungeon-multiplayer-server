@@ -107,6 +107,7 @@ public class Spinner extends Mob {
 				if (enemy != null && enemySeen) {
 					lastEnemyPos = enemy.pos;
 				} else {
+					//FIXME
 					lastEnemyPos = Dungeon.heroes.pos;
 				}
 			}
@@ -197,9 +198,8 @@ public class Spinner extends Mob {
 			
 			webCoolDown = 10;
 
-			if (Dungeon.level.fieldOfView[enemy.pos]){
-				Dungeon.heroes.interrupt();
-			}
+				Dungeon.interrupt(enemy.pos);
+
 		}
 		next();
 	}

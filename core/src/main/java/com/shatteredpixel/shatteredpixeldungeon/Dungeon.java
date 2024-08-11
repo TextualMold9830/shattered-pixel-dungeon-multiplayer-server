@@ -1284,4 +1284,13 @@ public class Dungeon {
             }
         }
 	}
+	public static void interrupt(int pos) {
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.fieldOfView[pos]) {
+					hero.interrupt();
+				}
+			}
+		}
+	}
 }

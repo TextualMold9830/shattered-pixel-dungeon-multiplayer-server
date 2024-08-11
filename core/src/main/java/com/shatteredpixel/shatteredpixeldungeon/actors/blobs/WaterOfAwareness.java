@@ -56,7 +56,7 @@ public class WaterOfAwareness extends WellWater {
 				
 				Dungeon.level.discover( i );
 				
-				if (Dungeon.level.fieldOfView[i]) {
+				if (hero.fieldOfView[i]) {
 					GameScene.discoverTile( i, terr );
 				}
 			}
@@ -65,7 +65,7 @@ public class WaterOfAwareness extends WellWater {
 		Buff.affect( hero, Awareness.class, Awareness.DURATION );
 		Dungeon.observe();
 
-		Dungeon.heroes.interrupt();
+		hero.interrupt();
 	
 		GLog.p( Messages.get(this, "procced") );
 		
@@ -77,7 +77,7 @@ public class WaterOfAwareness extends WellWater {
 		if (item.isIdentified()) {
 			return null;
 		} else {
-			item.identify();
+			item.identify(null);
 			Badges.validateItemLevelAquired( item );
 			
 			Sample.INSTANCE.play( Assets.Sounds.DRINK );

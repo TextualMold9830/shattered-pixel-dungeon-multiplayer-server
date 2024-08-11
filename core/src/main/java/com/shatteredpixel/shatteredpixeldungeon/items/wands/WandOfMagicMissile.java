@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -53,13 +54,13 @@ public class WandOfMagicMissile extends DamageWand {
 	}
 	
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 				
 		Char ch = Actor.findChar( bolt.collisionPos );
 		if (ch != null) {
 
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
+			ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
 
 			ch.sprite.burst(0xFFFFFFFF, buffedLvl() / 2 + 2);

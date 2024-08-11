@@ -140,7 +140,7 @@ public class BrokenSeal extends Item {
 		}
 		//FIXME
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			BrokenSeal seal = (BrokenSeal) curItem;
 			if (item != null && item instanceof Armor) {
 				Armor armor = (Armor)item;
@@ -203,7 +203,7 @@ public class BrokenSeal extends Item {
 		@Override
 		public synchronized boolean act() {
 			if (target instanceof Hero) {
-				if (Regeneration.regenOn() && shielding() < maxShield((Hero) target)) {
+				if (Regeneration.regenOn((Hero) target) && shielding() < maxShield((Hero) target)) {
 					partialShield += 1 / 30f;
 				}
 

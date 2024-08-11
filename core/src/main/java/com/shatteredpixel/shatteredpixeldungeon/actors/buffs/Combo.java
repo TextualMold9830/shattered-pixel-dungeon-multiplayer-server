@@ -403,7 +403,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					hit(enemy);
 					break;
 				case CRUSH:
-					WandOfBlastWave.BlastWave.blast(enemy.pos);
+					WandOfBlastWave.BlastWave.blast(enemy.pos, hero);
 					PathFinder.buildDistanceMap(target.pos, BArray.not(Dungeon.level.solid, null), 3);
 					for (Char ch : Actor.chars()) {
 						if (ch != enemy && ch.alignment == Char.Alignment.ENEMY

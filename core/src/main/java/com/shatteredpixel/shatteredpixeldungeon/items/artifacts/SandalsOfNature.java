@@ -295,15 +295,15 @@ public class SandalsOfNature extends Artifact {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item) {
 			if (item != null && item instanceof Plant.Seed) {
 				if (level() < 3) seeds.add(0, item.getClass());
 				curSeedEffect = item.getClass();
 
-				hero.sprite.operate( hero.pos );
+				getOwner().sprite.operate( getOwner().pos );
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
-				hero.busy();
-				hero.spend( Actor.TICK );
+				getOwner().busy();
+				getOwner().spend( Actor.TICK );
 				if (seeds.size() >= 3+(level()*3)){
 					seeds.clear();
 					upgrade();
@@ -315,7 +315,7 @@ public class SandalsOfNature extends Artifact {
 				} else {
 					GLog.i( Messages.get(SandalsOfNature.class, "absorb_seed") );
 				}
-				item.detach(hero.belongings.backpack);
+				item.detach(getOwner().belongings.backpack);
 			}
 		}
 	};
@@ -338,7 +338,7 @@ public class SandalsOfNature extends Artifact {
 					Splash.at(DungeonTilemap.tileCenterToWorld( cell ), -PointF.PI/2, PointF.PI/2, seedColors.get(curSeedEffect), 6);
 					Invisibility.dispel(curUser);
 
-					Plant plant = ((Plant.Seed) Reflection.newInstance(curSeedEffect)).couch(cell, null);
+					Plant plant = ((Plant.Seed) Reflection.newInstance(curSeedEffect)).couch(cell, null, curUser);
 					plant.activate(Actor.findChar(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );

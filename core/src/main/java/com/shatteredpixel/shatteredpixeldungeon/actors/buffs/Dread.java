@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -30,6 +31,11 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
 public class Dread extends Buff {
+	private Hero cause;
+
+	public Dread(Hero cause) {
+		this.cause = cause;
+	}
 
 	protected int left = (int)DURATION;
 	public int object = 0;
@@ -59,8 +65,8 @@ public class Dread extends Buff {
 	@Override
 	public boolean act() {
 
-		if (!Dungeon.level.fieldOfView[target.pos]
-				&& Dungeon.level.distance(target.pos, Dungeon.heroes.pos) >= 6) {
+		if (!cause.fieldOfView[target.pos]
+				&& Dungeon.level.distance(target.pos, cause.pos) >= 6) {
 			if (target instanceof Mob){
 				((Mob) target).EXP /= 2;
 			}

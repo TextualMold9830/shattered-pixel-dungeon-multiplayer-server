@@ -115,7 +115,7 @@ public class HeroicLeap extends ArmorAbility {
 						}
 					}
 
-					WandOfBlastWave.BlastWave.blast(dest);
+					WandOfBlastWave.BlastWave.blast(dest, hero);
 					PixelScene.shake(2, 0.5f);
 
 					Invisibility.dispel(hero);

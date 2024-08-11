@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -56,7 +57,7 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 
 		Heap heap = Dungeon.level.heaps.get(bolt.collisionPos);
 		if (heap != null) {
@@ -81,7 +82,7 @@ public class WandOfFrost extends DamageWand {
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 
-			int damage = damageRoll();
+			int damage = damageRoll(hero);
 
 			if (ch.buff(Frost.class) != null){
 				return; //do nothing, can't affect a frozen target

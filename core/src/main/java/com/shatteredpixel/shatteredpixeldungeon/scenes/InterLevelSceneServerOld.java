@@ -115,7 +115,7 @@ public class InterLevelSceneServerOld {
 
             Level level;
             level = getNextLevel();
-            Dungeon.switchLevel(level, fallIntoPit ? level.pitCell() : level.randomRespawnCell(), hero);
+            Dungeon.switchLevel(level, fallIntoPit ? level.pitCell() : level.randomRespawnCell(hero), hero);
 
             for (int i = 0; i < heroes.length; i++) {
                 SendData.sendInterLevelSceneFadeOut(i);

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -40,6 +41,21 @@ public class WndOptions extends Window {
 	public WndOptions(Image icon, String title, String message, String... options) {
 		super();
 
+		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
+
+		float pos = 0;
+		if (title != null) {
+			IconTitle tfTitle = new IconTitle(icon, title);
+			tfTitle.setRect(0, pos, width, 0);
+			add(tfTitle);
+
+			pos = tfTitle.bottom() + 2*MARGIN;
+		}
+
+		layoutBody(pos, message, options);
+	}
+	public WndOptions(Hero hero, Image icon, String title, String message, String... options) {
+		super(hero);
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
 
 		float pos = 0;

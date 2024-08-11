@@ -608,6 +608,7 @@ public abstract class Char extends Actor {
 	//used for damage and blocking calculations, normally just calls NormalIntRange
 	// but may be affected by things that specifically impact combat number ranges
 	public static int combatRoll(int min, int max ){
+		//FIXME
 		if (Random.Float() < ThirteenLeafClover.combatDistributionInverseChance()){
 			return ThirteenLeafClover.invCombatRoll(min, max);
 		} else {

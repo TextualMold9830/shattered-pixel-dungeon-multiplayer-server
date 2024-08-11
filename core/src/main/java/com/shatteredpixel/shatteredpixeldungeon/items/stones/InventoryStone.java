@@ -101,7 +101,7 @@ public abstract class InventoryStone extends Runestone {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -111,7 +111,7 @@ public abstract class InventoryStone extends Runestone {
 			
 			if (item != null) {
 
-				((InventoryStone)curItem).onItemSelected( item, hero );
+				((InventoryStone)curItem).onItemSelected( item, getOwner() );
 				
 			}
 		}

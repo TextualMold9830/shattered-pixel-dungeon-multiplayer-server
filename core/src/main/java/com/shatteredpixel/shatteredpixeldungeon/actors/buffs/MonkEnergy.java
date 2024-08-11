@@ -144,7 +144,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 	public void gainEnergy(Mob enemy ){
 		if (target == null) return;
 
-		if (!Regeneration.regenOn()){
+		if (!Regeneration.regenOn((Hero) target)){
 			return; //to prevent farming boss minions
 		}
 
@@ -201,7 +201,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 	//10 at base, 20 at level 30
 	public int energyCap(){
-		return Math.max(10, 5 + Dungeon.heroes.lvl/2);
+		return Math.max(10, 5 + ((Hero)target)	.lvl/2);
 	}
 
 	public void abilityUsed( MonkAbility abil ){
@@ -347,7 +347,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				}
 
 				Char enemy = Actor.findChar(target);
-				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.fieldOfView[target]) {
+				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.fieldOfView[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
 				}
@@ -571,7 +571,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				}
 
 				Char enemy = Actor.findChar(target);
-				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.fieldOfView[target]) {
+				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !hero.fieldOfView[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
 				}

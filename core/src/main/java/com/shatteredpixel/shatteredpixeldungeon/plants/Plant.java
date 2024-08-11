@@ -49,24 +49,27 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 
 public abstract class Plant implements Bundlable {
-	
+
 	public int image;
 	public int pos;
 
 	protected Class<? extends Plant.Seed> seedClass;
 
-	public void trigger(){
+	public void trigger() {
 
 		Char ch = Actor.findChar(pos);
 
-		if (ch instanceof Hero){
+		if (ch instanceof Hero) {
 			((Hero) ch).interrupt();
 		}
-
-		if (Dungeon.visibleforAnyHero(pos) && Dungeon.heroes.hasTalent(Talent.NATURES_AID)){
-			// 3/5 turns based on talent points spent
-			Barkskin.conditionallyAppend(Dungeon.heroes, 2, 1 + 2*(Dungeon.heroes.pointsInTalent(Talent.NATURES_AID)));
-		}
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null){
+			if (hero.fieldOfView[pos] && hero.hasTalent(Talent.NATURES_AID)) {
+				// 3/5 turns based on talent points spent
+				Barkskin.conditionallyAppend(hero, 2, 1 + 2 * (hero.pointsInTalent(Talent.NATURES_AID)));
+			}
+	}
+}
 
 		wither();
 		activate( ch );
@@ -115,13 +118,18 @@ public abstract class Plant implements Bundlable {
 		return Messages.get(this, "name");
 	}
 
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = Messages.get(this, "desc");
-		if (Dungeon.heroes.subClass == HeroSubClass.WARDEN){
+		if (hero.subClass == HeroSubClass.WARDEN){
 			desc += "\n\n" + Messages.get(this, "warden_desc");
 		}
 		return desc;
 	}
+	public String desc() {
+		String desc = Messages.get(this, "desc");
+		return desc;
+	}
+
 	
 	public static class Seed extends Item {
 
@@ -144,7 +152,7 @@ public abstract class Plant implements Bundlable {
 		}
 		
 		@Override
-		protected void onThrow( int cell ) {
+		protected void onThrow( int cell, Hero hero ) {
 			if (Dungeon.level.map[cell] == Terrain.ALCHEMY
 					|| Dungeon.level.pit[cell]
 					|| Dungeon.level.traps.get(cell) != null
@@ -152,7 +160,7 @@ public abstract class Plant implements Bundlable {
 				super.onThrow( cell );
 			} else {
 				Dungeon.level.plant( this, cell );
-				if (Dungeon.heroes.subClass == HeroSubClass.WARDEN) {
+				if (hero.subClass == HeroSubClass.WARDEN) {
 					for (int i : PathFinder.NEIGHBOURS8) {
 						int c = Dungeon.level.map[cell + i];
 						if ( c == Terrain.EMPTY || c == Terrain.EMPTY_DECO
@@ -182,10 +190,15 @@ public abstract class Plant implements Bundlable {
 			}
 		}
 		
-		public Plant couch( int pos, Level level ) {
-			if (level != null && level.fieldOfView != null && level.fieldOfView[pos]) {
+		public Plant couch( int pos, Level level, Hero hero ) {
+			if (level != null && hero.fieldOfView != null && hero.fieldOfView[pos]) {
 				Sample.INSTANCE.play(Assets.Sounds.PLANT);
 			}
+			Plant plant = Reflection.newInstance(plantClass);
+			plant.pos = pos;
+			return plant;
+		}
+		public Plant couch( int pos, Level level ) {
 			Plant plant = Reflection.newInstance(plantClass);
 			plant.pos = pos;
 			return plant;

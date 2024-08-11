@@ -358,18 +358,17 @@ public class WndBag extends WndTabbed {
 					selector.onSelect( item );
 
 				} else {
-
-					RightClickMenu r = new RightClickMenu(item){
-						@Override
-						public void onSelect(int index) {
-							WndBag.this.hide();
-						}
-					};
-					parent.addToFront(r);
-					r.camera = camera();
-					PointF mousePos = PointerEvent.currentHoverPos();
-					mousePos = camera.screenToCamera((int)mousePos.x, (int)mousePos.y);
-					r.setPos(mousePos.x-3, mousePos.y-3);
+//					RightClickMenu r = new RightClickMenu(item){
+//						@Override
+//						public void onSelect(int index) {
+//							WndBag.this.hide();
+//						}
+//					};
+//					parent.addToFront(r);
+//					r.camera = camera();
+//					PointF mousePos = PointerEvent.currentHoverPos();
+//					mousePos = camera.screenToCamera((int)mousePos.x, (int)mousePos.y);
+//					r.setPos(mousePos.x-3, mousePos.y-3);
 
 				}
 			}
@@ -521,9 +520,11 @@ public class WndBag extends WndTabbed {
 			return null; //defaults to last bag opened
 		}
 		public abstract boolean itemSelectable( Item item );
+		public void onSelect(Item item){};
 		@Deprecated
-		public void onSelect( Item item ){};
-		public abstract void onSelect( Item item, Hero hero );
+		public void onSelect( Item item, Hero hero ){
+			onSelect(item);
+		};
 
 		public ItemSelector() {
 		}

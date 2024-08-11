@@ -267,25 +267,27 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	private static boolean evaluatingTwinUpgrades = false;
-	//IDE Warns this is not override. Why???
 	@Override
-	public int buffedLvl(Hero hero) {
-		if (!evaluatingTwinUpgrades && isEquipped(hero) && hero.hasTalent(Talent.TWIN_UPGRADES)){
-			KindOfWeapon other = null;
-			if (hero.belongings.weapon() != this) other = hero.belongings.weapon();
-			if (hero.belongings.secondWep() != this) other = hero.belongings.secondWep();
+	public int buffedLvl(Char owner) {
+		if (owner instanceof Hero) {
+			Hero hero = (Hero) owner;
+			if (!evaluatingTwinUpgrades && isEquipped(hero) && hero.hasTalent(Talent.TWIN_UPGRADES)) {
+				KindOfWeapon other = null;
+				if (hero.belongings.weapon() != this) other = hero.belongings.weapon();
+				if (hero.belongings.secondWep() != this) other = hero.belongings.secondWep();
 
-			if (other instanceof MeleeWeapon) {
-				evaluatingTwinUpgrades = true;
-				int otherLevel = other.buffedLvl();
-				evaluatingTwinUpgrades = false;
+				if (other instanceof MeleeWeapon) {
+					evaluatingTwinUpgrades = true;
+					int otherLevel = other.buffedLvl();
+					evaluatingTwinUpgrades = false;
 
-				//weaker weapon needs to be 2/1/0 tiers lower, based on talent level
-				if ((tier + (3 - hero.pointsInTalent(Talent.TWIN_UPGRADES))) <= ((MeleeWeapon) other).tier
-						&& otherLevel > super.buffedLvl()) {
-					return otherLevel;
+					//weaker weapon needs to be 2/1/0 tiers lower, based on talent level
+					if ((tier + (3 - hero.pointsInTalent(Talent.TWIN_UPGRADES))) <= ((MeleeWeapon) other).tier
+							&& otherLevel > super.buffedLvl()) {
+						return otherLevel;
+					}
+
 				}
-
 			}
 		}
 		return super.buffedLvl();
@@ -431,51 +433,58 @@ public class MeleeWeapon extends Weapon {
 
 		@Override
 		public boolean act() {
-			if (charges < chargeCap()){
-				if (Regeneration.regenOn()){
-					//60 to 45 turns per charge
-					float chargeToGain = 1/(60f-1.5f*(chargeCap()-charges));
+			if (target instanceof Hero) {
+				Hero hero = (Hero) target;
+				if (charges < chargeCap()) {
+					if (Regeneration.regenOn()) {
+						//60 to 45 turns per charge
+						float chargeToGain = 1 / (60f - 1.5f * (chargeCap() - charges));
 
-					//40 to 30 turns per charge for champion
-					if (Dungeon.heroes.subClass == HeroSubClass.CHAMPION){
-						chargeToGain *= 1.5f;
+						//40 to 30 turns per charge for champion
+						if (hero.subClass == HeroSubClass.CHAMPION) {
+							chargeToGain *= 1.5f;
+						}
+
+						//50% slower charge gain with brawler's stance enabled, even if buff is inactive
+						if (hero.buff(RingOfForce.BrawlersStance.class) != null) {
+							chargeToGain *= 0.50f;
+						}
+
+						partialCharge += chargeToGain;
 					}
 
-					//50% slower charge gain with brawler's stance enabled, even if buff is inactive
-					if (Dungeon.heroes.buff(RingOfForce.BrawlersStance.class) != null){
-						chargeToGain *= 0.50f;
+					int points = ((Hero) target).pointsInTalent(Talent.WEAPON_RECHARGING);
+					if (points > 0 && target.buff(Recharging.class) != null || target.buff(ArtifactRecharge.class) != null) {
+						//1 every 15 turns at +1, 10 turns at +2
+						partialCharge += 1 / (20f - 5f * points);
 					}
 
-					partialCharge += chargeToGain;
+					if (partialCharge >= 1) {
+						charges++;
+						partialCharge--;
+						updateQuickslot();
+					}
+				} else {
+					partialCharge = 0;
 				}
 
-				int points = ((Hero)target).pointsInTalent(Talent.WEAPON_RECHARGING);
-				if (points > 0 && target.buff(Recharging.class) != null || target.buff(ArtifactRecharge.class) != null){
-					//1 every 15 turns at +1, 10 turns at +2
-					partialCharge += 1/(20f - 5f*points);
+				if (ActionIndicator.action != this && hero.subClass == HeroSubClass.CHAMPION) {
+					ActionIndicator.setAction(this);
 				}
 
-				if (partialCharge >= 1){
-					charges++;
-					partialCharge--;
-					updateQuickslot();
-				}
-			} else {
-				partialCharge = 0;
+				spend(TICK);
+			//				return true;
 			}
-
-			if (ActionIndicator.action != this && Dungeon.heroes.subClass == HeroSubClass.CHAMPION) {
-				ActionIndicator.setAction(this);
-			}
-
-			spend(TICK);
 			return true;
+
 		}
 
 		@Override
 		public void fx(boolean on) {
-			if (on && Dungeon.heroes.subClass == HeroSubClass.CHAMPION) {
-				ActionIndicator.setAction(this);
+			if (target instanceof Hero) {
+				if (on && ((Hero) target).subClass == HeroSubClass.CHAMPION) {
+					ActionIndicator.setAction(this);
+				}
 			}
 		}
 
@@ -485,12 +494,12 @@ public class MeleeWeapon extends Weapon {
 			ActionIndicator.clearAction(this);
 		}
 
-		public int chargeCap(){
+		public int chargeCap(Hero hero){
 			//caps at level 19 with 8 or 10 charges
-			if (Dungeon.heroes.subClass == HeroSubClass.CHAMPION){
-				return Math.min(10, 4 + (Dungeon.heroes.lvl - 1) / 3);
+			if (hero.subClass == HeroSubClass.CHAMPION){
+				return Math.min(10, 4 + (hero.lvl - 1) / 3);
 			} else {
-				return Math.min(8, 2 + (Dungeon.heroes.lvl - 1) / 3);
+				return Math.min(8, 2 + (hero.lvl - 1) / 3);
 			}
 		}
 

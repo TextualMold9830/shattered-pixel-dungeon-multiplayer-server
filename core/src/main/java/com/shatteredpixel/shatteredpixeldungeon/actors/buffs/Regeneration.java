@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
+//This buff is from ChaliceOfBlood(Artifact) target will always be hero
 
 public class Regeneration extends Buff {
 	
@@ -41,7 +42,7 @@ public class Regeneration extends Buff {
 		if (target.isAlive()) {
 
 			if (target.HP < regencap() && !((Hero)target).isStarving()) {
-				if (regenOn()) {
+				if (regenOn((Hero) target)) {
 					target.HP += 1;
 					if (target.HP == regencap()) {
 						((Hero) target).resting = false;
@@ -49,7 +50,7 @@ public class Regeneration extends Buff {
 				}
 			}
 
-			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.heroes.buff( ChaliceOfBlood.chaliceRegen.class);
+			ChaliceOfBlood.chaliceRegen regenBuff = target.buff( ChaliceOfBlood.chaliceRegen.class);
 
 			float delay = REGENERATION_DELAY;
 			if (regenBuff != null && target.buff(MagicImmune.class) == null) {
@@ -76,8 +77,8 @@ public class Regeneration extends Buff {
 		return target.HT;
 	}
 
-	public static boolean regenOn(){
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
+	public static boolean regenOn(Hero hero){
+		LockedFloor lock = hero.buff(LockedFloor.class);
 		if (lock != null && !lock.regenOn()){
 			return false;
 		}

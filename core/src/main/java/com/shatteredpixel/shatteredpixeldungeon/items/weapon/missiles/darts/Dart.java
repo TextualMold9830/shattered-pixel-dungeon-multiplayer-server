@@ -71,7 +71,7 @@ public class Dart extends MissileWeapon {
 	public void execute(Hero hero, String action) {
 		super.execute(hero, action);
 		if (action.equals(AC_TIP)){
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 		}
 	}
 	
@@ -99,12 +99,12 @@ public class Dart extends MissileWeapon {
 	
 	protected static Crossbow bow;
 	
-	private void updateCrossbow(){
-		if (Dungeon.heroes.belongings.weapon() instanceof Crossbow){
-			bow = (Crossbow) Dungeon.heroes.belongings.weapon();
-		} else if (Dungeon.heroes.belongings.secondWep() instanceof Crossbow) {
+	private void updateCrossbow(Hero hero){
+		if (hero.belongings.weapon() instanceof Crossbow){
+			bow = (Crossbow) hero.belongings.weapon();
+		} else if (hero.belongings.secondWep() instanceof Crossbow) {
 			//player can instant swap anyway, so this is just QoL
-			bow = (Crossbow) Dungeon.heroes.belongings.secondWep();
+			bow = (Crossbow) hero.belongings.secondWep();
 		} else {
 			bow = null;
 		}
@@ -150,13 +150,13 @@ public class Dart extends MissileWeapon {
 
 	@Override
 	public int throwPos(Hero user, int dst) {
-		updateCrossbow();
+		updateCrossbow(user);
 		return super.throwPos(user, dst);
 	}
 
 	@Override
-	protected void onThrow(int cell) {
-		updateCrossbow();
+	protected void onThrow(int cell, Hero hero) {
+		updateCrossbow(hero);
 		//we have to set this here, as on-hit effects can move the target we aim at
 		chargedShotPos = cell;
 		super.onThrow(cell);
@@ -194,10 +194,10 @@ public class Dart extends MissileWeapon {
 	}
 
 	@Override
-	protected void decrementDurability() {
-		super.decrementDurability();
-		if (Dungeon.heroes.buff(Crossbow.ChargedShot.class) != null) {
-			Dungeon.heroes.buff(Crossbow.ChargedShot.class).detach();
+	protected void decrementDurability(Hero hero) {
+		super.decrementDurability(hero);
+		if (hero.buff(Crossbow.ChargedShot.class) != null) {
+			hero.buff(Crossbow.ChargedShot.class).detach();
 		}
 	}
 
@@ -212,8 +212,8 @@ public class Dart extends MissileWeapon {
 	}
 	
 	@Override
-	public String info() {
-		updateCrossbow();
+	public String info(Hero hero) {
+		updateCrossbow(hero);
 		if (bow != null && !bow.isIdentified()){
 			int level = bow.level();
 			//temporarily sets the level of the bow to 0 for IDing purposes
@@ -286,7 +286,7 @@ public class Dart extends MissileWeapon {
 			
 			TippedDart tipResult = TippedDart.getTipped((Plant.Seed) item, 1);
 			
-			GameScene.show(new WndOptions( new ItemSprite(item),
+			GameScene.show(new WndOptions(getOwner(), new ItemSprite(item),
 					Messages.titleCase(item.name()),
 					Messages.get(Dart.class, "tip_desc", tipResult.name()) + "\n\n" + tipResult.desc(),
 					options){
@@ -309,7 +309,7 @@ public class Dart extends MissileWeapon {
 						}
 						
 						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, maxToTip);
-						if (!newDart.collect()) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
+						if (!newDart.collect(getOwnerHero())) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
 						
 						curUser.spend( 1f );
 						curUser.busy();
@@ -325,7 +325,7 @@ public class Dart extends MissileWeapon {
 						}
 						
 						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, singleSeedDarts);
-						if (!newDart.collect()) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
+						if (!newDart.collect(getOwnerHero())) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
 						
 						curUser.spend( 1f );
 						curUser.busy();

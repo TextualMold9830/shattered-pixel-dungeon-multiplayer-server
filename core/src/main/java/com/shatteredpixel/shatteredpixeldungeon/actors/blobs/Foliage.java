@@ -63,14 +63,18 @@ public class Foliage extends Blob {
 			}
 		}
 		
-		Hero hero = Dungeon.heroes;
-		if (hero.isAlive() && cur[hero.pos] > 0) {
-			Shadows s = Buff.affect( hero, Shadows.class );
-			if (s != null){
-				s.prolong();
+		//Hero hero = Dungeon.heroes;
+		for (Hero hero :Dungeon.heroes) {
+			if (hero != null) {
+
+				if (hero.isAlive() && cur[hero.pos] > 0) {
+					Shadows s = Buff.affect(hero, Shadows.class);
+					if (s != null) {
+						s.prolong();
+					}
+				}
 			}
 		}
-
 		if (seen) {
 			Notes.add( Notes.Landmark.GARDEN );
 		}

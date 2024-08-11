@@ -86,12 +86,12 @@ public class WandOfRegrowth extends Wand {
 	}
 
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 
 		ArrayList<Integer> cells = new ArrayList<>(cone.cells);
 
 		float furrowedChance = 0;
-		if (totChrgUsed >= chargeLimit(Dungeon.heroes.lvl)){
+		if (totChrgUsed >= chargeLimit(hero.lvl)){
 			furrowedChance = (chargesOverLimit+1)/5f;
 		}
 
@@ -189,12 +189,12 @@ public class WandOfRegrowth extends Wand {
 			grassToPlace--;
 		}
 
-		if (totChrgUsed < chargeLimit(Dungeon.heroes.lvl)) {
+		if (totChrgUsed < chargeLimit(hero.lvl)) {
 			chargesOverLimit = 0;
 			totChrgUsed += chrgUsed;
-			if (totChrgUsed > chargeLimit(Dungeon.heroes.lvl)){
-				chargesOverLimit = totChrgUsed - chargeLimit(Dungeon.heroes.lvl);
-				totChrgUsed = chargeLimit(Dungeon.heroes.lvl);
+			if (totChrgUsed > chargeLimit(hero.lvl)){
+				chargesOverLimit = totChrgUsed - chargeLimit(hero.lvl);
+				totChrgUsed = chargeLimit(hero.lvl);
 			}
 		} else {
 			chargesOverLimit += chrgUsed;

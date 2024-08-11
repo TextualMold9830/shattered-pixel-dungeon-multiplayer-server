@@ -102,7 +102,7 @@ public abstract class InventoryScroll extends Scroll {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -115,14 +115,14 @@ public abstract class InventoryScroll extends Scroll {
 				if (!identifiedByUse) {
 					curItem = detach(curUser.belongings.backpack);
 				}
-				((InventoryScroll)curItem).onItemSelected( item, hero );
+				((InventoryScroll)curItem).onItemSelected( item, getOwner() );
 				((InventoryScroll)curItem).readAnimation();
 				
 				Sample.INSTANCE.play( Assets.Sounds.READ );
 				
 			} else if (identifiedByUse && !((Scroll)curItem).anonymous) {
 				
-				((InventoryScroll)curItem).confirmCancelation(hero);
+				((InventoryScroll)curItem).confirmCancelation(getOwner());
 				
 			} else if (((Scroll)curItem).anonymous) {
 

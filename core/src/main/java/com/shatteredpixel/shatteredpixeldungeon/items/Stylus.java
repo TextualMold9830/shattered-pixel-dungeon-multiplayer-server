@@ -131,7 +131,7 @@ public class Stylus extends Item {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			if (item != null) {
 				Stylus.this.inscribe( (Armor)item );
 			}

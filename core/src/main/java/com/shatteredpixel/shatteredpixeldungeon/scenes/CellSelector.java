@@ -52,7 +52,11 @@ public class CellSelector extends ScrollArea {
 	}
 
 	public Listener listener = null;
-	
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
+	}
+
 	public boolean enabled;
 	
 	private float dragThreshold;

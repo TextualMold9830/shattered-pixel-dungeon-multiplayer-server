@@ -236,7 +236,7 @@ public class ScrollOfTeleportation extends Scroll {
 					&& Actor.findChar(i) == null){
 				if (preferNotSeen && !Dungeon.level.visited[i]){
 					notSeenValid.add(i);
-				} else if (Dungeon.level.fieldOfView[i]){
+				} else if (ch.fieldOfView[i]){
 					visibleValid.add(i);
 				} else {
 					notVisibleValid.add(i);
@@ -278,11 +278,11 @@ public class ScrollOfTeleportation extends Scroll {
 
 		ch.sprite.interruptMotion();
 
-		if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[ch.pos]){
+		if (Dungeon.visibleforAnyHero(pos) || ch.fieldOfView[ch.pos]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
-		if (Dungeon.level.fieldOfView[ch.pos] && ch != Dungeon.heroes) {
+		if (ch.fieldOfView[ch.pos] && !(ch instanceof Hero)){
 			CellEmitter.get(ch.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 
@@ -304,7 +304,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 	//just plays the VFX for teleporting, without any position changes
 	public static void appearVFX( Char ch ){
-		if (Dungeon.level.fieldOfView[ch.pos]){
+		if (ch.fieldOfView[ch.pos]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
@@ -313,7 +313,7 @@ public class ScrollOfTeleportation extends Scroll {
 			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
 		}
 
-		if (Dungeon.level.fieldOfView[ch.pos]) {
+		if (ch.fieldOfView[ch.pos]) {
 			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}

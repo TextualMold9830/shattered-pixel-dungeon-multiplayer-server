@@ -44,12 +44,22 @@ public class MossyClump extends Trinket {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		return Messages.get(this, "desc", (int)(100*overrideNormalLevelChance(buffedLvl())));
 	}
 
-	public static float overrideNormalLevelChance(){
-		return overrideNormalLevelChance(trinketLevel(MossyClump.class));
+	public static float overrideNormalLevelChance() {
+		// highest level mossy clump gets to override the level
+		float currentOverrideNormalLevelChance = 0f;
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				float overrideNormalLevelChance = overrideNormalLevelChance(trinketLevel(MossyClump.class, hero));
+				if (overrideNormalLevelChance > currentOverrideNormalLevelChance) {
+					currentOverrideNormalLevelChance = overrideNormalLevelChance;
+
+				}			}
+		}
+		return currentOverrideNormalLevelChance;
 	}
 
 	public static float overrideNormalLevelChance( int level ){

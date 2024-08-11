@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -60,8 +62,8 @@ public abstract class WellWater extends Blob {
 	protected boolean affect( int pos ) {
 		
 		Heap heap;
-		
-		if (pos == Dungeon.heroes.pos && affectHero( Dungeon.heroes)) {
+		Char ch = Actor.findChar(pos);
+		if (ch instanceof Hero && affectHero((Hero) ch)) {
 			
 			cur[pos] = 0;
 			return true;

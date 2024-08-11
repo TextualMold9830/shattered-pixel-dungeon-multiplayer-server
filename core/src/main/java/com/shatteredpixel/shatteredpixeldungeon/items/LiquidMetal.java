@@ -72,7 +72,7 @@ public class LiquidMetal extends Item {
 		if (action.equals(AC_APPLY)) {
 
 			curUser = hero;
-			GameScene.selectItem( itemSelector );
+			GameScene.selectItem( itemSelector, hero );
 
 		}
 	}
@@ -140,9 +140,9 @@ public class LiquidMetal extends Item {
 				//we remove a tiny amount here to account for rounding errors
 				float percentDurabilityLost = 0.999f - (m.durabilityLeft()/100f);
 				maxToUse = (int)Math.ceil(maxToUse*percentDurabilityLost);
-				float durPerUse = m.durabilityPerUse()/100f;
+				float durPerUse = m.durabilityPerUse(getOwner())/100f;
 				if (maxToUse == 0 ||
-						Math.ceil(m.durabilityLeft()/ m.durabilityPerUse()) >= Math.ceil(m.MAX_DURABILITY/ m.durabilityPerUse()) ){
+						Math.ceil(m.durabilityLeft()/ m.durabilityPerUse(getOwner())) >= Math.ceil(m.MAX_DURABILITY/ m.durabilityPerUse(getOwner())) ){
 					GLog.w(Messages.get(LiquidMetal.class, "already_fixed"));
 					return;
 				} else if (maxToUse < quantity()) {
@@ -153,7 +153,7 @@ public class LiquidMetal extends Item {
 				} else {
 					m.repair(quantity()*durabilityPerMetal);
 					GLog.i(Messages.get(LiquidMetal.class, "apply", quantity()));
-					detachAll(Dungeon.heroes.belongings.backpack);
+					detachAll(getOwner().belongings.backpack);
 				}
 
 				curUser.sprite.operate(curUser.pos);
@@ -187,7 +187,7 @@ public class LiquidMetal extends Item {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Item result = sampleOutput(ingredients);
 
 			for (Item i : ingredients){

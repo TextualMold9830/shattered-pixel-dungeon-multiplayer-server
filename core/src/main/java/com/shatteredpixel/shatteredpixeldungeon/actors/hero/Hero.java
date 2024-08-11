@@ -750,7 +750,7 @@ public class Hero extends Char {
 	public boolean act() {
 
 		if (buff(Endure.EndureTracker.class) != null){
-			buff(Endure.EndureTracker.class).endEnduring();
+			buff(Endure.EndureTracker.class).endEnduring(this);
 		}
 		
 		if (!ready) {

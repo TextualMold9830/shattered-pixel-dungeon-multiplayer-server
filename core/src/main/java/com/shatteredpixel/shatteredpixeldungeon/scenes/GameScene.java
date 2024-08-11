@@ -137,6 +137,7 @@ import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1403,6 +1404,10 @@ public class GameScene extends PixelScene {
 			updateTags = true;
 		}
 	}
+	public static void ready(@NotNull Hero hero) {
+		selectCell(hero, hero.cellSelector.listener );
+	}
+
 	//FIXME
 	public static void checkKeyHold(){
 		cellSelector.processKeyHold();
@@ -1519,5 +1524,7 @@ public class GameScene extends PixelScene {
 		sprite.visible = true;
 		sprite.link(hero);
 	}
-
+	public static void selectCell(  Hero hero,  CellSelector.Listener listener ) {
+		hero.cellSelector.setListener(listener);
+	}
 }

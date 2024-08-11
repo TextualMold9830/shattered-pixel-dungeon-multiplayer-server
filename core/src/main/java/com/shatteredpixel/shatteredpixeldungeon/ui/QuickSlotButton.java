@@ -392,7 +392,7 @@ public class QuickSlotButton extends Button {
 			lastTarget = target;
 			
 			TargetHealthIndicator.instance.target( target );
-			InventoryPane.lastTarget = target;
+			//InventoryPane.lastTarget = target;
 		}
 	}
 	

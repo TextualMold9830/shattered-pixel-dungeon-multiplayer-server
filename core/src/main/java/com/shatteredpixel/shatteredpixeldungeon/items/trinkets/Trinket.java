@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -48,12 +49,12 @@ public abstract class Trinket extends Item {
 
 	protected abstract int upgradeEnergyCost();
 
-	protected static int trinketLevel(Class<? extends Trinket> trinketType ){
-		if (Dungeon.heroes == null || Dungeon.heroes.belongings == null){
+	protected static int trinketLevel(Class<? extends Trinket> trinketType, Hero hero ){
+		if (hero == null || hero.belongings == null){
 			return -1;
 		}
 
-		Trinket trinket = Dungeon.heroes.belongings.getItem(trinketType);
+		Trinket trinket = hero.belongings.getItem(trinketType);
 
 		if (trinket != null){
 			return trinket.buffedLvl();
@@ -98,7 +99,7 @@ public abstract class Trinket extends Item {
 		}
 
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Item result = ingredients.get(0).duplicate();
 			ingredients.get(0).quantity(0);
 			result.upgrade();

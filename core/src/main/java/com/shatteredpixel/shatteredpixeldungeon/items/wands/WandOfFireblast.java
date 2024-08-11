@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage.WildMagic;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
@@ -78,7 +79,7 @@ public class WandOfFireblast extends DamageWand {
 	ConeAOE cone;
 
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 
 		ArrayList<Char> affectedChars = new ArrayList<>();
 		ArrayList<Integer> adjacentCells = new ArrayList<>();
@@ -132,7 +133,7 @@ public class WandOfFireblast extends DamageWand {
 
 		for ( Char ch : affectedChars ){
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), new Char.DamageCause(this, curUser));
+			ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 			if (ch.isAlive()) {
 				Buff.affect(ch, Burning.class).reignite(ch);
 				switch (chargesPerCast()) {

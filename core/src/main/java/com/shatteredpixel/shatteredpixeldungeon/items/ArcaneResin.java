@@ -107,7 +107,7 @@ public class ArcaneResin extends Item {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			if (item != null && item instanceof Wand) {
 				Wand w = (Wand)item;
 
@@ -126,7 +126,7 @@ public class ArcaneResin extends Item {
 					if (resinToUse < quantity()){
 						quantity(quantity()-resinToUse);
 					} else {
-						detachAll(hero.belongings.backpack);
+						detachAll(getOwner().belongings.backpack);
 					}
 
 					w.resinBonus++;

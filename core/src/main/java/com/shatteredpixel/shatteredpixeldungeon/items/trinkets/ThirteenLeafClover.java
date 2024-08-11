@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
@@ -42,8 +43,8 @@ public class ThirteenLeafClover extends Trinket {
 		return Messages.get(this, "desc", (int)(100*combatDistributionInverseChance(buffedLvl())));
 	}
 
-	public static float combatDistributionInverseChance(){
-		return combatDistributionInverseChance(trinketLevel(ThirteenLeafClover.class));
+	public static float combatDistributionInverseChance(Hero hero){
+		return combatDistributionInverseChance(trinketLevel(ThirteenLeafClover.class, hero));
 	}
 
 	public static float combatDistributionInverseChance( int level ){

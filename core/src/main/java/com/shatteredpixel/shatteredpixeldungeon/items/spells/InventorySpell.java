@@ -70,7 +70,7 @@ public abstract class InventorySpell extends Spell {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
@@ -82,13 +82,13 @@ public abstract class InventorySpell extends Spell {
 
 				curItem = detach(curUser.belongings.backpack);
 				
-				((InventorySpell)curItem).onItemSelected( item, hero );
+				((InventorySpell)curItem).onItemSelected( item, getOwner() );
 				curUser.spend( 1f );
 				curUser.busy();
 				(curUser.sprite).operate( curUser.pos );
 				
 				Sample.INSTANCE.play( Assets.Sounds.READ );
-				Invisibility.dispel(hero);
+				Invisibility.dispel(getOwner());
 
 				if (Random.Float() < ((Spell)curItem).talentChance){
 					Talent.onScrollUsed(curUser, curUser.pos, ((Spell)curItem).talentFactor);

@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
@@ -267,7 +268,11 @@ public class SurfaceScene extends PixelScene {
 		gameOver.setPos( frame.x + FRAME_MARGIN_X * 2, frame.y + frame.height + 4 );
 		add( gameOver );
 
-		Badges.validateHappyEnd();
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				Badges.validateHappyEnd(hero);
+			}
+		}
 		Dungeon.win( Amulet.class );
 		Dungeon.deleteGame(  true );
 		Badges.saveGlobal();

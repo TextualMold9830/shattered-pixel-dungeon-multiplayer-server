@@ -321,17 +321,17 @@ public class HornOfPlenty extends Artifact {
 		}
 
 		@Override
-		public void onSelect( Item item, Hero hero ) {
+		public void onSelect( Item item ) {
 			if (item != null && item instanceof Food) {
 				if (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null){
 					GLog.w( Messages.get(HornOfPlenty.class, "reject") );
 				} else {
-					hero.sprite.operate( hero.pos );
-					hero.busy();
-					hero.spend( Food.TIME_TO_EAT );
+					getOwner().sprite.operate( getOwner().pos );
+					getOwner().busy();
+					getOwner().spend( Food.TIME_TO_EAT );
 
 					((HornOfPlenty)curItem).gainFoodValue(((Food)item));
-					item.detach(hero.belongings.backpack);
+					item.detach(getOwner().belongings.backpack);
 				}
 
 			}

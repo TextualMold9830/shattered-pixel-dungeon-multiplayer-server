@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -38,11 +39,11 @@ public class IncendiaryDart extends TippedDart {
 	}
 	
 	@Override
-	protected void onThrow( int cell ) {
+	protected void onThrow( int cell, Hero hero ) {
 		Char enemy = Actor.findChar( cell );
 		if ((enemy == null || enemy == curUser) && Dungeon.level.flamable[cell]) {
 			GameScene.add(Blob.seed(cell, 4, Fire.class));
-			decrementDurability();
+			decrementDurability(hero);
 			if (durability > 0){
 				super.onThrow(cell);
 			} else {

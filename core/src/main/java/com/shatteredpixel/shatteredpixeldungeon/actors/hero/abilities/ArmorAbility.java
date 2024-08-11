@@ -38,7 +38,7 @@ public abstract class ArmorAbility implements Bundlable {
 	protected float baseChargeUse = 35;
 
 	public void use( ClassArmor armor, Hero hero ){
-		if (targetingPrompt() == null){
+		if (targetingPrompt(hero) == null){
 			activate(armor, hero, hero.pos);
 		} else {
 			GameScene.selectCell(new CellSelector.Listener() {
@@ -56,8 +56,12 @@ public abstract class ArmorAbility implements Bundlable {
 	}
 
 	//leave null for no targeting
+	@Deprecated
 	public String targetingPrompt(){
 		return null;
+	}
+	public String targetingPrompt(Hero hero){
+		return targetingPrompt();
 	}
 
 	public boolean useTargeting(){
@@ -86,9 +90,15 @@ public abstract class ArmorAbility implements Bundlable {
 	public String shortDesc(){
 		return Messages.get(this, "short_desc");
 	}
+	public String shortDesc(Hero hero){
+		return shortDesc();
+	}
 
 	public String desc(){
 		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+	}
+	public String desc(Hero hero){
+		return desc();
 	}
 
 	public int icon(){
