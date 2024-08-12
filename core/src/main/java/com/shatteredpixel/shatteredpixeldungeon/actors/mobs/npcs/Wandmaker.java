@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotHeart;
@@ -102,25 +103,25 @@ public class Wandmaker extends NPC {
 	
 	@Override
 	public boolean interact(Char c) {
-		sprite.turnTo( pos, Dungeon.heroes.pos );
+		sprite.turnTo( pos, c.pos );
 
-		if (c != Dungeon.heroes){
+		if (!(c instanceof Hero)){
 			return true;
 		}
-
+		Hero hero = (Hero) c;
 		if (Quest.given) {
 			
 			Item item;
 			switch (Quest.type) {
 				case 1:
 				default:
-					item = Dungeon.heroes.belongings.getItem(CorpseDust.class);
+					item = hero.belongings.getItem(CorpseDust.class);
 					break;
 				case 2:
-					item = Dungeon.heroes.belongings.getItem(Embers.class);
+					item = hero.belongings.getItem(Embers.class);
 					break;
 				case 3:
-					item = Dungeon.heroes.belongings.getItem(Rotberry.Seed.class);
+					item = hero.belongings.getItem(Rotberry.Seed.class);
 					break;
 			}
 
@@ -135,13 +136,13 @@ public class Wandmaker extends NPC {
 				String msg;
 				switch(Quest.type){
 					case 1: default:
-						msg = Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.heroes.name()));
+						msg = Messages.get(this, "reminder_dust", Messages.titleCase(hero.name()));
 						break;
 					case 2:
-						msg = Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.heroes.name()));
+						msg = Messages.get(this, "reminder_ember", Messages.titleCase(hero.name()));
 						break;
 					case 3:
-						msg = Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.heroes.name()));
+						msg = Messages.get(this, "reminder_berry", Messages.titleCase(hero.name()));
 						break;
 				}
 				Game.runOnRenderThread(new Callback() {
@@ -156,7 +157,7 @@ public class Wandmaker extends NPC {
 
 			String msg1 = "";
 			String msg2 = "";
-			switch(Dungeon.heroes.heroClass){
+			switch(hero.heroClass){
 				case WARRIOR:
 					msg1 += Messages.get(this, "intro_warrior");
 					break;
@@ -164,7 +165,7 @@ public class Wandmaker extends NPC {
 					msg1 += Messages.get(this, "intro_rogue");
 					break;
 				case MAGE:
-					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.heroes.name()));
+					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(hero.name()));
 					break;
 				case HUNTRESS:
 					msg1 += Messages.get(this, "intro_huntress");
@@ -367,28 +368,33 @@ public class Wandmaker extends NPC {
 		}
 
 		//quest is active if:
-		public static boolean active(){
+		public static boolean active() {
 			//it is not completed
 			if (wand1 == null || wand2 == null
-					|| !(Dungeon.level instanceof RegularLevel) || Dungeon.heroes == null){
+					|| !(Dungeon.level instanceof RegularLevel) || Dungeon.heroes == null) {
 				return false;
 			}
 
 			//and...
-			if (type == 1){
+			if (type == 1) {
 				//hero is in the mass grave room
-				if (((RegularLevel) Dungeon.level).room(Dungeon.heroes.pos) instanceof MassGraveRoom) {
-					return true;
-				}
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					if (((RegularLevel) Dungeon.level).room(hero.pos) instanceof MassGraveRoom) {
+						return true;
+					}
 
 				//or if they are corpse dust cursed
-				for (Buff b : Dungeon.heroes.buffs()) {
+				for (Buff b : hero.buffs()) {
 					if (b instanceof CorpseDust.DustGhostSpawner) {
 						return true;
 					}
 				}
 
+			}
+				}
 				return false;
+
 			} else if (type == 2){
 				//hero has summoned the newborn elemental
 				for (Mob m : Dungeon.level.mobs) {
@@ -396,28 +402,30 @@ public class Wandmaker extends NPC {
 						return true;
 					}
 				}
+				int candles = 0;
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					//or hero is in the ritual room and all 4 candles are with them
+					if (((RegularLevel) Dungeon.level).room(hero.pos) instanceof RitualSiteRoom) {
+						if (hero.belongings.getItem(CeremonialCandle.class) != null) {
+							candles += hero.belongings.getItem(CeremonialCandle.class).quantity();
+						}
 
-				//or hero is in the ritual room and all 4 candles are with them
-				if (((RegularLevel) Dungeon.level).room(Dungeon.heroes.pos) instanceof RitualSiteRoom) {
-					int candles = 0;
-					if (Dungeon.heroes.belongings.getItem(CeremonialCandle.class) != null){
-						candles += Dungeon.heroes.belongings.getItem(CeremonialCandle.class).quantity();
-					}
+						if (candles >= 4) {
+							return true;
+						}
 
-					if (candles >= 4){
-						return true;
-					}
-
-					for (Heap h : Dungeon.level.heaps.valueList()){
-						if (((RegularLevel) Dungeon.level).room(h.pos) instanceof RitualSiteRoom){
-							for (Item i : h.items){
-								if (i instanceof CeremonialCandle){
-									candles += i.quantity();
+						for (Heap h : Dungeon.level.heaps.valueList()) {
+							if (((RegularLevel) Dungeon.level).room(h.pos) instanceof RitualSiteRoom) {
+								for (Item i : h.items) {
+									if (i instanceof CeremonialCandle) {
+										candles += i.quantity();
+									}
 								}
 							}
 						}
 					}
-
+				}
 					if (candles >= 4){
 						return true;
 					}
@@ -427,14 +435,18 @@ public class Wandmaker extends NPC {
 				return false;
 			} else {
 				//hero is in the rot garden room and the rot heart is alive
-				if (((RegularLevel) Dungeon.level).room(Dungeon.heroes.pos) instanceof RotGardenRoom) {
-					for (Mob m : Dungeon.level.mobs) {
-						if (m instanceof RotHeart) {
-							return true;
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					if (((RegularLevel) Dungeon.level).room(hero.pos) instanceof RotGardenRoom) {
+						for (Mob m : Dungeon.level.mobs) {
+							if (m instanceof RotHeart) {
+								return true;
+							}
 						}
 					}
-				}
 
+				}
+			}
 				return false;
 			}
 		}
