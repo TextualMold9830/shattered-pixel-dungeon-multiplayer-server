@@ -49,20 +49,36 @@ public abstract class Trinket extends Item {
 
 	protected abstract int upgradeEnergyCost();
 
-	protected static int trinketLevel(Class<? extends Trinket> trinketType, Hero hero ){
-		if (hero == null || hero.belongings == null){
+	protected static int trinketLevel(Class<? extends Trinket> trinketType, Hero hero) {
+		if (hero == null || hero.belongings == null) {
 			return -1;
 		}
 
 		Trinket trinket = hero.belongings.getItem(trinketType);
 
-		if (trinket != null){
+		if (trinket != null) {
 			return trinket.buffedLvl();
 		} else {
 			return -1;
 		}
 	}
 
+	protected static int trinketLevel(Class<? extends Trinket> trinketType) {
+		int bestLevel = -1;
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null && hero.belongings != null){
+				Trinket trinket = hero.belongings.getItem(trinketType);
+
+			if (trinket != null) {
+				if (bestLevel < trinket.buffedLvl(hero)) {
+					bestLevel = trinket.buffedLvl(hero);
+				}
+			}
+		}
+
+	}
+		return bestLevel;
+}
 	public static class PlaceHolder extends Trinket {
 
 		{
