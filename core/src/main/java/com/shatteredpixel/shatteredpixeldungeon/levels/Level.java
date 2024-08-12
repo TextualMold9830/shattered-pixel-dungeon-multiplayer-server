@@ -1270,7 +1270,7 @@ public abstract class Level implements Bundlable {
 	private static boolean[] heroMindFov;
 	private static boolean[] modifiableBlocking;
 
-	public void updateFieldOfView( Char c, boolean[] fieldOfView ) {
+	public void updateFieldOfView(final Char c, boolean[] fieldOfView ) {
 
 		int cx = c.pos % width();
 		int cy = c.pos / width();
@@ -1323,7 +1323,7 @@ public abstract class Level implements Bundlable {
 			float viewDist = c.viewDistance;
 			if (c instanceof Hero){
 				viewDist *= 1f + 0.25f*((Hero) c).pointsInTalent(Talent.FARSIGHT);
-				viewDist *= EyeOfNewt.visionRangeMultiplier();
+				viewDist *= EyeOfNewt.visionRangeMultiplier((Hero) c);
 			}
 			
 			ShadowCaster.castShadow( cx, cy, width(), fieldOfView, blocking, Math.round(viewDist) );
