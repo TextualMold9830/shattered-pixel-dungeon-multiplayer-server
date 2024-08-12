@@ -129,7 +129,11 @@ public class CursedWand {
 	}
 
 	private static boolean commonEffect(final Item origin, final Char user, final int targetPos){
-		boolean positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance();
+		boolean positiveOnly = false;
+		if (user instanceof Hero) {
+			positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance((Hero) user);
+		}
+
 		switch(Random.Int(4)){
 
 			//anti-entropy
@@ -192,7 +196,10 @@ public class CursedWand {
 	}
 
 	private static boolean uncommonEffect(final Item origin, final Char user, final int targetPos){
-		boolean positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance();
+		boolean positiveOnly = false;
+		if (user instanceof Hero) {
+			positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance((Hero) user);
+		}
 		switch(Random.Int(4)){
 
 			//Random plant
@@ -273,8 +280,10 @@ public class CursedWand {
 	}
 
 	private static boolean rareEffect(final Item origin, final Char user, final int targetPos){
-		boolean positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance();
-		switch(Random.Int(4)){
+		boolean positiveOnly = false;
+		if (user instanceof Hero) {
+			positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance((Hero) user);
+		}		switch(Random.Int(4)){
 
 			//sheep transformation
 			case 0: default:
@@ -346,7 +355,7 @@ public class CursedWand {
 			//or mirror images if positive only
 			case 3:
 				if (positiveOnly && user instanceof Hero){
-					ScrollOfMirrorImage.spawnImages(Dungeon.heroes, 2);
+					ScrollOfMirrorImage.spawnImages((Hero) user, 2);
 				} else {
 					new SummoningTrap().set(targetPos).activate();
 				}
@@ -355,14 +364,18 @@ public class CursedWand {
 	}
 
 	private static boolean veryRareEffect(final Item origin, final Char user, final int targetPos){
-		boolean positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance();
-		switch( Random.Int(4) ){
+		boolean positiveOnly = false;
+		if (user instanceof Hero) {
+			positiveOnly = Random.Float() < WondrousResin.positiveCurseEffectChance((Hero) user);
+		}
+		switch( Random.Int(4) ) {
 
 			//great forest fire!
 			//only grass, no fire, if positive only
-			case 0: default:
-				for (int i = 0; i < Dungeon.level.length(); i++){
-					GameScene.add( Blob.seed(i, 15, Regrowth.class));
+			case 0:
+			default:
+				for (int i = 0; i < Dungeon.level.length(); i++) {
+					GameScene.add(Blob.seed(i, 15, Regrowth.class));
 				}
 
 				new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
@@ -382,15 +395,15 @@ public class CursedWand {
 
 				Char ch = Actor.findChar(targetPos);
 				int spawnCell = targetPos;
-				if (ch != null){
+				if (ch != null) {
 					ArrayList<Integer> candidates = new ArrayList<Integer>();
 					for (int n : PathFinder.NEIGHBOURS8) {
 						int cell = targetPos + n;
-						if (Dungeon.level.passable[cell] && Actor.findChar( cell ) == null) {
-							candidates.add( cell );
+						if (Dungeon.level.passable[cell] && Actor.findChar(cell) == null) {
+							candidates.add(cell);
 						}
 					}
-					if (!candidates.isEmpty()){
+					if (!candidates.isEmpty()) {
 						spawnCell = Random.element(candidates);
 					} else {
 						return cursedEffect(origin, user, targetPos);
@@ -406,7 +419,7 @@ public class CursedWand {
 				mimic.items.clear();
 				GameScene.add(mimic);
 
-				if (positiveOnly){
+				if (positiveOnly) {
 					Buff.affect(mimic, ScrollOfSirensSong.Enthralled.class);
 				} else {
 					Item reward;
@@ -421,60 +434,64 @@ public class CursedWand {
 
 			//appears to crash the game (actually just closes it)
 			case 2:
-				
-				try {
-					Dungeon.saveAll();
-					if(Messages.lang() != Languages.ENGLISH){
-						//Don't bother doing this joke to none-english speakers, I doubt it would translate.
-						return cursedEffect(origin, user, targetPos);
-					} else {
-						ShatteredPixelDungeon.runOnRenderThread(
-								new Callback() {
-									@Override
-									public void call() {
-										GameScene.show(
-												new WndOptions(Icons.get(Icons.WARNING),
-														"CURSED WAND ERROR",
-														"this application will now self-destruct",
-														"abort",
-														"retry",
-														"fail") {
+				if (user instanceof Hero) {
+					try {
+						Dungeon.saveAll();
+						if (Messages.lang() != Languages.ENGLISH) {
+							//Don't bother doing this joke to none-english speakers, I doubt it would translate.
+							return cursedEffect(origin, user, targetPos);
+						} else {
+							ShatteredPixelDungeon.runOnRenderThread(
+									new Callback() {
+										@Override
+										public void call() {
+											GameScene.show(
+													new WndOptions((Hero) user, Icons.get(Icons.WARNING),
+															"CURSED WAND ERROR",
+															"this application will now self-destruct",
+															"abort",
+															"retry",
+															"fail") {
 
-													@Override
-													protected void onSelect(int index) {
-														Game.instance.finish();
-													}
+														@Override
+														protected void onSelect(int index) {
+															Game.instance.finish();
+														}
 
-													@Override
-													public void onBackPressed() {
-														//do nothing
+														@Override
+														public void onBackPressed() {
+															//do nothing
+														}
 													}
-												}
-										);
+											);
+										}
 									}
-								}
-						);
-						return false;
-					}
-				} catch(IOException e){
-					ShatteredPixelDungeon.reportException(e);
-					//maybe don't kill the game if the save failed.
-					return cursedEffect(origin, user, targetPos);
-				}
+							);
+							return false;
 
-			//random transmogrification
-			//or triggers metamorph effect if positive only
+						}
+
+					} catch (IOException e) {
+						ShatteredPixelDungeon.reportException(e);
+						//maybe don't kill the game if the save failed.
+						return cursedEffect(origin, user, targetPos);
+					}
+				}
+				//random transmogrification
+				//or triggers metamorph effect if positive only
 			case 3:
-				if (positiveOnly){
-					GameScene.show(new ScrollOfMetamorphosis.WndMetamorphChoose());
+				if (user instanceof Hero) {
+					if (positiveOnly) {
+						GameScene.show(new ScrollOfMetamorphosis.WndMetamorphChoose((Hero) user));
+					}
 					return true;
 				}
-
+		}
 				//skips this effect if there is no item to transmogrify
-				if (origin == null || user != Dungeon.heroes || !Dungeon.heroes.belongings.contains(origin)){
+				if (origin == null || !(user instanceof Hero)|| !((Hero) user).belongings.contains(origin)) {
 					return cursedEffect(origin, user, targetPos);
 				}
-				origin.detach(Dungeon.heroes.belongings.backpack);
+				origin.detach(((Hero)user).belongings.backpack);
 				Item result;
 				do {
 					result = Generator.randomUsingDefaults(Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR,
@@ -482,14 +499,15 @@ public class CursedWand {
 				} while (result.cursed);
 				if (result.isUpgradable()) result.upgrade();
 				result.cursed = result.cursedKnown = true;
-				if (origin instanceof Wand){
-					GLog.w( Messages.get(CursedWand.class, "transmogrify_wand") );
+				if (origin instanceof Wand) {
+					GLog.w(Messages.get(CursedWand.class, "transmogrify_wand"));
 				} else {
-					GLog.w( Messages.get(CursedWand.class, "transmogrify_other") );
+					GLog.w(Messages.get(CursedWand.class, "transmogrify_other"));
 				}
 				Dungeon.level.drop(result, user.pos).sprite.drop();
 				return true;
-		}
+
+
 	}
 
 	private static void cursedFX(final Char user, final Ballistica bolt, final Callback callback){
