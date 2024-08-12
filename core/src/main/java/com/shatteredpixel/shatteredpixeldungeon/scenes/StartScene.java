@@ -273,7 +273,6 @@ public class StartScene extends PixelScene {
 			if (newGame) {
 				GamesInProgress.selectedClass = null;
 				GamesInProgress.curSlot = slot;
-				ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
 			} else {
 				ShatteredPixelDungeon.scene().add( new WndGameInProgress(slot));
 			}

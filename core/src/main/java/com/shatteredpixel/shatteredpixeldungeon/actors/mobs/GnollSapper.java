@@ -202,14 +202,13 @@ public class GnollSapper extends Mob {
 						for (int i : warnPath.subPath(0, warnPath.dist)){
 							sprite.parent.add(new TargetedCell(i, 0xFF0000));
 						}
-
-						Dungeon.heroes.interrupt();
+						Dungeon.interrupt(pos);
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollSapper.this, 2, true)) {
 						lastAbilityWasRockfall = true;
-						Dungeon.heroes.interrupt();
+						Dungeon.interrupt(pos);
 						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						return true;

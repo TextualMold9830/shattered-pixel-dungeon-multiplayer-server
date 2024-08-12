@@ -56,6 +56,10 @@ public class WndInfoItem extends Window {
 
 		}
 	}
+	public WndInfoItem(Heap heap, Hero hero) {
+		this(heap);
+		setOwnerHero(hero);
+	}
 	
 	public WndInfoItem( Item item ) {
 		super();

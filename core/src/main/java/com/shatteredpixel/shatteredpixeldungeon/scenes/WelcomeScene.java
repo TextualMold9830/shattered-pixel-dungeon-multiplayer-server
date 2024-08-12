@@ -150,8 +150,6 @@ public class WelcomeScene extends PixelScene {
 					if (GamesInProgress.curSlot == -1 || Rankings.INSTANCE.totalNumber > 0){
 						SPDSettings.intro(false);
 						ShatteredPixelDungeon.switchScene(TitleScene.class);
-					} else {
-						ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
 					}
 				} else {
 					updateVersion(previousVersion);

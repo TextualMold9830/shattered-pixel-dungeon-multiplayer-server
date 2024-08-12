@@ -111,13 +111,7 @@ public class TitleScene extends PixelScene {
 		StyledButton btnPlay = new StyledButton(GREY_TR, Messages.get(this, "enter")){
 			@Override
 			protected void onClick() {
-				if (GamesInProgress.checkAll().size() == 0){
-					GamesInProgress.selectedClass = null;
-					GamesInProgress.curSlot = 1;
-					ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
-				} else {
-					ShatteredPixelDungeon.switchNoFade( StartScene.class );
-				}
+				ShatteredPixelDungeon.switchNoFade( StartScene.class );
 			}
 			
 			@Override
@@ -126,7 +120,6 @@ public class TitleScene extends PixelScene {
 				if (DeviceCompat.isDebug()) {
 					GamesInProgress.selectedClass = null;
 					GamesInProgress.curSlot = 1;
-					ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
 					return true;
 				}
 				return super.onLongClick();

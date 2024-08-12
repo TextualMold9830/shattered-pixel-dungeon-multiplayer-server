@@ -200,8 +200,11 @@ public class WndTradeItem extends WndInfoItem {
 		}
 
 		resize(width, (int) pos);
+	}public WndTradeItem( final Heap heap, Hero hero) {
+		this(heap);
+		setOwnerHero(hero);
 	}
-	
+
 	@Override
 	public void hide() {
 		
@@ -210,7 +213,7 @@ public class WndTradeItem extends WndInfoItem {
 		if (owner != null) {
 			owner.hide();
 		}
-		if (selling) Shopkeeper.sell();
+		if (selling) Shopkeeper.sell(getOwnerHero());
 	}
 
 	public static void sell( Item item, Hero hero ) {

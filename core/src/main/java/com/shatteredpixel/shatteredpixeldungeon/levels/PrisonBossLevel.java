@@ -328,14 +328,16 @@ public class PrisonBossLevel extends Level {
 				heap.destroy();
 			}
 		}
-		
-		for (HeavyBoomerang.CircleBack b : Dungeon.heroes.buffs(HeavyBoomerang.CircleBack.class)){
-			if (b.activeDepth() == Dungeon.depth
-					&& (safeArea == null || !safeArea.inside(cellToPoint(b.returnPos())))){
-				storedItems.add(b.cancel());
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				for (HeavyBoomerang.CircleBack b : hero.buffs(HeavyBoomerang.CircleBack.class)) {
+					if (b.activeDepth() == Dungeon.depth
+							&& (safeArea == null || !safeArea.inside(cellToPoint(b.returnPos())))) {
+						storedItems.add(b.cancel());
+					}
+				}
 			}
 		}
-		
 		for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
 			if (mob != tengu && (safeArea == null || !safeArea.inside(cellToPoint(mob.pos)))){
 				mob.destroy();
