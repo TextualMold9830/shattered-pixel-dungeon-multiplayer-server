@@ -167,7 +167,7 @@ public class DriedRose extends Artifact {
 				}
 
 				if (spawnPoints.size() > 0) {
-					ghost = new GhostHero( this );
+					ghost = new GhostHero( this , hero);
 					ghostID = ghost.id();
 					ghost.pos = Random.element(spawnPoints);
 
@@ -589,7 +589,7 @@ public class DriedRose extends Artifact {
 			if (rose == null
 					|| !rose.isEquipped(getOwner())
 					|| getOwner().buff(MagicImmune.class) != null){
-				damage(1, new NoRoseDamage());
+				damage(1, 				new DamageCause(new NoRoseDamage(), getOwner()));
 			}
 			
 			if (!isAlive()) {
