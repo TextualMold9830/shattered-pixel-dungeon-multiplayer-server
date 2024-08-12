@@ -189,7 +189,7 @@ public class Eye extends Mob {
 			if (hit( this, ch, true )) {
 				int dmg = Char.combatRoll( 30, 50 );
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-				ch.damage( dmg, new DeathGaze() );
+				ch.damage( dmg,  new DamageCause( new DeathGaze(), null));
 
 				if (Dungeon.visibleforAnyHero(pos)) {
 					ch.sprite.flash();
