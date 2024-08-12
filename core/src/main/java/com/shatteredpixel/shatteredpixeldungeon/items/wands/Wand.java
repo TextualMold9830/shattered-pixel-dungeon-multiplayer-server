@@ -195,19 +195,19 @@ public abstract class Wand extends Item {
 		charger.setScaleFactor( chargeScaleFactor );
 	}
 
-	protected void wandProc(Char target, int chargesUsed){
-		wandProc(target, buffedLvl(), chargesUsed);
+	protected void wandProc(Char target, int chargesUsed, Hero hero){
+		wandProc(target, buffedLvl(), chargesUsed, hero);
 	}
 
 	//TODO Consider externalizing char awareness buff
-	protected static void wandProc(Char target, int wandLevel, int chargesUsed){
-		if (Dungeon.heroes.hasTalent(Talent.ARCANE_VISION)) {
-			int dur = 5 + 5*Dungeon.heroes.pointsInTalent(Talent.ARCANE_VISION);
-			Buff.append(Dungeon.heroes, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
+	protected static void wandProc(Char target, int wandLevel, int chargesUsed, Hero hero){
+		if (hero.hasTalent(Talent.ARCANE_VISION)) {
+			int dur = 5 + 5*hero.pointsInTalent(Talent.ARCANE_VISION);
+			Buff.append(hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
 		}
 
-		if (target != Dungeon.heroes &&
-				Dungeon.heroes.subClass == HeroSubClass.WARLOCK &&
+		if (!(target instanceof Hero)&&
+				hero.subClass == HeroSubClass.WARLOCK &&
 				//standard 1 - 0.92^x chance, plus 7%. Starts at 15%
 				Random.Float() > (Math.pow(0.92f, (wandLevel*chargesUsed)+1) - 0.07f)){
 			SoulMark.prolong(target, SoulMark.class, SoulMark.DURATION + wandLevel);
@@ -232,10 +232,10 @@ public abstract class Wand extends Item {
 	}
 	
 	@Override
-	public Item identify( boolean byHero ) {
+	public Item identify( boolean byHero, Hero hero ) {
 		
 		curChargeKnown = true;
-		super.identify(byHero);
+		super.identify(byHero, hero);
 		
 		updateQuickslot();
 		
@@ -251,7 +251,7 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public String info() {
+	public String info(Hero hero) {
 		String desc = desc();
 
 		desc += "\n\n" + statsDesc();
@@ -268,13 +268,16 @@ public abstract class Wand extends Item {
 			desc += "\n\n" + Messages.get(Wand.class, "not_cursed");
 		}
 
-		if (Dungeon.heroes.subClass == HeroSubClass.BATTLEMAGE){
+		if (hero.subClass == HeroSubClass.BATTLEMAGE){
 			desc += "\n\n" + Messages.get(this, "bmage_desc");
 		}
 
 		return desc;
 	}
 
+	public String statsDesc(Hero hero){
+		return statsDesc();
+	}
 	public String statsDesc(){
 		return Messages.get(this, "stats_desc");
 	}
@@ -336,15 +339,15 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public int buffedLvl() {
+	public int buffedLvl(Char owner) {
 		int lvl = super.buffedLvl();
 
 		if (charger != null && charger.target != null) {
 
 			//inside staff, still need to apply degradation
 			if (charger.target instanceof Hero
-					&& !Dungeon.heroes.belongings.contains(this)
-					&& Dungeon.heroes.buff( Degrade.class ) != null){
+					&& !((Hero) charger.target).belongings.contains(this)
+					&& charger.target.buff( Degrade.class ) != null){
 				lvl = Degrade.reduceLevel(lvl);
 			}
 
@@ -405,24 +408,24 @@ public abstract class Wand extends Item {
 		particle.radiateXY(0.5f);
 	}
 
-	protected void wandUsed() {
+	protected void wandUsed(Hero hero) {
 		if (!isIdentified()) {
-			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.heroes, this) );
+			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(hero, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
-			if (usesLeftToID <= 0 || Dungeon.heroes.pointsInTalent(Talent.SCHOLARS_INTUITION) == 2) {
-				identify();
+			if (usesLeftToID <= 0 || hero.pointsInTalent(Talent.SCHOLARS_INTUITION) == 2) {
+				identify(hero);
 				GLog.p( Messages.get(Wand.class, "identify") );
 				Badges.validateItemLevelAquired( this );
 			}
 		}
 
 		//inside staff
-		if (charger != null && charger.target instanceof Hero && !Dungeon.heroes.belongings.contains(this)){
-			if (Dungeon.heroes.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= maxCharges){
-				int shieldToGive = Math.round(buffedLvl()*0.67f*Dungeon.heroes.pointsInTalent(Talent.EXCESS_CHARGE));
-				Buff.affect(Dungeon.heroes, Barrier.class).setShield(shieldToGive);
-				Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+		if (charger != null && charger.target instanceof Hero && !hero.belongings.contains(this)){
+			if (hero.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= maxCharges){
+				int shieldToGive = Math.round(buffedLvl()*0.67f*hero.pointsInTalent(Talent.EXCESS_CHARGE));
+				Buff.affect(hero, Barrier.class).setShield(shieldToGive);
+				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			}
 		}
 		
@@ -444,17 +447,17 @@ public abstract class Wand extends Item {
 		}
 
 		//If hero owns wand but it isn't in belongings it must be in the staff
-		if (Dungeon.heroes.hasTalent(Talent.EMPOWERED_STRIKE)
+		if (hero.hasTalent(Talent.EMPOWERED_STRIKE)
 				&& charger != null && charger.target instanceof Hero
-				&& !Dungeon.heroes.belongings.contains(this)){
+				&& !hero.belongings.contains(this)){
 
-			Buff.prolong(Dungeon.heroes, Talent.EmpoweredStrikeTracker.class, 10f);
+			Buff.prolong(hero, Talent.EmpoweredStrikeTracker.class, 10f);
 		}
 
-		if (Dungeon.heroes.hasTalent(Talent.LINGERING_MAGIC)
+		if (hero.hasTalent(Talent.LINGERING_MAGIC)
 				&& charger != null && charger.target instanceof Hero){
 
-			Buff.prolong(Dungeon.heroes, Talent.LingeringMagicTracker.class, 5f);
+			Buff.prolong(hero, Talent.LingeringMagicTracker.class, 5f);
 		}
 		//TODO: might want to move this somewhere
 		Hero owner = findOwner();
@@ -587,7 +590,6 @@ public abstract class Wand extends Item {
 		
 		@Override
 		public void onSelect( Integer target ) {
-			
 			if (target != null) {
 				
 				//FIXME this safety check shouldn't be necessary
@@ -683,7 +685,7 @@ public abstract class Wand extends Item {
 								new Callback() {
 									@Override
 									public void call() {
-										curWand.wandUsed();
+										curWand.wandUsed(getOwner());
 									}
 								});
 					} else {
@@ -696,11 +698,11 @@ public abstract class Wand extends Item {
 											new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT), new Callback() {
 												@Override
 												public void call() {
-													curWand.wandUsed();
+													curWand.wandUsed(getOwner());
 												}
 											});
 								} else {
-									curWand.wandUsed();
+									curWand.wandUsed(getOwner());
 								}
 							}
 						});
@@ -744,7 +746,7 @@ public abstract class Wand extends Item {
 		@Override
 		public boolean act() {
 			if (curCharges < maxCharges && target.buff(MagicImmune.class) == null)
-				recharge();
+				recharge((Hero) target);
 			
 			while (partialCharge >= 1 && curCharges < maxCharges) {
 				partialCharge--;
@@ -761,14 +763,14 @@ public abstract class Wand extends Item {
 			return true;
 		}
 
-		private void recharge(){
+		private void recharge(Hero hero){
 			int missingCharges = maxCharges - curCharges;
 			missingCharges = Math.max(0, missingCharges);
 
 			float turnsToCharge = (float) (BASE_CHARGE_DELAY
 					+ (SCALING_CHARGE_ADDITION * Math.pow(scalingFactor, missingCharges)));
 
-			if (Regeneration.regenOn())
+			if (Regeneration.regenOn(hero))
 				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target);
 
 			for (Recharging bonus : target.buffs(Recharging.class)){
