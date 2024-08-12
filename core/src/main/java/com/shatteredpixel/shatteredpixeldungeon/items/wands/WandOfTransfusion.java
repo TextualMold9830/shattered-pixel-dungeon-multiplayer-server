@@ -83,7 +83,7 @@ public class WandOfTransfusion extends DamageWand {
 
 		if (ch instanceof Mob){
 			
-			wandProc(ch, chargesPerCast());
+			wandProc(ch, chargesPerCast(), hero);
 			
 			//this wand does different things depending on the target.
 			
@@ -189,8 +189,8 @@ public class WandOfTransfusion extends DamageWand {
 	}
 
 	@Override
-	public String statsDesc() {
-		int selfDMG = Math.round(Dungeon.heroes.HT*0.05f);
+	public String statsDesc(Hero hero) {
+		int selfDMG = Math.round(hero.HT*0.05f);
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max());
 		else

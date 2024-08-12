@@ -56,6 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
@@ -124,7 +125,7 @@ public class WandOfCorruption extends Wand {
 	}
 	
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 		Char ch = Actor.findChar(bolt.collisionPos);
 
 		if (ch != null){
@@ -184,7 +185,7 @@ public class WandOfCorruption extends Wand {
 				}
 			}
 
-			wandProc(ch, chargesPerCast());
+			wandProc(ch, chargesPerCast(), hero);
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, 0.8f * Random.Float(0.87f, 1.15f) );
 			
 		} else {

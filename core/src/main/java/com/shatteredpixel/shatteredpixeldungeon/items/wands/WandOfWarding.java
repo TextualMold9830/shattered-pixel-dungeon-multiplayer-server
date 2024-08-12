@@ -61,7 +61,7 @@ public class WandOfWarding extends Wand {
 	@Override
 	public int collisionProperties(int target) {
 		if (cursed)                                 return super.collisionProperties(target);
-		else if (!Dungeon.level.fieldOfView[target])    return Ballistica.PROJECTILE;
+		else if (!Dungeon.visibleforAnyHero(target))    return Ballistica.PROJECTILE;
 		else                                        return Ballistica.STOP_TARGET;
 	}
 
@@ -105,7 +105,7 @@ public class WandOfWarding extends Wand {
 	}
 	
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 
 		int target = bolt.collisionPos;
 		Char ch = Actor.findChar(target);
@@ -138,7 +138,7 @@ public class WandOfWarding extends Wand {
 			}
 			
 		} else {
-			Ward ward = new Ward();
+			Ward ward = new Ward(hero);
 			ward.pos = target;
 			ward.wandLevel = buffedLvl();
 			GameScene.add(ward, 1f);
@@ -203,6 +203,11 @@ public class WandOfWarding extends Wand {
 	}
 
 	public static class Ward extends NPC {
+		private Hero owner;
+
+		public Ward(Hero owner) {
+			this.owner = owner;
+		}
 
 		public int tier = 1;
 		private int wandLevel = 1;
@@ -321,13 +326,13 @@ public class WandOfWarding extends Wand {
 			if (visible) {
 				sprite.zap( enemy.pos );
 			} else {
-				zap();
+				zap(owner);
 			}
 
 			return !visible;
 		}
 
-		private void zap() {
+		private void zap(Hero hero) {
 			spend( 1f );
 
 			//always hits
@@ -335,7 +340,7 @@ public class WandOfWarding extends Wand {
 			Char enemy = this.enemy;
 			enemy.damage( dmg, this );
 			if (enemy.isAlive()){
-				Wand.wandProc(enemy, wandLevel, 1);
+				Wand.wandProc(enemy, wandLevel, 1, hero);
 			}
 
 			if (!enemy.isAlive() && enemy instanceof Hero) {
@@ -363,8 +368,8 @@ public class WandOfWarding extends Wand {
 			}
 		}
 
-		public void onZapComplete() {
-			zap();
+		public void onZapComplete(Hero hero) {
+			zap(hero);
 			next();
 		}
 

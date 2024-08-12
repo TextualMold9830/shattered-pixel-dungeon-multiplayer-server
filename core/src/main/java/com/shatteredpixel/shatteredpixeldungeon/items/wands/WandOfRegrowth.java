@@ -119,7 +119,7 @@ public class WandOfRegrowth extends Wand {
 					if (ch instanceof DwarfKing){
 						Statistics.qualifiedForBossChallengeBadge = false;
 					}
-					wandProc(ch, chargesPerCast());
+					wandProc(ch, chargesPerCast(), hero);
 					Buff.prolong( ch, Roots.class, 4f * chrgUsed );
 				}
 			}
@@ -283,10 +283,10 @@ public class WandOfRegrowth extends Wand {
 	}
 
 	@Override
-	public String statsDesc() {
+	public String statsDesc(Hero hero) {
 		String desc = Messages.get(this, "stats_desc", chargesPerCast());
 		if (isIdentified()){
-			int chargeLeft = chargeLimit(Dungeon.heroes.lvl) - totChrgUsed;
+			int chargeLeft = chargeLimit(hero.lvl) - totChrgUsed;
 			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));
 		}
 		return desc;

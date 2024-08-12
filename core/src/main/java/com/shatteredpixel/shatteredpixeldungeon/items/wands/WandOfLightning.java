@@ -82,7 +82,7 @@ public class WandOfLightning extends DamageWand {
 			if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
 				continue;
 			}
-			wandProc(ch, chargesPerCast());
+			wandProc(ch, chargesPerCast(), hero);
 			if (ch == curUser && ch.isAlive()) {
 				ch.damage(Math.round(damageRoll(hero) * multiplier * 0.5f), new Char.DamageCause(this, curUser));
 				if (!curUser.isAlive()) {

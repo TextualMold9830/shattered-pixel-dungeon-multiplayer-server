@@ -105,9 +105,9 @@ public class CursedWand {
 		});
 	}
 
-	public static void tryForWandProc( Char target, Item origin ){
+	public static void tryForWandProc( Char target, Item origin , Hero hero){
 		if (target != null && origin instanceof Wand){
-			Wand.wandProc(target, origin.buffedLvl(), 1);
+			Wand.wandProc(target, origin.buffedLvl(), 1, hero);
 		}
 	}
 
@@ -147,13 +147,17 @@ public class CursedWand {
 					if (!positiveOnly)Buff.affect(user, Burning.class).reignite(user);
 					if (target != null) Buff.affect(target, Frost.class, Frost.DURATION);
 				}
-				tryForWandProc(target, origin);
+				if (user instanceof Hero) {
+					tryForWandProc(target, origin, (Hero) user);
+				}
 				return true;
 
 			//spawns some regrowth
 			case 1:
 				GameScene.add( Blob.seed(targetPos, 30, Regrowth.class));
-				tryForWandProc(Actor.findChar(targetPos), origin);
+				if (user instanceof Hero) {
+					tryForWandProc(Actor.findChar(targetPos), origin, (Hero) user);
+				}
 				return true;
 
 			//random teleportation
@@ -169,8 +173,10 @@ public class CursedWand {
 					Char ch = Actor.findChar( targetPos );
 					if (ch != null && !ch.properties().contains(Char.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(ch);
-						tryForWandProc(ch, origin);
-					} else {
+                        if (user instanceof Hero) {
+                            tryForWandProc(ch, origin, (Hero) user);
+                        }
+                    } else {
 						return cursedEffect(origin, user, targetPos);
 					}
 				}
@@ -179,8 +185,10 @@ public class CursedWand {
 			//random gas at location
 			case 3:
 				Sample.INSTANCE.play( Assets.Sounds.GAS );
-				tryForWandProc(Actor.findChar(targetPos), origin);
-				switch (Random.Int(3)) {
+                if (user instanceof Hero) {
+                    tryForWandProc(Actor.findChar(targetPos), origin, (Hero) user);
+                }
+                switch (Random.Int(3)) {
 					case 0: default:
 						GameScene.add( Blob.seed( targetPos, 800, ConfusionGas.class ) );
 						return true;
@@ -211,8 +219,10 @@ public class CursedWand {
 						&& Dungeon.level.traps.get(pos) == null
 						&& !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
 					Dungeon.level.plant((Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED), pos);
-					tryForWandProc(Actor.findChar(pos), origin);
-				} else {
+                    if (user instanceof Hero) {
+                        tryForWandProc(Actor.findChar(pos), origin, (Hero) user);
+                    }
+                } else {
 					return cursedEffect(origin, user, targetPos);
 				}
 
@@ -255,8 +265,10 @@ public class CursedWand {
 					} else {
 						Sample.INSTANCE.play(Assets.Sounds.BURNING);
 					}
-					tryForWandProc(target, origin);
-				} else {
+                    if (user instanceof Hero) {
+                        tryForWandProc(target, origin, (Hero) user);
+                    }
+                } else {
 					return cursedEffect(origin, user, targetPos);
 				}
 				return true;
@@ -264,8 +276,10 @@ public class CursedWand {
 			//Bomb explosion
 			case 2:
 				new Bomb.ConjuredBomb().explode(targetPos);
-				tryForWandProc(Actor.findChar(targetPos), origin);
-				return true;
+                if (user instanceof Hero) {
+                    tryForWandProc(Actor.findChar(targetPos), origin, (Hero) user);
+                }
+                return true;
 
 			//shock and recharge
 			//no shock if positive only
