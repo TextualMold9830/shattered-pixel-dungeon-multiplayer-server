@@ -1140,7 +1140,7 @@ public abstract class Level implements Bundlable {
 					&& ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REJUVENATING_STEPS)
 					&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
 
-				if (!Regeneration.regenOn()){
+				if (!Regeneration.regenOn((Hero)ch)){
 					set(ch.pos, Terrain.FURROWED_GRASS);
 				} else if (ch.buff(Talent.RejuvenatingStepsFurrow.class) != null && ch.buff(Talent.RejuvenatingStepsFurrow.class).count() >= 200) {
 					set(ch.pos, Terrain.FURROWED_GRASS);
