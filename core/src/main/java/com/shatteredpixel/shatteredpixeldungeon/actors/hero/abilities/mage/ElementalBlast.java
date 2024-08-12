@@ -272,7 +272,7 @@ public class ElementalBlast extends ArmorAbility {
 									* damageFactors.get(finalWandCls));
 
 							if (mob != null && damage > 0 && mob.alignment != Char.Alignment.ALLY){
-								mob.damage(damage, Reflection.newInstance(finalWandCls));
+								mob.damage(damage, new Char.DamageCause(Reflection.newInstance(finalWandCls), hero));
 								charsHit++;
 							}
 
@@ -360,7 +360,7 @@ public class ElementalBlast extends ArmorAbility {
 											mob.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 3);
 										} else {
 											damage = Math.round(Char.combatRoll(15, 25) * effectMulti);
-											mob.damage(damage, Reflection.newInstance(finalWandCls));
+											mob.damage(damage, new Char.DamageCause(Reflection.newInstance(finalWandCls), hero));
 											mob.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 										}
 									}
@@ -436,10 +436,10 @@ public class ElementalBlast extends ArmorAbility {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
-			MagesStaff staff = Dungeon.heroes.belongings.getItem(MagesStaff.class);
+			MagesStaff staff = hero.belongings.getItem(MagesStaff.class);
 			if (staff != null && staff.wandClass() != null){
 				desc += "\n\n" + Messages.get(staff.wandClass(), "eleblast_desc");
 			} else {
