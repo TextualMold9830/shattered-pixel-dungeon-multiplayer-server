@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
@@ -66,7 +67,7 @@ public class Imp extends NPC {
 		if (!Quest.given && Dungeon.level.visited[pos]) {
 			Notes.add( Notes.Landmark.IMP );
 			if (!seenBefore && Dungeon.visibleforAnyHero(pos)) {
-				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.heroes.name())));
+			//	yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.heroes.name())));
 				seenBefore = true;
 			}
 		} else {
@@ -99,15 +100,15 @@ public class Imp extends NPC {
 	@Override
 	public boolean interact(Char c) {
 		
-		sprite.turnTo( pos, Dungeon.heroes.pos );
 
-		if (c != Dungeon.heroes){
+		if (!(c instanceof Hero)){
 			return true;
 		}
-
+		Hero hero = (Hero) c;
+		sprite.turnTo( pos, hero.pos );
 		if (Quest.given) {
 			
-			DwarfToken tokens = Dungeon.heroes.belongings.getItem( DwarfToken.class );
+			DwarfToken tokens = hero.belongings.getItem( DwarfToken.class );
 			if (tokens != null && (tokens.quantity() >= 5 || (!Quest.alternative && tokens.quantity() >= 4))) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
@@ -117,8 +118,8 @@ public class Imp extends NPC {
 				});
 			} else {
 				tell( Quest.alternative ?
-						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.heroes.name()))
-						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.heroes.name())) );
+						Messages.get(this, "monks_2", Messages.titleCase(hero.name()))
+						: Messages.get(this, "golems_2", Messages.titleCase(hero.name())) );
 			}
 			
 		} else {
@@ -142,7 +143,7 @@ public class Imp extends NPC {
 	
 	public void flee() {
 		
-		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.heroes.name())) );
+		//yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.heroes.name())) );
 		
 		destroy();
 		sprite.die();
