@@ -57,7 +57,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	@Override
 	protected void onItemSelected( Item item, Hero hero ) {
 
-		upgrade( curUser );
+		upgradeAnimation( curUser );
 
 		Degrade.detach( curUser, Degrade.class );
 
@@ -121,7 +121,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		Badges.validateMageUnlock();
 	}
 	
-	public static void upgrade( Hero hero ) {
+	public static void upgradeAnimation(Hero hero){
 		hero.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
 	}
 

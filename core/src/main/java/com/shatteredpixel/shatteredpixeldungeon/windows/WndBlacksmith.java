@@ -266,7 +266,7 @@ public class WndBlacksmith extends Window {
 					}
 
 					Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-					ScrollOfUpgrade.upgrade(getOwnerHero());
+					ScrollOfUpgrade.upgradeAnimation(getOwnerHero());
 					Item.evoke(getOwnerHero());
 
 					if (second.isEquipped( getOwnerHero())) {
@@ -434,7 +434,7 @@ public class WndBlacksmith extends Window {
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				ScrollOfUpgrade.upgrade( getOwnerHero());
+				ScrollOfUpgrade.upgradeAnimation( getOwnerHero());
 				Item.evoke( getOwnerHero());
 
 				Badges.validateItemLevelAquired( item );

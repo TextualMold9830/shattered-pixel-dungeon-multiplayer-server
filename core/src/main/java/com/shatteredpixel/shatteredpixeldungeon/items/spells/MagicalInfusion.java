@@ -52,7 +52,7 @@ public class MagicalInfusion extends InventorySpell {
 	@Override
 	protected void onItemSelected( Item item, Hero hero ) {
 
-		ScrollOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgradeAnimation(curUser);
 
 		Degrade.detach( curUser, Degrade.class );
 
