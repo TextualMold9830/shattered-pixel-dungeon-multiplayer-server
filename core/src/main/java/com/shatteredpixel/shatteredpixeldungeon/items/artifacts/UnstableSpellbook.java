@@ -171,14 +171,14 @@ public class UnstableSpellbook extends Artifact {
 						}
 					});
 				} else {
-					scroll.doRead();
-					Talent.onArtifactUsed(Dungeon.heroes);
+					scroll.doRead(hero);
+					Talent.onArtifactUsed(hero);
 				}
 				updateQuickslot();
 			}
 
 		} else if (action.equals( AC_ADD )) {
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 		}
 	}
 
@@ -190,13 +190,13 @@ public class UnstableSpellbook extends Artifact {
 
 		@Override
 		public boolean act() {
-			curUser = Dungeon.heroes;
+			curUser = (Hero) target;
 			curItem = scroll;
 			scroll.anonymize();
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					scroll.doRead();
+					scroll.doRead((Hero) target);
 					Item.updateQuickslot();
 				}
 			});
@@ -249,10 +249,10 @@ public class UnstableSpellbook extends Artifact {
 	}
 
 	@Override
-	public String desc() {
-		String desc = super.desc();
+	public String desc(Hero hero) {
+		String desc = super.desc(hero);
 
-		if (isEquipped(Dungeon.heroes)) {
+		if (isEquipped(hero)) {
 			if (cursed) {
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			}
@@ -295,7 +295,7 @@ public class UnstableSpellbook extends Artifact {
 			if (charge < chargeCap
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
-					&& Regeneration.regenOn()) {
+					&& Regeneration.regenOn((Hero) target)) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
 				float chargeGain = 1 / (120f - (chargeCap - charge)*5f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
@@ -339,7 +339,7 @@ public class UnstableSpellbook extends Artifact {
 		@Override
 		public void onSelect(Item item) {
 			if (item != null && item instanceof Scroll && item.isIdentified()){
-				Hero hero = Dungeon.heroes;
+				Hero hero = getOwner();
 				for (int i = 0; ( i <= 1 && i < scrolls.size() ); i++){
 					if (scrolls.get(i).equals(item.getClass())){
 						hero.sprite.operate( hero.pos );

@@ -230,7 +230,7 @@ public class CloakOfShadows extends Artifact {
 		@Override
 		public boolean act() {
 			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
-				if (activeBuff == null && Regeneration.regenOn()) {
+				if (activeBuff == null && Regeneration.regenOn((Hero) target)) {
 					assert target instanceof Hero;
 					Hero hero = (Hero) target;
 					float missing = (chargeCap - charge);
