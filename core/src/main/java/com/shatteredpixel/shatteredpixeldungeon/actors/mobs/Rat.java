@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 import com.watabou.utils.Bundle;
@@ -40,7 +41,16 @@ public class Rat extends Mob {
 
 	@Override
 	protected boolean act() {
-		if (Dungeon.visibleforAnyHero(pos) && Dungeon.heroes.armorAbility instanceof Ratmogrify){
+		boolean hasRatMogrify = false;
+		for (Hero hero: Dungeon.heroes ){
+			if (hero != null) {
+				if (hero.armorAbility instanceof Ratmogrify){
+					hasRatMogrify = true;
+					break;
+				}
+			}
+		}
+		if (Dungeon.visibleforAnyHero(pos) && hasRatMogrify){
 			alignment = Alignment.ALLY;
 			if (state == SLEEPING) state = WANDERING;
 		}
