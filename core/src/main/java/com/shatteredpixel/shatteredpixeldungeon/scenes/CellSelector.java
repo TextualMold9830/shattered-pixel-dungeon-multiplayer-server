@@ -55,6 +55,7 @@ public class CellSelector extends ScrollArea {
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
+		listener.owner = this.owner;
 	}
 
 	public boolean enabled;
