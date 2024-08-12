@@ -91,6 +91,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class Mob extends Char {
 
@@ -1037,7 +1039,40 @@ public abstract class Mob extends Char {
 		}
 		target = cell;
 	}
-	
+
+	public Char selectClosestChar(Char[] chars, boolean skipInvisible){
+		List<Char> targets = new LinkedList<>();
+		for (Char target : chars) {
+			if (target == null) continue;
+			if (!skipInvisible && target.invisible > 0) {
+				continue;
+			}
+			targets.add(target);
+		}
+		if (targets.size() == 0) {
+			return null;
+		}
+
+		Char closestTarget = null;
+		int distance = Integer.MAX_VALUE;
+		PathFinder.buildDistanceMap(this.pos, Dungeon.level.passable);
+		for (Char target : targets) {
+			if (distance > PathFinder.distance[target.pos]) {
+				closestTarget = target;
+				distance = PathFinder.distance[target.pos];
+			}
+		}
+		return closestTarget;
+	}
+
+	public Char beckon( Char[] chars, boolean skipInvisible ) {
+		Char target = selectClosestChar(chars, skipInvisible);;
+		if (target != null){
+			this.beckon(target.pos);
+		}
+		return target;
+	}
+
 	public String description() {
 		return Messages.get(this, "desc");
 	}

@@ -309,12 +309,10 @@ public class CityBossLevel extends Level {
 		boss.state = boss.WANDERING;
 		boss.pos = pointToCell(arena.center());
 		GameScene.add( boss );
-		for (Hero hero : Dungeon.heroes) {
-			if (hero != null) {
-				boss.beckon(hero.pos);
 
-			}
-		}
+
+		boss.beckon(Dungeon.heroes, false);
+		
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
 				if (hero.fieldOfView[boss.pos]) {

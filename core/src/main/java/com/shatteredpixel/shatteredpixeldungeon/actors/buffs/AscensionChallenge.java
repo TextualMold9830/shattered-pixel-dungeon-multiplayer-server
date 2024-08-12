@@ -64,6 +64,7 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class AscensionChallenge extends Buff {
 
@@ -123,13 +124,28 @@ public class AscensionChallenge extends Buff {
 	}
 
 	//distant mobs get constantly beckoned to the hero at 2+ stacks
-	public static void beckonEnemies(){
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null
-				&& Dungeon.heroes.buff(AscensionChallenge.class).stacks >= 2f){
-			for (Mob m : Dungeon.level.mobs){
-				if (m.alignment == Char.Alignment.ENEMY && m.distance(Dungeon.heroes) > 8) {
-					m.beckon(Dungeon.heroes.pos);
+	public static void beckonEnemies() {
+		LinkedList<Hero> targets = new LinkedList<>();
+		for (Hero hero : Dungeon.heroes) {
+			if (hero == null) continue;
+			if (hero.buff(AscensionChallenge.class) != null
+					&& hero.buff(AscensionChallenge.class).stacks >= 2f) {
+				targets.add(hero);
+			}
+		}
+		if (targets.isEmpty()) return;
+		for (Mob m : Dungeon.level.mobs) {
+			if (m.alignment != Char.Alignment.ENEMY) continue;
+			Hero closest = null;
+			int distance = Integer.MAX_VALUE;
+			for (Hero hero : targets) {
+				if (distance > m.distance(hero)) {
+					distance = m.distance(hero);
+					closest = hero;
 				}
+			}
+			if ((closest!= null) && (distance > 8)) {
+				m.beckon(closest.pos);
 			}
 		}
 	}
