@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -55,7 +56,7 @@ public class WandOfCorrosion extends Wand {
 	}
 
 	@Override
-	public void onZap(Ballistica bolt) {
+	public void onZap(Ballistica bolt, Hero hero) {
 		CorrosiveGas gas = Blob.seed(bolt.collisionPos, 50 + 10 * buffedLvl(), CorrosiveGas.class);
 		CellEmitter.get(bolt.collisionPos).burst(Speck.factory(Speck.CORROSION), 10 );
 		gas.setStrength(2 + buffedLvl(), getClass());
@@ -65,7 +66,7 @@ public class WandOfCorrosion extends Wand {
 		for (int i : PathFinder.NEIGHBOURS9) {
 			Char ch = Actor.findChar(bolt.collisionPos + i);
 			if (ch != null) {
-				wandProc(ch, chargesPerCast());
+				wandProc(ch, chargesPerCast(), hero);
 
 				if (i == 0 && ch instanceof DwarfKing){
 					Statistics.qualifiedForBossChallengeBadge = false;

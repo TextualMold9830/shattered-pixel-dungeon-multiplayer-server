@@ -326,13 +326,13 @@ public class WandOfWarding extends Wand {
 			if (visible) {
 				sprite.zap( enemy.pos );
 			} else {
-				zap(owner);
+				zap();
 			}
 
 			return !visible;
 		}
 
-		private void zap(Hero hero) {
+		private void zap() {
 			spend( 1f );
 
 			//always hits
@@ -340,7 +340,7 @@ public class WandOfWarding extends Wand {
 			Char enemy = this.enemy;
 			enemy.damage( dmg, this );
 			if (enemy.isAlive()){
-				Wand.wandProc(enemy, wandLevel, 1, hero);
+				Wand.wandProc(enemy, wandLevel, 1, owner);
 			}
 
 			if (!enemy.isAlive() && enemy instanceof Hero) {
@@ -368,8 +368,8 @@ public class WandOfWarding extends Wand {
 			}
 		}
 
-		public void onZapComplete(Hero hero) {
-			zap(hero);
+		public void onZapComplete() {
+			zap();
 			next();
 		}
 

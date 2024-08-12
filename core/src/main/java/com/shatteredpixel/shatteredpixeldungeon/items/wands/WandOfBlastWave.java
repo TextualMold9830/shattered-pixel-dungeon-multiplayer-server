@@ -83,7 +83,7 @@ public class WandOfBlastWave extends DamageWand {
 			Char ch = Actor.findChar(bolt.collisionPos + i);
 
 			if (ch != null){
-				wandProc(ch, chargesPerCast());
+				wandProc(ch, chargesPerCast(), hero);
 				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
 				if (ch.pos == bolt.collisionPos + i) {
@@ -98,7 +98,7 @@ public class WandOfBlastWave extends DamageWand {
 		//throws the char at the center of the blast
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
-			wandProc(ch, chargesPerCast());
+			wandProc(ch, chargesPerCast(), hero);
 			ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
 			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
