@@ -31,6 +31,10 @@ import com.watabou.utils.Bundle;
 public class DirectableAlly extends NPC {
 	public Hero owner;
 
+	public Hero getOwner() {
+		return owner;
+	}
+
 	{
 		alignment = Char.Alignment.ALLY;
 		intelligentAlly = true;

@@ -428,19 +428,26 @@ public class Item implements Bundlable {
 
 		updateQuickslot();
 	}
-
+	@Deprecated
 	public Item upgrade(){
 		this.level++;
 		updateQuickslot();
 		return this;
 	}
+	public Item upgrade(Hero hero){
+		return upgrade();
+	}
+	@Deprecated
 	public Item upgrade(int n){
 		for (int i=0; i < n; i++) {
 			upgrade();
 		}
 		return this;
 	}
-	
+	public Item upgrade(int n, Hero hero){
+		return upgrade(n);
+	}
+
 	public Item degrade() {
 		
 		this.level--;
