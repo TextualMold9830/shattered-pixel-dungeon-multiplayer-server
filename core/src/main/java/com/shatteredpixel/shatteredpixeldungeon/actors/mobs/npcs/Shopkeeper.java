@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -82,7 +83,7 @@ public class Shopkeeper extends NPC {
 			turnsSinceHarmed ++;
 		}
 
-		sprite.turnTo( pos, Dungeon.heroes.pos );
+		//sprite.turnTo( pos, Dungeon.heroes.pos );
 		spend( TICK );
 		return super.act();
 	}
@@ -132,11 +133,10 @@ public class Shopkeeper extends NPC {
 							affected = true;
 						}
 					}
+						if (affected && Dungeon.visibleforAnyHero(i)) {
+							CellEmitter.get(i).burst(Speck.factory(Speck.DISCOVER), 2);
 
-					if (affected && Dungeon.level.fieldOfView[i]) {
-						CellEmitter.get( i ).burst( Speck.factory( Speck.DISCOVER ), 2 );
 					}
-
 				}
 			}
 
@@ -186,15 +186,15 @@ public class Shopkeeper extends NPC {
 		return item.value() * 5 * (Dungeon.depth / 5 + 1);
 	}
 	
-	public static WndBag sell() {
-		return GameScene.selectItem( itemSelector );
+	public static WndBag sell(Hero hero) {
+		return GameScene.selectItem( itemSelector, hero );
 	}
 
-	public static boolean canSell(Item item){
+	public static boolean canSell(Item item, Hero hero){
 		if (item.value() <= 0)                                              return false;
 		if (item.unique && !item.stackable)                                 return false;
 		if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
-		if (item.isEquipped(Dungeon.heroes) && item.cursed)                   return false;
+		if (item.isEquipped(hero) && item.cursed)                   return false;
 		return true;
 	}
 
@@ -206,13 +206,13 @@ public class Shopkeeper extends NPC {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			return Shopkeeper.canSell(item);
+			return Shopkeeper.canSell(item, getOwner());
 		}
 
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null) {
-				WndBag parentWnd = sell();
+				WndBag parentWnd = sell(getOwner());
 				GameScene.show( new WndTradeItem( item, parentWnd ) );
 			}
 		}
@@ -220,7 +220,7 @@ public class Shopkeeper extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
-		if (c != Dungeon.heroes) {
+		if (!(c instanceof Hero)) {
 			return true;
 		}
 		Game.runOnRenderThread(new Callback() {
@@ -236,21 +236,21 @@ public class Shopkeeper extends NPC {
 					if (options[i].length() > maxLen) options[i] = options[i].substring(0, maxLen-3) + "...";
 					i++;
 				}
-				GameScene.show(new WndOptions(sprite(), Messages.titleCase(name()), description(), options){
+				GameScene.show(new WndOptions((Hero) c,sprite(), Messages.titleCase(name()), description(), options){
 					@Override
 					protected void onSelect(int index) {
 						super.onSelect(index);
 						if (index == 0){
-							sell();
+							sell(getOwnerHero());
 						} else if (index == 1){
-							GameScene.show(new WndTitledMessage(sprite(), Messages.titleCase(name()), chatText()));
+							GameScene.show(new WndTitledMessage(sprite(), Messages.titleCase(name()), chatText(getOwnerHero())));
 						} else if (index > 1){
 							GLog.i(Messages.get(Shopkeeper.this, "buyback"));
 							Item returned = buybackItems.remove(index-2);
 							Dungeon.gold -= returned.value();
 							Statistics.goldCollected -= returned.value();
-							if (!returned.doPickUp(Dungeon.heroes)){
-								Dungeon.level.drop(returned, Dungeon.heroes.pos);
+							if (!returned.doPickUp(getOwnerHero())){
+								Dungeon.level.drop(returned, getOwnerHero().pos);
 							}
 						}
 					}
@@ -282,13 +282,13 @@ public class Shopkeeper extends NPC {
 		return true;
 	}
 
-	public String chatText(){
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
+	public String chatText(Hero hero){
+		if (hero.buff(AscensionChallenge.class) != null){
 			return Messages.get(this, "talk_ascent");
 		}
 		switch (Dungeon.depth){
 			case 6: default:
-				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + Dungeon.heroes.heroClass.name());
+				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + hero.heroClass.name());
 			case 11:
 				return Messages.get(this, "talk_caves");
 			case 16:
