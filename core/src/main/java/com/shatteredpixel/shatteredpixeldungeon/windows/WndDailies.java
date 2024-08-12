@@ -67,7 +67,7 @@ public class WndDailies extends Window {
 			IconButton replayInfo = new IconButton(Icons.get(Icons.CALENDAR)){
 				@Override
 				protected void onClick() {
-					ShatteredPixelDungeon.scene().addToFront(new WndRanking(Rankings.INSTANCE.latestDailyReplay));
+					ShatteredPixelDungeon.scene().addToFront(new WndRanking(Rankings.INSTANCE.latestDailyReplay, getOwnerHero()));
 				}
 
 				@Override
@@ -121,7 +121,7 @@ public class WndDailies extends Window {
 				IconButton latestInfo = new IconButton(Icons.INFO.get()){
 					@Override
 					protected void onClick() {
-						ShatteredPixelDungeon.scene().addToFront(new WndRanking(Rankings.INSTANCE.latestDaily));
+						ShatteredPixelDungeon.scene().addToFront(new WndRanking(Rankings.INSTANCE.latestDaily, getOwnerHero()));
 					}
 				};
 				latestInfo.setRect(day.right()+2, top - 5, 16, 16);

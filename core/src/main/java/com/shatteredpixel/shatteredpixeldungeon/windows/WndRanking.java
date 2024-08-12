@@ -72,9 +72,9 @@ public class WndRanking extends WndTabbed {
 	private String gameID;
 	private Rankings.Record record;
 	
-	public WndRanking( final Rankings.Record rec ) {
+	public WndRanking( final Rankings.Record rec, Hero hero ) {
 		
-		super();
+		super(hero);
 		resize( WIDTH, HEIGHT );
 
 		if (INSTANCE != null){
@@ -110,7 +110,7 @@ public class WndRanking extends WndTabbed {
 			Icons[] icons =
 					{Icons.RANKINGS, Icons.TALENT, Icons.BACKPACK_LRG, Icons.BADGES, Icons.CHALLENGE_ON};
 			Group[] pages =
-					{new StatsTab(), new TalentsTab(), new ItemsTab(), new BadgesTab(), null};
+					{new StatsTab(getOwnerHero()), new TalentsTab(getOwnerHero()), new ItemsTab(getOwnerHero()), new BadgesTab(), null};
 
 			if (Dungeon.challenges != 0) pages[4] = new ChallengesTab();
 
@@ -130,7 +130,7 @@ public class WndRanking extends WndTabbed {
 
 			select(0);
 		} else {
-			StatsTab tab = new StatsTab();
+			StatsTab tab = new StatsTab(getOwnerHero());
 			add(tab);
 
 		}
@@ -223,13 +223,13 @@ public class WndRanking extends WndTabbed {
 
 				pos += GAP;
 
-				int strBonus = Dungeon.heroes.STR() - Dungeon.heroes.STR;
+				int strBonus = getOwnerHero().STR() - getOwnerHero().STR;
 				if (strBonus > 0)
-					pos = statSlot(this, Messages.get(this, "str"), Dungeon.heroes.STR + " + " + strBonus, pos);
+					pos = statSlot(this, Messages.get(this, "str"), getOwnerHero().STR + " + " + strBonus, pos);
 				else if (strBonus < 0)
-					pos = statSlot(this, Messages.get(this, "str"), Dungeon.heroes.STR + " - " + -strBonus, pos);
+					pos = statSlot(this, Messages.get(this, "str"), getOwnerHero().STR + " - " + -strBonus, pos);
 				else
-					pos = statSlot(this, Messages.get(this, "str"), Integer.toString(Dungeon.heroes.STR), pos);
+					pos = statSlot(this, Messages.get(this, "str"), Integer.toString(getOwnerHero().STR), pos);
 				pos = statSlot(this, Messages.get(this, "duration"), num.format((int) Statistics.duration), pos);
 				if (Statistics.highestAscent == 0) {
 					pos = statSlot(this, Messages.get(this, "depth"), num.format(Statistics.deepestFloor), pos);
@@ -311,18 +311,18 @@ public class WndRanking extends WndTabbed {
 	}
 
 	private class TalentsTab extends Group{
-
-		public TalentsTab(){
+	private Hero owner;
+		public TalentsTab(Hero hero){
 			super();
-
+			owner = hero;
 			camera = WndRanking.this.camera;
 
 			int tiers = 1;
-			if (Dungeon.heroes.lvl >= 6) tiers++;
-			if (Dungeon.heroes.lvl >= 12 && Dungeon.heroes.subClass != HeroSubClass.NONE) tiers++;
-			if (Dungeon.heroes.lvl >= 20 && Dungeon.heroes.armorAbility != null) tiers++;
-			while (Dungeon.heroes.talents.size() > tiers){
-				Dungeon.heroes.talents.remove(Dungeon.heroes.talents.size()-1);
+			if (hero.lvl >= 6) tiers++;
+			if (hero.lvl >= 12 && hero.subClass != HeroSubClass.NONE) tiers++;
+			if (hero.lvl >= 20 && hero.armorAbility != null) tiers++;
+			while (hero.talents.size() > tiers){
+				hero.talents.remove(hero.talents.size()-1);
 			}
 
 			TalentsPane p = new TalentsPane(TalentButton.Mode.INFO);
@@ -336,13 +336,13 @@ public class WndRanking extends WndTabbed {
 	}
 
 	private class ItemsTab extends Group {
-		
+		private Hero owner;
 		private float pos;
 		
-		public ItemsTab() {
+		public ItemsTab(Hero hero) {
 			super();
-			
-			Belongings stuff = Dungeon.heroes.belongings;
+			owner = hero;
+			Belongings stuff = hero.belongings;
 			if (stuff.weapon != null) {
 				addItem( stuff.weapon );
 			}
