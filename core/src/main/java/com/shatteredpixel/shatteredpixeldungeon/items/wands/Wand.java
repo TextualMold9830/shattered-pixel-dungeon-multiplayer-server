@@ -690,7 +690,7 @@ public abstract class Wand extends Item {
 						curWand.fx(shot, new Callback() {
 							public void call() {
 								curWand.onZap(shot);
-								if (Random.Float() < WondrousResin.extraCurseEffectChance()){
+								if (Random.Float() < WondrousResin.extraCurseEffectChance(getOwner())){
 									CursedWand.cursedZap(curWand,
 											curUser,
 											new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT), new Callback() {

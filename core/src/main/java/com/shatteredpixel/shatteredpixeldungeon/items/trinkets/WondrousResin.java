@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -37,20 +38,20 @@ public class WondrousResin extends Trinket {
 	}
 
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		return Messages.get(this, "desc",
-				Messages.decimalFormat("#.##", 100*positiveCurseEffectChance(buffedLvl())),
-				Messages.decimalFormat("#.##", 100*extraCurseEffectChance(buffedLvl())));
+				Messages.decimalFormat("#.##", 100*positiveCurseEffectChance(buffedLvl(hero))),
+				Messages.decimalFormat("#.##", 100*extraCurseEffectChance(buffedLvl(hero))));
 	}
 
 	//TODO currently this trims most rare/v.rare wand effects entirely. Need to improve variety there
 	// certain effects might also be extremely good with no negatives
 
-	public static float positiveCurseEffectChance(){
-		return positiveCurseEffectChance( trinketLevel(WondrousResin.class) );
+	public static float positiveCurseEffectChance(Hero hero){
+		return positiveCurseEffectChance( trinketLevel(WondrousResin.class, hero));
 	}
 
-	public static float positiveCurseEffectChance(int level ){
+	public static float positiveCurseEffectChance(int level){
 		if (level >= 0){
 			return 0.25f + 0.25f * level;
 		} else {
@@ -58,11 +59,11 @@ public class WondrousResin extends Trinket {
 		}
 	}
 
-	public static float extraCurseEffectChance(){
-		return extraCurseEffectChance( trinketLevel(WondrousResin.class) );
+	public static float extraCurseEffectChance(Hero hero){
+		return extraCurseEffectChance( trinketLevel(WondrousResin.class, hero));
 	}
 
-	public static float extraCurseEffectChance( int level ){
+	public static float extraCurseEffectChance( int level){
 		if (level >= 0){
 			return 0.125f + 0.125f * level;
 		} else {
