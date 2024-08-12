@@ -180,8 +180,11 @@ public abstract class Actor implements Bundlable {
 			a.time -= min;
 		}
 
-		if (Dungeon.heroes != null && all.contains( Dungeon.heroes)) {
-			Statistics.duration += min;
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null && all.contains(hero)) {
+				Statistics.duration += min;
+				break;
+			}
 		}
 		now -= min;
 	}
@@ -286,8 +289,16 @@ public abstract class Actor implements Bundlable {
 					current = null;
 				} else {
 					doNext = acting.act();
-					for (Hero hero: Dungeon.heroes) {
-						if (doNext && (Dungeon.heroes == null || !hero.isAlive())) {
+					if (doNext) {
+						boolean hasAliveHero = false;
+						for (Hero hero : Dungeon.heroes) {
+							if (hero != null && hero.isAlive()) {
+								hasAliveHero = true;
+								break;
+							}
+						}
+						if (!hasAliveHero) {
+
 							doNext = false;
 							current = null;
 						}

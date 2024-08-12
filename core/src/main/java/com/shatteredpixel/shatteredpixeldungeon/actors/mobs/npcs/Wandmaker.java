@@ -371,7 +371,7 @@ public class Wandmaker extends NPC {
 		public static boolean active() {
 			//it is not completed
 			if (wand1 == null || wand2 == null
-					|| !(Dungeon.level instanceof RegularLevel) || Dungeon.heroes == null) {
+					|| !(Dungeon.level instanceof RegularLevel))  {
 				return false;
 			}
 

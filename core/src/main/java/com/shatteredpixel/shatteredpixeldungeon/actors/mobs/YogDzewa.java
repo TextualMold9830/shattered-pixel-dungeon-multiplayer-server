@@ -490,13 +490,10 @@ public class YogDzewa extends Mob {
 		level.viewDistance = viewDistance;
 		for(Hero hero: Dungeon.heroes) {
 			if (hero != null) {
-
-				if (Dungeon.heroes != null) {
-					if (hero.buff(Light.class) == null) {
-						hero.viewDistance = level.viewDistance;
-					}
-					Dungeon.observe(hero);
+				if (hero.buff(Light.class) == null) {
+					hero.viewDistance = level.viewDistance;
 				}
+				Dungeon.observe(hero);
 			}
 		}
 	}

@@ -83,8 +83,8 @@ public class RatKingSprite extends MobSprite {
 	public void link(Char ch) {
 		super.link(ch);
 		//FIXME
-//		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
-//			aura(0xFFFF00);
-//		}
+		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
+			aura(0xFFFF00);
+		}
 	}
 }

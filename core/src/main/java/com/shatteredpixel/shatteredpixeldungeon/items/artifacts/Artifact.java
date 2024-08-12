@@ -33,6 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.Arrays;
+
 public class Artifact extends KindofMisc {
 
 	protected Buff passiveBuff;
@@ -220,7 +222,7 @@ public class Artifact extends KindofMisc {
 		public boolean attachTo( Char target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
-				if (target instanceof Hero && Dungeon.heroes == null && cooldown() == 0 && target.cooldown() > 0) {
+				if (target instanceof Hero && (!Arrays.asList(Dungeon.heroes).contains(target)) && cooldown() == 0 && target.cooldown() > 0) {
 					spend(TICK);
 				}
 				return true;
