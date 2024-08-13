@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -230,48 +231,53 @@ public class SentryRoom extends SpecialRoom {
 
 		@Override
 		protected boolean act() {
-			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
+			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()) {
 				fieldOfView = new boolean[Dungeon.level.length()];
 			}
-			Dungeon.level.updateFieldOfView( this, fieldOfView );
+			Dungeon.level.updateFieldOfView(this, fieldOfView);
 
-			if (properties().contains(Property.IMMOVABLE)){
+			if (properties().contains(Property.IMMOVABLE)) {
 				throwItems();
 			}
 
-			if (Dungeon.heroes != null){
-				if (fieldOfView[Dungeon.heroes.pos]
-						&& Dungeon.level.map[Dungeon.heroes.pos] == Terrain.EMPTY_SP
-						&& room.inside(Dungeon.level.cellToPoint(Dungeon.heroes.pos))
-						&& !Dungeon.heroes.belongings.lostInventory()){
+			if (Dungeon.heroes != null) {
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					if (fieldOfView[hero.pos]
+							&& Dungeon.level.map[hero.pos] == Terrain.EMPTY_SP
+							&& room.inside(Dungeon.level.cellToPoint(hero.pos))
+							&& !hero.belongings.lostInventory()) {
 
-					if (curChargeDelay > 0.001f){ //helps prevent rounding errors
-						if (curChargeDelay == initialChargeDelay) {
+						if (curChargeDelay > 0.001f) { //helps prevent rounding errors
+							if (curChargeDelay == initialChargeDelay) {
+								((SentrySprite) sprite).charge();
+							}
+							curChargeDelay -= hero.cooldown();
+							//pity mechanic so mistaps don't get people instakilled
+							if (hero.cooldown() >= 0.34f) {
+								hero.interrupt();
+							}
+						}
+
+						if (curChargeDelay <= .001f) {
+							curChargeDelay = 1f;
+							sprite.zap(hero.pos);
 							((SentrySprite) sprite).charge();
 						}
-						curChargeDelay -= Dungeon.heroes.cooldown();
-						//pity mechanic so mistaps don't get people instakilled
-						if (Dungeon.heroes.cooldown() >= 0.34f){
-							Dungeon.heroes.interrupt();
-						}
+
+						spend(hero.cooldown());
+						return true;
+
+					} else {
+						curChargeDelay = initialChargeDelay;
+						sprite.idle();
 					}
 
-					if (curChargeDelay <= .001f){
-						curChargeDelay = 1f;
-						sprite.zap(Dungeon.heroes.pos);
-						((SentrySprite) sprite).charge();
-					}
-
-					spend(Dungeon.heroes.cooldown());
-					return true;
-
-				} else {
-					curChargeDelay = initialChargeDelay;
-					sprite.idle();
+					spend(hero.cooldown());
 				}
-
-				spend(Dungeon.heroes.cooldown());
-			} else {
+			}
+			}
+		else {
 				spend(1f);
 			}
 			return true;
