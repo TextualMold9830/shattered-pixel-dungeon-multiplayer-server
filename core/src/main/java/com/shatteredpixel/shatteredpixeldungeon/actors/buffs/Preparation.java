@@ -84,8 +84,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				{.50f, .67f, .83f, 1.0f}
 		};
 
-		public float KOThreshold(){
-			return KOThresholds[ordinal()][Dungeon.heroes.pointsInTalent(Talent.ENHANCED_LETHALITY)];
+		public float KOThreshold(Hero hero){
+			return KOThresholds[ordinal()][hero.pointsInTalent(Talent.ENHANCED_LETHALITY)];
 		}
 
 		//1st index is prep level, 2nd is talent level
@@ -96,16 +96,16 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				{4, 6, 8, 10}
 		};
 
-		public int blinkDistance(){
+		public int blinkDistance(Char target){
 			return blinkRanges[ordinal()][((Hero)target).pointsInTalent(Talent.ASSASSINS_REACH)];
 		}
 		
-		public boolean canKO(Char defender){
+		public boolean canKO(Char defender, Hero attacker){
 			if (defender.properties().contains(Char.Property.MINIBOSS)
 					|| defender.properties().contains(Char.Property.BOSS)){
-				return (defender.HP/(float)defender.HT) < (KOThreshold()/5f);
+				return (defender.HP/(float)defender.HT) < (KOThreshold(attacker)/5f);
 			} else {
-				return (defender.HP/(float)defender.HT) < KOThreshold();
+				return (defender.HP/(float)defender.HT) < KOThreshold(attacker);
 			}
 		}
 		
@@ -136,7 +136,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	public boolean act() {
 		if (target.invisible > 0){
 			turnsInvis++;
-			if (AttackLevel.getLvl(turnsInvis).blinkDistance() > 0 && target instanceof Hero){
+			if (AttackLevel.getLvl(turnsInvis).blinkDistance(target) > 0 && target instanceof Hero){
 				ActionIndicator.setAction(this);
 			}
 			spend(TICK);
@@ -160,8 +160,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		return AttackLevel.getLvl(turnsInvis).damageRoll(attacker);
 	}
 
-	public boolean canKO( Char defender ){
-		return !defender.isInvulnerable(target.getClass()) && AttackLevel.getLvl(turnsInvis).canKO(defender);
+	public boolean canKO( Char defender, Hero attacker ){
+		return !defender.isInvulnerable(target.getClass()) && AttackLevel.getLvl(turnsInvis).canKO(defender, attacker);
 	}
 	
 	@Override
@@ -192,18 +192,18 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		String desc = Messages.get(this, "desc");
 		
 		AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
-
-		desc += "\n\n" + Messages.get(this, "desc_dmg",
-				(int)(lvl.baseDmgBonus*100),
-				(int)(lvl.KOThreshold()*100),
-				(int)(lvl.KOThreshold()*20));
-		
+		if (target instanceof Hero) {
+			desc += "\n\n" + Messages.get(this, "desc_dmg",
+					(int) (lvl.baseDmgBonus * 100),
+					(int) (lvl.KOThreshold((Hero) target) * 100),
+					(int) (lvl.KOThreshold((Hero) target) * 20));
+		}
 		if (lvl.damageRolls > 1){
 			desc += " " + Messages.get(this, "desc_dmg_likely");
 		}
 		
-		if (lvl.blinkDistance() > 0){
-			desc += "\n\n" + Messages.get(this, "desc_blink", lvl.blinkDistance());
+		if (lvl.blinkDistance(target) > 0){
+			desc += "\n\n" + Messages.get(this, "desc_blink", lvl.blinkDistance(target));
 		}
 		
 		desc += "\n\n" + Messages.get(this, "desc_invis_time", turnsInvis);
@@ -286,7 +286,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				
 				AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 
-				PathFinder.buildDistanceMap(target.pos,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance());
+				PathFinder.buildDistanceMap(target.pos,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance(target));
 				int dest = -1;
 				for (int i : PathFinder.NEIGHBOURS8){
 					//cannot blink into a cell that's occupied or impassable, only over them
@@ -332,7 +332,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		
 		@Override
 		public String prompt() {
-			return Messages.get(Preparation.class, "prompt", AttackLevel.getLvl(turnsInvis).blinkDistance());
+			return Messages.get(Preparation.class, "prompt", AttackLevel.getLvl(turnsInvis).blinkDistance(target));
 		}
 	};
 }
