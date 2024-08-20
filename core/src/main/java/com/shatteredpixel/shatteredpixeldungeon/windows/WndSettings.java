@@ -490,13 +490,8 @@ public class WndSettings extends WndTabbed {
 										textColor(TITLE_COLOR);
 										btnGrouped.textColor(WHITE);
 										btnCentered.textColor(WHITE);
-										SPDSettings.toolbarMode(Toolbar.Mode.SPLIT.name());
-										Toolbar.updateLayout();
 									}
 								};
-								if (SPDSettings.toolbarMode().equals(Toolbar.Mode.SPLIT.name())) {
-									btnSplit.textColor(TITLE_COLOR);
-								}
 								add(btnSplit);
 
 								btnGrouped = new RedButton(Messages.get(WndSettings.UITab.this, "group")) {
@@ -505,13 +500,8 @@ public class WndSettings extends WndTabbed {
 										btnSplit.textColor(WHITE);
 										textColor(TITLE_COLOR);
 										btnCentered.textColor(WHITE);
-										SPDSettings.toolbarMode(Toolbar.Mode.GROUP.name());
-										Toolbar.updateLayout();
 									}
 								};
-								if (SPDSettings.toolbarMode().equals(Toolbar.Mode.GROUP.name())) {
-									btnGrouped.textColor(TITLE_COLOR);
-								}
 								add(btnGrouped);
 
 								btnCentered = new RedButton(Messages.get(WndSettings.UITab.this, "center")) {
@@ -520,13 +510,8 @@ public class WndSettings extends WndTabbed {
 										btnSplit.textColor(WHITE);
 										btnGrouped.textColor(WHITE);
 										textColor(TITLE_COLOR);
-										SPDSettings.toolbarMode(Toolbar.Mode.CENTER.name());
-										Toolbar.updateLayout();
 									}
 								};
-								if (SPDSettings.toolbarMode().equals(Toolbar.Mode.CENTER.name())) {
-									btnCentered.textColor(TITLE_COLOR);
-								}
 								add(btnCentered);
 
 								chkQuickSwapper = new CheckBox(Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
@@ -534,7 +519,6 @@ public class WndSettings extends WndTabbed {
 									protected void onClick() {
 										super.onClick();
 										SPDSettings.quickSwapper(checked());
-										Toolbar.updateLayout();
 									}
 								};
 								chkQuickSwapper.checked(SPDSettings.quickSwapper());
@@ -549,7 +533,6 @@ public class WndSettings extends WndTabbed {
 									protected void onClick() {
 										super.onClick();
 										SPDSettings.flipToolbar(checked());
-										Toolbar.updateLayout();
 									}
 								};
 								chkFlipToolbar.checked(SPDSettings.flipToolbar());

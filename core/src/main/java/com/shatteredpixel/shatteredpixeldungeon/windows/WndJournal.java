@@ -36,12 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickRecipe;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollingListPane;
+import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
@@ -591,7 +586,7 @@ public class WndJournal extends WndTabbed {
 						if (inside( x, y ) && itemSeen) {
 							if (item instanceof ClassArmor){
 								GameScene.show(new WndTitledMessage(new Image(icon),
-										Messages.titleCase(item.trueName()), item.desc()));
+										Messages.titleCase(item.trueName()), item.desc(((Window) parent).getOwnerHero())));
 							} else {
 								GameScene.show(new WndTitledMessage(new Image(icon),
 										Messages.titleCase(item.trueName()), item.info()));

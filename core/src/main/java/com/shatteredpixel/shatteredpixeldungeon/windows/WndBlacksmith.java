@@ -123,7 +123,7 @@ public class WndBlacksmith extends Window {
 		RedButton harden = new RedButton(Messages.get(this, "harden", hardenCost), 6){
 			@Override
 			protected void onClick() {
-				GameScene.selectItem(new HardenSelector());
+				GameScene.selectItem(new HardenSelector(), getOwnerHero());
 			}
 		};
 		harden.enable(Blacksmith.Quest.favor >= hardenCost);
@@ -133,7 +133,7 @@ public class WndBlacksmith extends Window {
 		RedButton upgrade = new RedButton(Messages.get(this, "upgrade", upgradeCost), 6){
 			@Override
 			protected void onClick() {
-				GameScene.selectItem(new UpgradeSelector());
+				GameScene.selectItem(new UpgradeSelector(), getOwnerHero());
 			}
 		};
 		upgrade.enable(Blacksmith.Quest.favor >= upgradeCost);
@@ -236,7 +236,7 @@ public class WndBlacksmith extends Window {
 				@Override
 				protected void onClick() {
 					btnPressed = btnItem1;
-					GameScene.selectItem( itemSelector );
+					GameScene.selectItem( itemSelector, getOwnerHero() );
 				}
 			};
 			btnItem1.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
@@ -246,7 +246,7 @@ public class WndBlacksmith extends Window {
 				@Override
 				protected void onClick() {
 					btnPressed = btnItem2;
-					GameScene.selectItem( itemSelector );
+					GameScene.selectItem( itemSelector, getOwnerHero() );
 				}
 			};
 			btnItem2.setRect( btnItem1.right() + BTN_GAP, btnItem1.top(), BTN_SIZE, BTN_SIZE );

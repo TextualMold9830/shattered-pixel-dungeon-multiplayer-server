@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
@@ -47,9 +48,9 @@ public class WndWandmaker extends Window {
 	Wandmaker wandmaker;
 	Item questItem;
 
-	public WndWandmaker( final Wandmaker wandmaker, final Item item ) {
+	public WndWandmaker(final Wandmaker wandmaker, final Item item, Hero hero) {
 		
-		super();
+		super(hero);
 
 		this.wandmaker = wandmaker;
 		this.questItem = item;
@@ -77,7 +78,7 @@ public class WndWandmaker extends Window {
 		ItemButton btnWand1 = new ItemButton(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.heroes.belongings.contains(questItem) && item() != null) {
+				if (getOwnerHero().belongings.contains(questItem) && item() != null) {
 					GameScene.show(new RewardWindow(item()));
 				} else {
 					hide();
@@ -91,7 +92,7 @@ public class WndWandmaker extends Window {
 		ItemButton btnWand2 = new ItemButton(){
 			@Override
 			protected void onClick() {
-				if (Dungeon.heroes.belongings.contains(questItem) && item() != null) {
+				if (getOwnerHero().belongings.contains(questItem) && item() != null) {
 					GameScene.show(new RewardWindow(item()));
 				} else {
 					hide();
@@ -113,16 +114,16 @@ public class WndWandmaker extends Window {
 
 		hide();
 
-		questItem.detach( Dungeon.heroes.belongings.backpack );
+		questItem.detach( getOwnerHero().belongings.backpack );
 
-		reward.identify(false);
-		if (reward.doPickUp( Dungeon.heroes)) {
+		reward.identify(false, getOwnerHero());
+		if (reward.doPickUp( getOwnerHero())) {
 			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}
 		
-		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(Dungeon.heroes.name())) );
+		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
 		wandmaker.destroy();
 		
 		wandmaker.sprite.die();
