@@ -93,12 +93,15 @@ public enum Sample {
 		play( id, volume, null );
 	}
 	public void play( String id, float volume, Hero hero ) {
-		play( id, volume, volume, 1, hero );
+		play( id, volume, volume, 1, 1, hero );
+	}
+	public void play( String id, float volume, float pitch, Hero hero ) {
+		play( id, volume, volume, 1, pitch, hero );
 	}
 	public void play( String id, float leftVolume, float rightVolume, float rate ) {
-		play( id, leftVolume, rightVolume, rate, null );
+		play( id, leftVolume, rightVolume, rate, 1, null );
 	}
-	public void play( String id, float leftVolume, float rightVolume, float rate, @Nullable Hero hero) {
+	public void play( String id, float leftVolume, float rightVolume, float rate, float pitch, @Nullable Hero hero) {
 		if (!ids.contains( id )) {
 			assert !DeviceCompat.isDebug(): "playing unloaded sample: " + id;
 			Log.e("Sound", "playing unloaded sample: " + id);
@@ -112,11 +115,15 @@ public enum Sample {
 			actionObj.put("left_volume", leftVolume);
 			actionObj.put("right_volume", rightVolume);
 			actionObj.put("rate", rate);
+			actionObj.put("pitch", pitch);
 		} catch (JSONException ignored) {}
 		if (hero != null){
 			SendData.sendCustomAction(actionObj, hero);
 		} else {
 			SendData.sendCustomActionForAll(actionObj);
 		}
+	}
+	public void play(String id, float volume, float pitch){
+		play(id, volume, volume, 1, pitch, null);
 	}
 }

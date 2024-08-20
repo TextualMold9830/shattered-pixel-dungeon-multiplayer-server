@@ -25,7 +25,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Callback;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -63,7 +66,6 @@ public enum Sample {
 	}
 
 	private static LinkedList<String> loadingQueue = new LinkedList<>();
-
 	public synchronized void load( final String... assets ) {
 
 		for (String asset : assets){

@@ -207,7 +207,7 @@ public class Game implements ApplicationListener {
 		
 		sceneClass = null;
 		Music.INSTANCE.stop();
-		Sample.INSTANCE.reset();
+		//Sample.INSTANCE.reset();
 	}
 	
 	@Override
@@ -284,7 +284,7 @@ public class Game implements ApplicationListener {
 		inputHandler.processAllEvents();
 
 		Music.INSTANCE.update();
-		Sample.INSTANCE.update();
+		//Sample.INSTANCE.update();
 		scene.update();
 		Camera.updateAll();
 	}
