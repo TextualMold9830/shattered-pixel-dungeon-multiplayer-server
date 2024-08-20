@@ -51,6 +51,15 @@ public class Bee extends Mob {
 		//only applicable when the bee is charmed with elixir of honeyed healing
 		intelligentAlly = true;
 	}
+	private Hero owner;
+
+	public Hero getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Hero owner) {
+		this.owner = owner;
+	}
 
 	private int level;
 
@@ -204,7 +213,7 @@ public class Bee extends Mob {
 	@Override
 	protected boolean getCloser(int target) {
 		if (alignment == Alignment.ALLY && enemy == null && buffs(AllyBuff.class).isEmpty()){
-			target = Dungeon.heroes.pos;
+			target = getOwner().pos;
 		} else if (enemy != null && Actor.findById(potHolder) == enemy) {
 			target = enemy.pos;
 		} else if (potPos != -1 && (state == WANDERING || Dungeon.level.distance(target, potPos) > 3))

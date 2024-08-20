@@ -50,7 +50,7 @@ public class ElixirOfHoneyedHealing extends Elixir {
 	}
 	
 	@Override
-	public void shatter(int cell) {
+	public void shatter(int cell, Hero hero) {
 		splash( cell );
 		if (Dungeon.visibleforAnyHero(cell)) {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
@@ -62,6 +62,7 @@ public class ElixirOfHoneyedHealing extends Elixir {
 			PotionOfHealing.heal(ch);
 			if (ch instanceof Bee && ch.alignment != curUser.alignment){
 				ch.alignment = Char.Alignment.ALLY;
+				((Bee)ch).setOwner(hero);
 				((Bee)ch).setPotInfo(-1, null);
 			}
 		}
