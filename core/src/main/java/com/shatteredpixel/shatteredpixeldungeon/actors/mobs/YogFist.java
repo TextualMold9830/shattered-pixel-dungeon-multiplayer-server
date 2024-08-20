@@ -96,7 +96,18 @@ public abstract class YogFist extends Mob {
 		if (enemy.invisible <= 0 && state == WANDERING){
 				beckon( enemy.pos);
 			state = HUNTING;
-			enemy = Dungeon.heroes;
+			Hero[] heroes = new Hero[Dungeon.heroes.length];
+			int index = 0;
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					heroes[index] = hero;
+					index++;
+				}
+			}
+			//Chose a random hero if none is present
+			if (enemy == null) {
+				enemy = Random.element(heroes);
+			}
 		}
 
 		return super.act();
@@ -153,12 +164,15 @@ public abstract class YogFist extends Mob {
 		int preHP = HP;
 		super.damage(dmg, source);
 		int dmgTaken = preHP - HP;
-
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-		if (dmgTaken > 0 && lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/4f);
-			else                                                    lock.addTime(dmgTaken/2f);
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+			LockedFloor lock = hero.buff(LockedFloor.class);
+			if (dmgTaken > 0 && lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmgTaken / 4f);
+				else lock.addTime(dmgTaken / 2f);
+			}
 		}
+	}
 	}
 
 	protected abstract void zap();
@@ -508,7 +522,7 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-				enemy.damage( Char.combatRoll(10, 20), new LightBeam() );
+				enemy.damage( Char.combatRoll(10, 20), new DamageCause (new LightBeam(), this) );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
 
 				if (!enemy.isAlive() && enemy instanceof Hero) {
@@ -579,7 +593,7 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-				enemy.damage( Char.combatRoll(10, 20), new DarkBolt() );
+				enemy.damage( Char.combatRoll(10, 20), new DamageCause(new DarkBolt(), this) );
 
 				Light l = enemy.buff(Light.class);
 				if (l != null){

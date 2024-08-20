@@ -197,9 +197,18 @@ public class Thief extends Mob {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void escaped() {
+			int closestDistance = Integer.MAX_VALUE;
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					int distance = Dungeon.level.distance(hero.pos, pos);
+					if (distance < closestDistance) {
+						closestDistance = distance;
+					}
+				}
+			}
 			if (item != null
 					&& !Dungeon.visibleforAnyHero(pos)
-					&& Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
+					&& closestDistance >= 6) {
 
 				int count = 32;
 				int newPos;
@@ -208,7 +217,7 @@ public class Thief extends Mob {
 					if (count-- <= 0) {
 						break;
 					}
-				} while (newPos == -1 || Dungeon.level.fieldOfView[newPos] || Dungeon.level.distance(newPos, pos) < (count/3));
+				} while (newPos == -1 || Dungeon.visibleforAnyHero(newPos) || Dungeon.level.distance(newPos, pos) < (count/3));
 
 				if (newPos != -1) {
 
