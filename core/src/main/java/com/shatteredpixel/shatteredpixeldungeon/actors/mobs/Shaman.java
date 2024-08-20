@@ -125,7 +125,7 @@ public abstract class Shaman extends Mob {
 			
 			int dmg = Char.combatRoll( 6, 15 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new EarthenBolt() );
+			enemy.damage( dmg, new DamageCause( new EarthenBolt(), null));
 			
 			if (!enemy.isAlive() && enemy instanceof Hero) {
 				Badges.validateDeathFromEnemyMagic();

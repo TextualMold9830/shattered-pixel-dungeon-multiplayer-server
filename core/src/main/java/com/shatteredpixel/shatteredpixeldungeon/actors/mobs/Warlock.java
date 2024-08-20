@@ -118,7 +118,7 @@ public class Warlock extends Mob implements Callback {
 			
 			int dmg = Char.combatRoll( 12, 18 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new DarkBolt() );
+			enemy.damage( dmg, new DamageCause( new DarkBolt(), this) );
 			
 			if (enemy instanceof Hero && !enemy.isAlive()) {
 				Badges.validateDeathFromEnemyMagic();
