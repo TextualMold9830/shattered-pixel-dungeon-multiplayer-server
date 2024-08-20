@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,7 +56,7 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public String targetingPrompt(Hero hero) {
 		return Messages.get(this, "prompt");
 	}
 
@@ -80,7 +83,7 @@ public class DeathMark extends ArmorAbility {
 
 		Char ch = Actor.findChar(target);
 
-		if (ch == null || !Dungeon.level.fieldOfView[target]){
+		if (ch == null || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		} else if (ch.alignment != Char.Alignment.ENEMY){
@@ -88,10 +91,16 @@ public class DeathMark extends ArmorAbility {
 			return;
 		}
 
-		if (ch != null){
-			Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
-		}
-
+		DeathMarkTracker deathMarkTracker = new DeathMarkTracker(hero);
+		deathMarkTracker.attachTo(ch);
+        try {
+			Method spend = ClassReflection.getMethod(deathMarkTracker.getClass(), "spend", float.class);
+			spend.setAccessible(true);
+			spend.invoke(deathMarkTracker.DURATION * ch.resist(DeathMarkTracker.class) );
+        } catch (ReflectionException e) {
+            throw new RuntimeException(e);
+        }
+		Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();
 		hero.sprite.zap(target);
@@ -110,24 +119,26 @@ public class DeathMark extends ArmorAbility {
 		if (ch.HP > 0 || ch.buff(DeathMarkTracker.class) == null){
 			return;
 		}
+		Hero hero = ch.buff(DeathMarkTracker.class).cause;
+		if (hero != null) {
+			if (hero.hasTalent(Talent.FEAR_THE_REAPER)) {
+				if (hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 2) {
+					Buff.prolong(ch, Terror.class, 5f).object = hero.id();
+				}
+				Buff.prolong(ch, Cripple.class, 5f);
 
-		if (Dungeon.heroes.hasTalent(Talent.FEAR_THE_REAPER)) {
-			if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) >= 2) {
-				Buff.prolong(ch, Terror.class, 5f).object = Dungeon.heroes.id();
-			}
-			Buff.prolong(ch, Cripple.class, 5f);
+				if (hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 3) {
+					boolean[] passable = BArray.not(Dungeon.level.solid, null);
+					PathFinder.buildDistanceMap(ch.pos, passable, 3);
 
-			if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) >= 3) {
-				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				PathFinder.buildDistanceMap(ch.pos, passable, 3);
-
-				for (Char near : Actor.chars()) {
-					if (near != ch && near.alignment == Char.Alignment.ENEMY
-							&& PathFinder.distance[near.pos] != Integer.MAX_VALUE) {
-						if (Dungeon.heroes.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
-							Buff.prolong(near, Terror.class, 5f).object = Dungeon.heroes.id();
+					for (Char near : Actor.chars()) {
+						if (near != ch && near.alignment == Char.Alignment.ENEMY
+								&& PathFinder.distance[near.pos] != Integer.MAX_VALUE) {
+							if (hero.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
+								Buff.prolong(near, Terror.class, 5f).object = hero.id();
+							}
+							Buff.prolong(near, Cripple.class, 5f);
 						}
-						Buff.prolong(near, Cripple.class, 5f);
 					}
 				}
 			}
@@ -145,8 +156,18 @@ public class DeathMark extends ArmorAbility {
 	public Talent[] talents() {
 		return new Talent[]{Talent.FEAR_THE_REAPER, Talent.DEATHLY_DURABILITY, Talent.DOUBLE_MARK, Talent.HEROIC_ENERGY};
 	}
-
+	//Need a way to have a hero
 	public static class DeathMarkTracker extends FlavourBuff {
+		Hero cause;
+
+		public DeathMarkTracker(Hero cause) {
+			this();
+			this.cause = cause;
+		}
+
+		public DeathMarkTracker() {
+			super();
+		}
 
 		public static float DURATION = 5f;
 
@@ -197,11 +218,11 @@ public class DeathMark extends ArmorAbility {
 				target.sprite.bloodBurstA(target.sprite.center(), target.HT*2);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-				target.die(this);
-				int shld = Math.round(initialHP * (0.125f*Dungeon.heroes.pointsInTalent(Talent.DEATHLY_DURABILITY)));
+				target.die(new Char.DamageCause(this, null));
+				int shld = Math.round(initialHP * (0.125f*cause.pointsInTalent(Talent.DEATHLY_DURABILITY)));
 				if (shld > 0 && target.alignment != Char.Alignment.ALLY){
-					Dungeon.heroes.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
-					Buff.affect(Dungeon.heroes, Barrier.class).setShield(shld);
+					cause.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
+					Buff.affect(cause, Barrier.class).setShield(shld);
 				}
 			}
 		}
