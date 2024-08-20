@@ -98,7 +98,7 @@ public class DM201 extends DM200 {
 
 	@Override
 	public void rollToDropLoot(Hero hero) {
-		if (Dungeon.heroes.lvl > maxLvl + 2) return;
+		if (hero.lvl > maxLvl + 2) return;
 
 		super.rollToDropLoot(hero);
 
