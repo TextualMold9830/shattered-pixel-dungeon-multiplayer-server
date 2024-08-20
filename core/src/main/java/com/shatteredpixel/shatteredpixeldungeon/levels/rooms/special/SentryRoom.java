@@ -283,16 +283,16 @@ public class SentryRoom extends SpecialRoom {
 			return true;
 		}
 
-		public void onZapComplete(){
-			if (hit(this, Dungeon.heroes, true)) {
-				Dungeon.heroes.damage(Char.combatRoll(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new DamageCause(new Eye.DeathGaze(), this));
-				if (!Dungeon.heroes.isAlive()) {
+		public void onZapComplete(Hero hero){
+			if (hit(this, hero, true)) {
+				hero.damage(Char.combatRoll(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new DamageCause(new Eye.DeathGaze(), this));
+				if (!hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
 					GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
 				}
 			} else {
-				Dungeon.heroes.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.heroes.defenseVerb() );
+				hero.sprite.showStatus( CharSprite.NEUTRAL,  hero.defenseVerb() );
 			}
 		}
 
@@ -377,7 +377,10 @@ public class SentryRoom extends SpecialRoom {
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 			}
-			((Sentry)ch).onZapComplete();
+			Char c = Actor.findChar(pos);
+			if (c instanceof Hero) {
+				((Sentry) ch).onZapComplete((Hero) Actor.findChar(pos));
+			}
 		}
 
 		@Override
