@@ -69,22 +69,7 @@ public class WndGame extends Window {
 			} );
 			curBtn.icon(Icons.get(Icons.CHALLENGE_ON));
 		}
-
-		// Restart
-		//TODO: might want to remove this
-		if (Dungeon.heroes == null) {
-
-			
-			addButton( curBtn = new RedButton( Messages.get(this, "rankings") ) {
-				@Override
-				protected void onClick() {
-					InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
-					Game.switchScene( RankingsScene.class );
-				}
-			} );
-			curBtn.icon(Icons.get(Icons.RANKINGS));
-		}
-
+		
 		// Main menu
 		addButton(curBtn = new RedButton(Messages.get(this, "menu")) {
 			@Override
