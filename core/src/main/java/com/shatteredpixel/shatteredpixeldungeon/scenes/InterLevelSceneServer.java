@@ -382,8 +382,11 @@ public class InterLevelSceneServer {
 	private void fall() throws IOException {
 		
 		Mob.holdAllies( Dungeon.level );
-		
-		Buff.affect( Dungeon.heroes, Chasm.Falling.class );
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				Buff.affect(hero, Chasm.Falling.class);
+			}
+		}
 		Dungeon.saveAll();
 
 		Level level;
