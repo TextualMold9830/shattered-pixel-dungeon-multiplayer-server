@@ -1293,4 +1293,20 @@ public class Dungeon {
 			}
 		}
 	}
+
+	@FunctionalInterface
+	public static interface RunForVisibleHeroCallback{
+		public void run(Hero hero);
+	}
+	public static void runForHeroIfVisible(int[] cells, RunForVisibleHeroCallback callback){
+		for (Hero hero: heroes){
+			if (hero == null) continue;
+			for (int cell: cells) {
+				if (hero.fieldOfView[cell]) {
+					callback.run(hero);
+				}
+				break;
+			}
+		}
+	}
 }
