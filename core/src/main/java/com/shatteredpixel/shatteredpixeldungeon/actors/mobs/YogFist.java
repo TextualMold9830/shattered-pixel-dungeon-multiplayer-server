@@ -65,6 +65,8 @@ import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public abstract class YogFist extends Mob {
 
 	{
@@ -96,17 +98,15 @@ public abstract class YogFist extends Mob {
 		if (enemy.invisible <= 0 && state == WANDERING){
 				beckon( enemy.pos);
 			state = HUNTING;
-			Hero[] heroes = new Hero[Dungeon.heroes.length];
-			int index = 0;
-			for (Hero hero: Dungeon.heroes) {
-				if (hero != null) {
-					heroes[index] = hero;
-					index++;
-				}
-			}
 			//Chose a random hero if none is present
 			if (enemy == null) {
-				enemy = Random.element(heroes);
+				ArrayList<Hero> targets = new ArrayList<>((Dungeon.heroes.length));
+				for (Hero hero: Dungeon.heroes){
+					if (hero != null) {
+						targets.add(hero);
+					}
+				}
+				enemy = Random.element(targets);
 			}
 		}
 
