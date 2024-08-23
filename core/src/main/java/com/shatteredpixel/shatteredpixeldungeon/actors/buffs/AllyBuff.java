@@ -61,7 +61,7 @@ public abstract class AllyBuff extends Buff{
 			Badges.validateMonstersSlain();
 			Statistics.qualifiedForNoKilling = false;
 
-			AscensionChallenge.processEnemyKill(enemy);
+			AscensionChallenge.processEnemyKill(enemy, hero);
 
 			int exp = hero.lvl <= enemy.maxLvl ? enemy.EXP : 0;
 			if (exp > 0) {

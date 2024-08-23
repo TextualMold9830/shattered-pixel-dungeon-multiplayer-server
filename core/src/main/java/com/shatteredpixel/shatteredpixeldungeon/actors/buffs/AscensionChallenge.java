@@ -102,7 +102,7 @@ public class AscensionChallenge extends Buff {
 	}
 
 	public static float statModifier(Char ch){
-		if (Dungeon.heroes == null || Dungeon.heroes.buff(AscensionChallenge.class) == null){
+		if (highestStack() == -1){
 			return 1;
 		}
 
@@ -152,9 +152,8 @@ public class AscensionChallenge extends Buff {
 
 	//mobs move at 2x speed when not hunting/fleeing at 4 stacks or higher
 	public static float enemySpeedModifier(Mob m){
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null
-				&& m.alignment == Char.Alignment.ENEMY
-				&& Dungeon.heroes.buff(AscensionChallenge.class).stacks >= 4f
+		if (m.alignment == Char.Alignment.ENEMY
+				&& highestStack() >= 4f
 				&& m.state != m.HUNTING && m.state != m.FLEEING){
 			return 2;
 		}
@@ -163,17 +162,16 @@ public class AscensionChallenge extends Buff {
 	}
 
 	//hero speed is halved and capped at 1x at 6+ stacks
-	public static float modifyHeroSpeed(float speed){
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null
-				&& Dungeon.heroes.buff(AscensionChallenge.class).stacks >= 6f){
+	public static float modifyHeroSpeed(float speed, Hero hero){
+		if (hero.buff(AscensionChallenge.class) != null
+				&& hero.buff(AscensionChallenge.class).stacks >= 6f){
 			return Math.min(speed/2f, 1f);
 		}
 
 		return speed;
 	}
-
-	public static void processEnemyKill(Char enemy){
-		AscensionChallenge chal = Dungeon.heroes.buff(AscensionChallenge.class);
+	public static void processEnemyKill(Char enemy, Hero hero){
+		AscensionChallenge chal = hero.buff(AscensionChallenge.class);
 		if (chal == null) return;
 
 		if (enemy instanceof Ratmogrify.TransmogRat){
@@ -208,16 +206,16 @@ public class AscensionChallenge extends Buff {
 
 		//if the hero is at the max level, grant them 10 effective xp per stack cleared
 		// for the purposes of on-xp gain effects
-		if (oldStacks > chal.stacks && Dungeon.heroes.lvl == Hero.MAX_LEVEL){
-			Dungeon.heroes.earnExp(Math.round(10*(oldStacks - chal.stacks)), chal.getClass());
+		if (oldStacks > chal.stacks && hero.lvl == Hero.MAX_LEVEL){
+			hero.earnExp(Math.round(10*(oldStacks - chal.stacks)), chal.getClass());
 		}
 
 		BuffIndicator.refreshHero();
 	}
 
-	public static int AscensionCorruptResist(Mob m){
+	public static int AscensionCorruptResist(Mob m, Hero hero){
 		//default to just using their EXP value if no ascent challenge is happening
-		if (Dungeon.heroes.buff(AscensionChallenge.class) == null){
+		if (hero.buff(AscensionChallenge.class) == null){
 			return m.EXP;
 		}
 
@@ -254,9 +252,10 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.depth < Statistics.highestAscent){
 			Statistics.highestAscent = Dungeon.depth;
 			justAscended = true;
+			Hero hero = (Hero) target;
 			if (Dungeon.bossLevel()){
-				Dungeon.heroes.buff(Hunger.class).satisfy(Hunger.STARVING);
-				Buff.affect(Dungeon.heroes, Healing.class).setHeal(Dungeon.heroes.HT, 0, 20);
+				hero.buff(Hunger.class).satisfy(Hunger.STARVING);
+				Buff.affect(hero, Healing.class).setHeal(hero.HT, 0, 20);
 			} else {
 				stacks += 2f;
 
@@ -395,7 +394,22 @@ public class AscensionChallenge extends Buff {
 		stacks = bundle.getFloat(STACKS);
 		damageInc = bundle.getFloat(DAMAGE);
 	}
-
+	public static float highestStack(){
+		//-1 for no buff
+		float highestStack = -1;
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				AscensionChallenge buff = hero.buff(AscensionChallenge.class);
+				if (buff != null) {
+					float curStack = buff.stacks;
+					if (curStack > highestStack) {
+						highestStack = curStack;
+					}
+				}
+			}
+		}
+		return highestStack;
+	}
 	//chars with this buff are not boosted by the ascension challenge
 	public static class AscensionBuffBlocker extends Buff{};
 }

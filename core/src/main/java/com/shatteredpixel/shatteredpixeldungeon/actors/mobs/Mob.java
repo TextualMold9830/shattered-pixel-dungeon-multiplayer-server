@@ -79,7 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -835,7 +835,7 @@ public abstract class Mob extends Char {
 						Badges.validateMonstersSlain();
 						Statistics.qualifiedForNoKilling = false;
 
-						AscensionChallenge.processEnemyKill(this);
+						AscensionChallenge.processEnemyKill(this, hero);
 
 						int exp = hero.lvl <= maxLvl ? EXP : 0;
 
