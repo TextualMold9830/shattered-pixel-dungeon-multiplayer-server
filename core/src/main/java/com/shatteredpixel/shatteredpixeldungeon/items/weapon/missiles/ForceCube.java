@@ -60,7 +60,7 @@ public class ForceCube extends MissileWeapon {
 			return;
 		}
 
-		rangedHit( null, cell );
+		rangedHit( null, cell, curUser );
 		Dungeon.level.pressCell(cell);
 		
 		ArrayList<Char> targets = new ArrayList<>();
@@ -80,7 +80,7 @@ public class ForceCube extends MissileWeapon {
 			}
 		}
 		
-		WandOfBlastWave.BlastWave.blast(cell);
+		WandOfBlastWave.BlastWave.blast(cell, curUser);
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 	}
 }
