@@ -21,16 +21,17 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 public class Dazzling extends Weapon.Enchantment {
@@ -50,9 +51,10 @@ public class Dazzling extends Weapon.Enchantment {
 					}
 				}
 			}
-			if (Dungeon.level.fieldOfView[attacker.pos] || Dungeon.level.fieldOfView[defender.pos]){
-				Sample.INSTANCE.play( Assets.Sounds.BLAST );
-			}
+			Dungeon.RunForVisibleHeroCallback callback = (Hero hero) -> {
+				Sample.INSTANCE.play(Assets.Sounds.BLAST, hero );
+			};
+			Dungeon.runForHeroIfVisible(new int[]{attacker.pos,defender.pos}, callback);
 		}
 
 		return damage;
