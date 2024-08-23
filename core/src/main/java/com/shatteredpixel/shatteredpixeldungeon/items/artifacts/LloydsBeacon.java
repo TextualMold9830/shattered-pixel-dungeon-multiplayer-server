@@ -42,14 +42,14 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite.Glowing;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 
 import java.util.ArrayList;
 
+//This item is unused
 public class LloydsBeacon extends Artifact {
 
 	public static final float TIME_TO_USE = 1;
@@ -180,7 +180,7 @@ public class LloydsBeacon extends Artifact {
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
 				InterLevelSceneServer.returnDepth = returnDepth;
 				InterLevelSceneServer.returnPos = returnPos;
-				Game.switchScene( InterLevelSceneServer.class );
+				//	Game.switchScene( InterLevelSceneServer.class );
 			}
 			
 			
@@ -316,7 +316,7 @@ public class LloydsBeacon extends Artifact {
 	public class beaconRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && Regeneration.regenOn()) {
+			if (charge < chargeCap && !cursed && Regeneration.regenOn((Hero) target)) {
 				partialCharge += 1 / (100f - (chargeCap - charge)*10f);
 
 				while (partialCharge >= 1) {

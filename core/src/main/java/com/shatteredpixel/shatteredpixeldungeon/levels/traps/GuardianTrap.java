@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 public class GuardianTrap extends Trap {
 
@@ -63,7 +63,7 @@ public class GuardianTrap extends Trap {
 			guardian.pos = Dungeon.level.randomRespawnCell( guardian );
 			if (guardian.pos != -1) {
 				GameScene.add(guardian);
-				guardian.beckon(Dungeon.heroes.pos);
+				guardian.beckon(Dungeon.heroes, true);
 			}
 		}
 

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameSettings;
 import com.watabou.utils.Point;
@@ -423,7 +423,6 @@ public class SPDSettings extends GameSettings {
 	}
 	
 	public static void soundFx( boolean value ) {
-		Sample.INSTANCE.enable( value );
 		put( KEY_SOUND_FX, value );
 	}
 	
@@ -432,7 +431,6 @@ public class SPDSettings extends GameSettings {
 	}
 	
 	public static void SFXVol( int value ) {
-		Sample.INSTANCE.volume(value*value/100f);
 		put( KEY_SFX_VOL, value );
 	}
 	

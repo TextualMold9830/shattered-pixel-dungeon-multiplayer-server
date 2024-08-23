@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MonkSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -91,7 +91,7 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	protected void spend( float time ) {
+    public void spend(float time) {
 		focusCooldown -= time;
 		super.spend( time );
 	}

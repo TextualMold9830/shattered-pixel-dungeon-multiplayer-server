@@ -50,7 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
@@ -232,7 +232,7 @@ public class Heap implements Bundlable {
 				burnt = true;
 			} else if (item instanceof Bomb) {
 				items.remove( item );
-				((Bomb) item).explode( pos );
+				((Bomb) item).explode( pos , null);
 				if (((Bomb) item).explodesDestructively()) {
 					//stop processing the burning, it will be replaced by the explosion.
 					return;
@@ -295,7 +295,7 @@ public class Heap implements Bundlable {
 
 				} else if (item instanceof Bomb) {
 					items.remove( item );
-					((Bomb) item).explode(pos);
+					((Bomb) item).explode(pos, null);
 					if (((Bomb) item).explodesDestructively()) {
 						//stop processing current explosion, it will be replaced by the new one.
 						return;
