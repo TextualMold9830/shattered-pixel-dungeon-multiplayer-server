@@ -402,7 +402,7 @@ public class MeleeWeapon extends Weapon {
 		if (isEquipped(hero)
 				&& hero.buff(Charger.class) != null) {
 			Charger buff = hero.buff(Charger.class);
-			return buff.charges + "/" + buff.chargeCap();
+			return buff.charges + "/" + buff.chargeCap(hero);
 		} else {
 			return super.status();
 		}
@@ -435,10 +435,10 @@ public class MeleeWeapon extends Weapon {
 		public boolean act() {
 			if (target instanceof Hero) {
 				Hero hero = (Hero) target;
-				if (charges < chargeCap()) {
-					if (Regeneration.regenOn()) {
+				if (charges < chargeCap(hero)) {
+					if (Regeneration.regenOn(hero)) {
 						//60 to 45 turns per charge
-						float chargeToGain = 1 / (60f - 1.5f * (chargeCap() - charges));
+						float chargeToGain = 1 / (60f - 1.5f * (chargeCap(hero) - charges));
 
 						//40 to 30 turns per charge for champion
 						if (hero.subClass == HeroSubClass.CHAMPION) {
@@ -596,7 +596,7 @@ public class MeleeWeapon extends Weapon {
 
 			ActionIndicator.setAction(this);
 			Item.updateQuickslot();
-			AttackIndicator.updateState();
+			hero.attackIndicator.updateState();
 		}
 	}
 
