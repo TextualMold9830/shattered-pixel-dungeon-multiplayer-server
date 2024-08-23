@@ -86,13 +86,11 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.RaisedTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.WallBlockingTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
-import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Banner;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.LootIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.MenuPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ResumeIndicator;
@@ -123,7 +121,6 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
-import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
@@ -134,7 +131,6 @@ import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
-import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
 import org.jetbrains.annotations.NotNull;
@@ -193,7 +189,6 @@ public class GameScene extends PixelScene {
 
 	private Toolbar toolbar;
 	private Toast prompt;
-	private LootIndicator loot;
 	private ActionIndicator action;
 	private ResumeIndicator resume;
 
@@ -388,10 +383,6 @@ public class GameScene extends PixelScene {
 		action = new ActionIndicator();
 		action.camera = uiCamera;
 		add(action);
-
-		loot = new LootIndicator();
-		loot.camera = uiCamera;
-		add(loot);
 
 		log = new GameLog();
 		log.camera = uiCamera;
@@ -781,23 +772,18 @@ public class GameScene extends PixelScene {
 	}
 
 		if (updateTags){
-			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
 
 			layoutTags();
 
 		} else if (
-				tagLoot != loot.visible ||
 				tagAction != action.visible ||
 				tagResume != resume.visible) {
 
 			boolean tagAppearing =
-									(loot.visible && !tagLoot) ||
 									(action.visible && !tagAction) ||
 									(resume.visible && !tagResume);
-
-			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
 
@@ -830,7 +816,6 @@ public class GameScene extends PixelScene {
 		}
 		return result;
 	}
-	private boolean tagLoot      = false;
 	private boolean tagAction    = false;
 	private boolean tagResume    = false;
 
@@ -873,12 +858,6 @@ public class GameScene extends PixelScene {
 		float pos = scene.toolbar.top();
 		if (tagsOnLeft && SPDSettings.interfaceSize() > 0){
 			pos = scene.status.top();
-		}
-
-		if (scene.tagLoot) {
-			scene.loot.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
-			scene.loot.flip(tagsOnLeft);
-			pos = scene.loot.top();
 		}
 
 		if (scene.tagAction) {
