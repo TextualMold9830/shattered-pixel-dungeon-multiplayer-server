@@ -178,6 +178,8 @@ public class Hero extends Char {
 	public int networkID = -1;
 	public String name;
 	public int energy;
+	public AttackIndicator attackIndicator;
+
 
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
@@ -240,6 +242,8 @@ public class Hero extends Char {
 		belongings = new Belongings( this );
 		
 		visibleEnemies = new ArrayList<>();
+
+		attackIndicator = new AttackIndicator(this);
 	}
 	
 	public void updateHT( boolean boostHP ){
@@ -856,7 +860,7 @@ public class Hero extends Char {
 		ready = true;
 		canSelfTrample = true;
 
-		AttackIndicator.updateState();
+		attackIndicator.updateState();
 		
 		GameScene.ready();
 	}
@@ -2111,8 +2115,8 @@ public class Hero extends Char {
 			super.onAttackComplete();
 			return;
 		}
-		
-		AttackIndicator.target(enemy);
+
+		attackIndicator.target(enemy);
 		boolean wasEnemy = enemy.alignment == Alignment.ENEMY
 				|| (enemy instanceof Mimic && enemy.alignment == Alignment.NEUTRAL);
 

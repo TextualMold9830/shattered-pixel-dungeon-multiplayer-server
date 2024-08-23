@@ -24,8 +24,10 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
@@ -34,175 +36,74 @@ import com.watabou.noosa.Game;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 //FIXME needs a refactor, lots of weird thread interaction here.
-public class AttackIndicator extends Tag {
+public class AttackIndicator {
 	
-	private static final float ENABLED	= 1.0f;
-	private static final float DISABLED	= 0.3f;
-
-	private static float delay;
+	private Char lastTarget;
+	private final ArrayList<Char> candidates = new ArrayList<>();
+	private final Hero owner;
 	
-	private static AttackIndicator instance;
-	
-	private CharSprite sprite = null;
-	
-	private Mob lastTarget;
-	private ArrayList<Mob> candidates = new ArrayList<>();
-	
-	public AttackIndicator() {
-		super( DangerIndicator.COLOR );
-
+	public AttackIndicator(@NotNull Hero hero) {
+		owner = hero;
 		synchronized (this) {
-			instance = this;
 			lastTarget = null;
-
-			setSize(SIZE, SIZE);
-			visible(false);
-			enable(false);
 		}
 	}
-	
-	@Override
-	public GameAction keyAction() {
-		return SPDAction.TAG_ATTACK;
-	}
-	
-	@Override
-	protected void createChildren() {
-		super.createChildren();
-	}
-	
-	@Override
-	protected synchronized void layout() {
-		super.layout();
 
-		if (sprite != null) {
-			if (!flipped)   sprite.x = x + (SIZE - sprite.width()) / 2f + 1;
-			else            sprite.x = x + width - (SIZE + sprite.width()) / 2f - 1;
-			sprite.y = y + (height - sprite.height()) / 2f;
-			PixelScene.align(sprite);
-		}
-	}
-	
-	@Override
-	public synchronized void update() {
-		super.update();
 
-		if (!bg.visible){
-			if (sprite != null) sprite.visible = false;
-			enable(false);
-			if (delay > 0f) delay -= Game.elapsed;
-			if (delay <= 0f) active = false;
-		} else {
-			delay = 0.75f;
-			active = true;
-			if (bg.width > 0 && sprite != null)sprite.visible = true;
-
-			if (Dungeon.heroes.isAlive()) {
-
-				enable(Dungeon.heroes.ready);
-
-			} else {
-				visible( false );
-				enable( false );
-			}
-		}
-	}
-	
+	/**
+	 * Updates {@link #candidates}. Updates {@link #lastTarget}.
+	 * <p>
+	 * If {@link #lastTarget} not in {@link #candidates},  chooses random element from
+	 * {@link #candidates} or {@code null} if {@link #candidates} is empty.
+	 */
 	private synchronized void checkEnemies() {
 
 		candidates.clear();
-		int v = Dungeon.heroes.visibleEnemies();
+		int v = owner.visibleEnemies();
 		for (int i=0; i < v; i++) {
-			Mob mob = Dungeon.heroes.visibleEnemy( i );
-			if ( Dungeon.heroes.canAttack( mob) ) {
+			Char mob = owner.visibleEnemy( i );
+			if ( owner.canAttack(mob) ) {
 				candidates.add( mob );
 			}
 		}
 		
 		if (!candidates.contains( lastTarget )) {
 			if (candidates.isEmpty()) {
-				lastTarget = null;
+				setLastTarget(lastTarget);
 			} else {
-				active = true;
-				lastTarget = Random.element( candidates );
-				updateImage();
-				flash();
-			}
-		} else {
-			if (!bg.visible) {
-				active = true;
-				flash();
+				setLastTarget(Random.element( candidates ));
 			}
 		}
-		
-		visible( lastTarget != null );
-		enable( bg.visible );
 	}
-	
-	private synchronized void updateImage() {
-		
-		if (sprite != null) {
-			sprite.killAndErase();
-			sprite = null;
-		}
-		
-		sprite = Reflection.newInstance(lastTarget.spriteClass);
-		active = true;
-		sprite.linkVisuals(lastTarget);
-		sprite.idle();
-		sprite.paused = true;
-		sprite.visible = bg.visible;
 
-		if (sprite.width() > 20 || sprite.height() > 20){
-			sprite.scale.set(PixelScene.align(20f/Math.max(sprite.width(), sprite.height())));
-		}
-
-		add( sprite );
-
-		layout();
-	}
-	
-	private boolean enabled = true;
-	private synchronized void enable( boolean value ) {
-		enabled = value;
-		if (sprite != null) {
-			sprite.alpha( value ? ENABLED : DISABLED );
-		}
-	}
-	
-	private synchronized void visible( boolean value ) {
-		bg.visible = value;
-	}
-	
-	@Override
 	protected void onClick() {
-		super.onClick();
-		if (enabled && Dungeon.heroes.ready) {
-			if (Dungeon.heroes.handle( lastTarget.pos )) {
-				Dungeon.heroes.next();
+		if ((lastTarget != null) && owner.ready) {
+			if (owner.handle(lastTarget.pos)) {
+				owner.next();
 			}
 		}
 	}
 
-	@Override
-	protected String hoverText() {
-		return Messages.titleCase(Messages.get(WndKeyBindings.class, "tag_attack"));
-	}
-
-	public static void target(Char target ) {
+	public void target(Char target) {
 		if (target == null) return;
-		synchronized (instance) {
-			instance.lastTarget = (Mob) target;
-			instance.updateImage();
+		synchronized (this) {
+			setLastTarget(target);
 
 			QuickSlotButton.target(target);
 		}
 	}
 	
-	public static void updateState() {
-		instance.checkEnemies();
+	public void updateState() {
+		this.checkEnemies();
+	}
+
+	private void setLastTarget(Char lastTarget) {
+		this.lastTarget = lastTarget;
+		SendData.sendHeroAttackIndicator(lastTarget == null? null: lastTarget.id(), owner.networkID);
 	}
 }

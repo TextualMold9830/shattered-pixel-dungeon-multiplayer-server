@@ -350,8 +350,9 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 	private void doAttack(final Char enemy) {
 
-		AttackIndicator.target(enemy);
-
+		if (target instanceof Hero) {
+			((Hero)target).attackIndicator.target(enemy);
+		}
 		boolean wasAlly = enemy.alignment == target.alignment;
 		Hero hero = (Hero) target;
 

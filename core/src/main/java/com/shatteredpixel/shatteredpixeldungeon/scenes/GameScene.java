@@ -193,8 +193,6 @@ public class GameScene extends PixelScene {
 
 	private Toolbar toolbar;
 	private Toast prompt;
-
-	private AttackIndicator attack;
 	private LootIndicator loot;
 	private ActionIndicator action;
 	private ResumeIndicator resume;
@@ -394,10 +392,6 @@ public class GameScene extends PixelScene {
 		loot = new LootIndicator();
 		loot.camera = uiCamera;
 		add(loot);
-
-		attack = new AttackIndicator();
-		attack.camera = uiCamera;
-		add(attack);
 
 		log = new GameLog();
 		log.camera = uiCamera;
@@ -787,24 +781,22 @@ public class GameScene extends PixelScene {
 	}
 
 		if (updateTags){
-			tagAttack = attack.active;
 			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
 
 			layoutTags();
 
-		} else if (tagAttack != attack.active ||
+		} else if (
 				tagLoot != loot.visible ||
 				tagAction != action.visible ||
 				tagResume != resume.visible) {
 
-			boolean tagAppearing = (attack.active && !tagAttack) ||
+			boolean tagAppearing =
 									(loot.visible && !tagLoot) ||
 									(action.visible && !tagAction) ||
 									(resume.visible && !tagResume);
 
-			tagAttack = attack.active;
 			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
@@ -838,8 +830,6 @@ public class GameScene extends PixelScene {
 		}
 		return result;
 	}
-
-	private boolean tagAttack    = false;
 	private boolean tagLoot      = false;
 	private boolean tagAction    = false;
 	private boolean tagResume    = false;
@@ -883,12 +873,6 @@ public class GameScene extends PixelScene {
 		float pos = scene.toolbar.top();
 		if (tagsOnLeft && SPDSettings.interfaceSize() > 0){
 			pos = scene.status.top();
-		}
-
-		if (scene.tagAttack){
-			scene.attack.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
-			scene.attack.flip(tagsOnLeft);
-			pos = scene.attack.top();
 		}
 
 		if (scene.tagLoot) {

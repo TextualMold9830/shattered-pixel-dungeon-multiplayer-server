@@ -369,7 +369,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				hero.sprite.attack(enemy.pos, new Callback() {
 					@Override
 					public void call() {
-						AttackIndicator.target(enemy);
+						hero.attackIndicator.target(enemy);
 						hero.attack(enemy, 1, 0, Char.INFINITE_ACCURACY);
 
 						if (enemy.isAlive()){
@@ -586,7 +586,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				hero.sprite.attack(enemy.pos, new Callback() {
 					@Override
 					public void call() {
-						AttackIndicator.target(enemy);
+						hero.attackIndicator.target(enemy);
 						boolean empowered = Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero);
 
 						int oldPos = enemy.pos;
