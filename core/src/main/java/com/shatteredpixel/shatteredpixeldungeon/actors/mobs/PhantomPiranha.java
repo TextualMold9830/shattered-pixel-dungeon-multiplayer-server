@@ -52,7 +52,7 @@ public class PhantomPiranha extends Piranha {
 		Object src = source.getCause();
 		Char dmgSource = null;
 		if (src instanceof Char) dmgSource = (Char)src;
-		if (src instanceof Wand) dmgSource = Dungeon.heroes;
+		if (src instanceof Wand) dmgSource = source.getDamageOwner();
 
 		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
 			dmg = Math.round(dmg/2f); //halve damage taken if we are going to teleport
@@ -99,7 +99,7 @@ public class PhantomPiranha extends Piranha {
 		ArrayList<Integer> outFOVCandidates = new ArrayList<>();
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (Dungeon.level.water[i] && Actor.findChar(i) == null){
-				if (Dungeon.level.fieldOfView[i]){
+				if (Dungeon.visibleforAnyHero(i)){
 					inFOVCandidates.add(i);
 				} else {
 					outFOVCandidates.add(i);
