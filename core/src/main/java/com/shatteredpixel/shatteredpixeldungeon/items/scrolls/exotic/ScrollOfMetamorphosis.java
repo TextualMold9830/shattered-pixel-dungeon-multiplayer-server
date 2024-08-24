@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -40,7 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.TalentsPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -83,11 +82,12 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 	}
 
 	private void confirmCancelation( Window chooseWindow ) {
-		GameScene.show( new WndOptions(new ItemSprite(this),
+		GameScene.show( new WndOptions(chooseWindow.getOwnerHero(),
+				new ItemSprite(this),
 				Messages.titleCase(name()),
 				Messages.get(InventoryScroll.class, "warning"),
 				Messages.get(InventoryScroll.class, "yes"),
-				Messages.get(InventoryScroll.class, "no") ) {
+				Messages.get(InventoryScroll.class, "no")) {
 			@Override
 			protected void onSelect( int index ) {
 				switch (index) {
@@ -141,7 +141,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 				}
 			}
 
-			pane = new TalentsPane(TalentButton.Mode.METAMORPH_CHOOSE, talents);
+			pane = new TalentsPane(TalentButton.Mode.METAMORPH_CHOOSE, talents, hero);
 			add(pane);
 			pane.setPos(0, top);
 			pane.setSize(120, pane.content().height());
@@ -253,7 +253,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 
 			top = text.bottom() + 2;
 
-			TalentsPane.TalentTierPane optionsPane = new TalentsPane.TalentTierPane(replaceOptions, tier, TalentButton.Mode.METAMORPH_REPLACE);
+			TalentsPane.TalentTierPane optionsPane = new TalentsPane.TalentTierPane(replaceOptions, tier, TalentButton.Mode.METAMORPH_REPLACE, getOwnerHero());
 			add(optionsPane);
 			optionsPane.title.text(" ");
 			optionsPane.setPos(0, top);
