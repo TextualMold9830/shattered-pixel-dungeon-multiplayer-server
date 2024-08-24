@@ -308,14 +308,14 @@ public class Tengu extends Mob {
 
 				if (tries <= 0) newPos = pos;
 
-				if (level.fieldOfView[pos]) CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+				if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				
 				sprite.move( pos, newPos );
 				move( newPos );
 				
 				if (arenaJumps < 4) arenaJumps++;
 				
-				if (level.fieldOfView[newPos]) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
+				if (Dungeon.visibleforAnyHero(newPos)) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 				
 			}
