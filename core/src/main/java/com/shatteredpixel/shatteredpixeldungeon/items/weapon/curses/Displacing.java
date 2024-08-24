@@ -43,7 +43,7 @@ public class Displacing extends Weapon.Enchantment {
 
 			int oldpos = defender.pos;
 			if (ScrollOfTeleportation.teleportChar(defender)){
-				if (attacker.fieldOfView[oldpos]) {
+				if (Dungeon.level.fieldOfView[oldpos]) {
 					CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 				}
 
