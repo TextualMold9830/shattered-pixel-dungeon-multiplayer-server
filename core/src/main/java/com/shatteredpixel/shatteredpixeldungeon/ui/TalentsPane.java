@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
@@ -38,6 +39,7 @@ import java.util.LinkedHashMap;
 
 public class TalentsPane extends ScrollPane {
 
+
 	ArrayList<TalentTierPane> panes = new ArrayList<>();
 	ArrayList<ColorBlock> separators = new ArrayList<>();
 
@@ -45,14 +47,14 @@ public class TalentsPane extends ScrollPane {
 	ColorBlock blocker;
 	RenderedTextBlock blockText;
 
-	public TalentsPane( TalentButton.Mode mode ) {
-		this( mode, Dungeon.heroes.talents );
+	public TalentsPane( TalentButton.Mode mode, Hero hero ) {
+		this( mode, hero.talents, hero);
 	}
 
-	public TalentsPane( TalentButton.Mode mode, ArrayList<LinkedHashMap<Talent, Integer>> talents ) {
+	public TalentsPane( TalentButton.Mode mode, ArrayList<LinkedHashMap<Talent, Integer>> talents, Hero hero ) {
 		super(new Component());
 
-		Ratmogrify.useRatroicEnergy = Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify;
+		Ratmogrify.useRatroicEnergy = Dungeon.heroes != null && hero.armorAbility instanceof Ratmogrify;
 
 		int tiersAvailable = 1;
 
@@ -68,12 +70,12 @@ public class TalentsPane extends ScrollPane {
 			}
 		} else {
 			while (tiersAvailable < Talent.MAX_TALENT_TIERS
-					&& Dungeon.heroes.lvl+1 >= Talent.tierLevelThresholds[tiersAvailable+1]){
+					&& hero.lvl+1 >= Talent.tierLevelThresholds[tiersAvailable+1]){
 				tiersAvailable++;
 			}
-			if (tiersAvailable > 2 && Dungeon.heroes.subClass == HeroSubClass.NONE){
+			if (tiersAvailable > 2 && hero.subClass == HeroSubClass.NONE){
 				tiersAvailable = 2;
-			} else if (tiersAvailable > 3 && Dungeon.heroes.armorAbility == null){
+			} else if (tiersAvailable > 3 && hero.armorAbility == null){
 				tiersAvailable = 3;
 			}
 		}
@@ -83,7 +85,7 @@ public class TalentsPane extends ScrollPane {
 		for (int i = 0; i < Math.min(tiersAvailable, talents.size()); i++){
 			if (talents.get(i).isEmpty()) continue;
 
-			TalentTierPane pane = new TalentTierPane(talents.get(i), i+1, mode);
+			TalentTierPane pane = new TalentTierPane(talents.get(i), i+1, mode, hero);
 			panes.add(pane);
 			content.add(pane);
 
@@ -163,7 +165,7 @@ public class TalentsPane extends ScrollPane {
 
 		ArrayList<Image> stars = new ArrayList<>();
 
-		public TalentTierPane(LinkedHashMap<Talent, Integer> talents, int tier, TalentButton.Mode mode){
+		public TalentTierPane(LinkedHashMap<Talent, Integer> talents, int tier, TalentButton.Mode mode, Hero hero){
 			super();
 
 			this.tier = tier;
@@ -172,7 +174,7 @@ public class TalentsPane extends ScrollPane {
 			title.hardlight(Window.TITLE_COLOR);
 			add(title);
 
-			if (mode == TalentButton.Mode.UPGRADE) setupStars();
+			if (mode == TalentButton.Mode.UPGRADE) setupStars(hero);
 
 			buttons = new ArrayList<>();
 			for (Talent talent : talents.keySet()){
@@ -181,7 +183,7 @@ public class TalentsPane extends ScrollPane {
 					public void upgradeTalent() {
 						super.upgradeTalent();
 						if (parent != null) {
-							setupStars();
+							setupStars(hero);
 							TalentTierPane.this.layout();
 						}
 					}
@@ -192,7 +194,7 @@ public class TalentsPane extends ScrollPane {
 
 		}
 
-		private void setupStars(){
+		private void setupStars(Hero hero){
 			if (!stars.isEmpty()){
 				for (Image im : stars){
 					im.killAndErase();
@@ -200,9 +202,9 @@ public class TalentsPane extends ScrollPane {
 				stars.clear();
 			}
 
-			int totStars = Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] + Dungeon.heroes.bonusTalentPoints(tier);
-			int openStars = Dungeon.heroes.talentPointsAvailable(tier);
-			int usedStars = Dungeon.heroes.talentPointsSpent(tier);
+			int totStars = Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] + hero.bonusTalentPoints(tier);
+			int openStars = hero.talentPointsAvailable(tier);
+			int usedStars = hero.talentPointsSpent(tier);
 			for (int i = 0; i < totStars; i++){
 				Image im = new Speck().image(Speck.STAR);
 				stars.add(im);
