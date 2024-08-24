@@ -38,7 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTradeItem;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -115,7 +115,7 @@ public class Alchemize extends Spell {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return !(item instanceof Alchemize)
-					&& (Shopkeeper.canSell(item) || item.energyVal() > 0);
+					&& (Shopkeeper.canSell(item, getOwner()) || item.energyVal() > 0);
 		}
 
 		@Override
@@ -138,13 +138,12 @@ public class Alchemize extends Spell {
 		private WndBag owner;
 
 		public WndAlchemizeItem(Item item, WndBag owner) {
-			super(item);
-
+			super(item, owner.getOwnerHero());
 			this.owner = owner;
 
 			float pos = height;
 
-			if (Shopkeeper.canSell(item)) {
+			if (Shopkeeper.canSell(item, getOwnerHero())) {
 				if (item.quantity() == 1) {
 
 					RedButton btnSell = new RedButton(Messages.get(this, "sell", item.value())) {
@@ -215,7 +214,7 @@ public class Alchemize extends Spell {
 					RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll / item.quantity())) {
 						@Override
 						protected void onClick() {
-							WndEnergizeItem.energizeOne(item);
+							WndEnergizeItem.energizeOne(item, getOwnerHero());
 							hide();
 							consumeAlchemize(owner.getOwnerHero());
 						}
