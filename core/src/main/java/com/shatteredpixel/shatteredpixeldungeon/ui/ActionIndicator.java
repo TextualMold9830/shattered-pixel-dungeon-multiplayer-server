@@ -191,13 +191,24 @@ public class ActionIndicator extends Tag {
 		default Visual primaryVisual(){
 			return new HeroIcon(this);
 		}
+		default Visual primaryVisual(Hero hero){
+			return primaryVisual();
+		}
 
 		//a smaller visual on the bottom-right, usually a tiny icon or bitmap text
 		default Visual secondaryVisual(){
 			return null; //no second visual by default
 		}
+		default Visual secondaryVisual(Hero hero){
+			return secondaryVisual(); //no second visual by default
+		}
 
-		int indicatorColor();
+		default int indicatorColor(){
+			return 0;
+		};
+		default int indicatorColor(Hero hero){
+			return indicatorColor();
+		};
 
 		void doAction(Hero hero);
 
