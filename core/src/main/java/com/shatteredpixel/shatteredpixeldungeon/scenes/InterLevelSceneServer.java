@@ -209,14 +209,17 @@ public class InterLevelSceneServer {
 			};
 			thread.start();
 		}
-		thread.join();
-		hadleError();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+			handleError();
+		}
 		for (int i = 0; i < heroes.length; i++) {
 			SendData.sendInterLevelSceneFadeOut(i);
 		}
 	}
 
-	public void hadleError() {
+	public void handleError() {
 
 		if (error == null){
 			if (phase != Phase.FADE_OUT){
@@ -235,7 +238,7 @@ public class InterLevelSceneServer {
 			else throw new RuntimeException("fatal error occurred while moving between floors. " +
 						"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth, error);
 
-			add(new WndError(errorMsg) {
+			add(new WndError(errorMsg, null) {
 				public void onBackPressed() {
 					super.onBackPressed();
 					Game.switchScene(StartScene.class);
