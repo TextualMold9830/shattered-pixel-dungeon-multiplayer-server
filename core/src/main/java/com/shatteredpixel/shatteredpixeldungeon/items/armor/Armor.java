@@ -286,8 +286,8 @@ public class Armor extends EquipableItem {
 		return hero.belongings.armor() == this;
 	}
 
-	public final int DRMax(Hero hero){
-		return DRMax(buffedLvl(hero));
+	public final int DRMax(Char owner){
+		return DRMax(buffedLvl(owner));
 	}
 
 	public int DRMax(int lvl){
@@ -303,8 +303,8 @@ public class Armor extends EquipableItem {
 		}
 	}
 
-	public final int DRMin(Hero hero){
-		return DRMin(buffedLvl(hero));
+	public final int DRMin(Char owner){
+		return DRMin(buffedLvl(owner));
 	}
 
 	public int DRMin(int lvl){
