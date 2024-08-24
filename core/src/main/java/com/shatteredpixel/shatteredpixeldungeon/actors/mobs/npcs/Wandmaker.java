@@ -71,7 +71,7 @@ public class Wandmaker extends NPC {
 	
 	@Override
 	protected boolean act() {
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
+		if (AscensionChallenge.highestStack() > -1){
 			die(new DamageCause( null));
 			return true;
 		}
@@ -129,7 +129,7 @@ public class Wandmaker extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						GameScene.show( new WndWandmaker( Wandmaker.this, item ) );
+						GameScene.show( new WndWandmaker( Wandmaker.this, item , hero) );
 					}
 				});
 			} else {
@@ -148,7 +148,7 @@ public class Wandmaker extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						GameScene.show(new WndQuest(Wandmaker.this, msg));
+						GameScene.show(new WndQuest(Wandmaker.this, msg, (Hero) c));
 					}
 				});
 			}
@@ -196,11 +196,11 @@ public class Wandmaker extends NPC {
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					GameScene.show(new WndQuest(Wandmaker.this, msg1Final){
+					GameScene.show(new WndQuest(Wandmaker.this, msg1Final, hero){
 						@Override
 						public void hide() {
 							super.hide();
-							GameScene.show(new WndQuest(Wandmaker.this, msg2Final));
+							GameScene.show(new WndQuest(Wandmaker.this, msg2Final, hero));
 						}
 					});
 				}
