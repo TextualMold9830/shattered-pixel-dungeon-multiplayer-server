@@ -138,7 +138,7 @@ public class CavesLevel extends RegularLevel {
 						if (pick == null){
 							GameScene.show( new WndTitledMessage(new BlacksmithSprite(),
 									Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-									Messages.get(Blacksmith.class, "lost_pick"))
+									Messages.get(Blacksmith.class, "lost_pick"), hero)
 							);
 						} else {
 							GameScene.show( new WndOptions( new BlacksmithSprite(),
@@ -268,7 +268,7 @@ public class CavesLevel extends RegularLevel {
 		@Override
 		public void update() {
 			
-			if (visible = (pos < Dungeon.level.fieldOfView.length && Dungeon.visibleforAnyHero(pos))) {
+			if (visible = (pos < Dungeon.level.length && Dungeon.visibleforAnyHero(pos))) {
 				
 				super.update();
 
