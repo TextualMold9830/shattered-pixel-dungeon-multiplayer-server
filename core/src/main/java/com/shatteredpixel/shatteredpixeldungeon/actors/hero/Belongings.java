@@ -47,6 +47,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Belongings implements Iterable<Item> {
+	public Item getItemInSlot(List<Integer> slot) {
+		if (slot.get(0) < 0) {
+			SpecialSlot spec_slot = getSpecialSlots().get(-slot.get(0) - 1);
+			slot.remove(0);
+			if (slot.isEmpty()) {
+				return spec_slot.item;
+			} else {
+				return ((Bag) spec_slot.item).getItemInSlot(slot);
+			}
+		}
+		return backpack.getItemInSlot(slot);
+	}
 
 	private Hero owner;
 	public ArrayList<SpecialSlot> getSpecialSlots() {

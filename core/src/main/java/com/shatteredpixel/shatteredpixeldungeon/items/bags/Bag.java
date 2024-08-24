@@ -38,6 +38,17 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Bag extends Item implements Iterable<Item> {
+	public Item getItemInSlot(List<Integer> slot) {
+		int slot_id = slot.get(0);
+		slot.remove(0);
+		if (slot.isEmpty()){
+			return items.get(slot_id);
+		}
+		else
+		{
+			return ((Bag) items.get(slot_id)).getItemInSlot(slot);
+		}
+	}
 	public List<Integer> pathOfItem(Item item) {
 		assert (item != null) : "path of null item";
 		for (int i = 0; i < items.size(); i++) {
