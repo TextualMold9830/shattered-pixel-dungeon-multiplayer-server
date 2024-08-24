@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 
 public class SpectralNecromancerSprite extends MobSprite {
@@ -76,7 +76,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 	public void update() {
 		super.update();
 		if (summoningParticles != null && ((Necromancer) ch).summoningPos != -1){
-			summoningParticles.visible = Dungeon.level.fieldOfView[((Necromancer) ch).summoningPos];
+			summoningParticles.visible = Dungeon.visibleforAnyHero(((Necromancer) ch).summoningPos);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 			}
 			summoningParticles = CellEmitter.get(((Necromancer) ch).summoningPos);
 			summoningParticles.pour(ShadowParticle.MISSILE, 0.1f);
-			summoningParticles.visible = Dungeon.level.fieldOfView[((Necromancer) ch).summoningPos];
+			summoningParticles.visible = Dungeon.visibleforAnyHero(((Necromancer) ch).summoningPos);
 			if (visible || summoningParticles.visible ) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP, 1f, 0.8f );
 		}
 	}
