@@ -46,7 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CrystalSpireSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -98,7 +98,7 @@ public class CrystalSpire extends Mob {
 		sprite.hideLost();
 
 		//mob logic
-		enemy = Dungeon.heroes;
+		enemy = chooseEnemy();
 
 		//crystal can still track an invisible hero
 		enemySeen = enemy.isAlive() && fieldOfView[enemy.pos];
@@ -132,7 +132,7 @@ public class CrystalSpire extends Mob {
 						dmg += 12; //18-27 damage
 						Buff.prolong(ch, Cripple.class, 30f);
 					}
-					ch.damage(dmg, new SpireSpike());
+					ch.damage(dmg, new DamageCause(new SpireSpike(), this));
 
 					int movePos = i;
 					//crystal guardians get knocked away from the hero, others get knocked away from the spire
@@ -196,7 +196,7 @@ public class CrystalSpire extends Mob {
 				abilityCooldown += ABILITY_CD;
 
 				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.heroes.cooldown()), 3*TICK));
-				Dungeon.heroes.interrupt();
+				Dungeon.interrupt(pos);
 			} else {
 				abilityCooldown -= 1;
 				spend(TICK);
@@ -324,7 +324,7 @@ public class CrystalSpire extends Mob {
 					//we pretend the spire is the owner here so that properties like hero str or or other equipment do not factor in
 					int dmg = p.damageRoll(CrystalSpire.this);
 
-					damage(dmg, p);
+					damage(dmg, new DamageCause(p, hero));
 					abilityCooldown -= dmg/10f;
 					sprite.bloodBurstA(hero.sprite.center(), dmg);
 					sprite.flash();
@@ -356,7 +356,7 @@ public class CrystalSpire extends Mob {
 						for (Char ch : Actor.chars()){
 							if (fieldOfView[ch.pos]) {
 								if (ch instanceof CrystalGuardian) {
-									ch.damage(ch.HT, new SpireSpike());
+									ch.damage(ch.HT, new DamageCause(new SpireSpike(), CrystalSpire.this));
 								}
 								if (ch instanceof CrystalWisp) {
 									Buff.affect(ch, Blindness.class, 5f);
