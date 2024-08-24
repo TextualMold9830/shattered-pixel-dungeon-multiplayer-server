@@ -39,7 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MimicSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 public class EbonyMimic extends Mimic {
@@ -70,8 +70,8 @@ public class EbonyMimic extends Mimic {
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
 		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
-			enemy = Dungeon.heroes;
-			target = Dungeon.heroes.pos;
+			enemy = chooseEnemy();
+			target = enemy.pos;
 			GLog.w(Messages.get(this, "reveal") );
 			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 0.85f);
