@@ -71,7 +71,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
@@ -153,10 +153,10 @@ public class WandOfCorruption extends Wand {
 				enemyResist = (1f + Dungeon.scalingDepth()/4f) / 5f;
 			} else if (ch instanceof Swarm){
 				//child swarms don't give exp, so we force this here.
-				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy);
+				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy, hero);
 				if (enemyResist == 1) enemyResist = 1 + 3;
 			} else {
-				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy);
+				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy, hero);
 			}
 			
 			//100% health: 5x resist   75%: 3.25x resist   50%: 2x resist   25%: 1.25x resist
