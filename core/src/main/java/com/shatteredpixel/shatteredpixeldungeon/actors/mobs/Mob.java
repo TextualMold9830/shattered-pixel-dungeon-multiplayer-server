@@ -21,10 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -90,11 +93,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Mob extends Char {
 
@@ -1361,7 +1364,7 @@ public abstract class Mob extends Char {
 	}
 	
 	
-	private static final Dictionary<Integer,ArrayList<Mob>> heldAllies = new Hashtable<>();
+	private static final Map<Integer,ArrayList<Mob>> heldAllies = new Hashtable<>();
 
 	public static void holdAlliesForAllHeroes( Level level ) {
 		for (Hero hero: Dungeon.heroes) {
@@ -1370,12 +1373,21 @@ public abstract class Mob extends Char {
 		}
 	}
 	public static void holdAllies( Level level, Hero hero ) {
-		//Will fix later
-		//TODO: check this
-		//holdAllies(level, Dungeon.heroes.pos);
+		holdAllies(level, hero.pos, hero);
 	}
 
-	public static void holdAllies( Level level, int holdFromPos ){
+	public static void holdAlliesForAllHeroes( Level level, int pos ) {
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			holdAllies(level, pos, hero);
+		}
+	}
+
+	public static void holdAllies( Level level, int holdFromPos, Hero hero ){
+		if (!Mob.heldAllies.containsKey(getHeroID(hero))) {
+			Mob.heldAllies.put(getHeroID(hero), new ArrayList<>());
+		}
+		@NotNull ArrayList<Mob> heldAllies = Mob.heldAllies.get(getHeroID(hero));
 		heldAllies.clear();
 		for (Mob mob : level.mobs.toArray( new Mob[0] )) {
 			//preserve directable allies no matter where they are
@@ -1399,7 +1411,11 @@ public abstract class Mob extends Char {
 	}
 
 	public static void restoreAllies( Level level, int pos, int gravitatePos, Hero hero ){
-		if (!heldAllies.isEmpty()){
+		if (!Mob.heldAllies.containsKey(getHeroID(hero)){
+			Mob.heldAllies.put(getHeroID(hero), new ArrayList<>());
+		}
+		@NotNull ArrayList<Mob> heldAllies = Mob.heldAllies.get(getHeroID(hero));
+		if ((heldAllies!= null) && !heldAllies.isEmpty()){
 			
 			ArrayList<Integer> candidatePositions = new ArrayList<>();
 			for (int i : PathFinder.NEIGHBOURS8) {
@@ -1420,8 +1436,8 @@ public abstract class Mob extends Char {
 					}
 				});
 			}
-			
-			for (Mob ally : heldAllies.get(hero)) {
+
+			for (Mob ally : heldAllies) {
 				level.mobs.add(ally);
 				ally.state = ally.WANDERING;
 				

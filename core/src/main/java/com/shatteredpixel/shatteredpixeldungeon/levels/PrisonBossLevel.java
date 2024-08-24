@@ -412,7 +412,7 @@ public class PrisonBossLevel extends Level {
 
 				//moves intelligent allies with the hero, preferring closer pos to cell door
 				int doorPos = pointToCell(tenguCellDoor);
-				Mob.holdAllies(this, doorPos);
+				Mob.holdAlliesForAllHeroes(this, doorPos);
 				for (Hero hero: Dungeon.heroes) {
 					if (hero != null) {
 						Mob.restoreAllies(this, hero.pos, doorPos, hero);

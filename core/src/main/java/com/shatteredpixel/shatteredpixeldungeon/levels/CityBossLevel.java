@@ -299,7 +299,7 @@ public class CityBossLevel extends Level {
 
 		//moves intelligent allies with the hero, preferring closer pos to entrance door
 		int doorPos = pointToCell(new Point(arena.left + arena.width() / 2, arena.bottom));
-		Mob.holdAllies(this, doorPos);
+		Mob.holdAlliesForAllHeroes(this, doorPos);
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
 			Mob.restoreAllies(this, hero.pos, doorPos, hero);
