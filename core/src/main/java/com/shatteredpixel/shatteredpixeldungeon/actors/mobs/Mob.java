@@ -1411,7 +1411,7 @@ public abstract class Mob extends Char {
 	}
 
 	public static void restoreAllies( Level level, int pos, int gravitatePos, Hero hero ){
-		if (!Mob.heldAllies.containsKey(getHeroID(hero)){
+		if (!Mob.heldAllies.containsKey(getHeroID(hero))){
 			Mob.heldAllies.put(getHeroID(hero), new ArrayList<>());
 		}
 		@NotNull ArrayList<Mob> heldAllies = Mob.heldAllies.get(getHeroID(hero));
