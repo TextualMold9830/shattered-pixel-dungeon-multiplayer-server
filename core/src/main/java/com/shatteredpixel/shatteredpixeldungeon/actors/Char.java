@@ -130,7 +130,7 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -476,8 +476,8 @@ public abstract class Char extends Actor {
 
 			if (buff(FireImbue.class) != null)  buff(FireImbue.class).proc(enemy);
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
-
-			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
+			//TODO: check this
+			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy, (Hero) prep.target)){
 				enemy.HP = 0;
 				if (!enemy.isAlive()) {
 					enemy.die(new DamageCause(this, this));
@@ -767,6 +767,7 @@ public abstract class Char extends Actor {
 				}
 				b.announced = false;
 				b.set(dmg, Sickle.HarvestBleedTracker.class);
+				b.setSourceHero(buff(Sickle.HarvestBleedTracker.class).getHero());
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 				return;
@@ -983,7 +984,7 @@ public abstract class Char extends Actor {
 	}
 
 	@Override
-	protected void spend( float time ) {
+	public void spend(float time) {
 
 		float timeScale = 1f;
 		if (buff( Slow.class ) != null) {

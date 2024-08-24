@@ -48,6 +48,15 @@ public class Bleeding extends Buff {
 
 	//used in specific cases where the source of the bleed is important for death logic
 	private Class source;
+	private Hero sourceHero;
+
+	public Hero getSourceHero() {
+		return sourceHero;
+	}
+
+	public void setSourceHero(Hero sourceHero) {
+		this.sourceHero = sourceHero;
+	}
 
 	public float level(){
 		return level;
@@ -118,7 +127,7 @@ public class Bleeding extends Buff {
 
 				if (source == Sickle.HarvestBleedTracker.class && !target.isAlive()){
 					//FIXME
-					MeleeWeapon.onAbilityKill(Dungeon.heroes, target);
+					MeleeWeapon.onAbilityKill(getSourceHero(), target);
 				}
 				
 				spend( TICK );
