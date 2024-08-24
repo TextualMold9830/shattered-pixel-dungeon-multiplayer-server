@@ -232,7 +232,7 @@ public class MiningLevel extends CavesLevel {
 					public void call() {
 						GameScene.show(new WndTitledMessage( new BlacksmithSprite(),
 								Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-								Messages.get(Blacksmith.class, "lost_pick")));
+								Messages.get(Blacksmith.class, "lost_pick"), hero));
 					}
 				});
 				return false;
