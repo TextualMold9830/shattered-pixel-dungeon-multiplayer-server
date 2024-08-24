@@ -139,7 +139,7 @@ public class CrystalSpire extends Mob {
 					if (ch instanceof CrystalGuardian){
 						for (int j : PathFinder.NEIGHBOURS8){
 							if (!Dungeon.level.solid[i+j] && Actor.findChar(i+j) == null &&
-									Dungeon.level.trueDistance(i+j, Dungeon.heroes.pos) > Dungeon.level.trueDistance(movePos, Dungeon.heroes.pos)){
+									Dungeon.level.trueDistance(i+j, enemy.pos) > Dungeon.level.trueDistance(movePos, enemy.pos)){
 								movePos = i+j;
 							}
 						}
@@ -184,7 +184,7 @@ public class CrystalSpire extends Mob {
 			if (abilityCooldown <= 0){
 
 				if (Random.Int(2) == 0) {
-					diamondAOEAttack();
+					diamondAOEAttack(enemy);
 				} else {
 					lineAttack();
 				}
@@ -195,7 +195,7 @@ public class CrystalSpire extends Mob {
 
 				abilityCooldown += ABILITY_CD;
 
-				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.heroes.cooldown()), 3*TICK));
+				spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 				Dungeon.interrupt(pos);
 			} else {
 				abilityCooldown -= 1;
@@ -208,12 +208,11 @@ public class CrystalSpire extends Mob {
 	}
 
 	public static class SpireSpike{}
-
-	private void diamondAOEAttack(){
+	private void diamondAOEAttack(Char target){
 		targetedCells.clear();
 
 		ArrayList<Integer> aoeCells = new ArrayList<>();
-		aoeCells.add(Dungeon.heroes.pos);
+		aoeCells.add(target.pos);
 		aoeCells.addAll(spreadDiamondAOE(aoeCells));
 		targetedCells.add(new ArrayList<>(aoeCells));
 
@@ -244,7 +243,7 @@ public class CrystalSpire extends Mob {
 		targetedCells.clear();
 
 		ArrayList<Integer> lineCells = new ArrayList<>();
-		Ballistica aim = new Ballistica(pos, Dungeon.heroes.pos, Ballistica.WONT_STOP);
+		Ballistica aim = new Ballistica(pos, enemy.pos, Ballistica.WONT_STOP);
 		for (int i : aim.subPath(1, 7)){
 			if (!Dungeon.level.solid[i] || Dungeon.level.map[i] == Terrain.MINE_CRYSTAL){
 				lineCells.add(i);
