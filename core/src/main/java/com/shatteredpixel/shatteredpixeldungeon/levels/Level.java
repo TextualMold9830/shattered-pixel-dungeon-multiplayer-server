@@ -563,7 +563,7 @@ public abstract class Level implements Bundlable {
 		} else {
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.ASCEND;
 		}
-		//Game.switchScene(InterLevelSceneServer.class);
+		InterLevelSceneServer.create(hero);
 		return true;
 	}
 

@@ -55,7 +55,7 @@ public class Fadeleaf extends Plant {
 				InterLevelSceneServer.returnDepth = Math.max(1, (Dungeon.depth - 1));
 				InterLevelSceneServer.returnBranch = 0;
 				InterLevelSceneServer.returnPos = -2;
-				//Game.switchScene( InterLevelSceneServer.class );
+				InterLevelSceneServer.create((Hero) ch);
 				
 			} else {
 				ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);

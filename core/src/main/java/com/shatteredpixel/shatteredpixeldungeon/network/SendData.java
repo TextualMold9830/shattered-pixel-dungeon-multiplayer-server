@@ -200,11 +200,13 @@ public class SendData {
     }
 
     //-----------------------------Interlevel Scene
-    public static void sendInterLevelScene(int ID, String type) {
-        sendInterLevelScene(ID, type, true);
-    }
 
-    public static void sendInterLevelScene(int ID, String type, boolean reset_level) {
+    public static void sendInterLevelSceneForAll(JSONObject interlevelSceneParams) {
+        for (int i = 0; i < clients.length; i++) {
+            sendInterLevelScene(i, interlevelSceneParams);
+        }
+    }
+    public static void sendInterLevelScene(int ID, JSONObject interlevelSceneParams) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].flush();
             {
@@ -212,7 +214,7 @@ public class SendData {
                     return;
                 }
             }
-            clients[ID].packet.packAndAddInterLevelSceneType(type, reset_level);
+            clients[ID].packet.addInterlevelSceneObject(interlevelSceneParams);
             clients[ID].flush();
         }
     }

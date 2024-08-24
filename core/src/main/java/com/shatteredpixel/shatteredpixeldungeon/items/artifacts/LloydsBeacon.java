@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
+import com.watabou.noosa.Game;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
@@ -180,7 +181,7 @@ public class LloydsBeacon extends Artifact {
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
 				InterLevelSceneServer.returnDepth = returnDepth;
 				InterLevelSceneServer.returnPos = returnPos;
-				//	Game.switchScene( InterLevelSceneServer.class );
+				InterLevelSceneServer.create(hero);
 			}
 			
 			

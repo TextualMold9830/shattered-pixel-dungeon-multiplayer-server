@@ -469,7 +469,7 @@ public class Dungeon {
 		return true;
 	}
 	
-	public static void switchLevel( final Level level, int pos ) {
+	public static void switchLevelForAll( final Level level, int pos ) {
 
 		//Position of -2 specifically means trying to place the hero the exit
 		if (pos == -2){
@@ -479,18 +479,21 @@ public class Dungeon {
 
 		//Place hero at the entrance if they are out of the map (often used for pox = -1)
 		// or if they are in solid terrain (except in the mining level, where that happens normally)
-		if (pos < 0 || pos >= level.length()
-				|| (!(level instanceof MiningLevel) && !level.passable[pos] && !level.avoid[pos])){
+		if ((pos != -3) && (pos < 0 || pos >= level.length()
+				|| (!(level instanceof MiningLevel) && !level.passable[pos] && !level.avoid[pos]))){
 			pos = level.getTransition(null).cell();
 		}
 		
 		PathFinder.setMapSize(level.width(), level.height());
 		
 		Dungeon.level = level;
+		//Position of -3 specifically means place hero to it's position
 		for (Hero hero : heroes) {
 			if (hero == null) continue;
 
-			hero.pos = pos;
+			if (pos != -3) {
+				hero.pos = pos;
+			}
 
 			if (hero.buff(AscensionChallenge.class) != null) {
 				hero.buff(AscensionChallenge.class).onLevelSwitch();
@@ -1160,73 +1163,16 @@ public class Dungeon {
 		}
 	}
 
-	public static void switchLevel( final Level level, int pos, Hero hero ){
+	//to allow multiple levels delete this
+	public static void switchLevel( final Level level, int pos){
 		if (Dungeon.level != level){
 			switchLevelForAll(level, pos);
 		}
 	}
-	public static void switchLevelForAll(final Level level, int pos ) {
 
-		//Position of -2 specifically means trying to place the hero the exit
-		if (pos == -2){
-			LevelTransition t = level.getTransition(LevelTransition.Type.REGULAR_EXIT);
-			if (t != null) pos = t.cell();
-		}
-
-		//Place hero at the entrance if they are out of the map (often used for pox = -1)
-		// or if they are in solid terrain (except in the mining level, where that happens normally)
-		if (pos < 0 || pos >= level.length()
-				|| (!(level instanceof MiningLevel) && !level.passable[pos] && !level.avoid[pos])){
-			pos = level.getTransition(null).cell();
-		}
-
-		PathFinder.setMapSize(level.width(), level.height());
-
-		Dungeon.level = level;
-		for (Hero hero: heroes) {
-			if (hero == null) continue;
-			hero.pos = pos;
-
-			if (hero.buff(AscensionChallenge.class) != null) {
-				hero.buff(AscensionChallenge.class).onLevelSwitch();
-			}
-		}
-		Mob.restoreAllies( level, pos );
-
-		Actor.init();
-
-		level.addRespawner();
-
-		for(Mob m : level.mobs){
-			for (Hero hero: heroes) {
-				if (hero == null) continue;
-				if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)) {
-					//displace mob
-					for (int i : PathFinder.NEIGHBOURS8) {
-						if (Actor.findChar(m.pos + i) == null && level.passable[m.pos + i]) {
-							m.pos += i;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		for (Hero hero: heroes) {
-			if (hero == null) continue;
-			Light light = hero.buff(Light.class);
-			hero.viewDistance = light == null ? level.viewDistance : Math.max(Light.DISTANCE, level.viewDistance);
-
-			hero.curAction = hero.lastAction = null;
-
-			observe(hero);
-		}
-		try {
-			saveAll();
-		} catch (IOException e) {
-			ShatteredPixelDungeon.reportException(e);
-			/*This only catches IO errors. Yes, this means things can go wrong, and they can go wrong catastrophically.
-			But when they do the user will get a nice 'report this issue' dialogue, and I can fix the bug.*/
+	public static void switchLevel( final Level level, int pos, Hero hero ){
+		if (Dungeon.level != level){
+			switchLevelForAll(level, pos);
 		}
 	}
 

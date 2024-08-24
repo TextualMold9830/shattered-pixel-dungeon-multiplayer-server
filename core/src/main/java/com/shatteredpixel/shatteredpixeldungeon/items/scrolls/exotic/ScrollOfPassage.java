@@ -56,6 +56,6 @@ public class ScrollOfPassage extends ExoticScroll {
 		InterLevelSceneServer.returnDepth = Math.max(1, (Dungeon.depth - 1 - (Dungeon.depth-2)%5));
 		InterLevelSceneServer.returnBranch = 0;
 		InterLevelSceneServer.returnPos = -1;
-		//Game.switchScene( InterLevelSceneServer.class );
+		InterLevelSceneServer.create(hero);
 	}
 }

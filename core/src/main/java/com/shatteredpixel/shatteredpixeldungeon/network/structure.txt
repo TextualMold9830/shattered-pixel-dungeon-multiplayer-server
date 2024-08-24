@@ -142,10 +142,15 @@ server:
     ]
     "interlevel_scene":
     {
-        "state": "fade_out" //If you switch scenes(from GameScene  to  InterlevelScene,  for  example, do not send state)
+        //getting this object causes scene switching if current scene is not IterlevelScene
+        "state": "fade_out" //If the current scene is not an InterlevelScene, "state" field will be ignored and set to "fade_in"
         "type": "RESURRECT"
-        "custom_message": "missingno"
+        "custom_message": "missingno" //optional, use mode message if not presented
+        "scroll_speed": 1f //optional, use mode scroll speed if not presented
+        "loading_texture": "interfaces/loading_sewers.png" //optional, uses "interfaces/shadow.png" if not presented; do not change during InterlevelScene
+        "fade_time": "fast_fade" //optional, depends on mode if not presented
         "reset_level" = true //clear level
+
     }
     "window":
     {

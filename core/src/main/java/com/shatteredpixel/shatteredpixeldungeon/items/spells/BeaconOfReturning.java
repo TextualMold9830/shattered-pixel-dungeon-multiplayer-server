@@ -170,7 +170,7 @@ public class BeaconOfReturning extends Spell {
 			InterLevelSceneServer.returnDepth = returnDepth;
 			InterLevelSceneServer.returnBranch = returnBranch;
 			InterLevelSceneServer.returnPos = returnPos;
-			Game.switchScene( InterLevelSceneServer.class );
+			InterLevelSceneServer.create(hero);
 		}
 		detach(hero.belongings.backpack);
 		if (Random.Float() < talentChance){

@@ -21,10 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -38,29 +39,27 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.watabou.noosa.*;
 import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
-import com.watabou.glwrap.Blending;
 import com.watabou.utils.DeviceCompat;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class InterLevelSceneServer {
-	
-	//slow fade on entering a new region
-	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total
-	//norm fade when loading, falling, returning, or descending to a new floor
-	private static final float NORM_FADE = 0.67f; //.33 in, .67 steady, .33 out, 1.33 seconds total
-	//fast fade when ascending, or descending to a floor you've been on
-	private static final float FAST_FADE = 0.50f; //.33 in, .33 steady, .33 out, 1 second total
 
-	private static float fadeTime;
+	private enum FADE_TIME {
+		SLOW_FADE, NORM_FADE, FAST_FADE
+	}
 
 	public enum Mode {
 		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE
@@ -78,23 +77,25 @@ public class InterLevelSceneServer {
 		FADE_IN, STATIC, FADE_OUT
 	}
 	private Phase phase;
-	private float timeLeft;
 	
-	private RenderedTextBlock message;
-	
-	private static Thread thread;
+	private Thread thread = null;
 	private static Exception error = null;
-	private float waitingTime;
-
 	public static int lastRegion = -1;
 
-	public void create(Hero hero) {
-		//super.create();
+	public static InterLevelSceneServer create(Hero hero){
+		return new InterLevelSceneServer(hero);
+	}
+
+	public InterLevelSceneServer(Hero hero) {
 		
 		String loadingAsset;
 		int loadingDepth;
+
+		@SuppressWarnings("unused")
 		final float scrollSpeed;
-		fadeTime = NORM_FADE;
+
+		FADE_TIME fadeTime;
+		fadeTime = FADE_TIME.NORM_FADE;
 		switch (mode){
 			default:
 				loadingDepth = Dungeon.depth;
@@ -107,15 +108,15 @@ public class InterLevelSceneServer {
 			case DESCEND:
 				if (Dungeon.heroes == null){
 					loadingDepth = 1;
-					fadeTime = SLOW_FADE;
+					fadeTime = FADE_TIME.SLOW_FADE;
 				} else {
 					if (curTransition != null)  loadingDepth = curTransition.destDepth;
 					else                        loadingDepth = Dungeon.depth+1;
 					if (Statistics.deepestFloor >= loadingDepth) {
-						fadeTime = FAST_FADE;
+						fadeTime = FADE_TIME.FAST_FADE;
 					} else if (loadingDepth == 6 || loadingDepth == 11
 							|| loadingDepth == 16 || loadingDepth == 21) {
-						fadeTime = SLOW_FADE;
+						fadeTime = FADE_TIME.SLOW_FADE;
 					}
 				}
 				scrollSpeed = 5;
@@ -125,7 +126,7 @@ public class InterLevelSceneServer {
 				scrollSpeed = 50;
 				break;
 			case ASCEND:
-				fadeTime = FAST_FADE;
+				fadeTime = FADE_TIME.FAST_FADE;
 				if (curTransition != null)  loadingDepth = curTransition.destDepth;
 				else                        loadingDepth = Dungeon.depth-1;
 				scrollSpeed = -5;
@@ -149,62 +150,17 @@ public class InterLevelSceneServer {
 		else if (lastRegion == 4)    loadingAsset = Assets.Interfaces.LOADING_CITY;
 		else if (lastRegion == 5)    loadingAsset = Assets.Interfaces.LOADING_HALLS;
 		else                         loadingAsset = Assets.Interfaces.SHADOW;
-		
-		if (DeviceCompat.isDebug()){
-			fadeTime = 0f;
-		}
-		
-		SkinnedBlock bg = new SkinnedBlock(Camera.main.width, Camera.main.height, loadingAsset ){
-			@Override
-			protected NoosaScript script() {
-				return NoosaScriptNoLighting.get();
-			}
-			
-			@Override
-			public void draw() {
-				Blending.disable();
-				super.draw();
-				Blending.enable();
-			}
-			
-			@Override
-			public void update() {
-				super.update();
-				offset(0, Game.elapsed * scrollSpeed);
-			}
-		};
-		bg.scale(4, 4);
-		bg.autoAdjust = true;
-		add(bg);
-		
-		Image im = new Image(TextureCache.createGradient(0xAA000000, 0xBB000000, 0xCC000000, 0xDD000000, 0xFF000000)){
-			@Override
-			public void update() {
-				super.update();
-				if (phase == Phase.FADE_IN)         aa = Math.max( 0, (timeLeft - (fadeTime - 0.333f)));
-				else if (phase == Phase.FADE_OUT)   aa = Math.max( 0, (0.333f - timeLeft));
-				else                                aa = 0;
-			}
-		};
-		im.angle = 90;
-		im.x = Camera.main.width;
-		im.scale.x = Camera.main.height/5f;
-		im.scale.y = Camera.main.width;
-		add(im);
 
 		String text = Messages.get(Mode.class, mode.name());
-		
-		message = PixelScene.renderTextBlock( text, 9 );
-		message.setPos(
-				(Camera.main.width - message.width()) / 2,
-				(Camera.main.height - message.height()) / 2
-		);
-		align(message);
-		add( message );
 
 		phase = Phase.FADE_IN;
-		timeLeft = fadeTime;
-		
+		// We do not send the message and the scrolling speed
+		// to allow the client to determine them independently according to the current mode
+		// the background scale is determined by the texture pack
+		//JSONObject paramsObject = (new InterLevelSceneParams(mode, loadingAsset, scrollSpeed, text)).toJSONObject();
+		JSONObject paramsObject = (new InterLevelSceneParams(mode, loadingAsset, fadeTime)).toJSONObject();
+		SendData.sendInterLevelSceneForAll(paramsObject);
+
 		if (thread == null) {
 			thread = new Thread() {
 				@Override
@@ -247,7 +203,6 @@ public class InterLevelSceneServer {
 					synchronized (thread) {
 						if (phase == Phase.STATIC && error == null) {
 							phase = Phase.FADE_OUT;
-							timeLeft = fadeTime;
 						}
 					}
 				}
@@ -255,78 +210,39 @@ public class InterLevelSceneServer {
 			thread.start();
 		}
 		thread.join();
-		waitingTime = 0f;
+		hadleError();
+		for (int i = 0; i < heroes.length; i++) {
+			SendData.sendInterLevelSceneFadeOut(i);
+		}
 	}
-	
-	@Override
-	public void update() {
-		super.update();
 
-		waitingTime += Game.elapsed;
-		
-		float p = timeLeft / fadeTime;
-		
-		switch (phase) {
-		
-		case FADE_IN:
-			message.alpha( 1 - p );
-			if ((timeLeft -= Game.elapsed) <= 0) {
-				synchronized (thread) {
-					if (!thread.isAlive() && error == null) {
-						phase = Phase.FADE_OUT;
-						timeLeft = fadeTime;
-					} else {
-						phase = Phase.STATIC;
-					}
-				}
-			}
-			break;
-			
-		case FADE_OUT:
-			message.alpha( p );
-			
-			if ((timeLeft -= Game.elapsed) <= 0) {
-				Game.switchScene( GameScene.class );
-				thread = null;
-				error = null;
-			}
-			break;
-			
-		case STATIC:
-			if (error != null) {
-				String errorMsg;
-				if (error instanceof FileNotFoundException)     errorMsg = Messages.get(this, "file_not_found");
-				else if (error instanceof IOException)          errorMsg = Messages.get(this, "io_error");
-				else if (error.getMessage() != null &&
-						error.getMessage().equals("old save")) errorMsg = Messages.get(this, "io_error");
+	public void hadleError() {
 
-				else throw new RuntimeException("fatal error occurred while moving between floors. " +
-							"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth, error);
-
-				add( new WndError( errorMsg ) {
-					public void onBackPressed() {
-						super.onBackPressed();
-						Game.switchScene( StartScene.class );
-					}
-				} );
-				thread = null;
-				error = null;
-			} else if (thread != null && (int)waitingTime == 10){
-				waitingTime = 11f;
-				String s = "";
-				for (StackTraceElement t : thread.getStackTrace()){
-					s += "\n";
-					s += t.toString();
-				}
-				//we care about reporting game logic exceptions, not slow IO
-				if (!s.contains("FileUtils.bundleToFile")){
-					ShatteredPixelDungeon.reportException(
-							new RuntimeException("waited more than 10 seconds on levelgen. " +
-									"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth + " trace:" +
-									s));
-				}
+		if (error == null){
+			if (phase != Phase.FADE_OUT){
+				error = new RuntimeException("InterlevelScene is not loaded fully");
 			}
-			break;
+		}
+		if (error != null) {
+			String errorMsg;
+			if (error instanceof FileNotFoundException)
+				errorMsg = Messages.get(this, "file_not_found");
+			else if (error instanceof IOException) errorMsg = Messages.get(this, "io_error");
+			else if (error.getMessage() != null &&
+					error.getMessage().equals("old save"))
+				errorMsg = Messages.get(this, "io_error");
+
+			else throw new RuntimeException("fatal error occurred while moving between floors. " +
+						"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth, error);
+
+			add(new WndError(errorMsg) {
+				public void onBackPressed() {
+					super.onBackPressed();
+					Game.switchScene(StartScene.class);
+				}
+			});
+			thread = null;
+			error = null;
 		}
 	}
 
@@ -446,7 +362,7 @@ public class InterLevelSceneServer {
 			Dungeon.switchLevel( Dungeon.loadLevel(), -1 );
 		} else {
 			Level level = Dungeon.loadLevel();
-			Dungeon.switchLevel( level, Dungeon.heroes.pos );
+			Dungeon.switchLevelForAll( level, -3 );
 		}
 	}
 	
@@ -509,8 +425,47 @@ public class InterLevelSceneServer {
 		Dungeon.switchLevel( level, level.entrance() );
 	}
 	
-	//@Override
-	protected void onBackPressed() {
-		//Do nothing
+	private static class InterLevelSceneParams {
+		@NotNull
+		final Mode mode;
+		@Nullable
+		final String message;
+		@Nullable
+		final Float scrollSpeed;
+		@Nullable
+		final String loadingTexture;
+		@Nullable
+		final FADE_TIME fadeTime;
+
+
+		public InterLevelSceneParams(@NotNull Mode mode, @Nullable String loadingTexture, @Nullable FADE_TIME fadeTime) {
+			this(mode, loadingTexture, fadeTime, null, null);
+		}
+		public InterLevelSceneParams(@NotNull Mode mode, @Nullable String loadingTexture, @Nullable FADE_TIME fadeTime, @Nullable Float scrollSpeed, @Nullable String message) {
+			this.mode = mode;
+			this.message = message;
+			this.fadeTime = fadeTime;
+			this.scrollSpeed = scrollSpeed;
+			this.loadingTexture = loadingTexture;
+		}
+
+		public JSONObject toJSONObject() {
+			JSONObject result = new JSONObject();
+			result.put("type", mode.name().toLowerCase());
+			if (message != null) {
+				result.put("custom_message", message);
+			}
+			if (scrollSpeed != null){
+				result.put("scroll_speed", scrollSpeed);
+			}
+			if (loadingTexture != null){
+				result.put("loading_texture", loadingTexture);
+			}
+			if (fadeTime != null){
+				result.put("fade_time", fadeTime.name().toLowerCase());
+			}
+			result.put("reset_level", true);
+			return result;
+		}
 	}
 }

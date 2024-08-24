@@ -113,7 +113,7 @@ public class Chasm implements Hero.Doom {
 			} else {
 				InterLevelSceneServer.fallIntoPit = false;
 			}
-			//Game.switchScene( InterLevelSceneServer.class );
+			InterLevelSceneServer.create(hero);
 		} else {
 			hero.sprite.visible = false;
 		}

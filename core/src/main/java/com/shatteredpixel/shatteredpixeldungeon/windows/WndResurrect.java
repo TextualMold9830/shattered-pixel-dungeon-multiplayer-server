@@ -135,7 +135,7 @@ public class WndResurrect extends Window {
 		}
 
 		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RESURRECT;
-		Game.switchScene( InterLevelSceneServer.class );
+		InterLevelSceneServer.create(getOwnerHero());
 	}
 
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

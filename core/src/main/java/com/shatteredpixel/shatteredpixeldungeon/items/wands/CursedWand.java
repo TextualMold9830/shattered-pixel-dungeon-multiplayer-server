@@ -357,7 +357,7 @@ public class CursedWand {
 					InterLevelSceneServer.returnDepth = depth;
 					InterLevelSceneServer.returnBranch = 0;
 					InterLevelSceneServer.returnPos = -1;
-					//Game.switchScene(InterLevelSceneServer.class);
+					InterLevelSceneServer.create((Hero) user);
 
 				} else {
 					ScrollOfTeleportation.teleportChar(user);

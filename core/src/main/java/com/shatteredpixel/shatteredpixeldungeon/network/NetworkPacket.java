@@ -462,22 +462,11 @@ public class NetworkPacket {
             }
         }
     }
-
-    public void packAndAddInterLevelSceneType(String type, boolean reset_level) {
-        packAndAddInterLevelSceneType(type, null, reset_level);
-    }
-
-    public void packAndAddInterLevelSceneType(String type, String customMessage, boolean reset_level) {
+    public void addInterlevelSceneObject(JSONObject interlevelSceneParams) {
         try {
-            JSONObject stateObj = new JSONObject();
-            stateObj.put("type", type);
-            stateObj.put("reset_level", reset_level);
-            if (customMessage != null) {
-                stateObj.put("custom_message", customMessage);
-            }
             synchronized (dataRef) {
                 JSONObject data = dataRef.get();
-                data.put("interlevel_scene", stateObj);
+                data.put("interlevel_scene", interlevelSceneParams);
             }
         } catch (JSONException ignored) {
 
