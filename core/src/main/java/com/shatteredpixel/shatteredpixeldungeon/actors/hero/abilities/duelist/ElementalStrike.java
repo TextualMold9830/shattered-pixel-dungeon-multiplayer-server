@@ -90,7 +90,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
@@ -517,7 +517,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Explosive){
 			if (Random.Float() < 0.5f*powerMulti){
 				Char exploding = Random.element(affected);
-				if (exploding != null) new Bomb.ConjuredBomb().explode(exploding.pos);
+				if (exploding != null) new Bomb.ConjuredBomb().explode(exploding.pos, hero);
 			}
 
 		//*** Sacrificial ***
