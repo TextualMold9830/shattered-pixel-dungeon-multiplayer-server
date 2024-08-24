@@ -1380,7 +1380,7 @@ public class GameScene extends PixelScene {
 		cellSelector.resetKeyHold();
 	}
 
-	public static void examineCell( Integer cell ) {
+	public static void examineCell( Integer cell, Hero hero ) {
 		if (cell == null
 				|| cell < 0
 				|| cell > Dungeon.level.length()
@@ -1393,7 +1393,7 @@ public class GameScene extends PixelScene {
 		if (objects.isEmpty()) {
 			GameScene.show(new WndInfoCell(cell));
 		} else if (objects.size() == 1){
-			examineObject(objects.get(0));
+			examineObject(objects.get(0), hero);
 		} else {
 			String[] names = getObjectNames(objects).toArray(new String[0]);
 
@@ -1403,7 +1403,7 @@ public class GameScene extends PixelScene {
 					names){
 				@Override
 				protected void onSelect(int index) {
-					examineObject(objects.get(index));
+					examineObject(objects.get(index), getOwnerHero());
 				}
 			});
 
@@ -1446,12 +1446,11 @@ public class GameScene extends PixelScene {
 		}
 		return names;
 	}
-
-	public static void examineObject(Object o){
+	public static void examineObject(Object o, Hero hero){
 		if (o instanceof Hero){
 			GameScene.show( new WndHero((Hero) o) );
 		} else if ( o instanceof Mob && ((Mob) o).isActive() ){
-			GameScene.show(new WndInfoMob((Mob) o));
+			GameScene.show(new WndInfoMob((Mob) o, hero));
 			if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)){
 				GLog.p(Messages.get(Guidebook.class, "hint"));
 				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_SURPRISE_ATKS);
@@ -1459,9 +1458,9 @@ public class GameScene extends PixelScene {
 		} else if ( o instanceof Heap && !((Heap) o).isEmpty() ){
 			GameScene.show(new WndInfoItem((Heap)o));
 		} else if ( o instanceof Plant ){
-			GameScene.show( new WndInfoPlant((Plant) o) );
+			GameScene.show( new WndInfoPlant((Plant) o, hero) );
 		} else if ( o instanceof Trap ){
-			GameScene.show( new WndInfoTrap((Trap) o));
+			GameScene.show( new WndInfoTrap((Trap) o, hero));
 		} else {
 			GameScene.show( new WndMessage( Messages.get(GameScene.class, "dont_know") ) ) ;
 		}
