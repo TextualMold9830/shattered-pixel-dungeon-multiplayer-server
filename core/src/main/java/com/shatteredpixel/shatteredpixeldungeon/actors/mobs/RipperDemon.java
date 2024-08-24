@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RipperSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -121,12 +121,11 @@ public class RipperDemon extends Mob {
 
 		//if state changed from wandering to hunting, we haven't acted yet, don't update.
 		if (!(lastState == WANDERING && state == HUNTING)) {
-			if (enemy != null) {
-				lastEnemyPos = enemy.pos;
-			} else {
-				lastEnemyPos = Dungeon.heroes.pos;
-			}
-		}
+            if (enemy == null) {
+                enemy = chooseEnemy();
+            }
+            lastEnemyPos = enemy.pos;
+        }
 
 		return result;
 	}
@@ -174,7 +173,7 @@ public class RipperDemon extends Mob {
 				}
 
 				//do leap
-				sprite.visible = Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[leapPos] || Dungeon.level.fieldOfView[endPos];
+				sprite.visible = Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(leapPos) || Dungeon.visibleforAnyHero(endPos);
 				sprite.jump(pos, leapPos, new Callback() {
 					@Override
 					public void call() {
@@ -245,11 +244,11 @@ public class RipperDemon extends Mob {
 						leapPos = targetPos;
 						//don't want to overly punish players with slow move or attack speed
 						spend(GameMath.gate(attackDelay(), (int)Math.ceil(enemy.cooldown()), 3*attackDelay()));
-						if (Dungeon.visibleforAnyHero(pos) || Dungeon.level.fieldOfView[leapPos]){
+						if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(leapPos)){
 							GLog.w(Messages.get(RipperDemon.this, "leap"));
 							sprite.parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
 							((RipperSprite)sprite).leapPrep( leapPos );
-							Dungeon.heroes.interrupt();
+							Dungeon.interrupt(pos);
 						}
 						return true;
 					}
