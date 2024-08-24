@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
 
@@ -38,10 +39,18 @@ public class ImpShopkeeper extends Shopkeeper {
 	protected boolean act() {
 
 		if (!seenBefore && Dungeon.visibleforAnyHero(pos)) {
-			if (Dungeon.heroes.buff(AscensionChallenge.class) == null) {
-				yell(Messages.get(this, "greetings", Messages.titleCase(Dungeon.heroes.name())));
+			if (AscensionChallenge.highestStack() > -1) {
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null) {
+					yell(Messages.get(this, "greetings", Messages.titleCase(hero.name())));
+				}
+				}
 			} else {
-				yell(Messages.get(this, "greetings_ascent", Messages.titleCase(Dungeon.heroes.name())));
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null) {
+						yell(Messages.get(this, "greetings_ascent", Messages.titleCase(hero.name())));
+					}
+				}
 			}
 			seenBefore = true;
 		}
