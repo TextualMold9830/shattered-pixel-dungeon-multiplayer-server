@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -30,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.ColorBlock;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 public class InventorySlot extends ItemSlot {
 
@@ -71,18 +72,17 @@ public class InventorySlot extends ItemSlot {
 	public void item( Item item ) {
 
 		super.item( item );
-
 		bg.visible = !(item instanceof Gold || item instanceof Bag);
 
 		if (item != null) {
-
-			boolean equipped = item.isEquipped(Dungeon.heroes) ||
-					item == Dungeon.heroes.belongings.weapon ||
-					item == Dungeon.heroes.belongings.armor ||
-					item == Dungeon.heroes.belongings.artifact ||
-					item == Dungeon.heroes.belongings.misc ||
-					item == Dungeon.heroes.belongings.ring ||
-					item == Dungeon.heroes.belongings.secondWep;
+			Hero hero = item.findOwner();
+			boolean equipped = item.isEquipped(hero) ||
+					item == hero.belongings.weapon ||
+					item == hero.belongings.armor ||
+					item == hero.belongings.artifact ||
+					item == hero.belongings.misc ||
+					item == hero.belongings.ring ||
+					item == hero.belongings.secondWep;
 
 			bg.texture( TextureCache.createSolid( equipped ? EQUIPPED : NORMAL ) );
 			bg.resetColor();
@@ -100,7 +100,7 @@ public class InventorySlot extends ItemSlot {
 
 			if (item.name() == null) {
 				enable( false );
-			} else if (Dungeon.heroes.belongings.lostInventory()
+			} else if (item.findOwner().belongings.lostInventory()
 					&& !item.keptThroughLostInventory()){
 				enable(false);
 			}
