@@ -273,7 +273,7 @@ public class Tengu extends Mob {
 					newPos = ((PrisonBossLevel)Dungeon.level).randomTenguCellPos();
 					tries--;
 				} while ( tries > 0 && (level.trueDistance(newPos, enemy.pos) <= 3.5f
-						|| level.trueDistance(newPos, Dungeon.heroes.pos) <= 3.5f
+						//|| level.trueDistance(newPos, enemy.pos) <= 3.5f
 						|| Actor.findChar(newPos) != null));
 
 				if (tries <= 0) newPos = pos;
@@ -300,8 +300,8 @@ public class Tengu extends Mob {
 						(level.solid[newPos] ||
 								level.distance(newPos, enemy.pos) < 5 ||
 								level.distance(newPos, enemy.pos) > 7 ||
-								level.distance(newPos, Dungeon.heroes.pos) < 5 ||
-								level.distance(newPos, Dungeon.heroes.pos) > 7 ||
+								//level.distance(newPos, Dungeon.heroes.pos) < 5 ||
+								//level.distance(newPos, Dungeon.heroes.pos) > 7 ||
 								level.distance(newPos, pos) < 5 ||
 								Actor.findChar(newPos) != null ||
 								Dungeon.level.heaps.get(newPos) != null));
