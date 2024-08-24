@@ -193,6 +193,10 @@ class ClientThread implements Callable<String> {
                                 clientHero.search(true);
                                 break;
                             }
+                            case "EXAMINE": {
+                                GameScene.examineCell(actionObj.getInt("cell"), clientHero);
+                                break;
+                            }
                         }
                         break;
                     }

@@ -52,7 +52,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RadialMenu;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StatusPane;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;

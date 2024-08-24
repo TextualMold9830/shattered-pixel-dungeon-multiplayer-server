@@ -98,7 +98,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StatusPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Tag;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toast;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;

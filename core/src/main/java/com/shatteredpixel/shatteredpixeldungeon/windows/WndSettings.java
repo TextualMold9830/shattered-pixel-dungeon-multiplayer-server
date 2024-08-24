@@ -38,7 +38,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.OptionSlider;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.ColorBlock;
