@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -156,6 +157,67 @@ public class WndInfoCell extends Window {
 		info.maxWidth(WIDTH);
 		info.setPos(titlebar.left(), titlebar.bottom() + 2*GAP);
 		
+		resize( WIDTH, (int)info.bottom()+2 );
+	}
+	public WndInfoCell(int cell, Hero hero) {
+
+		super(hero);
+
+		CustomTilemap customTile = null;
+		int x = cell % Dungeon.level.width();
+		int y = cell / Dungeon.level.width();
+		for (CustomTilemap i : Dungeon.level.customTiles){
+			if ((x >= i.tileX && x < i.tileX+i.tileW) &&
+					(y >= i.tileY && y < i.tileY+i.tileH)){
+				if (i.image(x - i.tileX, y - i.tileY) != null) {
+					x -= i.tileX;
+					y -= i.tileY;
+					customTile = i;
+					break;
+				}
+			}
+		}
+
+
+		String desc = "";
+
+		IconTitle titlebar = new IconTitle();
+		titlebar.icon(cellImage(cell));
+		titlebar.label(cellName(cell));
+
+		if (customTile != null){
+			String customDesc = customTile.desc(x, y);
+			if (customDesc != null) {
+				desc += customDesc;
+			} else {
+				desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
+			}
+
+		} else {
+
+			desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
+		}
+		titlebar.setRect(0, 0, WIDTH, 0);
+		add(titlebar);
+
+		RenderedTextBlock info = PixelScene.renderTextBlock(6);
+		add(info);
+
+		if (hero.fieldOfView[cell]) {
+			for (Blob blob : Dungeon.level.blobs.values()) {
+				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
+					if (desc.length() > 0) {
+						desc += "\n\n";
+					}
+					desc += blob.tileDesc();
+				}
+			}
+		}
+
+		info.text( desc.length() == 0 ? Messages.get(this, "nothing") : desc );
+		info.maxWidth(WIDTH);
+		info.setPos(titlebar.left(), titlebar.bottom() + 2*GAP);
+
 		resize( WIDTH, (int)info.bottom()+2 );
 	}
 }

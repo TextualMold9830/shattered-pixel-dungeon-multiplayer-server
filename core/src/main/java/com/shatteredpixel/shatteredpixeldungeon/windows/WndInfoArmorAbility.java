@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
@@ -35,14 +36,14 @@ import java.util.LinkedHashMap;
 
 public class WndInfoArmorAbility extends WndTitledMessage {
 
-	public WndInfoArmorAbility(HeroClass cls, ArmorAbility ability){
-		super( new HeroIcon(ability), Messages.titleCase(ability.name()), ability.desc());
+	public WndInfoArmorAbility(HeroClass cls, ArmorAbility ability, Hero hero){
+		super( new HeroIcon(ability), Messages.titleCase(ability.name()), ability.desc(), hero);
 
 		ArrayList<LinkedHashMap<Talent, Integer>> talentList = new ArrayList<>();
 		Talent.initArmorTalents(ability, talentList);
 
 		Ratmogrify.useRatroicEnergy = ability instanceof Ratmogrify;
-		TalentsPane.TalentTierPane talentPane = new TalentsPane.TalentTierPane(talentList.get(3), 4, TalentButton.Mode.INFO);
+		TalentsPane.TalentTierPane talentPane = new TalentsPane.TalentTierPane(talentList.get(3), 4, TalentButton.Mode.INFO, hero);
 		talentPane.title.text( Messages.titleCase(Messages.get(WndHeroInfo.class, "talents")));
 		talentPane.setRect(0, height + 5, width, talentPane.height());
 		add(talentPane);

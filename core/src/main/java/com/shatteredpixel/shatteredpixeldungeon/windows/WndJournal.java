@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -444,7 +445,7 @@ public class WndJournal extends WndTabbed {
 	}
 	
 	private static class CatalogTab extends Component{
-		
+
 		private RedButton[] itemButtons;
 		private static final int NUM_BUTTONS = 7;
 		
@@ -508,7 +509,6 @@ public class WndJournal extends WndTabbed {
 		}
 		
 		private void updateList() {
-			
 			list.clear();
 			
 			for (int i = 0; i < NUM_BUTTONS; i++){
@@ -586,10 +586,10 @@ public class WndJournal extends WndTabbed {
 						if (inside( x, y ) && itemSeen) {
 							if (item instanceof ClassArmor){
 								GameScene.show(new WndTitledMessage(new Image(icon),
-										Messages.titleCase(item.trueName()), item.desc(((Window) parent).getOwnerHero())));
+										Messages.titleCase(item.trueName()), item.desc(((Window) parent).getOwnerHero()), ((Window) parent).getOwnerHero()));
 							} else {
 								GameScene.show(new WndTitledMessage(new Image(icon),
-										Messages.titleCase(item.trueName()), item.info()));
+										Messages.titleCase(item.trueName()), item.info(), ((Window) parent).getOwnerHero()));
 							}
 							return true;
 						} else {

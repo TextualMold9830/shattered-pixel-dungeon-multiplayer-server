@@ -42,7 +42,7 @@ public class WndEnergizeItem extends WndInfoItem {
 	private WndBag owner;
 
 	public WndEnergizeItem(Item item, WndBag owner) {
-		super(item);
+		super(item, owner.getOwnerHero());
 
 		this.owner = owner;
 
@@ -69,7 +69,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll / item.quantity()) ) {
 				@Override
 				protected void onClick() {
-					energizeOne( item );
+					energizeOne( item, getOwnerHero() );
 					hide();
 				}
 			};
@@ -79,7 +79,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			RedButton btnEnergizeAll = new RedButton( Messages.get(this, "energize_all", energyAll ) ) {
 				@Override
 				protected void onClick() {
-					energize( item );
+					energize( item, getOwnerHero() );
 					hide();
 				}
 			};
@@ -102,7 +102,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		if (owner != null) {
 			owner.hide();
-			openItemSelector();
+			openItemSelector(getOwnerHero());
 		}
 	}
 
@@ -129,13 +129,12 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static void energizeOne( Item item ) {
+	public static void energizeOne( Item item, Hero hero ) {
 
 		if (item.quantity() <= 1) {
-			energize( item );
+			energize( item, hero );
 		} else {
 
-			Hero hero = Dungeon.heroes;
 
 			item = item.detach( hero.belongings.backpack );
 
@@ -154,11 +153,11 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static WndBag openItemSelector(){
+	public static WndBag openItemSelector(Hero hero){
 		if (ShatteredPixelDungeon.scene() instanceof GameScene) {
-			return GameScene.selectItem( selector );
+			return GameScene.selectItem( selector, hero );
 		} else {
-			WndBag window = WndBag.getBag( selector );
+			WndBag window = WndBag.getBag( selector, hero );
 			ShatteredPixelDungeon.scene().addToFront(window);
 			return window;
 		}
@@ -178,7 +177,7 @@ public class WndEnergizeItem extends WndInfoItem {
 		@Override
 		public void onSelect(Item item) {
 			if (item != null) {
-				WndBag parentWnd = openItemSelector();
+				WndBag parentWnd = openItemSelector(getOwner());
 				if (ShatteredPixelDungeon.scene() instanceof GameScene) {
 					GameScene.show(new WndEnergizeItem(item, parentWnd));
 				} else {

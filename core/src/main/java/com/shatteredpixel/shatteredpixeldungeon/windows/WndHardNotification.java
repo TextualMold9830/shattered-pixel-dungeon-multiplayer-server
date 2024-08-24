@@ -40,7 +40,7 @@ public class WndHardNotification extends WndTitledMessage{
 	}
 
 	public WndHardNotification(Component titlebar, String message, String btnMessage, int time) {
-		super(titlebar, message);
+		super(titlebar, message, null);
 
 		timeLeft = time;
 		this.btnMessage = btnMessage;

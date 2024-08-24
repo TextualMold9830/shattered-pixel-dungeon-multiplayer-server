@@ -156,9 +156,9 @@ public class WndHero extends WndTabbed {
 				protected void onClick() {
 					super.onClick();
 					if (ShatteredPixelDungeon.scene() instanceof GameScene){
-						GameScene.show(new WndHeroInfo(hero.heroClass));
+						GameScene.show(new WndHeroInfo(hero.heroClass, getOwnerHero()));
 					} else {
-						ShatteredPixelDungeon.scene().addToFront(new WndHeroInfo(hero.heroClass));
+						ShatteredPixelDungeon.scene().addToFront(new WndHeroInfo(hero.heroClass, getOwnerHero()));
 					}
 				}
 
@@ -230,7 +230,7 @@ public class WndHero extends WndTabbed {
 		@Override
 		protected void createChildren() {
 			super.createChildren();
-			pane = new TalentsPane(TalentButton.Mode.UPGRADE);
+			pane = new TalentsPane(TalentButton.Mode.UPGRADE, getOwnerHero());
 			add(pane);
 		}
 

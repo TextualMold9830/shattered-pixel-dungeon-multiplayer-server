@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -55,8 +56,8 @@ public class WndHeroInfo extends WndTabbed {
 	private static int MIN_HEIGHT = 125;
 	private static int MARGIN = 2;
 
-	public WndHeroInfo( HeroClass cl ){
-
+	public WndHeroInfo( HeroClass cl, Hero hero ){
+		super(hero);
 		Image tabIcon;
 		switch (cl){
 			case WARRIOR: default:
@@ -91,7 +92,7 @@ public class WndHeroInfo extends WndTabbed {
 			}
 		});
 
-		talentInfo = new TalentInfoTab(cl);
+		talentInfo = new TalentInfoTab(cl, getOwnerHero());
 		add(talentInfo);
 		talentInfo.setSize(WIDTH, MIN_HEIGHT);
 		finalHeight = (int)Math.max(finalHeight, talentInfo.height());
@@ -105,7 +106,7 @@ public class WndHeroInfo extends WndTabbed {
 		});
 
 		if (Badges.isUnlocked(Badges.Badge.BOSS_SLAIN_2) || DeviceCompat.isDebug()) {
-			subclassInfo = new SubclassInfoTab(cl);
+			subclassInfo = new SubclassInfoTab(cl, getOwnerHero());
 			add(subclassInfo);
 			subclassInfo.setSize(WIDTH, MIN_HEIGHT);
 			finalHeight = (int)Math.max(finalHeight, subclassInfo.height());
@@ -120,7 +121,7 @@ public class WndHeroInfo extends WndTabbed {
 		}
 
 		if (Badges.isUnlocked(Badges.Badge.BOSS_SLAIN_4) || DeviceCompat.isDebug()) {
-			abilityInfo = new ArmorAbilityInfoTab(cl);
+			abilityInfo = new ArmorAbilityInfoTab(cl, getOwnerHero());
 			add(abilityInfo);
 			abilityInfo.setSize(WIDTH, MIN_HEIGHT);
 			finalHeight = (int)Math.max(finalHeight, abilityInfo.height());
@@ -235,7 +236,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock message;
 		private TalentsPane talentPane;
 
-		public TalentInfoTab( HeroClass cls ){
+		public TalentInfoTab(HeroClass cls, Hero hero){
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "talents")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -248,7 +249,7 @@ public class WndHeroInfo extends WndTabbed {
 			Talent.initClassTalents(cls, talents);
 			talents.get(2).clear(); //we show T3 talents with subclasses
 
-			talentPane = new TalentsPane(TalentButton.Mode.INFO, talents);
+			talentPane = new TalentsPane(TalentButton.Mode.INFO, talents, hero);
 			add(talentPane);
 		}
 
@@ -273,7 +274,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock[] subClsDescs;
 		private IconButton[] subClsInfos;
 
-		public SubclassInfoTab( HeroClass cls ){
+		public SubclassInfoTab( HeroClass cls, Hero hero ){
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "subclasses")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -293,7 +294,7 @@ public class WndHeroInfo extends WndTabbed {
 				subClsInfos[i] = new IconButton( Icons.get(Icons.INFO) ){
 					@Override
 					protected void onClick() {
-						Game.scene().addToFront(new WndInfoSubclass(cls, subClasses[finalI]));
+						Game.scene().addToFront(new WndInfoSubclass(cls, subClasses[finalI], hero));
 					}
 				};
 				add(subClsDescs[i]);
@@ -333,7 +334,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock[] abilityDescs;
 		private IconButton[] abilityInfos;
 
-		public ArmorAbilityInfoTab(HeroClass cls){
+		public ArmorAbilityInfoTab(HeroClass cls, Hero hero){
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "abilities")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -353,7 +354,7 @@ public class WndHeroInfo extends WndTabbed {
 				abilityInfos[i] = new IconButton( Icons.get(Icons.INFO) ){
 					@Override
 					protected void onClick() {
-						Game.scene().addToFront(new WndInfoArmorAbility(cls, abilities[finalI]));
+						Game.scene().addToFront(new WndInfoArmorAbility(cls, abilities[finalI], hero));
 					}
 				};
 				add(abilityDescs[i]);

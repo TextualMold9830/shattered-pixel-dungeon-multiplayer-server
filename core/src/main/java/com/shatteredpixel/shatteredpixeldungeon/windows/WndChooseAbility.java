@@ -44,7 +44,7 @@ public class WndChooseAbility extends Window {
 
 	public WndChooseAbility(final KingsCrown crown, final Armor armor, final Hero hero){
 
-		super();
+		super(hero);
 
 		//crown can be null if hero is choosing from armor
 		IconTitle titlebar = new IconTitle();
@@ -98,7 +98,7 @@ public class WndChooseAbility extends Window {
 			IconButton abilityInfo = new IconButton(Icons.get(Icons.INFO)){
 				@Override
 				protected void onClick() {
-					GameScene.show(new WndInfoArmorAbility(getOwnerHero().heroClass, ability));
+					GameScene.show(new WndInfoArmorAbility(getOwnerHero().heroClass, ability, getOwnerHero()));
 				}
 			};
 			abilityInfo.setRect(WIDTH-20, abilityButton.top() + (abilityButton.height()-20)/2, 20, 20);

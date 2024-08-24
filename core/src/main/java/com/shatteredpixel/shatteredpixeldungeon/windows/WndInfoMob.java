@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -32,9 +33,9 @@ import com.watabou.noosa.ui.Component;
 
 public class WndInfoMob extends WndTitledMessage {
 	
-	public WndInfoMob( Mob mob ) {
+	public WndInfoMob(Mob mob, Hero hero) {
 
-		super( new MobTitle( mob ), mob.info() );
+		super( new MobTitle( mob ), mob.info() , hero);
 		
 	}
 	

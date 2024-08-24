@@ -21,13 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 
 public class WndError extends WndTitledMessage {
 
-	public WndError( String message ) {
-		super( Icons.WARNING.get(), Messages.get(WndError.class, "title"), message );
+	public WndError(String message, Hero hero) {
+		super( Icons.WARNING.get(), Messages.get(WndError.class, "title"), message, hero );
 	}
 
 }
