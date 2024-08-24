@@ -57,6 +57,11 @@ public class MirrorImage extends NPC {
 	}
 	
 	private Hero hero;
+
+	public Hero getHero() {
+		return hero;
+	}
+
 	private int heroID;
 	public int armTier;
 	
