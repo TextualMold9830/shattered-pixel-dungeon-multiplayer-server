@@ -57,7 +57,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -413,8 +413,11 @@ public class PrisonBossLevel extends Level {
 				//moves intelligent allies with the hero, preferring closer pos to cell door
 				int doorPos = pointToCell(tenguCellDoor);
 				Mob.holdAllies(this, doorPos);
-				Mob.restoreAllies(this, Dungeon.heroes.pos, doorPos);
-				
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null) {
+						Mob.restoreAllies(this, hero.pos, doorPos);
+					}
+				}
 				tengu.state = tengu.HUNTING;
 				tengu.pos = tenguPos;
 				GameScene.add( tengu );
@@ -452,8 +455,7 @@ public class PrisonBossLevel extends Level {
 
 			case FIGHT_PAUSE:
 				
-				Dungeon.heroes.interrupt();
-				
+
 				clearEntities( pauseSafeArea );
 				
 				setMapArena();
@@ -461,6 +463,7 @@ public class PrisonBossLevel extends Level {
 				
 				tengu.state = tengu.HUNTING;
 				tengu.pos = (arena.left + arena.width()/2) + width()*(arena.top+2);
+				Dungeon.interrupt(tengu.pos);
 				GameScene.add(tengu);
 				tengu.timeToNow();
 				tengu.notice();
@@ -475,12 +478,15 @@ public class PrisonBossLevel extends Level {
 				
 				unseal();
 				
-				Dungeon.heroes.interrupt();
-				Dungeon.heroes.pos = tenguCell.left+4 + (tenguCell.top+2)*width();
-				Dungeon.heroes.sprite.interruptMotion();
-				Dungeon.heroes.sprite.place(Dungeon.heroes.pos);
-				Camera.main.snapTo(Dungeon.heroes.sprite.center());
-				
+				Dungeon.interrupt(tengu.pos);
+				for (Hero hero: Dungeon.heroes) {
+					if (hero != null) {
+					hero.pos = tenguCell.left + 4 + (tenguCell.top + 2) * width();
+					hero.sprite.interruptMotion();
+					hero.sprite.place(hero.pos);
+					Camera.main.snapTo(hero.sprite.center());
+				}
+				}
 				tengu.pos = pointToCell(tenguCellCenter);
 				tengu.sprite.place(tengu.pos);
 				
