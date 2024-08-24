@@ -183,13 +183,13 @@ public class RingOfForce extends Ring {
 					hero.buff(BrawlersStance.class).active = false;
 				}
 				BuffIndicator.refreshHero();
-				AttackIndicator.updateState();
+				hero.attackIndicator.updateState();
 			} else if (!isEquipped(hero)) {
 				GLog.w(Messages.get(MeleeWeapon.class, "ability_need_equip"));
 
 			} else {
 				Buff.affect(hero, BrawlersStance.class).reset();
-				AttackIndicator.updateState();
+				hero.attackIndicator.updateState();
 			}
 		} else {
 			super.execute(hero, action);
@@ -229,7 +229,7 @@ public class RingOfForce extends Ring {
 			//clear the buff if no ring of force is equipped
 			if (hero.buff(RingOfForce.Force.class) == null){
 				stance.active = false;
-				AttackIndicator.updateState();
+				hero.attackIndicator.updateState();
 				return false;
 			} else {
 				return true;

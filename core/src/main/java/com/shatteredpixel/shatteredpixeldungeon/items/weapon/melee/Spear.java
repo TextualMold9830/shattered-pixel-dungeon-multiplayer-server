@@ -100,7 +100,7 @@ public class Spear extends MeleeWeapon {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 				int oldPos = enemy.pos;
 				//do not push if enemy has moved, or another push is active (e.g. elastic)
 				if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)) {

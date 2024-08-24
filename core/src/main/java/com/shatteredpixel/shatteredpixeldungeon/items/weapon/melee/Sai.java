@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 
@@ -100,7 +100,7 @@ public class Sai extends MeleeWeapon {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 
 				int recentHits = 0;
 				ComboStrikeTracker buff = hero.buff(ComboStrikeTracker.class);
@@ -137,16 +137,20 @@ public class Sai extends MeleeWeapon {
 		//FIXME
 		@Override
 		public int icon() {
-			if (Dungeon.heroes.belongings.weapon() instanceof Gloves
-					|| Dungeon.heroes.belongings.weapon() instanceof Sai
-					|| Dungeon.heroes.belongings.weapon() instanceof Gauntlet
-					|| Dungeon.heroes.belongings.secondWep() instanceof Gloves
-					|| Dungeon.heroes.belongings.secondWep() instanceof Sai
-					|| Dungeon.heroes.belongings.secondWep() instanceof Gauntlet) {
-				return BuffIndicator.DUEL_COMBO;
-			} else {
-				return BuffIndicator.NONE;
+			if (target instanceof Hero) {
+				Hero hero = (Hero) target;
+				if (hero.belongings.weapon() instanceof Gloves
+						|| hero.belongings.weapon() instanceof Sai
+						|| hero.belongings.weapon() instanceof Gauntlet
+						|| hero.belongings.secondWep() instanceof Gloves
+						|| hero.belongings.secondWep() instanceof Sai
+						|| hero.belongings.secondWep() instanceof Gauntlet) {
+					return BuffIndicator.DUEL_COMBO;
+				}
+
 			}
+			return BuffIndicator.NONE;
+
 		}
 
 		@Override

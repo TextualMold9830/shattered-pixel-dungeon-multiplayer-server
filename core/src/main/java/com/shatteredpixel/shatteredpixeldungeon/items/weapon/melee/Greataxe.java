@@ -89,7 +89,7 @@ public class Greataxe extends MeleeWeapon {
 			@Override
 			public void call() {
 				beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 
 				//+(12+(2*lvl)) damage, roughly +50% base damage, +55% scaling
 				int dmgBoost = augment.damageFactor(12 + 2*buffedLvl());

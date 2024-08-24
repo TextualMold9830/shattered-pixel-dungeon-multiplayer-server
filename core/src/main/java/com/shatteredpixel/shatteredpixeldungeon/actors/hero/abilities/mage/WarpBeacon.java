@@ -45,7 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
@@ -121,12 +121,12 @@ public class WarpBeacon extends ArmorAbility {
 								if (hero.hasTalent(Talent.TELEFRAG)){
 									int heroHP = hero.HP + hero.shielding();
 									int heroDmg = 5 * hero.pointsInTalent(Talent.TELEFRAG);
-									hero.damage(Math.min(heroDmg, heroHP-1), WarpBeacon.this);
+									hero.damage(Math.min(heroDmg, heroHP-1), new Char.DamageCause( WarpBeacon.this, hero));
 
 									int damage = Char.combatRoll(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
 									existing.sprite.flash();
 									existing.sprite.bloodBurstA(existing.sprite.center(), damage);
-									existing.damage(damage, WarpBeacon.this);
+									existing.damage(damage, new Char.DamageCause( WarpBeacon.this, hero));
 
 									Sample.INSTANCE.play(Assets.Sounds.HIT_CRUSH);
 									Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
@@ -166,7 +166,7 @@ public class WarpBeacon extends ArmorAbility {
 							Dungeon.observe();
 							GameScene.updateFog();
 							hero.checkVisibleMobs();
-							AttackIndicator.updateState();
+							hero.attackIndicator.updateState();
 
 						} else {
 
@@ -182,7 +182,7 @@ public class WarpBeacon extends ArmorAbility {
 							InterLevelSceneServer.returnDepth = tracker.depth;
 							InterLevelSceneServer.returnBranch = tracker.branch;
 							InterLevelSceneServer.returnPos = tracker.pos;
-							Game.switchScene( InterLevelSceneServer.class );
+							//Game.switchScene( InterLevelSceneServer.class );
 						}
 
 					} else if (index == 1){

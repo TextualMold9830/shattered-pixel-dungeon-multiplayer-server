@@ -107,7 +107,7 @@ public class Mace extends MeleeWeapon {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 				if (hero.attack(enemy, finalDmgMulti, finalDmgBoost, Char.INFINITE_ACCURACY)) {
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					if (enemy.isAlive()){
