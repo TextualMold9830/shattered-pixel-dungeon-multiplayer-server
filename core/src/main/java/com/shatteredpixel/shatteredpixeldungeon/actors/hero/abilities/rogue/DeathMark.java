@@ -45,7 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 
@@ -93,13 +93,7 @@ public class DeathMark extends ArmorAbility {
 
 		DeathMarkTracker deathMarkTracker = new DeathMarkTracker(hero);
 		deathMarkTracker.attachTo(ch);
-        try {
-			Method spend = ClassReflection.getMethod(deathMarkTracker.getClass(), "spend", float.class);
-			spend.setAccessible(true);
-			spend.invoke(deathMarkTracker.DURATION * ch.resist(DeathMarkTracker.class) );
-        } catch (ReflectionException e) {
-            throw new RuntimeException(e);
-        }
+		deathMarkTracker.spend(deathMarkTracker.DURATION * ch.resist(DeathMarkTracker.class));
 		Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();

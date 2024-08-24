@@ -47,7 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -170,8 +170,7 @@ public class Challenge extends ArmorAbility {
 				Buff.affect(toFreeze, SpectatorFreeze.class, DuelParticipant.DURATION);
 			}
 		}
-
-		Buff.affect(targetCh, DuelParticipant.class);
+		new DuelParticipant(hero).attachTo(targetCh);
 		Buff.affect(hero, DuelParticipant.class);
 		if (targetCh instanceof Mob){
 			((Mob) targetCh).aggro(hero);
@@ -200,6 +199,18 @@ public class Challenge extends ArmorAbility {
 	public static class EliminationMatchTracker extends FlavourBuff{};
 
 	public static class DuelParticipant extends Buff {
+		private Hero cause;
+
+		public DuelParticipant(Hero cause) {
+			this.cause = cause;
+		}
+
+		public Hero getCause() {
+			return cause;
+		}
+
+		public DuelParticipant() {
+		}
 
 		public static float DURATION = 10f;
 
@@ -254,11 +265,11 @@ public class Challenge extends ArmorAbility {
 		public void detach() {
 			super.detach();
 			if (!(target instanceof Hero)){
-				if (!target.isAlive() || target.alignment == Dungeon.heroes.alignment){
+				if (!target.isAlive() || target.alignment == getCause().alignment){
 					Sample.INSTANCE.play(Assets.Sounds.BOSS);
 
-					if (Dungeon.heroes.hasTalent(Talent.INVIGORATING_VICTORY)){
-						DuelParticipant heroBuff = Dungeon.heroes.buff(DuelParticipant.class);
+					if (getCause().hasTalent(Talent.INVIGORATING_VICTORY)){
+						DuelParticipant heroBuff = getCause().buff(DuelParticipant.class);
 
 						int hpToHeal = 0;
 						if (heroBuff != null){
@@ -266,22 +277,22 @@ public class Challenge extends ArmorAbility {
 						}
 
 						//heals for 30%/50%/65%/75% of taken damage plus 5/10/15/20 bonus, based on talent points
-						hpToHeal = (int)Math.round(hpToHeal * (1f - Math.pow(0.707f, Dungeon.heroes.pointsInTalent(Talent.INVIGORATING_VICTORY))));
-						hpToHeal += 5*Dungeon.heroes.pointsInTalent(Talent.INVIGORATING_VICTORY);
-						hpToHeal = Math.min(hpToHeal, Dungeon.heroes.HT - Dungeon.heroes.HP);
+						hpToHeal = (int)Math.round(hpToHeal * (1f - Math.pow(0.707f, getCause().pointsInTalent(Talent.INVIGORATING_VICTORY))));
+						hpToHeal += 5*getCause().pointsInTalent(Talent.INVIGORATING_VICTORY);
+						hpToHeal = Math.min(hpToHeal, getCause().HT - getCause().HP);
 						if (hpToHeal > 0){
-							Dungeon.heroes.HP += hpToHeal;
-							Dungeon.heroes.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
-							Dungeon.heroes.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
+							getCause().HP += hpToHeal;
+							getCause().sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
+							getCause().sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
 						}
 					}
 				}
 
 			} else {
-				if (Dungeon.heroes.isAlive()) {
+				if (target.isAlive()) {
 					GameScene.flash(0x80FFFFFF);
 
-					if (Dungeon.heroes.hasTalent(Talent.ELIMINATION_MATCH)){
+					if (((Hero) target).hasTalent(Talent.ELIMINATION_MATCH)){
 						Buff.affect(target, EliminationMatchTracker.class, 3);
 					}
 				}

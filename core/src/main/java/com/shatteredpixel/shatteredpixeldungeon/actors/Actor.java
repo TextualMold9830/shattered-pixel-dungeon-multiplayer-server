@@ -68,7 +68,7 @@ public abstract class Actor implements Bundlable {
 	}
 
 	//sends time, but the amount can be influenced
-	protected void spend( float time ) {
+    public void spend(float time) {
 		spendConstant( time );
 	}
 
