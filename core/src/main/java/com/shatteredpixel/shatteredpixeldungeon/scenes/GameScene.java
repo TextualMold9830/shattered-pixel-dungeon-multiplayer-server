@@ -298,7 +298,7 @@ public class GameScene extends PixelScene {
 			if (notSprite != null) {
 				hero = new HeroSprite(notSprite);
 				hero.place(notSprite.pos);
-				hero.updateArmor(notSprite);
+				hero.updateArmor();
 				mobs.add(hero);
 			}
 		}
