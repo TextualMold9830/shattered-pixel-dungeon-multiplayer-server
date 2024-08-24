@@ -49,7 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
@@ -68,7 +68,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendAllBadgeBossSlain;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
 public class Item implements Bundlable {
@@ -403,7 +402,10 @@ public class Item implements Bundlable {
 	public int level(){
 		return level;
 	}
-	
+	public int level(Hero hero){
+		return level();
+	}
+
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
 	public int buffedLvl(Char owner) {
@@ -663,7 +665,10 @@ public class Item implements Bundlable {
 	public void throwSound(){
 		Sample.INSTANCE.play(Assets.Sounds.MISS, 0.6f, 0.6f, 1.5f);
 	}
-	
+	public void throwSound(Hero hero){
+		Sample.INSTANCE.play(Assets.Sounds.MISS, 0.6f, 0.6f, 1.5f);
+	}
+
 	public void cast( final Hero user, final int dst ) {
 		
 		final int cell = throwPos( user, dst );
