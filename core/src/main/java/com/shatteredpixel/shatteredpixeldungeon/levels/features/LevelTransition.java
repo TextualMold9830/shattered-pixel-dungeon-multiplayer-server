@@ -40,8 +40,8 @@ public class LevelTransition extends Rect implements Bundlable {
 	}
 
 	public Type type;
-	public int destDepth;
-	public int destBranch;
+	public int destDepth = 0;
+	public int destBranch = 0;
 	public Type destType;
 
 	public int centerCell;

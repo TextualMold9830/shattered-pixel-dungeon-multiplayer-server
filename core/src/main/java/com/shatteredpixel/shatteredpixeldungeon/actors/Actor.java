@@ -191,7 +191,9 @@ public abstract class Actor implements Bundlable {
 	
 	public static void init() {
 		for (Hero hero: Dungeon.heroes) {
-			add(hero);
+			if (hero != null) {
+				add(hero);
+			}
 		}
 		
 		for (Mob mob : Dungeon.level.mobs) {
