@@ -186,7 +186,6 @@ public class GameScene extends PixelScene {
 
 	private static boolean invVisible = true;
 
-	private Toolbar toolbar;
 	private Toast prompt;
 	private ActionIndicator action;
 	private ResumeIndicator resume;
@@ -390,14 +389,6 @@ public class GameScene extends PixelScene {
 
 		if (uiSize > 0) {
 			bringToFront(status);
-		}
-
-		toolbar = new Toolbar();
-		toolbar.camera = uiCamera;
-		add(toolbar);
-
-		{
-			toolbar.setRect(0, uiCamera.height - toolbar.height(), uiCamera.width, toolbar.height());
 		}
 
 		layoutTags();
@@ -610,7 +601,6 @@ public class GameScene extends PixelScene {
 				} else {
 					GLog.p(Messages.get(GameScene.class, "tutorial_move_desktop"));
 				}
-				toolbar.visible = toolbar.active = false;
 				status.visible = status.active = false;
 			}
 
@@ -839,7 +829,7 @@ public class GameScene extends PixelScene {
 		float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
 		float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
 
-		float y = SPDSettings.interfaceSize() == 0 ? scene.toolbar.top()-2 : scene.status.top()-2;
+		float y = scene.status.top()-2;
 		if (SPDSettings.interfaceSize() == 0){
 			if (tagsOnLeft) {
 				scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);
@@ -854,7 +844,7 @@ public class GameScene extends PixelScene {
 			}
 		}
 
-		float pos = scene.toolbar.top();
+		float pos = 0;
 		if (tagsOnLeft && SPDSettings.interfaceSize() > 0){
 			pos = scene.status.top();
 		}
@@ -1095,7 +1085,6 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void pickUp( Item item, int pos ) {
-		if (scene != null) scene.toolbar.pickup( item, pos );
 	}
 
 	public static void pickUpJournal( Item item, int pos ) {
@@ -1117,12 +1106,9 @@ public class GameScene extends PixelScene {
 					if (progress <= 0.5f) {
 						scene.status.alpha(2*progress);
 						scene.status.visible = scene.status.active = true;
-						scene.toolbar.visible = scene.toolbar.active = false;
 					} else {
 						scene.status.alpha(1f);
 						scene.status.visible = scene.status.active = true;
-						scene.toolbar.alpha((progress - 0.5f)*2);
-						scene.toolbar.visible = scene.toolbar.active = true;
 					}
 				}
 			});
@@ -1360,7 +1346,6 @@ public class GameScene extends PixelScene {
 	public static void ready() {
 		selectCell( defaultCellListener );
 		QuickSlotButton.cancel();
-		if (scene != null && scene.toolbar != null) scene.toolbar.examining = false;
 		if (tagDisappeared) {
 			tagDisappeared = false;
 			updateTags = true;
