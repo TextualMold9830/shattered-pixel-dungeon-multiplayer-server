@@ -1088,7 +1088,9 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void pickUpJournal( Item item, int pos ) {
-		if (scene != null) scene.menu.pickup( item, pos );
+		if (scene != null){
+			//todo send this
+		}
 	}
 
 	public static void flashForDocument( Document doc, String page ){

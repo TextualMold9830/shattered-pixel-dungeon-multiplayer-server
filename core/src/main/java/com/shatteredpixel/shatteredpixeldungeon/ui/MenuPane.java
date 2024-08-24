@@ -58,8 +58,6 @@ public class MenuPane extends Component {
 	private JournalButton btnJournal;
 	private MenuButton btnMenu;
 
-	private Toolbar.PickedUpItem pickedUp;
-
 	private BitmapText version;
 
 	private DangerIndicator danger;
@@ -140,8 +138,6 @@ public class MenuPane extends Component {
 
 		danger = new DangerIndicator();
 		add( danger );
-
-		add( pickedUp = new Toolbar.PickedUpItem());
 	}
 
 	@Override
@@ -188,13 +184,6 @@ public class MenuPane extends Component {
 		PixelScene.align(version);
 
 		danger.setPos( x + WIDTH - danger.width(), y + bg.height + 3 );
-	}
-
-	public void pickup(Item item, int cell) {
-		pickedUp.reset( item,
-				cell,
-				btnJournal.centerX(),
-				btnJournal.centerY());
 	}
 
 	public void flashForPage( Document doc, String page ){
