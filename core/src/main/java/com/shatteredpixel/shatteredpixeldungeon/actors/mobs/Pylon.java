@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.PylonSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -201,15 +201,18 @@ public class Pylon extends Mob {
 	@Override
 	public void damage(int dmg, @NotNull DamageCause source) {
 		Object src = source.getCause();
-		if (dmg >= 15){
+		if (dmg >= 15) {
 			//takes 15/16/17/18/19/20 dmg at 15/17/20/24/29/36 incoming dmg
-			dmg = 14 + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
+			dmg = 14 + (int) (Math.sqrt(8 * (dmg - 14) + 1) - 1) / 2;
 		}
+		if (source.getDamageOwner() instanceof Hero){
+			Hero hero = (Hero) source.getDamageOwner();
+			LockedFloor lock = hero.buff(LockedFloor.class);
+			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmg / 2f);
+				else lock.addTime(dmg);
 
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/2f);
-			else                                                    lock.addTime(dmg);
+	}
 		}
 		super.damage(dmg, source);
 	}

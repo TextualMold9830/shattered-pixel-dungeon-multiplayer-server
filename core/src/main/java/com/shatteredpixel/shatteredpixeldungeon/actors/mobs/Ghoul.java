@@ -310,7 +310,7 @@ public class Ghoul extends Mob {
 
 		public void updateVisibility(){
 			if (ghoul != null && ghoul.sprite != null){
-				ghoul.sprite.visible = Dungeon.level.fieldOfView[ghoul.pos];
+				ghoul.sprite.visible = Dungeon.visibleforAnyHero(ghoul.pos);
 			}
 		}
 
