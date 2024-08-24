@@ -48,7 +48,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.LloydsBeacon;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -64,7 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -478,11 +477,14 @@ public class DwarfKing extends Mob {
 		}
 		int preHP = HP;
 		super.damage(dmg, source);
-
-		LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/5f);
-			else                                                    lock.addTime(dmg/3f);
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+			LockedFloor lock = hero.buff(LockedFloor.class);
+			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmg / 5f);
+				else lock.addTime(dmg / 3f);
+			}
+		}
 		}
 
 		if (phase == 1) {
@@ -520,7 +522,9 @@ public class DwarfKing extends Mob {
 			summonsMade = 1; //monk/warlock on 3rd summon
 			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
-			yell(  Messages.get(this, "enraged", Dungeon.heroes.name()) );
+			for (Hero hero: Dungeon.heroes) {
+				yell(Messages.get(this, "enraged", hero.name()), hero);
+			}
 			BossHealthBar.bleed(true);
 			Game.runOnRenderThread(new Callback() {
 				@Override
@@ -564,7 +568,11 @@ public class DwarfKing extends Mob {
 			Dungeon.level.drop(new KingsCrown(), pos).sprite.drop();
 		}
 
-		Badges.validateBossSlain();
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				Badges.validateBossSlain(hero);
+			}
+		}
 		if (Statistics.qualifiedForBossChallengeBadge){
 			Badges.validateBossChallengeCompleted();
 		}
@@ -575,11 +583,11 @@ public class DwarfKing extends Mob {
 		for (Mob m : getSubjects()){
 			m.die(new DamageCause(null));
 		}
-
-		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
-		if (beacon != null) {
-			beacon.upgrade();
-		}
+//		This code would never trigger
+//		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
+//		if (beacon != null) {
+//			beacon.upgrade();
+//		}
 
 		yell( Messages.get(this, "defeated") );
 	}
