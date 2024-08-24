@@ -41,7 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MimicSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -115,8 +115,8 @@ public class CrystalMimic extends Mimic {
 			Buff.affect(this, Haste.class, 1f);
 		}
 		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
-			enemy = Dungeon.heroes;
-			target = Dungeon.heroes.pos;
+			enemy = chooseEnemy();
+			target = enemy.pos;
 			GLog.w(Messages.get(this, "reveal") );
 			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 1.25f);
@@ -185,7 +185,16 @@ public class CrystalMimic extends Mimic {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void escaped() {
-			if (!Dungeon.visibleforAnyHero(pos) && Dungeon.level.distance(Dungeon.heroes.pos, pos) >= 6) {
+			int closestDistance = Integer.MAX_VALUE;
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					int distance = Dungeon.level.distance(pos, hero.pos);
+					if (distance < closestDistance) {
+						closestDistance = distance;
+					}
+				}
+			}
+			if (!Dungeon.visibleforAnyHero(pos) && closestDistance >= 6) {
 				GLog.n(Messages.get(CrystalMimic.class, "escaped"));
 				destroy();
 				sprite.killAndErase();
