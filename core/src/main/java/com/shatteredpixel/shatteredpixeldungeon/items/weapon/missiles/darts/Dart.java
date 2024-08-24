@@ -39,7 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -143,7 +143,7 @@ public class Dart extends MissileWeapon {
 
 		int dmg = super.proc(attacker, defender, damage);
 		if (!processingChargedShot) {
-			processChargedShot(defender, damage);
+			processChargedShot(defender, damage, (Hero) attacker);
 		}
 		return dmg;
 	}
@@ -164,10 +164,10 @@ public class Dart extends MissileWeapon {
 
 	protected boolean processingChargedShot = false;
 	private int chargedShotPos;
-	protected void processChargedShot( Char target, int dmg ){
+	protected void processChargedShot( Char target, int dmg, Hero hero ){
 		//don't update xbow here, as dart may be the active weapon atm
 		processingChargedShot = true;
-		if (chargedShotPos != -1 && bow != null && Dungeon.heroes.buff(Crossbow.ChargedShot.class) != null) {
+		if (chargedShotPos != -1 && bow != null && hero.buff(Crossbow.ChargedShot.class) != null) {
 			PathFinder.buildDistanceMap(chargedShotPos, Dungeon.level.passable, 3);
 			//necessary to clone as some on-hit effects use Pathfinder
 			int[] distance = PathFinder.distance.clone();
@@ -178,14 +178,14 @@ public class Dart extends MissileWeapon {
 						@Override
 						protected boolean act() {
 							if (!ch.isAlive()){
-								bow.onAbilityKill(Dungeon.heroes, ch);
+								bow.onAbilityKill(hero, ch);
 							}
 							Actor.remove(this);
 							return true;
 						}
 					});
 				} else if (distance[ch.pos] != Integer.MAX_VALUE){
-					proc(Dungeon.heroes, ch, dmg);
+					proc(hero, ch, dmg);
 				}
 			}
 		}
@@ -202,8 +202,8 @@ public class Dart extends MissileWeapon {
 	}
 
 	@Override
-	public void throwSound() {
-		updateCrossbow();
+	public void throwSound(Hero hero) {
+		updateCrossbow(hero);
 		if (bow != null) {
 			Sample.INSTANCE.play(Assets.Sounds.ATK_CROSSBOW, 1, Random.Float(0.87f, 1.15f));
 		} else {
