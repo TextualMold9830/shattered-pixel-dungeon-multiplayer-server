@@ -90,7 +90,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Dictionary;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -1359,9 +1361,15 @@ public abstract class Mob extends Char {
 	}
 	
 	
-	private static ArrayList<Mob> heldAllies = new ArrayList<>();
+	private static final Dictionary<Integer,ArrayList<Mob>> heldAllies = new Hashtable<>();
 
-	public static void holdAllies( Level level ) {
+	public static void holdAlliesForAllHeroes( Level level ) {
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			holdAllies(level, hero);
+		}
+	}
+	public static void holdAllies( Level level, Hero hero ) {
 		//Will fix later
 		//TODO: check this
 		//holdAllies(level, Dungeon.heroes.pos);
@@ -1386,11 +1394,11 @@ public abstract class Mob extends Char {
 		}
 	}
 
-	public static void restoreAllies( Level level, int pos ){
-		restoreAllies(level, pos, -1);
+	public static void restoreAllies( Level level, int pos, Hero hero ){
+		restoreAllies(level, pos, -1, hero);
 	}
 
-	public static void restoreAllies( Level level, int pos, int gravitatePos ){
+	public static void restoreAllies( Level level, int pos, int gravitatePos, Hero hero ){
 		if (!heldAllies.isEmpty()){
 			
 			ArrayList<Integer> candidatePositions = new ArrayList<>();
@@ -1413,7 +1421,7 @@ public abstract class Mob extends Char {
 				});
 			}
 			
-			for (Mob ally : heldAllies) {
+			for (Mob ally : heldAllies.get(hero)) {
 				level.mobs.add(ally);
 				ally.state = ally.WANDERING;
 				

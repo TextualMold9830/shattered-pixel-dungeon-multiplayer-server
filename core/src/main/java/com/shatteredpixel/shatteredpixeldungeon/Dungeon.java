@@ -75,7 +75,6 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
@@ -494,12 +493,12 @@ public class Dungeon {
 			if (pos != -3) {
 				hero.pos = pos;
 			}
+			Mob.restoreAllies( level, hero.pos, hero );
 
 			if (hero.buff(AscensionChallenge.class) != null) {
 				hero.buff(AscensionChallenge.class).onLevelSwitch();
 			}
 		}
-		Mob.restoreAllies( level, pos );
 
 		Actor.init();
 

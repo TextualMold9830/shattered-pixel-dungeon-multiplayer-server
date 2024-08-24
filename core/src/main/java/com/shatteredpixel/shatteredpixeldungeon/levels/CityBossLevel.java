@@ -302,7 +302,7 @@ public class CityBossLevel extends Level {
 		Mob.holdAllies(this, doorPos);
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
-			Mob.restoreAllies(this, hero.pos, doorPos);
+			Mob.restoreAllies(this, hero.pos, doorPos, hero);
 			}
 		}
 		DwarfKing boss = new DwarfKing();

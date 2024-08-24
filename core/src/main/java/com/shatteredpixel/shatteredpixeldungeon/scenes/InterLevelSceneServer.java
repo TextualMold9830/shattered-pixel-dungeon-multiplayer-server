@@ -274,7 +274,7 @@ public class InterLevelSceneServer {
 			Level level = Dungeon.newLevel();
 			Dungeon.switchLevel( level, -1 );
 		} else {
-			Mob.holdAllies( Dungeon.level );
+			Mob.holdAlliesForAllHeroes( Dungeon.level );
 			Dungeon.saveAll();
 
 			Level level;
@@ -297,7 +297,7 @@ public class InterLevelSceneServer {
 	//TODO atm falling always just increments depth by 1, do we eventually want to roll it into the transition system?
 	private void fall() throws IOException {
 		
-		Mob.holdAllies( Dungeon.level );
+		Mob.holdAlliesForAllHeroes( Dungeon.level );
 		for (Hero hero: Dungeon.heroes) {
 			if (hero != null) {
 				Buff.affect(hero, Chasm.Falling.class);
@@ -316,7 +316,7 @@ public class InterLevelSceneServer {
 	}
 
 	private void ascend() throws IOException {
-		Mob.holdAllies( Dungeon.level );
+		Mob.holdAlliesForAllHeroes( Dungeon.level );
 		Dungeon.saveAll();
 
 		Level level;
@@ -335,7 +335,7 @@ public class InterLevelSceneServer {
 	}
 	
 	private void returnTo() throws IOException {
-		Mob.holdAllies( Dungeon.level );
+		Mob.holdAlliesForAllHeroes( Dungeon.level );
 		Dungeon.saveAll();
 
 		Level level;
@@ -368,7 +368,7 @@ public class InterLevelSceneServer {
 	
 	private void resurrect(Hero hero) {
 		
-		Mob.holdAllies( Dungeon.level );
+		Mob.holdAlliesForAllHeroes( Dungeon.level );
 
 		Level level;
 		if (Dungeon.level.locked) {
@@ -417,7 +417,7 @@ public class InterLevelSceneServer {
 
 	private void reset() throws IOException {
 		
-		Mob.holdAllies( Dungeon.level );
+		Mob.holdAlliesForAllHeroes( Dungeon.level );
 
 		SpecialRoom.resetPitRoom(Dungeon.depth+1);
 

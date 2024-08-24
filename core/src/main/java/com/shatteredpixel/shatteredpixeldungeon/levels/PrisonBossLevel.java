@@ -415,7 +415,7 @@ public class PrisonBossLevel extends Level {
 				Mob.holdAllies(this, doorPos);
 				for (Hero hero: Dungeon.heroes) {
 					if (hero != null) {
-						Mob.restoreAllies(this, hero.pos, doorPos);
+						Mob.restoreAllies(this, hero.pos, doorPos, hero);
 					}
 				}
 				tengu.state = tengu.HUNTING;
