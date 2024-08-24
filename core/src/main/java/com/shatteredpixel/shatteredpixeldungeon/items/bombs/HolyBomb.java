@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
 
@@ -44,13 +44,13 @@ public class HolyBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
-		super.explode(cell);
+	public void explode(int cell, Hero hero) {
+		super.explode(cell, hero);
 
-		for (Hero hero: Dungeon.heroes) {
-			if (hero == null) continue;
-			if (hero.fieldOfView[cell]) {
-				new Flare(10, 64).show(hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
+		for (Hero h: Dungeon.heroes) {
+			if (h == null) continue;
+			if (h.fieldOfView[cell]) {
+				new Flare(10, 64).show(h.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
 			}
 		}
 		ArrayList<Char> affected = new ArrayList<>();

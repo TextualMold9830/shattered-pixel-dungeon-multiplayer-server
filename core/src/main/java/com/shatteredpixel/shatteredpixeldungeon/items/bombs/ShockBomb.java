@@ -28,13 +28,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
 
@@ -47,8 +48,8 @@ public class ShockBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
-		super.explode(cell);
+	public void explode(int cell, Hero hero) {
+		super.explode(cell, hero);
 
 		ArrayList<Char> affected = new ArrayList<>();
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 3 );
@@ -84,7 +85,7 @@ public class ShockBomb extends Bomb {
 		}
 
 		CellEmitter.center(cell).burst(SparkParticle.FACTORY, 20);
-		Dungeon.heroes.sprite.parent.addToFront(new Lightning(arcs, null));
+		hero.sprite.parent.addToFront(new Lightning(arcs, null));
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 	}
 	

@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -53,22 +54,21 @@ public class RegrowthBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
-		super.explode(cell);
+	public void explode(int cell, Hero hero) {
+		super.explode(cell, hero);
 		
 		if (Dungeon.visibleforAnyHero(cell)) {
 			Splash.at(cell, 0x00FF00, 30);
 		}
 		
 		ArrayList<Integer> plantCandidates = new ArrayList<>();
-		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				Char ch = Actor.findChar(i);
 				int t = Dungeon.level.map[i];
 				if (ch != null){
-					if (ch.alignment == Dungeon.heroes.alignment) {
+					if (ch.alignment == hero.alignment) {
 						//same as a healing potion
 						PotionOfHealing.cure(ch);
 						PotionOfHealing.heal(ch);

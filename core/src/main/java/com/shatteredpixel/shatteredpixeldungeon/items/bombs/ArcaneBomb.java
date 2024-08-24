@@ -62,15 +62,15 @@ public class ArcaneBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
-		super.explode(cell);
+	public void explode(int cell, Hero hero) {
+		super.explode(cell, hero);
 		
 		ArrayList<Char> affected = new ArrayList<>();
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				if (Dungeon.level.fieldOfView[i]) {
+				if (hero.fieldOfView[i]) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
 				Char ch = Actor.findChar(i);

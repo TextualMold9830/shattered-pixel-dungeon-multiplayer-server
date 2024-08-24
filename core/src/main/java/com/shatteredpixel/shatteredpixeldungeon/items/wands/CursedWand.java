@@ -77,7 +77,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -275,7 +275,7 @@ public class CursedWand {
 
 			//Bomb explosion
 			case 2:
-				new Bomb.ConjuredBomb().explode(targetPos);
+				new Bomb.ConjuredBomb().explode(targetPos, (Hero) user);
                 if (user instanceof Hero) {
                     tryForWandProc(Actor.findChar(targetPos), origin, (Hero) user);
                 }
@@ -357,7 +357,7 @@ public class CursedWand {
 					InterLevelSceneServer.returnDepth = depth;
 					InterLevelSceneServer.returnBranch = 0;
 					InterLevelSceneServer.returnPos = -1;
-					Game.switchScene(InterLevelSceneServer.class);
+					//Game.switchScene(InterLevelSceneServer.class);
 
 				} else {
 					ScrollOfTeleportation.teleportChar(user);

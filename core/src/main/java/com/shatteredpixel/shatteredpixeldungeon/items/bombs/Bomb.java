@@ -52,7 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -137,7 +137,7 @@ public class Bomb extends Item {
 		return super.doPickUp(hero, pos);
 	}
 
-	public void explode(int cell){
+	public void explode(int cell, Hero hero){
 		//We're blowing up, so no need for a fuse anymore.
 		this.fuse = null;
 
@@ -310,8 +310,12 @@ public class Bomb extends Item {
 		}
 
 		protected void trigger(Heap heap){
+			trigger(heap, null);
+
+		}
+		protected void trigger(Heap heap, Hero hero){
 			heap.remove(bomb);
-			bomb.explode(heap.pos);
+			bomb.explode(heap.pos, hero);
 			Actor.remove(this);
 		}
 
