@@ -58,13 +58,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Rankings {
-	
+
 	INSTANCE;
-	
+
 	public static final int TABLE_SIZE	= 11;
-	
+
 	public static final String RANKINGS_FILE = "rankings.dat";
-	
+
 	public ArrayList<Record> records;
 	public int lastRecord;
 	public int totalNumber;
@@ -78,10 +78,10 @@ public enum Rankings {
 	public Record latestDailyReplay = null; //not stored, only meant to be temp
 	public LinkedHashMap<Long, Integer> dailyScoreHistory = new LinkedHashMap<>();
 
-	public void submit( boolean win, Object cause ) {
+	public void submit( boolean win, Object cause, Hero hero ) {
 
 		load();
-		
+
 		Record rec = new Record();
 
 		//we trim version to just the numbers, ignoring alpha/beta, etc.
@@ -98,9 +98,9 @@ public enum Rankings {
 
 		rec.cause = cause instanceof Class ? (Class)cause : cause.getClass();
 		rec.win		= win;
-		rec.heroClass	= Dungeon.heroes.heroClass;
-		rec.armorTier	= Dungeon.heroes.tier();
-		rec.herolevel	= Dungeon.heroes.lvl;
+		rec.heroClass	= hero.heroClass;
+		rec.armorTier	= hero.tier();
+		rec.herolevel	= hero.lvl;
 		if (Statistics.highestAscent == 0){
 			rec.depth = Statistics.deepestFloor;
 			rec.ascending = false;
@@ -108,12 +108,12 @@ public enum Rankings {
 			rec.depth = Statistics.highestAscent;
 			rec.ascending = true;
 		}
-		rec.score       = calculateScore();
+		rec.score       = calculateScore(hero);
 		rec.customSeed  = Dungeon.customSeedText;
 		rec.daily       = Dungeon.daily;
 
 		Badges.validateHighScore( rec.score );
-		
+
 		INSTANCE.saveGameData(rec);
 
 		rec.gameID = UUID.randomUUID().toString();
@@ -135,9 +135,9 @@ public enum Rankings {
 		}
 
 		records.add( rec );
-		
+
 		Collections.sort( records, scoreComparator );
-		
+
 		lastRecord = records.indexOf( rec );
 		int size = records.size();
 		while (size > TABLE_SIZE) {
@@ -160,23 +160,23 @@ public enum Rankings {
 		}
 
 		Badges.validateGamesPlayed();
-		
+
 		save();
 	}
 
-	private int score( boolean win ) {
-		return (Statistics.goldCollected + Dungeon.heroes.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
+	private int score( boolean win, Hero hero ) {
+		return (Statistics.goldCollected + hero.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
 	}
 
 	//assumes a ranking is loaded, or game is ending
-	public int calculateScore(){
+	public int calculateScore(Hero hero){
 
 		if (Dungeon.initialVersion > ShatteredPixelDungeon.v1_2_3){
-			Statistics.progressScore = Dungeon.heroes.lvl * Statistics.deepestFloor * 65;
+			Statistics.progressScore = hero.lvl * Statistics.deepestFloor * 65;
 			Statistics.progressScore = Math.min(Statistics.progressScore, 50_000);
 
 			if (Statistics.heldItemValue == 0) {
-				for (Item i : Dungeon.heroes.belongings) {
+				for (Item i : hero.belongings) {
 					Statistics.heldItemValue += i.value();
 					if (i instanceof CorpseDust && Statistics.deepestFloor >= 10){
 						// in case player kept the corpse dust, for a necromancer run
@@ -211,7 +211,7 @@ public enum Rankings {
 		//only progress and treasure score, and they are each up to 50% bigger
 		//win multiplier is a simple 2x if run was a win, challenge multi is the same as 1.3.0
 		} else {
-			Statistics.progressScore = Dungeon.heroes.lvl * Statistics.deepestFloor * 100;
+			Statistics.progressScore = hero.lvl * Statistics.deepestFloor * 100;
 			Statistics.treasureScore = Math.min(Statistics.goldCollected, 30_000);
 
 			Statistics.exploreScore = Statistics.totalBossScore = Statistics.totalQuestScore = 0;
@@ -270,11 +270,16 @@ public enum Rankings {
 		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
-		for(Buff b : Dungeon.heroes.buffs()){
-			Dungeon.heroes.remove(b);
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				for (Buff b : hero.buffs()) {
+					hero.remove(b);
+				}
+			}
 		}
-
-		rec.gameData.put( HERO, Dungeon.heroes);
+		for (int i = 0; i < Dungeon.heroes.length; i++) {
+			rec.gameData.put( HERO+i, Dungeon.heroes[i]);
+		}
 
 		//save stats
 		Bundle stats = new Bundle();
@@ -298,7 +303,7 @@ public enum Rankings {
 
 		//restore items now that we're done saving
 		belongings.backpack.items = allItems;
-		
+
 		//save challenges
 		rec.gameData.put( CHALLENGES, Dungeon.challenges );
 
@@ -320,7 +325,6 @@ public enum Rankings {
 		Notes.reset();
 		Dungeon.quickslot.reset();
 		QuickSlotButton.reset();
-		Toolbar.swappedQuickslots = false;
 
 		if (data == null) return;
 
@@ -330,9 +334,13 @@ public enum Rankings {
 		Ring.restore(handler);
 
 		Badges.loadLocal(data.getBundle(BADGES));
-
-		Dungeon.heroes = (Hero)data.get(HERO);
-		Dungeon.heroes.belongings.identify();
+		for (int i = 0; i < Dungeon.heroes.length; i++) {
+			Hero hero = (Hero) data.get(HERO+i);
+			Dungeon.heroes[i] = hero;
+			if (hero != null) {
+				Dungeon.heroes[i].belongings.identify();
+			}
+		}
 
 		Statistics.restoreFromBundle(data.getBundle(STATS));
 		
@@ -343,7 +351,7 @@ public enum Rankings {
 		if (Dungeon.initialVersion <= ShatteredPixelDungeon.v1_2_3){
 			Statistics.gameWon = rec.win;
 		}
-		rec.score = calculateScore();
+		//rec.score = calculateScore();
 
 		if (rec.gameData.contains(SEED)){
 			Dungeon.seed = rec.gameData.getLong(SEED);
