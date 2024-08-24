@@ -39,8 +39,8 @@ public class Flashbang extends Bomb {
 	}
 
 	@Override
-	public void explode(int cell) {
-		super.explode(cell);
+	public void explode(int cell, Hero hero) {
+		super.explode(cell, hero);
 
 		Level l = Dungeon.level;
 		for (Char ch : Actor.chars()){
