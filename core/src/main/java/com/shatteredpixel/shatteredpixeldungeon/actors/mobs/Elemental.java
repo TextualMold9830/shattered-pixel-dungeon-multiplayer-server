@@ -56,7 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -271,7 +271,7 @@ public abstract class Elemental extends Mob {
 			if (targetingPos != -1 && state == HUNTING){
 				//account for bolt hitting walls, in case position suddenly changed
 				targetingPos = new Ballistica( pos, targetingPos, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
-				if (sprite != null && (sprite.visible || Dungeon.level.fieldOfView[targetingPos])) {
+				if (sprite != null && (sprite.visible || Dungeon.visibleforAnyHero(targetingPos))) {
 					sprite.zap( targetingPos );
 					return false;
 				} else {
@@ -324,8 +324,9 @@ public abstract class Elemental extends Mob {
 					}
 
 					GLog.n(Messages.get(this, "charging"));
-					spend(GameMath.gate(attackDelay(), (int)Math.ceil(Dungeon.heroes.cooldown()), 3*attackDelay()));
-					Dungeon.heroes.interrupt();
+					//TODO: check this
+						spend(GameMath.gate(attackDelay(), (int) Math.ceil(enemy.cooldown()), 3 * attackDelay()));
+					Dungeon.interrupt(pos);
 					return true;
 				} else {
 					rangedCooldown = 1;
@@ -335,7 +336,7 @@ public abstract class Elemental extends Mob {
 
 			} else {
 
-				if (sprite != null && (sprite.visible || Dungeon.level.fieldOfView[targetingPos])) {
+				if (sprite != null && (sprite.visible || Dungeon.visibleforAnyHero(targetingPos))) {
 					sprite.zap( targetingPos );
 					return false;
 				} else {
@@ -517,7 +518,7 @@ public abstract class Elemental extends Mob {
 			}
 			
 			for (Char ch : affected) {
-				ch.damage( Math.round( damage * 0.4f ), new Shocking() );
+				ch.damage( Math.round( damage * 0.4f ), new DamageCause( new Shocking(), this) );
 				if (ch instanceof Hero && !ch.isAlive()){
 					Dungeon.fail(this);
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
