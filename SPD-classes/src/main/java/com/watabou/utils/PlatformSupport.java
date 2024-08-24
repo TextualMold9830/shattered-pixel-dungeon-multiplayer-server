@@ -172,7 +172,7 @@ public abstract class PlatformSupport {
 
 		return fonts.get(generator).get(key);
 	}
-	//Small hack, may remove this
+	//return a list of plugin manifests
 	public List<PluginManifest> loadPlugins(){
 		return null;
 	}
