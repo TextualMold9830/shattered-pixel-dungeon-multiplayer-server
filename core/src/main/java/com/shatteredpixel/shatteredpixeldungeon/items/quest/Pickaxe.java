@@ -227,7 +227,7 @@ public class Pickaxe extends MeleeWeapon {
 					damageBoost = augment.damageFactor(8 + 2*buffedLvl());
 				}
 				beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 				if (hero.attack(enemy, 1, damageBoost, Char.INFINITE_ACCURACY)) {
 					if (enemy.isAlive()) {
 						Buff.affect(enemy, Vulnerable.class, 3f);
