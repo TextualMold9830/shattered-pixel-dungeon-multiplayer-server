@@ -263,8 +263,7 @@ public class Dungeon {
 
 		quickslot.reset();
 		QuickSlotButton.reset();
-		Toolbar.swappedQuickslots = false;
-		
+
 		depth = 1;
 		branch = 0;
 		generatedLevels.clear();
@@ -772,7 +771,6 @@ public class Dungeon {
 
 		quickslot.reset();
 		QuickSlotButton.reset();
-		Toolbar.swappedQuickslots = false;
 
 		Dungeon.challenges = bundle.getInt( CHALLENGES );
 		Dungeon.mobsToChampion = bundle.getInt( MOBS_TO_CHAMPION );
