@@ -57,7 +57,7 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -321,7 +321,7 @@ public class CavesBossLevel extends Level {
 		int i = 14 + 13*width();
 		for (int j = 0; j < 5; j++){
 			set( i+j, Terrain.EMPTY );
-			if (Dungeon.level.fieldOfView[i+j]){
+			if (Dungeon.visibleforAnyHero(i+j)){
 				CellEmitter.get(i+j).burst(BlastParticle.FACTORY, 10);
 			}
 		}
@@ -356,14 +356,10 @@ public class CavesBossLevel extends Level {
 		if (pylons.size() == 1){
 			pylons.get(0).activate();
 		} else if (!pylons.isEmpty()) {
-			Pylon closest = null;
-			for (Pylon p : pylons){
-				if (closest == null || trueDistance(p.pos, Dungeon.heroes.pos) < trueDistance(closest.pos, Dungeon.heroes.pos)){
-					closest = p;
-				}
-			}
-			pylons.remove(closest);
-			Random.element(pylons).activate();
+			//Activate a random pylon
+			Pylon pylon = Random.element(pylons);
+			pylons.remove(pylon);
+			pylon.activate();
 		}
 
 		for( int i = (mainArena.top-1)*width; i <length; i++){

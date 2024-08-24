@@ -64,7 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -76,6 +76,7 @@ import com.watabou.utils.Rect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class DM300 extends Mob {
 
@@ -177,10 +178,10 @@ public class DM300 extends Mob {
 			//determine if DM can reach its enemy
 			boolean canReach;
 			if (enemy == null || !enemy.isAlive()){
-				if (Dungeon.level.adjacent(pos, Dungeon.heroes.pos)){
+				if (Dungeon.level.adjacent(pos, enemy.pos)){
 					canReach = true;
 				} else {
-					canReach = (Dungeon.findStep(this, Dungeon.heroes.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
+					canReach = (Dungeon.findStep(this, enemy.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
 				}
 			} else {
 				if (Dungeon.level.adjacent(pos, enemy.pos)){
@@ -191,13 +192,13 @@ public class DM300 extends Mob {
 			}
 
 			if (state != HUNTING){
-				if (Dungeon.heroes.invisible <= 0 && canReach){
-					beckon(Dungeon.heroes.pos);
+				if (enemy.invisible <= 0 && canReach){
+					beckon(enemy.pos);
 				}
 			} else {
 
-				if ((enemy == null || !enemy.isAlive()) && Dungeon.heroes.invisible <= 0) {
-					enemy = Dungeon.heroes;
+				if ((enemy == null || !enemy.isAlive()) && enemy.invisible <= 0) {
+					enemy = chooseEnemy();
 				}
 
 				//more aggressive ability usage when DM can't reach its target
@@ -287,10 +288,10 @@ public class DM300 extends Mob {
 				chargeAnnounced = true;
 			}
 
-			if (Dungeon.heroes.invisible <= 0){
-				beckon(Dungeon.heroes.pos);
+			if (enemy.invisible <= 0){
+				beckon(enemy.pos);
 				state = HUNTING;
-				enemy = Dungeon.heroes;
+				enemy = chooseEnemy();
 			}
 
 		}
@@ -310,7 +311,24 @@ public class DM300 extends Mob {
 	protected Char chooseEnemy() {
 		Char enemy = super.chooseEnemy();
 		if (supercharged && enemy == null){
-			enemy = Dungeon.heroes;
+			ArrayList<Char> candidates = new ArrayList<>();
+			int distance = Integer.MAX_VALUE;
+			for (Hero hero : Dungeon.heroes) {
+				if (hero != null) {
+
+					if (fieldOfView[hero.pos] && hero.invisible <= 0) {
+						int dist = Dungeon.level.distance(hero.pos, pos);
+						if (dist < distance) {
+							candidates.clear();
+							distance = dist;
+						}
+						if (dist == distance) {
+							candidates.add(hero);
+						}
+					}
+				}
+			}
+			return Random.element(candidates);
 		}
 		return enemy;
 	}
@@ -328,7 +346,7 @@ public class DM300 extends Mob {
 				return;
 			}
 
-			if (Dungeon.level.fieldOfView[step]) {
+			if (Dungeon.visibleforAnyHero(step)) {
 				if (buff(Barrier.class) == null) {
 					GLog.w(Messages.get(this, "shield"));
 				}
@@ -403,7 +421,7 @@ public class DM300 extends Mob {
 
 	public void dropRocks( Char target ) {
 
-		Dungeon.heroes.interrupt();
+		Dungeon.interrupt(target.pos);
 		final int rockCenter;
 
 		//knock back 2 tiles if adjacent
@@ -481,10 +499,12 @@ public class DM300 extends Mob {
 
 		int dmgTaken = preHP - HP;
 		if (dmgTaken > 0) {
-			LockedFloor lock = Dungeon.heroes.buff(LockedFloor.class);
-			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/2f);
-				else                                                    lock.addTime(dmgTaken);
+			if (source.getDamageOwner() instanceof Hero) {
+				LockedFloor lock = source.getDamageOwner().buff(LockedFloor.class);
+				if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())) {
+					if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) lock.addTime(dmgTaken / 2f);
+					else lock.addTime(dmgTaken);
+				}
 			}
 		}
 
@@ -579,7 +599,11 @@ public class DM300 extends Mob {
 			Dungeon.level.drop( new MetalShard(), pos + ofs ).sprite.drop( pos );
 		}
 
-		Badges.validateBossSlain();
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null) {
+				Badges.validateBossSlain(hero);
+			}
+		}
 		if (Statistics.qualifiedForBossChallengeBadge){
 			Badges.validateBossChallengeCompleted();
 		}
