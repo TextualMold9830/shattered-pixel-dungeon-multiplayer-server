@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
 
@@ -228,8 +228,18 @@ abstract public class KindOfWeapon extends EquipableItem {
 		return max(buffedLvl(owner));
 	}
 
-	abstract public int min(int lvl);
-	abstract public int max(int lvl);
+	public int min(int lvl){
+		return min(findOwner());
+	};
+	public int min(int lvl, Char owner){
+		return min(lvl);
+	};
+	public int max(int lvl){
+		return -1;
+	};
+	public int max(int lvl, Char owner){
+		return max(lvl);
+	};
 
 	public int damageRoll( Char owner ) {
 		return Char.combatRoll( min(owner), max(owner) );
