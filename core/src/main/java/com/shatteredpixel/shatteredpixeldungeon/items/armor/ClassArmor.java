@@ -232,7 +232,7 @@ abstract public class ClassArmor extends Armor {
 								if (hero.belongings.armor == armor){
 									hero.belongings.armor = null;
 									if (hero.sprite instanceof HeroSprite) {
-										((HeroSprite) hero.sprite).updateArmor(hero);
+										((HeroSprite) hero.sprite).updateArmor();
 									}
 								}
 								level(armor.trueLevel());

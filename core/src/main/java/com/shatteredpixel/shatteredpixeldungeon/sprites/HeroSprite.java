@@ -52,7 +52,7 @@ public class HeroSprite extends CharSprite {
 		super();
 		
 		texture( owner.heroClass.spritesheet() );
-		updateArmor(owner);
+		updateArmor();
 		
 		link(owner);
 
@@ -62,8 +62,8 @@ public class HeroSprite extends CharSprite {
 			die();
 	}
 	
-	public void updateArmor(Hero hero) {
-
+	public void updateArmor() {
+		Hero hero = ((Hero) ch);
 		TextureFilm film = new TextureFilm( tiers(), hero.tier(), FRAME_WIDTH, FRAME_HEIGHT );
 		
 		idle = new Animation( 1, true );
