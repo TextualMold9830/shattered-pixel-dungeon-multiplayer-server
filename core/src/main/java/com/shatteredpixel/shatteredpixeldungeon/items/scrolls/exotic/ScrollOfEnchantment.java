@@ -42,7 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 public class ScrollOfEnchantment extends ExoticScroll {
 	
@@ -202,7 +202,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			GameScene.show(new WndTitledMessage(
 					Icons.get(Icons.INFO),
 					Messages.titleCase(enchantments[index].name()),
-					enchantments[index].desc()));
+					enchantments[index].desc(), getOwnerHero()));
 		}
 
 		@Override
@@ -265,7 +265,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			GameScene.show(new WndTitledMessage(
 					Icons.get(Icons.INFO),
 					Messages.titleCase(glyphs[index].name()),
-					glyphs[index].desc()));
+					glyphs[index].desc(), getOwnerHero()));
 		}
 
 		@Override
