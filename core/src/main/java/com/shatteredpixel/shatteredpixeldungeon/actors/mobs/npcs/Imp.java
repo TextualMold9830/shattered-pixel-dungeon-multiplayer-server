@@ -60,14 +60,18 @@ public class Imp extends NPC {
 	
 	@Override
 	protected boolean act() {
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
+		if (AscensionChallenge.highestStack() > -1){
 			die(new DamageCause( null));
 			return true;
 		}
 		if (!Quest.given && Dungeon.level.visited[pos]) {
 			Notes.add( Notes.Landmark.IMP );
 			if (!seenBefore && Dungeon.visibleforAnyHero(pos)) {
-			//	yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.heroes.name())));
+				for (Hero hero : Dungeon.heroes) {
+					if (hero != null) {
+					yell(Messages.get(this, "hey", Messages.titleCase(hero.name())));
+				}
+			}
 				seenBefore = true;
 			}
 		} else {
@@ -119,11 +123,11 @@ public class Imp extends NPC {
 			} else {
 				tell( Quest.alternative ?
 						Messages.get(this, "monks_2", Messages.titleCase(hero.name()))
-						: Messages.get(this, "golems_2", Messages.titleCase(hero.name())) );
+						: Messages.get(this, "golems_2", Messages.titleCase(hero.name())), hero );
 			}
 			
 		} else {
-			tell( Quest.alternative ? Messages.get(this, "monks_1") : Messages.get(this, "golems_1") );
+			tell( Quest.alternative ? Messages.get(this, "monks_1") : Messages.get(this, "golems_1"), hero );
 			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.IMP );
@@ -132,11 +136,11 @@ public class Imp extends NPC {
 		return true;
 	}
 	
-	private void tell( String text ) {
+	private void tell( String text, Hero hero ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( Imp.this, text ));
+				GameScene.show( new WndQuest( Imp.this, text, hero ));
 			}
 		});
 	}

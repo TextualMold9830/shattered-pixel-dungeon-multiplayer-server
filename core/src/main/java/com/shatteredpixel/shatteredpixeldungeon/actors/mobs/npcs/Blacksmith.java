@@ -63,14 +63,12 @@ public class Blacksmith extends NPC {
 	
 	@Override
 	protected boolean act() {
-		for (Hero hero: Dungeon.heroes) {
-			if (hero == null) continue;
-			if (hero.buff(AscensionChallenge.class) != null) {
+
+			if (AscensionChallenge.highestStack() > -1) {
 				die(new DamageCause(null));
 				Notes.remove(Notes.Landmark.TROLL);
 				return true;
 			}
-		}
 		if (Dungeon.level.visited[pos] && !Quest.started()){
 			Notes.add( Notes.Landmark.TROLL );
 		}
@@ -121,7 +119,7 @@ public class Blacksmith extends NPC {
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					GameScene.show(new WndQuest(Blacksmith.this, msg1Final) {
+					GameScene.show(new WndQuest(Blacksmith.this, msg1Final, hero) {
 						@Override
 						public void hide() {
 							super.hide();
@@ -138,7 +136,7 @@ public class Blacksmith extends NPC {
 							Quest.pickaxe = null;
 
 							if (!msg2Final.equals("")){
-								GameScene.show(new WndQuest(Blacksmith.this, msg2Final));
+								GameScene.show(new WndQuest(Blacksmith.this, msg2Final, hero));
 							}
 
 						}
@@ -153,9 +151,9 @@ public class Blacksmith extends NPC {
 
 					Pickaxe pick = hero.belongings.getItem(Pickaxe.class);
 					if (pick == null) {
-						tell(Messages.get(this, "lost_pick"));
+						tell(Messages.get(this, "lost_pick"), hero);
 					} else if (!pick.bloodStained) {
-						tell(Messages.get(this, "blood_2"));
+						tell(Messages.get(this, "blood_2"), hero);
 					} else {
 						if (pick.isEquipped(hero)) {
 							boolean wasCursed = pick.cursed;
@@ -165,7 +163,7 @@ public class Blacksmith extends NPC {
 						}
 						pick.detach(hero.belongings.backpack);
 						Quest.pickaxe = pick;
-						tell(Messages.get(this, "completed"));
+						tell(Messages.get(this, "completed"), hero);
 
 						Quest.completed = true;
 						Statistics.questScores[2] = 3000;
@@ -176,9 +174,9 @@ public class Blacksmith extends NPC {
 					Pickaxe pick = hero.belongings.getItem(Pickaxe.class);
 					DarkGold gold = hero.belongings.getItem(DarkGold.class);
 					if (pick == null) {
-						tell(Messages.get(this, "lost_pick"));
+						tell(Messages.get(this, "lost_pick"), hero);
 					} else if (gold == null || gold.quantity() < 15) {
-						tell(Messages.get(this, "gold_2"));
+						tell(Messages.get(this, "gold_2"), hero);
 					} else {
 						if (pick.isEquipped(hero)) {
 							boolean wasCursed = pick.cursed;
@@ -189,7 +187,7 @@ public class Blacksmith extends NPC {
 						pick.detach(hero.belongings.backpack);
 						Quest.pickaxe = pick;
 						gold.detachAll(hero.belongings.backpack);
-						tell(Messages.get(this, "completed"));
+						tell(Messages.get(this, "completed"), hero);
 
 						Quest.completed = true;
 						Statistics.questScores[2] = 3000;
@@ -204,7 +202,7 @@ public class Blacksmith extends NPC {
 					case Quest.GNOLL:   msg += Messages.get(Blacksmith.this, "reminder_gnoll"); break;
 					case Quest.FUNGI:   msg += Messages.get(Blacksmith.this, "reminder_fungi"); break;
 				}
-				tell(msg);
+				tell(msg, hero);
 
 			}
 		} else if (Quest.type == Quest.OLD && Quest.reforges == 0) {
@@ -232,18 +230,18 @@ public class Blacksmith extends NPC {
 
 		} else {
 			
-			tell( Messages.get(this, "get_lost") );
+			tell( Messages.get(this, "get_lost"), hero );
 			
 		}
 
 		return true;
 	}
 	
-	private void tell( String text ) {
+	private void tell( String text, Hero hero ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( Blacksmith.this, text ) );
+				GameScene.show( new WndQuest( Blacksmith.this, text, hero ) );
 			}
 		});
 	}

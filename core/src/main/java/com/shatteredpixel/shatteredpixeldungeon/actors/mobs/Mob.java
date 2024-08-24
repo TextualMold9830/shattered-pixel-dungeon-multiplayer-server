@@ -1090,7 +1090,10 @@ public abstract class Mob extends Char {
 	public void notice() {
 		sprite.showAlert();
 	}
-	
+	public void yell( String str, Hero hero ) {
+		GLog.newLine();
+		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str, hero);
+	}
 	public void yell( String str ) {
 		GLog.newLine();
 		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str );
