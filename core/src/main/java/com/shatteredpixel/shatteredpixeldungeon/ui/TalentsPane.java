@@ -54,7 +54,7 @@ public class TalentsPane extends ScrollPane {
 	public TalentsPane( TalentButton.Mode mode, ArrayList<LinkedHashMap<Talent, Integer>> talents, Hero hero ) {
 		super(new Component());
 
-		Ratmogrify.useRatroicEnergy = Dungeon.heroes != null && hero.armorAbility instanceof Ratmogrify;
+		Ratmogrify.useRatroicEnergy = hero != null && hero.armorAbility instanceof Ratmogrify;
 
 		int tiersAvailable = 1;
 
