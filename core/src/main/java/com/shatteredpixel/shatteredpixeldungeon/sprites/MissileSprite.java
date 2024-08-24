@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
@@ -159,9 +160,10 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		}
 		
 		float speed = SPEED;
+		Hero owner = item.findOwner();
 		if (item instanceof Dart
-				&& (Dungeon.heroes.belongings.weapon() instanceof Crossbow
-				|| Dungeon.heroes.belongings.secondWep() instanceof Crossbow)){
+				&& (owner.belongings.weapon() instanceof Crossbow
+				|| owner.belongings.secondWep() instanceof Crossbow)){
 			speed *= 3f;
 			
 		} else if (item instanceof SpiritBow.SpiritArrow
