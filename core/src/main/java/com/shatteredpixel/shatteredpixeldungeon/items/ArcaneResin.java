@@ -36,7 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 import java.util.ArrayList;
 
@@ -170,14 +170,13 @@ public class ArcaneResin extends Item {
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			Wand w = (Wand)ingredients.get(0);
 			int level = w.level() - w.resinBonus;
 
 			Item output = new ArcaneResin().quantity(2*(level+1));
-			//FIXME
-			if (Dungeon.heroes.heroClass != HeroClass.MAGE && Dungeon.heroes.hasTalent(Talent.WAND_PRESERVATION)){
-				output.quantity(output.quantity() + Dungeon.heroes.pointsInTalent(Talent.WAND_PRESERVATION));
+			if (hero.heroClass != HeroClass.MAGE && hero.hasTalent(Talent.WAND_PRESERVATION)){
+				output.quantity(output.quantity() + hero.pointsInTalent(Talent.WAND_PRESERVATION));
 			}
 
 			return output;
