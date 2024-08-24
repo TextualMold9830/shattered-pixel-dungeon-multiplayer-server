@@ -54,7 +54,7 @@ public class Corrupting extends Weapon.Enchantment {
 			
 			Mob enemy = (Mob) defender;
 			//FIXME
-			Hero hero = (attacker instanceof Hero) ? (Hero) attacker : Dungeon.heroes;
+			Hero hero = (attacker instanceof Hero) ? (Hero) attacker : weapon.findOwner();
 
 			Corruption.corruptionHeal(enemy);
 
