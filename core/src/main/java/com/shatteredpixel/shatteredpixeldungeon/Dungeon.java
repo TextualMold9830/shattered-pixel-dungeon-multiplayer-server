@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -191,7 +192,7 @@ public class Dungeon {
 	public static int challenges;
 	public static int mobsToChampion;
 	@Nullable
-	public static Hero[] heroes = new Hero[8];
+	public static Hero[] heroes = new Hero[SPDSettings.maxPlayers];
 	public static Level level;
 
 	public static QuickSlot quickslot = new QuickSlot();
@@ -282,7 +283,7 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 
-		heroes = new Hero[8];
+		heroes = new Hero[SPDSettings.maxPlayers()];
 		for (Hero hero : heroes) {
 			if (hero != null) {
 				hero.live();
@@ -299,6 +300,7 @@ public class Dungeon {
 	}
 
 	public static boolean levelHasBeenGenerated(int depth, int branch){
+		Gdx.app.log("Dungeon","levelHasBeenGenerated");
 		return generatedLevels.contains(depth + 1000*branch);
 	}
 	
@@ -523,10 +525,13 @@ public class Dungeon {
 				hero.viewDistance = light == null ? level.viewDistance : Math.max(Light.DISTANCE, level.viewDistance);
 
 				hero.curAction = hero.lastAction = null;
-
+				sendLevel(level, hero.networkID);
+				sendAllChars(hero.networkID);
+				sendHeroNewID(hero, hero.networkID);
 				observe(hero);
 			}
 		}
+
 		try {
 			saveAll();
 		} catch (IOException e) {
@@ -915,7 +920,7 @@ public class Dungeon {
 		if (WndResurrect.instance == null) {
 			updateLevelExplored();
 			Statistics.gameWon = false;
-			Rankings.INSTANCE.submit( false, cause );
+			//Rankings.INSTANCE.submit( false, cause );
 		}
 	}
 	
@@ -928,7 +933,7 @@ public class Dungeon {
 				hero.belongings.identify();
 			}
 		}
-		Rankings.INSTANCE.submit( true, cause );
+		//Rankings.INSTANCE.submit( true, cause );
 	}
 
 	public static void updateLevelExplored(){
