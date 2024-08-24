@@ -24,7 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Holiday;
 import com.watabou.noosa.TextureFilm;
 
@@ -52,8 +54,16 @@ public class RatKingSprite extends MobSprite {
 				c = 16;
 				break;
 		}
-
-		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
+		boolean hasRatmogrify = false;
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.armorAbility instanceof Ratmogrify){
+					hasRatmogrify = true;
+					break;
+				}
+			}
+		}
+		if (hasRatmogrify){
 			c = 24;
 			if (parent != null) aura(0xFFFF00);
 		}
@@ -83,7 +93,16 @@ public class RatKingSprite extends MobSprite {
 	public void link(Char ch) {
 		super.link(ch);
 		//FIXME
-		if (Dungeon.heroes != null && Dungeon.heroes.armorAbility instanceof Ratmogrify){
+		boolean hasRatmogrify = false;
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.armorAbility instanceof Ratmogrify){
+					hasRatmogrify = true;
+					break;
+				}
+			}
+		}
+		if (hasRatmogrify){
 			aura(0xFFFF00);
 		}
 	}

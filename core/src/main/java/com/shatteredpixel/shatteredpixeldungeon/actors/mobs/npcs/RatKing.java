@@ -145,7 +145,7 @@ public class RatKing extends NPC {
 									((RatKingSprite)sprite).resetAnims();
 									yell(Messages.get(RatKing.class, "crown_thankyou"));
 								} else if (index == 1) {
-									GameScene.show(new WndInfoArmorAbility(hero.heroClass, new Ratmogrify()));
+									GameScene.show(new WndInfoArmorAbility(hero.heroClass, new Ratmogrify(), hero));
 								} else {
 									yell(Messages.get(RatKing.class, "crown_fine"));
 								}

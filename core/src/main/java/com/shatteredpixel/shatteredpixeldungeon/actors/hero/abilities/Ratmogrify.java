@@ -46,7 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -258,7 +258,7 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		@Override
-		protected void spend(float time) {
+		public void spend(float time) {
 			if (!allied) timeLeft -= time;
 			super.spend(time);
 		}
