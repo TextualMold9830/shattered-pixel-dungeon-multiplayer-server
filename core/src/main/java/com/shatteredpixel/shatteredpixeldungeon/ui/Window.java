@@ -283,7 +283,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 			window.onSelect(button, res);
 		}
 	}
-	public void onSelect(int button, JSONObject args) {
+	public void onSelect(int button, @Nullable JSONObject args) {
 		onSelect(button);
 	}
 
