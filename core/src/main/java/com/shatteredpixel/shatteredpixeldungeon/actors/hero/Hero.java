@@ -2056,7 +2056,7 @@ public class Hero extends Char {
 			@Override
 			public void call() {
 				GameScene.gameOver();
-				Sample.INSTANCE.play( Assets.Sounds.DEATH );
+				Sample.INSTANCE.play( Assets.Sounds.DEATH, hero );
 			}
 		});
 

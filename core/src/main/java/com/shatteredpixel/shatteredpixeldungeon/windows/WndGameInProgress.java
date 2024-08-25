@@ -123,7 +123,7 @@ public class WndGameInProgress extends Window {
 				Dungeon.heroes = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.CONTINUE;
-				ShatteredPixelDungeon.switchScene(InterLevelSceneServer.class);
+				//ShatteredPixelDungeon.switchScene(InterLevelSceneServer.class);
 			}
 		};
 		

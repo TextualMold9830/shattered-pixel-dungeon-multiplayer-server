@@ -308,7 +308,7 @@ public class NewsScene extends PixelScene {
 	private static class WndArticle extends WndTitledMessage {
 
 		public WndArticle(NewsArticle article ) {
-			super(News.parseArticleIcon(article), article.title, article.summary);
+			super(News.parseArticleIcon(article), article.title, article.summary, null);
 
 			RedButton link = new RedButton(Messages.get(NewsScene.class, "read_more")){
 				@Override

@@ -47,7 +47,7 @@ public class SPDSettings extends GameSettings {
 	public static String KEY_MAX_PLAYERS =	"max_players";
 	public static int maxPlayers = 4;
 	public static int maxPlayers(){
-		return getInt(KEY_MAX_PLAYERS, 4);
+		return getInt(KEY_MAX_PLAYERS, 8);
 	}
 	public void maxPlayers(int maxPlayers){
 		put(KEY_MAX_PLAYERS, maxPlayers);
@@ -63,7 +63,7 @@ public class SPDSettings extends GameSettings {
 		put(KEY_SERVER_NAME, serverName);
 	}
 	//Version info
-	public static int defaultRelayServerPort =25556;
+	public static int defaultRelayServerPort =25555;
 	public static String defaultRelayServerAddress = "195.43.142.107";
 	public static String KEY_USE_CUSTOM_RELAY = "use_custom_relay";
 	public static boolean useCustomRelay = false;

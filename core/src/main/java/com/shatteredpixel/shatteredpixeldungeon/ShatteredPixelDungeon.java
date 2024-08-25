@@ -21,10 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.TitleScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.WelcomeScene;
+import com.badlogic.gdx.Gdx;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.*;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -99,6 +98,7 @@ public class ShatteredPixelDungeon extends Game {
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.RotGardenRoom.class,
 				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.RotGardenRoom" );
+
 	}
 	
 	@Override
@@ -112,7 +112,12 @@ public class ShatteredPixelDungeon extends Game {
 		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
 
 		Sample.INSTANCE.load( Assets.Sounds.all );
-		
+		Server.startServer();
+		Dungeon.init();
+		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
+		InterLevelSceneServer.create(null);
+		Gdx.app.log("Scene", Game.sceneClass.getName());
+		Game.switchScene(GameScene.class);
 	}
 
 	@Override

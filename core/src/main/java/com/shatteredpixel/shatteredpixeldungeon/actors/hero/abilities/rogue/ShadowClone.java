@@ -45,7 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.BArray;
@@ -370,7 +370,7 @@ public class ShadowClone extends ArmorAbility {
 		public ShadowSprite() {
 			super();
 
-			texture( ((ShadowAlly) ch).owner.heroClass.spritesheet() );
+			texture( ((ShadowAlly)ch).owner.heroClass.spritesheet() );
 
 			TextureFilm film = new TextureFilm( HeroSprite.tiers(), 6, 12, 15 );
 

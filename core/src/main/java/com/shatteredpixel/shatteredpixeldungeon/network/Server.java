@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 // based on https://developer.android.com/training/connect-devices-wirelessly/nsd.html#java
 
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;

@@ -89,11 +89,11 @@ public class AmuletScene extends PixelScene {
 							AmuletScene.this.add(new Delayer(3f){
 								@Override
 								protected void onComplete() {
-									Game.switchScene( RankingsScene.class );
+									//Game.switchScene( RankingsScene.class );
 								}
 							});
 						} else {
-							Game.switchScene( RankingsScene.class );
+							//Game.switchScene( RankingsScene.class );
 						}
 					}
 				});
@@ -154,7 +154,7 @@ public class AmuletScene extends PixelScene {
 	protected void onBackPressed() {
 		if (btnExit.isActive()) {
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.CONTINUE;
-			InterLevelSceneServer.create(hero);
+			//InterLevelSceneServer.create(hero);
 		}
 	}
 	

@@ -87,40 +87,40 @@ public class DangerIndicator extends Tag {
 	
 	@Override
 	public void update() {
-		//FIXME
-		if (Dungeon.heroes.isAlive()) {
-			int v =  Dungeon.heroes.visibleEnemies();
-			if (v != lastNumber) {
-				lastNumber = v;
-				if (visible = lastNumber > 0) {
-					number.text( Integer.toString( lastNumber ) );
-					number.measure();
-					placeNumber();
-
-					flash();
-				}
-			}
-		} else {
-			visible = false;
-		}
-		
+//		//FIXME
+//		if (Dungeon.heroes.isAlive()) {
+//			int v =  Dungeon.heroes.visibleEnemies();
+//			if (v != lastNumber) {
+//				lastNumber = v;
+//				if (visible = lastNumber > 0) {
+//					number.text( Integer.toString( lastNumber ) );
+//					number.measure();
+//					placeNumber();
+//
+//					flash();
+//				}
+//			}
+//		} else {
+//			visible = false;
+//		}
+//
 		super.update();
 	}
 	
 	@Override
 	protected void onClick() {
-		super.onClick();
-		if (Dungeon.heroes.visibleEnemies() > 0) {
-
-			Mob target = Dungeon.heroes.visibleEnemy(++enemyIndex);
-
-			QuickSlotButton.target(target);
-			if (Dungeon.heroes.canAttack(target)) AttackIndicator.target(target);
-
-			if (Dungeon.heroes.curAction == null && target.sprite != null) {
-				Camera.main.panTo(target.sprite.center(), 5f);
-			}
-		}
+//		super.onClick();
+//		if (Dungeon.heroes.visibleEnemies() > 0) {
+//
+//			Mob target = Dungeon.heroes.visibleEnemy(++enemyIndex);
+//
+//			QuickSlotButton.target(target);
+//			if (Dungeon.heroes.canAttack(target)) AttackIndicator.target(target);
+//
+//			if (Dungeon.heroes.curAction == null && target.sprite != null) {
+//				Camera.main.panTo(target.sprite.center(), 5f);
+//			}
+//		}
 	}
 
 	@Override

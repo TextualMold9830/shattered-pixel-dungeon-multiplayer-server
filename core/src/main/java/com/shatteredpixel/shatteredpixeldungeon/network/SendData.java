@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
+import com.badlogic.gdx.Gdx;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -220,7 +221,8 @@ public class SendData {
     }
 
     public static void sendInterLevelSceneFadeOut(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
+        Gdx.app.log("sendInterLevelSceneFadeOut", String.valueOf(ID));
+        if ((ID != -1)&&  (clients[ID] != null)) {
             clients[ID].flush();
             if (clients[ID].clientHero == null) {
                 return;
