@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -162,7 +161,7 @@ public class ArcaneResin extends Item {
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
-			Item result = sampleOutput(ingredients);
+			Item result = sampleOutput(ingredients, hero);
 
 			ingredients.get(0).quantity(0);
 

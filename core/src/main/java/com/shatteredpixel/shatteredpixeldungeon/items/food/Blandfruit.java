@@ -286,7 +286,7 @@ public class Blandfruit extends Food {
 		}
 		
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			return new Blandfruit().cook((Seed) ingredients.get(1));

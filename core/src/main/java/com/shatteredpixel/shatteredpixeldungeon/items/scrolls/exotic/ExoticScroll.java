@@ -145,7 +145,7 @@ public abstract class ExoticScroll extends Scroll {
 		}
 		
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return Reflection.newInstance(regToExo.get(ingredients.get(0).getClass()));
 		}
 	}
