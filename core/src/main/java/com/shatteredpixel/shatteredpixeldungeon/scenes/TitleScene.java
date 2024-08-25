@@ -130,11 +130,10 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnSupport = new SupportButton(GREY_TR, Messages.get(this, "support"));
 		add(btnSupport);
-
+//TODO: fully remove this
 		StyledButton btnRankings = new StyledButton(GREY_TR,Messages.get(this, "rankings")){
 			@Override
 			protected void onClick() {
-				ShatteredPixelDungeon.switchNoFade( RankingsScene.class );
 			}
 		};
 		btnRankings.icon(Icons.get(Icons.RANKINGS));

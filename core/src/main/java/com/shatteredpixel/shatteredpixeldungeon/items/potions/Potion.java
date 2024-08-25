@@ -44,7 +44,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfCor
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfShroudingFog;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfSnapFreeze;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfStormClouds;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
@@ -67,7 +66,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
@@ -348,10 +347,10 @@ public class Potion extends Item {
 				handler.know(this);
 				updateQuickslot();
 			}
-			
-			if (Dungeon.heroes.isAlive()) {
-				Catalog.setSeen(getClass());
-			}
+			//TODO: check this?
+//			if (Dungeon.heroes.isAlive()) {
+//				Catalog.setSeen(getClass());
+//			}
 		}
 	}
 	
@@ -490,7 +489,7 @@ public class Potion extends Item {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			for (Item ingredient : ingredients){
@@ -517,7 +516,7 @@ public class Potion extends Item {
 			}
 			
 			if (seeds.size() == 1){
-				result.identify();
+				result.identify(hero);
 			}
 
 			while (result instanceof PotionOfHealing

@@ -54,7 +54,7 @@ public class WndUseItem extends WndInfoItem {
 						}
 						Item.updateQuickslot();
 						if (action.equals(item.defaultAction()) && item.usesTargeting && owner == null){
-							InventoryPane.useTargeting();
+							//InventoryPane.useTargeting();
 						}
 					}
 				};

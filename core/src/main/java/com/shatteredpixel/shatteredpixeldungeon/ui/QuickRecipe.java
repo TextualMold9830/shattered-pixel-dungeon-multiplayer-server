@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -92,11 +93,11 @@ public class QuickRecipe extends Component {
 	private QuickRecipe.arrow arrow;
 	private ItemSlot output;
 	
-	public QuickRecipe(Recipe.SimpleRecipe r){
-		this(r, r.getIngredients(), r.sampleOutput(null));
+	public QuickRecipe(Recipe.SimpleRecipe r, Hero hero){
+		this(r, r.getIngredients(), r.sampleOutput(null), hero);
 	}
 	
-	public QuickRecipe(Recipe r, ArrayList<Item> inputs, final Item output) {
+	public QuickRecipe(Recipe r, ArrayList<Item> inputs, final Item output, Hero hero) {
 		
 		ingredients = inputs;
 		int cost = r.cost(inputs);
@@ -116,7 +117,7 @@ public class QuickRecipe extends Component {
 				}
 			};
 			
-			ArrayList<Item> similar = Dungeon.heroes.belongings.getAllSimilar(in);
+			ArrayList<Item> similar = hero.belongings.getAllSimilar(in);
 			int quantity = 0;
 			for (Item sim : similar) {
 				//if we are looking for a specific item, it must be IDed
@@ -236,11 +237,12 @@ public class QuickRecipe extends Component {
 		@Override
 		protected void onClick() {
 			super.onClick();
-			
+			Hero hero = null;
 			//find the window this is inside of and close it
 			Group parent = this.parent;
 			while (parent != null){
 				if (parent instanceof Window){
+					hero = ((Window) parent).getOwnerHero();
 					((Window) parent).hide();
 					break;
 				} else {
@@ -248,7 +250,7 @@ public class QuickRecipe extends Component {
 				}
 			}
 			
-			((AlchemyScene)ShatteredPixelDungeon.scene()).populate(ingredients, Dungeon.heroes.belongings);
+			((AlchemyScene)ShatteredPixelDungeon.scene()).populate(ingredients, hero.belongings);
 		}
 		
 		public void hardlightText(int color ){
@@ -258,7 +260,7 @@ public class QuickRecipe extends Component {
 	
 	//gets recipes for a particular alchemy guide page
 	//a null entry indicates a break in section
-	public static ArrayList<QuickRecipe> getRecipes( int pageIdx ){
+	public static ArrayList<QuickRecipe> getRecipes( int pageIdx, Hero hero ){
 		ArrayList<QuickRecipe> result = new ArrayList<>();
 		switch (pageIdx){
 			case 0: default:
@@ -272,7 +274,7 @@ public class QuickRecipe extends Component {
 					public String info() {
 						return "";
 					}
-				}));
+				}, hero));
 				return result;
 			case 1:
 				Recipe r = new Scroll.ScrollToStone();
@@ -280,17 +282,17 @@ public class QuickRecipe extends Component {
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					if (!scroll.isKnown()) scroll.anonymize();
 					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in), hero));
 				}
 				return result;
 			case 2:
-				result.add(new QuickRecipe( new StewedMeat.oneMeat() ));
-				result.add(new QuickRecipe( new StewedMeat.twoMeat() ));
-				result.add(new QuickRecipe( new StewedMeat.threeMeat() ));
+				result.add(new QuickRecipe( new StewedMeat.oneMeat() , hero));
+				result.add(new QuickRecipe( new StewedMeat.twoMeat() , hero));
+				result.add(new QuickRecipe( new StewedMeat.threeMeat(), hero ));
 				result.add(null);
 				result.add(new QuickRecipe( new MeatPie.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new Pasty(), new Food(), new MysteryMeat.PlaceHolder())),
-						new MeatPie()));
+						new MeatPie(), hero));
 				result.add(null);
 				result.add(new QuickRecipe( new Blandfruit.CookFruit(),
 						new ArrayList<>(Arrays.asList(new Blandfruit(), new Plant.Seed.PlaceHolder())),
@@ -304,14 +306,14 @@ public class QuickRecipe extends Component {
 							public String info() {
 								return "";
 							}
-						}));
+						}, hero));
 				return result;
 			case 3:
 				r = new ExoticPotion.PotionToExotic();
 				for (Class<?> cls : Generator.Category.POTION.classes){
 					Potion pot = (Potion) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(pot));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in), hero));
 				}
 				return result;
 			case 4:
@@ -319,7 +321,7 @@ public class QuickRecipe extends Component {
 				for (Class<?> cls : Generator.Category.SCROLL.classes){
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in), hero));
 				}
 				return result;
 			case 5:
@@ -332,60 +334,60 @@ public class QuickRecipe extends Component {
 					}
 					Item item = (Item) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(new Bomb(), item));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in), hero));
 					i++;
 				}
 				return result;
 			case 6:
 				result.add(new QuickRecipe( new LiquidMetal.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new MissileWeapon.PlaceHolder())),
-						new LiquidMetal()));
+						new LiquidMetal(), hero));
 				result.add(new QuickRecipe( new LiquidMetal.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new MissileWeapon.PlaceHolder().quantity(2))),
-						new LiquidMetal()));
+						new LiquidMetal(), hero));
 				result.add(new QuickRecipe( new LiquidMetal.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new MissileWeapon.PlaceHolder().quantity(3))),
-						new LiquidMetal()));
+						new LiquidMetal(), hero));
 				result.add(null);
 				result.add(null);
 				result.add(new QuickRecipe( new ArcaneResin.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new Wand.PlaceHolder())),
-						new ArcaneResin()));
+						new ArcaneResin(), hero));
 				return result;
 			case 7:
-				result.add(new QuickRecipe(new UnstableBrew.Recipe(), new ArrayList<>(Arrays.asList(new Potion.PlaceHolder(), new  Plant.Seed.PlaceHolder())), new UnstableBrew()));
-				result.add(new QuickRecipe(new CausticBrew.Recipe()));
-				result.add(new QuickRecipe(new BlizzardBrew.Recipe()));
-				result.add(new QuickRecipe(new ShockingBrew.Recipe()));
-				result.add(new QuickRecipe(new InfernalBrew.Recipe()));
-				result.add(new QuickRecipe(new AquaBrew.Recipe()));
+				result.add(new QuickRecipe(new UnstableBrew.Recipe(), new ArrayList<>(Arrays.asList(new Potion.PlaceHolder(), new  Plant.Seed.PlaceHolder())), new UnstableBrew(), hero));
+				result.add(new QuickRecipe(new CausticBrew.Recipe(), hero));
+				result.add(new QuickRecipe(new BlizzardBrew.Recipe(), hero));
+				result.add(new QuickRecipe(new ShockingBrew.Recipe(), hero));
+				result.add(new QuickRecipe(new InfernalBrew.Recipe(), hero));
+				result.add(new QuickRecipe(new AquaBrew.Recipe(), hero));
 				result.add(null);
 				result.add(null);
-				result.add(new QuickRecipe(new ElixirOfHoneyedHealing.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfAquaticRejuvenation.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfArcaneArmor.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfIcyTouch.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfToxicEssence.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfDragonsBlood.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfMight.Recipe()));
-				result.add(new QuickRecipe(new ElixirOfFeatherFall.Recipe()));
+				result.add(new QuickRecipe(new ElixirOfHoneyedHealing.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfAquaticRejuvenation.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfArcaneArmor.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfIcyTouch.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfToxicEssence.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfDragonsBlood.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfMight.Recipe(), hero));
+				result.add(new QuickRecipe(new ElixirOfFeatherFall.Recipe(), hero));
 				return result;
 			case 8:
-				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Scroll.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell()));
-				result.add(new QuickRecipe(new WildEnergy.Recipe()));
-				result.add(new QuickRecipe(new TelekineticGrab.Recipe()));
-				result.add(new QuickRecipe(new PhaseShift.Recipe()));
+				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Scroll.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell(), hero));
+				result.add(new QuickRecipe(new WildEnergy.Recipe(), hero));
+				result.add(new QuickRecipe(new TelekineticGrab.Recipe(), hero));
+				result.add(new QuickRecipe(new PhaseShift.Recipe(), hero));
 				if (!PixelScene.landscape()) result.add(null);
 				result.add(null);
-				result.add(new QuickRecipe(new Alchemize.Recipe(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder(), new Runestone.PlaceHolder())), new Alchemize().quantity(8)));
-				result.add(new QuickRecipe(new CurseInfusion.Recipe()));
-				result.add(new QuickRecipe(new MagicalInfusion.Recipe()));
-				result.add(new QuickRecipe(new Recycle.Recipe()));
+				result.add(new QuickRecipe(new Alchemize.Recipe(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder(), new Runestone.PlaceHolder())), new Alchemize().quantity(8), hero));
+				result.add(new QuickRecipe(new CurseInfusion.Recipe(), hero));
+				result.add(new QuickRecipe(new MagicalInfusion.Recipe(), hero));
+				result.add(new QuickRecipe(new Recycle.Recipe(), hero));
 				if (!PixelScene.landscape()) result.add(null);
 				result.add(null);
-				result.add(new QuickRecipe(new ReclaimTrap.Recipe()));
-				result.add(new QuickRecipe(new SummonElemental.Recipe()));
-				result.add(new QuickRecipe(new BeaconOfReturning.Recipe()));
+				result.add(new QuickRecipe(new ReclaimTrap.Recipe(), hero));
+				result.add(new QuickRecipe(new SummonElemental.Recipe(), hero));
+				result.add(new QuickRecipe(new BeaconOfReturning.Recipe(), hero));
 				return result;
 		}
 	}

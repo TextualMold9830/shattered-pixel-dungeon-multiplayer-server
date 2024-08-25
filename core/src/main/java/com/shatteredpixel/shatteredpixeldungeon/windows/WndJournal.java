@@ -335,8 +335,12 @@ public class WndJournal extends WndTabbed {
 			content.add(body);
 
 			Document.ALCHEMY_GUIDE.readPage(currentPageIdx);
-			
-			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx);
+
+			Hero hero = null;
+			if (parent instanceof Window){
+                hero = ((Window) parent).getOwnerHero();
+            }
+			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx, hero);
 			
 			float left;
 			float top = body.bottom()+2;

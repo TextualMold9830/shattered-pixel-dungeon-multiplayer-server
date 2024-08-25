@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -55,7 +56,12 @@ public class RevealedArea extends FlavourBuff{
 
 	@Override
 	public float iconFadePercent() {
-		float max = 5*Dungeon.heroes.pointsInTalent(Talent.SEER_SHOT);
+		float max;
+		if (target instanceof Hero) {
+			max = 5 * ((Hero) target).pointsInTalent(Talent.SEER_SHOT);
+		} else {
+			max	= 0;
+		}
 		return Math.max(0, (max-visualcooldown()) / max);
 	}
 

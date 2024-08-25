@@ -72,8 +72,13 @@ public abstract class Recipe {
 	
 	public abstract Item brew(ArrayList<Item> ingredients, Hero hero);
 	
-	public abstract Item sampleOutput(ArrayList<Item> ingredients);
-	
+	public Item sampleOutput(ArrayList<Item> ingredients){
+		return null;
+	};
+	public  Item sampleOutput(ArrayList<Item> ingredients, Hero hero){
+		return sampleOutput(ingredients);
+	};
+
 	//subclass for the common situation of a recipe with static inputs and outputs
 	public static abstract class SimpleRecipe extends Recipe {
 		

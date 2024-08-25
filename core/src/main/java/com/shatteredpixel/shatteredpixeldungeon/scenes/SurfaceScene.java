@@ -65,6 +65,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+//FIXME
 
 public class SurfaceScene extends PixelScene {
 
@@ -148,25 +149,25 @@ public class SurfaceScene extends PixelScene {
 			window.add( patch );
 		}
 		
-		Avatar a = new Avatar( Dungeon.heroes.heroClass );
-		// Removing semitransparent contour
-		a.am = 2; a.aa = -1;
-		a.x = (SKY_WIDTH - a.width) / 2;
-		a.y = SKY_HEIGHT - a.height;
-		align(a);
-
-		if (Dungeon.heroes.armorAbility instanceof Ratmogrify) {
-			rats = new Pet[30];
-			for (int i = 0; i < rats.length; i++){
-				Pet pet = new Pet();
-				pet.rm = pet.gm = pet.bm = 1.2f;
-				pet.x = Random.Int(SKY_WIDTH)-10;
-				pet.y = SKY_HEIGHT - pet.height;
-				window.add(pet);
-				rats[i] = pet;
-				if (dayTime) pet.brightness( 1.2f );
-			}
-		}
+//		Avatar a = new Avatar( Dungeon.heroes.heroClass );
+//		// Removing semitransparent contour
+//		a.am = 2; a.aa = -1;
+//		a.x = (SKY_WIDTH - a.width) / 2;
+//		a.y = SKY_HEIGHT - a.height;
+//		align(a);
+//
+//		if (Dungeon.heroes.armorAbility instanceof Ratmogrify) {
+//			rats = new Pet[30];
+//			for (int i = 0; i < rats.length; i++){
+//				Pet pet = new Pet();
+//				pet.rm = pet.gm = pet.bm = 1.2f;
+//				pet.x = Random.Int(SKY_WIDTH)-10;
+//				pet.y = SKY_HEIGHT - pet.height;
+//				window.add(pet);
+//				rats[i] = pet;
+//				if (dayTime) pet.brightness( 1.2f );
+//			}
+//		}
 
 		final Pet pet = new Pet();
 		pet.rm = pet.gm = pet.bm = 1.2f;
@@ -180,57 +181,57 @@ public class SurfaceScene extends PixelScene {
 		
 		//picks the highest between ghost's weapon, armor, and rose level/2
 		int roseLevel = 0;
-		DriedRose rose = Dungeon.heroes.belongings.getItem(DriedRose.class);
-		if (rose != null){
-			roseLevel = rose.level()/2;
-			if (rose.ghostWeapon() != null){
-				roseLevel = Math.max(roseLevel, rose.ghostWeapon().level());
-			}
-			if (rose.ghostArmor() != null){
-				roseLevel = Math.max(roseLevel, rose.ghostArmor().level());
-			}
-		}
-		
-		int earthLevel = Dungeon.heroes.belongings.getItem(WandOfLivingEarth.class) == null ? 0 : Dungeon.heroes.belongings.getItem(WandOfLivingEarth.class).level();
-		int wardLevel = Dungeon.heroes.belongings.getItem(WandOfWarding.class) == null ? 0 : Dungeon.heroes.belongings.getItem(WandOfWarding.class).level();
-		
-		MagesStaff staff = Dungeon.heroes.belongings.getItem(MagesStaff.class);
-		if (staff != null){
-			if (staff.wandClass() == WandOfLivingEarth.class){
-				earthLevel = Math.max(earthLevel, staff.level());
-			} else if (staff.wandClass() == WandOfWarding.class){
-				wardLevel = Math.max(wardLevel, staff.level());
-			}
-		}
-		
-		if (roseLevel >= 3 && roseLevel >= earthLevel && roseLevel >= wardLevel){
-			allySprite = new GhostSprite();
-			if (dayTime) allySprite.alpha(0.4f);
-		} else if (earthLevel >= 3 && earthLevel >= wardLevel){
-			allySprite = new EarthGuardianSprite();
-		} else if (wardLevel >= 3){
-			allySprite = new WardSprite();
-			((WardSprite) allySprite).updateTier(Math.min(wardLevel+2, 6));
-		}
+//		DriedRose rose = Dungeon.heroes.belongings.getItem(DriedRose.class);
+//		if (rose != null){
+//			roseLevel = rose.level()/2;
+//			if (rose.ghostWeapon() != null){
+//				roseLevel = Math.max(roseLevel, rose.ghostWeapon().level());
+//			}
+//			if (rose.ghostArmor() != null){
+//				roseLevel = Math.max(roseLevel, rose.ghostArmor().level());
+//			}
+//		}
+//
+//		int earthLevel = Dungeon.heroes.belongings.getItem(WandOfLivingEarth.class) == null ? 0 : Dungeon.heroes.belongings.getItem(WandOfLivingEarth.class).level();
+//		int wardLevel = Dungeon.heroes.belongings.getItem(WandOfWarding.class) == null ? 0 : Dungeon.heroes.belongings.getItem(WandOfWarding.class).level();
+//
+//		MagesStaff staff = Dungeon.heroes.belongings.getItem(MagesStaff.class);
+//		if (staff != null){
+//			if (staff.wandClass() == WandOfLivingEarth.class){
+//				earthLevel = Math.max(earthLevel, staff.level());
+//			} else if (staff.wandClass() == WandOfWarding.class){
+//				wardLevel = Math.max(wardLevel, staff.level());
+//			}
+//		}
+//
+//		if (roseLevel >= 3 && roseLevel >= earthLevel && roseLevel >= wardLevel){
+//			allySprite = new GhostSprite();
+//			if (dayTime) allySprite.alpha(0.4f);
+//		} else if (earthLevel >= 3 && earthLevel >= wardLevel){
+//			allySprite = new EarthGuardianSprite();
+//		} else if (wardLevel >= 3){
+//			allySprite = new WardSprite();
+//			((WardSprite) allySprite).updateTier(Math.min(wardLevel+2, 6));
+//		}
 		
 		if (allySprite != null){
 			allySprite.add(CharSprite.State.PARALYSED);
 			allySprite.scale = new PointF(2, 2);
-			allySprite.x = a.x - allySprite.width()*0.75f;
+			//allySprite.x = a.x - allySprite.width()*0.75f;
 			allySprite.y = SKY_HEIGHT - allySprite.height();
 			align(allySprite);
 			window.add(allySprite);
 		}
 
-		if (Dungeon.heroes.belongings.getItem(RemainsItem.class) != null){
-			Image grave = new Image(Assets.Interfaces.SURFACE, 88, 74, 16, 22);
-
-			grave.x = a.x + a.width() + 10;
-			grave.y = a.y + a.height() - grave.height();
-			window.add(grave);
-		}
-		
-		window.add( a );
+//		if (Dungeon.heroes.belongings.getItem(RemainsItem.class) != null){
+//			Image grave = new Image(Assets.Interfaces.SURFACE, 88, 74, 16, 22);
+//
+//			grave.x = a.x + a.width() + 10;
+//			grave.y = a.y + a.height() - grave.height();
+//			window.add(grave);
+//		}
+//
+//		window.add( a );
 		window.add( pet );
 		
 		window.add( new PointerArea( sky ) {
@@ -253,7 +254,7 @@ public class SurfaceScene extends PixelScene {
 		add( frame );
 
 		if (dayTime) {
-			a.brightness( 1.2f );
+			//a.brightness( 1.2f );
 			pet.brightness( 1.2f );
 		} else {
 			frame.hardlight( 0xDDEEFF );
@@ -261,7 +262,7 @@ public class SurfaceScene extends PixelScene {
 
 		RedButton gameOver = new RedButton( Messages.get(this, "exit") ) {
 			protected void onClick() {
-				Game.switchScene( RankingsScene.class );
+			//	Game.switchScene( RankingsScene.class );
 			}
 		};
 		gameOver.setSize( SKY_WIDTH - FRAME_MARGIN_X * 2, BUTTON_HEIGHT );

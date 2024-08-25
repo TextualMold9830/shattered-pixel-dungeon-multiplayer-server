@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FetidRat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollTrickster;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GreatCrab;
@@ -50,7 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSadGhost;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -85,7 +86,7 @@ public class Ghost extends NPC {
 
 	@Override
 	protected boolean act() {
-		if (Dungeon.heroes.buff(AscensionChallenge.class) != null){
+		if (AscensionChallenge.highestStack() > -1){
 			die(new DamageCause( null));
 			return true;
 		}
@@ -131,7 +132,7 @@ public class Ghost extends NPC {
 		
 		Sample.INSTANCE.play( Assets.Sounds.GHOST );
 
-		if (c != Dungeon.heroes){
+		if (!(c instanceof Hero)){
 			return super.interact(c);
 		}
 		
@@ -145,19 +146,20 @@ public class Ghost extends NPC {
 						}
 					});
 				} else {
+					Hero hero = (Hero) c;
 					Game.runOnRenderThread(new Callback() {
 						@Override
 						public void call() {
 							switch (Quest.type) {
 								case 1:
 								default:
-									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "rat_2")));
+									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "rat_2"), hero));
 									break;
 								case 2:
-									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "gnoll_2")));
+									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "gnoll_2"), hero));
 									break;
 								case 3:
-									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "crab_2")));
+									GameScene.show(new WndQuest(Ghost.this, Messages.get(Ghost.this, "crab_2"), hero));
 									break;
 							}
 						}
@@ -172,13 +174,13 @@ public class Ghost extends NPC {
 			switch (Quest.type){
 				case 1: default:
 					questBoss = new FetidRat();
-					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.heroes.name())); break;
+					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(c.name())); break;
 				case 2:
 					questBoss = new GnollTrickster();
-					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.heroes.name())); break;
+					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(c.name())); break;
 				case 3:
 					questBoss = new GreatCrab();
-					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.heroes.name())); break;
+					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(c.name())); break;
 			}
 
 			questBoss.pos = Dungeon.level.randomRespawnCell( this );
@@ -190,7 +192,7 @@ public class Ghost extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						GameScene.show( new WndQuest( Ghost.this, txt_quest ){
+						GameScene.show( new WndQuest( Ghost.this, txt_quest, (Hero) c){
 							@Override
 							public void hide() {
 								super.hide();

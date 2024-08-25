@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
+import com.badlogic.gdx.Gdx;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -98,14 +99,14 @@ class ClientThread implements Callable<String> {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            Log.e("ParseThread", e.getMessage());
+            Gdx.app.error("ParseThread", e.getMessage());
             return null;
         }
     }
 
     public void parse(@NotNull String json) throws JSONException {
-
         JSONObject data = new JSONObject(json);
+        Gdx.app.log("ClientThread", data.toString(4));
         for (Iterator<String> it = data.keys(); it.hasNext(); ) {
             String token = it.next();
             try {

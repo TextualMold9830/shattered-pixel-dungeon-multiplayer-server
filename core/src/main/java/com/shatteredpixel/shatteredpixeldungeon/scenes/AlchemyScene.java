@@ -43,16 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RadialMenu;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
-import com.shatteredpixel.shatteredpixeldungeon.ui.StatusPane;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
@@ -198,83 +189,83 @@ public class AlchemyScene extends PixelScene {
 		Button invSelector = new Button(){
 			@Override
 			protected void onClick() {
-						if (Dungeon.heroes != null) {
-							ArrayList<Bag> bags = Dungeon.heroes.belongings.getBags();
-
-							String[] names = new String[bags.size()];
-							Image[] images = new Image[bags.size()];
-							for (int i = 0; i < bags.size(); i++){
-								names[i] = Messages.titleCase(bags.get(i).name());
-								images[i] = new ItemSprite(bags.get(i));
-							}
-							String info = "";
-							if (ControllerHandler.controllerActive){
-								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
-								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "container_cancel");
-							} else {
-								info += Messages.get(WndKeyBindings.class, SPDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
-								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "container_cancel");
-							}
-
-							Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "container_prompt"), info, names, images){
-								@Override
-								public void onSelect(int idx, boolean alt) {
-									super.onSelect(idx, alt);
-									Bag bag = bags.get(idx);
-									ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
-
-									for(Item i : bag.items){
-										if (Dungeon.heroes.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
-										if (!Recipe.usableInRecipe(i)) items.remove(i);
-									}
-
-									if (items.size() == 0){
-										ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(AlchemyScene.class, "no_items")));
-										return;
-									}
-
-									String[] itemNames = new String[items.size()];
-									Image[] itemIcons = new Image[items.size()];
-									for (int i = 0; i < items.size(); i++){
-										itemNames[i] = Messages.titleCase(items.get(i).name());
-										itemIcons[i] = new ItemSprite(items.get(i));
-									}
-
-									String info = "";
-									if (ControllerHandler.controllerActive){
-										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
-										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "item_cancel");
-									} else {
-										info += Messages.get(WndKeyBindings.class, SPDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
-										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "item_cancel");
-									}
-
-									Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "item_prompt"), info, itemNames, itemIcons){
-										@Override
-										public void onSelect(int idx, boolean alt) {
-											super.onSelect(idx, alt);
-											Item item = items.get(idx);
-											synchronized (inputs) {
-												if (item != null && inputs[0] != null) {
-													for (int i = 0; i < inputs.length; i++) {
-														if (inputs[i].item() == null) {
-															if (item instanceof LiquidMetal){
-																inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
-															} else {
-																inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
-															}
-															break;
-														}
-													}
-													updateState();
-												}
-											}
-
-										}
-									});
-								}
-							});
-						}
+//						if (Dungeon.heroes != null) {
+//							ArrayList<Bag> bags = Dungeon.heroes.belongings.getBags();
+//
+//							String[] names = new String[bags.size()];
+//							Image[] images = new Image[bags.size()];
+//							for (int i = 0; i < bags.size(); i++){
+//								names[i] = Messages.titleCase(bags.get(i).name());
+//								images[i] = new ItemSprite(bags.get(i));
+//							}
+//							String info = "";
+//							if (ControllerHandler.controllerActive){
+//								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
+//								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "container_cancel");
+//							} else {
+//								info += Messages.get(WndKeyBindings.class, SPDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
+//								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "container_cancel");
+//							}
+//
+//							Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "container_prompt"), info, names, images){
+//								@Override
+//								public void onSelect(int idx, boolean alt) {
+//									super.onSelect(idx, alt);
+//									Bag bag = bags.get(idx);
+//									ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
+//
+//									for(Item i : bag.items){
+//										if (Dungeon.heroes.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
+//										if (!Recipe.usableInRecipe(i)) items.remove(i);
+//									}
+//
+//									if (items.size() == 0){
+//										ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(AlchemyScene.class, "no_items")));
+//										return;
+//									}
+//
+//									String[] itemNames = new String[items.size()];
+//									Image[] itemIcons = new Image[items.size()];
+//									for (int i = 0; i < items.size(); i++){
+//										itemNames[i] = Messages.titleCase(items.get(i).name());
+//										itemIcons[i] = new ItemSprite(items.get(i));
+//									}
+//
+//									String info = "";
+//									if (ControllerHandler.controllerActive){
+//										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
+//										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "item_cancel");
+//									} else {
+//										info += Messages.get(WndKeyBindings.class, SPDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
+//										info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "item_cancel");
+//									}
+//
+//									Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "item_prompt"), info, itemNames, itemIcons){
+//										@Override
+//										public void onSelect(int idx, boolean alt) {
+//											super.onSelect(idx, alt);
+//											Item item = items.get(idx);
+//											synchronized (inputs) {
+//												if (item != null && inputs[0] != null) {
+//													for (int i = 0; i < inputs.length; i++) {
+//														if (inputs[i].item() == null) {
+//															if (item instanceof LiquidMetal){
+//																inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
+//															} else {
+//																inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
+//															}
+//															break;
+//														}
+//													}
+//													updateState();
+//												}
+//											}
+//
+//										}
+//									});
+//								}
+//							});
+//						}
 			}
 
 			@Override
@@ -311,7 +302,7 @@ public class AlchemyScene extends PixelScene {
 			protected void onClick() {
 				super.onClick();
 				if (lastRecipe != null){
-					populate(lastIngredients, Dungeon.heroes.belongings);
+					//populate(lastIngredients, Dungeon.heroes.belongings);
 				}
 			}
 
@@ -437,7 +428,7 @@ public class AlchemyScene extends PixelScene {
 
 			@Override
 			protected void onClick() {
-				WndEnergizeItem.openItemSelector();
+				//WndEnergizeItem.openItemSelector();
 			}
 
 			@Override
@@ -500,9 +491,9 @@ public class AlchemyScene extends PixelScene {
 					for (int i = 0; i < inputs.length; i++) {
 						if (inputs[i].item() == null) {
 							if (item instanceof LiquidMetal){
-								inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
+								//inputs[i].item(item.detachAll(Dungeon.heroes.belongings.backpack));
 							} else {
-								inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
+								//inputs[i].item(item.detach(Dungeon.heroes.belongings.backpack));
 							}
 							break;
 						}
@@ -668,9 +659,9 @@ public class AlchemyScene extends PixelScene {
 		Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
 		int resultQuantity = result.quantity();
-		if (!result.collect()){
-			Dungeon.level.drop(result, Dungeon.heroes.pos);
-		}
+//		if (!result.collect()){
+//			Dungeon.level.drop(result, Dungeon.heroes.pos);
+//		}
 
 		Statistics.itemsCrafted++;
 		Badges.validateItemsCrafted();
@@ -749,9 +740,9 @@ public class AlchemyScene extends PixelScene {
 			for (int i = 0; i < inputs.length; i++) {
 				if (inputs[i] != null && inputs[i].item() != null) {
 					Item item = inputs[i].item();
-					if (!item.collect()) {
-						Dungeon.level.drop(item, Dungeon.heroes.pos);
-					}
+//					if (!item.collect()) {
+//						Dungeon.level.drop(item, Dungeon.heroes.pos);
+//					}
 					inputs[i].item(null);
 				}
 			}
@@ -813,13 +804,13 @@ public class AlchemyScene extends PixelScene {
 					super.onClick();
 					Item item = InputButton.this.item;
 					if (item != null) {
-						if (!item.collect()) {
-							Dungeon.level.drop(item, Dungeon.heroes.pos);
-						}
+//						if (!item.collect()) {
+//							Dungeon.level.drop(item, Dungeon.heroes.pos);
+//						}
 						InputButton.this.item(null);
 						updateState();
 					}
-					AlchemyScene.this.addToFront(WndBag.getBag( itemSelector ));
+					//AlchemyScene.this.addToFront(WndBag.getBag( itemSelector ));
 				}
 
 				@Override
@@ -910,7 +901,7 @@ public class AlchemyScene extends PixelScene {
 				@Override
 				protected void onClick() {
 					super.onClick();
-					combine(slot);
+					//combine(slot);
 				}
 
 				@Override

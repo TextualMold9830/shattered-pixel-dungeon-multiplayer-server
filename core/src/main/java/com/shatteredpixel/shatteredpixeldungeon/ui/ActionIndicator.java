@@ -122,13 +122,13 @@ public class ActionIndicator extends Tag {
 				needsRefresh = false;
 			}
 			//FIXME
-			if (!Dungeon.heroes.ready) {
-				if (primaryVis != null) primaryVis.alpha(0.5f);
-				if (secondVis != null) secondVis.alpha(0.5f);
-			} else {
-				if (primaryVis != null) primaryVis.alpha(1f);
-				if (secondVis != null) secondVis.alpha(1f);
-			}
+//			if (!Dungeon.heroes.ready) {
+//				if (primaryVis != null) primaryVis.alpha(0.5f);
+//				if (secondVis != null) secondVis.alpha(0.5f);
+//			} else {
+//				if (primaryVis != null) primaryVis.alpha(1f);
+//				if (secondVis != null) secondVis.alpha(1f);
+//			}
 		}
 
 	}
@@ -137,9 +137,9 @@ public class ActionIndicator extends Tag {
 	//FIXME
 	protected void onClick() {
 		super.onClick();
-		if (action != null && Dungeon.heroes.ready) {
-			action.doAction();
-		}
+//		if (action != null && Dungeon.heroes.ready) {
+//			action.doAction();
+//		}
 	}
 
 	@Override

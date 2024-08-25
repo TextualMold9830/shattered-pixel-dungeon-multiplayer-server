@@ -204,7 +204,7 @@ public class MeleeWeapon extends Weapon {
 			} else {
 				tracker.detach();
 				Charger charger = Buff.affect(hero, Charger.class);
-				charger.gainCharge(hero.pointsInTalent(Talent.VARIED_CHARGE) / 6f);
+				charger.gainCharge(hero.pointsInTalent(Talent.VARIED_CHARGE) / 6f, hero);
 				ScrollOfRecharging.charge(hero);
 			}
 		}
@@ -228,7 +228,7 @@ public class MeleeWeapon extends Weapon {
 		}
 		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
 			Charger charger = Buff.affect(hero, Charger.class);
-			charger.gainCharge(hero.pointsInTalent(Talent.COUNTER_ABILITY)*0.375f);
+			charger.gainCharge(hero.pointsInTalent(Talent.COUNTER_ABILITY)*0.375f, hero);
 			hero.buff(Talent.CounterAbilityTacker.class).detach();
 		}
 	}
@@ -503,16 +503,16 @@ public class MeleeWeapon extends Weapon {
 			}
 		}
 
-		public void gainCharge( float charge ){
-			if (charges < chargeCap()) {
+		public void gainCharge( float charge, Hero hero ){
+			if (charges < chargeCap(hero)) {
 				partialCharge += charge;
 				while (partialCharge >= 1f) {
 					charges++;
 					partialCharge--;
 				}
-				if (charges >= chargeCap()){
+				if (charges >= chargeCap(hero)){
 					partialCharge = 0;
-					charges = chargeCap();
+					charges = chargeCap(hero);
 				}
 				updateQuickslot();
 			}
@@ -546,24 +546,24 @@ public class MeleeWeapon extends Weapon {
 		}
 
 		@Override
-		public Visual primaryVisual() {
+		public Visual primaryVisual(Hero hero) {
 			Image ico;
-			if (Dungeon.heroes.belongings.weapon == null){
+			if (hero.belongings.weapon == null){
 				ico = new HeroIcon(this);
  			} else {
-				ico = new ItemSprite(Dungeon.heroes.belongings.weapon);
+				ico = new ItemSprite(hero.belongings.weapon);
 			}
 			ico.width += 4; //shift slightly to the left to separate from smaller icon
 			return ico;
 		}
 
 		@Override
-		public Visual secondaryVisual() {
+		public Visual secondaryVisual(Hero hero) {
 			Image ico;
-			if (Dungeon.heroes.belongings.secondWep == null){
+			if (hero.belongings.secondWep == null){
 				ico = new HeroIcon(this);
 			} else {
-				ico = new ItemSprite(Dungeon.heroes.belongings.secondWep);
+				ico = new ItemSprite(hero.belongings.secondWep);
 			}
 			ico.scale.set(PixelScene.align(0.51f));
 			ico.brightness(0.6f);

@@ -73,7 +73,6 @@ public class StatusPane extends Component {
 	private BuffIndicator buffs;
 	private Compass compass;
 
-	private BusyIndicator busy;
 	private CircleArc counter;
 
 	private static String asset = Assets.Interfaces.STATUS;
@@ -89,27 +88,6 @@ public class StatusPane extends Component {
 		else        bg = new NinePatch( asset, 0, 0, 128, 36, 85, 0, 45, 0 );
 		add( bg );
 
-		heroInfo = new Button(){
-			@Override
-			protected void onClick () {
-				Camera.main.panTo( Dungeon.heroes.sprite.center(), 5f );
-				GameScene.show( new WndHero() );
-			}
-			
-			@Override
-			public GameAction keyAction() {
-				return SPDAction.HERO_INFO;
-			}
-
-			@Override
-			protected String hoverText() {
-				return Messages.titleCase(Messages.get(WndKeyBindings.class, "hero_info"));
-			}
-		};
-		add(heroInfo);
-
-		avatar = HeroSprite.avatar( Dungeon.heroes.heroClass, lastTier );
-		add( avatar );
 
 		talentBlink = 0;
 
@@ -133,14 +111,6 @@ public class StatusPane extends Component {
 		hpText.alpha(0.6f);
 		add(hpText);
 
-		heroInfoOnBar = new Button(){
-			@Override
-			protected void onClick () {
-				Camera.main.panTo( Dungeon.heroes.sprite.center(), 5f );
-				GameScene.show( new WndHero() );
-			}
-		};
-		add(heroInfoOnBar);
 
 		if (large)  exp = new Image(asset, 0, 121, 128, 7);
 		else        exp = new Image(asset, 0, 44, 16, 1);
@@ -156,16 +126,8 @@ public class StatusPane extends Component {
 		level = new BitmapText( PixelScene.pixelFont);
 		level.hardlight( 0xFFFFAA );
 		add( level );
-
-		buffs = new BuffIndicator( Dungeon.heroes, large );
-		add( buffs );
-
-		busy = new BusyIndicator();
-		add( busy );
-
 		counter = new CircleArc(18, 4.25f);
 		counter.color( 0x808080, true );
-		counter.show(this, busy.center(), 0f);
 	}
 
 	@Override
@@ -207,8 +169,6 @@ public class StatusPane extends Component {
 
 			buffs.setRect(x + 31, y, 128, 16);
 
-			busy.x = x + bg.width + 1;
-			busy.y = y + bg.height - 9;
 		} else {
 			exp.x = x;
 			exp.y = y;
@@ -226,11 +186,8 @@ public class StatusPane extends Component {
 
 			buffs.setRect( x + 31, y + 9, 50, 8 );
 
-			busy.x = x + 1;
-			busy.y = y + 33;
 		}
 
-		counter.point(busy.center());
 	}
 	
 	private static final int[] warningColors = new int[]{0x660000, 0xCC0000, 0x660000};
@@ -242,87 +199,6 @@ public class StatusPane extends Component {
 	@Override
 	public void update() {
 		super.update();
-		
-		int health = Dungeon.heroes.HP;
-		int shield = Dungeon.heroes.shielding();
-		int max = Dungeon.heroes.HT;
-
-		if (!Dungeon.heroes.isAlive()) {
-			avatar.tint(0x000000, 0.5f);
-		} else if ((health/(float)max) <= 0.3f) {
-			warning += Game.elapsed * 5f *(0.4f - (health/(float)max));
-			warning %= 1f;
-			avatar.tint(ColorMath.interpolate(warning, warningColors), 0.5f );
-		} else if (talentBlink > 0.33f){ //stops early so it doesn't end in the middle of a blink
-			talentBlink -= Game.elapsed;
-			avatar.tint(1, 1, 0, (float)Math.abs(Math.cos(talentBlink*FLASH_RATE))/2f);
-		} else {
-			avatar.resetColor();
-		}
-
-		hp.scale.x = Math.max( 0, (health-shield)/(float)max);
-		shieldedHP.scale.x = health/(float)max;
-
-		if (shield > health) {
-			rawShielding.scale.x = Math.min(1, shield / (float) max);
-		} else {
-			rawShielding.scale.x = 0;
-		}
-
-		if (oldHP != health || oldShield != shield || oldMax != max){
-			if (shield <= 0) {
-				hpText.text(health + "/" + max);
-			} else {
-				hpText.text(health + "+" + shield + "/" + max);
-			}
-			oldHP = health;
-			oldShield = shield;
-			oldMax = max;
-		}
-
-		if (large) {
-			exp.scale.x = (128 / exp.width) * Dungeon.heroes.exp / Dungeon.heroes.maxExp();
-
-			hpText.measure();
-			hpText.x = hp.x + (128 - hpText.width())/2f;
-
-			expText.text(Dungeon.heroes.exp + "/" + Dungeon.heroes.maxExp());
-			expText.measure();
-			expText.x = hp.x + (128 - expText.width())/2f;
-
-		} else {
-			exp.scale.x = (width / exp.width) * Dungeon.heroes.exp / Dungeon.heroes.maxExp();
-		}
-
-		if (Dungeon.heroes.lvl != lastLvl) {
-
-			if (lastLvl != -1) {
-				showStarParticles();
-			}
-
-			lastLvl = Dungeon.heroes.lvl;
-
-			if (large){
-				level.text( "lv. " + lastLvl );
-				level.measure();
-				level.x = x + (30f - level.width()) / 2f;
-				level.y = y + 33f - level.baseLine() / 2f;
-			} else {
-				level.text( Integer.toString( lastLvl ) );
-				level.measure();
-				level.x = x + 27.5f - level.width() / 2f;
-				level.y = y + 28.0f - level.baseLine() / 2f;
-			}
-			PixelScene.align(level);
-		}
-
-		int tier = Dungeon.heroes.tier();
-		if (tier != lastTier) {
-			lastTier = tier;
-			avatar.copy( HeroSprite.avatar( Dungeon.heroes.heroClass, tier ) );
-		}
-
-		counter.setSweep((1f - Actor.now()%1f)%1f);
 	}
 
 	public void alpha( float value ){
@@ -337,7 +213,6 @@ public class StatusPane extends Component {
 		if (expText != null) expText.alpha(0.6f*value);
 		level.alpha(value);
 		compass.alpha(value);
-		busy.alpha(value);
 		counter.alpha(value);
 	}
 

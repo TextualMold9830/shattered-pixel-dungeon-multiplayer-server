@@ -23,10 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.badlogic.gdx.Gdx;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -54,6 +52,7 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InterLevelSceneServer {
 
@@ -66,7 +65,7 @@ public class InterLevelSceneServer {
 	}
 	public static Mode mode;
 
-	public static LevelTransition curTransition = null;
+	public static LevelTransition curTransition = new LevelTransition();
 	public static int returnDepth;
 	public static int returnBranch;
 	public static int returnPos;
@@ -165,6 +164,7 @@ public class InterLevelSceneServer {
 			thread = new Thread() {
 				@Override
 				public void run() {
+					Gdx.app.log("InterLevelSceneServer", "switch on mode, mode: " + mode);
 					
 					try {
 
@@ -195,7 +195,7 @@ public class InterLevelSceneServer {
 						}
 						
 					} catch (Exception e) {
-						
+						e.printStackTrace();
 						error = e;
 						
 					}
@@ -238,19 +238,19 @@ public class InterLevelSceneServer {
 			else throw new RuntimeException("fatal error occurred while moving between floors. " +
 						"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth, error);
 
-			add(new WndError(errorMsg, null) {
-				public void onBackPressed() {
-					super.onBackPressed();
-					Game.switchScene(StartScene.class);
-				}
-			});
+//			add(new WndError(errorMsg, null) {
+//				public void onBackPressed() {
+//					super.onBackPressed();
+//					Game.switchScene(StartScene.class);
+//				}
+//			});
 			thread = null;
 			error = null;
 		}
 	}
 
 	private void descend() throws IOException {
-
+		Gdx.app.log("InterLevelSceneServer", "descend()");
 		if (Dungeon.heroes == null) {
 			Mob.clearHeldAllies();
 			Dungeon.init();
@@ -262,6 +262,7 @@ public class InterLevelSceneServer {
 			if (DeviceCompat.isDebug()){
 				int trueDepth = Dungeon.depth;
 				int trueBranch = Dungeon.branch;
+				Gdx.app.log("InterLevelSceneServer", "step1");
 				for (int i = 1; i < trueDepth + (trueBranch == 0 ? 0 : 1); i++){
 					if (!Dungeon.levelHasBeenGenerated(i, 0)){
 						Dungeon.depth = i;
@@ -273,27 +274,53 @@ public class InterLevelSceneServer {
 				Dungeon.depth = trueDepth;
 				Dungeon.branch = trueBranch;
 			}
-
+			Gdx.app.log("InterLevelSceneServer", "step2");
 			Level level = Dungeon.newLevel();
+			Gdx.app.log("InterLevelSceneServer", "step3");
+
 			Dungeon.switchLevel( level, -1 );
+			Gdx.app.log("InterLevelSceneServer", "step4");
+
 		} else {
 			Mob.holdAlliesForAllHeroes( Dungeon.level );
+			Gdx.app.log("InterLevelSceneServer", "step1");
+
 			Dungeon.saveAll();
+			Gdx.app.log("InterLevelSceneServer", "step2");
 
 			Level level;
+			Gdx.app.log("InterLevelSceneServer", "step3");
+
 			Dungeon.depth = curTransition.destDepth;
 			Dungeon.branch = curTransition.destBranch;
-
-			if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
+			Gdx.app.log("InterLevelSceneServer", "depth: " + Dungeon.depth);
+			Gdx.app.log("InterLevelSceneServer", "branc: " + Dungeon.branch);
+			if (Dungeon.depth < 1){
+				Dungeon.depth = 1;
+			}
+			boolean hasGeneratedLevel = Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch);
+			Gdx.app.log("InterLevelSceneServer", "step3.01");
+			if (hasGeneratedLevel) {
+				Gdx.app.log("InterLevelSceneServer", "step3.1");
 				level = Dungeon.loadLevel();
+				Gdx.app.log("InterLevelSceneServer", "step4");
+
 			} else {
+				Gdx.app.log("InterLevelSceneServer", "step3.1");
 				level = Dungeon.newLevel();
+				Gdx.app.log("InterLevelSceneServer", "step4");
 			}
 
 			LevelTransition destTransition = level.getTransition(curTransition.destType);
+			Gdx.app.log("InterLevelSceneServer", "step5");
+
 			curTransition = null;
 			Dungeon.switchLevel( level, destTransition.cell() );
+			Gdx.app.log("InterLevelSceneServer", "step6");
+
 		}
+		Gdx.app.log("InterLevelSceneServer", "step7");
+		Gdx.app.log("DungeonTest", Arrays.toString(Dungeon.level.map));
 
 	}
 

@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.tiles;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
@@ -322,7 +323,12 @@ public class FogOfWar extends Image {
 	public void draw() {
 
 		if (!toUpdate.isEmpty()){
-			updateTexture(Dungeon.level.fieldOfView, Dungeon.level.visited, Dungeon.level.mapped);
+			//FIXME
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					updateTexture(hero.fieldOfView, Dungeon.level.visited, Dungeon.level.mapped);
+				}
+			}
 		}
 
 		super.draw();

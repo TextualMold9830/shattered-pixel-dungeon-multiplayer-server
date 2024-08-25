@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.Method;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -500,16 +505,23 @@ public class PrisonBossLevel extends Level {
 				}
 				
 				setMapEnd();
-				
-				for (Mob m : allies){
+				Field enemyField = null;
+				Char enemy = null;
+                try {
+					enemyField = ClassReflection.getField(Tengu.class, "enemy");
+					enemy = (Char) enemyField.get(tengu);
+                } catch (ReflectionException ex) {
+					Gdx.app.error("PrisonBossLevel", "Failed to get enemy");
+                }
+                for (Mob m : allies){
 					do{
 						m.pos = randomTenguCellPos();
-					} while (findMob(m.pos) != null || m.pos == Dungeon.heroes.pos);
+					} while (findMob(m.pos) != null || m.pos == enemy.pos);
 					if (m.sprite != null) m.sprite.place(m.pos);
 					mobs.add(m);
 				}
 				
-				tengu.die(Dungeon.heroes);
+				tengu.die(new Char.DamageCause(tengu));
 				
 				clearEntities(tenguCell);
 				cleanMapState();
@@ -621,7 +633,14 @@ public class PrisonBossLevel extends Level {
 	public void placeTrapsInTenguCell(float fill){
 		
 		Point tenguPoint = cellToPoint(tengu.pos);
-		Point heroPoint = cellToPoint(Dungeon.heroes.pos);
+		//Use random hero for now
+		Hero luckyHero = null;
+		for (Hero hero: Dungeon.heroes){
+			if (hero != null){
+				luckyHero = hero;
+			}
+		}
+		Point heroPoint = cellToPoint(luckyHero.pos);
 		
 		PathFinder.setMapSize(7, 7);
 		

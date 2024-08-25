@@ -56,6 +56,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//FIXME
 public enum Rankings {
 
 	INSTANCE;
@@ -249,24 +250,24 @@ public enum Rankings {
 
 		rec.gameData = new Bundle();
 
-		Belongings belongings = Dungeon.heroes.belongings;
-
-		//save the hero and belongings
-		ArrayList<Item> allItems = (ArrayList<Item>) belongings.backpack.items.clone();
-		//remove items that won't show up in the rankings screen
-		for (Item item : belongings.backpack.items.toArray( new Item[0])) {
-			if (item instanceof Bag){
-				for (Item bagItem : ((Bag) item).items.toArray( new Item[0])){
-					if (Dungeon.quickslot.contains(bagItem)
-							&& !Dungeon.quickslot.contains(item)){
-						belongings.backpack.items.add(bagItem);
-					}
-				}
-			}
-			if (!(item instanceof Trinket) && !Dungeon.quickslot.contains(item)) {
-				belongings.backpack.items.remove(item);
-			}
-		}
+//		Belongings belongings = Dungeon.heroes.belongings;
+//
+//		//save the hero and belongings
+//		ArrayList<Item> allItems = (ArrayList<Item>) belongings.backpack.items.clone();
+//		//remove items that won't show up in the rankings screen
+//		for (Item item : belongings.backpack.items.toArray( new Item[0])) {
+//			if (item instanceof Bag){
+//				for (Item bagItem : ((Bag) item).items.toArray( new Item[0])){
+//					if (Dungeon.quickslot.contains(bagItem)
+//							&& !Dungeon.quickslot.contains(item)){
+//						belongings.backpack.items.add(bagItem);
+//					}
+//				}
+//			}
+//			if (!(item instanceof Trinket) && !Dungeon.quickslot.contains(item)) {
+//				belongings.backpack.items.remove(item);
+//			}
+//		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
 		for (Hero hero: Dungeon.heroes) {
@@ -292,16 +293,16 @@ public enum Rankings {
 
 		//save handler information
 		Bundle handler = new Bundle();
-		Scroll.saveSelectively(handler, belongings.backpack.items);
-		Potion.saveSelectively(handler, belongings.backpack.items);
-		//include potentially worn rings
-		if (belongings.misc != null)        belongings.backpack.items.add(belongings.misc);
-		if (belongings.ring != null)        belongings.backpack.items.add(belongings.ring);
-		Ring.saveSelectively(handler, belongings.backpack.items);
+//		Scroll.saveSelectively(handler, belongings.backpack.items);
+//		Potion.saveSelectively(handler, belongings.backpack.items);
+//		//include potentially worn rings
+//		if (belongings.misc != null)        belongings.backpack.items.add(belongings.misc);
+//		if (belongings.ring != null)        belongings.backpack.items.add(belongings.ring);
+//		Ring.saveSelectively(handler, belongings.backpack.items);
 		rec.gameData.put( HANDLERS, handler);
 
 		//restore items now that we're done saving
-		belongings.backpack.items = allItems;
+//		belongings.backpack.items = allItems;
 
 		//save challenges
 		rec.gameData.put( CHALLENGES, Dungeon.challenges );

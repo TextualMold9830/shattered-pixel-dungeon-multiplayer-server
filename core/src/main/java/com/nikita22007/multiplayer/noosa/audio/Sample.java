@@ -126,4 +126,17 @@ public enum Sample {
 	public void play(String id, float volume, float pitch){
 		play(id, volume, volume, 1, pitch, null);
 	}
+	public void playDelayed( Object id, float delay ){
+		playDelayed( id, delay, 1 );
+	}
+
+	public void playDelayed( Object id, float delay, float volume ) {
+		playDelayed( id, delay, volume, volume, 1 );
+	}
+	public void playDelayed( Object id, float delay, float volume, float pitch ) {
+		playDelayed( id, delay, volume, volume, pitch );
+	}
+
+	public void playDelayed( Object id, float delay, float leftVolume, float rightVolume, float pitch ) {}
+
 }

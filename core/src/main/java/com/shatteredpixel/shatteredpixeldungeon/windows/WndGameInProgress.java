@@ -124,7 +124,7 @@ public class WndGameInProgress extends Window {
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				ActionIndicator.clearAction();
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.CONTINUE;
-				ShatteredPixelDungeon.switchScene(InterLevelSceneServer.class);
+				//ShatteredPixelDungeon.switchScene(InterLevelSceneServer.class);
 			}
 		};
 		

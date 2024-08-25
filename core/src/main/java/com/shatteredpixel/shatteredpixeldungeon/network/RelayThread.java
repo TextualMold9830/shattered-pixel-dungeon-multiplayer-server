@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.json.JSONException;
@@ -78,6 +79,7 @@ public class RelayThread extends Thread {
             writer.flush();
             while (true) {
                 String json = reader.readLine();
+                Gdx.app.log("RelayThread", json);
                 if (json == null){
                     GLog.h("relay thread stopped");
                     socket.close();
@@ -88,6 +90,7 @@ public class RelayThread extends Thread {
                 int port = port_obj.getInt("port");
                 Socket client = new Socket(relayServerAddress, port);
                 Server.startClientThread(client);
+                Gdx.app.log("RelayThread", "Client connected");
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
