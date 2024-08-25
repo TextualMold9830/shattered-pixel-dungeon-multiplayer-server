@@ -93,7 +93,7 @@ public class QuickRecipe extends Component {
 	private ItemSlot output;
 	
 	public QuickRecipe(Recipe.SimpleRecipe r){
-		this(r, r.getIngredients(), r.sampleOutput(null));
+		this(r, r.getIngredients(), r.sampleOutput(null, hero));
 	}
 	
 	public QuickRecipe(Recipe r, ArrayList<Item> inputs, final Item output) {
@@ -140,7 +140,9 @@ public class QuickRecipe extends Component {
 		}
 		if (hasInputs) {
 			arrow.icon.tint(1, 1, 0, 1);
-			if (!(ShatteredPixelDungeon.scene() instanceof AlchemyScene)) {
+			//if (!(ShatteredPixelDungeon.scene() instanceof AlchemyScene)) {
+			//todo check this
+			if (true) {
 				arrow.enable(false);
 			}
 		} else {
@@ -280,7 +282,7 @@ public class QuickRecipe extends Component {
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					if (!scroll.isKnown()) scroll.anonymize();
 					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 2:
@@ -311,7 +313,7 @@ public class QuickRecipe extends Component {
 				for (Class<?> cls : Generator.Category.POTION.classes){
 					Potion pot = (Potion) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(pot));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 4:
@@ -319,7 +321,7 @@ public class QuickRecipe extends Component {
 				for (Class<?> cls : Generator.Category.SCROLL.classes){
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 5:
@@ -332,7 +334,7 @@ public class QuickRecipe extends Component {
 					}
 					Item item = (Item) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(new Bomb(), item));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
+					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 					i++;
 				}
 				return result;

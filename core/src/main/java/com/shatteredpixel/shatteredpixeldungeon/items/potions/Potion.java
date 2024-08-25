@@ -534,7 +534,7 @@ public class Potion extends Item {
 		}
 		
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return new WndBag.Placeholder(ItemSpriteSheet.POTION_HOLDER){
 
 				@Override

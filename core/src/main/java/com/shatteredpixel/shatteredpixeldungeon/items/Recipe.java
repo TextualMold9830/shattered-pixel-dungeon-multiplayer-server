@@ -72,7 +72,7 @@ public abstract class Recipe {
 	
 	public abstract Item brew(ArrayList<Item> ingredients, Hero hero);
 	
-	public abstract Item sampleOutput(ArrayList<Item> ingredients);
+	public abstract Item sampleOutput(ArrayList<Item> ingredients, Hero hero);
 	
 	//subclass for the common situation of a recipe with static inputs and outputs
 	public static abstract class SimpleRecipe extends Recipe {
@@ -147,11 +147,11 @@ public abstract class Recipe {
 			}
 			
 			//sample output and real output are identical in this case.
-			return sampleOutput(null);
+			return sampleOutput(null, hero);
 		}
 		
 		//ingredients are ignored, as output doesn't vary
-		public final Item sampleOutput(ArrayList<Item> ingredients){
+		public final Item sampleOutput(ArrayList<Item> ingredients, Hero hero){
 			try {
 				Item result = Reflection.newInstance(output);
 				result.quantity(outQuantity);

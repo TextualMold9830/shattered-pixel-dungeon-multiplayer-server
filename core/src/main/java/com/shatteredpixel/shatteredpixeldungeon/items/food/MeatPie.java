@@ -87,11 +87,11 @@ public class MeatPie extends Food {
 				ingredient.quantity(ingredient.quantity() - 1);
 			}
 			
-			return sampleOutput(null);
+			return sampleOutput(null, hero);
 		}
 		
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return new MeatPie();
 		}
 	}

@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
@@ -97,11 +96,11 @@ public class Alchemize extends Spell {
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			ingredients.get(0).quantity(ingredients.get(0).quantity()-1);
 			ingredients.get(1).quantity(ingredients.get(1).quantity()-1);
-			return sampleOutput(null);
+			return sampleOutput(null, hero);
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return new Alchemize().quantity(OUT_QUANTITY);
 		}
 	}

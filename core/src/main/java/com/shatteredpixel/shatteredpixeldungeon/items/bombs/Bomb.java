@@ -428,7 +428,7 @@ public class Bomb extends Item {
 		}
 		
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			for (Item i : ingredients){
 				if (validIngredients.containsKey(i.getClass())){
 					return Reflection.newInstance(validIngredients.get(i.getClass()));

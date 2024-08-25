@@ -123,7 +123,7 @@ public abstract class Trinket extends Item {
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return ingredients.get(0).duplicate().upgrade();
 		}
 	}

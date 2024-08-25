@@ -188,7 +188,7 @@ public class LiquidMetal extends Item {
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
-			Item result = sampleOutput(ingredients);
+			Item result = sampleOutput(ingredients, hero);
 
 			for (Item i : ingredients){
 				i.quantity(0);
@@ -198,7 +198,7 @@ public class LiquidMetal extends Item {
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			int metalQuantity = 0;
 
 			for (Item i : ingredients){

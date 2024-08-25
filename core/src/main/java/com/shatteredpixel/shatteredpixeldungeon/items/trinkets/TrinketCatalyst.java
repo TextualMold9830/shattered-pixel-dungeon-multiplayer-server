@@ -127,7 +127,7 @@ public class TrinketCatalyst extends Item {
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return new Trinket.PlaceHolder();
 		}
 	}

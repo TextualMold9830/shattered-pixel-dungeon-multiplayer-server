@@ -159,11 +159,11 @@ public class UnstableSpell extends Spell {
 				i.quantity(i.quantity()-1);
 			}
 
-			return sampleOutput(null);
+			return sampleOutput(null, hero);
 		}
 
 		@Override
-		public Item sampleOutput(ArrayList<Item> ingredients) {
+		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			return new UnstableSpell();
 		}
 	}
