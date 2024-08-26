@@ -213,7 +213,7 @@ public class WandOfFireblast extends DamageWand {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(), max());
 		else
-			return Messages.get(this, "stats_desc", chargesPerCast(), min(0, hero), max(0, hero));
+			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));
 	}
 
 	@Override
