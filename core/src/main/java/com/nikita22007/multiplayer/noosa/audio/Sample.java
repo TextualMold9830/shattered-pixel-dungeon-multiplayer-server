@@ -101,7 +101,18 @@ public enum Sample {
 	public void play( String id, float leftVolume, float rightVolume, float rate ) {
 		play( id, leftVolume, rightVolume, rate, 1, null );
 	}
+
+	public void playDelayed(String id, float delay){
+		playDelayed(id, delay, 1.0f, 1.0f);
+
+	}
+	public void playDelayed( String id, float delay, float volume, float pitch ) {
+		play( id, volume, volume, 1.0f, pitch, delay,null );
+	}
 	public void play( String id, float leftVolume, float rightVolume, float rate, float pitch, @Nullable Hero hero) {
+		play(id, leftVolume, rightVolume, rate, pitch, null, hero);
+	}
+	public void play( String id, float leftVolume, float rightVolume, float rate, float pitch, @Nullable Float delay, @Nullable Hero hero) {
 		if (!ids.contains( id )) {
 			assert !DeviceCompat.isDebug(): "playing unloaded sample: " + id;
 			Log.e("Sound", "playing unloaded sample: " + id);
@@ -115,6 +126,9 @@ public enum Sample {
 			actionObj.put("left_volume", leftVolume);
 			actionObj.put("right_volume", rightVolume);
 			actionObj.put("rate", rate);
+			if (delay != null){
+				actionObj.put("delay", (float)delay);
+			}
 			actionObj.put("pitch", pitch);
 		} catch (JSONException ignored) {}
 		if (hero != null){
