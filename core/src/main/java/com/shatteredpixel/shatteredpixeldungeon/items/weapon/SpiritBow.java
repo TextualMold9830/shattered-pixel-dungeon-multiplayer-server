@@ -186,18 +186,20 @@ public class SpiritBow extends Weapon {
 
 	//FIXME
 	@Override
-	public int min(int lvl) {
-		int dmg = 1 + Dungeon.heroes.lvl/5
-				+ RingOfSharpshooting.levelDamageBonus(Dungeon.heroes)
-				+ (curseInfusionBonus ? 1 + Dungeon.heroes.lvl/30 : 0);
+	public int min(int lvl, Char owner) {
+		Hero hero = (Hero) owner;
+		int dmg = 1 + hero.lvl/5
+				+ RingOfSharpshooting.levelDamageBonus(hero)
+				+ (curseInfusionBonus ? 1 + hero.lvl/30 : 0);
 		return Math.max(0, dmg);
 	}
 	
 	@Override
-	public int max(int lvl) {
-		int dmg = 6 + (int)(Dungeon.heroes.lvl/2.5f)
-				+ 2*RingOfSharpshooting.levelDamageBonus(Dungeon.heroes)
-				+ (curseInfusionBonus ? 2 + Dungeon.heroes.lvl/15 : 0);
+	public int max(int lvl, Char owner) {
+		Hero hero = (Hero) owner;
+		int dmg = 6 + (int)(hero.lvl/2.5f)
+				+ 2*RingOfSharpshooting.levelDamageBonus(hero)
+				+ (curseInfusionBonus ? 2 + hero.lvl/15 : 0);
 		return Math.max(0, dmg);
 	}
 
@@ -271,7 +273,8 @@ public class SpiritBow extends Weapon {
 	@Override
 	//FIXME
 	public int level() {
-		int level = Dungeon.heroes == null ? 0 : Dungeon.heroes.lvl/5;
+		Hero hero = findOwner();
+		int level =  hero == null ? 0 :  hero.lvl/5;
 		if (curseInfusionBonus) level += 1 + level/6;
 		return level;
 	}
@@ -301,7 +304,7 @@ public class SpiritBow extends Weapon {
 		//FIXME
 		@Override
 		public Emitter emitter() {
-			if (Dungeon.heroes.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
+			if (SpiritBow.this.findOwner().buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
 				Emitter e = new Emitter();
 				e.pos(5, 5);
 				e.fillTarget = false;

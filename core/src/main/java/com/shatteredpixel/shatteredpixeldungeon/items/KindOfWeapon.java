@@ -221,22 +221,17 @@ abstract public class KindOfWeapon extends EquipableItem {
 	}
 
 	public int min(Char owner){
-		return min(buffedLvl(owner));
+		return min(buffedLvl(owner), owner);
 	}
 
 	public int max(Char owner){
-		return max(buffedLvl(owner));
+		return max(buffedLvl(owner), owner);
 	}
-
-	public int min(int lvl){
-		return min(findOwner());
-	};
+	protected abstract int min(int lvl);
 	public int min(int lvl, Char owner){
 		return min(lvl);
 	};
-	public int max(int lvl){
-		return -1;
-	};
+	protected abstract int max(int lvl);
 	public int max(int lvl, Char owner){
 		return max(lvl);
 	};

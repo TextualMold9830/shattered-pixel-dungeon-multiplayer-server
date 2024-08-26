@@ -103,7 +103,7 @@ public class Whip extends MeleeWeapon {
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(0, hero)+dmgBoost, max(0, hero)+dmgBoost);
 		}
 	}
 }
