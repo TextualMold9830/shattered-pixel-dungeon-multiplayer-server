@@ -262,10 +262,7 @@ public class Game implements ApplicationListener {
 		scene = requestedScene;
 		if (onChange != null) onChange.beforeCreate();
 		// small hack to not include core
-		if (scene.getClass().getSimpleName().equals("PixelScene"))
-		{
-			scene.create();
-		}
+		scene.create();
 		if (onChange != null) onChange.afterCreate();
 		onChange = null;
 
