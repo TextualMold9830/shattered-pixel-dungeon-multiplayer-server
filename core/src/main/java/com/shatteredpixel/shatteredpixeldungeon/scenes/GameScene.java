@@ -1287,7 +1287,11 @@ public class GameScene extends PixelScene {
 			cellSelector.listener.onSelect(null);
 		}
 		cellSelector.listener = listener;
-		cellSelector.enabled = listener.getOwner().ready;
+		if (listener.getOwner() != null) {
+			cellSelector.enabled = listener.getOwner().ready;
+		} else {
+			cellSelector.enabled = false;
+		}
 		if (scene != null) {
 			scene.prompt(listener.prompt());
 		}
