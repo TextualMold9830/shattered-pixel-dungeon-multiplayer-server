@@ -677,7 +677,7 @@ public abstract class Char extends Actor {
 	
 	//used so that buffs(Shieldbuff.class) isn't called every time unnecessarily
 	private int cachedShield = 0;
-	public boolean needsShieldUpdate = true;
+	public boolean needsShieldUpdate = true; //todo add to send
 	
 	public int shielding(){
 		if (!needsShieldUpdate){

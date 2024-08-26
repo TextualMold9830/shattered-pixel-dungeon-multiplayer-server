@@ -364,10 +364,7 @@ public class GameScene extends PixelScene {
 		menu.setPos(uiCamera.width - MenuPane.WIDTH, uiSize > 0 ? 0 : 1);
 		add(menu);
 
-		status = new StatusPane(SPDSettings.interfaceSize() > 0);
-		status.camera = uiCamera;
-		status.setRect(0, uiSize > 0 ? uiCamera.height - 39 : 0, uiCamera.width, 0);
-		add(status);
+		status = new StatusPane();
 
 		boss = new BossHealthBar();
 		boss.camera = uiCamera;
@@ -386,10 +383,6 @@ public class GameScene extends PixelScene {
 		log.camera = uiCamera;
 		log.newLine();
 		add(log);
-
-		if (uiSize > 0) {
-			bringToFront(status);
-		}
 
 		layoutTags();
 
@@ -587,22 +580,6 @@ public class GameScene extends PixelScene {
 
 				InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
 
-
-
-			//Tutorial
-			if (SPDSettings.intro()) {
-
-				if (Document.ADVENTURERS_GUIDE.isPageFound(Document.GUIDE_INTRO)) {
-					GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
-				} else if (ControllerHandler.isControllerConnected()) {
-					GLog.p(Messages.get(GameScene.class, "tutorial_move_controller"));
-				} else if (SPDSettings.interfaceSize() == 0) {
-					GLog.p(Messages.get(GameScene.class, "tutorial_move_mobile"));
-				} else {
-					GLog.p(Messages.get(GameScene.class, "tutorial_move_desktop"));
-				}
-				status.visible = status.active = false;
-			}
 
 			if (!SPDSettings.intro() &&
 					Rankings.INSTANCE.totalNumber > 0 &&
@@ -829,7 +806,7 @@ public class GameScene extends PixelScene {
 		float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
 		float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
 
-		float y = scene.status.top()-2;
+		float y = 0;
 		if (SPDSettings.interfaceSize() == 0){
 			if (tagsOnLeft) {
 				scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);
@@ -845,9 +822,6 @@ public class GameScene extends PixelScene {
 		}
 
 		float pos = 0;
-		if (tagsOnLeft && SPDSettings.interfaceSize() > 0){
-			pos = scene.status.top();
-		}
 
 		if (scene.tagAction) {
 			scene.action.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
@@ -1102,18 +1076,6 @@ public class GameScene extends PixelScene {
 	public static void endIntro(){
 		if (scene != null){
 			SPDSettings.intro(false);
-			scene.add(new Tweener(scene, 2f){
-				@Override
-				protected void updateValues(float progress) {
-					if (progress <= 0.5f) {
-						scene.status.alpha(2*progress);
-						scene.status.visible = scene.status.active = true;
-					} else {
-						scene.status.alpha(1f);
-						scene.status.visible = scene.status.active = true;
-					}
-				}
-			});
 			GameLog.wipe();
 			if (SPDSettings.interfaceSize() == 0){
 				GLog.p(Messages.get(GameScene.class, "tutorial_ui_mobile"));
@@ -1138,7 +1100,8 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void showlevelUpStars(){
-		if (scene != null) scene.status.showStarParticles();
+		//todo addToSend
+		if (scene != null) return;
 	}
 
 	public static void resetMap() {
