@@ -82,8 +82,7 @@ public class AlchemistsToolkit extends Artifact {
 			else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
 			else if (warmUpDelay > 0)           GLog.w( Messages.get(this, "not_ready") );
 			else {
-				AlchemyScene.assignToolkit(this);
-				Game.switchScene(AlchemyScene.class);
+				GameScene.show(new AlchemyScene(hero, this));
 			}
 			
 		} else if (action.equals(AC_ENERGIZE)){

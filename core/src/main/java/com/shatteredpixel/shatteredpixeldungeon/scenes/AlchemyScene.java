@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -67,6 +68,8 @@ public class AlchemyScene extends Window {
 
 	private static AlchemyScene[] activeAlchemyScene = new AlchemyScene[0];
 
+	private AlchemistsToolkit toolkit;
+
 	protected void enableAlchemyScene(Hero hero){
 		if (activeAlchemyScene.length != SPDSettings.maxPlayers()){
 			activeAlchemyScene = new AlchemyScene[SPDSettings.maxPlayers()];
@@ -88,12 +91,14 @@ public class AlchemyScene extends Window {
 		if (activeAlchemyScene.length != SPDSettings.maxPlayers()){
 			return null;
 		}
-		return activeAlchemyScene[HeroHelp.getHeroID(hero);
+		return activeAlchemyScene[HeroHelp.getHeroID(hero)];
 	}
 
-	public AlchemyScene(@NotNull Hero hero){
+	public AlchemyScene(@NotNull Hero hero, @Nullable AlchemistsToolkit toolkit){
 		super(hero);
 		enableAlchemyScene(hero);
+		this.toolkit = toolkit;
+
 		if (lastIngredientsCommon.containsKey(HeroHelp.getHeroID(hero))) {
 			lastIngredients = lastIngredientsCommon.get(HeroHelp.getHeroID(hero));
 		} else {
@@ -505,15 +510,4 @@ public class AlchemyScene extends Window {
 		}
 
 	}
-
-	private AlchemistsToolkit toolkit;
-
-	public void assignToolkit(AlchemistsToolkit toolkit) {
-		this.toolkit = toolkit;
-	}
-
-	public void clearToolkit() {
-		this.toolkit = null;
-	}
-
 }
