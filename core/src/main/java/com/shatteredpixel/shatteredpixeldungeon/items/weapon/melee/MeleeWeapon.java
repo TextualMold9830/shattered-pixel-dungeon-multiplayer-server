@@ -204,7 +204,7 @@ public class MeleeWeapon extends Weapon {
 			} else {
 				tracker.detach();
 				Charger charger = Buff.affect(hero, Charger.class);
-				charger.gainCharge(hero.pointsInTalent(Talent.VARIED_CHARGE) / 6f);
+				charger.gainCharge(hero.pointsInTalent(Talent.VARIED_CHARGE) / 6f, hero);
 				ScrollOfRecharging.charge(hero);
 			}
 		}
@@ -228,7 +228,7 @@ public class MeleeWeapon extends Weapon {
 		}
 		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
 			Charger charger = Buff.affect(hero, Charger.class);
-			charger.gainCharge(hero.pointsInTalent(Talent.COUNTER_ABILITY)*0.375f);
+			charger.gainCharge(hero.pointsInTalent(Talent.COUNTER_ABILITY)*0.375f, hero);
 			hero.buff(Talent.CounterAbilityTacker.class).detach();
 		}
 	}
@@ -503,16 +503,16 @@ public class MeleeWeapon extends Weapon {
 			}
 		}
 
-		public void gainCharge( float charge ){
-			if (charges < chargeCap()) {
+		public void gainCharge( float charge, Hero hero ){
+			if (charges < chargeCap(hero)) {
 				partialCharge += charge;
 				while (partialCharge >= 1f) {
 					charges++;
 					partialCharge--;
 				}
-				if (charges >= chargeCap()){
+				if (charges >= chargeCap(hero)){
 					partialCharge = 0;
-					charges = chargeCap();
+					charges = chargeCap(hero);
 				}
 				updateQuickslot();
 			}
