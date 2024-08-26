@@ -76,7 +76,6 @@ import com.watabou.utils.Rect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class DM300 extends Mob {
 
