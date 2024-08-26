@@ -114,10 +114,11 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 		item.detachAll( hero.belongings.backpack );
 
-		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+		AlchemyScene alchemyScene = AlchemyScene.getActiveAlchemyScene(hero);
+		if (alchemyScene != null){
 
 			Dungeon.energy += item.energyVal();
-			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
+			alchemyScene.createEnergy();
 
 		} else {
 
@@ -138,10 +139,11 @@ public class WndEnergizeItem extends WndInfoItem {
 
 			item = item.detach( hero.belongings.backpack );
 
-			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+			AlchemyScene alchemyScene = AlchemyScene.getActiveAlchemyScene(hero);
+			if (alchemyScene != null){
 
 				Dungeon.energy += item.energyVal();
-				((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
+				alchemyScene.createEnergy();
 
 			} else {
 

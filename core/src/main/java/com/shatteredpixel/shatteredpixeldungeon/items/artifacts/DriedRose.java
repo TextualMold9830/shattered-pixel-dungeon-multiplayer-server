@@ -227,7 +227,7 @@ public class DriedRose extends Artifact {
 	@Override
 	public String desc(Hero hero) {
 		if (!Ghost.Quest.completed()
-				&& (ShatteredPixelDungeon.scene() instanceof GameScene || ShatteredPixelDungeon.scene() instanceof AlchemyScene)){
+				&& (ShatteredPixelDungeon.scene() instanceof GameScene)){
 			return Messages.get(this, "desc_no_quest");
 		}
 		

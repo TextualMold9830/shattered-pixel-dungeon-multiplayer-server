@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -42,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -57,14 +59,41 @@ public class AlchemyScene extends Window {
 	private static final Item[] outputs = new Item[3];
 	
 	private ArrayList<Item> lastIngredients = new ArrayList<>();
-	private static Map<Integer,ArrayList<Item>> lastIngredientsCommon = new Hashtable<>();
+	private static final Map<Integer,ArrayList<Item>> lastIngredientsCommon = new Hashtable<>();
 	private static Recipe lastRecipe = null;
 
 	private boolean energyAddBlinking = false;
 	private boolean repeat_enabled = false;
 
-	AlchemyScene(Hero hero){
+	private static AlchemyScene[] activeAlchemyScene = new AlchemyScene[0];
+
+	protected void enableAlchemyScene(Hero hero){
+		if (activeAlchemyScene.length != SPDSettings.maxPlayers()){
+			activeAlchemyScene = new AlchemyScene[SPDSettings.maxPlayers()];
+		}
+		activeAlchemyScene[HeroHelp.getHeroID(hero)] = this;
+	}
+	protected static void disableAlchemyScene(Hero hero){
+		activeAlchemyScene[HeroHelp.getHeroID(hero)] = null;
+	}
+
+	public static boolean isAlchemySceneEnabled(Hero hero) {
+		if (activeAlchemyScene.length != SPDSettings.maxPlayers()){
+			return false;
+		}
+		return activeAlchemyScene[HeroHelp.getHeroID(hero)] != null;
+	}
+
+	public static AlchemyScene getActiveAlchemyScene(Hero hero) {
+		if (activeAlchemyScene.length != SPDSettings.maxPlayers()){
+			return null;
+		}
+		return activeAlchemyScene[HeroHelp.getHeroID(hero);
+	}
+
+	public AlchemyScene(@NotNull Hero hero){
 		super(hero);
+		enableAlchemyScene(hero);
 		if (lastIngredientsCommon.containsKey(HeroHelp.getHeroID(hero))) {
 			lastIngredients = lastIngredientsCommon.get(HeroHelp.getHeroID(hero));
 		} else {
@@ -128,6 +157,7 @@ public class AlchemyScene extends Window {
 		super.hide();
 		lastIngredientsCommon.put(HeroHelp.getHeroID(getOwnerHero()), lastIngredients);
 		clearSlots();
+		disableAlchemyScene(getOwnerHero());
 	}
 
 	private JSONObject getParamsObject() {

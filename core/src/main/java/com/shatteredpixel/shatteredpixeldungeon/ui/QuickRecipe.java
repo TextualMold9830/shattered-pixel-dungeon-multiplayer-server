@@ -141,8 +141,8 @@ public class QuickRecipe extends Component {
 		if (hasInputs) {
 			arrow.icon.tint(1, 1, 0, 1);
 			//if (!(ShatteredPixelDungeon.scene() instanceof AlchemyScene)) {
+			if (!AlchemyScene.isAlchemySceneEnabled(hero)) {
 			//todo check this
-			if (true) {
 				arrow.enable(false);
 			}
 		} else {
