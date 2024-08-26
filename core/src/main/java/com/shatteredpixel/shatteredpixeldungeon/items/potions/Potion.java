@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
@@ -349,7 +350,7 @@ public class Potion extends Item {
 				updateQuickslot();
 			}
 			
-			if (Dungeon.heroes.isAlive()) {
+			if (HeroHelp.haveAliveHero()) {
 				Catalog.setSeen(getClass());
 			}
 		}
@@ -517,7 +518,7 @@ public class Potion extends Item {
 			}
 			
 			if (seeds.size() == 1){
-				result.identify();
+				result.identify(hero);
 			}
 
 			while (result instanceof PotionOfHealing
