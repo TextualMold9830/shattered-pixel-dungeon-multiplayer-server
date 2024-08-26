@@ -55,14 +55,14 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 	
 	@Override
 	public boolean attachTo(Char target) {
-		ActionIndicator.setAction(this);
+		((Hero) target).actionIndicator.setAction(this);
 		return super.attachTo(target);
 	}
 	
 	@Override
 	public void detach() {
+		((Hero) target).actionIndicator.clearAction(this);
 		super.detach();
-		ActionIndicator.clearAction(this);
 	}
 	
 	@Override

@@ -468,8 +468,8 @@ public class MeleeWeapon extends Weapon {
 					partialCharge = 0;
 				}
 
-				if (ActionIndicator.action != this && hero.subClass == HeroSubClass.CHAMPION) {
-					ActionIndicator.setAction(this);
+				if (hero.actionIndicator.action != this && hero.subClass == HeroSubClass.CHAMPION) {
+					hero.actionIndicator.setAction(this);
 				}
 
 				spend(TICK);
@@ -483,15 +483,15 @@ public class MeleeWeapon extends Weapon {
 		public void fx(boolean on) {
 			if (target instanceof Hero) {
 				if (on && ((Hero) target).subClass == HeroSubClass.CHAMPION) {
-					ActionIndicator.setAction(this);
+					((Hero) target).actionIndicator.setAction(this);
 				}
 			}
 		}
 
 		@Override
 		public void detach() {
+			((Hero) target).actionIndicator.clearAction(this);
 			super.detach();
-			ActionIndicator.clearAction(this);
 		}
 
 		public int chargeCap(Hero hero){
@@ -594,7 +594,7 @@ public class MeleeWeapon extends Weapon {
 			hero.sprite.operate(hero.pos);
 			Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 
-			ActionIndicator.setAction(this);
+			hero.actionIndicator.setAction(this);
 			Item.updateQuickslot();
 			hero.attackIndicator.updateState();
 		}

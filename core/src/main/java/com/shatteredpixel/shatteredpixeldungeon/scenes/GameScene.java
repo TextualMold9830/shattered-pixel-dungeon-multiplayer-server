@@ -187,7 +187,6 @@ public class GameScene extends PixelScene {
 	private static boolean invVisible = true;
 
 	private Toast prompt;
-	private ActionIndicator action;
 	private ResumeIndicator resume;
 
 	{
@@ -374,10 +373,6 @@ public class GameScene extends PixelScene {
 		resume = new ResumeIndicator();
 		resume.camera = uiCamera;
 		add(resume);
-
-		action = new ActionIndicator();
-		action.camera = uiCamera;
-		add(action);
 
 		log = new GameLog();
 		log.camera = uiCamera;
@@ -688,9 +683,9 @@ public class GameScene extends PixelScene {
 		if (updateItemDisplays) {
 			updateItemDisplays = false;
 			QuickSlotButton.refresh();
-			if (ActionIndicator.action instanceof MeleeWeapon.Charger) {
+			if (hero.actionIndicator.action instanceof MeleeWeapon.Charger) {
 				//Champion weapon swap uses items, needs refreshing whenever item displays are updated
-				ActionIndicator.refresh();
+				hero.actionIndicator.refresh();
 			}
 		}
 
@@ -738,19 +733,15 @@ public class GameScene extends PixelScene {
 	}
 
 		if (updateTags){
-			tagAction = action.visible;
 			tagResume = resume.visible;
 
 			layoutTags();
 
 		} else if (
-				tagAction != action.visible ||
 				tagResume != resume.visible) {
 
 			boolean tagAppearing =
-									(action.visible && !tagAction) ||
 									(resume.visible && !tagResume);
-			tagAction = action.visible;
 			tagResume = resume.visible;
 
 			//if a new tag appears, re-layout tags immediately
@@ -782,7 +773,6 @@ public class GameScene extends PixelScene {
 		}
 		return result;
 	}
-	private boolean tagAction    = false;
 	private boolean tagResume    = false;
 
 	public static void layoutTags() {
@@ -822,12 +812,6 @@ public class GameScene extends PixelScene {
 		}
 
 		float pos = 0;
-
-		if (scene.tagAction) {
-			scene.action.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
-			scene.action.flip(tagsOnLeft);
-			pos = scene.action.top();
-		}
 
 		if (scene.tagResume) {
 			scene.resume.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );

@@ -57,8 +57,8 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public void detach() {
+		((Hero) target).actionIndicator.clearAction(this);
 		super.detach();
-		ActionIndicator.clearAction(this);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		if (freerunCooldown == 0 && !freerunning() && target.invisible > 0 && Dungeon.heroes.pointsInTalent(Talent.SPEEDY_STEALTH) >= 1){
 			momentumStacks = Math.min(momentumStacks + 2, 10);
 			movedLastTurn = true;
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 			BuffIndicator.refreshHero();
 		}
 
@@ -81,10 +81,10 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		} else if (!movedLastTurn){
 			momentumStacks = (int)GameMath.gate(0, momentumStacks-1, Math.round(momentumStacks * 0.667f));
 			if (momentumStacks <= 0) {
-				ActionIndicator.clearAction(this);
+				((Hero) target).actionIndicator.clearAction(this);
 				BuffIndicator.refreshHero();
 			} else {
-				ActionIndicator.refresh();
+				((Hero) target).actionIndicator.refresh();
 			}
 		}
 		movedLastTurn = false;
@@ -98,7 +98,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		if (freerunCooldown <= 0 && !freerunning()){
 			postpone(target.cooldown()+(1/target.speed()));
 			momentumStacks = Math.min(momentumStacks + 1, 10);
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 			BuffIndicator.refreshHero();
 		}
 	}
@@ -203,7 +203,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		freerunTurns = bundle.getInt(FREERUN_TURNS);
 		freerunCooldown = bundle.getInt(FREERUN_CD);
 		if (momentumStacks > 0 && freerunTurns <= 0){
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 		}
 		movedLastTurn = false;
 	}
@@ -242,7 +242,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		SpellSprite.show(target, SpellSprite.HASTE, 1, 1, 0);
 		momentumStacks = 0;
 		BuffIndicator.refreshHero();
-		ActionIndicator.clearAction(this);
+		hero.actionIndicator.clearAction(this);
 	}
 
 }

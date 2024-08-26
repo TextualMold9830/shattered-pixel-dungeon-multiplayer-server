@@ -102,7 +102,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		if (cooldown > 0){
 			cooldown--;
 			if (cooldown == 0 && energy >= 1){
-				ActionIndicator.setAction(this);
+				((Hero) target).actionIndicator.setAction(this);
 			}
 			BuffIndicator.refreshHero();
 		}
@@ -194,7 +194,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		energy = Math.min(energy+energyGain, energyCap());
 
 		if (energy > 0 && cooldown == 0){
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 		}
 		BuffIndicator.refreshHero();
 	}
@@ -220,9 +220,9 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		}
 
 		if (cooldown > 0 || energy < 1){
-			ActionIndicator.clearAction(this);
+			((Hero) target).actionIndicator.clearAction(this);
 		} else {
-			ActionIndicator.refresh();
+			((Hero) target).actionIndicator.refresh();
 		}
 		BuffIndicator.refreshHero();
 	}
@@ -237,7 +237,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		cooldown = 0;
 		tracker.detach();
 		if (energy >= 1){
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 		}
 		BuffIndicator.refreshHero();
 	}

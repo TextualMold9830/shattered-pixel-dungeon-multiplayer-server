@@ -30,153 +30,40 @@ import com.watabou.input.GameAction;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Visual;
 
-public class ActionIndicator extends Tag {
+public class ActionIndicator {
 
-	Visual primaryVis;
-	Visual secondVis;
+	private final Hero owner;
 
-	public static Action action;
-	public static ActionIndicator instance;
+	public Action action;
 
-	public ActionIndicator() {
-		super( 0 );
-
-		instance = this;
-
-		setSize( SIZE, SIZE );
-		visible = false;
-	}
-	
-	@Override
-	public GameAction keyAction() {
-		return SPDAction.TAG_ACTION;
-	}
-	
-	@Override
-	public void destroy() {
-		super.destroy();
-		instance = null;
-	}
-	
-	@Override
-	protected synchronized void layout() {
-		super.layout();
-		
-		if (primaryVis != null){
-			if (!flipped)   primaryVis.x = x + (SIZE - primaryVis.width()) / 2f + 1;
-			else            primaryVis.x = x + width - (SIZE + primaryVis.width()) / 2f - 1;
-			primaryVis.y = y + (height - primaryVis.height()) / 2f;
-			PixelScene.align(primaryVis);
-			if (secondVis != null){
-				if (secondVis.width() > 16) secondVis.x = primaryVis.center().x - secondVis.width()/2f;
-				else                        secondVis.x = primaryVis.center().x + 8 - secondVis.width();
-				if (secondVis instanceof BitmapText){
-					//need a special case here for text unfortunately
-					secondVis.y = primaryVis.center().y + 8 - ((BitmapText) secondVis).baseLine();
-				} else {
-					secondVis.y = primaryVis.center().y + 8 - secondVis.height();
-				}
-				PixelScene.align(secondVis);
-			}
-		}
-	}
-	
-	private boolean needsRefresh = false;
-	
-	@Override
-	public void update() {
-		super.update();
-		synchronized (ActionIndicator.class) {
-			if (!visible && action != null) {
-				visible = true;
-				needsRefresh = true;
-				flash();
-			} else {
-				visible = action != null;
-			}
-
-			if (needsRefresh) {
-				if (primaryVis != null) {
-					primaryVis.destroy();
-					primaryVis.killAndErase();
-					primaryVis = null;
-				}
-				if (secondVis != null) {
-					secondVis.destroy();
-					secondVis.killAndErase();
-					secondVis = null;
-				}
-				if (action != null) {
-					primaryVis = action.primaryVisual();
-					add(primaryVis);
-
-					secondVis = action.secondaryVisual();
-					if (secondVis != null) {
-						add(secondVis);
-					}
-
-					setColor(action.indicatorColor());
-				}
-
-				layout();
-				needsRefresh = false;
-			}
-			//FIXME
-			if (!Dungeon.heroes.ready) {
-				if (primaryVis != null) primaryVis.alpha(0.5f);
-				if (secondVis != null) secondVis.alpha(0.5f);
-			} else {
-				if (primaryVis != null) primaryVis.alpha(1f);
-				if (secondVis != null) secondVis.alpha(1f);
-			}
-		}
-
+	public ActionIndicator(Hero hero) {
+		this.owner = hero;
 	}
 
-	@Override
-	//FIXME
 	protected void onClick() {
-		super.onClick();
-		if (action != null && Dungeon.heroes.ready) {
-			action.doAction();
+		if (action != null && owner.ready) {
+			action.doAction(owner);
 		}
 	}
 
-	@Override
-	protected String hoverText() {
-		String text = (action == null ? null : action.actionName());
-		if (text != null){
-			return Messages.titleCase(text);
-		} else {
-			return null;
-		}
-	}
 
-	public static void setAction(Action action){
-		synchronized (ActionIndicator.class) {
-			ActionIndicator.action = action;
+	public void setAction(Action action){
+			this.action = action;
 			refresh();
-		}
 	}
 
-	public static void clearAction(){
+	public void clearAction(){
 		clearAction(null);
 	}
 
-	public static void clearAction(Action action){
-		synchronized (ActionIndicator.class) {
-			if (action == null || ActionIndicator.action == action) {
-				ActionIndicator.action = null;
-			}
+	public void clearAction(Action action) {
+		if (action == null || this.action == action) {
+			this.action = null;
 		}
 	}
 
-	public static void refresh(){
-		synchronized (ActionIndicator.class) {
-			if (instance != null) {
-				instance.needsRefresh = true;
-			}
-		}
+	public void refresh(){
+		//todo send this
 	}
 
 	public interface Action {

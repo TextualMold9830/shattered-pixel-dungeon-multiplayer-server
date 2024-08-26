@@ -101,7 +101,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 		if ((getHighestMove() != null)) {
 
-			ActionIndicator.setAction( this );
+			((Hero) target).actionIndicator.setAction( this );
 			Badges.validateMasteryCombo( count );
 
 			GLog.p( Messages.get(this, "combo", count) );
@@ -118,8 +118,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public void detach() {
+		((Hero) target).actionIndicator.clearAction(this);
 		super.detach();
-		ActionIndicator.clearAction(this);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		clobberUsed = bundle.getBoolean(CLOBBER_USED);
 		parryUsed = bundle.getBoolean(PARRY_USED);
 
-		if (getHighestMove() != null) ActionIndicator.setAction(this);
+		if (getHighestMove() != null) ((Hero) target).actionIndicator.setAction(this);
 	}
 
 	@Override
@@ -445,7 +445,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		switch(moveBeingUsed){
 			case CLOBBER:
 				clobberUsed = true;
-				if (getHighestMove() == null) ActionIndicator.clearAction(Combo.this);
+				if (getHighestMove() == null) ((Hero) target).actionIndicator.clearAction(Combo.this);
 				hero.spendAndNext(hero.attackDelay());
 				break;
 
@@ -465,16 +465,16 @@ public class Combo extends Buff implements ActionIndicator.Action {
 						}
 					});
 				} else {
+					((Hero) target).actionIndicator.clearAction(Combo.this);
 					detach();
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					ActionIndicator.clearAction(Combo.this);
 					hero.spendAndNext(hero.attackDelay());
 				}
 				break;
 
 			default:
+				((Hero) target).actionIndicator.clearAction(Combo.this);
 				detach();
-				ActionIndicator.clearAction(Combo.this);
 				hero.spendAndNext(hero.attackDelay());
 				break;
 		}

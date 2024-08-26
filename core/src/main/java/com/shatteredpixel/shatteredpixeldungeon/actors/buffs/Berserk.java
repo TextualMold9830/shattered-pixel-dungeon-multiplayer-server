@@ -91,7 +91,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		turnRecovery = bundle.getInt(TURN_RECOVERY);
 
 		if (power >= 1f && state == State.NORMAL){
-			ActionIndicator.setAction(this);
+			((Hero)target).actionIndicator.setAction(this);
 		}
 	}
 
@@ -140,9 +140,9 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				power -= GameMath.gate(0.1f, power, 1f) * 0.067f * Math.pow((target.HP / (float) target.HT), 2);
 
 				if (power < 1f){
-					ActionIndicator.clearAction(this);
+					((Hero)target).actionIndicator.clearAction(this);
 				} else {
-					ActionIndicator.refresh();
+					((Hero)target).actionIndicator.refresh();
 				}
 
 				if (power <= 0) {
@@ -162,8 +162,8 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public void detach() {
+		((Hero)target).actionIndicator.clearAction(this);
 		super.detach();
-		ActionIndicator.clearAction(this);
 	}
 
 	public float enchantFactor(float chance){
@@ -181,7 +181,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				&& target.buff(WarriorShield.class) != null
 				&& ((Hero)target).hasTalent(Talent.DEATHLESS_FURY)){
 			startBerserking((Hero) target);
-			ActionIndicator.clearAction(this);
+			((Hero) target).actionIndicator.clearAction(this);
 		}
 
 		return state == State.BERSERK && target.shielding() > 0;
@@ -226,7 +226,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		BuffIndicator.refreshHero(); //show new power immediately
 		powerLossBuffer = 3; //2 turns until rage starts dropping
 		if (power >= 1f){
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 		}
 	}
 
@@ -271,7 +271,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		WarriorShield shield = target.buff(WarriorShield.class);
 		if (shield != null && target instanceof Hero && shield.maxShield((Hero) target) > 0) {
 			startBerserking((Hero) target);
-			ActionIndicator.clearAction(this);
+			hero.actionIndicator.clearAction(this);
 		} else {
 			GLog.w(Messages.get(this, "no_seal"));
 		}

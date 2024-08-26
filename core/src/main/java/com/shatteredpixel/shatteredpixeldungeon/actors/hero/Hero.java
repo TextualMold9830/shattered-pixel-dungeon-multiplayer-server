@@ -149,6 +149,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
@@ -179,7 +180,7 @@ public class Hero extends Char {
 	public String name;
 	public int energy;
 	public AttackIndicator attackIndicator;
-
+	public ActionIndicator actionIndicator;
 
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
@@ -244,6 +245,7 @@ public class Hero extends Char {
 		visibleEnemies = new ArrayList<>();
 
 		attackIndicator = new AttackIndicator(this);
+		actionIndicator = new ActionIndicator(this);
 	}
 	
 	public void updateHT( boolean boostHP ){

@@ -137,7 +137,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		if (target.invisible > 0){
 			turnsInvis++;
 			if (AttackLevel.getLvl(turnsInvis).blinkDistance(target) > 0 && target instanceof Hero){
-				ActionIndicator.setAction(this);
+				((Hero) target).actionIndicator.setAction(this);
 			}
 			spend(TICK);
 		} else {
@@ -148,8 +148,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	
 	@Override
 	public void detach() {
+		((Hero) target).actionIndicator.clearAction(this);
 		super.detach();
-		ActionIndicator.clearAction(this);
 	}
 
 	public int attackLevel(){
@@ -222,7 +222,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		turnsInvis = bundle.getInt(TURNS);
-		ActionIndicator.setAction(this);
+		((Hero) target).actionIndicator.setAction(this);
 	}
 	
 	@Override
