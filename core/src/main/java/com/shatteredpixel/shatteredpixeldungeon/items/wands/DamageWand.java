@@ -32,7 +32,6 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 //for wands that directly damage a target
 //wands with AOE or circumstantial direct damage count here (e.g. fireblast, transfusion), but wands with indirect damage do not (e.g. corrosion)
 public abstract class DamageWand extends Wand{
-
 	public int min(){
 		return min(buffedLvl());
 	}
@@ -64,10 +63,10 @@ public abstract class DamageWand extends Wand{
 	}
 
 	@Override
-	public String statsDesc() {
+	public String statsDesc(Hero hero) {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", min(), max());
 		else
-			return Messages.get(this, "stats_desc", min(0, hero), max(0, hero));
+			return Messages.get(this, "stats_desc", min(0), max(0));
 	}
 }

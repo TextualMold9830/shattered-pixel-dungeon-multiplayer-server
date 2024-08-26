@@ -255,7 +255,7 @@ public abstract class Wand extends Item {
 	public String info(Hero hero) {
 		String desc = desc();
 
-		desc += "\n\n" + statsDesc();
+		desc += "\n\n" + statsDesc(hero);
 
 		if (resinBonus == 1){
 			desc += "\n\n" + Messages.get(Wand.class, "resin_one");
@@ -279,7 +279,7 @@ public abstract class Wand extends Item {
 	public String statsDesc(Hero hero){
 		return statsDesc();
 	}
-	public String statsDesc(){
+	protected String statsDesc(){
 		return Messages.get(this, "stats_desc");
 	}
 	
