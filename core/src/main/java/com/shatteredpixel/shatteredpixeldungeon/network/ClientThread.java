@@ -290,16 +290,21 @@ class ClientThread implements Callable<String> {
 
         curClass.initHero(newHero);
         for (int i : NEIGHBOURS8) {
-            if (Actor.findChar(level.entrance + i) == null && level.passable[level.entrance + i]) {
-                newHero.pos = level.entrance + i;
-                break;
+            if (level.entrance() + i > -1) {
+                if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
+                    newHero.pos = level.entrance() + i;
+                    break;
+                }
             }
+        }
+        if (newHero.pos == 0) {
+            Gdx.app.error("ClientThread", "Failed to find position for new hero");
         }
         //newHero.pos = Dungeon.getPosNear(level.entrance);
 
         newHero.updateSpriteState();
         if (newHero.pos == -1) {
-            newHero.pos = level.entrance; //todo  FIXME
+            newHero.pos = level.entrance(); //todo  FIXME
         }
         Actor.add(newHero);
         Dungeon.level.occupyCell(newHero);
