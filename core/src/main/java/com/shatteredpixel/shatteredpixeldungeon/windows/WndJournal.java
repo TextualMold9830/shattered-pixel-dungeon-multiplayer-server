@@ -340,7 +340,7 @@ public class WndJournal extends WndTabbed {
 			if (parent instanceof Window){
                 hero = ((Window) parent).getOwnerHero();
             }
-			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx, hero);
+			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx);
 			
 			float left;
 			float top = body.bottom()+2;

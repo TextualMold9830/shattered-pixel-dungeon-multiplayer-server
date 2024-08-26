@@ -114,12 +114,13 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 		item.detachAll( hero.belongings.backpack );
 
-		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
-
-			Dungeon.energy += item.energyVal();
-			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
-
-		} else {
+//		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+//
+//			Dungeon.energy += item.energyVal();
+//			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
+//
+//		} else
+		{
 
 			//selling items in the sell interface doesn't spend time
 			hero.spend(-hero.cooldown());
