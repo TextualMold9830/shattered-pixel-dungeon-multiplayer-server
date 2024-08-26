@@ -152,9 +152,6 @@ public class GameScene extends PixelScene {
 	private HeroSprite hero;
 
 	private MenuPane menu;
-	private StatusPane status;
-
-	private BossHealthBar boss;
 
 	private GameLog log;
 
@@ -179,8 +176,6 @@ public class GameScene extends PixelScene {
 	private Group emoicons;
 	private Group overFogEffects;
 	private Group healthIndicators;
-
-	private static boolean invVisible = true;
 
 	private Toast prompt;
 	private ResumeIndicator resume;
@@ -354,13 +349,6 @@ public class GameScene extends PixelScene {
 		menu.camera = uiCamera;
 		menu.setPos(uiCamera.width - MenuPane.WIDTH, uiSize > 0 ? 0 : 1);
 		add(menu);
-
-		status = new StatusPane();
-
-		boss = new BossHealthBar();
-		boss.camera = uiCamera;
-		boss.setPos(6 + (uiCamera.width - boss.width()) / 2, 20);
-		add(boss);
 
 		resume = new ResumeIndicator();
 		resume.camera = uiCamera;
