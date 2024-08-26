@@ -341,7 +341,7 @@ public class WndBag extends WndTabbed {
 
 				} else {
 
-					Game.scene().addToFront(new WndUseItem( WndBag.this, item ) );
+					Game.scene().addToFront(new WndUseItem( WndBag.this, item, getOwnerHero() ) );
 
 				}
 			}

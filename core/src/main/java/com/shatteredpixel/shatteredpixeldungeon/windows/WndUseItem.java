@@ -21,9 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.ui.InventoryPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -33,27 +37,27 @@ public class WndUseItem extends WndInfoItem {
 	
 	private static final float GAP	= 2;
 	
-	public WndUseItem( final Window owner, final Item item ) {
+	public WndUseItem(@Nullable final Window ownerWnd, final Item item, Hero ownerHero ) {
 		
-		super(item);
+		super(item, ownerHero);
 
 		float y = height;
 		
-		if (owner.getOwnerHero().isAlive() && owner.getOwnerHero().belongings.contains(item)) {
+		if (ownerHero.isAlive() && getOwnerHero().belongings.contains(item)) {
 			y += GAP;
 			ArrayList<RedButton> buttons = new ArrayList<>();
-			for (final String action : item.actions( owner.getOwnerHero())) {
+			for (final String action : item.actions( getOwnerHero())) {
 				
-				RedButton btn = new RedButton( item.actionName(action,owner.getOwnerHero()), 8 ) {
+				RedButton btn = new RedButton( item.actionName(action, getOwnerHero()), 8 ) {
 					@Override
 					protected void onClick() {
 						hide();
-						if (owner != null && owner.parent != null) owner.hide();
-						if (owner.getOwnerHero().isAlive() && owner.getOwnerHero().belongings.contains(item)){
-							item.execute( owner.getOwnerHero(), action );
+						if (ownerWnd != null && ownerWnd.parent != null) ownerWnd.hide();
+						if (getOwnerHero().isAlive() && getOwnerHero().belongings.contains(item)){
+							item.execute( getOwnerHero(), action );
 						}
 						Item.updateQuickslot();
-						if (action.equals(item.defaultAction()) && item.usesTargeting && owner == null){
+						if (action.equals(item.defaultAction()) && item.usesTargeting && ownerWnd == null){
 							InventoryPane.useTargeting();
 						}
 					}

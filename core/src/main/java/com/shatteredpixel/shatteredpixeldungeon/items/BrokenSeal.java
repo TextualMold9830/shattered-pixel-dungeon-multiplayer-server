@@ -112,7 +112,7 @@ public class BrokenSeal extends Item {
 			curItem = this;
 			GameScene.selectItem(armorSelector, hero);
 		} else if (action.equals(AC_INFO)) {
-			GameScene.show(new WndUseItem(null, this));
+			GameScene.show(new WndUseItem(null, this, hero));
 		}
 	}
 
