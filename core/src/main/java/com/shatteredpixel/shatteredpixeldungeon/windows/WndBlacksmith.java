@@ -500,7 +500,7 @@ public class WndBlacksmith extends Window {
 		private class RewardWindow extends WndInfoItem {
 
 			public RewardWindow( Blacksmith troll, Hero hero, Item item ) {
-				super(item);
+				super(item, hero);
 
 				RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 					@Override

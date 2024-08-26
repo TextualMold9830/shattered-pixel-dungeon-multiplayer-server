@@ -143,7 +143,7 @@ public class Ghost extends NPC {
 					Game.runOnRenderThread(new Callback() {
 						@Override
 						public void call() {
-							GameScene.show(new WndSadGhost(Ghost.this, Quest.type));
+							GameScene.show(new WndSadGhost(Ghost.this, Quest.type, hero));
 						}
 					});
 				} else {

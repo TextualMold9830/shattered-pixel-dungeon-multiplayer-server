@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -48,9 +49,9 @@ public class WndSadGhost extends Window {
 
 	Ghost ghost;
 	
-	public WndSadGhost( final Ghost ghost, final int type ) {
+	public WndSadGhost( final Ghost ghost, final int type, Hero hero ) {
 		
-		super();
+		super(hero);
 
 		this.ghost = ghost;
 		
@@ -85,7 +86,7 @@ public class WndSadGhost extends Window {
 		ItemButton btnWeapon = new ItemButton(){
 			@Override
 			protected void onClick() {
-				GameScene.show(new RewardWindow(item()));
+				GameScene.show(new RewardWindow(item(), hero));
 			}
 		};
 		btnWeapon.item( Ghost.Quest.weapon );
@@ -95,7 +96,7 @@ public class WndSadGhost extends Window {
 		ItemButton btnArmor = new ItemButton(){
 			@Override
 			protected void onClick() {
-				GameScene.show(new RewardWindow(item()));
+				GameScene.show(new RewardWindow(item(), hero));
 			}
 		};
 		btnArmor.item( Ghost.Quest.armor );
@@ -132,8 +133,8 @@ public class WndSadGhost extends Window {
 
 	private class RewardWindow extends WndInfoItem {
 
-		public RewardWindow( Item item ) {
-			super(item);
+		public RewardWindow( Item item, Hero rewardTarget ) {
+			super(item, rewardTarget);
 
 			RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 				@Override

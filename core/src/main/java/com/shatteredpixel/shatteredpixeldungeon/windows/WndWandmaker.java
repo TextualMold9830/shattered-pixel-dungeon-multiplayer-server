@@ -79,7 +79,7 @@ public class WndWandmaker extends Window {
 			@Override
 			protected void onClick() {
 				if (getOwnerHero().belongings.contains(questItem) && item() != null) {
-					GameScene.show(new RewardWindow(item()));
+					GameScene.show(new RewardWindow(item(), hero));
 				} else {
 					hide();
 				}
@@ -93,7 +93,7 @@ public class WndWandmaker extends Window {
 			@Override
 			protected void onClick() {
 				if (getOwnerHero().belongings.contains(questItem) && item() != null) {
-					GameScene.show(new RewardWindow(item()));
+					GameScene.show(new RewardWindow(item(), hero));
 				} else {
 					hide();
 				}
@@ -133,8 +133,8 @@ public class WndWandmaker extends Window {
 
 	private class RewardWindow extends WndInfoItem {
 
-		public RewardWindow( Item item ) {
-			super(item);
+		public RewardWindow( Item item, Hero rewardTarget ) {
+			super(item, rewardTarget);
 
 			RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 				@Override

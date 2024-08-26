@@ -39,9 +39,9 @@ public class WndInfoItem extends Window {
 	//only one WndInfoItem can appear at a time
 	private static WndInfoItem INSTANCE;
 
-	public WndInfoItem( Heap heap ) {
+	public WndInfoItem(Heap heap, Hero hero) {
 
-		super();
+		super(hero);
 
 		if (INSTANCE != null){
 			INSTANCE.hide();
@@ -56,13 +56,9 @@ public class WndInfoItem extends Window {
 
 		}
 	}
-	public WndInfoItem(Heap heap, Hero hero) {
-		this(heap);
-		setOwnerHero(hero);
-	}
 	
-	public WndInfoItem( Item item ) {
-		super();
+	public WndInfoItem(Item item, Hero hero) {
+		super(hero);
 
 		if (INSTANCE != null){
 			INSTANCE.hide();
@@ -127,10 +123,5 @@ public class WndInfoItem extends Window {
 		add( info );
 
 		resize( width, (int)(info.bottom() + 2) );
-	}
-
-	public WndInfoItem(Item item, Hero hero) {
-		this(item);
-		attachToHero(hero);
 	}
 }

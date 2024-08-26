@@ -38,17 +38,14 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.InventorySlot;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.input.GameAction;
 import com.watabou.input.KeyBindings;
 import com.watabou.input.KeyEvent;
-import com.watabou.input.PointerEvent;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.watabou.utils.PointF;
 
 public class WndBag extends WndTabbed {
 	
@@ -379,7 +376,7 @@ public class WndBag extends WndTabbed {
 					hide();
 					return true;
 				} else if (selector != null) {
-					Game.scene().addToFront(new WndInfoItem(item));
+					Game.scene().addToFront(new WndInfoItem(item, getOwnerHero()));
 					return true;
 				} else {
 					return false;

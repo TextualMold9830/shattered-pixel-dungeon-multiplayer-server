@@ -38,6 +38,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 
+import org.jetbrains.annotations.NotNull;
+
 public class WndTradeItem extends WndInfoItem {
 
 	private static final float GAP		= 2;
@@ -48,7 +50,7 @@ public class WndTradeItem extends WndInfoItem {
 	private boolean selling = false;
 
 	//selling
-	public WndTradeItem( final Item item, WndBag owner ) {
+	public WndTradeItem( final Item item, @NotNull WndBag owner ) {
 
 		super(item, owner.getOwnerHero());
 
@@ -115,9 +117,9 @@ public class WndTradeItem extends WndInfoItem {
 	}
 
 	//buying
-	public WndTradeItem( final Heap heap ) {
+	public WndTradeItem( final Heap heap, Hero hero ) {
 
-		super(heap);
+		super(heap, hero);
 
 		selling = false;
 
@@ -200,9 +202,6 @@ public class WndTradeItem extends WndInfoItem {
 		}
 
 		resize(width, (int) pos);
-	}public WndTradeItem( final Heap heap, Hero hero) {
-		this(heap);
-		setOwnerHero(hero);
 	}
 
 	@Override

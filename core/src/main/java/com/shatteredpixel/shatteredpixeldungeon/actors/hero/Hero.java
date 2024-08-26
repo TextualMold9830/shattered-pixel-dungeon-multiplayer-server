@@ -949,7 +949,8 @@ public class Hero extends Char {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						GameScene.show( new WndTradeItem( heap ) );
+						Hero hero = Hero.this;
+						GameScene.show( new WndTradeItem( heap, hero ) );
 					}
 				});
 			}

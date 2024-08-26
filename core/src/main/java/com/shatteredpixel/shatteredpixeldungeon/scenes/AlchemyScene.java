@@ -464,16 +464,6 @@ public class AlchemyScene extends Window {
 			AlchemyScene.this.addToFront(WndBag.getBag(itemSelector, getOwnerHero()));
 		}
 
-		public boolean onLongClick() {
-			Item item = InputButton.this.item;
-			if (item != null) {
-				AlchemyScene.this.addToFront(new WndInfoItem(item));
-				return true;
-			}
-			return false;
-		}
-
-
 		public Item item() {
 			return item;
 		}

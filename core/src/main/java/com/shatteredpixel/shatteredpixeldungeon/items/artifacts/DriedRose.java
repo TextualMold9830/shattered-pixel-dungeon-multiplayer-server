@@ -955,7 +955,7 @@ public class DriedRose extends Artifact {
 				@Override
 				protected boolean onLongClick() {
 					if (item() != null && item().name() != null){
-						GameScene.show(new WndInfoItem(item()));
+						GameScene.show(new WndInfoItem(item(), curUser));
 						return true;
 					}
 					return false;
