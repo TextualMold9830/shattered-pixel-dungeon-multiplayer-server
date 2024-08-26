@@ -194,7 +194,7 @@ public class WandOfTransfusion extends DamageWand {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max());
 		else
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 5, min(0, hero), max(0, hero));
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 5, min(0), max(0));
 	}
 
 	private static final String FREECHARGE = "freecharge";
