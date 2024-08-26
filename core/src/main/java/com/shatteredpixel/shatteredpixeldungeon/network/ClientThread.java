@@ -38,6 +38,7 @@ import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 class ClientThread implements Callable<String> {
 
     public static final String CHARSET = "UTF-8";
+    public static final String SERVER_TYPE = "SPD";
 
     protected OutputStreamWriter writeStream;
     protected BufferedWriter writer;
@@ -78,6 +79,7 @@ class ClientThread implements Callable<String> {
             disconnect();
             return;
         }
+        sendServerType();
         if (clientHero != null){
             sendInitData();
         }
@@ -267,6 +269,10 @@ class ClientThread implements Callable<String> {
     }
 
     //some functions
+    protected void sendServerType(){
+        packet.addServerType(SERVER_TYPE);
+        flush();
+    }
     protected void InitPlayerHero(String className) {
         HeroClass curClass;
         try {
