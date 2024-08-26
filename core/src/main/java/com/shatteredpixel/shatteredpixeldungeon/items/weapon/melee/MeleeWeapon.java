@@ -547,10 +547,10 @@ public class MeleeWeapon extends Weapon {
 		@Override
 		public Visual primaryVisual() {
 			Image ico;
-			if (Dungeon.heroes.belongings.weapon == null){
+			if (((Hero)target).belongings.weapon == null){
 				ico = new HeroIcon(this);
  			} else {
-				ico = new ItemSprite(Dungeon.heroes.belongings.weapon);
+				ico = new ItemSprite(((Hero)target).belongings.weapon);
 			}
 			ico.width += 4; //shift slightly to the left to separate from smaller icon
 			return ico;
@@ -559,10 +559,10 @@ public class MeleeWeapon extends Weapon {
 		@Override
 		public Visual secondaryVisual() {
 			Image ico;
-			if (Dungeon.heroes.belongings.secondWep == null){
+			if (((Hero)target).belongings.secondWep == null){
 				ico = new HeroIcon(this);
 			} else {
-				ico = new ItemSprite(Dungeon.heroes.belongings.secondWep);
+				ico = new ItemSprite(((Hero)target).belongings.secondWep);
 			}
 			ico.scale.set(PixelScene.align(0.51f));
 			ico.brightness(0.6f);
