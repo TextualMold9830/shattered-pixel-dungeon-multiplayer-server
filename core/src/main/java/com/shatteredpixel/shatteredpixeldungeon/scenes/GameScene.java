@@ -198,7 +198,7 @@ public class GameScene extends PixelScene {
 
 	@Override
 	public void create() {
-
+		Gdx.app.log("GameScene", "create");
 		if (Dungeon.heroes == null || Dungeon.level == null) {
 			ShatteredPixelDungeon.switchNoFade(TitleScene.class);
 			return;
@@ -261,7 +261,7 @@ public class GameScene extends PixelScene {
 
 		tiles = new DungeonTerrainTilemap();
 		terrain.add(tiles);
-
+		Gdx.app.log("GameScene.tiles", String.valueOf(tiles));
 		customTiles = new Group();
 		terrain.add(customTiles);
 
@@ -366,11 +366,6 @@ public class GameScene extends PixelScene {
 		menu.setPos(uiCamera.width - MenuPane.WIDTH, uiSize > 0 ? 0 : 1);
 		add(menu);
 
-		status = new StatusPane(SPDSettings.interfaceSize() > 0);
-		status.camera = uiCamera;
-		status.setRect(0, uiSize > 0 ? uiCamera.height - 39 : 0, uiCamera.width, 0);
-		add(status);
-
 		boss = new BossHealthBar();
 		boss.camera = uiCamera;
 		boss.setPos(6 + (uiCamera.width - boss.width()) / 2, 20);
@@ -467,16 +462,23 @@ public class GameScene extends PixelScene {
 			case FALL:
 			case DESCEND:
 			case CONTINUE:
-				Camera.main.snapTo(hero.center().x, hero.center().y - DungeonTilemap.SIZE * (defaultZoom / Camera.main.zoom));
+				if (hero != null) {
+					Camera.main.snapTo(hero.center().x, hero.center().y - DungeonTilemap.SIZE * (defaultZoom / Camera.main.zoom));
+				}
 				break;
 			case ASCEND:
-				Camera.main.snapTo(hero.center().x, hero.center().y + DungeonTilemap.SIZE * (defaultZoom / Camera.main.zoom));
+				if (hero != null) {
+					Camera.main.snapTo(hero.center().x, hero.center().y + DungeonTilemap.SIZE * (defaultZoom / Camera.main.zoom));
+				}
 				break;
 			default:
-				Camera.main.snapTo(hero.center().x, hero.center().y);
+				if (hero != null) {
+					Camera.main.snapTo(hero.center().x, hero.center().y);
+				}
 		}
-		Camera.main.panTo(hero.center(), 2.5f);
-
+		if (hero != null) {
+			Camera.main.panTo(hero.center(), 2.5f);
+		}
 		if (InterLevelSceneServer.mode != InterLevelSceneServer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
 					&& (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.DESCEND || InterLevelSceneServer.mode == InterLevelSceneServer.Mode.FALL)) {
@@ -831,21 +833,6 @@ public class GameScene extends PixelScene {
 		boolean tagsOnLeft = SPDSettings.flipTags();
 		float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
 		float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
-
-		float y = scene.status.top()-2;
-		if (SPDSettings.interfaceSize() == 0){
-			if (tagsOnLeft) {
-				scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);
-			} else {
-				scene.log.setRect(insets.left, y, uiCamera.width - tagWidth - insets.left, 0);
-			}
-		} else {
-			if (tagsOnLeft) {
-				scene.log.setRect(tagWidth, y, 160 - tagWidth, 0);
-			} else {
-				scene.log.setRect(insets.left, y, 160 - insets.left, 0);
-			}
-		}
 
 		float pos = 0;
 		if (tagsOnLeft && SPDSettings.interfaceSize() > 0){
