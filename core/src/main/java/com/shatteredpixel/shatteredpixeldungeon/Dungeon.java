@@ -300,7 +300,6 @@ public class Dungeon {
 	}
 
 	public static boolean levelHasBeenGenerated(int depth, int branch){
-		Gdx.app.log("Dungeon","levelHasBeenGenerated");
 		return generatedLevels.contains(depth + 1000*branch);
 	}
 	
@@ -525,13 +524,10 @@ public class Dungeon {
 				hero.viewDistance = light == null ? level.viewDistance : Math.max(Light.DISTANCE, level.viewDistance);
 
 				hero.curAction = hero.lastAction = null;
-				sendLevel(level, hero.networkID);
-				sendAllChars(hero.networkID);
-				sendHeroNewID(hero, hero.networkID);
+
 				observe(hero);
 			}
 		}
-
 		try {
 			saveAll();
 		} catch (IOException e) {
