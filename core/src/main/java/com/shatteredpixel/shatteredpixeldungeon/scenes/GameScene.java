@@ -149,7 +149,6 @@ public class GameScene extends PixelScene {
 	private RaisedTerrainTilemap raisedTerrain;
 	private DungeonWallsTilemap walls;
 	private WallBlockingTilemap wallBlocking;
-	private FogOfWar fog;
 	private HeroSprite hero;
 
 	private MenuPane menu;
@@ -675,11 +674,14 @@ public class GameScene extends PixelScene {
 
 		if (updateItemDisplays) {
 			updateItemDisplays = false;
-			QuickSlotButton.refresh();
+			//QuickSlotButton.refresh();
+			//todo send this
+			/*
 			if (hero.actionIndicator.action instanceof MeleeWeapon.Charger) {
 				//Champion weapon swap uses items, needs refreshing whenever item displays are updated
 				hero.actionIndicator.refresh();
 			}
+			*/
 		}
 
 		if (Dungeon.heroes == null || scene == null) {
@@ -1165,7 +1167,6 @@ public class GameScene extends PixelScene {
 
 	public static void updateFog(int x, int y, int w, int h){
 		if (scene != null) {
-			scene.fog.updateFogArea(x, y, w, h);
 			scene.wallBlocking.updateArea(x, y, w, h);
 		}
 	}
