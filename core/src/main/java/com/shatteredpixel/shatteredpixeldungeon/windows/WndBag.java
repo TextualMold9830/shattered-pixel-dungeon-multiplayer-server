@@ -377,7 +377,6 @@ public class WndBag extends WndTabbed {
 			protected boolean onLongClick() {
 				if (selector == null && item.defaultAction() != null) {
 					hide();
-					QuickSlotButton.set( item );
 					return true;
 				} else if (selector != null) {
 					Game.scene().addToFront(new WndInfoItem(item));

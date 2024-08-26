@@ -424,7 +424,7 @@ public class SpiritBow extends Weapon {
 												@Override
 												protected boolean act() {
 													flurryActor = this;
-													int target = QuickSlotButton.autoAim(enemy, SpiritArrow.this);
+													int target = QuickSlotButton.autoAim(enemy, SpiritArrow.this, user);
 													if (target == -1) target = cell;
 													cast(user, target);
 													Actor.remove(this);
