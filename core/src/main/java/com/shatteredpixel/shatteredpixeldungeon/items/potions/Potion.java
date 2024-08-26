@@ -490,7 +490,7 @@ public class Potion extends Item {
 		}
 		
 		@Override
-		public Item brew(ArrayList<Item> ingredients) {
+		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			
 			for (Item ingredient : ingredients){
