@@ -112,7 +112,7 @@ public class QuickRecipe extends Component {
 
 				@Override
 				protected void onClick() {
-					ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(in, ));
+					ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(in ));
 				}
 			};
 			
@@ -155,7 +155,7 @@ public class QuickRecipe extends Component {
 		this.output = new ItemSlot(output){
 			@Override
 			protected void onClick() {
-				ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(output, ));
+				ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(output ));
 			}
 		};
 		if (!hasInputs){
