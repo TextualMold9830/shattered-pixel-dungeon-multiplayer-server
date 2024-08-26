@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.watabou.noosa.ColorBlock;
+import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Reflection;
@@ -335,11 +336,6 @@ public class WndJournal extends WndTabbed {
 			content.add(body);
 
 			Document.ALCHEMY_GUIDE.readPage(currentPageIdx);
-
-			Hero hero = null;
-			if (parent instanceof Window){
-                hero = ((Window) parent).getOwnerHero();
-            }
 			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx);
 			
 			float left;

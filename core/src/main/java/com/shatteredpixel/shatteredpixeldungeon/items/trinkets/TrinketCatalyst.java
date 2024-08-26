@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -195,7 +196,9 @@ public class TrinketCatalyst extends Item {
 
 						if (cata != null) {
 							cata.detach(getOwnerHero().belongings.backpack);
-							AlchemyScene.getActiveAlchemyScene(hero).craftItem(null, item);
+							//new AlchemyScene(hero).craftItem(null, item);
+							// May remove ^
+							//AlchemyScene.getActiveAlchemyScene(hero).craftItem(null, item);
 						}
 					}
 				};

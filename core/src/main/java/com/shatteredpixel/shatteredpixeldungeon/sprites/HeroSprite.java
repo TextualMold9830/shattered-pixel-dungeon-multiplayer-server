@@ -50,7 +50,7 @@ public class HeroSprite extends CharSprite {
 
 	public HeroSprite(Hero owner) {
 		super();
-		
+		ch = owner;
 		texture( owner.heroClass.spritesheet() );
 		updateArmor();
 		

@@ -976,7 +976,7 @@ public class Hero extends Char {
 				return false;
 			}
 
-			GameScene.show(new AlchemyScene(this,null));
+			//new AlchemyScene(this,null);
 			return false;
 
 		} else if (getCloser( dst )) {

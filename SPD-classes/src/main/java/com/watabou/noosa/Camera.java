@@ -174,55 +174,55 @@ public class Camera extends Gizmo {
 	@Override
 	public void update() {
 		super.update();
-
-		float deadX = 0;
-		float deadY = 0;
-		if (followTarget != null){
-			//manually assign here to avoid an allocation from sprite.center()
-			panTarget.x = followTarget.x + followTarget.width()/2;
-			panTarget.y = followTarget.y + followTarget.height()/2;
-			panTarget.offset(centerOffset);
-			deadX = width * followDeadzone /2f;
-			deadY = height * followDeadzone /2f;
-		}
-		
-		if (panIntensity > 0f){
-
-			float panX = panTarget.x - (scroll.x + width/2f);
-			float panY = panTarget.y - (scroll.y + height/2f);
-
-			if (panX > deadX){
-				panX -= deadX;
-			} else if (panX < -deadX){
-				panX += deadX;
-			} else {
-				panX = 0;
-			}
-
-			if (panY > deadY){
-				panY -= deadY;
-			} else if (panY < -deadY){
-				panY += deadY;
-			} else {
-				panY = 0;
-			}
-
-			panX *= Math.min(1f, Game.elapsed * panIntensity);
-			panY *= Math.min(1f, Game.elapsed * panIntensity);
-
-			scroll.offset(panX, panY);
-		}
-		
-		if ((shakeTime -= Game.elapsed) > 0) {
-			float damping = shakeTime / shakeDuration;
-			shakeX = Random.Float( -shakeMagX, +shakeMagX ) * damping;
-			shakeY = Random.Float( -shakeMagY, +shakeMagY ) * damping;
-		} else {
-			shakeX = 0;
-			shakeY = 0;
-		}
-		
-		updateMatrix();
+//TODO: check this, no camera update
+//		float deadX = 0;
+//		float deadY = 0;
+//		if (followTarget != null){
+//			//manually assign here to avoid an allocation from sprite.center()
+//			panTarget.x = followTarget.x + followTarget.width()/2;
+//			panTarget.y = followTarget.y + followTarget.height()/2;
+//			panTarget.offset(centerOffset);
+//			deadX = width * followDeadzone /2f;
+//			deadY = height * followDeadzone /2f;
+//		}
+//
+//		if (panIntensity > 0f){
+//
+//			float panX = panTarget.x - (scroll.x + width/2f);
+//			float panY = panTarget.y - (scroll.y + height/2f);
+//
+//			if (panX > deadX){
+//				panX -= deadX;
+//			} else if (panX < -deadX){
+//				panX += deadX;
+//			} else {
+//				panX = 0;
+//			}
+//
+//			if (panY > deadY){
+//				panY -= deadY;
+//			} else if (panY < -deadY){
+//				panY += deadY;
+//			} else {
+//				panY = 0;
+//			}
+//
+//			panX *= Math.min(1f, Game.elapsed * panIntensity);
+//			panY *= Math.min(1f, Game.elapsed * panIntensity);
+//
+//			scroll.offset(panX, panY);
+//		}
+//
+//		if ((shakeTime -= Game.elapsed) > 0) {
+//			float damping = shakeTime / shakeDuration;
+//			shakeX = Random.Float( -shakeMagX, +shakeMagX ) * damping;
+//			shakeY = Random.Float( -shakeMagY, +shakeMagY ) * damping;
+//		} else {
+//			shakeX = 0;
+//			shakeY = 0;
+//		}
+//
+//		updateMatrix();
 	}
 	
 	public PointF center() {

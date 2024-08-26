@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -543,8 +544,8 @@ public class CellSelector extends ScrollArea {
 	}
 	public CellSelector(Hero owner ) {
         super(GameScene.tiles);
+		Gdx.app.log("CellSelector", "new");
 		camera = GameScene.tiles.camera();
-
 		mouseZoom = camera.zoom;
 		KeyEvent.addKeyListener( keyListener );
         this.owner=owner;
