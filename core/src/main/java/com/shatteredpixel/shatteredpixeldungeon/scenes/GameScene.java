@@ -80,7 +80,6 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTileSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonWallsTilemap;
-import com.shatteredpixel.shatteredpixeldungeon.tiles.FogOfWar;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.GridTileMap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.RaisedTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
@@ -333,10 +332,6 @@ public class GameScene extends PixelScene {
 			blob.emitter = null;
 			addBlobSprite(blob);
 		}
-
-
-		fog = new FogOfWar(Dungeon.level.width(), Dungeon.level.height());
-		add(fog);
 
 		spells = new Group();
 		add(spells);
@@ -1164,7 +1159,6 @@ public class GameScene extends PixelScene {
 
 	public static void updateFog(){
 		if (scene != null) {
-			scene.fog.updateFog();
 			scene.wallBlocking.updateMap();
 		}
 	}
@@ -1178,7 +1172,6 @@ public class GameScene extends PixelScene {
 	
 	public static void updateFog( int cell, int radius ){
 		if (scene != null) {
-			scene.fog.updateFog( cell, radius );
 			scene.wallBlocking.updateArea( cell, radius );
 		}
 	}
