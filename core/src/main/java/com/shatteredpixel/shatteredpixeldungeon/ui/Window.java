@@ -96,6 +96,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 			}
 			return;
 		}
+		if (hero == null) return;
 		int heroId = HeroHelp.getHeroID(hero);
 
 		setOwnerHero(hero);

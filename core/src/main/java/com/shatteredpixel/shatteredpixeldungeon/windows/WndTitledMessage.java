@@ -39,7 +39,12 @@ public class WndTitledMessage extends Window {
 		this( new IconTitle( icon, title ), message, hero );
 
 	}
-	
+	public WndTitledMessage( Image icon, String title, String message ) {
+		this(icon, title, message, null);
+	}
+	public WndTitledMessage( Component titlebar, String message) {
+		this( titlebar, message, null );
+	}
 	public WndTitledMessage( Component titlebar, String message, Hero hero ) {
 
 		super(hero);
