@@ -184,6 +184,16 @@ public class SpiritBow extends Weapon {
 		return STRReq(1, lvl); //tier 1
 	}
 
+	@Override
+	protected int min(int lvl) {
+		throw new RuntimeException();
+	}
+
+	@Override
+	protected int max(int lvl) {
+		throw new RuntimeException();
+	}
+
 	//FIXME
 	@Override
 	public int min(int lvl, Char owner) {

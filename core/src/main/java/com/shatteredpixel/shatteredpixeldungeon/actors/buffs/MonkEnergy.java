@@ -136,7 +136,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		cooldown = bundle.getInt(COOLDOWN);
 
 		if (energy >= 1 && cooldown == 0){
-			ActionIndicator.setAction(this);
+			((Hero) target).actionIndicator.setAction(this);
 		}
 	}
 
