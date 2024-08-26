@@ -67,6 +67,6 @@ public abstract class DamageWand extends Wand{
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", min(), max());
 		else
-			return Messages.get(this, "stats_desc", min(0, hero), max(0, hero));
+			return Messages.get(this, "stats_desc", min(0), max(0));
 	}
 }
