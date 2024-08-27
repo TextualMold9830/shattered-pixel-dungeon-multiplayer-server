@@ -65,7 +65,7 @@ public class Belongings implements Iterable<Item> {
 		ArrayList<SpecialSlot> slots = new ArrayList<>(4);
 		slots.add(new SpecialSlot(0, "items.png", ItemSpriteSheet.WEAPON_HOLDER, weapon()));
 		slots.add(new SpecialSlot(1, "items.png", ItemSpriteSheet.ARMOR_HOLDER, armor));
-		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.HOLDER, misc()));
+		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.SOMETHING, misc()));
 		slots.add(new SpecialSlot(4, "items.png", ItemSpriteSheet.RING_HOLDER, ring()));
 		slots.add(new SpecialSlot(5, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, artifact));
 		return slots;

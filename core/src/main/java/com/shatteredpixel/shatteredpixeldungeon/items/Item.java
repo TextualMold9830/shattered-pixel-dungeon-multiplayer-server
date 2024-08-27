@@ -66,6 +66,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
@@ -748,6 +749,10 @@ public class Item implements Bundlable {
 	};
 	public static JSONObject packItem(@NotNull Item item, @Nullable Hero hero) {
 		return item.toJsonObject(hero);
+	}
+
+	public List<Integer> getSlot(Hero owner) {
+		return owner.belongings.pathOfItem(this);
 	}
 
 	public final JSONObject toJsonObject(@Nullable Hero hero) {
