@@ -74,7 +74,7 @@ public class NecromancerSprite extends MobSprite {
 	public void update() {
 		super.update();
 		if (summoningBones != null && ((Necromancer) ch).summoningPos != -1){
-			summoningBones.visible = Dungeon.level.fieldOfView[((Necromancer) ch).summoningPos];
+			summoningBones.visible = Dungeon.visibleforAnyHero(((Necromancer) ch).summoningPos);
 		}
 	}
 
