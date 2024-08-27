@@ -238,14 +238,15 @@ public class InterLevelSceneServer {
 			else throw new RuntimeException("fatal error occurred while moving between floors. " +
 						"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth, error);
 
-			add(new WndError(errorMsg, null) {
+			/*add(new WndError(errorMsg, null) {
 				public void onBackPressed() {
 					super.onBackPressed();
 					Game.switchScene(StartScene.class);
 				}
-			});
+			});*/
 			thread = null;
 			error = null;
+			throw new RuntimeException(String.format("Fatal error: %s", errorMsg), error);
 		}
 	}
 
