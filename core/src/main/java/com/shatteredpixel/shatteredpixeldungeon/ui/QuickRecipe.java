@@ -93,78 +93,78 @@ public class QuickRecipe extends Component {
 	private ItemSlot output;
 	
 	public QuickRecipe(Recipe.SimpleRecipe r){
-		this(r, r.getIngredients(), r.sampleOutput(null, hero));
+		//this(r, r.getIngredients(), r.sampleOutput(null, hero));
 	}
 	
 	public QuickRecipe(Recipe r, ArrayList<Item> inputs, final Item output) {
-		
-		ingredients = inputs;
-		int cost = r.cost(inputs);
-		boolean hasInputs = true;
-		this.inputs = new ArrayList<>();
-		for (final Item in : inputs) {
-			anonymize(in);
-			ItemSlot curr;
-			curr = new ItemSlot(in) {
-				{
-					hotArea.blockLevel = PointerArea.NEVER_BLOCK;
-				}
-
-				@Override
-				protected void onClick() {
-					ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(in ));
-				}
-			};
-			
-			ArrayList<Item> similar = Dungeon.heroes.belongings.getAllSimilar(in);
-			int quantity = 0;
-			for (Item sim : similar) {
-				//if we are looking for a specific item, it must be IDed
-				if (sim.getClass() != in.getClass() || sim.isIdentified()) quantity += sim.quantity();
-			}
-			
-			if (quantity < in.quantity()) {
-				curr.sprite.alpha(0.3f);
-				hasInputs = false;
-			}
-			curr.showExtraInfo(false);
-			add(curr);
-			this.inputs.add(curr);
-		}
-		
-		if (cost > 0) {
-			arrow = new arrow(Icons.get(Icons.ARROW), cost);
-			arrow.hardlightText(0x44CCFF);
-		} else {
-			arrow = new arrow(Icons.get(Icons.ARROW));
-		}
-		if (hasInputs) {
-			arrow.icon.tint(1, 1, 0, 1);
-			//if (!(ShatteredPixelDungeon.scene() instanceof AlchemyScene)) {
-			if (!AlchemyScene.isAlchemySceneEnabled(hero)) {
-			//todo check this
-				arrow.enable(false);
-			}
-		} else {
-			arrow.icon.color(0, 0, 0);
-			arrow.enable(false);
-		}
-		add(arrow);
-		
-		anonymize(output);
-		this.output = new ItemSlot(output){
-			@Override
-			protected void onClick() {
-				ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(output ));
-			}
-		};
-		if (!hasInputs){
-			this.output.sprite.alpha(0.3f);
-		}
-		this.output.showExtraInfo(false);
-		add(this.output);
-		
-		layout();
+//
+//		ingredients = inputs;
+//		int cost = r.cost(inputs);
+//		boolean hasInputs = true;
+//		this.inputs = new ArrayList<>();
+//		for (final Item in : inputs) {
+//			anonymize(in);
+//			ItemSlot curr;
+//			curr = new ItemSlot(in) {
+//				{
+//					hotArea.blockLevel = PointerArea.NEVER_BLOCK;
+//				}
+//
+//				@Override
+//				protected void onClick() {
+//					ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(in ));
+//				}
+//			};
+//
+//			ArrayList<Item> similar = Dungeon.heroes.belongings.getAllSimilar(in);
+//			int quantity = 0;
+//			for (Item sim : similar) {
+//				//if we are looking for a specific item, it must be IDed
+//				if (sim.getClass() != in.getClass() || sim.isIdentified()) quantity += sim.quantity();
+//			}
+//
+//			if (quantity < in.quantity()) {
+//				curr.sprite.alpha(0.3f);
+//				hasInputs = false;
+//			}
+//			curr.showExtraInfo(false);
+//			add(curr);
+//			this.inputs.add(curr);
+//		}
+//
+//		if (cost > 0) {
+//			arrow = new arrow(Icons.get(Icons.ARROW), cost);
+//			arrow.hardlightText(0x44CCFF);
+//		} else {
+//			arrow = new arrow(Icons.get(Icons.ARROW));
+//		}
+//		if (hasInputs) {
+//			arrow.icon.tint(1, 1, 0, 1);
+//			//if (!(ShatteredPixelDungeon.scene() instanceof AlchemyScene)) {
+//			if (!AlchemyScene.isAlchemySceneEnabled(hero)) {
+//			//todo check this
+//				arrow.enable(false);
+//			}
+//		} else {
+//			arrow.icon.color(0, 0, 0);
+//			arrow.enable(false);
+//		}
+//		add(arrow);
+//
+//		anonymize(output);
+//		this.output = new ItemSlot(output){
+//			@Override
+//			protected void onClick() {
+//				ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(output ));
+//			}
+//		};
+//		if (!hasInputs){
+//			this.output.sprite.alpha(0.3f);
+//		}
+//		this.output.showExtraInfo(false);
+//		add(this.output);
+//
+//		layout();
 	}
 	
 	@Override
@@ -250,7 +250,7 @@ public class QuickRecipe extends Component {
 				}
 			}
 			
-			((AlchemyScene)ShatteredPixelDungeon.scene()).populate(ingredients, Dungeon.heroes.belongings);
+//			((AlchemyScene)ShatteredPixelDungeon.scene()).populate(ingredients, Dungeon.heroes.belongings);
 		}
 		
 		public void hardlightText(int color ){
@@ -282,7 +282,7 @@ public class QuickRecipe extends Component {
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					if (!scroll.isKnown()) scroll.anonymize();
 					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
+//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 2:
@@ -313,7 +313,7 @@ public class QuickRecipe extends Component {
 				for (Class<?> cls : Generator.Category.POTION.classes){
 					Potion pot = (Potion) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(pot));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
+//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 4:
@@ -321,7 +321,7 @@ public class QuickRecipe extends Component {
 				for (Class<?> cls : Generator.Category.SCROLL.classes){
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(scroll));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
+//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 				}
 				return result;
 			case 5:
@@ -334,7 +334,7 @@ public class QuickRecipe extends Component {
 					}
 					Item item = (Item) Reflection.newInstance(cls);
 					ArrayList<Item> in = new ArrayList<>(Arrays.asList(new Bomb(), item));
-					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
+//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
 					i++;
 				}
 				return result;
