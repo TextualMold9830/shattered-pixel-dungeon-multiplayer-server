@@ -502,14 +502,23 @@ public class PrisonBossLevel extends Level {
 				setMapEnd();
 				
 				for (Mob m : allies){
+					int pos;
+					boolean heroAtPos = false;
 					do{
-						m.pos = randomTenguCellPos();
-					} while (findMob(m.pos) != null || m.pos == Dungeon.heroes.pos);
+						pos = randomTenguCellPos();
+						for (Hero hero: Dungeon.heroes) {
+							if (( hero != null ) && (hero.pos == pos)){
+								heroAtPos = true;
+								break;
+							}
+						}
+					} while (findMob(pos) != null || heroAtPos);
+					m.pos = pos;
 					if (m.sprite != null) m.sprite.place(m.pos);
 					mobs.add(m);
 				}
 				
-				tengu.die(Dungeon.heroes);
+				tengu.die(new Char.DamageCause(null)); //give experience for each hero
 				
 				clearEntities(tenguCell);
 				cleanMapState();
@@ -621,13 +630,23 @@ public class PrisonBossLevel extends Level {
 	public void placeTrapsInTenguCell(float fill){
 		
 		Point tenguPoint = cellToPoint(tengu.pos);
-		Point heroPoint = cellToPoint(Dungeon.heroes.pos);
-		
+		ArrayList<Point> heroesPoints = new ArrayList<>(Dungeon.heroes.length);
+		for (Hero hero: Dungeon.heroes) {
+			if (hero == null) continue;
+			Point heroPoint = cellToPoint(hero.pos);
+			heroesPoints.add(heroPoint);
+		}
 		PathFinder.setMapSize(7, 7);
 		
 		int tenguPos = tenguPoint.x-(tenguCell.left+1) + (tenguPoint.y-(tenguCell.top+1))*7;
-		int heroPos = heroPoint.x-(tenguCell.left+1) + (heroPoint.y-(tenguCell.top+1))*7;
-		
+		int[] heroesPos = new int[heroesPoints.size()];
+		{
+			int i = 0;
+			for (Point heroPoint : heroesPoints) {
+				int heroPos = heroPoint.x - (tenguCell.left + 1) + (heroPoint.y - (tenguCell.top + 1)) * 7;
+				heroesPos[i++] = heroPos;
+			}
+		}
 		boolean[] trapsPatch;
 
 		//fill ramps up much faster during challenge, effectively 78%-90%
@@ -646,11 +665,13 @@ public class PrisonBossLevel extends Level {
 
 			trapsPatch = Patch.generate(7, 7, fill, 0, false);
 
-			PathFinder.buildDistanceMap(tenguPos, BArray.not(trapsPatch, null));
+			//generate distance from heroes to tengu
+			PathFinder.buildDistanceMap(heroesPos, BArray.not(trapsPatch, null));
+
 			//note that the effective range of fill is 40%-90%
 			//so distance to tengu starts at 3-6 tiles and scales up to 7-8 as fill increases
-		} while (((PathFinder.distance[heroPos] < Math.ceil(7*fill))
-				|| (PathFinder.distance[heroPos] > Math.ceil(4 + 4*fill))));
+		} while (((PathFinder.distance[tenguPos] < Math.ceil(7*fill))
+				|| (PathFinder.distance[tenguPos] > Math.ceil(4 + 4*fill))));
 		System.out.println(tries);
 
 		PathFinder.setMapSize(width(), height());
