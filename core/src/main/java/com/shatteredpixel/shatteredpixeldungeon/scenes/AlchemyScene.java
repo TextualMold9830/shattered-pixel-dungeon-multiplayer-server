@@ -45,9 +45,11 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -109,6 +111,7 @@ public class AlchemyScene extends Window {
 
 	@Override
 	public void onSelect(int button, JSONObject args) {
+		boolean longClick = args != null && args.has("long_click") && args.getBoolean("long_click");
 		switch (button) {
 			case 0: { //btn exit
 				hide();
@@ -135,13 +138,19 @@ public class AlchemyScene extends Window {
 			case 100:
 			case 101:
 			case 102: {
-				//input
+				if (!longClick) {
+					inputs[button - 100].onClick();
+				} else {
+					inputs[button - 100].onLongClick();
+				}
 				break;
 			}
 			case 200:
 			case 201:
 			case 202: {
-				combines[button-200].onClick();
+				if (!longClick) {
+					combines[button - 200].onClick();
+				}
 				break;
 			}
 			case 300:
@@ -167,13 +176,35 @@ public class AlchemyScene extends Window {
 
 	private JSONObject getParamsObject() {
 		JSONObject params = new JSONObject();
-		params.put(energy);
-		params.put(toolkitEnergy);
-		params.put(allowedItemsForRecipie);
-		params.put(inputItems);
-		params.put(combinueNBButtonsCost);
-		params.put(outputItems);
-		params.put(energyAddBlinking);
+		params.put("energy", Dungeon.energy);
+		params.put("has_toolkit", toolkit != null);
+		if (toolkit != null) {
+			params.put("toolkit_energy", toolkit.energyVal());
+		}
+
+		{
+			JSONArray inputsArr = new JSONArray();
+			for (InputButton input : inputs) {
+				if (input == null) continue;
+				if (input.item == null) continue;
+				inputsArr.put(input.item.toJsonObject(getOwnerHero()));
+			}
+			params.put("input", inputsArr);
+		}
+		{
+			JSONArray outputsArr = new JSONArray();
+			for (int i = 0; i < outputs.length; i++) {
+				Item output = outputs[i];
+				if (output == null) continue;
+				JSONObject outputObj = new JSONObject();
+				outputObj.put("cost", combines[i].cost);
+				outputObj.put("enabled", combines[i].enabled);
+				outputObj.put("item", output.toJsonObject(getOwnerHero()));
+			}
+		}
+
+		params.put("energyAddBlinking", energyAddBlinking);
+		params.put("repeat_enabled",  repeat_enabled);
 		return params;
 	}
 
@@ -254,6 +285,7 @@ public class AlchemyScene extends Window {
 	}
 
 	private void updateState() {
+		Hero hero = getOwnerHero();
 
 		repeat_enabled = (false);
 
@@ -462,6 +494,15 @@ public class AlchemyScene extends Window {
 				updateState();
 			}
 			AlchemyScene.this.addToFront(WndBag.getBag(itemSelector, getOwnerHero()));
+		}
+
+		protected boolean onLongClick() {
+			Item item = InputButton.this.item;
+			if (item != null){
+				GameScene.show(new WndInfoItem(item, AlchemyScene.this.getOwnerHero()));
+				return true;
+			}
+			return false;
 		}
 
 		public Item item() {
