@@ -32,39 +32,11 @@ import com.watabou.noosa.ui.Component;
 public class ItemButton extends Component {
 
 	protected NinePatch bg;
-	protected ItemSlot slot;
+	protected Item item;
 
 	@Override
 	protected void createChildren() {
 		super.createChildren();
-
-		bg = Chrome.get(Chrome.Type.RED_BUTTON);
-		add(bg);
-
-		slot = new ItemSlot() {
-			@Override
-			protected void onPointerDown() {
-				bg.brightness(1.2f);
-				Sample.INSTANCE.play(Assets.Sounds.CLICK);
-			}
-
-			@Override
-			protected void onPointerUp() {
-				bg.resetColor();
-			}
-
-			@Override
-			protected void onClick() {
-				ItemButton.this.onClick();
-			}
-
-			@Override
-			protected boolean onLongClick() {
-				return ItemButton.this.onLongClick();
-			}
-		};
-		slot.enable(true);
-		add(slot);
 	}
 
 	protected void onClick() {}
@@ -80,20 +52,18 @@ public class ItemButton extends Component {
 		bg.x = x;
 		bg.y = y;
 		bg.size( width, height );
-
-		slot.setRect( x + 2, y + 2, width - 4, height - 4 );
 	}
 
 	public Item item(){
-		return slot.item;
+		return item;
 	}
 
 	public void item( Item item ) {
-		slot.item( item );
+		this.item = item;
 	}
 
 	public void clear(){
-		slot.clear();
+		item = null;
 	}
 
 }
