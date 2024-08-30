@@ -312,7 +312,7 @@ public class AlchemyScene extends Window {
 
 			int cost = recipe.cost(ingredients);
 
-			outputs[i] = recipe.sampleOutput(ingredients, hero);
+			outputs[i] = recipe.sampleOutput(ingredients, getOwnerHero());
 
 			int availableEnergy = Dungeon.energy;
 			if (toolkit != null) {
