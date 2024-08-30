@@ -234,9 +234,7 @@ class ClientThread implements Callable<String> {
                 GLog.n(e.getStackTrace().toString());
                 disconnect();
             }
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
