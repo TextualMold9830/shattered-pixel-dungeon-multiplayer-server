@@ -186,7 +186,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 								result.write(buffer, 0, length);
 							}
 							loader.close();
-							manifests.add(new PluginManifest(result.toString()));
+							manifests.add(new PluginManifest(result.toString(), file.getPath()));
 						}
 					}
 				}

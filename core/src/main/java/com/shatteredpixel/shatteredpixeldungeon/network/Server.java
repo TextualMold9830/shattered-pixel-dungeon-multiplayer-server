@@ -6,6 +6,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
+import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
@@ -22,7 +24,7 @@ import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 public class Server extends Thread {
     public static ArrayList<String> textures = new ArrayList<>();
     // will return in the future
-    //public static PluginManager pluginManager = new PluginManager();
+    public static PluginManager pluginManager = new PluginManager(new PluginLoader(ShatteredPixelDungeon.platform.loadPlugins()));
 
     //primitive vars
     public static String serviceName;
@@ -92,7 +94,7 @@ public class Server extends Thread {
         serverThread = new Server();
 
         serverThread.start();
-
+        pluginManager.initialize();
         return started;
     }
 

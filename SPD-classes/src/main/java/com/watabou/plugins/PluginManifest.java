@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 //May change later
 public class PluginManifest {
+    public final String originPath;
     public HashMap<String, String> config = new HashMap<>();
     public void setConfig(String config){
         this.config.clear();
@@ -15,11 +16,15 @@ public class PluginManifest {
         }
     }
 
-    public PluginManifest(String content) {
+    public PluginManifest(String content, String originPath) {
         setConfig(content);
+        this.originPath = originPath;
     }
-    public PluginManifest() {
+
+    public String getOriginPath() {
+        return originPath;
     }
+
     public String mainClass(){
         return config.get("mainclass");
     }
