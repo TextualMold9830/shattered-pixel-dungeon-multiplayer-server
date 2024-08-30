@@ -179,7 +179,6 @@ public class DesktopPlatformSupport extends PlatformSupport {
 							URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
 							InputStream input = loader.getResourceAsStream("plugin_manifest.txt");
 							ByteArrayOutputStream result = new ByteArrayOutputStream();
-							Gdx.files.getExternalStoragePath();
 							//might change buffer, 2kb should be fine. Can a manifest even be that big?
 							byte[] buffer = new byte[2048];
 							for (int length; (length = input.read(buffer)) != -1; ) {
