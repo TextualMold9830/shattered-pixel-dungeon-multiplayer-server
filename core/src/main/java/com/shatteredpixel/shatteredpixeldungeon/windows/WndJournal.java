@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.watabou.noosa.ColorBlock;
+import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Reflection;
@@ -228,8 +229,7 @@ public class WndJournal extends WndTabbed {
 		private RenderedTextBlock body;
 		
 		private ScrollPane list;
-		private ArrayList<QuickRecipe> recipes = new ArrayList<>();
-		
+
 		@Override
 		protected void createChildren() {
 			pageButtons = new RedButton[NUM_BUTTONS];
@@ -311,15 +311,7 @@ public class WndJournal extends WndTabbed {
 			if (currentPageIdx == -1){
 				return;
 			}
-			
-			for (QuickRecipe r : recipes){
-				if (r != null) {
-					r.killAndErase();
-					r.destroy();
-				}
-			}
-			recipes.clear();
-			
+
 			Component content = list.content();
 			
 			content.clear();
@@ -335,57 +327,9 @@ public class WndJournal extends WndTabbed {
 			content.add(body);
 
 			Document.ALCHEMY_GUIDE.readPage(currentPageIdx);
-			
-			ArrayList<QuickRecipe> toAdd = QuickRecipe.getRecipes(currentPageIdx);
-			
-			float left;
-			float top = body.bottom()+2;
-			int w;
-			ArrayList<QuickRecipe> toAddThisRow = new ArrayList<>();
-			while (!toAdd.isEmpty()){
-				if (toAdd.get(0) == null){
-					toAdd.remove(0);
-					top += 6;
-				}
-				
-				w = 0;
-				while(!toAdd.isEmpty() && toAdd.get(0) != null
-						&& w + toAdd.get(0).width() <= width()){
-					toAddThisRow.add(toAdd.remove(0));
-					w += toAddThisRow.get(0).width();
-				}
-				
-				float spacing = (width() - w)/(toAddThisRow.size() + 1);
-				left = spacing;
-				while (!toAddThisRow.isEmpty()){
-					QuickRecipe r = toAddThisRow.remove(0);
-					r.setPos(left, top);
-					left += r.width() + spacing;
-					if (!toAddThisRow.isEmpty()) {
-						ColorBlock spacer = new ColorBlock(1, 16, 0xFF222222);
-						spacer.y = top;
-						spacer.x = left - spacing / 2 - 0.5f;
-						PixelScene.align(spacer);
-						content.add(spacer);
-					}
-					recipes.add(r);
-					content.add(r);
-				}
-				
-				if (!toAdd.isEmpty() && toAdd.get(0) == null){
-					toAdd.remove(0);
-				}
-				
-				if (!toAdd.isEmpty() && toAdd.get(0) != null) {
-					ColorBlock spacer = new ColorBlock(width(), 1, 0xFF222222);
-					spacer.y = top + 16;
-					spacer.x = 0;
-					content.add(spacer);
-				}
-				top += 17;
-				toAddThisRow.clear();
-			}
-			top -= 1;
+
+            float top = body.bottom()+2;
+            top -= 1;
 			content.setSize(width(), top);
 			list.setSize(list.width(), list.height());
 			list.scrollTo(0, 0);
