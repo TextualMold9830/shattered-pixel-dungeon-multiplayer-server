@@ -51,7 +51,7 @@ public class CellSelector extends ScrollArea {
 		return owner;
 	}
 
-	public Listener listener = null;
+	private Listener listener = null;
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
@@ -527,7 +527,11 @@ public class CellSelector extends ScrollArea {
 		super.destroy();
 		KeyEvent.removeKeyListener( keyListener );
 	}
-	
+
+	public Listener getListener() {
+		return listener;
+	}
+
 	public static abstract class Listener {
 		private Hero owner;
 

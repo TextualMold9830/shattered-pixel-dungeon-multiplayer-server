@@ -15,7 +15,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.DeviceCompat;
-import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,9 +123,9 @@ class ClientThread implements Callable<String> {
                     case ("cell_listener"): {
                         Integer cell = data.getInt(token);
                         if (clientHero.cellSelector != null) {
-                            if (clientHero.cellSelector.listener != null) {
+                            if (clientHero.cellSelector.getListener() != null) {
                                 if (cell != -1) {
-                                    clientHero.cellSelector.listener.onSelect(cell);
+                                    clientHero.cellSelector.getListener().onSelect(cell);
                                 } else {
                                     clientHero.cellSelector.cancel();
                                 }

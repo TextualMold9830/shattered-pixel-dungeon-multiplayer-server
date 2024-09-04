@@ -1223,10 +1223,10 @@ public class GameScene extends PixelScene {
 	public static void selectCell(Hero hero, CellSelector.Listener listener ) {
 		CellSelector cellSelector = hero.cellSelector;
 
-		if (cellSelector.listener != null && cellSelector.listener != hero.defaultCellListener){
-			cellSelector.listener.onSelect(null);
+		if (cellSelector.getListener() != null && cellSelector.getListener() != hero.defaultCellListener){
+			cellSelector.getListener().onSelect(null);
 		}
-		cellSelector.listener = listener;
+		cellSelector.setListener(listener);
 		cellSelector.enabled = listener.getOwner().ready;
 		if (scene != null) {
 			scene.prompt(listener.prompt());
@@ -1234,7 +1234,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static boolean cancelCellSelector(Hero hero) {
-		if (hero.cellSelector.listener != null && hero.cellSelector.listener != hero.defaultCellListener) {
+		if (hero.cellSelector.getListener() != null && hero.cellSelector.getListener() != hero.defaultCellListener) {
 			hero.cellSelector.resetKeyHold();
 			hero.cellSelector.cancel();
 			return true;
