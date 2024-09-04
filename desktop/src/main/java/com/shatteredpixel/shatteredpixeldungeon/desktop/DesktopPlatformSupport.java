@@ -166,13 +166,13 @@ public class DesktopPlatformSupport extends PlatformSupport {
 
 	@Override
 	public List<PluginManifest> loadPlugins() {
-		if (!Files.isDirectory(Paths.get("plugins/"))) {
+		if (Files.isDirectory(Paths.get("plugins/"))) {
 			List<PluginManifest> manifests = new ArrayList<>();
 			File[] files;
 			try {
 				files = new File("plugins/").listFiles();
 				if (files == null){
-					return manifests;
+					return null;
 				}
 				for (File file : files) {
 					if (file.getName().endsWith("jar")) {
@@ -195,7 +195,13 @@ public class DesktopPlatformSupport extends PlatformSupport {
 			} catch (IOException e) {
 				Gdx.app.error("PluginLoader", e.toString());
 			}
-		}
+		} else {
+            try {
+                Files.createDirectories(Paths.get("plugins"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 		return null;
 
 	}
