@@ -72,6 +72,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -131,6 +132,8 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -980,14 +983,14 @@ public class GameScene extends PixelScene {
 		scene.overFogEffects.add( effect );
 	}
 	
-	public static Ripple ripple( int pos ) {
-		if (scene != null) {
-			Ripple ripple = (Ripple) scene.ripples.recycle(Ripple.class);
-			ripple.reset(pos);
-			return ripple;
-		} else {
-			return null;
+	public static void ripple( int pos ) {
+		JSONObject actionObj = new JSONObject();
+		try {
+			actionObj.put("action_type", "ripple_visual");
+			actionObj.put("pos", pos);
+		} catch (JSONException ignore) {
 		}
+		SendData.sendCustomActionForAll(actionObj);
 	}
 	
 	public static synchronized SpellSprite spellSprite() {
@@ -1106,9 +1109,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void discoverTile( int pos, int oldValue ) {
-		if (scene != null) {
-			scene.tiles.discover( pos, oldValue );
-		}
+		SendData.sendActionDiscoverTile(pos, oldValue);
 	}
 	
 	public static void show( Window wnd ) {
@@ -1180,18 +1181,27 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void flash( int color ) {
-		flash( color, true);
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("action_type", "game_scene_flash");
+			obj.put("color", color);
+			obj.put("light", true);
+		} catch (JSONException ignored) {
+
+		}
+		SendData.sendCustomActionForAll(obj);
 	}
 
 	public static void flash( int color, boolean lightmode ) {
-		if (scene != null) {
-			//greater than 0 to account for negative values (which have the first bit set to 1)
-			if (color > 0 && color < 0x01000000) {
-				scene.fadeIn(0xFF000000 | color, lightmode);
-			} else {
-				scene.fadeIn(color, lightmode);
-			}
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("action_type", "game_scene_flash");
+			obj.put("color", color);
+			obj.put("light", lightmode);
+		} catch (JSONException ignored) {
+
 		}
+		SendData.sendCustomActionForAll(obj);
 	}
 	@Deprecated
 	public static void gameOver(Hero hero) {
