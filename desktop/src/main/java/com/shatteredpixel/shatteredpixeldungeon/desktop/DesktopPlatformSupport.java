@@ -166,13 +166,13 @@ public class DesktopPlatformSupport extends PlatformSupport {
 
 	@Override
 	public List<PluginManifest> loadPlugins() {
+		List<PluginManifest> manifests = new ArrayList<>();
 		if (Files.isDirectory(Paths.get("plugins/"))) {
-			List<PluginManifest> manifests = new ArrayList<>();
 			File[] files;
 			try {
 				files = new File("plugins/").listFiles();
 				if (files == null){
-					return null;
+					return manifests;
 				}
 				for (File file : files) {
 					if (file.getName().endsWith("jar")) {
@@ -202,7 +202,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
                 throw new RuntimeException(e);
             }
         }
-		return null;
+		return manifests;
 
 	}
 }
