@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -70,9 +71,10 @@ public abstract class Plant implements Bundlable {
 			}
 	}
 }
-
+		SendData.sendPlant(pos, null);
 		wither();
 		activate( ch );
+
 	}
 	
 	public abstract void activate( Char ch );

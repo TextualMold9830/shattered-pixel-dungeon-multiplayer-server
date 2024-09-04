@@ -1052,7 +1052,7 @@ public abstract class Level implements Bundlable {
 				return null;
 			}
 		}
-		
+		SendData.sendPlant(pos, plant);
 		return plant;
 	}
 	
