@@ -286,6 +286,7 @@ class ClientThread implements Callable<String> {
         Hero newHero = new Hero();
         newHero.setSprite(new HeroSprite(newHero));
         clientHero = newHero;
+        level.linkHero(newHero);
         newHero.live();
 
         curClass.initHero(newHero);

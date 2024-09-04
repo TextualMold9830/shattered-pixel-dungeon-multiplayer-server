@@ -314,11 +314,7 @@ public abstract class Level implements Bundlable {
 		
 		visited     = new boolean[length];
 		mapped      = new boolean[length];
-		for(Hero hero: Dungeon.heroes) {
-			if(hero != null) {
-				hero.fieldOfView = new boolean[length];
-			}
-		}
+
 		passable	= new boolean[length];
 		losBlocking	= new boolean[length];
 		flamable	= new boolean[length];
@@ -329,10 +325,18 @@ public abstract class Level implements Bundlable {
 		pit			= new boolean[length];
 
 		openSpace   = new boolean[length];
-		
+
+		for(Hero hero: Dungeon.heroes) {
+			linkHero(hero);
+		}
 		PathFinder.setMapSize(w, h);
 	}
-	
+
+	public void linkHero(Hero hero){
+		if (hero == null) return;
+		hero.fieldOfView = new boolean[length];
+	}
+
 	public void reset() {
 		
 		for (Mob mob : mobs.toArray( new Mob[0] )) {
