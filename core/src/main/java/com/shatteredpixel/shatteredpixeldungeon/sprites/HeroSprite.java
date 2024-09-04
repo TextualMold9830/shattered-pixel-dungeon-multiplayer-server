@@ -52,10 +52,9 @@ public class HeroSprite extends CharSprite {
 		super();
 		
 		texture( owner.heroClass.spritesheet() );
-		updateArmor();
-		
-		link(owner);
 
+		link(owner);
+		updateArmor();
 		if (ch.isAlive())
 			idle();
 		else

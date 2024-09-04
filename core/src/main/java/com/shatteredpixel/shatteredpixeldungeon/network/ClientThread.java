@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
@@ -283,6 +284,7 @@ class ClientThread implements Callable<String> {
             curClass = Random.element(HeroClass.values());
         }
         Hero newHero = new Hero();
+        newHero.setSprite(new HeroSprite(newHero));
         clientHero = newHero;
         newHero.live();
 
