@@ -171,6 +171,9 @@ public class DesktopPlatformSupport extends PlatformSupport {
 			File[] files;
 			try {
 				files = new File("plugins/").listFiles();
+				if (files == null){
+					return manifests;
+				}
 				for (File file : files) {
 					if (file.getName().endsWith("jar")) {
 						JarFile jar = new JarFile(file.getName());
