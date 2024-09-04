@@ -111,7 +111,6 @@ public class ShatteredPixelDungeon extends Game {
 		Music.INSTANCE.enable( SPDSettings.music() );
 		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
 
-		Sample.INSTANCE.load( Assets.Sounds.all );
 		Server.startServer();
 		Dungeon.init();
 		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
