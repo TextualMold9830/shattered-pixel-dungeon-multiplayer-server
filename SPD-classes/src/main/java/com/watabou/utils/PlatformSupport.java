@@ -36,6 +36,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -174,7 +175,7 @@ public abstract class PlatformSupport {
 	}
 	//return a list of plugin manifests
 	public List<PluginManifest> loadPlugins(){
-		return null;
+		return new ArrayList<PluginManifest>();
 	}
 	public boolean supportsPlugins(){
 		return true;
