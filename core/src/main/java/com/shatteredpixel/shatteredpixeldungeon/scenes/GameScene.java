@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.nikita22007.multiplayer.server.ui.Banner;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -86,8 +87,6 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.GridTileMap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.RaisedTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.WallBlockingTilemap;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Banner;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -582,7 +581,7 @@ public class GameScene extends PixelScene {
 						if (ankh != null && GamesInProgress.gameExists(GamesInProgress.curSlot)) {
 							add(new WndResurrect(ankh));
 						} else {
-							//gameOver();
+							gameOver(hero);
 						}
 					}
 
@@ -901,16 +900,7 @@ public class GameScene extends PixelScene {
 			add( prompt );
 		}
 	}
-	
-	private void showBanner( Banner banner ) {
-		banner.camera = uiCamera;
 
-		float offset = Camera.main.centerOffset.y;
-		banner.x = align( uiCamera, (uiCamera.width - banner.width) / 2 );
-		banner.y = align( uiCamera, (uiCamera.height - banner.height) / 2 - banner.height/2 - 16 - offset );
-
-		addToFront( banner );
-	}
 	
 	// -------------------------------------------------------
 
@@ -1204,16 +1194,19 @@ public class GameScene extends PixelScene {
 		}
 	}
 	@Deprecated
-	public static void gameOver() {
-
+	public static void gameOver(Hero hero) {
+		Banner.show(hero, BannerSprites.Type.GAME_OVER, 0x000000, 1f);
+		com.nikita22007.multiplayer.noosa.audio.Sample.INSTANCE.play(Assets.Sounds.DEATH);
 	}
 
 	//FIXME
 	public static void bossSlain() {
-			Banner bossSlain = new Banner( BannerSprites.get( BannerSprites.Type.BOSS_SLAIN ) );
-			bossSlain.show( 0xFFFFFF, 0.3f, 5f );
-			scene.showBanner( bossSlain );
-			
+		for (Hero hero : Dungeon.heroes) {
+			if (hero == null) {
+				continue;
+			}
+			com.nikita22007.multiplayer.server.ui.Banner.show(hero, BannerSprites.Type.BOSS_SLAIN, 0xFFFFFF, 0.3f, 5f);
+		}
 			Sample.INSTANCE.play( Assets.Sounds.BOSS );
 
 	}
