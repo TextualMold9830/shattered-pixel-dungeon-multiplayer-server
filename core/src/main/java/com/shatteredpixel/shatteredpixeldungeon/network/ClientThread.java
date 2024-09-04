@@ -288,8 +288,8 @@ class ClientThread implements Callable<String> {
 
         curClass.initHero(newHero);
         for (int i : NEIGHBOURS8) {
-            if (Actor.findChar(level.entrance + i) == null && level.passable[level.entrance + i]) {
-                newHero.pos = level.entrance + i;
+            if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
+                newHero.pos = level.entrance() + i;
                 break;
             }
         }
@@ -297,7 +297,7 @@ class ClientThread implements Callable<String> {
 
         newHero.updateSpriteState();
         if (newHero.pos == -1) {
-            newHero.pos = level.entrance; //todo  FIXME
+            newHero.pos = level.entrance(); //todo  FIXME
         }
         Actor.add(newHero);
         Dungeon.level.occupyCell(newHero);
