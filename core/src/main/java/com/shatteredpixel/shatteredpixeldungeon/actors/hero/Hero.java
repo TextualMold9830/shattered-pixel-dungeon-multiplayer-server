@@ -2055,7 +2055,7 @@ public class Hero extends Char {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.gameOver();
+				GameScene.gameOver(hero);
 				Sample.INSTANCE.play( Assets.Sounds.DEATH, hero );
 			}
 		});
