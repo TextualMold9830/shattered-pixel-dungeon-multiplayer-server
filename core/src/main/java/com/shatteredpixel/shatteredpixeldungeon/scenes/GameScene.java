@@ -433,6 +433,7 @@ public class GameScene extends PixelScene {
 
 			}
 		}
+		/*
 		switch (InterLevelSceneServer.mode) {
 			case FALL:
 			case DESCEND:
@@ -446,7 +447,7 @@ public class GameScene extends PixelScene {
 				Camera.main.snapTo(hero.center().x, hero.center().y);
 		}
 		Camera.main.panTo(hero.center(), 2.5f);
-
+*/
 		if (InterLevelSceneServer.mode != InterLevelSceneServer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
 					&& (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.DESCEND || InterLevelSceneServer.mode == InterLevelSceneServer.Mode.FALL)) {

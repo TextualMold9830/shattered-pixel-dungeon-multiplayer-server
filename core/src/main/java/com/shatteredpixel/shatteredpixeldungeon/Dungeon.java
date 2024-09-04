@@ -192,7 +192,7 @@ public class Dungeon {
 	public static int challenges;
 	public static int mobsToChampion;
 	@Nullable
-	public static Hero[] heroes = new Hero[SPDSettings.maxPlayers];
+	public static Hero[] heroes = null;
 	public static Level level;
 
 	public static QuickSlot quickslot = new QuickSlot();

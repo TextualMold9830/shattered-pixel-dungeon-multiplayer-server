@@ -114,8 +114,7 @@ public class InterLevelSceneServer {
 					else                        loadingDepth = Dungeon.depth+1;
 					if (Statistics.deepestFloor >= loadingDepth) {
 						fadeTime = FADE_TIME.FAST_FADE;
-					} else if (loadingDepth == 6 || loadingDepth == 11
-							|| loadingDepth == 16 || loadingDepth == 21) {
+					} else if (loadingDepth % 5 == 1) {
 						fadeTime = FADE_TIME.SLOW_FADE;
 					}
 				}
@@ -212,8 +211,9 @@ public class InterLevelSceneServer {
         try {
             thread.join();
         } catch (InterruptedException e) {
-			handleError();
+
 		}
+		handleError();
 		for (int i = 0; i < heroes.length; i++) {
 			SendData.sendInterLevelSceneFadeOut(i);
 		}
@@ -222,9 +222,9 @@ public class InterLevelSceneServer {
 	public void handleError() {
 
 		if (error == null){
-			if (phase != Phase.FADE_OUT){
+			/*if (phase != Phase.FADE_OUT){
 				error = new RuntimeException("InterlevelScene is not loaded fully");
-			}
+			}*/
 		}
 		if (error != null) {
 			String errorMsg;

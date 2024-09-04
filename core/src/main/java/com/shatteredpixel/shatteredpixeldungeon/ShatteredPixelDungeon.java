@@ -112,9 +112,10 @@ public class ShatteredPixelDungeon extends Game {
 		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
 
 		Server.startServer();
-		Dungeon.init();
 		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
 		InterLevelSceneServer.create(null);
+		Dungeon.init();
+
 		Gdx.app.log("Scene", Game.sceneClass.getName());
 		Game.switchScene(GameScene.class);
 	}
