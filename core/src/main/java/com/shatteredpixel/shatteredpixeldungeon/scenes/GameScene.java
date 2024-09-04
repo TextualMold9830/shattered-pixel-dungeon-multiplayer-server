@@ -1278,17 +1278,15 @@ public class GameScene extends PixelScene {
 		}
 		return cancelCellSelector();
 	}
-	
-	public static void ready() {
-		selectCell( defaultCellListener );
+
+	public static void ready(@NotNull Hero hero) {
+		selectCell(hero, hero.cellSelector.listener );
+		//todo use Hero
 		QuickSlotButton.cancel();
 		if (tagDisappeared) {
 			tagDisappeared = false;
 			updateTags = true;
 		}
-	}
-	public static void ready(@NotNull Hero hero) {
-		selectCell(hero, hero.cellSelector.listener );
 	}
 
 	//FIXME

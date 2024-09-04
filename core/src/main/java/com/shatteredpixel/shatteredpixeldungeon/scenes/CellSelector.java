@@ -173,7 +173,7 @@ public class CellSelector extends ScrollArea {
 					listener.onRightClick( cell );
 					break;
 			}
-			GameScene.ready();
+			GameScene.ready(owner);
 			
 		} else {
 			
@@ -502,7 +502,7 @@ public class CellSelector extends ScrollArea {
 			listener.onSelect( null );
 		}
 		
-		GameScene.ready();
+		GameScene.ready(owner);
 	}
 
 	@Override

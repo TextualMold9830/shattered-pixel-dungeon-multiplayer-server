@@ -864,7 +864,7 @@ public class Hero extends Char {
 
 		attackIndicator.updateState();
 		
-		GameScene.ready();
+		GameScene.ready(this);
 	}
 	
 	public void interrupt() {
