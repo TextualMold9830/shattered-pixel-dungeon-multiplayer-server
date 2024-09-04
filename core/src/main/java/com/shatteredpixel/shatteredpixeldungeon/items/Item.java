@@ -171,12 +171,12 @@ public class Item implements Bundlable {
 	}
 
 	public void doThrow( Hero hero ) {
-		GameScene.selectCell(thrower);
+		GameScene.selectCell(hero, thrower);
 	}
 	
 	public void execute( Hero hero, String action ) {
 
-		GameScene.cancel();
+		GameScene.cancel(hero);
 		curUser = hero;
 		curItem = this;
 		

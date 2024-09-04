@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -39,6 +38,7 @@ public class WndMonkAbilities extends Window {
 	private static final int MARGIN  = 2;
 
 	public WndMonkAbilities( MonkEnergy energyBuff ){
+		//todo fix me
 		super();
 
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
@@ -61,7 +61,7 @@ public class WndMonkAbilities extends Window {
 					hide();
 					if (abil.targetingPrompt() != null) {
 						abilityBeingUsed = abil;
-						GameScene.selectCell(listener);
+						GameScene.selectCell(getOwnerHero(), listener);
 					} else {
 						abil.doAbility(getOwnerHero(), null);
 					}

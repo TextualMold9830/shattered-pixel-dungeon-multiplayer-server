@@ -152,7 +152,7 @@ public class SandalsOfNature extends Artifact {
 			else if (curSeedEffect == null)                         GLog.i( Messages.get(this, "no_effect") );
 			else if (charge < seedChargeReqs.get(curSeedEffect))    GLog.i( Messages.get(this, "low_charge") );
 			else {
-				GameScene.selectCell(cellSelector);
+				GameScene.selectCell(hero, cellSelector);
 			}
 		}
 	}

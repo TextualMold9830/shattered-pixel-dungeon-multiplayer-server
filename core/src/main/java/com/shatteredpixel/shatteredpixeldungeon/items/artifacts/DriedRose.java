@@ -212,7 +212,7 @@ public class DriedRose extends Artifact {
 					ghostID = 0;
 				}
 			}
-			if (ghost != null) GameScene.selectCell(ghostDirector);
+			if (ghost != null) GameScene.selectCell(hero, ghostDirector);
 			
 		} else if (action.equals(AC_OUTFIT)){
 			GameScene.show( new WndGhostHero(this) );

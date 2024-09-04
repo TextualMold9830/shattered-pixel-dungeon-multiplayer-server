@@ -116,7 +116,7 @@ public abstract class Wand extends Item {
 			
 			curUser = hero;
 			curItem = this;
-			GameScene.selectCell( zapper );
+			GameScene.selectCell(hero, zapper);
 			
 		}
 	}

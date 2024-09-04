@@ -107,7 +107,7 @@ public class EtherealChains extends Artifact {
 
 			} else {
 				usesTargeting = true;
-				GameScene.selectCell(caster);
+				GameScene.selectCell(hero, caster);
 			}
 
 		}

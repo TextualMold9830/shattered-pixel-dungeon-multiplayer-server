@@ -41,7 +41,7 @@ public abstract class ArmorAbility implements Bundlable {
 		if (targetingPrompt(hero) == null){
 			activate(armor, hero, hero.pos);
 		} else {
-			GameScene.selectCell(new CellSelector.Listener() {
+			GameScene.selectCell(hero, new CellSelector.Listener() {
 				@Override
 				public void onSelect(Integer cell) {
 					activate(armor, hero, cell);

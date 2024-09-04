@@ -184,7 +184,7 @@ public class Hero extends Char {
 
 	//FIXME;
 	public CellSelector cellSelector = new CellSelector(this);
-
+	public CellSelector.Listener defaultCellListener = new GameScene.DefaultCellListener();
 	{
 		actPriority = HERO_PRIO;
 		
@@ -874,7 +874,7 @@ public class Hero extends Char {
 			lastAction = curAction;
 		}
 		curAction = null;
-		GameScene.resetKeyHold();
+		GameScene.resetKeyHold(this);
 		resting = false;
 	}
 	
@@ -2142,7 +2142,7 @@ public class Hero extends Char {
 	
 	@Override
 	public void onMotionComplete() {
-		GameScene.checkKeyHold();
+		GameScene.checkKeyHold(this);
 	}
 	
 	@Override

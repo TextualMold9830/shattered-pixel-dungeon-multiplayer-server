@@ -103,7 +103,7 @@ public class MasterThievesArmband extends Artifact {
 
 			} else {
 				usesTargeting = true;
-				GameScene.selectCell(targeter);
+				GameScene.selectCell(hero, targeter);
 			}
 
 		}

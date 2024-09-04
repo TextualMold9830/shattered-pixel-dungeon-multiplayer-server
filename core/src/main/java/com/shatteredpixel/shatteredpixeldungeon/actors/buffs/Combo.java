@@ -304,7 +304,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			((Hero)target).busy();
 		} else {
 			moveBeingUsed = move;
-			GameScene.selectCell(listener);
+			GameScene.selectCell((Hero) target, listener);
 		}
 	}
 

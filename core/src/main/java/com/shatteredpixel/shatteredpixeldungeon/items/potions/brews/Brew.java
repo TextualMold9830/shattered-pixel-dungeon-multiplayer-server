@@ -43,7 +43,7 @@ public abstract class Brew extends Potion {
 	
 	@Override
 	public void doThrow(Hero hero) {
-		GameScene.selectCell(thrower);
+		GameScene.selectCell(hero, thrower);
 	}
 	
 	@Override

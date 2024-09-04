@@ -264,7 +264,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	
 	@Override
 	public void doAction(Hero hero) {
-		GameScene.selectCell(attack);
+		GameScene.selectCell(hero, attack);
 	}
 	
 	private CellSelector.Listener attack = new CellSelector.Listener() {

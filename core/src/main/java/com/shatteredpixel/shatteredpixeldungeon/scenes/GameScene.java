@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.nikita22007.multiplayer.server.ui.Banner;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -50,7 +49,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Ripple;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -62,7 +60,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -158,8 +155,6 @@ public class GameScene extends PixelScene {
 	private MenuPane menu;
 
 	private GameLog log;
-
-	private static CellSelector cellSelector;
 
 	private Group terrain;
 	private Group customTiles;
@@ -344,8 +339,6 @@ public class GameScene extends PixelScene {
 		add(new TargetHealthIndicator());
 
 		add(emoicons);
-
-		add(cellSelector = new CellSelector(tiles));
 
 		int uiSize = SPDSettings.interfaceSize();
 
@@ -741,7 +734,7 @@ public class GameScene extends PixelScene {
 		}
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
-				cellSelector.enable(hero.ready);
+				hero.cellSelector.enable(hero.ready);
 			}
 		}
 		if (!toDestroy.isEmpty()) {
@@ -810,9 +803,7 @@ public class GameScene extends PixelScene {
 	
 	@Override
 	protected void onBackPressed() {
-		if (!cancel()) {
-			add( new WndGame() );
-		}
+		add( new WndGame() );
 	}
 
 	public void addCustomTile( CustomTilemap visual){
@@ -895,7 +886,7 @@ public class GameScene extends PixelScene {
 			prompt = new Toast( text ) {
 				@Override
 				protected void onClose() {
-					cancel();
+					//cancel();
 				}
 			};
 			prompt.camera = uiCamera;
@@ -1115,8 +1106,11 @@ public class GameScene extends PixelScene {
 	
 	public static void show( Window wnd ) {
 		if (scene != null) {
-			cancel();
-			scene.addToFront(wnd);
+			if (wnd.getOwnerHero() != null) {
+				cancel(wnd.getOwnerHero());
+			} else {
+				scene.addToFront(wnd);
+			}
 		}
 	}
 
@@ -1221,13 +1215,15 @@ public class GameScene extends PixelScene {
 			Sample.INSTANCE.play( Assets.Sounds.BOSS );
 
 	}
-	
-	public static void handleCell( int cell ) {
-		cellSelector.select( cell, PointerEvent.LEFT );
+
+	public static void handleCell(Hero hero, int cell ) {
+		hero.cellSelector.select( cell, PointerEvent.LEFT );
 	}
 	
-	public static void selectCell( CellSelector.Listener listener ) {
-		if (cellSelector.listener != null && cellSelector.listener != defaultCellListener){
+	public static void selectCell(Hero hero, CellSelector.Listener listener ) {
+		CellSelector cellSelector = hero.cellSelector;
+
+		if (cellSelector.listener != null && cellSelector.listener != hero.defaultCellListener){
 			cellSelector.listener.onSelect(null);
 		}
 		cellSelector.listener = listener;
@@ -1237,10 +1233,10 @@ public class GameScene extends PixelScene {
 		}
 	}
 	
-	public static boolean cancelCellSelector() {
-		if (cellSelector.listener != null && cellSelector.listener != defaultCellListener) {
-			cellSelector.resetKeyHold();
-			cellSelector.cancel();
+	public static boolean cancelCellSelector(Hero hero) {
+		if (hero.cellSelector.listener != null && hero.cellSelector.listener != hero.defaultCellListener) {
+			hero.cellSelector.resetKeyHold();
+			hero.cellSelector.cancel();
 			return true;
 		} else {
 			return false;
@@ -1248,7 +1244,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static WndBag selectItem( WndBag.ItemSelector listener, Hero hero ) {
-		cancel();
+		cancel(hero);
 
 		if (scene != null) {
 			{
@@ -1260,27 +1256,24 @@ public class GameScene extends PixelScene {
 		
 		return null;
 	}
-	
-	public static boolean cancel() {
-		cellSelector.resetKeyHold();
-		for(Hero hero: Dungeon.heroes) {
-			if (hero != null && (hero.curAction != null || hero.resting)) {
 
-				hero.curAction = null;
-				hero.resting = false;
-				return true;
+	public static boolean cancel(Hero hero) {
+		hero.cellSelector.resetKeyHold();
+		if (hero.curAction != null || hero.resting) {
 
-			} else {
+			hero.curAction = null;
+			hero.resting = false;
+			return true;
 
-				return cancelCellSelector();
+		} else {
 
-			}
+			return cancelCellSelector(hero);
+
 		}
-		return cancelCellSelector();
 	}
 
 	public static void ready(@NotNull Hero hero) {
-		selectCell(hero, hero.cellSelector.listener );
+		selectCell(hero, hero.defaultCellListener );
 		//todo use Hero
 		QuickSlotButton.cancel();
 		if (tagDisappeared) {
@@ -1290,12 +1283,12 @@ public class GameScene extends PixelScene {
 	}
 
 	//FIXME
-	public static void checkKeyHold(){
-		cellSelector.processKeyHold();
+	public static void checkKeyHold(Hero hero){
+		hero.cellSelector.processKeyHold();
 	}
 	
-	public static void resetKeyHold(){
-		cellSelector.resetKeyHold();
+	public static void resetKeyHold(Hero hero){
+		hero.cellSelector.resetKeyHold();
 	}
 
 	public static void examineCell( Integer cell, Hero hero ) {
@@ -1385,7 +1378,7 @@ public class GameScene extends PixelScene {
 	}
 
 	//FIXME
-	private static final CellSelector.Listener defaultCellListener = new CellSelector.Listener() {
+	public static class DefaultCellListener extends CellSelector.Listener {
 		@Override
 		public void onSelect( Integer cell ) {
 
@@ -1404,7 +1397,5 @@ public class GameScene extends PixelScene {
 		sprite.visible = true;
 		sprite.link(hero);
 	}
-	public static void selectCell(  Hero hero,  CellSelector.Listener listener ) {
-		hero.cellSelector.setListener(listener);
-	}
+
 }

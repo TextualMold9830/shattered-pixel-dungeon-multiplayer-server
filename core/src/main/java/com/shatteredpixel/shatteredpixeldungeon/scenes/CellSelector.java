@@ -177,7 +177,7 @@ public class CellSelector extends ScrollArea {
 			
 		} else {
 			
-			GameScene.cancel();
+			GameScene.cancel(owner);
 			
 		}
 	}
@@ -409,7 +409,7 @@ public class CellSelector extends ScrollArea {
 			return false;
 		}
 
-		if (GameScene.cancelCellSelector()){
+		if (GameScene.cancelCellSelector(owner)){
 			return false;
 		}
 

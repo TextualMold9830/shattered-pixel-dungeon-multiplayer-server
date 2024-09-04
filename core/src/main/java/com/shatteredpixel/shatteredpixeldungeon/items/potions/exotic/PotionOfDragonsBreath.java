@@ -71,7 +71,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 			identifiedByUse = false;
 		}
 
-		GameScene.selectCell(targeter);
+		GameScene.selectCell(hero, targeter);
 	}
 	
 	private CellSelector.Listener targeter = new CellSelector.Listener() {
@@ -109,7 +109,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 										identifiedByUse = false;
 										break;
 									case 1:
-										GameScene.selectCell( targeter );
+										GameScene.selectCell(curUser, targeter);
 										break;
 								}
 							}

@@ -56,7 +56,7 @@ public class Pushing extends Actor {
 		this.callback = null;
 
 		if (ch instanceof Hero){
-			Camera.main.panFollow(ch.sprite, 20f);
+			//Camera.main.panFollow(ch.sprite, 20f); todo
 		}
 	}
 

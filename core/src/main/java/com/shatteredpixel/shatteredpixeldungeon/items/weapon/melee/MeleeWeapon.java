@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -127,7 +126,7 @@ public class MeleeWeapon extends Weapon {
 					updateQuickslot();
 				} else {
 					usesTargeting = useTargeting();
-					GameScene.selectCell(new CellSelector.Listener() {
+					GameScene.selectCell(hero, new CellSelector.Listener() {
 						@Override
 						public void onSelect(Integer cell) {
 							if (cell != null) {

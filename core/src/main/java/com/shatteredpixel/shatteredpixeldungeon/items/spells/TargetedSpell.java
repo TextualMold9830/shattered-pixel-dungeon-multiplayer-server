@@ -42,7 +42,7 @@ public abstract class TargetedSpell extends Spell {
 	
 	@Override
 	protected void onCast(Hero hero) {
-		GameScene.selectCell(targeter);
+		GameScene.selectCell(hero, targeter);
 	}
 	
 	protected abstract void affectTarget( Ballistica bolt, Hero hero );

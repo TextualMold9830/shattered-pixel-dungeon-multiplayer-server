@@ -57,7 +57,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 		} else {
 			identifiedByUse = false;
 		}
-		GameScene.selectCell(targeter);
+		GameScene.selectCell(hero, targeter);
 	}
 
 	private CellSelector.Listener targeter = new CellSelector.Listener() {

@@ -139,7 +139,7 @@ public class LloydsBeacon extends Artifact {
 				QuickSlotButton.cancel();
 
 			} else {
-				GameScene.selectCell(zapper);
+				GameScene.selectCell(hero, zapper);
 			}
 
 		} else if (action == AC_SET) {
