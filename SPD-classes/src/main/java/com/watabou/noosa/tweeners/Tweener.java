@@ -44,7 +44,7 @@ abstract public class Tweener extends Gizmo {
 	
 	@Override
 	public void update() {
-		if (elapsed < 0){
+		if ((elapsed < 0)|| true){
 			onComplete();
 			kill();
 			return;
