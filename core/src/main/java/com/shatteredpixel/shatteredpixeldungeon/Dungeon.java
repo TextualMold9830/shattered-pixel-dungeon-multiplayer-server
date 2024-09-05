@@ -953,11 +953,17 @@ public class Dungeon {
 		observe( hero, dist+1, send );
 	}
 
+	private static boolean[] heroVisibleTemp = new boolean[0];
 
 	public static void observe(Hero hero, int dist, boolean send ) {
 		if (level == null) {
 			return;
 		}
+		if (heroVisibleTemp.length != hero.fieldOfView.length){
+			heroVisibleTemp = new boolean[hero.fieldOfView.length];
+		}
+		System.arraycopy(hero.fieldOfView, 0, heroVisibleTemp, 0,  heroVisibleTemp.length);
+
 		level.updateFieldOfView(hero, hero.fieldOfView);
 
 		int x = hero.pos % level.width();
@@ -1063,8 +1069,7 @@ public class Dungeon {
 		}
 		GameScene.afterObserve();
 
-
-		addToSendLevelVisitedStateFull(level, hero.networkID);
+		addToSendLevelVisitedState(level, hero.networkID, BArray.xor(heroVisibleTemp,hero.fieldOfView,heroVisibleTemp));
 		if (send) {
 			int networkID = getHeroID(hero);
 			addToSendHeroVisibleCells(hero.fieldOfView,networkID);
