@@ -1223,9 +1223,7 @@ public class Dungeon {
 		boolean[] result = new boolean[heroes.length];
 		for (int pos : positions) {
 			for (int i = 0; i < heroes.length; i++) {
-				if (heroes[i] == null) {
-					result[i] = false;
-				} else {
+				if (heroes[i] != null) {
 					result[i] = result[i] || heroes[i].fieldOfView[pos];
 				}
 			}
