@@ -160,8 +160,9 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		}
 		
 		float speed = SPEED;
-		Hero owner = item.findOwner();
-		if (item instanceof Dart
+
+		Hero owner = item.findOwner(); //todo fixme
+		if (owner != null && item instanceof Dart
 				&& (owner.belongings.weapon() instanceof Crossbow
 				|| owner.belongings.secondWep() instanceof Crossbow)){
 			speed *= 3f;
