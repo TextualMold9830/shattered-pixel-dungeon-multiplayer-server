@@ -1381,7 +1381,7 @@ public class GameScene extends PixelScene {
 	public static class DefaultCellListener extends CellSelector.Listener {
 		@Override
 		public void onSelect( Integer cell ) {
-
+			if (cell == null) return;
 			if (getOwner().handle( cell )) {
 				getOwner().next();
 			}
