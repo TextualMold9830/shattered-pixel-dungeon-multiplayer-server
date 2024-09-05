@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
-import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -953,16 +952,21 @@ public class Dungeon {
 		observe( hero, dist+1, send );
 	}
 
-	private static boolean[] heroVisibleTemp = new boolean[0];
+	private static boolean[] oldLevelVisitedChache = new boolean[0];
+	private static boolean[] oldLevelMappedChache = new boolean[0];
 
 	public static void observe(Hero hero, int dist, boolean send ) {
 		if (level == null) {
 			return;
 		}
-		if (heroVisibleTemp.length != hero.fieldOfView.length){
-			heroVisibleTemp = new boolean[hero.fieldOfView.length];
+		if (oldLevelMappedChache.length != level.mapped.length) {
+			oldLevelMappedChache = new boolean[level.mapped.length];
 		}
-		System.arraycopy(hero.fieldOfView, 0, heroVisibleTemp, 0,  heroVisibleTemp.length);
+		if (oldLevelVisitedChache.length != level.visited.length) {
+			oldLevelVisitedChache = new boolean[level.visited.length];
+		}
+		System.arraycopy(level.visited, 0, oldLevelVisitedChache, 0, level.visited.length);
+		System.arraycopy(level.mapped, 0, oldLevelMappedChache, 0, level.mapped.length);
 
 		level.updateFieldOfView(hero, hero.fieldOfView);
 
@@ -1069,10 +1073,13 @@ public class Dungeon {
 		}
 		GameScene.afterObserve();
 
-		addToSendLevelVisitedState(level, hero.networkID, BArray.xor(heroVisibleTemp,hero.fieldOfView,heroVisibleTemp));
+		BArray.xor(oldLevelVisitedChache, level.visited, oldLevelVisitedChache);
+		BArray.xor(oldLevelMappedChache, level.mapped, oldLevelMappedChache);
+		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache);
+		addToSendLevelVisitedState(level, hero.networkID, oldLevelMappedChache);
 		if (send) {
 			int networkID = getHeroID(hero);
-			addToSendHeroVisibleCells(hero.fieldOfView,networkID);
+			addToSendHeroVisibleCells(hero.fieldOfView, networkID);
 			SendData.flush(networkID);
 		}
 	}
