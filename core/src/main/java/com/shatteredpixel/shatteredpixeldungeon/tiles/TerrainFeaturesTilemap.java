@@ -90,22 +90,7 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 	}
 
 	public void growPlant( final int pos ){
-		final Image plant = tile( pos, map[pos] );
-		if (plant == null) return;
-		
-		plant.origin.set( 8, 12 );
-		plant.scale.set( 0 );
-		plant.point( DungeonTilemap.tileToWorld( pos ) );
-
-		parent.add( plant );
-
-		parent.add( new ScaleTweener( plant, new PointF(1, 1), 0.2f ) {
-			protected void onComplete() {
-				plant.killAndErase();
-				killAndErase();
-				updateMapCell(pos);
-			}
-		} );
+		return;
 	}
 
 }
