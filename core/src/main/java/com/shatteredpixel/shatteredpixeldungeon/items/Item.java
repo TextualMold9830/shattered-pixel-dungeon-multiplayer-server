@@ -69,6 +69,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendNewInventoryItem;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemCount;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
 public class Item implements Bundlable {
@@ -229,35 +232,44 @@ public class Item implements Bundlable {
 		}
 		return this;
 	}
-	
 	public boolean collect( Bag container) {
+		return collect(container, new ArrayList<Integer>(2)) != null;
+	}
+	public List<Integer> collect(Bag container, List<Integer> path) {
 
 		if (quantity <= 0){
-			return true;
+			return null;
 		}
 
 		ArrayList<Item> items = container.items;
 
-		if (items.contains( this )) {
-			return true;
+		{
+			int index = items.indexOf(this);
+			if (index >= 0) {
+				path.add(index);
+				return path;
+			}
 		}
 
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				if (collect( (Bag)item )){
-					return true;
+				List<Integer> newPath = collect( (Bag)item, path );
+				if (newPath != null) {
+					return newPath;
 				}
 			}
 		}
 
 		if (!container.canHold(this)){
-			return false;
+			return null;
 		}
 		Hero hero = (container.owner instanceof Hero)? (Hero)container.owner : null;
 		if (stackable) {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
+					path.add(items.indexOf(item));
+					sendUpdateItemCount(container.owner, item, item.quantity(), path);
 					item.updateQuickslot();
 					if (hero != null && hero.isAlive()) {
 						Badges.validateItemLevelAquired( this );
@@ -281,7 +293,7 @@ public class Item implements Bundlable {
 							});
 						}
 					}
-					return true;
+					return path;
 				}
 			}
 		}
@@ -295,8 +307,10 @@ public class Item implements Bundlable {
 		items.add( this );
 		Dungeon.quickslot.replacePlaceholder(this);
 		Collections.sort( items, itemComparator );
+		path.add(items.indexOf(this));
+		sendNewInventoryItem(container.owner, this, path);
 		updateQuickslot();
-		return true;
+		return path;
 
 	}
 	
@@ -365,9 +379,15 @@ public class Item implements Bundlable {
 	
 	public final Item detachAll( Bag container ) {
 		Dungeon.quickslot.clearItem( this );
-
+		Hero owner = null;
+		if (container.owner instanceof Hero) {
+			owner = (Hero) container.owner;
+		}
 		for (Item item : container.items) {
 			if (item == this) {
+				if (owner != null) {
+					sendRemoveItemFromInventory(owner, getSlot(owner));
+				}
 				container.items.remove(this);
 				item.onDetach();
 				container.grabItems(); //try to put more items into the bag as it now has free space
