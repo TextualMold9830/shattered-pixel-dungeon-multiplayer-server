@@ -992,7 +992,7 @@ public abstract class Level implements Bundlable {
 			
 			heap = new Heap();
 			//TODO: check this
-			heap.seen = Dungeon.level == this && Dungeon.visibleforAnyHero(cell);
+			heap.setSeen(Dungeon.level == this && Dungeon.visibleforAnyHero(cell));
 			heap.pos = cell;
 			heap.drop(item);
 			if (map[cell] == Terrain.CHASM || (Dungeon.level != null && pit[cell])) {
@@ -1479,8 +1479,8 @@ public abstract class Level implements Bundlable {
 
 		if (c instanceof Hero) {
 			for (Heap heap : heaps.valueList())
-				if (!heap.seen && fieldOfView[heap.pos])
-					heap.seen = true;
+				if (!heap.isSeen() && fieldOfView[heap.pos])
+					heap.setSeen(true);
 		}
 
 	}

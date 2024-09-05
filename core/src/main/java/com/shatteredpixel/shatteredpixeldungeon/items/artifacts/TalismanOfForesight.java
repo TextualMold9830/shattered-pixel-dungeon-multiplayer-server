@@ -198,7 +198,7 @@ public class TalismanOfForesight extends Artifact {
 					if (h != null){
 						Buff.append(curUser, HeapAwareness.class, 5 + 2*level()).pos = h.pos;
 
-						if (!h.seen){
+						if (!h.isSeen()){
 							earnedExp += 10;
 						}
 					}

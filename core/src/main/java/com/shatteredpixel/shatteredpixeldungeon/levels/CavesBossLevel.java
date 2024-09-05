@@ -40,7 +40,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CavesPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -275,7 +274,7 @@ public class CavesBossLevel extends Level {
 				n = entrance + PathFinder.NEIGHBOURS8[Random.Int(8)];
 			} while (!Dungeon.level.passable[n]);
 			Heap dropped = Dungeon.level.drop(heap.pickUp(), n);
-			dropped.seen = heap.seen;
+			dropped.setSeen(heap.isSeen());
 		}
 
 		Char ch = Actor.findChar( entrance );

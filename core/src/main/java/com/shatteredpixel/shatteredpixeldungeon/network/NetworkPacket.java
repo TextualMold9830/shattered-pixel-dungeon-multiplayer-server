@@ -680,6 +680,7 @@ public class NetworkPacket {
             }
             heapObj.put("visible_sprite", heapImage);
             heapObj.put("show_item", heap.showsFirstItem());
+            heapObj.put("seen", heap.isSeen());
         } catch (JSONException e) {
             e.printStackTrace();
         }

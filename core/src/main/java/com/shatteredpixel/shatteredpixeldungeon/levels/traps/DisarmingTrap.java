@@ -61,7 +61,7 @@ public class DisarmingTrap extends Trap{
 			if (cell != -1) {
 				Item item = heap.pickUp();
 				Heap dropped = Dungeon.level.drop( item, cell );
-				dropped.seen = true;
+				dropped.setSeen(true);
 				if (item instanceof Honeypot.ShatteredPot){
 					((Honeypot.ShatteredPot)item).movePot(pos, cell);
 				}
@@ -98,7 +98,7 @@ public class DisarmingTrap extends Trap{
 				Dungeon.quickslot.clearItem(weapon);
 				weapon.updateQuickslot();
 
-				Dungeon.level.drop(weapon, cell).seen = true;
+				Dungeon.level.drop(weapon, cell).setSeen(true);
 				for (int i : PathFinder.NEIGHBOURS9)
 					Dungeon.level.mapped[cell+i] = true;
 				GameScene.updateFog(cell, 1);

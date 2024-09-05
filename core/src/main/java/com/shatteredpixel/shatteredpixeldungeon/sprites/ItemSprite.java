@@ -108,7 +108,7 @@ public class ItemSprite extends MovieClip {
 		this.heap = heap;
 		view(heap);
 		renderShadow = true;
-		visible = heap.seen;
+		visible = heap.isSeen();
 		place(heap.pos);
 	}
 	
@@ -167,7 +167,7 @@ public class ItemSprite extends MovieClip {
 		speed.set( 0, -100 );
 		acc.set(0, -speed.y / DROP_INTERVAL * 2);
 		
-		if (heap != null && heap.seen && heap.peek() instanceof Gold) {
+		if (heap != null && heap.isSeen() && heap.peek() instanceof Gold) {
 			CellEmitter.center( heap.pos ).burst( Speck.factory( Speck.COIN ), 5 );
 			Sample.INSTANCE.play( Assets.Sounds.GOLD, 1, 1, Random.Float( 0.9f, 1.1f ) );
 		}
@@ -310,7 +310,7 @@ public class ItemSprite extends MovieClip {
 	public synchronized void update() {
 		super.update();
 
-		visible = (heap == null || heap.seen);
+		visible = (heap == null || heap.isSeen());
 
 		if (emitter != null){
 			emitter.visible = visible;

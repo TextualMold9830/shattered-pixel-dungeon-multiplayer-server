@@ -59,10 +59,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import static com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room.Door.Type.HIDDEN;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeap;
 
 public class Heap implements Bundlable {
-	
+
 	public enum Type {
 		HEAP,
 		FOR_SALE,
@@ -78,11 +78,12 @@ public class Heap implements Bundlable {
 	public int pos = 0;
 	
 	public ItemSprite sprite;
-	public boolean seen = false;
+	private boolean seen = false;
 	public boolean haunted = false;
 	public boolean autoExplored = false; //used to determine if this heap should count for exploration bonus
 	
-	public LinkedList<Item> items = new LinkedList<>();
+	public LinkedList<Item>
+			items = new LinkedList<>();
 	
 	public void open( Hero hero ) {
 		switch (type) {
@@ -184,6 +185,9 @@ public class Heap implements Bundlable {
 			TippedDart.lostDarts = 0;
 			drop(d);
 		}
+
+		sendHeap(this);
+		//ItemSprite.dropEffects(this);
 	}
 	
 	public void replace( Item a, Item b ) {
@@ -427,7 +431,7 @@ public class Heap implements Bundlable {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		pos = bundle.getInt( POS );
-		seen = bundle.getBoolean( SEEN );
+		setSeen(bundle.getBoolean( SEEN ));
 		type = Type.valueOf( bundle.getString( TYPE ) );
 		
 		items = new LinkedList<>((Collection<Item>) ((Collection<?>) bundle.getCollection(ITEMS)));
@@ -452,7 +456,7 @@ public class Heap implements Bundlable {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( POS, pos );
-		bundle.put( SEEN, seen );
+		bundle.put( SEEN, isSeen());
 		bundle.put( TYPE, type );
 		bundle.put( ITEMS, items );
 		bundle.put( HAUNTED, haunted );
@@ -476,5 +480,13 @@ public class Heap implements Bundlable {
 				return 0;
 		}
 	}
-	
+
+	public boolean isSeen() {
+		return seen;
+	}
+
+	public void setSeen(boolean seen) {
+		this.seen = seen;
+		sendHeap(this);
+	}
 }
