@@ -21,8 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteAction;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteState;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.DarkBlock;
@@ -38,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -154,6 +159,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public CharSprite() {
 		super();
 		listener = this;
+		ShatteredPixelDungeon.scene().add(this);
 	}
 	
 	@Override
@@ -211,6 +217,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void place( int cell ) {
 		point( worldToCamera( cell ) );
+		sendCharSpriteAction(ch.id(), "place", null, cell);
 	}
 	
 	public void showStatus( int color, String text, Object... args ) {
@@ -233,10 +240,17 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 	
 	public void idle() {
+		if (curAnim == idle) return;
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "idle", null, null);
+		}
 		play(idle);
 	}
 	
 	public void move( int from, int to ) {
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "run", from, to);
+		}
 		turnTo( from , to );
 
 		play( run );
@@ -280,6 +294,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public synchronized void attack( int cell, Callback callback ) {
 		animCallback = callback;
 		turnTo( ch.pos, cell );
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "attack", null, cell);
+		}
 		play( attack );
 	}
 	
@@ -290,6 +307,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public synchronized void operate( int cell, Callback callback ) {
 		animCallback = callback;
 		turnTo( ch.pos, cell );
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "operate", null, cell);
+		}
 		play( operate );
 	}
 	
@@ -300,6 +320,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public synchronized void zap( int cell, Callback callback ) {
 		animCallback = callback;
 		turnTo( ch.pos, cell );
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "zap", null, cell);
+		}
 		play( zap );
 	}
 	
@@ -311,6 +334,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		} else if (tx < fx) {
 			flipHorizontal = true;
 		}
+		sendCharSpriteAction(ch.id(), "turn", from, to);
 	}
 
 	public void jump( int from, int to, Callback callback ) {
@@ -326,11 +350,17 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		parent.add( jumpTweener );
 
 		turnTo( from, to );
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "jump", from, to);
+		}
 	}
 
 	public void die() {
 		sleeping = false;
 		remove( State.PARALYSED );
+		if (ch != null) {
+			sendCharSpriteAction(ch.id(), "die", null, null);
+		}
 		play( die );
 
 		hideEmo();
@@ -379,9 +409,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void flash() {
 		ra = ba = ga = 1f;
 		flashTime = FLASH_INTERVAL;
+		SendData.sendFlashChar(this, FLASH_INTERVAL);
 	}
 	
 	public void add( State state ) {
+		sendCharSpriteState(ch, state, false);
 		switch (state) {
 			case BURNING:
 				burning = emitter();
@@ -442,6 +474,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 	
 	public void remove( State state ) {
+		sendCharSpriteState(ch, state, true);
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
