@@ -229,7 +229,7 @@ public class SewerLevel extends RegularLevel {
 				super.update();
 				
 				if (!isFrozen() && (rippleDelay -= Game.elapsed) <= 0) {
-					GameScene.ripple( pos + Dungeon.level.width() );
+					//GameScene.ripple( pos + Dungeon.level.width() );
 				}
 			}
 		}
