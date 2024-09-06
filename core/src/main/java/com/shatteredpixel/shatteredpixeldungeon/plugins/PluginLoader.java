@@ -26,7 +26,10 @@ public class PluginLoader {
                         URLClassLoader loader = new URLClassLoader(new URL[]{URI.create(manifest.getOriginPath()).toURL()});
                         Class pluginClass = loader.loadClass(manifest.mainClass());
                         if (ClassReflection.isAssignableFrom(Plugin.class, pluginClass) && !ClassReflection.isAbstract(pluginClass)){
-                            plugins.add((Plugin) pluginClass.newInstance());
+                            Plugin plugin = (Plugin) pluginClass.newInstance();
+                            plugin.manifest = manifest;
+                            plugins.add(plugin);
+                            Gdx.app.log("PluginLoader", "Successfully loaded plugin class: " + pluginClass.getName());
                         } else {
                             Gdx.app.error("PluginLoader", "Not a plugin: " + manifest.mainClass());
                         }

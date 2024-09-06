@@ -175,11 +175,11 @@ public class DesktopPlatformSupport extends PlatformSupport {
 					return manifests;
 				}
 				for (File file : files) {
-					if (file.getName().endsWith("jar")) {
-						JarFile jar = new JarFile(file.getName());
+					if (file.getName().endsWith(".jar")) {
+						JarFile jar = new JarFile(file.toPath().toAbsolutePath().toFile());
 						ZipEntry manifest = jar.getEntry("plugin_manifest.txt");
 						if (manifest != null) {
-							URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+							URLClassLoader loader = new URLClassLoader(new URL[]{file.toPath().toAbsolutePath().toUri().toURL()});
 							InputStream input = loader.getResourceAsStream("plugin_manifest.txt");
 							ByteArrayOutputStream result = new ByteArrayOutputStream();
 							//might change buffer, 2kb should be fine. Can a manifest even be that big?
@@ -188,7 +188,10 @@ public class DesktopPlatformSupport extends PlatformSupport {
 								result.write(buffer, 0, length);
 							}
 							loader.close();
-							manifests.add(new PluginManifest(result.toString(), file.getPath()));
+							Gdx.app.log("PluginLoader", "Found manifest in: " + file.toPath());
+							manifests.add(new PluginManifest(result.toString(), file.toPath().toAbsolutePath().toUri().toString()));
+						} else {
+							Gdx.app.error("PluginLoader", "Failed to find manifest in: " + file.getName());
 						}
 					}
 				}
