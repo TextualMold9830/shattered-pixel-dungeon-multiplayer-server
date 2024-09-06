@@ -60,6 +60,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeap;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeapRemoving;
 
 public class Heap implements Bundlable {
 
@@ -368,6 +369,7 @@ public class Heap implements Bundlable {
 			sprite.kill();
 		}
 		items.clear();
+		sendHeapRemoving(this);
 	}
 
 	public String title(){
