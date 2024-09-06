@@ -597,6 +597,9 @@ public class SendData {
     }
 
     public static void sendCellListenerPrompt(String new_prompt, int networkID) {
+        if (networkID < 0){
+            return;
+        }
         if (clients[networkID] == null) {
             return;
         }
