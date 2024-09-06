@@ -58,7 +58,7 @@ public class GamesInProgress {
 	}
 
 	public static String gameFolder(){
-		return Messages.format(GAME_FOLDER);
+		return Messages.format(GAME_FOLDER, 0);
 	}
 	
 	public static String gameFile( ){
