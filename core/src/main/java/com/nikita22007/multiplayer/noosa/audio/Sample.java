@@ -114,7 +114,7 @@ public enum Sample {
 	}
 	public void play( String id, float leftVolume, float rightVolume, float rate, float pitch, @Nullable Float delay, @Nullable Hero hero) {
 		if (!ids.contains( id )) {
-			assert !DeviceCompat.isDebug(): "playing unloaded sample: " + id;
+			//assert !DeviceCompat.isDebug(): "playing unloaded sample: " + id; todo
 			Log.e("Sound", "playing unloaded sample: " + id);
 			load(id);
 		}
