@@ -28,5 +28,12 @@ public class PluginManifest {
     public String mainClass(){
         return config.get("mainclass");
     }
+    public String getName(){
+        String name = config.get("name");
+        if (name == null) {
+            name = mainClass();
+        }
+        return name;
+    }
 
 }

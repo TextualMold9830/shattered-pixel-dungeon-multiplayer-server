@@ -56,8 +56,10 @@ public class CellSelector extends ScrollArea {
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
-		listener.owner = this.owner;
-		SendData.sendCellListenerPrompt(listener != null ? listener.prompt() : null, owner.networkID);
+		if (listener != null) {
+			listener.owner = this.owner;
+		}
+		SendData.sendCellListenerPrompt(listener.prompt(), owner.networkID);
 	}
 
 	public boolean enabled;

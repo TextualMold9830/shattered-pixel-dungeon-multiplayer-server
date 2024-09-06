@@ -7,4 +7,7 @@ public abstract class Plugin {
     public abstract void onEnable();
     public abstract void onDisable();
     public void handleEvent(Event event){}
+    public String defaultConfig(){
+        return null;
+    }
 }

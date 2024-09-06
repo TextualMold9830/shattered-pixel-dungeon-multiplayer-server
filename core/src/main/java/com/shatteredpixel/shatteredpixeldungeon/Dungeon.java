@@ -73,6 +73,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.plugins.DungeonGenerateLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
@@ -375,6 +377,8 @@ public class Dungeon {
 		} else {
 			level = new DeadEndLevel();
 		}
+        Server.pluginManager.fireEvent(new DungeonGenerateLevelEvent(depth, level));
+
 
 		//dead end levels get cleared, don't count as generated
 		if (!(level instanceof DeadEndLevel)){
@@ -401,7 +405,7 @@ public class Dungeon {
 		
 		if (branch == 0) Statistics.qualifiedForNoKilling = !bossLevel();
 		Statistics.qualifiedForBossChallengeBadge = false;
-		
+
 		return level;
 	}
 	
