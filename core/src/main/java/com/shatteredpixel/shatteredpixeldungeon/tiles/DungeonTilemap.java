@@ -58,19 +58,7 @@ public abstract class DungeonTilemap extends Tilemap {
 
 	@Override
 	public synchronized void updateMapCell(int cell) {
-		//update in a 3x3 grid to account for neighbours which might also be affected
-		if (Dungeon.level.insideMap(cell)) {
-			for (int i : PathFinder.NEIGHBOURS9) {
-				data[cell + i] = getTileVisual(cell + i, map[cell + i], false);
-			}
-			super.updateMapCell(cell - mapWidth - 1);
-			super.updateMapCell(cell + mapWidth + 1);
 
-		//unless we're at the level's edge, then just do the one tile.
-		} else {
-			data[cell] = getTileVisual(cell, map[cell], false);
-			super.updateMapCell(cell);
-		}
 	}
 
 	protected abstract int getTileVisual(int pos, int tile, boolean flat);
@@ -116,7 +104,7 @@ public abstract class DungeonTilemap extends Tilemap {
 	public void discover( int pos, int oldValue ) {
 		SendData.sendActionDiscoverTile(pos, oldValue);
 	}
-	
+
 	public static PointF tileToWorld( int pos ) {
 		return new PointF( pos % Dungeon.level.width(), pos / Dungeon.level.width()  ).scale( SIZE );
 	}

@@ -66,127 +66,7 @@ public class WallBlockingTilemap extends Tilemap {
 	
 	@Override
 	public synchronized void updateMapCell(int cell) {
-
-		//FIXME this is to address the wall blocking looking odd on the new yog floor.
-		// The true solution is to improve the fog of war so the blockers aren't necessary.
-		if (Dungeon.level instanceof HallsBossLevel){
-			data[cell] = CLEARED;
-			super.updateMapCell(cell);
-			return;
-		}
-
-		//non-wall tiles
-		if (!wall(cell)) {
-
-			//clear empty floor tiles and cells which are visible
-			if (!fogHidden(cell) || !wall(cell + mapWidth)) {
-				curr = CLEARED;
-
-			//block wall overhang if:
-			//- There are cells 2x below
-			//- The cell below is a wall and visible
-			//- All of left, below-left, right, below-right is either a wall or hidden
-			} else if ( !fogHidden(cell + mapWidth)
-					&& (fogHidden(cell - 1) || wall(cell - 1))
-					&& (fogHidden(cell + 1) || wall(cell + 1))
-					&& (fogHidden(cell - 1 + mapWidth) || wall(cell - 1 + mapWidth))
-					&& (fogHidden(cell + 1 + mapWidth) || wall(cell + 1 + mapWidth))) {
-				curr = BLOCK_BELOW;
-
-			} else {
-				curr = BLOCK_NONE;
-			}
-
-		//wall tiles
-		} else {
-
-			//camera-facing wall tiles
-			if (!wall(cell + mapWidth)) {
-
-				//Block a camera-facing wall if:
-				//- the cell above, above-left, or above-right is not a wall, visible, and has a wall below
-				//- none of the remaining 5 neighbour cells are both not a wall and visible
-				
-				//if all 3 above are wall we can shortcut and just clear the cell
-				//unless one or more is a shelf, or we can mine, then we have to just block none
-				if (wall(cell - 1 - mapWidth) && wall(cell - mapWidth) && wall(cell + 1 - mapWidth)){
-					if (shelf(cell - 1 - mapWidth) || shelf(cell - mapWidth)
-							|| shelf(cell + 1 - mapWidth) || Dungeon.level instanceof MiningLevel){
-						curr = BLOCK_NONE;
-					} else {
-						curr = CLEARED;
-					}
-					
-				} else if ((!wall(cell - 1 - mapWidth) && !fogHidden(cell - 1 - mapWidth) && wall(cell - 1)) ||
-						(!wall(cell - mapWidth) && !fogHidden(cell - mapWidth)) ||
-						(!wall(cell + 1 - mapWidth) && !fogHidden(cell + 1 - mapWidth) && wall(cell+1))){
-					
-					if ( !fogHidden( cell + mapWidth) ||
-							(!wall(cell - 1) && !fogHidden(cell - 1)) ||
-							(!wall(cell - 1 + mapWidth) && !fogHidden(cell - 1 + mapWidth)) ||
-							(!wall(cell + 1) && !fogHidden(cell + 1)) ||
-							(!wall(cell + 1 + mapWidth) && !fogHidden(cell + 1 + mapWidth))){
-						curr = CLEARED;
-					} else {
-						curr = BLOCK_ALL;
-					}
-					
-				} else {
-					curr = BLOCK_NONE;
-				}
-
-			//internal wall tiles
-			} else {
-				
-				//Block the side of an internal wall if:
-				//- the cell above, below, or the cell itself is visible
-				//and all of the following are NOT true:
-				//- the cell has no neighbours on that side
-				//- the top-side neighbour is visible and the side neighbour isn't a wall.
-				//- the side neighbour is both not a wall and visible
-				//- the bottom-side neighbour is both not a wall and visible
-
-				curr = BLOCK_NONE;
-				
-				if (!fogHidden(cell - mapWidth)
-						|| !fogHidden(cell)
-						|| !fogHidden(cell + mapWidth)) {
-					
-					//right side
-					if ( ((cell + 1) % mapWidth == 0) ||
-							(!wall(cell + 1) && !fogHidden(cell + 1 - mapWidth)) ||
-							(!wall(cell + 1) && !fogHidden(cell + 1)) ||
-							(!wall(cell + 1 + mapWidth) && !fogHidden(cell + 1 + mapWidth))
-							){
-						//do nothing
-					} else {
-						curr += 1;
-					}
-					
-					//left side
-					if ( (cell  % mapWidth == 0) ||
-							(!wall(cell - 1) && !fogHidden(cell - 1 - mapWidth)) ||
-							(!wall(cell - 1) && !fogHidden(cell - 1)) ||
-							(!wall(cell - 1 + mapWidth) && !fogHidden(cell - 1 + mapWidth))
-							){
-						//do nothing
-					} else {
-						curr += 2;
-					}
-					
-					if (curr == BLOCK_NONE) {
-						curr = CLEARED;
-					}
-				}
-
-			}
-
-		}
-
-		if (data[cell] != curr){
-			data[cell] = curr;
-			super.updateMapCell(cell);
-		}
+		return;
 	}
 
 	private boolean fogHidden(int cell){
@@ -200,7 +80,7 @@ public class WallBlockingTilemap extends Tilemap {
 	}
 
 	private boolean wall(int cell) {
-		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);
+		return false;
 	}
 
 	private boolean shelf(int cell) {
