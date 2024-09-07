@@ -125,6 +125,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GnollRockfallTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -173,6 +174,12 @@ public abstract class Char extends Actor {
 	public int viewDistance	= 8;
 	
 	public boolean[] fieldOfView = null;
+	public void sendSelf(){
+		if ( !all().contains(this) ){
+			return;
+		}
+		SendData.sendActor(this);
+	}
 	
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 	public JSONObject getEmoJsonObject() {

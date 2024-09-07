@@ -661,6 +661,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				emo = new EmoIcon.Alert(this);
 				emo.visible = visible;
+				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -670,6 +671,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (emo instanceof EmoIcon.Alert) {
 				emo.killAndErase();
 				emo = null;
+				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -682,6 +684,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				emo = new EmoIcon.Lost(this);
 				emo.visible = visible;
+				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -691,6 +694,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (emo instanceof EmoIcon.Lost) {
 				emo.killAndErase();
 				emo = null;
+				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -700,6 +704,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (emo != null) {
 				emo.killAndErase();
 				emo = null;
+				SendData.sendActor(this.ch);
 			}
 		}
 	}
