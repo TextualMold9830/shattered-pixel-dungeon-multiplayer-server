@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Tilemap;
@@ -113,22 +114,7 @@ public abstract class DungeonTilemap extends Tilemap {
 	}
 	
 	public void discover( int pos, int oldValue ) {
-		
-		int visual = getTileVisual( pos, oldValue, false);
-		if (visual < 0) return;
-		
-		final Image tile = new Image( texture );
-		tile.frame( tileset.get( getTileVisual( pos, oldValue, false)));
-		tile.point( tileToWorld( pos ) );
-
-		parent.add( tile );
-		
-		parent.add( new AlphaTweener( tile, 0, 0.6f ) {
-			protected void onComplete() {
-				tile.killAndErase();
-				killAndErase();
-			}
-		} );
+		SendData.sendActionDiscoverTile(pos, oldValue);
 	}
 	
 	public static PointF tileToWorld( int pos ) {
