@@ -529,8 +529,13 @@ public class Dungeon {
 				hero.curAction = hero.lastAction = null;
 
 				observe(hero);
+
+				sendLevel(level, hero.networkID);
+				sendAllChars(hero.networkID);
+				sendHeroNewID(hero, hero.networkID);
 			}
 		}
+
 		try {
 			saveAll();
 		} catch (IOException e) {
