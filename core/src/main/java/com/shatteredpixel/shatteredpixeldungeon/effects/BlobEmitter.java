@@ -44,30 +44,6 @@ public class BlobEmitter extends Emitter {
 	
 	@Override
 	protected void emit( int index ) {
-		
-		if (blob.volume <= 0) {
-			return;
-		}
 
-		if (blob.area.isEmpty())
-			blob.setupArea();
-		
-		int[] map = blob.cur;
-		float size = DungeonTilemap.SIZE;
-
-		int cell;
-		for (int i = blob.area.left; i < blob.area.right; i++) {
-			for (int j = blob.area.top; j < blob.area.bottom; j++) {
-				cell = i + j*Dungeon.level.width();
-				//TODO: check this
-				if (//cell < Dungeon.level.fieldOfView.length
-						 (Dungeon.visibleforAnyHero(cell) || blob.alwaysVisible)
-						&& map[cell] > 0) {
-					float x = (i + Random.Float(bound.left, bound.right)) * size;
-					float y = (j + Random.Float(bound.top, bound.bottom)) * size;
-					factory.emit(this, index, x, y);
-				}
-			}
-		}
 	}
 }
