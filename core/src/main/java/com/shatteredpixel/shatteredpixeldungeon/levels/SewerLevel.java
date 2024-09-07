@@ -224,14 +224,7 @@ public class SewerLevel extends RegularLevel {
 		
 		@Override
 		public void update() {
-			if (visible = (pos < Dungeon.level.length() && Dungeon.visibleforAnyHero(pos))) {
-				
-				super.update();
-				
-				if (!isFrozen() && (rippleDelay -= Game.elapsed) <= 0) {
-					//GameScene.ripple( pos + Dungeon.level.width() );
-				}
-			}
+
 		}
 	}
 	
