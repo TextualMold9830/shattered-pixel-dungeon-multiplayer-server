@@ -553,6 +553,12 @@ public class SendData {
         }
     }
 
+    public static void addToSendCustomActionForAll(@NotNull JSONObject action_obj) {
+        for (int i = 0; i < clients.length; i++) {
+            addToSendCustomAction(action_obj, i);
+        }
+    }
+
     public static void sendCustomAction(@NotNull JSONObject action_obj, @NotNull Hero hero) {
         if (hero.networkID <= -1) {
             return;
@@ -583,6 +589,11 @@ public class SendData {
 
     public static void addToSendCustomAction(JSONObject action_obj, int networkID) {
         sendCustomAction(action_obj, networkID, false);
+    }
+
+    public static void addToSendCustomAction(JSONObject action_obj, Hero hero) {
+        if (hero == null) return;
+        sendCustomAction(action_obj, hero.networkID, false);
     }
 
     public static void sendActionDiscoverTile(int pos, int oldValue) {
@@ -643,4 +654,15 @@ public class SendData {
     }
 
 
+    public static void sendLevelSize(Level level) {
+        for (int i = 0; i < clients.length; i++){
+            sendLevelSize(level, i);
+        }
+    }
+    public static void sendLevelSize(Level level, int ID){
+        if (ID < 0) return;
+        if (clients[ID] == null) return;
+        clients[ID].packet.packAndAddLevelParams(level);
+        clients[ID].flush();
+    }
 }

@@ -428,8 +428,8 @@ public class NetworkPacket {
 
     public void packAndAddLevel(Level level, Hero observer) {
         packAndAddLevelParams(level);
-        packAndAddLevelEntrance(level.entrance);
-        packAndAddLevelExit(level.exit);
+        packAndAddLevelEntrance(level.entrance());
+        packAndAddLevelExit(level.exit());
         packAndAddLevelCells(level);
         packAndAddLevelHeaps(level.heaps, observer);
         packAndAddPlants(level);

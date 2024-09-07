@@ -154,9 +154,6 @@ public abstract class Level implements Bundlable {
 	public boolean[] openSpace;
 	
 	public Feeling feeling = Feeling.NONE;
-	
-	public int entrance;
-	public int exit;
 
 	public ArrayList<LevelTransition> transitions;
 
@@ -293,7 +290,7 @@ public abstract class Level implements Bundlable {
 			customWalls = new HashSet<>();
 			
 		} while (!build());
-		
+
 		buildFlagMaps();
 		cleanWalls();
 		
@@ -308,7 +305,9 @@ public abstract class Level implements Bundlable {
 		width = w;
 		height = h;
 		length = w * h;
-		
+
+		SendData.sendLevelSize(this);
+
 		map = new int[length];
 		Arrays.fill( map, feeling == Level.Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
 		
