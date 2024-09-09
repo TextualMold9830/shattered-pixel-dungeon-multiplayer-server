@@ -221,14 +221,14 @@ public abstract class Mob extends Char {
 
 		boolean justAlerted = alerted;
 		alerted = false;
-
-		if (justAlerted) {
-			sprite.showAlert();
-		} else {
-			sprite.hideAlert();
-			sprite.hideLost();
+		if(sprite != null) {
+			if (justAlerted) {
+				sprite.showAlert();
+			} else {
+				sprite.hideAlert();
+				sprite.hideLost();
+			}
 		}
-
 		if (paralysed > 0) {
 			enemySeen = false;
 			spend(TICK);
