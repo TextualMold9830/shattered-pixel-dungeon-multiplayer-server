@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -63,6 +64,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -120,6 +122,8 @@ public class Item implements Bundlable {
 	public static final int DEGRADED = 0xFF4444;
 	public static final int UPGRADED = 0x44FF44;
 	public static final int WARNING = 0xFF8800;
+	public static final int MASTERED	= 0xFFFF44;
+	public static final int CURSE_INFUSED	= 0x8800FF;
 	protected static final String TXT_TYPICAL_STR = "%d?";
 	protected static final String TXT_LEVEL = "%+d";
 	protected static final String TXT_CURSED = "";//"-";
@@ -827,11 +831,15 @@ public class Item implements Bundlable {
 
 		boolean isArmor = item instanceof Armor;
 		boolean isWeapon = item instanceof Weapon;
+		boolean isWand = item instanceof Wand;
 		if (isArmor || isWeapon) {
 			if (item.levelKnown || (isWeapon && !(item instanceof MeleeWeapon))) {
 				int str = isArmor ? ((Armor) item).STRReq() : ((Weapon) item).STRReq();
+				boolean masteryBuff = isArmor ? ((Armor) item).masteryPotionBonus : ((Weapon) item).masteryPotionBonus;
 				topRight.put("text", Utils.format(TXT_STRENGTH, str));
-				if (str > owner.STR()) {
+				if(masteryBuff) {
+					topRight.put("color", MASTERED);
+				} else if (str > owner.STR()) {
 					topRight.put("color", DEGRADED);
 				} else {
 					topRight.put("color", JSONObject.NULL);
@@ -849,7 +857,23 @@ public class Item implements Bundlable {
 		int level = item.visiblyUpgraded();
 		if (level != 0 || (item.cursed && item.cursedKnown)) {
 			bottomRight.put("text", item.levelKnown ? Utils.format(TXT_LEVEL, level) : TXT_CURSED);
+			boolean curseInfusionBonus = false;
+			if (isWeapon){
+				curseInfusionBonus = ((Weapon)item).curseInfusionBonus;
+			}
+			if (isArmor){
+				curseInfusionBonus = ((Armor)item).curseInfusionBonus;
+			}
+			if (isWand){
+				curseInfusionBonus = ((Wand)item).curseInfusionBonus;
+			}
+
+
+
 			bottomRight.put("color", level > 0 ? (UPGRADED) : DEGRADED);
+			if (curseInfusionBonus){
+				bottomRight.put("color", CURSE_INFUSED);
+			}
 		} else {
 			bottomRight.put("text", JSONObject.NULL);
 		}
