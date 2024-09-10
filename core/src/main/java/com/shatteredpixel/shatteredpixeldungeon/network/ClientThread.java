@@ -440,7 +440,9 @@ class ClientThread implements Callable<String> {
     }
 
     private void sendInitData() {
-        Server.textures.forEach(this::sendTexture);
+        for (String texture : Server.textures) {
+            sendTexture(texture);
+        }
 
         packet.packAndAddLevel(level, clientHero);
         packet.packAndAddHero(clientHero);

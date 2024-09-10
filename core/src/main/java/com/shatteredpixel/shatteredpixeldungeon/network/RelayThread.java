@@ -77,6 +77,7 @@ public class RelayThread extends Thread {
             writer.write(name.toString());
             writer.write('\n');
             writer.flush();
+            Thread.sleep(2000);
             while (true) {
                 String json = reader.readLine();
                 Gdx.app.log("RelayThread", json);
@@ -92,7 +93,7 @@ public class RelayThread extends Thread {
                 Server.startClientThread(client);
                 Gdx.app.log("RelayThread", "Client connected");
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException | InterruptedException e) {
             e.printStackTrace();
             GLog.h("relay thread stopped");
             this.callback.onDisconnect();
