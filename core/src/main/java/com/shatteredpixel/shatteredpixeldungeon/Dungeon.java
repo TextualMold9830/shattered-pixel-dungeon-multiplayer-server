@@ -285,12 +285,6 @@ public class Dungeon {
 		Imp.Quest.reset();
 
 		heroes = new Hero[SPDSettings.maxPlayers()];
-		for (Hero hero : heroes) {
-			if (hero != null) {
-				hero.live();
-			}
-		}
-
 		Badges.reset();
 		//TODO: Check this
 		//GamesInProgress.selectedClass.initHero(heroes);
@@ -504,7 +498,9 @@ public class Dungeon {
 		}
 
 		Actor.init();
-
+		for (Mob mob: level.mobs){
+			GameScene.add(mob);
+		}
 		level.addRespawner();
 		for (Hero hero: heroes) {
 			if (hero != null) {
