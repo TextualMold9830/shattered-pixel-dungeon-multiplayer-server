@@ -70,7 +70,7 @@ public class Bat extends Mob {
 		
 		if (reg > 0) {
 			HP += reg;
-			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(reg), FloatingText.HEALING);
+			getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(reg), FloatingText.HEALING);
 		}
 		
 		return damage;

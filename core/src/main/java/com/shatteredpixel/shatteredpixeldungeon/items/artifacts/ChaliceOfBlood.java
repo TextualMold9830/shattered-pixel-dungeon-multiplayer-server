@@ -112,7 +112,7 @@ public class ChaliceOfBlood extends Artifact {
 
 		damage -= hero.drRoll();
 
-		hero.sprite.operate( hero.pos );
+		hero.getSprite().operate( hero.pos );
 		hero.busy();
 		hero.spend(3f);
 		GLog.w( Messages.get(this, "onprick") );
@@ -120,7 +120,7 @@ public class ChaliceOfBlood extends Artifact {
 			damage = 1;
 		} else {
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
-			hero.sprite.emitter().burst( ShadowParticle.CURSE, 4+(damage/10) );
+			hero.getSprite().emitter().burst( ShadowParticle.CURSE, 4+(damage/10) );
 		}
 
 		hero.damage(damage, new Char.DamageCause(this, hero));
@@ -171,7 +171,7 @@ public class ChaliceOfBlood extends Artifact {
 		}
 		if (heal >= 1f && target.HP < target.HT) {
 			target.HP = Math.min(target.HT, target.HP + (int)heal);
-			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString((int)heal), FloatingText.HEALING);
+			target.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString((int)heal), FloatingText.HEALING);
 
 			if (target.HP == target.HT && target instanceof Hero) {
 				((Hero) target).resting = false;

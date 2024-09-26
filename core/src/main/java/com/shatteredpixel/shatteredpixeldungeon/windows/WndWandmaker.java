@@ -126,7 +126,7 @@ public class WndWandmaker extends Window {
 		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
 		wandmaker.destroy();
 		
-		wandmaker.sprite.die();
+		wandmaker.getSprite().die();
 		
 		Wandmaker.Quest.complete();
 	}

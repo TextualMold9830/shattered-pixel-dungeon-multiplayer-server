@@ -88,10 +88,10 @@ public class Dewdrop extends Item {
 			hero.HP += effect;
 			if (shield > 0) Buff.affect(hero, Barrier.class).incShield(shield);
 			if (effect > 0){
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(effect), FloatingText.HEALING);
+				hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(effect), FloatingText.HEALING);
 			}
 			if (shield > 0) {
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING );
+				hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING );
 			}
 
 		} else if (!force) {

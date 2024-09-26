@@ -58,7 +58,7 @@ public class StoneOfShock extends Runestone {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				Char n = Actor.findChar(i);
 				if (n != null) {
-					arcs.add(new Lightning.Arc(cell, n.sprite.center()));
+					arcs.add(new Lightning.Arc(cell, n.getSprite().center()));
 					Buff.prolong(n, Paralysis.class, 1f);
 					hits++;
 				}
@@ -68,8 +68,8 @@ public class StoneOfShock extends Runestone {
 		CellEmitter.center( cell ).burst( SparkParticle.FACTORY, 3 );
 		
 		if (hits > 0) {
-			curUser.sprite.parent.addToFront( new Lightning( arcs, null ) );
-			curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
+			curUser.getSprite().parent.addToFront( new Lightning( arcs, null ) );
+			curUser.getSprite().centerEmitter().burst(EnergyParticle.FACTORY, 10);
 			Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 			
 			curUser.belongings.charge(1f + hits);

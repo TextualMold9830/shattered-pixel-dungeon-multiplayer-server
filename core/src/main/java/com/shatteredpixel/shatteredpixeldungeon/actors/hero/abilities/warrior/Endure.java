@@ -60,7 +60,7 @@ public class Endure extends ArmorAbility {
 		if (combo != null){
 			combo.addTime(3f);
 		}
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
@@ -135,7 +135,7 @@ public class Endure extends ArmorAbility {
 			damageBonus /= hitsLeft;
 
 			if (damageBonus > 0) {
-				target.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+				target.getSprite().centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 				Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 				SpellSprite.show(target, SpellSprite.BERSERK);
 			} else {

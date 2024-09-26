@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -122,17 +121,17 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	}
 	
 	public static void upgradeAnimation(Hero hero){
-		hero.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
+		hero.getSprite().emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
 	}
 
 	public static void weakenCurse( Hero hero ){
 		GLog.p( Messages.get(ScrollOfUpgrade.class, "weaken_curse") );
-		hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 5 );
+		hero.getSprite().emitter().start( ShadowParticle.UP, 0.05f, 5 );
 	}
 
 	public static void removeCurse( Hero hero ){
 		GLog.p( Messages.get(ScrollOfUpgrade.class, "remove_curse") );
-		hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+		hero.getSprite().emitter().start( ShadowParticle.UP, 0.05f, 10 );
 	}
 	
 	@Override

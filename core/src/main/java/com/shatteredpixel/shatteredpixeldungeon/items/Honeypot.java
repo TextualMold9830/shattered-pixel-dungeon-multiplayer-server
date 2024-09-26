@@ -65,7 +65,7 @@ public class Honeypot extends Item {
 
 		if (action.equals( AC_SHATTER )) {
 			
-			hero.sprite.zap( hero.pos );
+			hero.getSprite().zap( hero.pos );
 			
 			detach( hero.belongings.backpack );
 
@@ -122,8 +122,8 @@ public class Honeypot extends Item {
 			GameScene.add( bee );
 			if (newPos != pos) Actor.add( new Pushing( bee, pos, newPos ) );
 
-			bee.sprite.alpha( 0 );
-			bee.sprite.parent.add( new AlphaTweener( bee.sprite, 1, 0.15f ) );
+			bee.getSprite().alpha( 0 );
+			bee.getSprite().parent.add( new AlphaTweener(bee.getSprite(), 1, 0.15f ) );
 			
 			Sample.INSTANCE.play( Assets.Sounds.BEE );
 			return new ShatteredPot();

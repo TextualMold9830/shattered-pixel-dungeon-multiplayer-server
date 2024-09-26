@@ -90,10 +90,10 @@ public class GrimTrap extends Trap {
 					final int finalDmg = damage;
 					// The } mess my brain, this should be changed
 					if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(target.pos)) {
-						((MagicMissile)finalTarget.sprite.parent.recycle(MagicMissile.class)).reset(
+						((MagicMissile) finalTarget.getSprite().parent.recycle(MagicMissile.class)).reset(
 								MagicMissile.SHADOW,
 								DungeonTilemap.tileCenterToWorld(pos),
-								finalTarget.sprite.center(),
+								finalTarget.getSprite().center(),
 								new Callback() {
 									@Override
 									public void call() {
@@ -108,7 +108,7 @@ public class GrimTrap extends Trap {
 										} else {
 											Sample.INSTANCE.play(Assets.Sounds.BURNING);
 										}
-										finalTarget.sprite.emitter().burst(ShadowParticle.UP, 10);
+										finalTarget.getSprite().emitter().burst(ShadowParticle.UP, 10);
 										next();
 									}
 								});

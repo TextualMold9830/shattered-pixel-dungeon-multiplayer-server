@@ -144,8 +144,8 @@ public abstract class Elemental extends Mob {
 			
 		} else {
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+				getSprite().zap( enemy.pos );
 				return false;
 			} else {
 				zap();
@@ -172,7 +172,7 @@ public abstract class Elemental extends Mob {
 			rangedProc( enemy );
 			
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+			enemy.getSprite().showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
 		}
 
 		rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -238,7 +238,7 @@ public abstract class Elemental extends Mob {
 		protected void meleeProc( Char enemy, int damage ) {
 			if (Random.Int( 2 ) == 0 && !Dungeon.level.water[enemy.pos]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy );
-				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
+				if (enemy.getSprite().visible) Splash.at( enemy.getSprite().center(), getSprite().blood(), 5);
 			}
 		}
 		
@@ -247,7 +247,7 @@ public abstract class Elemental extends Mob {
 			if (!Dungeon.level.water[enemy.pos]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy, 4f );
 			}
-			if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
+			if (enemy.getSprite().visible) Splash.at( enemy.getSprite().center(), getSprite().blood(), 5);
 		}
 	}
 	
@@ -271,8 +271,8 @@ public abstract class Elemental extends Mob {
 			if (targetingPos != -1 && state == HUNTING){
 				//account for bolt hitting walls, in case position suddenly changed
 				targetingPos = new Ballistica( pos, targetingPos, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
-				if (sprite != null && (sprite.visible || Dungeon.visibleforAnyHero(targetingPos))) {
-					sprite.zap( targetingPos );
+				if (getSprite() != null && (getSprite().visible || Dungeon.visibleforAnyHero(targetingPos))) {
+					getSprite().zap( targetingPos );
 					return false;
 				} else {
 					zap();
@@ -319,7 +319,7 @@ public abstract class Elemental extends Mob {
 
 					for (int i : PathFinder.NEIGHBOURS9){
 						if (!Dungeon.level.solid[targetingPos + i]) {
-							sprite.parent.addToBack(new TargetedCell(targetingPos + i, 0xFF0000));
+							getSprite().parent.addToBack(new TargetedCell(targetingPos + i, 0xFF0000));
 						}
 					}
 
@@ -336,8 +336,8 @@ public abstract class Elemental extends Mob {
 
 			} else {
 
-				if (sprite != null && (sprite.visible || Dungeon.visibleforAnyHero(targetingPos))) {
-					sprite.zap( targetingPos );
+				if (getSprite() != null && (getSprite().visible || Dungeon.visibleforAnyHero(targetingPos))) {
+					getSprite().zap( targetingPos );
 					return false;
 				} else {
 					zap();
@@ -485,14 +485,14 @@ public abstract class Elemental extends Mob {
 		protected void meleeProc( Char enemy, int damage ) {
 			if (Random.Int( 3 ) == 0 || Dungeon.level.water[enemy.pos]) {
 				Freezing.freeze( enemy.pos );
-				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
+				if (enemy.getSprite().visible) Splash.at( enemy.getSprite().center(), getSprite().blood(), 5);
 			}
 		}
 		
 		@Override
 		protected void rangedProc( Char enemy ) {
 			Freezing.freeze( enemy.pos );
-			if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
+			if (enemy.getSprite().visible) Splash.at( enemy.getSprite().center(), getSprite().blood(), 5);
 		}
 	}
 	
@@ -525,13 +525,13 @@ public abstract class Elemental extends Mob {
 				}
 			}
 
-			boolean visible = sprite.visible || enemy.sprite.visible;
+			boolean visible = getSprite().visible || enemy.getSprite().visible;
 			for (Char ch : affected){
-				if (ch.sprite.visible) visible = true;
+				if (ch.getSprite().visible) visible = true;
 			}
 
 			if (visible) {
-				sprite.parent.addToFront(new Lightning(arcs, null));
+				getSprite().parent.addToFront(new Lightning(arcs, null));
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 			}
 		}

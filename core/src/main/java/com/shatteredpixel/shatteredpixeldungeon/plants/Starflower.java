@@ -45,7 +45,7 @@ public class Starflower extends Plant {
 		if (ch != null) {
 			Buff.prolong(ch, Bless.class, Bless.DURATION);
 			if (Dungeon.visibleforAnyHero(pos)){
-				new Flare(6, 32).color(0xFFFF00, true).show(ch.sprite, 2f);
+				new Flare(6, 32).color(0xFFFF00, true).show(ch.getSprite(), 2f);
 			}
 			if (ch instanceof Hero && ((Hero) ch).subClass == HeroSubClass.WARDEN){
 				Buff.prolong(ch, Recharging.class, Recharging.DURATION);

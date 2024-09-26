@@ -78,7 +78,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 				}
 				target.HP += (int)healAmt;
 				left -= (int)healAmt;
-				target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int)healAmt), FloatingText.HEALING );
+				target.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int)healAmt), FloatingText.HEALING );
 
 				if (target.HP >= target.HT) {
 					target.HP = target.HT;

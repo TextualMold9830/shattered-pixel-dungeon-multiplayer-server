@@ -107,7 +107,7 @@ public class BeaconOfReturning extends Spell {
 		
 		GLog.i( Messages.get(this, "set") );
 		
-		hero.sprite.operate( hero.pos );
+		hero.getSprite().operate( hero.pos );
 		Sample.INSTANCE.play( Assets.Sounds.BEACON );
 		updateQuickslot();
 	}

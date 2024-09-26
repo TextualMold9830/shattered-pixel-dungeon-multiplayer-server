@@ -131,7 +131,7 @@ public class WandOfWarding extends Wand {
 				} else {
 					((Ward) ch).wandHeal( buffedLvl() );
 				}
-				ch.sprite.emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
+				ch.getSprite().emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
 			} else {
 				GLog.w( Messages.get(this, "bad_location"));
 				Dungeon.level.pressCell(target);
@@ -143,7 +143,7 @@ public class WandOfWarding extends Wand {
 			ward.wandLevel = buffedLvl();
 			GameScene.add(ward, 1f);
 			Dungeon.level.occupyCell(ward);
-			ward.sprite.emitter().burst(MagicMissile.WardParticle.UP, ward.tier);
+			ward.getSprite().emitter().burst(MagicMissile.WardParticle.UP, ward.tier);
 			Dungeon.level.pressCell(target);
 
 		}
@@ -151,9 +151,9 @@ public class WandOfWarding extends Wand {
 
 	@Override
 	public void fx(Ballistica bolt, Callback callback) {
-		MagicMissile m = MagicMissile.boltFromChar(curUser.sprite.parent,
+		MagicMissile m = MagicMissile.boltFromChar(curUser.getSprite().parent,
 				MagicMissile.WARD,
-				curUser.sprite,
+                curUser.getSprite(),
 				bolt.collisionPos,
 				callback);
 		
@@ -178,7 +178,7 @@ public class WandOfWarding extends Wand {
 			for (Char ch : Actor.chars()){
 				if (ch instanceof Ward){
 					((Ward) ch).wandHeal(staff.buffedLvl(), powerMulti);
-					ch.sprite.emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
+					ch.getSprite().emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
 				}
 			}
 		}
@@ -259,9 +259,9 @@ public class WandOfWarding extends Wand {
 			if (tier < 6){
 				tier++;
 				viewDistance++;
-				if (sprite != null){
-					((WardSprite)sprite).updateTier(tier);
-					sprite.place(pos);
+				if (getSprite() != null){
+					((WardSprite) getSprite()).updateTier(tier);
+					getSprite().place(pos);
 				}
 				GameScene.updateFog(pos, viewDistance+1);
 			}
@@ -293,7 +293,7 @@ public class WandOfWarding extends Wand {
 			}
 
 			HP = Math.min(HT, HP+heal);
-			if (sprite != null) sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
+			if (getSprite() != null) getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 
 		}
 
@@ -324,7 +324,7 @@ public class WandOfWarding extends Wand {
 		protected boolean doAttack(Char enemy) {
 			boolean visible = fieldOfView[pos] || fieldOfView[enemy.pos];
 			if (visible) {
-				sprite.zap( enemy.pos );
+				getSprite().zap( enemy.pos );
 			} else {
 				zap();
 			}
@@ -393,8 +393,8 @@ public class WandOfWarding extends Wand {
 		@Override
 		public void updateSpriteState() {
 			super.updateSpriteState();
-			((WardSprite)sprite).updateTier(tier);
-			sprite.place(pos);
+			((WardSprite) getSprite()).updateTier(tier);
+			getSprite().place(pos);
 		}
 		
 		@Override

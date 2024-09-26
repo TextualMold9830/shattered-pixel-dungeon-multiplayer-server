@@ -80,12 +80,12 @@ public class ShockBomb extends Bomb {
 					ch.damage(damage, new Char.DamageCause(this, null));
 				}
 				if (ch.isAlive()) Buff.prolong(ch, Paralysis.class, power);
-				arcs.add(new Lightning.Arc(DungeonTilemap.tileCenterToWorld(cell), ch.sprite.center()));
+				arcs.add(new Lightning.Arc(DungeonTilemap.tileCenterToWorld(cell), ch.getSprite().center()));
 			}
 		}
 
 		CellEmitter.center(cell).burst(SparkParticle.FACTORY, 20);
-		hero.sprite.parent.addToFront(new Lightning(arcs, null));
+		hero.getSprite().parent.addToFront(new Lightning(arcs, null));
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 	}
 	

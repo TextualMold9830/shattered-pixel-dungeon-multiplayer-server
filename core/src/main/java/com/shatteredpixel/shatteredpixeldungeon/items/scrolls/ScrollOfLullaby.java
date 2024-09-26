@@ -43,13 +43,13 @@ public class ScrollOfLullaby extends Scroll {
 	public void doRead(Hero hero) {
 
 		detach(curUser.belongings.backpack);
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
+		curUser.getSprite().centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
 		Sample.INSTANCE.play( Assets.Sounds.LULLABY );
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (hero.fieldOfView[mob.pos]) {
 				Buff.affect( mob, Drowsy.class );
-				mob.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
+				mob.getSprite().centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
 			}
 		}
 

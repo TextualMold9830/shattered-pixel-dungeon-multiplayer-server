@@ -231,7 +231,7 @@ public class TalismanOfForesight extends Artifact {
 				curUser.checkVisibleMobs();
 				GameScene.updateFog();
 
-				curUser.sprite.zap(target);
+				curUser.getSprite().zap(target);
 				curUser.spendAndNext(Actor.TICK);
 				Sample.INSTANCE.play(Assets.Sounds.SCAN);
 				if (noticed) Sample.INSTANCE.play(Assets.Sounds.SECRET);

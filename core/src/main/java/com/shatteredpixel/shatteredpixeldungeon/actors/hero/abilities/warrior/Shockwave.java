@@ -89,21 +89,21 @@ public class Shockwave extends ArmorAbility {
 
 		//cast to cells at the tip, rather than all cells, better performance.
 		for (Ballistica ray : cone.outerRays){
-			((MagicMissile)hero.sprite.parent.recycle( MagicMissile.class )).reset(
+			((MagicMissile) hero.getSprite().parent.recycle( MagicMissile.class )).reset(
 					MagicMissile.FORCE_CONE,
-					hero.sprite,
+                    hero.getSprite(),
 					ray.path.get(ray.dist),
 					null
 			);
 		}
 
-		hero.sprite.zap(target);
+		hero.getSprite().zap(target);
 		Sample.INSTANCE.play(Assets.Sounds.BLAST, 1f, 0.5f);
 		PixelScene.shake(2, 0.5f);
 		//final zap at 2/3 distance, for timing of the actual effect
-		MagicMissile.boltFromChar(hero.sprite.parent,
+		MagicMissile.boltFromChar(hero.getSprite().parent,
 				MagicMissile.FORCE_CONE,
-				hero.sprite,
+                hero.getSprite(),
 				cone.coreRay.path.get(dist * 2 / 3),
 				new Callback() {
 					@Override

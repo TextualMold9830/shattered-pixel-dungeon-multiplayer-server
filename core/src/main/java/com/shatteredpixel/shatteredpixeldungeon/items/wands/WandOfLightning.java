@@ -76,8 +76,8 @@ public class WandOfLightning extends DamageWand {
 
 		for (Char ch : affected){
 			if (ch instanceof Hero) PixelScene.shake( 2, 0.3f );
-			ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );
-			ch.sprite.flash();
+			ch.getSprite().centerEmitter().burst( SparkParticle.FACTORY, 3 );
+			ch.getSprite().flash();
 
 			if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
 				continue;
@@ -129,7 +129,7 @@ public class WandOfLightning extends DamageWand {
 		
 		affected.addAll(hitThisArc);
 		for (Char hit : hitThisArc){
-			arcs.add(new Lightning.Arc(ch.sprite.center(), hit.sprite.center()));
+			arcs.add(new Lightning.Arc(ch.getSprite().center(), hit.getSprite().center()));
 			arc(hit);
 		}
 	}
@@ -149,15 +149,15 @@ public class WandOfLightning extends DamageWand {
 			}
 
 			affected.add( ch );
-			arcs.add( new Lightning.Arc(curUser.sprite.center(), ch.sprite.center()));
+			arcs.add( new Lightning.Arc(curUser.getSprite().center(), ch.getSprite().center()));
 			arc(ch);
 		} else {
-			arcs.add( new Lightning.Arc(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos)));
+			arcs.add( new Lightning.Arc(curUser.getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos)));
 			CellEmitter.center( cell ).burst( SparkParticle.FACTORY, 3 );
 		}
 
 		//don't want to wait for the effect before processing damage.
-		curUser.sprite.parent.addToFront( new Lightning( arcs, null ) );
+		curUser.getSprite().parent.addToFront( new Lightning( arcs, null ) );
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		callback.call();
 	}

@@ -46,7 +46,7 @@ public class ShockingDart extends TippedDart {
 		if (!processingChargedShot || attacker.alignment != defender.alignment) {
 			defender.damage(Char.combatRoll(5 + Dungeon.scalingDepth() / 4, 10 + Dungeon.scalingDepth() / 4),new Char.DamageCause( new Electricity(), attacker) );
 
-			CharSprite s = defender.sprite;
+			CharSprite s = defender.getSprite();
 			if (s != null && s.parent != null) {
 				ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 				arcs.add(new Lightning.Arc(new PointF(s.x, s.y + s.height / 2), new PointF(s.x + s.width, s.y + s.height / 2)));

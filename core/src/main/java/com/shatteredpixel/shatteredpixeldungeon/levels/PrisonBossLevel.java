@@ -341,8 +341,8 @@ public class PrisonBossLevel extends Level {
 		for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
 			if (mob != tengu && (safeArea == null || !safeArea.inside(cellToPoint(mob.pos)))){
 				mob.destroy();
-				if (mob.sprite != null)
-					mob.sprite.killAndErase();
+				if (mob.getSprite() != null)
+					mob.getSprite().killAndErase();
 			}
 		}
 		for (Plant plant : plants.valueList()){
@@ -444,7 +444,7 @@ public class PrisonBossLevel extends Level {
 				Actor.remove(tengu);
 				mobs.remove(tengu);
 				TargetHealthIndicator.instance.target(null);
-				tengu.sprite.kill();
+				tengu.getSprite().kill();
 				if (d != null) tengu.add(d);
 				
 				GameScene.flash(0x80FFFFFF);
@@ -482,13 +482,13 @@ public class PrisonBossLevel extends Level {
 				for (Hero hero: Dungeon.heroes) {
 					if (hero != null) {
 					hero.pos = tenguCell.left + 4 + (tenguCell.top + 2) * width();
-					hero.sprite.interruptMotion();
-					hero.sprite.place(hero.pos);
-					Camera.main.snapTo(hero.sprite.center());
+					hero.getSprite().interruptMotion();
+					hero.getSprite().place(hero.pos);
+					Camera.main.snapTo(hero.getSprite().center());
 				}
 				}
 				tengu.pos = pointToCell(tenguCellCenter);
-				tengu.sprite.place(tengu.pos);
+				tengu.getSprite().place(tengu.pos);
 				
 				//remove all mobs, but preserve allies
 				ArrayList<Mob> allies = new ArrayList<>();
@@ -514,7 +514,7 @@ public class PrisonBossLevel extends Level {
 						}
 					} while (findMob(pos) != null || heroAtPos);
 					m.pos = pos;
-					if (m.sprite != null) m.sprite.place(m.pos);
+					if (m.getSprite() != null) m.getSprite().place(m.pos);
 					mobs.add(m);
 				}
 				

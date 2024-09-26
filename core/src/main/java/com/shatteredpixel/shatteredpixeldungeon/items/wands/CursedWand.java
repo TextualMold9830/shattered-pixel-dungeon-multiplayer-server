@@ -244,11 +244,11 @@ public class CursedWand {
 						toDamage = user;
 					}
 					toHeal.HP = Math.min(toHeal.HT, toHeal.HP + damage);
-					toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
-					toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
+					toHeal.getSprite().emitter().burst(Speck.factory(Speck.HEALING), 3);
+					toHeal.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
 
 					toDamage.damage(damage, new Char.DamageCause( new CursedWand(),user));
-					toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
+					toDamage.getSprite().emitter().start(ShadowParticle.UP, 0.05f, 10);
 
 					if (toDamage instanceof Hero){
 						Sample.INSTANCE.play(Assets.Sounds.CURSED);
@@ -312,7 +312,7 @@ public class CursedWand {
 					sheep.lifespan = 10;
 					sheep.pos = ch.pos;
 					ch.destroy();
-					ch.sprite.killAndErase();
+					ch.getSprite().killAndErase();
 					Dungeon.level.mobs.remove(ch);
 					TargetHealthIndicator.instance.target(null);
 					GameScene.add(sheep);
@@ -392,7 +392,7 @@ public class CursedWand {
 					GameScene.add(Blob.seed(i, 15, Regrowth.class));
 				}
 
-				new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
+				new Flare(8, 32).color(0xFFFF66, true).show(user.getSprite(), 2f);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 				GLog.p(Messages.get(CursedWand.class, "grass"));
 				if (!positiveOnly) {
@@ -525,9 +525,9 @@ public class CursedWand {
 	}
 
 	private static void cursedFX(final Char user, final Ballistica bolt, final Callback callback){
-		MagicMissile.boltFromChar( user.sprite.parent,
+		MagicMissile.boltFromChar( user.getSprite().parent,
 				MagicMissile.RAINBOW,
-				user.sprite,
+                user.getSprite(),
 				bolt.collisionPos,
 				callback);
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );

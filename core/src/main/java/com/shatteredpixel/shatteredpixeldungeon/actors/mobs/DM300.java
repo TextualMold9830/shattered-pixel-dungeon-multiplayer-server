@@ -211,8 +211,8 @@ public class DM300 extends Mob {
 							lastAbility = GAS;
 							turnsSinceLastAbility = 0;
 
-							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								sprite.zap(enemy.pos);
+							if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+								getSprite().zap(enemy.pos);
 								return false;
 							} else {
 								ventGas(enemy);
@@ -224,8 +224,8 @@ public class DM300 extends Mob {
 						} else if (enemy.paralysed <= 0) {
 							lastAbility = ROCKS;
 							turnsSinceLastAbility = 0;
-							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								((DM300Sprite)sprite).slam(enemy.pos);
+							if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+								((DM300Sprite) getSprite()).slam(enemy.pos);
 								return false;
 							} else {
 								dropRocks(enemy);
@@ -259,8 +259,8 @@ public class DM300 extends Mob {
 						abilityCooldown = Random.NormalIntRange(MIN_COOLDOWN, MAX_COOLDOWN);
 
 						if (lastAbility == GAS) {
-							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								sprite.zap(enemy.pos);
+							if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+								getSprite().zap(enemy.pos);
 								return false;
 							} else {
 								ventGas(enemy);
@@ -268,8 +268,8 @@ public class DM300 extends Mob {
 								return true;
 							}
 						} else {
-							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								((DM300Sprite)sprite).slam(enemy.pos);
+							if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+								((DM300Sprite) getSprite()).slam(enemy.pos);
 								return false;
 							} else {
 								dropRocks(enemy);
@@ -350,8 +350,8 @@ public class DM300 extends Mob {
 					GLog.w(Messages.get(this, "shield"));
 				}
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
-				sprite.emitter().start(SparkParticle.STATIC, 0.05f, 20);
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(30 + (HT - HP)/10), FloatingText.SHIELDING);
+				getSprite().emitter().start(SparkParticle.STATIC, 0.05f, 20);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(30 + (HT - HP)/10), FloatingText.SHIELDING);
 			}
 
 			Buff.affect(this, Barrier.class).setShield( 30 + (HT - HP)/10);
@@ -474,7 +474,7 @@ public class DM300 extends Mob {
 			}
 		}
 		for (int i : rockCells){
-			sprite.parent.add(new TargetedCell(i, 0xFF0000));
+			getSprite().parent.add(new TargetedCell(i, 0xFF0000));
 		}
 		//don't want to overly punish players with slow move or attack speed
 		Buff.append(this, FallingRockBuff.class, GameMath.gate(TICK, (int)Math.ceil(target.cooldown()), 3*TICK)).setRockPositions(rockCells);
@@ -541,9 +541,9 @@ public class DM300 extends Mob {
 
 		spend(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2f : 3f);
 		yell(Messages.get(this, "charging"));
-		sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
-		((DM300Sprite)sprite).updateChargeState(true);
-		((DM300Sprite)sprite).charge();
+		getSprite().showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
+		((DM300Sprite) getSprite()).updateChargeState(true);
+		((DM300Sprite) getSprite()).charge();
 		chargeAnnounced = false;
 
 	}
@@ -554,7 +554,7 @@ public class DM300 extends Mob {
 
 	public void loseSupercharge(){
 		supercharged = false;
-		((DM300Sprite)sprite).updateChargeState(false);
+		((DM300Sprite) getSprite()).updateChargeState(false);
 
 		if (pylonsActivated < totalPylonsToActivate()){
 			yell(Messages.get(this, "charge_lost"));

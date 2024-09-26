@@ -81,8 +81,8 @@ public class Pylon extends Mob {
 
 		throwItems();
 
-		sprite.hideAlert();
-		sprite.hideLost();
+		getSprite().hideAlert();
+		getSprite().hideLost();
 
 		//mob logic
 		enemy = chooseEnemy();
@@ -106,7 +106,7 @@ public class Pylon extends Mob {
 			shockCells.add(pos + PathFinder.CIRCLE8[(targetNeighbor+4)%8]);
 		}
 
-		sprite.flash();
+		getSprite().flash();
 
 		boolean visible = Dungeon.visibleforAnyHero(pos);
 		for (int cell : shockCells){
@@ -117,7 +117,7 @@ public class Pylon extends Mob {
 
 		if (visible) {
 			for (int cell : shockCells){
-				sprite.parent.add(new Lightning(sprite.center(),
+				getSprite().parent.add(new Lightning(getSprite().center(),
 						DungeonTilemap.raisedTileCenterToWorld(cell), null));
 				CellEmitter.get(cell).burst(SparkParticle.FACTORY, 3);
 			}
@@ -137,7 +137,7 @@ public class Pylon extends Mob {
 
 	private void shockChar( Char ch ){
 		if (ch != null && !(ch instanceof DM300)){
-			ch.sprite.flash();
+			ch.getSprite().flash();
 			ch.damage(Char.combatRoll(10, 20),new DamageCause( new Electricity(), this));
 
 			if (ch instanceof Hero) {
@@ -154,7 +154,7 @@ public class Pylon extends Mob {
 	public void activate(){
 		alignment = Alignment.ENEMY;
 		state = HUNTING; //so allies know to attack it
-		((PylonSprite) sprite).activate();
+		((PylonSprite) getSprite()).activate();
 	}
 
 	@Override

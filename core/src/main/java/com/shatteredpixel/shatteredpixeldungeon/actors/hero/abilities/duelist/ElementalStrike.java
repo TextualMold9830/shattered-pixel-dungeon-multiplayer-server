@@ -87,7 +87,6 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.ConeAOE;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -175,16 +174,16 @@ public class ElementalStrike extends ArmorAbility {
 
 		//cast to cells at the tip, rather than all cells, better performance.
 		for (Ballistica ray : cone.outerRays){
-			((MagicMissile)hero.sprite.parent.recycle( MagicMissile.class )).reset(
+			((MagicMissile) hero.getSprite().parent.recycle( MagicMissile.class )).reset(
 					effectTypes.get(enchCls),
-					hero.sprite,
+                    hero.getSprite(),
 					ray.path.get(ray.dist),
 					null
 			);
 		}
 
 		Weapon.Enchantment finalEnchantment = enchantment;
-		hero.sprite.attack(target, new Callback() {
+		hero.getSprite().attack(target, new Callback() {
 			@Override
 			public void call() {
 
@@ -252,7 +251,7 @@ public class ElementalStrike extends ArmorAbility {
 			if (targetsHit > 0){
 				int shield = Math.round(Math.round(6f*targetsHit*powerMulti));
 				Buff.affect(hero, Barrier.class).setShield(Math.round(6f*targetsHit*powerMulti));
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
+				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
 			}
 
 		//*** Vampiric ***
@@ -262,7 +261,7 @@ public class ElementalStrike extends ArmorAbility {
 				heal = Math.min( heal, hero.HT - hero.HP );
 				if (heal > 0){
 					hero.HP += heal;
-					hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( heal ), FloatingText.HEALING );
+					hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( heal ), FloatingText.HEALING );
 				}
 			}
 
@@ -425,7 +424,7 @@ public class ElementalStrike extends ArmorAbility {
 						&& Random.Float() < 0.125f*powerMulti
 						&& ch.buff(ElementalStrikeLuckyTracker.class) == null) {
 					Dungeon.level.drop(Lucky.genLoot(), ch.pos).sprite.drop();
-					Lucky.showFlare(ch.sprite);
+					Lucky.showFlare(ch.getSprite());
 					Buff.affect(ch, ElementalStrikeLuckyTracker.class);
 				}
 			}
@@ -474,7 +473,7 @@ public class ElementalStrike extends ArmorAbility {
 					float chance = 0.06f + 0.24f*hpMissing; //6-30%
 					if (Random.Float() < chance*powerMulti){
 						ch.damage( ch.HP, new Char.DamageCause( Grim.class, hero) );
-						ch.sprite.emitter().burst( ShadowParticle.UP, 5 );
+						ch.getSprite().emitter().burst( ShadowParticle.UP, 5 );
 					}
 				}
 			}

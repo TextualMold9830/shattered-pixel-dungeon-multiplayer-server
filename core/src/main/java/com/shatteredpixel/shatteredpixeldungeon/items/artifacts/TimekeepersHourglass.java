@@ -321,8 +321,8 @@ public class TimekeepersHourglass extends Artifact {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add( CharSprite.State.INVISIBLE );
-			else if (target.invisible == 0) target.sprite.remove( CharSprite.State.INVISIBLE );
+			if (on) target.getSprite().add( CharSprite.State.INVISIBLE );
+			else if (target.invisible == 0) target.getSprite().remove( CharSprite.State.INVISIBLE );
 		}
 	}
 
@@ -404,11 +404,11 @@ public class TimekeepersHourglass extends Artifact {
 			Emitter.freezeEmitters = on;
 			if (on){
 				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-					if (mob.sprite != null) mob.sprite.add(CharSprite.State.PARALYSED);
+					if (mob.getSprite() != null) mob.getSprite().add(CharSprite.State.PARALYSED);
 				}
 			} else {
 				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-					if (mob.paralysed <= 0) mob.sprite.remove(CharSprite.State.PARALYSED);
+					if (mob.paralysed <= 0) mob.getSprite().remove(CharSprite.State.PARALYSED);
 				}
 			}
 		}

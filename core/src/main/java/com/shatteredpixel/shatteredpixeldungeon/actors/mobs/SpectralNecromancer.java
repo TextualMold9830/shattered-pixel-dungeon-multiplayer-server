@@ -54,8 +54,8 @@ public class SpectralNecromancer extends Necromancer {
 	protected boolean act() {
 		if (summoning && state != HUNTING){
 			summoning = false;
-			if (sprite instanceof SpectralNecromancerSprite) {
-				((SpectralNecromancerSprite) sprite).cancelSummoning();
+			if (getSprite() instanceof SpectralNecromancerSprite) {
+				((SpectralNecromancerSprite) getSprite()).cancelSummoning();
 			}
 		}
 		return super.act();
@@ -112,7 +112,7 @@ public class SpectralNecromancer extends Necromancer {
 			//cancel if character cannot be moved
 			if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
 				summoning = false;
-				((SpectralNecromancerSprite)sprite).finishSummoning();
+				((SpectralNecromancerSprite) getSprite()).finishSummoning();
 				spend(TICK);
 				return;
 			}
@@ -157,7 +157,7 @@ public class SpectralNecromancer extends Necromancer {
 		Wraith wraith = Wraith.spawnAt(summoningPos, Wraith.class);
 		wraith.adjustStats(0);
 		Dungeon.level.occupyCell( wraith );
-		((SpectralNecromancerSprite)sprite).finishSummoning();
+		((SpectralNecromancerSprite) getSprite()).finishSummoning();
 
 		for (Buff b : buffs(AllyBuff.class)){
 			Buff.affect( wraith, b.getClass());

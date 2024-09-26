@@ -300,7 +300,7 @@ public class SandalsOfNature extends Artifact {
 				if (level() < 3) seeds.add(0, item.getClass());
 				curSeedEffect = item.getClass();
 
-				getOwner().sprite.operate( getOwner().pos );
+				getOwner().getSprite().operate( getOwner().pos );
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
 				getOwner().busy();
 				getOwner().spend( Actor.TICK );

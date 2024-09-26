@@ -56,7 +56,7 @@ public class Quarterstaff extends MeleeWeapon {
 		beforeAbilityUsed(hero, null);
 		//1 turn less as using the ability is instant
 		Buff.prolong(hero, DefensiveStance.class, 3 + buffedLvl());
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		hero.next();
 		afterAbilityUsed(hero);
 	}

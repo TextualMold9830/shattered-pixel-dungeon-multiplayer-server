@@ -284,7 +284,7 @@ public class CavesBossLevel extends Level {
 				n = entrance + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
 			} while (!Dungeon.level.passable[n]);
 			ch.pos = n;
-			ch.sprite.place(n);
+			ch.getSprite().place(n);
 		}
 
 		GameScene.updateMap( entrance );
@@ -375,7 +375,7 @@ public class CavesBossLevel extends Level {
 		for (Mob m : mobs){
 			if (m instanceof DM300){
 				((DM300) m).loseSupercharge();
-				PylonEnergy.energySourceSprite = m.sprite;
+				PylonEnergy.energySourceSprite = m.getSprite();
 			} else if (m instanceof Pylon){
 				pylonsRemaining++;
 			}
@@ -812,7 +812,7 @@ public class CavesBossLevel extends Level {
 						if (ch != null && !(ch instanceof DM300) && !ch.flying) {
 							Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 							ch.damage( Char.combatRoll(6, 12), new Char.DamageCause( new Electricity(), null));
-							ch.sprite.flash();
+							ch.getSprite().flash();
 
 							if (ch instanceof Hero){
 								if (energySourceSprite != null && energySourceSprite instanceof PylonSprite){
@@ -845,10 +845,10 @@ public class CavesBossLevel extends Level {
 				if (energySourceSprite == null){
 					for (Char c : Actor.chars()){
 						if (c instanceof Pylon && c.alignment != Char.Alignment.NEUTRAL){
-							energySourceSprite = c.sprite;
+							energySourceSprite = c.getSprite();
 							break;
 						} else if (c instanceof DM300){
-							energySourceSprite = c.sprite;
+							energySourceSprite = c.getSprite();
 						}
 					}
 					if (energySourceSprite == null){

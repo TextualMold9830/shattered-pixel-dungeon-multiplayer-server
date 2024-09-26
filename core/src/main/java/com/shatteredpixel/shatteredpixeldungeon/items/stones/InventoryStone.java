@@ -63,7 +63,7 @@ public abstract class InventoryStone extends Runestone {
 	protected void useAnimation() {
 		curUser.spend( 1f );
 		curUser.busy();
-		curUser.sprite.operate(curUser.pos);
+		curUser.getSprite().operate(curUser.pos);
 
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		//TODO: I belive this is called somewhere else

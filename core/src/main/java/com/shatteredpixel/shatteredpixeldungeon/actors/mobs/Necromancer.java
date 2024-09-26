@@ -79,7 +79,7 @@ public class Necromancer extends Mob {
 	protected boolean act() {
 		if (summoning && state != HUNTING){
 			summoning = false;
-			if (sprite instanceof NecromancerSprite) ((NecromancerSprite) sprite).cancelSummoning();
+			if (getSprite() instanceof NecromancerSprite) ((NecromancerSprite) getSprite()).cancelSummoning();
 		}
 		return super.act();
 	}
@@ -166,27 +166,27 @@ public class Necromancer extends Mob {
 	}
 	
 	public void onZapComplete(){
-		if (mySkeleton == null || mySkeleton.sprite == null || !mySkeleton.isAlive()){
+		if (mySkeleton == null || mySkeleton.getSprite() == null || !mySkeleton.isAlive()){
 			return;
 		}
 		
 		//heal skeleton first
 		if (mySkeleton.HP < mySkeleton.HT){
 
-			if (sprite.visible || mySkeleton.sprite.visible) {
-				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
+			if (getSprite().visible || mySkeleton.getSprite().visible) {
+				getSprite().parent.add(new Beam.HealthRay(getSprite().center(), mySkeleton.getSprite().center()));
 			}
 			
 			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5, mySkeleton.HT);
-			if (mySkeleton.sprite.visible) {
-				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
+			if (mySkeleton.getSprite().visible) {
+				mySkeleton.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
 			}
 			
 		//otherwise give it adrenaline
 		} else if (mySkeleton.buff(Adrenaline.class) == null) {
 
-			if (sprite.visible || mySkeleton.sprite.visible) {
-				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
+			if (getSprite().visible || mySkeleton.getSprite().visible) {
+				getSprite().parent.add(new Beam.HealthRay(getSprite().center(), mySkeleton.getSprite().center()));
 			}
 			
 			Buff.affect(mySkeleton, Adrenaline.class, 3f);
@@ -201,7 +201,7 @@ public class Necromancer extends Mob {
 			//cancel if character cannot be moved
 			if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
 				summoning = false;
-				((NecromancerSprite)sprite).finishSummoning();
+				((NecromancerSprite) getSprite()).finishSummoning();
 				spend(TICK);
 				return;
 			}
@@ -247,7 +247,7 @@ public class Necromancer extends Mob {
 		mySkeleton.pos = summoningPos;
 		GameScene.add( mySkeleton );
 		Dungeon.level.occupyCell( mySkeleton );
-		((NecromancerSprite)sprite).finishSummoning();
+		((NecromancerSprite) getSprite()).finishSummoning();
 
 		for (Buff b : buffs(AllyBuff.class)){
 			Buff.affect(mySkeleton, b.getClass());
@@ -311,7 +311,7 @@ public class Necromancer extends Mob {
 				if (summoningPos != -1){
 					
 					summoning = true;
-					sprite.zap( summoningPos );
+					getSprite().zap( summoningPos );
 					
 					spend( firstSummon ? TICK : 2*TICK );
 				} else {
@@ -346,8 +346,8 @@ public class Necromancer extends Mob {
 							ScrollOfTeleportation.appear(mySkeleton, telePos);
 							mySkeleton.teleportSpend();
 							
-							if (sprite != null && sprite.visible){
-								sprite.zap(telePos);
+							if (getSprite() != null && getSprite().visible){
+								getSprite().zap(telePos);
 								return false;
 							} else {
 								onZapComplete();
@@ -361,8 +361,8 @@ public class Necromancer extends Mob {
 					
 					//zap skeleton
 					if (mySkeleton.HP < mySkeleton.HT || mySkeleton.buff(Adrenaline.class) == null) {
-						if (sprite != null && sprite.visible){
-							sprite.zap(mySkeleton.pos);
+						if (getSprite() != null && getSprite().visible){
+							getSprite().zap(mySkeleton.pos);
 							return false;
 						} else {
 							onZapComplete();

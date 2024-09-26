@@ -57,8 +57,8 @@ public abstract class ChampionEnemy extends Buff {
 
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.aura( color );
-		else target.sprite.clearAura();
+		if (on) target.getSprite().aura( color );
+		else target.getSprite().clearAura();
 	}
 
 	public void onAttackProc(Char enemy ){

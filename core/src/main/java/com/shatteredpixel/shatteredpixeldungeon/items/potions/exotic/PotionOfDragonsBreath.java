@@ -125,12 +125,12 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 				identifiedByUse = false;
 				curUser.busy();
 				Sample.INSTANCE.play( Assets.Sounds.DRINK );
-				curUser.sprite.operate(curUser.pos, new Callback() {
+				curUser.getSprite().operate(curUser.pos, new Callback() {
 					@Override
 					public void call() {
 
-						curUser.sprite.idle();
-						curUser.sprite.zap(cell);
+						curUser.getSprite().idle();
+						curUser.getSprite().zap(cell);
 						Sample.INSTANCE.play( Assets.Sounds.BURNING );
 
 						final Ballistica bolt = new Ballistica(curUser.pos, cell, Ballistica.WONT_STOP);
@@ -142,17 +142,17 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 
 						//cast to cells at the tip, rather than all cells, better performance.
 						for (Ballistica ray : cone.outerRays){
-							((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
+							((MagicMissile) curUser.getSprite().parent.recycle( MagicMissile.class )).reset(
 									MagicMissile.FIRE_CONE,
-									curUser.sprite,
+                                    curUser.getSprite(),
 									ray.path.get(ray.dist),
 									null
 							);
 						}
 						
-						MagicMissile.boltFromChar(curUser.sprite.parent,
+						MagicMissile.boltFromChar(curUser.getSprite().parent,
 								MagicMissile.FIRE_CONE,
-								curUser.sprite,
+                                curUser.getSprite(),
 								bolt.path.get(dist / 2),
 								new Callback() {
 									@Override

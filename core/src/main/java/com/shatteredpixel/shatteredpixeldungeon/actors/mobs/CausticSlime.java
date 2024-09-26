@@ -43,7 +43,7 @@ public class CausticSlime extends Slime {
 	public int attackProc( Char enemy, int damage ) {
 		if (Random.Int( 2 ) == 0) {
 			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
-			enemy.sprite.burst( 0x000000, 5 );
+			enemy.getSprite().burst( 0x000000, 5 );
 		}
 		
 		return super.attackProc( enemy, damage );

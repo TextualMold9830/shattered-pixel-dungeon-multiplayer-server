@@ -72,7 +72,7 @@ public class DM100Sprite extends MobSprite {
 			origin.x += 1*scale.x;
 		}
 		if (enemy != null) {
-			parent.add(new Lightning(origin, enemy.sprite.destinationCenter(), (DM100) ch));
+			parent.add(new Lightning(origin, enemy.getSprite().destinationCenter(), (DM100) ch));
 		} else {
 			parent.add(new Lightning(origin, pos, (DM100) ch));
 		}

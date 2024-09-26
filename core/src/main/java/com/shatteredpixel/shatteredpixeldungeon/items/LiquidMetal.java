@@ -156,10 +156,10 @@ public class LiquidMetal extends Item {
 					detachAll(getOwner().belongings.backpack);
 				}
 
-				curUser.sprite.operate(curUser.pos);
+				curUser.getSprite().operate(curUser.pos);
 				Sample.INSTANCE.play(Assets.Sounds.DRINK);
 				updateQuickslot();
-				curUser.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.1f, 10);
+				curUser.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.1f, 10);
 			}
 		}
 	};

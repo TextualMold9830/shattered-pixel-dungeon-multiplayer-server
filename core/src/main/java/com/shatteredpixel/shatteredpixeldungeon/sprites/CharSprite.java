@@ -175,7 +175,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		linkVisuals( ch );
 		
 		this.ch = ch;
-		ch.sprite = this;
+		ch.setSprite(this);
 		
 		place( ch.pos );
 		turnTo( ch.pos, Random.Int( Dungeon.level.length() ) );
@@ -195,8 +195,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	@Override
 	public void destroy() {
 		super.destroy();
-		if (ch != null && ch.sprite == this){
-			ch.sprite = null;
+		if (ch != null && ch.getSprite() == this){
+			ch.setSprite(null);
 		}
 	}
 

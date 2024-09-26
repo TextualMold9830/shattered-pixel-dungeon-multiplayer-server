@@ -143,20 +143,20 @@ public class Pasty extends Food {
 				if (target != null){
 					Buff.affect(target, Charm.class, 5f).object = hero.id();
 				}
-				hero.sprite.emitter().burst(RainbowParticle.BURST, 15);
+				hero.getSprite().emitter().burst(RainbowParticle.BURST, 15);
 				break;
 			case SHATTEREDPD_BIRTHDAY:
 			case PD_BIRTHDAY:
 				//gives 10% of level in exp, min of 2
 				int expToGive = Math.max(2, hero.maxExp()/10);
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(expToGive), FloatingText.EXPERIENCE);
+				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(expToGive), FloatingText.EXPERIENCE);
 				hero.earnExp(expToGive, PotionOfExperience.class);
 				break;
 			case HALLOWEEN:
 				//heals for 5% max hp, min of 3
 				int toHeal = Math.max(3, hero.HT/20);
 				hero.HP = Math.min(hero.HP + toHeal, hero.HT);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toHeal), FloatingText.HEALING );
+				hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toHeal), FloatingText.HEALING );
 				break;
 			case WINTER_HOLIDAYS:
 				hero.belongings.charge(0.5f); //2 turns worth
@@ -166,7 +166,7 @@ public class Pasty extends Food {
 				//shields for 10% of max hp, min of 5
 				int toShield = Math.max(5, hero.HT/10);
 				Buff.affect(hero, Barrier.class).setShield(toShield);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toShield), FloatingText.SHIELDING );
+				hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toShield), FloatingText.SHIELDING );
 				break;
 		}
 	}

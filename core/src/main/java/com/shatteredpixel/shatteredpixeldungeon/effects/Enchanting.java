@@ -62,8 +62,8 @@ public class Enchanting extends ItemSprite {
 		super.update();
 
 		if (passed == 0) {
-			x = target.sprite.center().x - width() / 2;
-			y = target.sprite.y - height();
+			x = target.getSprite().center().x - width() / 2;
+			y = target.getSprite().y - height();
 		}
 
 		switch (phase) {
@@ -101,12 +101,12 @@ public class Enchanting extends ItemSprite {
 
 	public static void show( Char ch, Item item ) {
 
-		if (!ch.sprite.visible) {
+		if (!ch.getSprite().visible) {
 			return;
 		}
 
 		Enchanting sprite = new Enchanting( item );
 		sprite.target = ch;
-		ch.sprite.parent.add( sprite );
+		ch.getSprite().parent.add( sprite );
 	}
 }

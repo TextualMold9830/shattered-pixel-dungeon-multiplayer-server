@@ -106,7 +106,7 @@ public class Goo extends Mob {
 
 		if (state != HUNTING && pumpedUp > 0){
 			pumpedUp = 0;
-			sprite.idle();
+			getSprite().idle();
 		}
 
 		if (Dungeon.level.water[pos] && HP < HT) {
@@ -121,14 +121,14 @@ public class Goo extends Mob {
 				}
 			}
 			if (Dungeon.visibleforAnyHero(pos) ){
-				sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healInc), FloatingText.HEALING );
+				getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healInc), FloatingText.HEALING );
 			}
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && healInc < 3) {
 				healInc++;
 			}
 			if (HP*2 > HT) {
 				BossHealthBar.bleed(false);
-				((GooSprite)sprite).spray(false);
+				((GooSprite) getSprite()).spray(false);
 				HP = Math.min(HP, HT);
 			}
 		} else {
@@ -160,7 +160,7 @@ public class Goo extends Mob {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int( 3 ) == 0) {
 			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
-			enemy.sprite.burst( 0x000000, 5 );
+			enemy.getSprite().burst( 0x000000, 5 );
 		}
 
 		if (pumpedUp > 0) {
@@ -175,7 +175,7 @@ public class Goo extends Mob {
 		super.updateSpriteState();
 
 		if (pumpedUp > 0){
-			((GooSprite)sprite).pumpUp( pumpedUp );
+			((GooSprite) getSprite()).pumpUp( pumpedUp );
 		}
 	}
 
@@ -183,7 +183,7 @@ public class Goo extends Mob {
 	protected boolean doAttack( Char enemy ) {
 		if (pumpedUp == 1) {
 			pumpedUp++;
-			((GooSprite)sprite).pumpUp( pumpedUp );
+			((GooSprite) getSprite()).pumpUp( pumpedUp );
 
 			spend( attackDelay() );
 
@@ -194,13 +194,13 @@ public class Goo extends Mob {
 
 			if (visible) {
 				if (pumpedUp >= 2) {
-					((GooSprite) sprite).pumpAttack();
+					((GooSprite) getSprite()).pumpAttack();
 				} else {
-					sprite.attack(enemy.pos);
+					getSprite().attack(enemy.pos);
 				}
 			} else {
 				if (pumpedUp >= 2){
-					((GooSprite)sprite).triggerEmitters();
+					((GooSprite) getSprite()).triggerEmitters();
 				}
 				attack( enemy );
 				Invisibility.dispel(this);
@@ -220,10 +220,10 @@ public class Goo extends Mob {
 				spend( attackDelay() );
 			}
 
-			((GooSprite)sprite).pumpUp( pumpedUp );
+			((GooSprite) getSprite()).pumpUp( pumpedUp );
 
 			if (Dungeon.visibleforAnyHero(pos)) {
-				sprite.showStatus( CharSprite.WARNING, Messages.get(this, "!!!") );
+				getSprite().showStatus( CharSprite.WARNING, Messages.get(this, "!!!") );
 				GLog.n( Messages.get(this, "pumpup") );
 			}
 
@@ -248,7 +248,7 @@ public class Goo extends Mob {
 	protected boolean getCloser( int target ) {
 		if (pumpedUp != 0) {
 			pumpedUp = 0;
-			sprite.idle();
+			getSprite().idle();
 		}
 		return super.getCloser( target );
 	}
@@ -257,7 +257,7 @@ public class Goo extends Mob {
 	protected boolean getFurther(int target) {
 		if (pumpedUp != 0) {
 			pumpedUp = 0;
-			sprite.idle();
+			getSprite().idle();
 		}
 		return super.getFurther( target );
 	}
@@ -273,8 +273,8 @@ public class Goo extends Mob {
 		super.damage(dmg, source);
 		if ((HP*2 <= HT) && !bleeding){
 			BossHealthBar.bleed(true);
-			sprite.showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
-			((GooSprite)sprite).spray(true);
+			getSprite().showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
+			((GooSprite) getSprite()).spray(true);
 			yell(Messages.get(this, "gluuurp"));
 		}
 		for (Hero hero: Dungeon.heroes) {

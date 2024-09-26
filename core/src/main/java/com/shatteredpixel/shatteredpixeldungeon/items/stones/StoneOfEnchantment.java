@@ -61,7 +61,7 @@ public class StoneOfEnchantment extends InventoryStone {
 			
 		}
 		
-		curUser.sprite.emitter().start( Speck.factory( Speck.LIGHT ), 0.1f, 5 );
+		curUser.getSprite().emitter().start( Speck.factory( Speck.LIGHT ), 0.1f, 5 );
 		Enchanting.show( curUser, item );
 		
 		if (item instanceof Weapon) {

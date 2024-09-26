@@ -222,12 +222,12 @@ public abstract class Mob extends Char {
 
 		boolean justAlerted = alerted;
 		alerted = false;
-		if(sprite != null) {
+		if(getSprite() != null) {
 			if (justAlerted) {
-				sprite.showAlert();
+				getSprite().showAlert();
 			} else {
-				sprite.hideAlert();
-				sprite.hideLost();
+				getSprite().hideAlert();
+				getSprite().hideLost();
 			}
 		}
 		if (paralysed > 0) {
@@ -470,7 +470,7 @@ public abstract class Mob extends Char {
 			if ((buff instanceof Terror && buff(Dread.class) == null)
 					|| (buff instanceof Dread && buff(Terror.class) == null)) {
 				if (enemySeen) {
-					sprite.showStatus(CharSprite.WARNING, Messages.get(this, "rage"));
+					getSprite().showStatus(CharSprite.WARNING, Messages.get(this, "rage"));
 					state = HUNTING;
 				} else {
 					state = WANDERING;
@@ -657,7 +657,7 @@ public abstract class Mob extends Char {
 
 			if (hero.buff(TimekeepersHourglass.timeFreeze.class) != null
 					|| hero.buff(Swiftthistle.TimeBubble.class) != null) {
-                sprite.add(CharSprite.State.PARALYSED);
+                getSprite().add(CharSprite.State.PARALYSED);
 				break;
             }
 		}
@@ -672,8 +672,8 @@ public abstract class Mob extends Char {
 	
 	protected boolean doAttack( Char enemy ) {
 		
-		if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-			sprite.attack( enemy.pos );
+		if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+			getSprite().attack( enemy.pos );
 			return false;
 			
 		} else {
@@ -754,7 +754,7 @@ public abstract class Mob extends Char {
 						if (hero.HP < hero.HT) {
 							int heal = (int) Math.ceil(restoration * 0.4f);
 							hero.HP = Math.min(hero.HT, hero.HP + heal);
-							hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
+							hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 						}
 					}
 				}
@@ -853,7 +853,7 @@ public abstract class Mob extends Char {
 						}
 
 						if (exp > 0) {
-							hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(exp), FloatingText.EXPERIENCE);
+							hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(exp), FloatingText.EXPERIENCE);
 						}
 						hero.earnExp(exp, getClass());
 
@@ -976,14 +976,14 @@ public abstract class Mob extends Char {
 			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(hero, rolls);
 			if (bonus != null && !bonus.isEmpty()) {
 				for (Item b : bonus) Dungeon.level.drop(b, pos).sprite.drop();
-				RingOfWealth.showFlareForBonusDrop(sprite);
+				RingOfWealth.showFlareForBonusDrop(getSprite());
 			}
 		}
 		
 		//lucky enchant logic
 		if (buff(Lucky.LuckProc.class) != null){
 			Dungeon.level.drop(buff(Lucky.LuckProc.class).genLoot(), pos).sprite.drop();
-			Lucky.showFlare(sprite);
+			Lucky.showFlare(getSprite());
 		}
 
 		//soul eater talent
@@ -1093,7 +1093,7 @@ public abstract class Mob extends Char {
 	}
 	
 	public void notice() {
-		sprite.showAlert();
+		getSprite().showAlert();
 	}
 	public void yell( String str, Hero hero ) {
 		GLog.newLine();
@@ -1256,7 +1256,7 @@ public abstract class Mob extends Char {
 				if (enemyInFOV) {
 					target = enemy.pos;
 				} else if (enemy == null) {
-					sprite.showLost();
+					getSprite().showLost();
 					state = WANDERING;
 					target = ((Mob.Wandering)WANDERING).randomDestination();
 					spend( TICK );
@@ -1287,7 +1287,7 @@ public abstract class Mob extends Char {
 
 					spend( TICK );
 					if (!enemyInFOV) {
-						sprite.showLost();
+						getSprite().showLost();
 						state = WANDERING;
 						target = ((Mob.Wandering)WANDERING).randomDestination();
 					}
@@ -1342,7 +1342,7 @@ public abstract class Mob extends Char {
 					&& buffs( AllyBuff.class ).isEmpty()
 					&& buff( Dread.class ) == null) {
 				if (enemySeen) {
-					sprite.showStatus(CharSprite.WARNING, Messages.get(Mob.class, "rage"));
+					getSprite().showStatus(CharSprite.WARNING, Messages.get(Mob.class, "rage"));
 					state = HUNTING;
 				} else {
 					state = WANDERING;
@@ -1446,7 +1446,7 @@ public abstract class Mob extends Char {
 				} else {
 					ally.pos = pos;
 				}
-				if (ally.sprite != null) ally.sprite.place(ally.pos);
+				if (ally.getSprite() != null) ally.getSprite().place(ally.pos);
 
 				if (ally.fieldOfView == null || ally.fieldOfView.length != level.length()){
 					ally.fieldOfView = new boolean[level.length()];

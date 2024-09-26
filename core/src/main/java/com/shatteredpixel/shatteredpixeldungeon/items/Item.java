@@ -64,7 +64,6 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -541,7 +540,7 @@ public class Item implements Bundlable {
 	}
 	
 	public static void evoke( Hero hero ) {
-		hero.sprite.emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
+		hero.getSprite().emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
 
 	public String title() {
@@ -697,7 +696,7 @@ public class Item implements Bundlable {
 	public void cast( final Hero user, final int dst ) {
 		
 		final int cell = throwPos( user, dst );
-		user.sprite.zap( cell );
+		user.getSprite().zap( cell );
 		user.busy();
 
 		throwSound();
@@ -708,9 +707,9 @@ public class Item implements Bundlable {
 		final float delay = castDelay(user, dst);
 
 		if (enemy != null) {
-			((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
-					reset(user.sprite,
-							enemy.sprite,
+			((MissileSprite) user.getSprite().parent.recycle(MissileSprite.class)).
+					reset(user.getSprite(),
+							enemy.getSprite(),
 							this,
 							new Callback() {
 						@Override
@@ -736,8 +735,8 @@ public class Item implements Bundlable {
 						}
 					});
 		} else {
-			((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
-					reset(user.sprite,
+			((MissileSprite) user.getSprite().parent.recycle(MissileSprite.class)).
+					reset(user.getSprite(),
 							cell,
 							this,
 							new Callback() {

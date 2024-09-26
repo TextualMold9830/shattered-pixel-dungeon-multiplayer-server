@@ -413,9 +413,9 @@ public class SpiritBow extends Weapon {
 				
 				throwSound();
 
-				user.sprite.zap(cell);
-				((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
-						reset(user.sprite,
+				user.getSprite().zap(cell);
+				((MissileSprite) user.getSprite().parent.recycle(MissileSprite.class)).
+						reset(user.getSprite(),
 								cell,
 								this,
 								new Callback() {

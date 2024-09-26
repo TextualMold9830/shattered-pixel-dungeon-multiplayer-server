@@ -37,7 +37,7 @@ public class FrostImbue extends FlavourBuff {
 	
 	public void proc(Char enemy){
 		Buff.affect(enemy, Chill.class, 3f);
-		enemy.sprite.emitter().burst( SnowParticle.FACTORY, 3 );
+		enemy.getSprite().emitter().burst( SnowParticle.FACTORY, 3 );
 	}
 	
 	@Override

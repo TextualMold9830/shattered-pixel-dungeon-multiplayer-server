@@ -84,9 +84,9 @@ public class SpellSprite extends Image {
 	public void update() {
 		super.update();
 
-		if (target != null && target.sprite != null) {
-			x = target.sprite.center().x - SIZE / 2;
-			y = target.sprite.y - SIZE;
+		if (target != null && target.getSprite() != null) {
+			x = target.getSprite().center().x - SIZE / 2;
+			y = target.getSprite().y - SIZE;
 		}
 
 		if (phase == null || target == null){
@@ -136,7 +136,7 @@ public class SpellSprite extends Image {
 	
 	public static void show( Char ch, int index, float r, float g, float b ) {
 		
-		if (!ch.sprite.visible) {
+		if (!ch.getSprite().visible) {
 			return;
 		}
 		

@@ -31,8 +31,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -317,8 +315,8 @@ public class CityBossLevel extends Level {
 			if (hero != null) {
 				if (hero.fieldOfView[boss.pos]) {
 					boss.notice();
-					boss.sprite.alpha( 0 );
-					boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );
+					boss.getSprite().alpha( 0 );
+					boss.getSprite().parent.add( new AlphaTweener(boss.getSprite(), 1, 0.1f ) );
 				}
 			}
 		}

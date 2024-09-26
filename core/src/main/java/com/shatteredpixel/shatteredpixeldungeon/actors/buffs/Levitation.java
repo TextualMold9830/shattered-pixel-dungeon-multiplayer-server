@@ -90,7 +90,7 @@ public class Levitation extends FlavourBuff {
 	
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.LEVITATING);
-		else target.sprite.remove(CharSprite.State.LEVITATING);
+		if (on) target.getSprite().add(CharSprite.State.LEVITATING);
+		else target.getSprite().remove(CharSprite.State.LEVITATING);
 	}
 }

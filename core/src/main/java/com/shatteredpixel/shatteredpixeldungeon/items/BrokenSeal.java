@@ -162,7 +162,7 @@ public class BrokenSeal extends Item {
 							//if index is 1, then the glyph transfer happens in affixSeal
 							GLog.p(Messages.get(BrokenSeal.class, "affix"));
 
-							getOwnerHero().sprite.operate(getOwnerHero().pos);
+							getOwnerHero().getSprite().operate(getOwnerHero().pos);
 							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 							armor.affixSeal(seal, getOwnerHero());
 							seal.detach(getOwnerHero().belongings.backpack);
@@ -171,7 +171,7 @@ public class BrokenSeal extends Item {
 
 				} else {
 					GLog.p(Messages.get(BrokenSeal.class, "affix"));
-					getOwner().sprite.operate(getOwner().pos);
+					getOwner().getSprite().operate(getOwner().pos);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 					armor.affixSeal((BrokenSeal)curItem, getOwner());
 					curItem.detach(getOwner().belongings.backpack);

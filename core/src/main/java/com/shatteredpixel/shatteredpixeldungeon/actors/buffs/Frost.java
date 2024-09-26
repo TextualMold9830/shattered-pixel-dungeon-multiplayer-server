@@ -128,11 +128,11 @@ public class Frost extends FlavourBuff {
 	@Override
 	public void fx(boolean on) {
 		if (on) {
-			target.sprite.add(CharSprite.State.FROZEN);
-			target.sprite.add(CharSprite.State.PARALYSED);
+			target.getSprite().add(CharSprite.State.FROZEN);
+			target.getSprite().add(CharSprite.State.PARALYSED);
 		} else {
-			target.sprite.remove(CharSprite.State.FROZEN);
-			if (target.paralysed <= 1) target.sprite.remove(CharSprite.State.PARALYSED);
+			target.getSprite().remove(CharSprite.State.FROZEN);
+			if (target.paralysed <= 1) target.getSprite().remove(CharSprite.State.PARALYSED);
 		}
 	}
 

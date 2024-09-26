@@ -110,9 +110,9 @@ public class Bleeding extends Buff {
 			if (dmg > 0) {
 				
 				target.damage( dmg, new Char.DamageCause(this, null) ); //todo save cause?
-				if (target.sprite.visible) {
-					Splash.at( target.sprite.center(), -PointF.PI / 2, PointF.PI / 6,
-							target.sprite.blood(), Math.min( 10 * dmg / target.HT, 10 ) );
+				if (target.getSprite().visible) {
+					Splash.at( target.getSprite().center(), -PointF.PI / 2, PointF.PI / 6,
+							target.getSprite().blood(), Math.min( 10 * dmg / target.HT, 10 ) );
 				}
 				
 				if (target instanceof Hero && !target.isAlive()) {

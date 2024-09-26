@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -56,8 +55,8 @@ public class WaterOfHealth extends WellWater {
 		hero.buff( Hunger.class ).satisfy( Hunger.STARVING );
 
 		hero.HP = hero.HT;
-		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
-		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(hero.HT), FloatingText.HEALING);
+		hero.getSprite().emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
+		hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(hero.HT), FloatingText.HEALING);
 		
 		CellEmitter.get( hero.pos ).start( ShaftParticle.FACTORY, 0.2f, 3 );
 

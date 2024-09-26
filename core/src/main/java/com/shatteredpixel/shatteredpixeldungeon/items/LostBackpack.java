@@ -75,7 +75,7 @@ public class LostBackpack extends Item {
 		Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 		hero.spendAndNext(TIME_TO_PICK_UP);
 		GameScene.pickUp( this, pos );
-		((HeroSprite)hero.sprite).updateArmor();
+		((HeroSprite) hero.getSprite()).updateArmor();
 		return true;
 	}
 }

@@ -94,7 +94,7 @@ public class MagicalSleep extends Buff {
 	public void fx(boolean on) {
 		if (!on && (target.paralysed <= 1) ) {
 			//in case the character has visual paralysis from another source
-			target.sprite.remove(CharSprite.State.PARALYSED);
+			target.getSprite().remove(CharSprite.State.PARALYSED);
 		}
 	}
 }

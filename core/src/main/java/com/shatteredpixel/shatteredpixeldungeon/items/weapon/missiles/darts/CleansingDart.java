@@ -67,7 +67,7 @@ public class CleansingDart extends TippedDart {
 							((Mob) defender).state = ((Mob) defender).WANDERING;
 						}
 						((Mob) defender).beckon(Dungeon.level.randomDestination(defender));
-						defender.sprite.showLost();
+						defender.getSprite().showLost();
 						return super.act();
 					}
 				}.attachTo(defender);

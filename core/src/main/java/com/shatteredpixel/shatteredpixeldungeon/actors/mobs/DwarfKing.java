@@ -203,7 +203,7 @@ public class DwarfKing extends Mob {
 				//challenge logic
 				if (summonsMade < 6){
 					if (summonsMade == 0) {
-						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+						getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 						yell(Messages.get(this, "wave_1"));
 					}
@@ -214,7 +214,7 @@ public class DwarfKing extends Mob {
 					return true;
 				} else if (shielding() <= 300 && summonsMade < 12){
 					if (summonsMade == 6) {
-						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+						getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 						yell(Messages.get(this, "wave_2"));
 					}
@@ -230,7 +230,7 @@ public class DwarfKing extends Mob {
 					return true;
 				} else if (shielding() <= 150 && summonsMade < 18) {
 					if (summonsMade == 12) {
-						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+						getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 						yell(Messages.get(this, "wave_3"));
 						summonSubject(3, DKWarlock.class);
@@ -254,7 +254,7 @@ public class DwarfKing extends Mob {
 				//non-challenge logic
 				if (summonsMade < 4) {
 					if (summonsMade == 0) {
-						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+						getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 						yell(Messages.get(this, "wave_1"));
 					}
@@ -264,7 +264,7 @@ public class DwarfKing extends Mob {
 					return true;
 				} else if (shielding() <= 200 && summonsMade < 8) {
 					if (summonsMade == 4) {
-						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+						getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 						yell(Messages.get(this, "wave_2"));
 					}
@@ -277,7 +277,7 @@ public class DwarfKing extends Mob {
 					spend(TICK);
 					return true;
 				} else if (shielding() <= 100 && summonsMade < 12) {
-					sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
+					getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 					Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 					yell(Messages.get(this, "wave_3"));
 					summonSubject(4, DKWarlock.class);
@@ -362,7 +362,7 @@ public class DwarfKing extends Mob {
 			Buff.append(furthest, LifeLink.class, 100f).object = id();
 			Buff.append(this, LifeLink.class, 100f).object = furthest.id();
 			yell(Messages.get(this, "lifelink_" + Random.IntRange(1, 2)));
-			sprite.parent.add(new Beam.HealthRay(sprite.destinationCenter(), furthest.sprite.destinationCenter()));
+			getSprite().parent.add(new Beam.HealthRay(getSprite().destinationCenter(), furthest.getSprite().destinationCenter()));
 			return true;
 
 		}
@@ -471,7 +471,7 @@ public class DwarfKing extends Mob {
 				Viscosity.DeferedDamage deferred = Buff.affect( this, Viscosity.DeferedDamage.class );
 				deferred.prolong( dmg );
 
-				sprite.showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg) );
+				getSprite().showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg) );
 			}
 			return;
 		}
@@ -493,12 +493,12 @@ public class DwarfKing extends Mob {
 			summonCooldown -= dmgTaken/8f;
 			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
 				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
-				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
+				getSprite().showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 				ScrollOfTeleportation.appear(this, CityBossLevel.throne);
 				properties.add(Property.IMMOVABLE);
 				phase = 2;
 				summonsMade = 0;
-				sprite.idle();
+				getSprite().idle();
 				Buff.affect(this, DKBarrior.class).setShield(HT);
 				for (Summoning s : buffs(Summoning.class)) {
 					s.detach();
@@ -520,7 +520,7 @@ public class DwarfKing extends Mob {
 			properties.remove(Property.IMMOVABLE);
 			phase = 3;
 			summonsMade = 1; //monk/warlock on 3rd summon
-			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
+			getSprite().centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 			for (Hero hero: Dungeon.heroes) {
 				yell(Messages.get(this, "enraged", hero.name()), hero);

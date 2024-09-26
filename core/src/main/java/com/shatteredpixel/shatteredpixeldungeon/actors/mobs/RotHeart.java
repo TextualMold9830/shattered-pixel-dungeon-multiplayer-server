@@ -63,7 +63,7 @@ public class RotHeart extends Mob {
 		//TODO: when effect properties are done, change this to FIRE
 		if (src instanceof Burning) {
 			destroy();
-			sprite.die();
+			getSprite().die();
 		} else {
 			super.damage(dmg, source);
 		}

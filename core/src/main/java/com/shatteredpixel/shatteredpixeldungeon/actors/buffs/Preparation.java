@@ -320,8 +320,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				GameScene.updateFog();
 				hero.checkVisibleMobs();
 				
-				hero.sprite.place( hero.pos );
-				hero.sprite.turnTo( hero.pos, cell);
+				hero.getSprite().place( hero.pos );
+				hero.getSprite().turnTo( hero.pos, cell);
 				CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 

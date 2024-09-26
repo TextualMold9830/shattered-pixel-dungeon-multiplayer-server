@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -238,7 +237,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		//cooldown is functionally 10+2*stacks when active effect ends
 		freerunCooldown = 10 + 4*momentumStacks;
 		Sample.INSTANCE.play(Assets.Sounds.MISS, 1f, 0.8f);
-		target.sprite.emitter().burst(Speck.factory(Speck.JET), 5+ momentumStacks);
+		target.getSprite().emitter().burst(Speck.factory(Speck.JET), 5+ momentumStacks);
 		SpellSprite.show(target, SpellSprite.HASTE, 1, 1, 0);
 		momentumStacks = 0;
 		BuffIndicator.refreshHero();

@@ -135,7 +135,7 @@ public class Ghoul extends Mob {
 				GameScene.add( child );
 				Dungeon.level.occupyCell(child);
 				
-				if (sprite.visible) {
+				if (getSprite().visible) {
 					Actor.add( new Pushing( child, pos, child.pos ) );
 				}
 
@@ -162,7 +162,7 @@ public class Ghoul extends Mob {
 				Actor.remove(this);
 				Dungeon.level.mobs.remove( this );
 				Buff.append(nearby, GhoulLifeLink.class).set(timesDowned*5, this);
-				((GhoulSprite)sprite).crumple();
+				((GhoulSprite) getSprite()).crumple();
 				return;
 			}
 		}
@@ -298,8 +298,8 @@ public class Ghoul extends Mob {
 				ghoul.timeToNow();
 				Dungeon.level.mobs.add(ghoul);
 				Dungeon.level.occupyCell( ghoul );
-				ghoul.sprite.idle();
-				ghoul.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.HT/10f)), FloatingText.HEALING);
+				ghoul.getSprite().idle();
+				ghoul.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.HT/10f)), FloatingText.HEALING);
 				super.detach();
 				return true;
 			}
@@ -309,8 +309,8 @@ public class Ghoul extends Mob {
 		}
 
 		public void updateVisibility(){
-			if (ghoul != null && ghoul.sprite != null){
-				ghoul.sprite.visible = Dungeon.visibleforAnyHero(ghoul.pos);
+			if (ghoul != null && ghoul.getSprite() != null){
+				ghoul.getSprite().visible = Dungeon.visibleforAnyHero(ghoul.pos);
 			}
 		}
 
@@ -321,9 +321,9 @@ public class Ghoul extends Mob {
 
 		@Override
 		public void fx(boolean on) {
-			if (on && ghoul != null && ghoul.sprite == null){
+			if (on && ghoul != null && ghoul.getSprite() == null){
 				GameScene.addSprite(ghoul);
-				((GhoulSprite)ghoul.sprite).crumple();
+				((GhoulSprite) ghoul.getSprite()).crumple();
 			}
 		}
 

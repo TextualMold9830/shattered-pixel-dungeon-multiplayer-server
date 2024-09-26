@@ -52,7 +52,7 @@ public class Sheep extends NPC {
 			HP = 0;
 
 			destroy();
-			sprite.die();
+			getSprite().die();
 
 		} else {
 			initialized = true;
@@ -78,7 +78,7 @@ public class Sheep extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
-		sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
+		getSprite().showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
 		if (c instanceof Hero) {
 			((Hero) c).spendAndNext(1f);
 			Sample.INSTANCE.play(Assets.Sounds.SHEEP, 1, Random.Float(0.91f, 1.1f));

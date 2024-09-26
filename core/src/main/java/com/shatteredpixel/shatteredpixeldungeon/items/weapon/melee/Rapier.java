@@ -32,7 +32,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Callback;
@@ -124,7 +123,7 @@ public class Rapier extends MeleeWeapon {
 
 		hero.busy();
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		hero.sprite.jump(hero.pos, dest, 0, 0.1f, new Callback() {
+		hero.getSprite().jump(hero.pos, dest, 0, 0.1f, new Callback() {
 			@Override
 			public void call() {
 				if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
@@ -136,7 +135,7 @@ public class Rapier extends MeleeWeapon {
 
 				hero.belongings.abilityWeapon = wep; //set this early to we can check canAttack
 				if (enemy != null && hero.canAttack(enemy)) {
-					hero.sprite.attack(enemy.pos, new Callback() {
+					hero.getSprite().attack(enemy.pos, new Callback() {
 						@Override
 						public void call() {
 

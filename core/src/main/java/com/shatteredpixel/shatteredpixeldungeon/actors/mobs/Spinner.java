@@ -228,8 +228,8 @@ public class Spinner extends Mob {
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			if (enemyInFOV && webCoolDown <= 0 && lastEnemyPos != -1){
 				if (webPos() != -1){
-					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( webPos() );
+					if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+						getSprite().zap( webPos() );
 						shotWebVisually = true;
 						return false;
 					} else {
@@ -255,8 +255,8 @@ public class Spinner extends Mob {
 
 			if (enemyInFOV && webCoolDown <= 0 && lastEnemyPos != -1){
 				if (webPos() != -1){
-					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( webPos() );
+					if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+						getSprite().zap( webPos() );
 						shotWebVisually = true;
 						return false;
 					} else {

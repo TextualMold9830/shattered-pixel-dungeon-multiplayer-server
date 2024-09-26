@@ -88,11 +88,11 @@ public class Transmuting extends Component {
 		super.update();
 
 		if (passed == 0) {
-			oldSprite.x = target.sprite.center().x - oldSprite.width() / 2;
-			oldSprite.y = target.sprite.y - oldSprite.height();
+			oldSprite.x = target.getSprite().center().x - oldSprite.width() / 2;
+			oldSprite.y = target.getSprite().y - oldSprite.height();
 
-			newSprite.x = target.sprite.center().x - newSprite.width() / 2;
-			newSprite.y = target.sprite.y - newSprite.height();
+			newSprite.x = target.getSprite().center().x - newSprite.width() / 2;
+			newSprite.y = target.getSprite().y - newSprite.height();
 		}
 
 		switch (phase) {
@@ -131,24 +131,24 @@ public class Transmuting extends Component {
 
 	public static void show( Char ch, Item oldItem, Item newItem ) {
 
-		if (!ch.sprite.visible) {
+		if (!ch.getSprite().visible) {
 			return;
 		}
 
 		Transmuting sprite = new Transmuting( oldItem, newItem );
 		sprite.target = ch;
-		ch.sprite.parent.add( sprite );
+		ch.getSprite().parent.add( sprite );
 	}
 
 	public static void show( Char ch, Talent oldTalent, Talent newTalent ) {
 
-		if (!ch.sprite.visible) {
+		if (!ch.getSprite().visible) {
 			return;
 		}
 
 		Transmuting sprite = new Transmuting( oldTalent, newTalent );
 		sprite.target = ch;
-		ch.sprite.parent.add( sprite );
+		ch.getSprite().parent.add( sprite );
 	}
 
 }

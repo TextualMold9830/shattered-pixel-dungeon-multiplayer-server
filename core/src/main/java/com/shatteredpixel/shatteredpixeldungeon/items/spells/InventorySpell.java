@@ -85,7 +85,7 @@ public abstract class InventorySpell extends Spell {
 				((InventorySpell)curItem).onItemSelected( item, getOwner() );
 				curUser.spend( 1f );
 				curUser.busy();
-				(curUser.sprite).operate( curUser.pos );
+				(curUser.getSprite()).operate( curUser.pos );
 				
 				Sample.INSTANCE.play( Assets.Sounds.READ );
 				Invisibility.dispel(getOwner());

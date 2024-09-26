@@ -137,10 +137,10 @@ public class Burning extends Buff implements Hero.Doom {
 				Item item = ((Thief) target).item;
 
 				if (!item.unique && item instanceof Scroll) {
-					target.sprite.emitter().burst( ElmoParticle.FACTORY, 6 );
+					target.getSprite().emitter().burst( ElmoParticle.FACTORY, 6 );
 					((Thief)target).item = null;
 				} else if (item instanceof MysteryMeat) {
-					target.sprite.emitter().burst( ElmoParticle.FACTORY, 6 );
+					target.getSprite().emitter().burst( ElmoParticle.FACTORY, 6 );
 					((Thief)target).item = new ChargrilledMeat();
 				}
 
@@ -211,8 +211,8 @@ public class Burning extends Buff implements Hero.Doom {
 
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.BURNING);
-		else target.sprite.remove(CharSprite.State.BURNING);
+		if (on) target.getSprite().add(CharSprite.State.BURNING);
+		else target.getSprite().remove(CharSprite.State.BURNING);
 	}
 
 	@Override

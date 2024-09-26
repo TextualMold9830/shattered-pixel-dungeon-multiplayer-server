@@ -70,11 +70,11 @@ public class CrystalGuardian extends Mob{
 			throwItems();
 			HP = Math.min(HT, HP+5);
 			if (Dungeon.visibleforAnyHero(pos)) {
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (HP == HT){
 				recovering = false;
-				if (sprite instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) sprite).endCrumple();
+				if (getSprite() instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) getSprite()).endCrumple();
 			}
 			spend(TICK);
 			return true;
@@ -117,7 +117,7 @@ public class CrystalGuardian extends Mob{
 	@Override
 	public int defenseProc(Char enemy, int damage) {
 		if (recovering){
-			sprite.showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
+			getSprite().showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
 			HP = Math.max(1, HP-damage);
 			damage = -1;
 		}
@@ -138,7 +138,7 @@ public class CrystalGuardian extends Mob{
 
 			if (!recovering) {
 				recovering = true;
-				if (sprite != null) ((CrystalGuardianSprite) sprite).crumple();
+				if (getSprite() != null) ((CrystalGuardianSprite) getSprite()).crumple();
 			}
 		}
 		return super.isAlive();

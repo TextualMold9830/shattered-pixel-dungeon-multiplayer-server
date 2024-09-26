@@ -393,9 +393,9 @@ public abstract class Wand extends Item {
 	}
 	
 	public void fx(Ballistica bolt, Callback callback) {
-		MagicMissile.boltFromChar( curUser.sprite.parent,
+		MagicMissile.boltFromChar( curUser.getSprite().parent,
 				MagicMissile.MAGIC_MISSILE,
-				curUser.sprite,
+                curUser.getSprite(),
 				bolt.collisionPos,
 				callback);
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
@@ -426,7 +426,7 @@ public abstract class Wand extends Item {
 			if (hero.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= maxCharges){
 				int shieldToGive = Math.round(buffedLvl()*0.67f*hero.pointsInTalent(Talent.EXCESS_CHARGE));
 				Buff.affect(hero, Barrier.class).setShield(shieldToGive);
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			}
 		}
 		
@@ -621,9 +621,9 @@ public abstract class Wand extends Item {
 						float shield = curUser.HT * (0.04f*curWand.curCharges);
 						if (curUser.pointsInTalent(Talent.SHIELD_BATTERY) == 2) shield *= 1.5f;
 						Buff.affect(curUser, Barrier.class).setShield(Math.round(shield));
-						curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(shield)), FloatingText.SHIELDING);
+						curUser.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(shield)), FloatingText.SHIELDING);
 						curWand.curCharges = 0;
-						curUser.sprite.operate(curUser.pos);
+						curUser.getSprite().operate(curUser.pos);
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
 						updateQuickslot();
@@ -634,7 +634,7 @@ public abstract class Wand extends Item {
 					return;
 				}
 
-				curUser.sprite.zap(cell);
+				curUser.getSprite().zap(cell);
 
 				//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
 				if (Actor.findChar(target) != null)
@@ -657,7 +657,7 @@ public abstract class Wand extends Item {
 							//grants 3/5 shielding
 							int shieldToGive = 1 + 2 * getOwner().pointsInTalent(Talent.BACKUP_BARRIER);
 							Buff.affect(getOwner(), Barrier.class).setShield(shieldToGive);
-							getOwner().sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+							getOwner().getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 
 						//metamorphed. Triggers if wand is highest level hero has
 						} else if (curUser.heroClass != HeroClass.MAGE) {
@@ -671,7 +671,7 @@ public abstract class Wand extends Item {
 								//grants 3/5 shielding
 								int shieldToGive = 1 + 2 * getOwner().pointsInTalent(Talent.BACKUP_BARRIER);
 								Buff.affect(getOwner(), Barrier.class).setShield(shieldToGive);
-								getOwner().sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+								getOwner().getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 							}
 						}
 					}

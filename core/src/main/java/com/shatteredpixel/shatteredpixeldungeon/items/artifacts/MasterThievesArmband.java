@@ -127,7 +127,7 @@ public class MasterThievesArmband extends Artifact {
 					GLog.w( Messages.get(MasterThievesArmband.class, "no_target") );
 				} else if (ch instanceof Mob) {
 					curUser.busy();
-					curUser.sprite.attack(target, new Callback() {
+					curUser.getSprite().attack(target, new Callback() {
 						@Override
 						public void call() {
 							Sample.INSTANCE.play(Assets.Sounds.HIT);

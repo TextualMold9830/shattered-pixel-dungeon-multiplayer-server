@@ -66,7 +66,7 @@ public class WardSprite extends MobSprite {
 		flash();
 		emitter().burst(MagicMissile.WardParticle.UP, 2);
 		if (Actor.findChar(pos) != null){
-			parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).sprite.center()));
+			parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).getSprite().center()));
 		} else {
 			parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 		}

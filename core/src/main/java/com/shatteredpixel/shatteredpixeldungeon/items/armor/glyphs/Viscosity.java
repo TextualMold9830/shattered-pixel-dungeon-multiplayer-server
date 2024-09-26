@@ -88,7 +88,7 @@ public class Viscosity extends Glyph {
 				DeferedDamage deferred = Buff.affect( target, DeferedDamage.class );
 				deferred.prolong( amount );
 
-				target.sprite.showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", amount) );
+				target.getSprite().showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", amount) );
 			}
 
 			return dmg - amount;

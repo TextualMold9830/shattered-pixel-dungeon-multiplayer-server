@@ -276,7 +276,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 	public static void appear( Char ch, int pos ) {
 
-		ch.sprite.interruptMotion();
+		ch.getSprite().interruptMotion();
 
 		if (Dungeon.visibleforAnyHero(pos) || ch.fieldOfView[ch.pos]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
@@ -288,17 +288,17 @@ public class ScrollOfTeleportation extends Scroll {
 
 		ch.move( pos, false );
 		if (ch.pos == pos) {
-			ch.sprite.interruptMotion();
-			ch.sprite.place(pos);
+			ch.getSprite().interruptMotion();
+			ch.getSprite().place(pos);
 		}
 
 		if (ch.invisible == 0) {
-			ch.sprite.alpha( 0 );
-			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
+			ch.getSprite().alpha( 0 );
+			ch.getSprite().parent.add( new AlphaTweener(ch.getSprite(), 1, 0.4f ) );
 		}
 
 		if (Dungeon.visibleforAnyHero(pos) || ch instanceof Hero) {
-			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+			ch.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}
 
@@ -309,12 +309,12 @@ public class ScrollOfTeleportation extends Scroll {
 		}
 
 		if (ch.invisible == 0) {
-			ch.sprite.alpha( 0 );
-			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
+			ch.getSprite().alpha( 0 );
+			ch.getSprite().parent.add( new AlphaTweener(ch.getSprite(), 1, 0.4f ) );
 		}
 
 		if (ch.fieldOfView[ch.pos]) {
-			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+			ch.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}
 	

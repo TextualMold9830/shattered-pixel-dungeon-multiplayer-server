@@ -105,7 +105,7 @@ public class CellSelector extends ScrollArea {
 			//The extra check prevents large sprites from blocking the player from clicking adjacent tiles
 
 			//hero first
-			if (owner.sprite != null && owner.sprite.overlapsPoint( p.x, p.y )){
+			if (owner.getSprite() != null && owner.getSprite().overlapsPoint( p.x, p.y )){
 				PointF c = DungeonTilemap.tileCenterToWorld(owner.pos);
 				if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
 					select(owner.pos, event.button);
@@ -115,7 +115,7 @@ public class CellSelector extends ScrollArea {
 
 			//then mobs
 			for (Char mob : Dungeon.level.mobs.toArray(new Mob[0])){
-				if (mob.sprite != null && mob.sprite.overlapsPoint( p.x, p.y )){
+				if (mob.getSprite() != null && mob.getSprite().overlapsPoint( p.x, p.y )){
 					PointF c = DungeonTilemap.tileCenterToWorld(mob.pos);
 					if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
 						select(mob.pos, event.button);
@@ -152,8 +152,8 @@ public class CellSelector extends ScrollArea {
 		//This is important as sprites are centered on a 16x16 tile, but may have any sprite size
 		//This can lead to none-whole coordinate, which need to be aligned with the zoom
 		for (Char c : Actor.chars()){
-			if (c.sprite != null && !c.sprite.isMoving){
-				c.sprite.point(c.sprite.worldToCamera(c.pos));
+			if (c.getSprite() != null && !c.getSprite().isMoving){
+				c.getSprite().point(c.getSprite().worldToCamera(c.pos));
 			}
 		}
 		for (Heap heap : Dungeon.level.heaps.valueList()){

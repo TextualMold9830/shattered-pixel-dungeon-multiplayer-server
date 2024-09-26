@@ -111,13 +111,13 @@ public class AlchemistsToolkit extends Artifact {
 							Dungeon.energy -= 6;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							getOwnerHero().sprite.operate(getOwnerHero().pos);
+							getOwnerHero().getSprite().operate(getOwnerHero().pos);
 							upgrade();
 						} else if (index == 1){
 							Dungeon.energy -= 6*maxLevels;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							getOwnerHero().sprite.operate(getOwnerHero().pos);
+							getOwnerHero().getSprite().operate(getOwnerHero().pos);
 							upgrade(maxLevels);
 						}
 

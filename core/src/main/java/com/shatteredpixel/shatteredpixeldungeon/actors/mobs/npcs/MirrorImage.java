@@ -72,14 +72,14 @@ public class MirrorImage extends NPC {
 			hero = (Hero)Actor.findById(heroID);
 			if ( hero == null ){
 				die(new DamageCause( null));
-				sprite.killAndErase();
+				getSprite().killAndErase();
 				return true;
 			}
 		}
 		
 		if (hero.tier() != armTier){
 			armTier = hero.tier();
-			((MirrorSprite)sprite).updateArmor( armTier );
+			((MirrorSprite) getSprite()).updateArmor( armTier );
 		}
 		
 		return super.act();

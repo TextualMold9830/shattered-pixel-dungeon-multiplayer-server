@@ -46,7 +46,7 @@ public class Annoying extends Weapon.Enchantment {
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
 				mob.beckon(attacker.pos);
 			}
-			attacker.sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.3f, 3);
+			attacker.getSprite().centerEmitter().start(Speck.factory(Speck.SCREAM), 0.3f, 3);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 			Invisibility.dispel(weapon.findOwner());
 			//~1/100 for each rare line, ~1/10 for each common line

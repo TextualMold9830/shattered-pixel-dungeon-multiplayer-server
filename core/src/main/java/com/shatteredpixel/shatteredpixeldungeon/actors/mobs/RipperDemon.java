@@ -173,18 +173,18 @@ public class RipperDemon extends Mob {
 				}
 
 				//do leap
-				sprite.visible = Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(leapPos) || Dungeon.visibleforAnyHero(endPos);
-				sprite.jump(pos, leapPos, new Callback() {
+				getSprite().visible = Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(leapPos) || Dungeon.visibleforAnyHero(endPos);
+				getSprite().jump(pos, leapPos, new Callback() {
 					@Override
 					public void call() {
 
 						if (leapVictim != null && alignment != leapVictim.alignment){
 							if (hit(RipperDemon.this, leapVictim, Char.INFINITE_ACCURACY, false)) {
 								Buff.affect(leapVictim, Bleeding.class).set(0.75f * damageRoll());
-								leapVictim.sprite.flash();
+								leapVictim.getSprite().flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
 							} else {
-								enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+								enemy.getSprite().showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
 								Sample.INSTANCE.play(Assets.Sounds.MISS);
 							}
 						}
@@ -195,7 +195,7 @@ public class RipperDemon extends Mob {
 
 						pos = endPos;
 						leapPos = -1;
-						sprite.idle();
+						getSprite().idle();
 						Dungeon.level.occupyCell(RipperDemon.this);
 						next();
 					}
@@ -246,8 +246,8 @@ public class RipperDemon extends Mob {
 						spend(GameMath.gate(attackDelay(), (int)Math.ceil(enemy.cooldown()), 3*attackDelay()));
 						if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(leapPos)){
 							GLog.w(Messages.get(RipperDemon.this, "leap"));
-							sprite.parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
-							((RipperSprite)sprite).leapPrep( leapPos );
+							getSprite().parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
+							((RipperSprite) getSprite()).leapPrep( leapPos );
 							Dungeon.interrupt(pos);
 						}
 						return true;
@@ -263,7 +263,7 @@ public class RipperDemon extends Mob {
 				} else {
 					spend( TICK );
 					if (!enemyInFOV) {
-						sprite.showLost();
+						getSprite().showLost();
 						state = WANDERING;
 						target = Dungeon.level.randomDestination( RipperDemon.this );
 					}

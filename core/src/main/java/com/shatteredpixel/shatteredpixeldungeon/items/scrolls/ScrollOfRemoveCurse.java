@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -62,7 +61,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 			Sample.INSTANCE.play( Assets.Sounds.READ );
 			readAnimation();
 
-			new Flare( 6, 32 ).show( curUser.sprite, 2f );
+			new Flare( 6, 32 ).show(curUser.getSprite(), 2f );
 
 			if (curUser.buff(Degrade.class) != null) {
 				Degrade.detach(curUser, Degrade.class);
@@ -96,7 +95,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 
 	@Override
 	protected void onItemSelected(Item item, Hero hero) {
-		new Flare( 6, 32 ).show( curUser.sprite, 2f );
+		new Flare( 6, 32 ).show(curUser.getSprite(), 2f );
 
 		boolean procced = uncurse( curUser, item );
 
@@ -143,7 +142,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 		}
 		
 		if (procced && hero != null) {
-			hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+			hero.getSprite().emitter().start( ShadowParticle.UP, 0.05f, 10 );
 			hero.updateHT( false ); //for ring of might
 			updateQuickslot();
 		}

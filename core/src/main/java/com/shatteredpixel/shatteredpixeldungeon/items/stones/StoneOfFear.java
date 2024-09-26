@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -48,7 +47,7 @@ public class StoneOfFear extends Runestone {
 			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.id();
 		}
 
-		new Flare( 5, 16 ).color( 0xFF0000, true ).show(hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f );
+		new Flare( 5, 16 ).color( 0xFF0000, true ).show(hero.getSprite().parent, DungeonTilemap.tileCenterToWorld(cell), 2f );
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		
 	}

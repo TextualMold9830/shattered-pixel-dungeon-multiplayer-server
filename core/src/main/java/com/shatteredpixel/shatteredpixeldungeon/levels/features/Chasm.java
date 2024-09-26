@@ -115,7 +115,7 @@ public class Chasm implements Hero.Doom {
 			}
 			InterLevelSceneServer.create(hero);
 		} else {
-			hero.sprite.visible = false;
+			hero.getSprite().visible = false;
 		}
 	}
 
@@ -132,7 +132,7 @@ public class Chasm implements Hero.Doom {
 		ElixirOfFeatherFall.FeatherBuff b = hero.buff(ElixirOfFeatherFall.FeatherBuff.class);
 		
 		if (b != null){
-			hero.sprite.emitter().burst( Speck.factory( Speck.JET ), 20);
+			hero.getSprite().emitter().burst( Speck.factory( Speck.JET ), 20);
 			b.detach();
 			return;
 		}
@@ -151,7 +151,7 @@ public class Chasm implements Hero.Doom {
 	public static void mobFall( Mob mob ) {
 		if (mob.isAlive()) mob.die( new Char.DamageCause( Chasm.class, null ));
 		
-		if (mob.sprite != null) ((MobSprite)mob.sprite).fall();
+		if (mob.getSprite() != null) ((MobSprite) mob.getSprite()).fall();
 	}
 	
 	public static class Falling extends Buff {

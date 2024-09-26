@@ -119,7 +119,7 @@ public class Monk extends Mob {
 			return super.defenseVerb();
 		} else {
 			f.detach();
-			if (sprite != null && sprite.visible) {
+			if (getSprite() != null && getSprite().visible) {
 				Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY, 1, Random.Float(0.96f, 1.05f));
 			}
 			focusCooldown = Random.NormalFloat( 6, 7 );

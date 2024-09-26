@@ -111,7 +111,7 @@ public class SmokeBomb extends ArmorAbility {
 					if (Dungeon.level.adjacent(mob.pos, hero.pos) && mob.alignment != Char.Alignment.ALLY) {
 						Buff.prolong(mob, Blindness.class, Blindness.DURATION / 2f);
 						if (mob.state == mob.HUNTING) mob.state = mob.WANDERING;
-						mob.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 4);
+						mob.getSprite().emitter().burst(Speck.factory(Speck.LIGHT), 4);
 					}
 				}
 

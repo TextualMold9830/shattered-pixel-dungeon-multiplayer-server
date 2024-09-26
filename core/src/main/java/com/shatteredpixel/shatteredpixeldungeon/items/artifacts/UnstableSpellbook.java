@@ -341,11 +341,11 @@ public class UnstableSpellbook extends Artifact {
 				Hero hero = getOwner();
 				for (int i = 0; ( i <= 1 && i < scrolls.size() ); i++){
 					if (scrolls.get(i).equals(item.getClass())){
-						hero.sprite.operate( hero.pos );
+						hero.getSprite().operate( hero.pos );
 						hero.busy();
 						hero.spend( 2f );
 						Sample.INSTANCE.play(Assets.Sounds.BURNING);
-						hero.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
+						hero.getSprite().emitter().burst( ElmoParticle.FACTORY, 12 );
 
 						scrolls.remove(i);
 						item.detach(hero.belongings.backpack);

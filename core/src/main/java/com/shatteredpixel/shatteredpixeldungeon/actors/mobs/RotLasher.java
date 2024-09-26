@@ -57,7 +57,7 @@ public class RotLasher extends Mob {
 	@Override
 	protected boolean act() {
 		if (HP < HT && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
-			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, HT - HP)), FloatingText.HEALING);
+			getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, HT - HP)), FloatingText.HEALING);
 			HP = Math.min(HT, HP + 5);
 		}
 		return super.act();
@@ -68,7 +68,7 @@ public class RotLasher extends Mob {
 		Object src = source.getCause();
 		if (src instanceof Burning) {
 			destroy();
-			sprite.die();
+			getSprite().die();
 		} else {
 			super.damage(dmg, source);
 		}

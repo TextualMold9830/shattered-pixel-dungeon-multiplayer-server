@@ -1158,12 +1158,12 @@ public class GameScene extends PixelScene {
 		if (scene != null) {
 			boolean stealthyMimics = MimicTooth.stealthyMimics();
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-				if (mob.sprite != null) {
-					if (stealthyMimics && mob instanceof Mimic && mob.state == mob.PASSIVE && mob.sprite.visible){
+				if (mob.getSprite() != null) {
+					if (stealthyMimics && mob instanceof Mimic && mob.state == mob.PASSIVE && mob.getSprite().visible){
 						//mimics stay visible in fog of war after being first seen
-						mob.sprite.visible = true;
+						mob.getSprite().visible = true;
 					} else {
-						mob.sprite.visible = Dungeon.visibleforAnyHero(mob.pos);
+						mob.getSprite().visible = Dungeon.visibleforAnyHero(mob.pos);
 					}
 				}
 				if (mob instanceof Ghoul){

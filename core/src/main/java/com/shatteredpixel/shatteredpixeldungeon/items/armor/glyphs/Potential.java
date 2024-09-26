@@ -49,7 +49,7 @@ public class Potential extends Glyph {
 
 			int wands = ((Hero) defender).belongings.charge( powerMulti );
 			if (wands > 0) {
-				defender.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
+				defender.getSprite().centerEmitter().burst(EnergyParticle.FACTORY, 10);
 			}
 		}
 		

@@ -92,14 +92,14 @@ public class RatKing extends NPC {
 		if (Dungeon.depth < 5){
 			if (pos == Dungeon.level.exit()){
 				destroy();
-				sprite.killAndErase();
+				getSprite().killAndErase();
 			} else {
 				target = Dungeon.level.exit();
 			}
 		} else if (Dungeon.depth > 5){
 			if (pos == Dungeon.level.entrance()){
 				destroy();
-				sprite.killAndErase();
+				getSprite().killAndErase();
 			} else {
 				target = Dungeon.level.entrance();
 			}
@@ -111,7 +111,7 @@ public class RatKing extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
-		sprite.turnTo( pos, c.pos );
+		getSprite().turnTo( pos, c.pos );
 
 		if (!(c instanceof Hero)){
 			return super.interact(c);
@@ -142,7 +142,7 @@ public class RatKing extends NPC {
 							protected void onSelect(int index) {
 								if (index == 0){
 									crown.upgradeArmor(hero, hero.belongings.armor(), new Ratmogrify());
-									((RatKingSprite)sprite).resetAnims();
+									((RatKingSprite) getSprite()).resetAnims();
 									yell(Messages.get(RatKing.class, "crown_thankyou"));
 								} else if (index == 1) {
 									GameScene.show(new WndInfoArmorAbility(hero.heroClass, new Ratmogrify(), hero));

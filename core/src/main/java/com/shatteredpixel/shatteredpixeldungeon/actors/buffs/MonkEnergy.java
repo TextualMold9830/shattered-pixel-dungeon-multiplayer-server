@@ -366,14 +366,14 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				hero.sprite.attack(enemy.pos, new Callback() {
+				hero.getSprite().attack(enemy.pos, new Callback() {
 					@Override
 					public void call() {
 						hero.attackIndicator.target(enemy);
 						hero.attack(enemy, 1, 0, Char.INFINITE_ACCURACY);
 
 						if (enemy.isAlive()){
-							hero.sprite.attack(enemy.pos, new Callback() {
+							hero.getSprite().attack(enemy.pos, new Callback() {
 								@Override
 								public void call() {
 									hero.attack(enemy, 1, 0, Char.INFINITE_ACCURACY);
@@ -519,8 +519,8 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 				hero.busy();
 				Sample.INSTANCE.play(Assets.Sounds.MISS);
-				hero.sprite.emitter().start(Speck.factory(Speck.JET), 0.01f, Math.round(4 + 2*Dungeon.level.trueDistance(hero.pos, target)));
-				hero.sprite.jump(hero.pos, target, 0, 0.1f, new Callback() {
+				hero.getSprite().emitter().start(Speck.factory(Speck.JET), 0.01f, Math.round(4 + 2*Dungeon.level.trueDistance(hero.pos, target)));
+				hero.getSprite().jump(hero.pos, target, 0, 0.1f, new Callback() {
 					@Override
 					public void call() {
 						if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
@@ -583,7 +583,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				hero.sprite.attack(enemy.pos, new Callback() {
+				hero.getSprite().attack(enemy.pos, new Callback() {
 					@Override
 					public void call() {
 						hero.attackIndicator.target(enemy);
@@ -649,7 +649,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			@Override
 			public void doAbility(Hero hero, Integer target) {
 
-				hero.sprite.operate(hero.pos);
+				hero.getSprite().operate(hero.pos);
 				GameScene.flash(0x88000000, false);
 				Sample.INSTANCE.play(Assets.Sounds.SCAN);
 

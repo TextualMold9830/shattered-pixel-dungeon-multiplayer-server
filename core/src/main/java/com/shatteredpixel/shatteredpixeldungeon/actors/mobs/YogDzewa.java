@@ -168,8 +168,8 @@ public class YogDzewa extends Mob {
 
 		throwItems();
 
-		sprite.hideAlert();
-		sprite.hideLost();
+		getSprite().hideAlert();
+		getSprite().hideLost();
 
 		//mob logic
 		enemy = chooseEnemy();
@@ -220,7 +220,7 @@ public class YogDzewa extends Mob {
 				for (int i : targetedCells) {
 					Ballistica b = new Ballistica(pos, i, Ballistica.WONT_STOP);
 					//shoot beams
-					sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
+					getSprite().parent.add(new Beam.DeathRay(getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
 					for (int p : b.path) {
 						Char ch = Actor.findChar(p);
 						if (ch != null && (ch.alignment != alignment || ch instanceof Bee)) {
@@ -254,7 +254,7 @@ public class YogDzewa extends Mob {
 							ch.damage(Char.combatRoll(20, 30), new DamageCause(new Eye.DeathGaze(), this));
 						}
 						if (Dungeon.visibleforAnyHero(pos)) {
-							ch.sprite.flash();
+							ch.getSprite().flash();
 							CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
 						}
 						if (!ch.isAlive() && ch instanceof Hero) {
@@ -263,7 +263,7 @@ public class YogDzewa extends Mob {
 							GLog.n(Messages.get(Char.class, "kill", name()));
 						}
 					} else {
-						ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
+						ch.getSprite().showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
 					}
 				}
 				targetedCells.clear();
@@ -301,7 +301,7 @@ public class YogDzewa extends Mob {
 				for (int i : targetedCells) {
 					Ballistica b = new Ballistica(pos, i, Ballistica.WONT_STOP);
 					for (int p : b.path) {
-						sprite.parent.add(new TargetedCell(p, 0xFF0000));
+						getSprite().parent.add(new TargetedCell(p, 0xFF0000));
 						affectedCells.add(p);
 					}
 				}
@@ -419,7 +419,7 @@ public class YogDzewa extends Mob {
 
 			updateVisibility(Dungeon.level);
 			GLog.n(Messages.get(this, "darkness"));
-			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
+			getSprite().showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 
 			addFist((YogFist)Reflection.newInstance(fistSummons.remove(0)));
 

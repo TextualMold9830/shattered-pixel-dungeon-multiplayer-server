@@ -250,7 +250,7 @@ public class SentryRoom extends SpecialRoom {
 
 						if (curChargeDelay > 0.001f) { //helps prevent rounding errors
 							if (curChargeDelay == initialChargeDelay) {
-								((SentrySprite) sprite).charge();
+								((SentrySprite) getSprite()).charge();
 							}
 							curChargeDelay -= hero.cooldown();
 							//pity mechanic so mistaps don't get people instakilled
@@ -261,8 +261,8 @@ public class SentryRoom extends SpecialRoom {
 
 						if (curChargeDelay <= .001f) {
 							curChargeDelay = 1f;
-							sprite.zap(hero.pos);
-							((SentrySprite) sprite).charge();
+							getSprite().zap(hero.pos);
+							((SentrySprite) getSprite()).charge();
 						}
 
 						spend(hero.cooldown());
@@ -270,7 +270,7 @@ public class SentryRoom extends SpecialRoom {
 
 					} else {
 						curChargeDelay = initialChargeDelay;
-						sprite.idle();
+						getSprite().idle();
 					}
 
 					spend(hero.cooldown());
@@ -292,7 +292,7 @@ public class SentryRoom extends SpecialRoom {
 					GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
 				}
 			} else {
-				hero.sprite.showStatus( CharSprite.NEUTRAL,  hero.defenseVerb() );
+				hero.getSprite().showStatus( CharSprite.NEUTRAL,  hero.defenseVerb() );
 			}
 		}
 
@@ -373,7 +373,7 @@ public class SentryRoom extends SpecialRoom {
 			flash();
 			emitter().burst(MagicMissile.WardParticle.UP, 2);
 			if (Actor.findChar(pos) != null){
-				parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).sprite.center()));
+				parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).getSprite().center()));
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 			}

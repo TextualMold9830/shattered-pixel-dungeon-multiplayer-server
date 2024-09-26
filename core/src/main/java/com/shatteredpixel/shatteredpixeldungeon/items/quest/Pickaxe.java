@@ -115,7 +115,7 @@ public class Pickaxe extends MeleeWeapon {
 					hero.spend( TIME_TO_MINE );
 					hero.busy();
 					
-					hero.sprite.attack( pos, new Callback() {
+					hero.getSprite().attack( pos, new Callback() {
 						
 						@Override
 						public void call() {
@@ -212,7 +212,7 @@ public class Pickaxe extends MeleeWeapon {
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.getSprite().attack(enemy.pos, new Callback() {
 			@Override
 			public void call() {
 				int damageBoost = 0;

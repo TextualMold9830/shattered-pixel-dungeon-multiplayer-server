@@ -78,7 +78,7 @@ public class Whip extends MeleeWeapon {
 
 		throwSound();
 		Char finalClosest = closest;
-		hero.sprite.attack(hero.pos, new Callback() {
+		hero.getSprite().attack(hero.pos, new Callback() {
 			@Override
 			public void call() {
 				beforeAbilityUsed(hero, finalClosest);

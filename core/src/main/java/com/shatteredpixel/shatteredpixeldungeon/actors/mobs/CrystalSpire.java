@@ -94,8 +94,8 @@ public class CrystalSpire extends Mob {
 
 		throwItems();
 
-		sprite.hideAlert();
-		sprite.hideLost();
+		getSprite().hideAlert();
+		getSprite().hideLost();
 
 		//mob logic
 		enemy = chooseEnemy();
@@ -170,7 +170,7 @@ public class CrystalSpire extends Mob {
 
 			if (!targetedCells.isEmpty()){
 				for (int i : targetedCells.get(0)){
-					sprite.parent.add(new TargetedCell(i, 0xFF0000));
+					getSprite().parent.add(new TargetedCell(i, 0xFF0000));
 				}
 			}
 
@@ -190,7 +190,7 @@ public class CrystalSpire extends Mob {
 				}
 
 				for (int i : targetedCells.get(0)){
-					sprite.parent.add(new TargetedCell(i, 0xFF0000));
+					getSprite().parent.add(new TargetedCell(i, 0xFF0000));
 				}
 
 				abilityCooldown += ABILITY_CD;
@@ -316,7 +316,7 @@ public class CrystalSpire extends Mob {
 				return true;
 			}
 
-			hero.sprite.attack(pos, new Callback() {
+			hero.getSprite().attack(pos, new Callback() {
 				@Override
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
@@ -325,14 +325,14 @@ public class CrystalSpire extends Mob {
 
 					damage(dmg, new DamageCause(p, hero));
 					abilityCooldown -= dmg/10f;
-					sprite.bloodBurstA(hero.sprite.center(), dmg);
-					sprite.flash();
+					getSprite().bloodBurstA(hero.getSprite().center(), dmg);
+					getSprite().flash();
 
 					BossHealthBar.bleed(HP <= HT/3);
 
 					if (isAlive()) {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER, 1f, Random.Float(1.15f, 1.25f));
-						((CrystalSpireSprite) sprite).updateIdle();
+						((CrystalSpireSprite) getSprite()).updateIdle();
 					} else {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER);
 						Sample.INSTANCE.playDelayed(Assets.Sounds.ROCKS, 0.1f);

@@ -115,8 +115,8 @@ public class DM201 extends DM200 {
 		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
 
 			if (threatened && enemyInFOV){
-				if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-					sprite.zap( enemy.pos );
+				if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+					getSprite().zap( enemy.pos );
 					return false;
 				} else {
 					zap();

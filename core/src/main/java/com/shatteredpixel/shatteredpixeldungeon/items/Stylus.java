@@ -99,8 +99,8 @@ public class Stylus extends Item {
 
 		armor.inscribe();
 		
-		curUser.sprite.operate(curUser.pos);
-		curUser.sprite.centerEmitter().start(PurpleParticle.BURST, 0.05f, 10);
+		curUser.getSprite().operate(curUser.pos);
+		curUser.getSprite().centerEmitter().start(PurpleParticle.BURST, 0.05f, 10);
 		Enchanting.show(curUser, armor);
 		Sample.INSTANCE.play(Assets.Sounds.BURNING);
 		

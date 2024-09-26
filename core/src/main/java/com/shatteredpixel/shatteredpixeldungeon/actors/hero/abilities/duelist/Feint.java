@@ -99,7 +99,7 @@ public class Feint extends ArmorAbility {
 
 		hero.busy();
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		hero.sprite.jump(hero.pos, target, 0, 0.1f, new Callback() {
+		hero.getSprite().jump(hero.pos, target, 0, 0.1f, new Callback() {
 			@Override
 			public void call() {
 				if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
@@ -124,10 +124,10 @@ public class Feint extends ArmorAbility {
 			imageAttackPos = image.pos + (image.pos - target);
 		}
 		//do a purely visual attack
-		hero.sprite.parent.add(new Delayer(0f){
+		hero.getSprite().parent.add(new Delayer(0f){
 			@Override
 			protected void onComplete() {
-				image.sprite.attack(imageAttackPos, new Callback() {
+				image.getSprite().attack(imageAttackPos, new Callback() {
 					@Override
 					public void call() {
 						//do nothing, attack is purely visual
@@ -186,7 +186,7 @@ public class Feint extends ArmorAbility {
 		@Override
 		protected boolean act() {
 			destroy();
-			sprite.die();
+			getSprite().die();
 			return true;
 		}
 
@@ -202,7 +202,7 @@ public class Feint extends ArmorAbility {
 					((Mob) enemy).clearEnemy();
 				}
 				Buff.affect(enemy, FeintConfusion.class, 1);
-				if (enemy.sprite != null) enemy.sprite.showLost();
+				if (enemy.getSprite() != null) enemy.getSprite().showLost();
 				if (getOwner().hasTalent(Talent.FEIGNED_RETREAT)) {
 					Buff.prolong(getOwner(), Haste.class, 2f * getOwner().pointsInTalent(Talent.FEIGNED_RETREAT));
 				}

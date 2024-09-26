@@ -287,7 +287,7 @@ public class Potion extends Item {
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
 		
-		hero.sprite.operate( hero.pos );
+		hero.getSprite().operate( hero.pos );
 
 		if (!anonymous && Random.Float() < talentChance){
 			Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
@@ -416,7 +416,7 @@ public class Potion extends Item {
 
 		if (Dungeon.visibleforAnyHero(cell)) {
 			if (ch != null) {
-				Splash.at(ch.sprite.center(), splashColor(), 5);
+				Splash.at(ch.getSprite().center(), splashColor(), 5);
 			} else {
 				Splash.at(cell, splashColor(), 5);
 			}

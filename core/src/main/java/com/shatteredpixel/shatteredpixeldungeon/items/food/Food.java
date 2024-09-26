@@ -77,7 +77,7 @@ public class Food extends Item {
 			satisfy(hero);
 			GLog.i( Messages.get(this, "eat_msg") );
 			
-			hero.sprite.operate( hero.pos );
+			hero.getSprite().operate( hero.pos );
 			hero.busy();
 			SpellSprite.show( hero, SpellSprite.FOOD );
 			eatSFX();

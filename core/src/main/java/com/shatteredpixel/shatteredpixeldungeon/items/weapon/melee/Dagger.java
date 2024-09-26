@@ -122,14 +122,14 @@ public class Dagger extends MeleeWeapon {
 		wep.beforeAbilityUsed(hero, null);
 		Buff.affect(hero, Invisibility.class, invisTurns-1); //1 fewer turns as ability is instant
 
-		hero.sprite.turnTo( hero.pos, target);
+		hero.getSprite().turnTo( hero.pos, target);
 		hero.pos = target;
 		Dungeon.level.occupyCell(hero);
 		Dungeon.observe();
 		GameScene.updateFog();
 		hero.checkVisibleMobs();
 
-		hero.sprite.place( hero.pos );
+		hero.getSprite().place( hero.pos );
 		CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		Sample.INSTANCE.play( Assets.Sounds.PUFF );
 

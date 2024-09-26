@@ -50,7 +50,7 @@ public abstract class RemainsItem extends Item {
 		super.execute(hero, action);
 
 		if (action.equals(AC_USE)){
-			hero.sprite.operate(hero.pos);
+			hero.getSprite().operate(hero.pos);
 
 			doEffect(hero);
 

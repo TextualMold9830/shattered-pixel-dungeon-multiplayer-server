@@ -103,7 +103,7 @@ public class Wandmaker extends NPC {
 	
 	@Override
 	public boolean interact(Char c) {
-		sprite.turnTo( pos, c.pos );
+		getSprite().turnTo( pos, c.pos );
 
 		if (!(c instanceof Hero)){
 			return true;

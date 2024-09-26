@@ -59,8 +59,8 @@ public class Chill extends FlavourBuff {
 
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.CHILLED);
-		else target.sprite.remove(CharSprite.State.CHILLED);
+		if (on) target.getSprite().add(CharSprite.State.CHILLED);
+		else target.getSprite().remove(CharSprite.State.CHILLED);
 	}
 
 	@Override

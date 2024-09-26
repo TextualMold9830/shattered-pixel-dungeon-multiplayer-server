@@ -87,7 +87,7 @@ public class HeroicLeap extends ArmorAbility {
 
 			final int dest = cell;
 			hero.busy();
-			hero.sprite.jump(hero.pos, cell, new Callback() {
+			hero.getSprite().jump(hero.pos, cell, new Callback() {
 				@Override
 				public void call() {
 					hero.move(dest);

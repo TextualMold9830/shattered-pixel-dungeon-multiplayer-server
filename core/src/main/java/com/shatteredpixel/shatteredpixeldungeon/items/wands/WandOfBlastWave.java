@@ -154,7 +154,7 @@ public class WandOfBlastWave extends DamageWand {
 			public void call() {
 				if (initialpos != ch.pos || Actor.findChar(newPos) != null) {
 					//something caused movement or added chars before pushing resolved, cancel to be safe.
-					ch.sprite.place(ch.pos);
+					ch.getSprite().place(ch.pos);
 					return;
 				}
 				int oldPos = ch.pos;
@@ -230,9 +230,9 @@ public class WandOfBlastWave extends DamageWand {
 
 	@Override
 	public void fx(Ballistica bolt, Callback callback) {
-		MagicMissile.boltFromChar( curUser.sprite.parent,
+		MagicMissile.boltFromChar( curUser.getSprite().parent,
 				MagicMissile.FORCE,
-				curUser.sprite,
+                curUser.getSprite(),
 				bolt.collisionPos,
 				callback);
 		Sample.INSTANCE.play(Assets.Sounds.ZAP);
@@ -282,7 +282,7 @@ public class WandOfBlastWave extends DamageWand {
 
 		//FIXME
 		public static void blast(int pos, Hero hero) {
-			Group parent = hero.sprite.parent;
+			Group parent = hero.getSprite().parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
 			parent.bringToFront(b);
 			b.reset(pos);

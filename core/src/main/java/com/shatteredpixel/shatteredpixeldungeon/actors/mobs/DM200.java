@@ -151,8 +151,8 @@ public class DM200 extends Mob {
 				int oldPos = pos;
 
 				if (distance(enemy) >= 1 && Random.Int(100/distance(enemy)) == 0 && canVent(target)){
-					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+					if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+						getSprite().zap( enemy.pos );
 						return false;
 					} else {
 						zap();
@@ -164,8 +164,8 @@ public class DM200 extends Mob {
 					return moveSprite( oldPos,  pos );
 
 				} else if (canVent(target)) {
-					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+					if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+						getSprite().zap( enemy.pos );
 						return false;
 					} else {
 						zap();

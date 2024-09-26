@@ -92,12 +92,12 @@ public class Guard extends Mob {
 				final int newPosFinal = newPos;
 				this.target = newPos;
 
-				if (sprite.visible || enemy.sprite.visible) {
+				if (getSprite().visible || enemy.getSprite().visible) {
 					yell(Messages.get(this, "scorpion"));
 					new Item().throwSound();
 					Sample.INSTANCE.play(Assets.Sounds.CHAINS);
-					sprite.parent.add(new Chains(sprite.center(),
-							enemy.sprite.destinationCenter(),
+					getSprite().parent.add(new Chains(getSprite().center(),
+							enemy.getSprite().destinationCenter(),
 							Effects.Type.CHAIN,
 							new Callback() {
 						public void call() {
@@ -120,7 +120,7 @@ public class Guard extends Mob {
 
 	private void pullEnemy( Char enemy, int pullPos ){
 		enemy.pos = pullPos;
-		enemy.sprite.place(pullPos);
+		enemy.getSprite().place(pullPos);
 		Dungeon.level.occupyCell(enemy);
 		Cripple.prolong(enemy, Cripple.class, 4f);
 		if (enemy instanceof Hero) {
@@ -180,7 +180,7 @@ public class Guard extends Mob {
 
 					
 					&& chain(enemy.pos)){
-				return !(sprite.visible || enemy.sprite.visible);
+				return !(getSprite().visible || enemy.getSprite().visible);
 			} else {
 				return super.act( enemyInFOV, justAlerted );
 			}

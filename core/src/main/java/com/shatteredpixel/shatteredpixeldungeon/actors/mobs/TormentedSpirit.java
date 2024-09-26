@@ -76,10 +76,10 @@ public class TormentedSpirit extends Wraith {
 		Dungeon.level.drop(prize, pos).sprite.drop();
 
 		destroy();
-		sprite.die();
-		sprite.tint(1, 1, 1, 1);
-		sprite.emitter().start( ShaftParticle.FACTORY, 0.3f, 4 );
-		sprite.emitter().start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
+		getSprite().die();
+		getSprite().tint(1, 1, 1, 1);
+		getSprite().emitter().start( ShaftParticle.FACTORY, 0.3f, 4 );
+		getSprite().emitter().start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 
 	}
 

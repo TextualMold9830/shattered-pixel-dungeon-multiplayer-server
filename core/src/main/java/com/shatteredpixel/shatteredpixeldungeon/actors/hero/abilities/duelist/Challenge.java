@@ -157,7 +157,7 @@ public class Challenge extends ArmorAbility {
 			GameScene.updateFog();
 			hero.checkVisibleMobs();
 
-			hero.sprite.place( hero.pos );
+			hero.getSprite().place( hero.pos );
 			CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 			Sample.INSTANCE.play( Assets.Sounds.PUFF );
 		}
@@ -182,7 +182,7 @@ public class Challenge extends ArmorAbility {
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();
 		Invisibility.dispel(hero);
-		hero.sprite.zap(target);
+		hero.getSprite().zap(target);
 
 		hero.next();
 
@@ -282,8 +282,8 @@ public class Challenge extends ArmorAbility {
 						hpToHeal = Math.min(hpToHeal, getCause().HT - getCause().HP);
 						if (hpToHeal > 0){
 							getCause().HP += hpToHeal;
-							getCause().sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
-							getCause().sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
+							getCause().getSprite().emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
+							getCause().getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
 						}
 					}
 				}
@@ -336,12 +336,12 @@ public class Challenge extends ArmorAbility {
 		@Override
 		public void fx(boolean on) {
 			if (on) {
-				target.sprite.add(CharSprite.State.DARKENED);
-				target.sprite.add(CharSprite.State.PARALYSED);
+				target.getSprite().add(CharSprite.State.DARKENED);
+				target.getSprite().add(CharSprite.State.PARALYSED);
 			} else {
 				//allies can't be spectator frozen, so just check doom
-				if (target.buff(Doom.class) == null) target.sprite.remove(CharSprite.State.DARKENED);
-				if (target.paralysed == 0) target.sprite.remove(CharSprite.State.PARALYSED);
+				if (target.buff(Doom.class) == null) target.getSprite().remove(CharSprite.State.DARKENED);
+				if (target.paralysed == 0) target.getSprite().remove(CharSprite.State.PARALYSED);
 			}
 		}
 

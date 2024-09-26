@@ -118,8 +118,8 @@ public class WandOfDisintegration extends DamageWand {
 		for (Char ch : chars) {
 			wandProc(ch, chargesPerCast(), hero);
 			ch.damage( damageRoll(lvl, hero), new Char.DamageCause(this, curUser) );
-			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
-			ch.sprite.flash();
+			ch.getSprite().centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
+			ch.getSprite().flash();
 		}
 	}
 
@@ -136,7 +136,7 @@ public class WandOfDisintegration extends DamageWand {
 	public void fx(Ballistica beam, Callback callback) {
 		
 		int cell = beam.path.get(Math.min(beam.dist, distance()));
-		curUser.sprite.parent.add(new Beam.DeathRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
+		curUser.getSprite().parent.add(new Beam.DeathRay(curUser.getSprite().center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
 		callback.call();
 	}
 

@@ -38,7 +38,7 @@ public class ScrollOfAntiMagic extends ExoticScroll {
 
 		detach(curUser.belongings.backpack);
 		Buff.affect( curUser, MagicImmune.class, MagicImmune.DURATION );
-		new Flare( 5, 32 ).color( 0x00FF00, true ).show( curUser.sprite, 2f );
+		new Flare( 5, 32 ).color( 0x00FF00, true ).show(curUser.getSprite(), 2f );
 
 		identify(hero);
 		

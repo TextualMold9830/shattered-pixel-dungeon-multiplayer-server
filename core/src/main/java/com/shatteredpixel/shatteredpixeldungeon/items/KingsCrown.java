@@ -90,7 +90,7 @@ public class KingsCrown extends Item {
 
 		detach(hero.belongings.backpack);
 
-		hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
+		hero.getSprite().emitter().burst( Speck.factory( Speck.CROWN), 12 );
 		hero.spend(Actor.TICK);
 		hero.busy();
 
@@ -106,7 +106,7 @@ public class KingsCrown extends Item {
 			if (hero.belongings.armor == armor) {
 
 				hero.belongings.armor = classArmor;
-				((HeroSprite) hero.sprite).updateArmor();
+				((HeroSprite) hero.getSprite()).updateArmor();
 				classArmor.activate(hero);
 
 			} else {
@@ -120,7 +120,7 @@ public class KingsCrown extends Item {
 		hero.armorAbility = ability;
 		Talent.initArmorTalents(hero);
 
-		hero.sprite.operate( hero.pos );
+		hero.getSprite().operate( hero.pos );
 		Sample.INSTANCE.play( Assets.Sounds.MASTERY );
 	}
 

@@ -104,10 +104,10 @@ public class TengusMask extends Item {
 			Buff.affect(curUser, Preparation.class);
 		}
 		
-		curUser.sprite.operate( curUser.pos );
+		curUser.getSprite().operate( curUser.pos );
 		Sample.INSTANCE.play( Assets.Sounds.MASTERY );
 		
-		Emitter e = curUser.sprite.centerEmitter();
+		Emitter e = curUser.getSprite().centerEmitter();
 		e.pos(e.x-2, e.y-6, 4, 4);
 		e.start(Speck.factory(Speck.MASK), 0.05f, 20);
 		GLog.p( Messages.get(this, "used"));

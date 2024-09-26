@@ -329,7 +329,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		public boolean act() {
 			if (target.buff(Combo.class) != null) {
 				moveBeingUsed = ComboMove.PARRY;
-				target.sprite.attack(enemy.pos, new Callback() {
+				target.getSprite().attack(enemy.pos, new Callback() {
 					@Override
 					public void call() {
 						target.buff(Combo.class).doAttack(enemy);
@@ -418,15 +418,15 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							} else {
 								ch.damage(aoeHit, target);
 							}
-							ch.sprite.bloodBurstA(target.sprite.center(), aoeHit);
-							ch.sprite.flash();
+							ch.getSprite().bloodBurstA(target.getSprite().center(), aoeHit);
+							ch.getSprite().flash();
 
 							if (!ch.isAlive()) {
 								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null) {
 									BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
 									int shieldAmt = Math.round(shield.maxShield(hero) * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 									shield.supercharge(shieldAmt);
-									hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
+									hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 								}
 							}
 						}
@@ -457,7 +457,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				//fury attacks as many times as you have combo count
 				if (count > 0 && enemy.isAlive() && hero.canAttack(enemy) &&
 						(wasAlly || enemy.alignment != target.alignment)){
-					target.sprite.attack(enemy.pos, new Callback() {
+					target.getSprite().attack(enemy.pos, new Callback() {
 						@Override
 						public void call() {
 							doAttack(enemy);
@@ -483,7 +483,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
 				int shieldAmt = Math.round(shield.maxShield(hero) * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 				shield.supercharge(shieldAmt);
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
+				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 			}
 		}
 
@@ -516,14 +516,14 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							GLog.w(Messages.get(Combo.class, "bad_target"));
 						} else {
 							getOwner().busy();
-							target.sprite.jump(target.pos, leapPos, new Callback() {
+							target.getSprite().jump(target.pos, leapPos, new Callback() {
 								@Override
 								public void call() {
 									target.move(leapPos);
 									Dungeon.level.occupyCell(target);
 									Dungeon.observe();
 									GameScene.updateFog();
-									target.sprite.attack(cell, new Callback() {
+									target.getSprite().attack(cell, new Callback() {
 										@Override
 										public void call() {
 											doAttack(enemy);
@@ -539,7 +539,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 			} else {
 				getOwner().busy();
-				target.sprite.attack(cell, new Callback() {
+				target.getSprite().attack(cell, new Callback() {
 					@Override
 					public void call() {
 						doAttack(enemy);

@@ -58,7 +58,7 @@ public class EnergyCrystal extends Item {
 		//TODO track energy collected maybe? We do already track recipes crafted though..
 
 		GameScene.pickUp( this, pos );
-		hero.sprite.showStatusWithIcon( 0x44CCFF, Integer.toString(quantity), FloatingText.ENERGY );
+		hero.getSprite().showStatusWithIcon( 0x44CCFF, Integer.toString(quantity), FloatingText.ENERGY );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );

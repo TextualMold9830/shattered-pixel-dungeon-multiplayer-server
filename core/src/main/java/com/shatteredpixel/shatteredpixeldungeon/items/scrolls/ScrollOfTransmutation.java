@@ -139,7 +139,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				Catalog.setSeen(result.getClass());
 			}
 			Transmuting.show(curUser, item, result);
-			curUser.sprite.emitter().start(Speck.factory(Speck.CHANGE), 0.2f, 10);
+			curUser.getSprite().emitter().start(Speck.factory(Speck.CHANGE), 0.2f, 10);
 			GLog.p( Messages.get(this, "morph") );
 		}
 		

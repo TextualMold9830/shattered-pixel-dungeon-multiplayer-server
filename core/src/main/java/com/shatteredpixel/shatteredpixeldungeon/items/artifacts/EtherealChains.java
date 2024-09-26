@@ -179,8 +179,8 @@ public class EtherealChains extends Artifact {
 		hero.busy();
 		throwSound();
 		Sample.INSTANCE.play( Assets.Sounds.CHAINS );
-		hero.sprite.parent.add(new Chains(hero.sprite.center(),
-				enemy.sprite.center(),
+		hero.getSprite().parent.add(new Chains(hero.getSprite().center(),
+				enemy.getSprite().center(),
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {
 			public void call() {
@@ -245,7 +245,7 @@ public class EtherealChains extends Artifact {
 		hero.busy();
 		throwSound();
 		Sample.INSTANCE.play( Assets.Sounds.CHAINS );
-		hero.sprite.parent.add(new Chains(hero.sprite.center(),
+		hero.getSprite().parent.add(new Chains(hero.getSprite().center(),
 				DungeonTilemap.raisedTileCenterToWorld(newHeroPos),
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {

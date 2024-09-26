@@ -56,7 +56,7 @@ public class Paralysis extends FlavourBuff {
 		resist.damage += damage;
 		if (Random.NormalIntRange(0, resist.damage) >= Random.NormalIntRange(0, target.HP)){
 			if (target.fieldOfView[target.pos]) {
-				target.sprite.showStatus(CharSprite.NEUTRAL, Messages.get(this, "out"));
+				target.getSprite().showStatus(CharSprite.NEUTRAL, Messages.get(this, "out"));
 			}
 			detach();
 		}
@@ -81,8 +81,8 @@ public class Paralysis extends FlavourBuff {
 
 	@Override
 	public void fx(boolean on) {
-		if (on)                         target.sprite.add(CharSprite.State.PARALYSED);
-		else if (target.paralysed <= 1) target.sprite.remove(CharSprite.State.PARALYSED);
+		if (on)                         target.getSprite().add(CharSprite.State.PARALYSED);
+		else if (target.paralysed <= 1) target.getSprite().remove(CharSprite.State.PARALYSED);
 	}
 
 	public static class ParalysisResist extends Buff {

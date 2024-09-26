@@ -83,14 +83,14 @@ public class Succubus extends Mob {
 			if (shield > 0){
 				HP = HT;
 				if (shield < 5){
-					sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(5-shield), FloatingText.HEALING);
+					getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(5-shield), FloatingText.HEALING);
 				}
 
 				Buff.affect(this, Barrier.class).setShield(shield);
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
 			} else {
 				HP += 5 + damage;
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (Dungeon.visibleforAnyHero(pos)) {
 				Sample.INSTANCE.play( Assets.Sounds.CHARMS );
@@ -100,7 +100,7 @@ public class Succubus extends Mob {
 			c.object = id();
 			c.ignoreNextHit = true; //so that the -5 duration from succubus hit is ignored
 			if (enemy instanceof Hero && enemy.fieldOfView[enemy.pos]) {
-				enemy.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
+				enemy.getSprite().centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
 				Sample.INSTANCE.play(Assets.Sounds.CHARMS);
 			}
 		}

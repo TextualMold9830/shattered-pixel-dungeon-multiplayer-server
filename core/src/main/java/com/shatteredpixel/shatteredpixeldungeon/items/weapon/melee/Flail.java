@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -117,7 +116,7 @@ public class Flail extends MeleeWeapon {
 		spin.spins++;
 		Buff.prolong(hero, SpinAbilityTracker.class, 3f);
 		Sample.INSTANCE.play(Assets.Sounds.CHAINS, 1, 1, 0.9f + 0.1f*spin.spins);
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		hero.spendAndNext(Actor.TICK);
 		BuffIndicator.refreshHero();
 

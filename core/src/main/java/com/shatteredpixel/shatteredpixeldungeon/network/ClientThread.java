@@ -303,7 +303,7 @@ class ClientThread implements Callable<String> {
         }
         Actor.add(newHero);
         Dungeon.level.occupyCell(newHero);
-        newHero.sprite.place(newHero.pos);
+        newHero.getSprite().place(newHero.pos);
 
         synchronized (heroes) { //todo fix it. It is not work
             for (int i = 0; i < heroes.length; i++) {

@@ -71,7 +71,7 @@ public class Light extends FlavourBuff {
 
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.ILLUMINATED);
-		else target.sprite.remove(CharSprite.State.ILLUMINATED);
+		if (on) target.getSprite().add(CharSprite.State.ILLUMINATED);
+		else target.getSprite().remove(CharSprite.State.ILLUMINATED);
 	}
 }

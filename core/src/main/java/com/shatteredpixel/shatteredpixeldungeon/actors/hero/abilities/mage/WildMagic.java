@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -135,7 +134,7 @@ public class WildMagic extends ArmorAbility {
 
 		Ballistica aim = new Ballistica(hero.pos, cell, cur.collisionProperties(cell));
 
-		hero.sprite.zap(cell);
+		hero.getSprite().zap(cell);
 
 		float startTime = Game.timeTotal;
 		if (cur.tryToZap(hero, cell)) {
@@ -146,7 +145,7 @@ public class WildMagic extends ArmorAbility {
 						cur.onZap(aim);
 						boolean alsoCursedZap = Random.Float() < WondrousResin.extraCurseEffectChance(hero);
 						if (Game.timeTotal - startTime < 0.33f) {
-							hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
+							hero.getSprite().parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
 								@Override
 								protected void onComplete() {
 									if (alsoCursedZap){
@@ -190,7 +189,7 @@ public class WildMagic extends ArmorAbility {
 							@Override
 							public void call() {
 								if (Game.timeTotal - startTime < 0.33f) {
-									hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
+									hero.getSprite().parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
 										@Override
 										protected void onComplete() {
 											afterZap(cur, wands, hero, cell);

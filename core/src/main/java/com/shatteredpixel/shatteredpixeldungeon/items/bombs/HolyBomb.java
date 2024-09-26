@@ -50,7 +50,7 @@ public class HolyBomb extends Bomb {
 		for (Hero h: Dungeon.heroes) {
 			if (h == null) continue;
 			if (h.fieldOfView[cell]) {
-				new Flare(10, 64).show(h.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
+				new Flare(10, 64).show(h.getSprite().parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
 			}
 		}
 		ArrayList<Char> affected = new ArrayList<>();
@@ -68,7 +68,7 @@ public class HolyBomb extends Bomb {
 		
 		for (Char ch : affected){
 			if (ch.properties().contains(Char.Property.UNDEAD) || ch.properties().contains(Char.Property.DEMONIC)){
-				ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+				ch.getSprite().emitter().start( ShadowParticle.UP, 0.05f, 10 );
 				
 				//bomb deals an additional 50% damage to unholy enemies in a 5x5 range
 				int damage = Math.round(Char.combatRoll( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ) * 0.5f);

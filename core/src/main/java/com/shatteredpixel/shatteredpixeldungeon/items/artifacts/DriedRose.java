@@ -178,7 +178,7 @@ public class DriedRose extends Artifact {
 
 					hero.spend(1f);
 					hero.busy();
-					hero.sprite.operate(hero.pos);
+					hero.getSprite().operate(hero.pos);
 
 					if (!firstSummon) {
 						ghost.yell( Messages.get(GhostHero.class, "hello", Messages.titleCase(hero.name())) );
@@ -320,7 +320,7 @@ public class DriedRose extends Artifact {
 		} else if (ghost.HP < ghost.HT) {
 			int heal = Math.round((1 + level()/3f)*amount);
 			ghost.HP = Math.min( ghost.HT, ghost.HP + heal);
-			ghost.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
+			ghost.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 			updateQuickslot();
 		}
 	}

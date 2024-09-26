@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -142,7 +141,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -566,7 +564,7 @@ public class Hero extends Char {
 
 		if (buff(MonkEnergy.MonkAbility.Focus.FocusActivation.class) != null){
 			buff(MonkEnergy.MonkAbility.Focus.FocusActivation.class).detach();
-			if (sprite != null && sprite.visible) {
+			if (getSprite() != null && getSprite().visible) {
 				Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY, 1, Random.Float(0.96f, 1.05f));
 			}
 			return Messages.get(Monk.class, "parried");
@@ -650,10 +648,10 @@ public class Hero extends Char {
 		
 		Momentum momentum = buff(Momentum.class);
 		if (momentum != null){
-			((HeroSprite)sprite).sprint( momentum.freerunning() ? 1.5f : 1f );
+			((HeroSprite) getSprite()).sprint( momentum.freerunning() ? 1.5f : 1f );
 			speed *= momentum.speedMultiplier();
 		} else {
-			((HeroSprite)sprite).sprint( 1f );
+			((HeroSprite) getSprite()).sprint( 1f );
 		}
 
 		NaturesPower.naturesPowerTracker natStrength = buff(NaturesPower.naturesPowerTracker.class);
@@ -855,7 +853,7 @@ public class Hero extends Char {
 	}
 	
 	private void ready() {
-		if (sprite.looping()) sprite.idle();
+		if (getSprite().looping()) getSprite().idle();
 		curAction = null;
 		damageInterrupt = true;
 		waitOrPickup = false;
@@ -921,7 +919,7 @@ public class Hero extends Char {
 		if (ch.isAlive() && ch.canInteract(this)) {
 			
 			ready();
-			sprite.turnTo( pos, ch.pos );
+			getSprite().turnTo( pos, ch.pos );
 			return ch.interact(this);
 			
 		} else {
@@ -1104,7 +1102,7 @@ public class Hero extends Char {
 					Sample.INSTANCE.play( Assets.Sounds.UNLOCK );
 				}
 				
-				sprite.operate( dst );
+				getSprite().operate( dst );
 				
 			} else {
 				ready();
@@ -1149,7 +1147,7 @@ public class Hero extends Char {
 			
 			if (hasKey) {
 				
-				sprite.operate( doorCell );
+				getSprite().operate( doorCell );
 				
 				Sample.INSTANCE.play( Assets.Sounds.UNLOCK );
 				
@@ -1178,7 +1176,7 @@ public class Hero extends Char {
 					|| Dungeon.level.map[action.dst] == Terrain.MINE_CRYSTAL
 					|| Dungeon.level.map[action.dst] == Terrain.MINE_BOULDER)
 				&& Dungeon.level.insideMap(action.dst)){
-				sprite.attack(action.dst, new Callback() {
+				getSprite().attack(action.dst, new Callback() {
 					@Override
 					public void call() {
 
@@ -1243,7 +1241,7 @@ public class Hero extends Char {
 						}
 
 						if (crystalAdjacent){
-							sprite.parent.add(new Delayer(0.2f){
+							getSprite().parent.add(new Delayer(0.2f){
 								@Override
 								protected void onComplete() {
 									boolean broke = false;
@@ -1333,11 +1331,11 @@ public class Hero extends Char {
 					&& buff(Talent.AggressiveBarrierCooldown.class) == null
 					&& (HP / (float)HT) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
 				Buff.affect(this, Barrier.class).setShield(3);
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 				Buff.affect(this, Talent.AggressiveBarrierCooldown.class, 50f);
 
 			}
-			sprite.attack( enemy.pos );
+			getSprite().attack( enemy.pos );
 
 			return false;
 
@@ -1368,8 +1366,8 @@ public class Hero extends Char {
 			Buff.affect(this, Talent.PatientStrikeTracker.class).pos = this.pos;
 		}
 		if (!fullRest) {
-			if (sprite != null) {
-				sprite.showStatus(CharSprite.DEFAULT, Messages.get(this, "wait"));
+			if (getSprite() != null) {
+				getSprite().showStatus(CharSprite.DEFAULT, Messages.get(this, "wait"));
 			}
 		}
 		resting = fullRest;
@@ -1680,7 +1678,7 @@ public class Hero extends Char {
 				Buff.affect(this, Momentum.class).gainStack();
 			}
 			
-			sprite.move(pos, step);
+			getSprite().move(pos, step);
 			move(step);
 
 			spend( delay );
@@ -1852,10 +1850,10 @@ public class Hero extends Char {
 		
 		if (levelUp) {
 			
-			if (sprite != null) {
+			if (getSprite() != null) {
 				GLog.newLine();
 				GLog.p( Messages.get(this, "new_level") );
-				sprite.showStatus( CharSprite.POSITIVE, Messages.get(Hero.class, "level_up") );
+				getSprite().showStatus( CharSprite.POSITIVE, Messages.get(Hero.class, "level_up") );
 				Sample.INSTANCE.play( Assets.Sounds.LEVELUP );
 				if (lvl < Talent.tierLevelThresholds[Talent.MAX_TALENT_TIERS+1]){
 					GLog.newLine();
@@ -1892,7 +1890,7 @@ public class Hero extends Char {
 
 		boolean added = super.add( buff );
 
-		if (sprite != null && added) {
+		if (getSprite() != null && added) {
 			String msg = buff.heroMessage();
 			if (msg != null){
 				GLog.w(msg);
@@ -2341,8 +2339,8 @@ public class Hero extends Char {
 		}
 		
 		if (intentional) {
-			sprite.showStatus( CharSprite.DEFAULT, Messages.get(this, "search") );
-			sprite.operate( pos );
+			getSprite().showStatus( CharSprite.DEFAULT, Messages.get(this, "search") );
+			getSprite().operate( pos );
 			if (!Dungeon.level.locked) {
 				if (cursed) {
 					GLog.n(Messages.get(this, "search_distracted"));
@@ -2413,26 +2411,12 @@ public class Hero extends Char {
 	public static interface Doom {
 		public void onDeath();
 	}
-	public void sendSelf(){
-		if ( !all().contains(this) ){
-			return;
-		}
-		SendData.sendActor(this);
-	}
 
-	public CharSprite getSprite() {
-		return sprite;
-	}
-
-	public void setSprite(CharSprite sprite) {
-		this.sprite = sprite;
-		sendSelf();
-	}
 
 	public JSONObject getEmoJsonObject() {
-		if (sprite == null){
+		if (getSprite() == null){
 			return new JSONObject();
 		}
-		return sprite.getEmoJsonObject();
+		return getSprite().getEmoJsonObject();
 	}
 }

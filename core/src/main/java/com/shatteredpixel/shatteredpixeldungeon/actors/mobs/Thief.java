@@ -222,8 +222,8 @@ public class Thief extends Mob {
 				if (newPos != -1) {
 
 					pos = newPos;
-					sprite.place( pos );
-					sprite.visible = Dungeon.visibleforAnyHero(pos);
+					getSprite().place( pos );
+					getSprite().visible = Dungeon.visibleforAnyHero(pos);
 					if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get(pos).burst(Speck.factory(Speck.WOOL), 6);
 
 				}

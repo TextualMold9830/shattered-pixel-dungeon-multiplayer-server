@@ -125,7 +125,7 @@ public class Ratmogrify extends ArmorAbility {
 				return;
 			} else {
 				((TransmogRat) ch).makeAlly();
-				ch.sprite.emitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
+				ch.getSprite().emitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 				if (hero.pointsInTalent(Talent.RATLOMACY) > 1){
 					Buff.affect(ch, Adrenaline.class, 2*(hero.pointsInTalent(Talent.RATLOMACY)-1));
@@ -143,7 +143,7 @@ public class Ratmogrify extends ArmorAbility {
 			HashSet<ChampionEnemy> champBuffs = ch.buffs(ChampionEnemy.class);
 			for (ChampionEnemy champ : champBuffs){
 				if (ch.remove(champ)) {
-					ch.sprite.clearAura();
+					ch.getSprite().clearAura();
 				}
 			}
 
@@ -153,7 +153,7 @@ public class Ratmogrify extends ArmorAbility {
 			}
 
 			Actor.remove( ch );
-			ch.sprite.killAndErase();
+			ch.getSprite().killAndErase();
 			Dungeon.level.mobs.remove(ch);
 
 			for (ChampionEnemy champ : champBuffs){
@@ -248,7 +248,7 @@ public class Ratmogrify extends ArmorAbility {
 
 				EXP = 0;
 				destroy();
-				sprite.killAndErase();
+				getSprite().killAndErase();
 				CellEmitter.get(original.pos).burst(Speck.factory(Speck.WOOL), 4);
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 				return true;

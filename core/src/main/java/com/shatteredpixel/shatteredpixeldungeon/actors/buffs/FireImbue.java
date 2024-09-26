@@ -82,7 +82,7 @@ public class FireImbue extends Buff {
 		if (Random.Int(2) == 0)
 			Buff.affect( enemy, Burning.class ).reignite( enemy );
 
-		enemy.sprite.emitter().burst( FlameParticle.FACTORY, 2 );
+		enemy.getSprite().emitter().burst( FlameParticle.FACTORY, 2 );
 	}
 
 	@Override

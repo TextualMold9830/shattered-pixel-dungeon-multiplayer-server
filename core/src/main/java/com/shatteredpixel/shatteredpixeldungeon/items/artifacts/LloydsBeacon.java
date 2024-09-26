@@ -150,7 +150,7 @@ public class LloydsBeacon extends Artifact {
 			hero.spend( LloydsBeacon.TIME_TO_USE );
 			hero.busy();
 			
-			hero.sprite.operate( hero.pos );
+			hero.getSprite().operate( hero.pos );
 			Sample.INSTANCE.play( Assets.Sounds.BEACON );
 			
 			GLog.i( Messages.get(this, "return") );
@@ -165,7 +165,7 @@ public class LloydsBeacon extends Artifact {
 						for(int i : PathFinder.NEIGHBOURS8){
 							if (Actor.findChar(m.pos+i) == null && Dungeon.level.passable[m.pos + i]){
 								m.pos += i;
-								m.sprite.point(m.sprite.worldToCamera(m.pos));
+								m.getSprite().point(m.getSprite().worldToCamera(m.pos));
 								break;
 							}
 						}
@@ -210,12 +210,12 @@ public class LloydsBeacon extends Artifact {
 					curUser.spendAndNext( 1f );
 				} else {
 					Sample.INSTANCE.play( Assets.Sounds.ZAP );
-					curUser.sprite.zap(bolt.collisionPos);
+					curUser.getSprite().zap(bolt.collisionPos);
 					curUser.busy();
 
-					MagicMissile.boltFromChar(curUser.sprite.parent,
+					MagicMissile.boltFromChar(curUser.getSprite().parent,
 							MagicMissile.BEACON,
-							curUser.sprite,
+                            curUser.getSprite(),
 							bolt.collisionPos,
 							new Callback() {
 								@Override
@@ -245,8 +245,8 @@ public class LloydsBeacon extends Artifact {
 											if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING){
 												((Mob) ch).state = ((Mob) ch).WANDERING;
 											}
-											ch.sprite.place(ch.pos);
-											ch.sprite.visible = Dungeon.visibleforAnyHero(pos);
+											ch.getSprite().place(ch.pos);
+											ch.getSprite().visible = Dungeon.visibleforAnyHero(pos);
 
 										}
 									}

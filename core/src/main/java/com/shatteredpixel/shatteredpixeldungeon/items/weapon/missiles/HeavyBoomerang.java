@@ -118,7 +118,7 @@ public class HeavyBoomerang extends MissileWeapon {
 				if (left <= 0){
 					final Char returnTarget = Actor.findChar(returnPos);
 					final Char target = this.target;
-					MissileSprite visual = ((MissileSprite) target.sprite.parent.recycle(MissileSprite.class));
+					MissileSprite visual = ((MissileSprite) target.getSprite().parent.recycle(MissileSprite.class));
 					visual.reset( thrownPos,
 									returnPos,
 									boomerang,
@@ -150,7 +150,7 @@ public class HeavyBoomerang extends MissileWeapon {
 									});
 					visual.alpha(0f);
 					float duration = Dungeon.level.trueDistance(thrownPos, returnPos) / 20f;
-					target.sprite.parent.add(new AlphaTweener(visual, 1f, duration));
+					target.getSprite().parent.add(new AlphaTweener(visual, 1f, duration));
 					detach();
 					return false;
 				}

@@ -152,8 +152,8 @@ public class Shopkeeper extends NPC {
 
 		Notes.remove(Notes.Landmark.SHOP);
 
-		if (sprite != null) {
-			sprite.killAndErase();
+		if (getSprite() != null) {
+			getSprite().killAndErase();
 			CellEmitter.get(pos).burst(ElmoParticle.FACTORY, 6);
 		}
 	}

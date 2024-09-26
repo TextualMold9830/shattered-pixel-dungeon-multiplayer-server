@@ -178,7 +178,7 @@ public class MeleeWeapon extends Weapon {
 				&& (hero.HP / (float)hero.HT) <= 0.5f){
 			int shieldAmt = 1 + 2*hero.pointsInTalent(Talent.AGGRESSIVE_BARRIER);
 			Buff.affect(hero, Barrier.class).setShield(shieldAmt);
-			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
+			hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 		}
 
 		if (hero.buff(Talent.CombinedLethalityAbilityTracker.class) != null
@@ -589,7 +589,7 @@ public class MeleeWeapon extends Weapon {
 			hero.belongings.weapon = hero.belongings.secondWep;
 			hero.belongings.secondWep = temp;
 
-			hero.sprite.operate(hero.pos);
+			hero.getSprite().operate(hero.pos);
 			Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 
 			hero.actionIndicator.setAction(this);

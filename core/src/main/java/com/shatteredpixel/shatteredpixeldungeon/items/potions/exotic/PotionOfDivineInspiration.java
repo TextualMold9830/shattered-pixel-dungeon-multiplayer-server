@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -110,7 +109,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					identifiedByUse = false;
 
 					curUser.busy();
-					curUser.sprite.operate(curUser.pos);
+					curUser.getSprite().operate(curUser.pos);
 
 					curUser.spendAndNext(1f);
 
@@ -131,7 +130,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					Sample.INSTANCE.play( Assets.Sounds.DRINK );
 					Sample.INSTANCE.playDelayed(Assets.Sounds.LEVELUP, 0.3f, 0.7f, 1.2f);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.LEVELUP, 0.6f, 0.7f, 1.2f);
-					new Flare( 6, 32 ).color(0xFFFF00, true).show( curUser.sprite, 2f );
+					new Flare( 6, 32 ).color(0xFFFF00, true).show(curUser.getSprite(), 2f );
 					GLog.p(Messages.get(PotionOfDivineInspiration.class, "bonus"));
 
 					if (!anonymous && Random.Float() < talentChance){

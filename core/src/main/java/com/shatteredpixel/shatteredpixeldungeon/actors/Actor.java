@@ -273,13 +273,13 @@ public abstract class Actor implements Bundlable {
 				now = current.time;
 				Actor acting = current;
 
-				if (acting instanceof Char && ((Char) acting).sprite != null) {
+				if (acting instanceof Char && ((Char) acting).getSprite() != null) {
 					// If it's character's turn to act, but its sprite
 					// is moving, wait till the movement is over
 					try {
-						synchronized (((Char)acting).sprite) {
-							if (((Char)acting).sprite.isMoving) {
-								((Char) acting).sprite.wait();
+						synchronized (((Char) acting).getSprite()) {
+							if (((Char) acting).getSprite().isMoving) {
+								((Char) acting).getSprite().wait();
 							}
 						}
 					} catch (InterruptedException e) {

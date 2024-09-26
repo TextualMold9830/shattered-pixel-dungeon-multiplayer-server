@@ -45,7 +45,7 @@ public class WaterOfAwareness extends WellWater {
 	protected boolean affectHero( Hero hero ) {
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
-		emitter.parent.add( new Identification( hero.sprite.center() ) );
+		emitter.parent.add( new Identification( hero.getSprite().center() ) );
 		
 		hero.belongings.observe();
 		

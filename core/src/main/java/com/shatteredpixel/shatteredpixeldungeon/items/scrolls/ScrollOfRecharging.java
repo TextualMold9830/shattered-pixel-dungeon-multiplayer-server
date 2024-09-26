@@ -58,8 +58,8 @@ public class ScrollOfRecharging extends Scroll {
 	}
 	
 	public static void charge( Char user ) {
-		if (user.sprite != null) {
-			Emitter e = user.sprite.centerEmitter();
+		if (user.getSprite() != null) {
+			Emitter e = user.getSprite().centerEmitter();
 			if (e != null) e.burst(EnergyParticle.FACTORY, 15);
 		}
 	}

@@ -192,7 +192,7 @@ public class GnollGeomancer extends Mob {
 				return true;
 			}
 
-			hero.sprite.attack(pos, new Callback() {
+			hero.getSprite().attack(pos, new Callback() {
 				@Override
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
@@ -207,8 +207,8 @@ public class GnollGeomancer extends Mob {
 					dmg = Math.min(dmg, buff(RockArmor.class).shielding());
 
 					damage(dmg, new DamageCause(p, hero));
-					sprite.bloodBurstA(hero.sprite.center(), dmg);
-					sprite.flash();
+					getSprite().bloodBurstA(hero.getSprite().center(), dmg);
+					getSprite().flash();
 
 					hits++;
 					if (hits == 1){
@@ -217,7 +217,7 @@ public class GnollGeomancer extends Mob {
 						GLog.n( Messages.get(GnollGeomancer.this, "alert"));
 						wasSleeping = false;
 						spend(TICK);
-						sprite.idle();
+						getSprite().idle();
 
 						carveRockAndDash();
 
@@ -243,8 +243,8 @@ public class GnollGeomancer extends Mob {
 					}
 
 					if (buff(RockArmor.class) == null){
-						Splash.around(sprite, 0x555555, 30);
-						sprite.idle();
+						Splash.around(getSprite(), 0x555555, 30);
+						getSprite().idle();
 					}
 
 					Sample.INSTANCE.play(Assets.Sounds.MINE, 1f, Random.Float(0.85f, 1.15f));
@@ -296,8 +296,8 @@ public class GnollGeomancer extends Mob {
 
 	public void linkSapper( GnollSapper sapper ){
 		this.sapperID = sapper.id();
-		if (sprite instanceof GnollGeomancerSprite){
-			((GnollGeomancerSprite) sprite).setupArmor();
+		if (getSprite() instanceof GnollGeomancerSprite){
+			((GnollGeomancerSprite) getSprite()).setupArmor();
 		}
 	}
 
@@ -310,8 +310,8 @@ public class GnollGeomancer extends Mob {
 	public void loseSapper(){
 		if (sapperID != -1){
 			sapperID = -1;
-			if (sprite instanceof GnollGeomancerSprite){
-				((GnollGeomancerSprite) sprite).loseArmor();
+			if (getSprite() instanceof GnollGeomancerSprite){
+				((GnollGeomancerSprite) getSprite()).loseArmor();
 			}
 		}
 	}
@@ -594,7 +594,7 @@ public class GnollGeomancer extends Mob {
 
 							Ballistica warnPath = new Ballistica(aim.sourcePos, aim.collisionPos, Ballistica.STOP_SOLID);
 							for (int j : warnPath.subPath(0, warnPath.dist)){
-								sprite.parent.add(new TargetedCell(j, 0xFF0000));
+								getSprite().parent.add(new TargetedCell(j, 0xFF0000));
 							}
 
 							aim = GnollGeomancer.prepRockThrowAttack(enemy, GnollGeomancer.this);
@@ -670,10 +670,10 @@ public class GnollGeomancer extends Mob {
 
 		Level.set(from, Terrain.EMPTY);
 		GameScene.updateMap(from);
-		source.sprite.attack(from, new Callback() {
+		source.getSprite().attack(from, new Callback() {
 			@Override
 			public void call() {
-				source.sprite.idle();
+				source.getSprite().idle();
 				//do nothing
 			}
 		});
@@ -681,7 +681,7 @@ public class GnollGeomancer extends Mob {
 		Ballistica rockPath = new Ballistica(from, to, Ballistica.MAGIC_BOLT);
 
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		((MissileSprite)source.sprite.parent.recycle( MissileSprite.class )).
+		((MissileSprite) source.getSprite().parent.recycle( MissileSprite.class )).
 				reset( from, rockPath.collisionPos, new GnollGeomancer.Boulder(), new Callback() {
 					@Override
 					public void call() {
@@ -779,16 +779,16 @@ public class GnollGeomancer extends Mob {
 			}
 		}
 		for (int i : rockCells){
-			source.sprite.parent.add(new TargetedCell(i, 0xFF0000));
+			source.getSprite().parent.add(new TargetedCell(i, 0xFF0000));
 		}
 		//don't want to overly punish players with slow move or attack speed
 		Buff.append(source, GnollRockFall.class, GameMath.gate(TICK, (int)Math.ceil(target.cooldown()), 3*TICK)).setRockPositions(rockCells);
 
-		source.sprite.attack(target.pos, new Callback() {
+		source.getSprite().attack(target.pos, new Callback() {
 			@Override
 			public void call() {
 				//do nothing
-				source.sprite.idle();
+				source.getSprite().idle();
 			}
 		});
 

@@ -114,11 +114,11 @@ public class Eye extends Mob {
 	protected boolean act() {
 		if (beamCharged && state != HUNTING){
 			beamCharged = false;
-			sprite.idle();
+			getSprite().idle();
 		}
 		if (beam == null && beamTarget != -1) {
 			beam = new Ballistica(pos, beamTarget, Ballistica.STOP_SOLID);
-			sprite.turnTo(pos, beamTarget);
+			getSprite().turnTo(pos, beamTarget);
 		}
 		if (beamCooldown > 0)
 			beamCooldown--;
@@ -132,7 +132,7 @@ public class Eye extends Mob {
 		if (beamCooldown > 0 || (!beamCharged && !beam.subPath(1, beam.dist).contains(enemy.pos))) {
 			return super.doAttack(enemy);
 		} else if (!beamCharged){
-			((EyeSprite)sprite).charge( enemy.pos );
+			((EyeSprite) getSprite()).charge( enemy.pos );
 			spend( attackDelay()*2f );
 			beamCharged = true;
 			return true;
@@ -141,10 +141,10 @@ public class Eye extends Mob {
 			spend( attackDelay() );
 			
 			if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(beam.collisionPos) ) {
-				sprite.zap( beam.collisionPos );
+				getSprite().zap( beam.collisionPos );
 				return false;
 			} else {
-				sprite.idle();
+				getSprite().idle();
 				deathGaze();
 				return true;
 			}
@@ -192,7 +192,7 @@ public class Eye extends Mob {
 				ch.damage( dmg,  new DamageCause( new DeathGaze(), null));
 
 				if (Dungeon.visibleforAnyHero(pos)) {
-					ch.sprite.flash();
+					ch.getSprite().flash();
 					CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 				}
 
@@ -202,7 +202,7 @@ public class Eye extends Mob {
 					GLog.n( Messages.get(this, "deathgaze_kill") );
 				}
 			} else {
-				ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
+				ch.getSprite().showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
 			}
 		}
 

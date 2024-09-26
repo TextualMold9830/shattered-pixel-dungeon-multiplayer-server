@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -173,13 +172,13 @@ public class NetworkPacket {
                     object.put("type", "hero");
                 } else {
                     object.put("type", "character");
-                    if (character.sprite != null) {
-                        String spriteAsset = character.sprite.getSpriteAsset();
+                    if (character.getSprite() != null) {
+                        String spriteAsset = character.getSprite().getSpriteAsset();
                         if (spriteAsset != null) {
                             object.put("sprite_asset",spriteAsset);
                         } else
                         {
-                            object.put("sprite_name", ((Char) actor).sprite.spriteName());
+                            object.put("sprite_name", ((Char) actor).getSprite().spriteName());
                         }
                     }
                 }
@@ -193,9 +192,9 @@ public class NetworkPacket {
                 object.put("name", name);
 
                 object.put("emo", character.getEmoJsonObject());
-                CharSprite sprite = character.sprite;
+                CharSprite sprite = character.getSprite();
                 if (sprite != null) {
-                    JSONArray states = putToJSONArray(((Char) actor).sprite.states().toArray());
+                    JSONArray states = putToJSONArray(((Char) actor).getSprite().states().toArray());
                     object.put("states", states);
                 }
                 if (actor instanceof Mob) {

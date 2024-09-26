@@ -39,11 +39,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
-import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -84,7 +82,7 @@ public class WarpBeacon extends ArmorAbility {
 			final WarpBeaconTracker tracker = hero.buff(WarpBeaconTracker.class);
 
 			GameScene.show( new WndOptions(hero,
-					new Image(hero.sprite),
+					new Image(hero.getSprite()),
 					Messages.titleCase(name()),
 					Messages.get(WarpBeacon.class, "window_desc", tracker.depth),
 					Messages.get(WarpBeacon.class, "window_tele"),
@@ -124,8 +122,8 @@ public class WarpBeacon extends ArmorAbility {
 									hero.damage(Math.min(heroDmg, heroHP-1), new Char.DamageCause( WarpBeacon.this, hero));
 
 									int damage = Char.combatRoll(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
-									existing.sprite.flash();
-									existing.sprite.bloodBurstA(existing.sprite.center(), damage);
+									existing.getSprite().flash();
+									existing.getSprite().bloodBurstA(existing.getSprite().center(), damage);
 									existing.damage(damage, new Char.DamageCause( WarpBeacon.this, hero));
 
 									Sample.INSTANCE.play(Assets.Sounds.HIT_CRUSH);
@@ -216,7 +214,7 @@ public class WarpBeacon extends ArmorAbility {
 			tracker.branch = Dungeon.branch;
 			tracker.attachTo(hero);
 
-			hero.sprite.operate(target);
+			hero.getSprite().operate(target);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			Invisibility.dispel(hero);
 			hero.spendAndNext(Actor.TICK);

@@ -109,7 +109,7 @@ public class Imp extends NPC {
 			return true;
 		}
 		Hero hero = (Hero) c;
-		sprite.turnTo( pos, hero.pos );
+		getSprite().turnTo( pos, hero.pos );
 		if (Quest.given) {
 			
 			DwarfToken tokens = hero.belongings.getItem( DwarfToken.class );
@@ -150,7 +150,7 @@ public class Imp extends NPC {
 		//yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.heroes.name())) );
 		
 		destroy();
-		sprite.die();
+		getSprite().die();
 	}
 
 	public static class Quest {

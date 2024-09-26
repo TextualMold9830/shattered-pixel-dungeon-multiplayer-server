@@ -93,7 +93,7 @@ public class PoisonDartTrap extends Trap {
 					final Char finalTarget = target;
 					if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(target.pos)) {
 						((MissileSprite) ShatteredPixelDungeon.scene().recycle(MissileSprite.class)).
-								reset(pos, finalTarget.sprite, new PoisonDart(), new Callback() {
+								reset(pos, finalTarget.getSprite(), new PoisonDart(), new Callback() {
 									@Override
 									public void call() {
 										int dmg = Char.combatRoll(4, 8) - finalTarget.drRoll();
@@ -110,8 +110,8 @@ public class PoisonDartTrap extends Trap {
 										}
 										Buff.affect( finalTarget, Poison.class ).set( poisonAmount() );
 										Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));
-										finalTarget.sprite.bloodBurstA(finalTarget.sprite.center(), dmg);
-										finalTarget.sprite.flash();
+										finalTarget.getSprite().bloodBurstA(finalTarget.getSprite().center(), dmg);
+										finalTarget.getSprite().flash();
 										next();
 									}
 								});

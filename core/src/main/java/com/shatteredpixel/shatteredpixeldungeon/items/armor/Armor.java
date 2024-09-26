@@ -72,8 +72,6 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -195,7 +193,7 @@ public class Armor extends EquipableItem {
 				detaching.setGlyph(null);
 			}
 			GLog.i( Messages.get(Armor.class, "detach_seal") );
-			hero.sprite.operate(hero.pos);
+			hero.getSprite().operate(hero.pos);
 			if (!detaching.collect(hero)){
 				Dungeon.level.drop(detaching, hero.pos);
 			}
@@ -218,7 +216,7 @@ public class Armor extends EquipableItem {
 				GLog.n( Messages.get(Armor.class, "equip_cursed") );
 			}
 			
-			((HeroSprite)hero.sprite).updateArmor();
+			((HeroSprite) hero.getSprite()).updateArmor();
 			activate(hero);
 			Talent.onItemEquipped(hero, this);
 			hero.spendAndNext( timeToEquip( hero ) );
@@ -267,7 +265,7 @@ public class Armor extends EquipableItem {
 		if (super.doUnequip( hero, collect, single )) {
 
 			hero.belongings.armor = null;
-			((HeroSprite)hero.sprite).updateArmor();
+			((HeroSprite) hero.getSprite()).updateArmor();
 
 			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
 			if (sealBuff != null) sealBuff.setArmor(null);

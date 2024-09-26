@@ -176,8 +176,8 @@ public class ShadowClone extends ArmorAbility {
 			int oldPos = pos;
 			boolean result = super.act();
 			//partially simulates how the hero switches to idle animation
-			if ((pos == target || oldPos == pos) && sprite.looping()){
-				sprite.idle();
+			if ((pos == target || oldPos == pos) && getSprite().looping()){
+				getSprite().idle();
 			}
 			return result;
 		}
@@ -334,17 +334,17 @@ public class ShadowClone extends ArmorAbility {
 
 		private static void appear( Char ch, int pos ) {
 
-			ch.sprite.interruptMotion();
+			ch.getSprite().interruptMotion();
 
 			if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(ch.pos)){
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 			}
 
 			ch.move( pos );
-			if (ch.pos == pos) ch.sprite.place( pos );
+			if (ch.pos == pos) ch.getSprite().place( pos );
 
 			if (Dungeon.visibleforAnyHero(pos) || ch instanceof Hero) {
-				ch.sprite.emitter().burst(SmokeParticle.FACTORY, 10);
+				ch.getSprite().emitter().burst(SmokeParticle.FACTORY, 10);
 			}
 		}
 

@@ -69,7 +69,7 @@ public class Buff extends Actor {
 		this.target = target;
 
 		if (target.add( this )){
-			if (target.sprite != null) fx( true );
+			if (target.getSprite() != null) fx( true );
 			return true;
 		} else {
 			this.target = null;
@@ -78,7 +78,7 @@ public class Buff extends Actor {
 	}
 	
 	public void detach() {
-		if (target.remove( this ) && target.sprite != null) fx( false );
+		if (target.remove( this ) && target.getSprite() != null) fx( false );
 	}
 	
 	@Override

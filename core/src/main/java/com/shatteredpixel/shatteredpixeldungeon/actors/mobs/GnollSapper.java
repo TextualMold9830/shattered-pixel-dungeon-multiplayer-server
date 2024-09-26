@@ -200,7 +200,7 @@ public class GnollSapper extends Mob {
 
 						Ballistica warnPath = new Ballistica(aim.sourcePos, aim.collisionPos, Ballistica.STOP_SOLID);
 						for (int i : warnPath.subPath(0, warnPath.dist)){
-							sprite.parent.add(new TargetedCell(i, 0xFF0000));
+							getSprite().parent.add(new TargetedCell(i, 0xFF0000));
 						}
 						Dungeon.interrupt(pos);
 						abilityCooldown = Random.NormalIntRange(4, 6);

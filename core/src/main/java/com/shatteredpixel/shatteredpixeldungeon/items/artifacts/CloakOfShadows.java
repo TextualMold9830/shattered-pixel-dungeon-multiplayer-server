@@ -97,7 +97,7 @@ public class CloakOfShadows extends Artifact {
 					activeBuff = activeBuff();
 					activeBuff.attachTo(hero);
 					Talent.onArtifactUsed(hero);
-					hero.sprite.operate(hero.pos);
+					hero.getSprite().operate(hero.pos);
 				}
 			} else {
 				activeBuff.detach();
@@ -105,7 +105,7 @@ public class CloakOfShadows extends Artifact {
 				if (hero.invisible <= 0 && hero.buff(Preparation.class) != null){
 					hero.buff(Preparation.class).detach();
 				}
-				hero.sprite.operate( hero.pos );
+				hero.getSprite().operate( hero.pos );
 			}
 
 		}
@@ -366,8 +366,8 @@ public class CloakOfShadows extends Artifact {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add( CharSprite.State.INVISIBLE );
-			else if (target.invisible == 0) target.sprite.remove( CharSprite.State.INVISIBLE );
+			if (on) target.getSprite().add( CharSprite.State.INVISIBLE );
+			else if (target.invisible == 0) target.getSprite().remove( CharSprite.State.INVISIBLE );
 		}
 
 		@Override

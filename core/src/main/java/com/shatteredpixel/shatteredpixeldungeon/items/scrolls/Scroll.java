@@ -187,7 +187,7 @@ public abstract class Scroll extends Item {
 		Invisibility.dispel(findOwner());
 		curUser.spend( TIME_TO_READ );
 		curUser.busy();
-		((HeroSprite)curUser.sprite).read();
+		((HeroSprite) curUser.getSprite()).read();
 
 		if (!anonymous && Random.Float() < talentChance) {
 			Talent.onScrollUsed(curUser, curUser.pos, talentFactor);

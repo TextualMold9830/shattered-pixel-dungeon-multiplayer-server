@@ -99,7 +99,7 @@ public class Mimic extends Mob {
 			if (buff.type == Buff.buffType.NEGATIVE && alignment == Alignment.NEUTRAL) {
 				alignment = Alignment.ENEMY;
 				stopHiding();
-				if (sprite != null) sprite.idle();
+				if (getSprite() != null) getSprite().idle();
 			}
 			return true;
 		}
@@ -132,7 +132,7 @@ public class Mimic extends Mob {
 	protected boolean act() {
 		if (alignment == Alignment.NEUTRAL && state != PASSIVE){
 			alignment = Alignment.ENEMY;
-			if (sprite != null) sprite.idle();
+			if (getSprite() != null) getSprite().idle();
 			if (Dungeon.visibleforAnyHero(pos)) {
 				GLog.w(Messages.get(this, "reveal") );
 				CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
@@ -157,13 +157,13 @@ public class Mimic extends Mob {
 		stopHiding();
 		Hero hero = (Hero) c;
 		hero.busy();
-		hero.sprite.operate(pos);
+		hero.getSprite().operate(pos);
 		if (hero.invisible <= 0
 				&& hero.buff(Swiftthistle.TimeBubble.class) == null
 				&& hero.buff(TimekeepersHourglass.timeFreeze.class) == null){
 			return doAttack(hero);
 		} else {
-			sprite.idle();
+			getSprite().idle();
 			alignment = Alignment.ENEMY;
 			hero.spendAndNext(1f);
 			return true;
@@ -212,7 +212,7 @@ public class Mimic extends Mob {
 
 	public void stopHiding(){
 		state = HUNTING;
-		if (sprite != null) sprite.idle();
+		if (getSprite() != null) getSprite().idle();
 		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = chooseEnemy();
 			target = enemy.pos;

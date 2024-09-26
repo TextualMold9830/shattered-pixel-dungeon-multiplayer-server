@@ -92,7 +92,7 @@ public class WandOfFrost extends DamageWand {
 				float chillturns = Math.min(10, ch.buff(Chill.class).cooldown());
 				damage = (int)Math.round(damage * Math.pow(0.9333f, chillturns));
 			} else {
-				ch.sprite.burst( 0xFF99CCFF, buffedLvl() / 2 + 2 );
+				ch.getSprite().burst( 0xFF99CCFF, buffedLvl() / 2 + 2 );
 			}
 
 			wandProc(ch, chargesPerCast(), hero);
@@ -112,9 +112,9 @@ public class WandOfFrost extends DamageWand {
 
 	@Override
 	public void fx(Ballistica bolt, Callback callback) {
-		MagicMissile.boltFromChar(curUser.sprite.parent,
+		MagicMissile.boltFromChar(curUser.getSprite().parent,
 				MagicMissile.FROST,
-				curUser.sprite,
+                curUser.getSprite(),
 				bolt.collisionPos,
 				callback);
 		Sample.INSTANCE.play(Assets.Sounds.ZAP);

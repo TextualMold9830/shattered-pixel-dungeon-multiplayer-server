@@ -280,7 +280,7 @@ public class Tengu extends Mob {
 
 				if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				
-				sprite.move( pos, newPos );
+				getSprite().move( pos, newPos );
 				move( newPos );
 				
 				if (Dungeon.visibleforAnyHero(newPos)) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
@@ -310,7 +310,7 @@ public class Tengu extends Mob {
 
 				if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				
-				sprite.move( pos, newPos );
+				getSprite().move( pos, newPos );
 				move( newPos );
 				
 				if (arenaJumps < 4) arenaJumps++;
@@ -328,7 +328,7 @@ public class Tengu extends Mob {
 			
 			if (Dungeon.visibleforAnyHero(pos)) CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 			
-			sprite.move( pos, newPos );
+			getSprite().move( pos, newPos );
 			move( newPos );
 			
 			if (Dungeon.visibleforAnyHero(newPos)) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
@@ -601,9 +601,9 @@ public class Tengu extends Mob {
 		final int finalTargetCell = targetCell;
 		throwingChar = thrower;
 		final BombAbility.BombItem item = new BombAbility.BombItem();
-		thrower.sprite.zap(finalTargetCell);
-		((MissileSprite) thrower.sprite.parent.recycle(MissileSprite.class)).
-				reset(thrower.sprite,
+		thrower.getSprite().zap(finalTargetCell);
+		((MissileSprite) thrower.getSprite().parent.recycle(MissileSprite.class)).
+				reset(thrower.getSprite(),
 						finalTargetCell,
 						item,
 						new Callback() {
@@ -771,10 +771,10 @@ public class Tengu extends Mob {
 		
 		for (int i = 0; i < PathFinder.CIRCLE8.length; i++){
 			if (aim.sourcePos+PathFinder.CIRCLE8[i] == aim.path.get(1)){
-				thrower.sprite.zap(target.pos);
+				thrower.getSprite().zap(target.pos);
 				Buff.append(thrower, Tengu.FireAbility.class).direction = i;
 				
-				thrower.sprite.emitter().start(Speck.factory(Speck.STEAM), .03f, 10);
+				thrower.getSprite().emitter().start(Speck.factory(Speck.STEAM), .03f, 10);
 				return true;
 			}
 		}
@@ -976,9 +976,9 @@ public class Tengu extends Mob {
 		final int finalTargetCell = targetCell;
 		throwingChar = thrower;
 		final ShockerAbility.ShockerItem item = new ShockerAbility.ShockerItem();
-		thrower.sprite.zap(finalTargetCell);
-		((MissileSprite) thrower.sprite.parent.recycle(MissileSprite.class)).
-				reset(thrower.sprite,
+		thrower.getSprite().zap(finalTargetCell);
+		((MissileSprite) thrower.getSprite().parent.recycle(MissileSprite.class)).
+				reset(thrower.getSprite(),
 						finalTargetCell,
 						item,
 						new Callback() {
@@ -1005,8 +1005,8 @@ public class Tengu extends Mob {
 				spreadblob();
 			} else if (shockingOrdinals){
 				
-				target.sprite.parent.add(new Lightning(shockerPos - 1 - Dungeon.level.width(), shockerPos + 1 + Dungeon.level.width(), null));
-				target.sprite.parent.add(new Lightning(shockerPos - 1 + Dungeon.level.width(), shockerPos + 1 - Dungeon.level.width(), null));
+				target.getSprite().parent.add(new Lightning(shockerPos - 1 - Dungeon.level.width(), shockerPos + 1 + Dungeon.level.width(), null));
+				target.getSprite().parent.add(new Lightning(shockerPos - 1 + Dungeon.level.width(), shockerPos + 1 - Dungeon.level.width(), null));
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
 						if (Dungeon.level.distance(hero.pos, shockerPos) <= 1) {
@@ -1020,8 +1020,8 @@ public class Tengu extends Mob {
 				spreadblob();
 			} else {
 
-				target.sprite.parent.add(new Lightning(shockerPos - Dungeon.level.width(), shockerPos + Dungeon.level.width(), null));
-				target.sprite.parent.add(new Lightning(shockerPos - 1, shockerPos + 1, null));
+				target.getSprite().parent.add(new Lightning(shockerPos - Dungeon.level.width(), shockerPos + Dungeon.level.width(), null));
+				target.getSprite().parent.add(new Lightning(shockerPos - 1, shockerPos + 1, null));
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
 					if (Dungeon.level.distance(hero.pos, shockerPos) <= 1) {

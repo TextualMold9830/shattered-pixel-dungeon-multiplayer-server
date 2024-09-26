@@ -78,7 +78,7 @@ public class WornDartTrap extends Trap {
 					final Char finalTarget = target;
 					if (Dungeon.visibleforAnyHero(pos) || Dungeon.visibleforAnyHero(pos)) {
 						((MissileSprite) ShatteredPixelDungeon.scene().recycle(MissileSprite.class)).
-								reset(pos, finalTarget.sprite, new Dart(), new Callback() {
+								reset(pos, finalTarget.getSprite(), new Dart(), new Callback() {
 									@Override
 									public void call() {
 										int dmg = Char.combatRoll(4, 8) - finalTarget.drRoll();
@@ -87,8 +87,8 @@ public class WornDartTrap extends Trap {
 											Dungeon.fail( WornDartTrap.this  );
 										}
 										Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));
-										finalTarget.sprite.bloodBurstA(finalTarget.sprite.center(), dmg);
-										finalTarget.sprite.flash();
+										finalTarget.getSprite().bloodBurstA(finalTarget.getSprite().center(), dmg);
+										finalTarget.getSprite().flash();
 										next();
 									}
 								});

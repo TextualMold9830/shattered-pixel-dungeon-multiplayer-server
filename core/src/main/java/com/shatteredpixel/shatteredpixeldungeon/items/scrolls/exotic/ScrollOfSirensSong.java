@@ -82,14 +82,14 @@ public class ScrollOfSirensSong extends ExoticScroll {
 
 			} else {
 
-				curUser.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
+				curUser.getSprite().centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 				Sample.INSTANCE.play( Assets.Sounds.CHARMS );
 				Sample.INSTANCE.playDelayed( Assets.Sounds.LULLABY, 0.1f );
 
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 					if (findOwner().fieldOfView[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
 						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.id();
-						mob.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
+						mob.getSprite().centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 					}
 				}
 
@@ -101,7 +101,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 						Buff.affect( target, Charm.class, Charm.DURATION ).object = curUser.id();
 
 					}
-					target.sprite.centerEmitter().burst( Speck.factory( Speck.HEART ), 10 );
+					target.getSprite().centerEmitter().burst( Speck.factory( Speck.HEART ), 10 );
 				} else {
 					GLog.w(Messages.get(ScrollOfSirensSong.class, "no_target"));
 				}
@@ -132,8 +132,8 @@ public class ScrollOfSirensSong extends ExoticScroll {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add(CharSprite.State.HEARTS);
-			else    target.sprite.remove(CharSprite.State.HEARTS);
+			if (on) target.getSprite().add(CharSprite.State.HEARTS);
+			else    target.getSprite().remove(CharSprite.State.HEARTS);
 		}
 
 		@Override

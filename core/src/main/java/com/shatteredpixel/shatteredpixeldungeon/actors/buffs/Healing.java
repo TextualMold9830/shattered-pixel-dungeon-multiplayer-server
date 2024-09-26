@@ -54,7 +54,7 @@ public class Healing extends Buff {
 				((Hero) target).resting = false;
 			}
 
-			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healingThisTick()), FloatingText.HEALING);
+			target.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healingThisTick()), FloatingText.HEALING);
 		}
 
 		healingLeft -= healingThisTick();
@@ -90,8 +90,8 @@ public class Healing extends Buff {
 	
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add( CharSprite.State.HEALING );
-		else    target.sprite.remove( CharSprite.State.HEALING );
+		if (on) target.getSprite().add( CharSprite.State.HEALING );
+		else    target.getSprite().remove( CharSprite.State.HEALING );
 	}
 	
 	private static final String LEFT = "left";

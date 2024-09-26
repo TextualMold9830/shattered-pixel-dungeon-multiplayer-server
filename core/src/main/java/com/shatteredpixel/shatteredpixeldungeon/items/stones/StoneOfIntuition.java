@@ -107,7 +107,7 @@ public class StoneOfIntuition extends InventoryStone {
 							item.identify(null);
 						}
 						GLog.p( Messages.get(WndGuess.class, "correct") );
-						curUser.sprite.parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
+						curUser.getSprite().parent.add( new Identification( curUser.getSprite().center().offset( 0, -16 ) ) );
 
 						if (curUser.buff(IntuitionUseTracker.class) == null){
 							GLog.h( Messages.get(WndGuess.class, "preserved") );

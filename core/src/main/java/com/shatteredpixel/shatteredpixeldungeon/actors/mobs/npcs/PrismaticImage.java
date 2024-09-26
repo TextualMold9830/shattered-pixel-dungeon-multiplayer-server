@@ -77,33 +77,33 @@ public class PrismaticImage extends NPC {
 			deathTimer--;
 			
 			if (deathTimer > 0) {
-				sprite.alpha((deathTimer + 3) / 8f);
+				getSprite().alpha((deathTimer + 3) / 8f);
 				spend(TICK);
 			} else {
 				destroy();
-				sprite.die();
+				getSprite().die();
 			}
 			return true;
 		}
 		
 		if (deathTimer != -1){
-			if (paralysed == 0) sprite.remove(CharSprite.State.PARALYSED);
+			if (paralysed == 0) getSprite().remove(CharSprite.State.PARALYSED);
 			deathTimer = -1;
-			sprite.resetColor();
+			getSprite().resetColor();
 		}
 		
 		if ( hero == null ){
 			hero = (Hero) Actor.findById(heroID);
 			if ( hero == null ){
 				destroy();
-				sprite.die();
+				getSprite().die();
 				return true;
 			}
 		}
 		
 		if (hero.tier() != armTier){
 			armTier = hero.tier();
-			((PrismaticSprite)sprite).updateArmor( armTier );
+			((PrismaticSprite) getSprite()).updateArmor( armTier );
 		}
 		
 		return super.act();
@@ -116,7 +116,7 @@ public class PrismaticImage extends NPC {
 				super.die( cause );
 			} else {
 				deathTimer = 5;
-				sprite.add(CharSprite.State.PARALYSED);
+				getSprite().add(CharSprite.State.PARALYSED);
 			}
 		}
 	}
@@ -274,7 +274,7 @@ public class PrismaticImage extends NPC {
 				Buff.affect(hero, PrismaticGuard.class).set( HP );
 				destroy();
 				CellEmitter.get(pos).start( Speck.factory(Speck.LIGHT), 0.2f, 3 );
-				sprite.die();
+				getSprite().die();
 				Sample.INSTANCE.play( Assets.Sounds.TELEPORT );
 				return true;
 			} else {

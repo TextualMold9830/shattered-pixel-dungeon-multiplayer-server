@@ -94,7 +94,7 @@ public class DeathMark extends ArmorAbility {
 		Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();
-		hero.sprite.zap(target);
+		hero.getSprite().zap(target);
 
 		hero.next();
 
@@ -205,14 +205,14 @@ public class DeathMark extends ArmorAbility {
 			super.detach();
 			target.deathMarked = false;
 			if (!target.isAlive()){
-				target.sprite.flash();
-				target.sprite.bloodBurstA(target.sprite.center(), target.HT*2);
+				target.getSprite().flash();
+				target.getSprite().bloodBurstA(target.getSprite().center(), target.HT*2);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(new Char.DamageCause(this, null));
 				int shld = Math.round(initialHP * (0.125f*cause.pointsInTalent(Talent.DEATHLY_DURABILITY)));
 				if (shld > 0 && target.alignment != Char.Alignment.ALLY){
-					cause.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
+					cause.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
 					Buff.affect(cause, Barrier.class).setShield(shld);
 				}
 			}

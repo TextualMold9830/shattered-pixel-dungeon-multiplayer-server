@@ -231,8 +231,8 @@ abstract public class ClassArmor extends Armor {
 								armor.detach(hero.belongings.backpack);
 								if (hero.belongings.armor == armor){
 									hero.belongings.armor = null;
-									if (hero.sprite instanceof HeroSprite) {
-										((HeroSprite) hero.sprite).updateArmor();
+									if (hero.getSprite() instanceof HeroSprite) {
+										((HeroSprite) hero.getSprite()).updateArmor();
 									}
 								}
 								level(armor.trueLevel());
@@ -280,8 +280,8 @@ abstract public class ClassArmor extends Armor {
 								}
 
 								GLog.p( Messages.get(ClassArmor.class, "transfer_complete") );
-								hero.sprite.operate(hero.pos);
-								hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
+								hero.getSprite().operate(hero.pos);
+								hero.getSprite().emitter().burst( Speck.factory( Speck.CROWN), 12 );
 								Sample.INSTANCE.play( Assets.Sounds.EVOKE );
 								hero.spend(Actor.TICK);
 								hero.busy();

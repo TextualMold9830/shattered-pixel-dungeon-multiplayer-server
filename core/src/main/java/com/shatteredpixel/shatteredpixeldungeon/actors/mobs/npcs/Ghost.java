@@ -128,7 +128,7 @@ public class Ghost extends NPC {
 	
 	@Override
 	public boolean interact(final Char c) {
-		sprite.turnTo( pos, c.pos );
+		getSprite().turnTo( pos, c.pos );
 		
 		Sample.INSTANCE.play( Assets.Sounds.GHOST );
 

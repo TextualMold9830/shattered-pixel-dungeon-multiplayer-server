@@ -91,7 +91,7 @@ public abstract class TippedDart extends Dart {
 						
 						hero.spend( 1f );
 						hero.busy();
-						hero.sprite.operate(hero.pos);
+						hero.getSprite().operate(hero.pos);
 					} else if (index == 1){
 						detach(hero.belongings.backpack);
 						if (!new Dart().collect(getOwnerHero())) Dungeon.level.drop(new Dart(), hero.pos).sprite.drop();
@@ -101,7 +101,7 @@ public abstract class TippedDart extends Dart {
 						
 						hero.spend( 1f );
 						hero.busy();
-						hero.sprite.operate(hero.pos);
+						hero.getSprite().operate(hero.pos);
 					}
 				}
 			});

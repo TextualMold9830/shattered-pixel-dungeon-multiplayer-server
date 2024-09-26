@@ -180,9 +180,9 @@ public class ElementalBlast extends ArmorAbility {
 		ConeAOE aoe = new ConeAOE(aim, aoeSize, 360, projectileProps);
 
 		for (Ballistica ray : aoe.outerRays){
-			((MagicMissile)hero.sprite.parent.recycle( MagicMissile.class )).reset(
+			((MagicMissile) hero.getSprite().parent.recycle( MagicMissile.class )).reset(
 					effectTypes.get(wandCls),
-					hero.sprite,
+                    hero.getSprite(),
 					ray.path.get(ray.dist),
 					null
 			);
@@ -192,9 +192,9 @@ public class ElementalBlast extends ArmorAbility {
 
 		//cast a ray 2/3 the way, and do effects
 		Class<? extends Wand> finalWandCls = wandCls;
-		((MagicMissile)hero.sprite.parent.recycle( MagicMissile.class )).reset(
+		((MagicMissile) hero.getSprite().parent.recycle( MagicMissile.class )).reset(
 				effectTypes.get(wandCls),
-				hero.sprite,
+                hero.getSprite(),
 				aim.path.get(Math.min(aoeSize / 2, aim.path.size()-1)),
 				new Callback() {
 					@Override
@@ -344,24 +344,24 @@ public class ElementalBlast extends ArmorAbility {
 										}
 										mob.HP += healing;
 
-										mob.sprite.emitter().burst(Speck.factory(Speck.HEALING), 4);
+										mob.getSprite().emitter().burst(Speck.factory(Speck.HEALING), 4);
 
 										if (healing > 0) {
-											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
+											mob.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
 										}
 										if (shielding > 0){
-											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
+											mob.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
 										}
 									} else {
 										if (!mob.properties().contains(Char.Property.UNDEAD)) {
 											Charm charm = Buff.affect(mob, Charm.class, effectMulti*Charm.DURATION/2f);
 											charm.object = hero.id();
 											charm.ignoreHeroAllies = true;
-											mob.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 3);
+											mob.getSprite().centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 3);
 										} else {
 											damage = Math.round(Char.combatRoll(15, 25) * effectMulti);
 											mob.damage(damage, new Char.DamageCause(Reflection.newInstance(finalWandCls), hero));
-											mob.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
+											mob.getSprite().emitter().start(ShadowParticle.UP, 0.05f, 10);
 										}
 									}
 									charsHit++;
@@ -395,7 +395,7 @@ public class ElementalBlast extends ArmorAbility {
 							for (Mob m : Dungeon.level.mobs){
 								if (m instanceof WandOfLivingEarth.EarthGuardian){
 									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, 0, Math.round(effectMulti*charsHit*5));
-									m.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + charsHit);
+									m.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + charsHit);
 									break;
 								}
 							}
@@ -415,7 +415,7 @@ public class ElementalBlast extends ArmorAbility {
 						charsHit = Math.min(4 + hero.pointsInTalent(Talent.REACTIVE_BARRIER), charsHit);
 						if (charsHit > 0 && hero.hasTalent(Talent.REACTIVE_BARRIER)){
 							int shielding = Math.round(charsHit*2.5f*hero.pointsInTalent(Talent.REACTIVE_BARRIER));
-							hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
+							hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
 							Buff.affect(hero, Barrier.class).setShield(shielding);
 						}
 
@@ -424,7 +424,7 @@ public class ElementalBlast extends ArmorAbility {
 				}
 		);
 
-		hero.sprite.operate( hero.pos );
+		hero.getSprite().operate( hero.pos );
 		Invisibility.dispel(hero);
 		hero.busy();
 

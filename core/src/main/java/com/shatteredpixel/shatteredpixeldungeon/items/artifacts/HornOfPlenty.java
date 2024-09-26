@@ -120,7 +120,7 @@ public class HornOfPlenty extends Artifact {
 				charge -= chargesToUse;
 				Talent.onArtifactUsed(hero);
 
-				hero.sprite.operate(hero.pos);
+				hero.getSprite().operate(hero.pos);
 				hero.busy();
 				SpellSprite.show(hero, SpellSprite.FOOD);
 				Sample.INSTANCE.play(Assets.Sounds.EAT);
@@ -326,7 +326,7 @@ public class HornOfPlenty extends Artifact {
 				if (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null){
 					GLog.w( Messages.get(HornOfPlenty.class, "reject") );
 				} else {
-					getOwner().sprite.operate( getOwner().pos );
+					getOwner().getSprite().operate( getOwner().pos );
 					getOwner().busy();
 					getOwner().spend( Food.TIME_TO_EAT );
 

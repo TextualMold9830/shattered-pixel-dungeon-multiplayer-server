@@ -148,8 +148,8 @@ public abstract class YogFist extends Mob {
 		} else {
 
 			incrementRangedCooldown();
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (getSprite() != null && (getSprite().visible || enemy.getSprite().visible)) {
+				getSprite().zap( enemy.pos );
 				return false;
 			} else {
 				zap();
@@ -364,7 +364,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.getSprite().showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
 			}
 
 			for (int i : PathFinder.NEIGHBOURS9){
@@ -406,7 +406,7 @@ public abstract class YogFist extends Mob {
 			GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
 
 			if (Dungeon.level.water[pos] && HP < HT) {
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(HT/50), FloatingText.HEALING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(HT/50), FloatingText.HEALING);
 				HP = Math.min(HT, HP + HT/50);
 			}
 
@@ -430,7 +430,7 @@ public abstract class YogFist extends Mob {
 				b.announced = false;
 				b.set(dmg*.6f);
 				b.attachTo(this);
-				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
+				getSprite().showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 			} else{
 				super.damage(dmg, source);
 			}
@@ -448,7 +448,7 @@ public abstract class YogFist extends Mob {
 
 			if (Random.Int( 2 ) == 0) {
 				Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
-				enemy.sprite.burst( 0xFF000000, 5 );
+				enemy.getSprite().burst( 0xFF000000, 5 );
 			}
 
 			return damage;
@@ -481,7 +481,7 @@ public abstract class YogFist extends Mob {
 				dmg = Math.round( dmg * resist( src.getClass() ));
 				if (dmg >= 0) {
 					Buff.affect(this, Viscosity.DeferedDamage.class).prolong(dmg);
-					sprite.showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg));
+					getSprite().showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg));
 				}
 			} else{
 				super.damage(dmg, source);
@@ -533,7 +533,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.getSprite().showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
 			}
 
 		}
@@ -608,7 +608,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.getSprite().showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
 			}
 
 		}
