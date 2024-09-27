@@ -169,6 +169,7 @@ public abstract class Char extends Actor {
 
 	public void setSprite(CharSprite sprite) {
 		this.sprite = sprite;
+		sendSelf();
 	}
 
 	//these are relative to the hero
