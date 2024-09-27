@@ -319,8 +319,8 @@ public abstract class RegularLevel extends Level {
 			}
 
 			cell = pointToCell(room.random(1));
-			//TODO: check this
-			if (!ch.fieldOfView[cell]
+			
+			if (!Dungeon.visibleforAnyHero(cell)
 					&& Actor.findChar(cell) == null
 					&& passable[cell]
 					&& !solid[cell]
