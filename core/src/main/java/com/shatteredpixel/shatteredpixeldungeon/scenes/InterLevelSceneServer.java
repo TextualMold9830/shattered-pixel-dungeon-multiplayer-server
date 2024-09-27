@@ -217,6 +217,7 @@ public class InterLevelSceneServer {
 		for (int i = 0; i < heroes.length; i++) {
 			SendData.sendInterLevelSceneFadeOut(i);
 		}
+		Game.switchScene(GameScene.class);
 	}
 
 	public void handleError() {
