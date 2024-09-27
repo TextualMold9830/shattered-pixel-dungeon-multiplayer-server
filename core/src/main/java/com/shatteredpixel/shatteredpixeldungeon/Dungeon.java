@@ -498,9 +498,7 @@ public class Dungeon {
 		}
 
 		Actor.init();
-		for (Mob mob: level.mobs){
-			GameScene.add(mob);
-		}
+
 		level.addRespawner();
 		for (Hero hero: heroes) {
 			if (hero != null) {
