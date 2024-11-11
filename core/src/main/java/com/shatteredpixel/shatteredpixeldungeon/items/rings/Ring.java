@@ -297,6 +297,9 @@ public class Ring extends KindofMisc {
 	//@Override
 	public int buffedLvl(Hero hero) {
 		int lvl = super.buffedLvl();
+		if (hero == null) {
+			return lvl;
+		}
 		if (hero.buff(EnhancedRings.class) != null){
 			lvl++;
 		}
@@ -304,6 +307,9 @@ public class Ring extends KindofMisc {
 	}
 
 	public static int getBonus(Char target, Class<?extends RingBuff> type){
+		if (target == null) {
+			return 0;
+		}
 		if (target.buff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
@@ -313,6 +319,9 @@ public class Ring extends KindofMisc {
 	}
 
 	public static int getBuffedBonus(Char target, Class<?extends RingBuff> type){
+		if (target == null) {
+			return 0;
+		}
 		if (target.buff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
