@@ -672,25 +672,7 @@ public class NetworkPacket {
         if (heap == null) {
             return null;
         }
-        if (heap.isEmpty()) {
-            return null;
-        }
-        JSONObject heapObj;
-        heapObj = new JSONObject();
-        try {
-            heapObj.put("pos", heap.pos);
-            heapObj.put("visible_item", Item.packItem(heap.items.getFirst(), observer));
-            int heapImage = -1;
-            if (heap.showsFirstItem()) {
-                heapImage = heap.image();
-            }
-            heapObj.put("visible_sprite", heapImage);
-            heapObj.put("show_item", heap.showsFirstItem());
-            heapObj.put("seen", heap.isSeen());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return heapObj;
+        return heap.toJsonObject(observer);
     }
 
     public void addHeapRemoving(Heap heap) {

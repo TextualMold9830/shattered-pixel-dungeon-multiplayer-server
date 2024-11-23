@@ -49,10 +49,13 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,7 +66,6 @@ import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeap
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeapRemoving;
 
 public class Heap implements Bundlable {
-
 	public enum Type {
 		HEAP,
 		FOR_SALE,
@@ -154,7 +156,18 @@ public class Heap implements Bundlable {
 	public Item peek() {
 		return items.peek();
 	}
-	
+
+	public Item peekVisual() {
+		Heap heap = this;
+		return
+				heap.type == Heap.Type.CHEST ? ItemSlot.CHEST :
+				heap.type == Heap.Type.LOCKED_CHEST ? ItemSlot.LOCKED_CHEST :
+				heap.type == Heap.Type.CRYSTAL_CHEST ? ItemSlot.CRYSTAL_CHEST :
+				heap.type == Heap.Type.TOMB ? ItemSlot.TOMB :
+				heap.type == Heap.Type.SKELETON ? ItemSlot.SKELETON :
+				heap.type == Heap.Type.REMAINS ? ItemSlot.REMAINS :
+				heap.peek();
+	}
 	public void drop( Item item ) {
 		
 		if (item.stackable && type != Type.FOR_SALE) {
@@ -491,4 +504,24 @@ public class Heap implements Bundlable {
 		this.seen = seen;
 		sendHeap(this);
 	}
+
+
+	public JSONObject toJsonObject(Hero observer) {
+		Heap heap = this;
+		if (heap.isEmpty()) {
+			return null;
+		}
+		JSONObject heapObj;
+		heapObj = new JSONObject();
+		try {
+			heapObj.put("pos", heap.pos);
+			heapObj.put("visible_item", peekVisual().toJsonObject(observer));
+			heapObj.put("show_item", true);
+			heapObj.put("seen", heap.isSeen());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return heapObj;
+	}
+
 }
