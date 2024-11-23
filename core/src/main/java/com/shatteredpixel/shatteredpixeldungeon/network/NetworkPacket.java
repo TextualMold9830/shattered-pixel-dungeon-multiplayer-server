@@ -168,9 +168,16 @@ public class NetworkPacket {
                     return new JSONObject();
                 }
                 object.put("id", id);
-                if (heroAsHero && (actor instanceof Hero)) {
-                    object.put("type", "hero");
-                } else {
+                if (actor instanceof Hero) {
+                    Hero hero = (Hero) actor;
+                    if (heroAsHero) {
+                        object.put("type", "hero");
+                    } else {
+                        object.put("type", "character");
+                    }
+                    object.put("class", hero.heroClass);
+                    object.put("tier", hero.tier());
+                }else {
                     object.put("type", "character");
                     if (character.getSprite() != null) {
                         String spriteAsset = character.getSprite().getSpriteAsset();
