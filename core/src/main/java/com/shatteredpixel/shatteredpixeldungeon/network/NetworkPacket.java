@@ -209,13 +209,15 @@ public class NetworkPacket {
                     object.put("description", desc);
                 }
             } else if (actor instanceof Blob) {
+                Blob blob = (Blob) actor;
                 int id = actor.id();
                 object.put("id", id);
                 object.put("type", "blob");
                 object.put("blob_type", toSnakeCase(actor.getClass().getSimpleName()));
+                object.put("alwaysVisible", blob.alwaysVisible);
                 JSONArray positions = new JSONArray();
-                for (int i = 0; i < ((Blob) actor).cur.length; i++) {
-                    if (((Blob) actor).cur[i] > 0) {
+                for (int i = 0; i < blob.cur.length; i++) {
+                    if (blob.cur[i] > 0) {
                         positions.put(i);
                     }
                 }
@@ -226,7 +228,7 @@ public class NetworkPacket {
                 Log.w("NetworkPacket", "remove actor. Actor class: " + actor.getClass().toString());
             }
         } catch (JSONException e) {
-
+            throw new RuntimeException(e);
         }
 
         return object;
