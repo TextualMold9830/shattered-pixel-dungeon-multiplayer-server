@@ -214,7 +214,7 @@ public class NetworkPacket {
                 object.put("id", id);
                 object.put("type", "blob");
                 object.put("blob_type", toSnakeCase(actor.getClass().getSimpleName()));
-                object.put("alwaysVisible", blob.alwaysVisible);
+                object.put("always_visible", blob.alwaysVisible);
                 JSONArray positions = new JSONArray();
                 for (int i = 0; i < blob.cur.length; i++) {
                     if (blob.cur[i] > 0) {
