@@ -546,10 +546,10 @@ public class MeleeWeapon extends Weapon {
 		@Override
 		public Visual primaryVisual() {
 			Image ico;
-			if (((Hero)target).belongings.weapon == null){
+			if (((Hero) target).belongings.getRealWeapon() == null){
 				ico = new HeroIcon(this);
  			} else {
-				ico = new ItemSprite(((Hero)target).belongings.weapon);
+				ico = new ItemSprite(((Hero) target).belongings.getRealWeapon());
 			}
 			ico.width += 4; //shift slightly to the left to separate from smaller icon
 			return ico;
@@ -585,8 +585,8 @@ public class MeleeWeapon extends Weapon {
 				return;
 			}
 
-			KindOfWeapon temp = hero.belongings.weapon;
-			hero.belongings.weapon = hero.belongings.secondWep;
+			KindOfWeapon temp = hero.belongings.getRealWeapon();
+			hero.belongings.setWeapon(hero.belongings.secondWep);
 			hero.belongings.secondWep = temp;
 
 			hero.getSprite().operate(hero.pos);

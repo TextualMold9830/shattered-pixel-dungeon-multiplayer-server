@@ -229,8 +229,8 @@ abstract public class ClassArmor extends Armor {
 
 								Armor armor = (Armor)item;
 								armor.detach(hero.belongings.backpack);
-								if (hero.belongings.armor == armor){
-									hero.belongings.armor = null;
+								if (hero.belongings.getRealArmor() == armor){
+									hero.belongings.setArmor(null);
 									if (hero.getSprite() instanceof HeroSprite) {
 										((HeroSprite) hero.getSprite()).updateArmor();
 									}

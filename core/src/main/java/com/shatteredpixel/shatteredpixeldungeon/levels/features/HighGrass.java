@@ -147,7 +147,7 @@ public class HighGrass {
 			if (ch instanceof Hero) {
 				Hero hero = (Hero) ch;
 				if (hero.belongings.armor() != null && hero.belongings.armor().hasGlyph(Camouflage.class, hero)) {
-					Camouflage.activate(hero, hero.belongings.armor.buffedLvl());
+					Camouflage.activate(hero, hero.belongings.getRealArmor().buffedLvl());
 				}
 			} else if (ch instanceof DriedRose.GhostHero){
 				DriedRose.GhostHero ghost = (DriedRose.GhostHero) ch;

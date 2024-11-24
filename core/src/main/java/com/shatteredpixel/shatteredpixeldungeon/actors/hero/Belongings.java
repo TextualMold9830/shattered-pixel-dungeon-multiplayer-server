@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -36,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.SpecialSlot;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Bundle;
@@ -64,10 +64,10 @@ public class Belongings implements Iterable<Item> {
 	public ArrayList<SpecialSlot> getSpecialSlots() {
 		ArrayList<SpecialSlot> slots = new ArrayList<>(4);
 		slots.add(new SpecialSlot(0, "items.png", ItemSpriteSheet.WEAPON_HOLDER, weapon()));
-		slots.add(new SpecialSlot(1, "items.png", ItemSpriteSheet.ARMOR_HOLDER, armor));
+		slots.add(new SpecialSlot(1, "items.png", ItemSpriteSheet.ARMOR_HOLDER, getRealArmor()));
 		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.SOMETHING, misc()));
 		slots.add(new SpecialSlot(4, "items.png", ItemSpriteSheet.RING_HOLDER, ring()));
-		slots.add(new SpecialSlot(5, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, artifact));
+		slots.add(new SpecialSlot(5, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, getRealArtifact()));
 		return slots;
 	}
 
@@ -93,6 +93,87 @@ public class Belongings implements Iterable<Item> {
 		}
 		return backpack.pathOfItem(item);
 	}
+
+	public KindOfWeapon getRealWeapon() {
+		return weapon;
+	}
+
+	public KindOfWeapon setWeapon(KindOfWeapon weapon) {
+		this.weapon = weapon;
+		if (weapon != null) {
+			weapon.sendSelfUpdate(owner);
+		} else {
+			List<Integer> path = new ArrayList<>(1);
+			path.add(-1);
+			SendData.sendRemoveItemFromInventory(owner, path);
+		}
+		return weapon;
+	}
+
+	public Armor getRealArmor() {
+		return armor;
+	}
+
+	public Armor setArmor(Armor armor) {
+		this.armor = armor;
+		if (armor != null) {
+			armor.sendSelfUpdate(owner);
+		} else {
+			List<Integer> path = new ArrayList<>(1);
+			path.add(-2);
+			SendData.sendRemoveItemFromInventory(owner, path);
+		}
+		return armor;
+	}
+
+	public Artifact getRealArtifact() {
+		return artifact;
+	}
+
+	public Artifact setArtifact(Artifact artifact) {
+		this.artifact = artifact;
+		if (artifact != null) {
+			artifact.sendSelfUpdate(owner);
+		} else {
+			List<Integer> path = new ArrayList<>(1);
+			path.add(-3);
+			SendData.sendRemoveItemFromInventory(owner, path);
+		}
+		return artifact;
+	}
+
+	public KindofMisc getRealMisc() {
+		return misc;
+	}
+
+	public KindofMisc setMisc(KindofMisc misc) {
+		this.misc = misc;
+		if (misc != null) {
+			misc.sendSelfUpdate(owner);
+		} else {
+			List<Integer> path = new ArrayList<>(1);
+			path.add(-4);
+			SendData.sendRemoveItemFromInventory(owner, path);
+		}
+		return misc;
+	}
+
+	public Ring getRealRing() {
+		return ring;
+	}
+
+	public Ring setRing(Ring ring) {
+		this.ring = ring;
+		if (ring != null) {
+			ring.sendSelfUpdate(owner);
+		} else {
+			List<Integer> path = new ArrayList<>(1);
+			path.add(-5);
+			SendData.sendRemoveItemFromInventory(owner, path);
+		}
+		return ring;
+	}
+
 	public static class Backpack extends Bag {
 		public List<Integer> pathOfItem(Item item) {
 			assert (item != null) : "path of null item";
@@ -143,11 +224,11 @@ public class Belongings implements Iterable<Item> {
 		backpack.owner = owner;
 	}
 
-	public KindOfWeapon weapon = null;
-	public Armor armor = null;
-	public Artifact artifact = null;
-	public KindofMisc misc = null;
-	public Ring ring = null;
+	private KindOfWeapon weapon = null;
+	private Armor armor = null;
+	private Artifact artifact = null;
+	private KindofMisc misc = null;
+	private Ring ring = null;
 
 	//used when thrown weapons temporary become the current weapon
 	public KindOfWeapon thrownWeapon = null;
@@ -180,40 +261,40 @@ public class Belongings implements Iterable<Item> {
 	}
 
 	public KindOfWeapon weapon(){
-		if (!lostInventory() || (weapon != null && weapon.keptThroughLostInventory())){
-			return weapon;
+		if (!lostInventory() || (getRealWeapon() != null && getRealWeapon().keptThroughLostInventory())){
+			return getRealWeapon();
 		} else {
 			return null;
 		}
 	}
 
 	public Armor armor(){
-		if (!lostInventory() || (armor != null && armor.keptThroughLostInventory())){
-			return armor;
+		if (!lostInventory() || (getRealArmor() != null && getRealArmor().keptThroughLostInventory())){
+			return getRealArmor();
 		} else {
 			return null;
 		}
 	}
 
 	public Artifact artifact(){
-		if (!lostInventory() || (artifact != null && artifact.keptThroughLostInventory())){
-			return artifact;
+		if (!lostInventory() || (getRealArtifact() != null && getRealArtifact().keptThroughLostInventory())){
+			return getRealArtifact();
 		} else {
 			return null;
 		}
 	}
 
 	public KindofMisc misc(){
-		if (!lostInventory() || (misc != null && misc.keptThroughLostInventory())){
-			return misc;
+		if (!lostInventory() || (getRealMisc() != null && getRealMisc().keptThroughLostInventory())){
+			return getRealMisc();
 		} else {
 			return null;
 		}
 	}
 
 	public Ring ring(){
-		if (!lostInventory() || (ring != null && ring.keptThroughLostInventory())){
-			return ring;
+		if (!lostInventory() || (getRealRing() != null && getRealRing().keptThroughLostInventory())){
+			return getRealRing();
 		} else {
 			return null;
 		}
@@ -241,11 +322,11 @@ public class Belongings implements Iterable<Item> {
 		
 		backpack.storeInBundle( bundle );
 		
-		bundle.put( WEAPON, weapon );
-		bundle.put( ARMOR, armor );
-		bundle.put( ARTIFACT, artifact );
-		bundle.put( MISC, misc );
-		bundle.put( RING, ring );
+		bundle.put( WEAPON, getRealWeapon());
+		bundle.put( ARMOR, getRealArmor());
+		bundle.put( ARTIFACT, getRealArtifact());
+		bundle.put( MISC, getRealMisc());
+		bundle.put( RING, getRealRing());
 		bundle.put( SECOND_WEP, secondWep );
 	}
 	
@@ -254,19 +335,19 @@ public class Belongings implements Iterable<Item> {
 		backpack.clear();
 		backpack.restoreFromBundle( bundle );
 		
-		weapon = (KindOfWeapon) bundle.get(WEAPON);
+		setWeapon((KindOfWeapon) bundle.get(WEAPON));
 		if (weapon() != null)       weapon().activate(owner);
 		
-		armor = (Armor)bundle.get( ARMOR );
+		setArmor((Armor)bundle.get( ARMOR ));
 		if (armor() != null)        armor().activate( owner );
 
-		artifact = (Artifact) bundle.get(ARTIFACT);
+		setArtifact((Artifact) bundle.get(ARTIFACT));
 		if (artifact() != null)     artifact().activate(owner);
 
-		misc = (KindofMisc) bundle.get(MISC);
+		setMisc((KindofMisc) bundle.get(MISC));
 		if (misc() != null)         misc().activate( owner );
 
-		ring = (Ring) bundle.get(RING);
+		setRing((Ring) bundle.get(RING));
 		if (ring() != null)         ring().activate( owner );
 
 		secondWep = (KindOfWeapon) bundle.get(SECOND_WEP);
@@ -452,7 +533,7 @@ public class Belongings implements Iterable<Item> {
 		
 		private Iterator<Item> backpackIterator = backpack.iterator();
 		
-		private Item[] equipped = {weapon, armor, artifact, misc, ring, secondWep};
+		private Item[] equipped = {getRealWeapon(), getRealArmor(), getRealArtifact(), getRealMisc(), getRealRing(), secondWep};
 		private int backpackIndex = equipped.length;
 		
 		@Override
@@ -484,19 +565,19 @@ public class Belongings implements Iterable<Item> {
 		public void remove() {
 			switch (index) {
 			case 0:
-				equipped[0] = weapon = null;
+				equipped[0] = setWeapon(null);
 				break;
 			case 1:
-				equipped[1] = armor = null;
+				equipped[1] = setArmor(null);
 				break;
 			case 2:
-				equipped[2] = artifact = null;
+				equipped[2] = setArtifact(null);
 				break;
 			case 3:
-				equipped[3] = misc = null;
+				equipped[3] = setMisc(null);
 				break;
 			case 4:
-				equipped[4] = ring = null;
+				equipped[4] = setRing(null);
 				break;
 			case 5:
 				equipped[5] = secondWep = null;

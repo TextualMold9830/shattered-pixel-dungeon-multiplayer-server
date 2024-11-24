@@ -430,11 +430,11 @@ public enum Talent {
 		}
 
 		if (talent == VETERANS_INTUITION && hero.pointsInTalent(VETERANS_INTUITION) == 2){
-			if (hero.belongings.armor() != null)  hero.belongings.armor.identify(hero);
+			if (hero.belongings.armor() != null)  hero.belongings.getRealArmor().identify(hero);
 		}
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
-			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.identify(hero);
-			if (hero.belongings.misc instanceof Ring) hero.belongings.misc.identify(hero);
+			if (hero.belongings.getRealRing() instanceof Ring) hero.belongings.getRealRing().identify(hero);
+			if (hero.belongings.getRealMisc() instanceof Ring) hero.belongings.getRealMisc().identify(hero);
 			for (Item item : hero.belongings){
 				if (item instanceof Ring){
 					((Ring) item).setKnown();
@@ -442,8 +442,8 @@ public enum Talent {
 			}
 		}
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 1){
-			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.setKnown();
-			if (hero.belongings.misc instanceof Ring) ((Ring) hero.belongings.misc).setKnown();
+			if (hero.belongings.getRealRing() instanceof Ring) hero.belongings.getRealRing().setKnown();
+			if (hero.belongings.getRealMisc() instanceof Ring) ((Ring) hero.belongings.getRealMisc()).setKnown();
 		}
 		if (talent == ADVENTURERS_INTUITION && hero.pointsInTalent(ADVENTURERS_INTUITION) == 2){
 			if (hero.belongings.weapon() != null) hero.belongings.weapon().identify(hero);

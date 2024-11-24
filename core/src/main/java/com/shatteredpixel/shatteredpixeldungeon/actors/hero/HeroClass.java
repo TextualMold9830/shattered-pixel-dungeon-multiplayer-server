@@ -94,7 +94,7 @@ public enum HeroClass {
 		Talent.initClassTalents(hero);
 
 		Item i = new ClothArmor().identify(hero);
-		if (!Challenges.isItemBlocked(i)) hero.belongings.armor = (ClothArmor)i;
+		if (!Challenges.isItemBlocked(i)) hero.belongings.setArmor((ClothArmor)i);
 
 		i = new Food();
 		if (!Challenges.isItemBlocked(i)) i.collect(hero);
@@ -157,13 +157,13 @@ public enum HeroClass {
 	}
 
 	private static void initWarrior( Hero hero ) {
-		(hero.belongings.weapon = new WornShortsword()).identify(hero);
+		(hero.belongings.setWeapon(new WornShortsword())).identify(hero);
 		ThrowingStone stones = new ThrowingStone();
 		stones.quantity(3).collect(hero);
 		Dungeon.quickslot.setSlot(0, stones);
 
-		if (hero.belongings.armor != null){
-			hero.belongings.armor.affixSeal(new BrokenSeal(), hero);
+		if (hero.belongings.getRealArmor() != null){
+			hero.belongings.getRealArmor().affixSeal(new BrokenSeal(), hero);
 		}
 
 		new PotionOfHealing().identify(hero);
@@ -175,8 +175,8 @@ public enum HeroClass {
 
 		staff = new MagesStaff(new WandOfMagicMissile());
 
-		(hero.belongings.weapon = staff).identify(hero);
-		hero.belongings.weapon.activate(hero);
+		(hero.belongings.setWeapon(staff)).identify(hero);
+		hero.belongings.getRealWeapon().activate(hero);
 
 		Dungeon.quickslot.setSlot(0, staff);
 
@@ -185,11 +185,11 @@ public enum HeroClass {
 	}
 
 	private static void initRogue( Hero hero ) {
-		(hero.belongings.weapon = new Dagger()).identify(hero);
+		(hero.belongings.setWeapon(new Dagger())).identify(hero);
 
 		CloakOfShadows cloak = new CloakOfShadows();
-		(hero.belongings.artifact = cloak).identify(hero);
-		hero.belongings.artifact.activate( hero );
+		(hero.belongings.setArtifact(cloak)).identify(hero);
+		hero.belongings.getRealArtifact().activate( hero );
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect(hero);
@@ -203,7 +203,7 @@ public enum HeroClass {
 
 	private static void initHuntress( Hero hero ) {
 
-		(hero.belongings.weapon = new Gloves()).identify(hero);
+		(hero.belongings.setWeapon(new Gloves())).identify(hero);
 		SpiritBow bow = new SpiritBow();
 		bow.identify(hero).collect(hero);
 
@@ -215,13 +215,13 @@ public enum HeroClass {
 
 	private static void initDuelist( Hero hero ) {
 
-		(hero.belongings.weapon = new Rapier()).identify(hero);
-		hero.belongings.weapon.activate(hero);
+		(hero.belongings.setWeapon(new Rapier())).identify(hero);
+		hero.belongings.getRealWeapon().activate(hero);
 
 		ThrowingSpike spikes = new ThrowingSpike();
 		spikes.quantity(2).collect(hero);
 
-		Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
+		Dungeon.quickslot.setSlot(0, hero.belongings.getRealWeapon());
 		Dungeon.quickslot.setSlot(1, spikes);
 
 		new PotionOfStrength().identify(hero);

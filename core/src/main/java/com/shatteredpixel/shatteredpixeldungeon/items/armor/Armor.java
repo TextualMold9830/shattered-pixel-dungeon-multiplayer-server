@@ -206,9 +206,9 @@ public class Armor extends EquipableItem {
 		
 		detach(hero.belongings.backpack);
 
-		if (hero.belongings.armor == null || hero.belongings.armor.doUnequip( hero, true, false )) {
+		if (hero.belongings.getRealArmor() == null || hero.belongings.getRealArmor().doUnequip( hero, true, false )) {
 			
-			hero.belongings.armor = this;
+			hero.belongings.setArmor(this);
 			
 			cursedKnown = true;
 			if (cursed) {
@@ -264,7 +264,7 @@ public class Armor extends EquipableItem {
 	public boolean doUnequip( Hero hero, boolean collect, boolean single ) {
 		if (super.doUnequip( hero, collect, single )) {
 
-			hero.belongings.armor = null;
+			hero.belongings.setArmor(null);
 			((HeroSprite) hero.getSprite()).updateArmor();
 
 			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);

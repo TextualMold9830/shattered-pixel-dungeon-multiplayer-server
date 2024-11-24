@@ -251,7 +251,6 @@ public class SendData {
             if (client == null) {
                 continue;
             }
-            Gdx.app.log("SendData" , String.valueOf(actor == client.clientHero));
             client.packet.packAndAddActor(actor, actor == client.clientHero);
             client.flush();
         }

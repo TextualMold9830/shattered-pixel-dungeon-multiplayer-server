@@ -48,7 +48,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 	public void execute(Hero hero, String action) {
 		if (hero.subClass == HeroSubClass.CHAMPION && action.equals(AC_EQUIP)){
 			usesTargeting = false;
-			String primaryName = Messages.titleCase(hero.belongings.weapon != null ? hero.belongings.weapon.trueName() : Messages.get(KindOfWeapon.class, "empty"));
+			String primaryName = Messages.titleCase(hero.belongings.getRealWeapon() != null ? hero.belongings.getRealWeapon().trueName() : Messages.get(KindOfWeapon.class, "empty"));
 			String secondaryName = Messages.titleCase(hero.belongings.secondWep != null ? hero.belongings.secondWep.trueName() : Messages.get(KindOfWeapon.class, "empty"));
 			if (primaryName.length() > 18) primaryName = primaryName.substring(0, 15) + "...";
 			if (secondaryName.length() > 18) secondaryName = secondaryName.substring(0, 15) + "...";
@@ -113,9 +113,9 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 		detachAll( hero.belongings.backpack );
 		
-		if (hero.belongings.weapon == null || hero.belongings.weapon.doUnequip( hero, true )) {
+		if (hero.belongings.getRealWeapon() == null || hero.belongings.getRealWeapon().doUnequip( hero, true )) {
 			
-			hero.belongings.weapon = this;
+			hero.belongings.setWeapon(this);
 			activate( hero );
 			Talent.onItemEquipped(hero, this);
 			Badges.validateDuelistUnlock();
@@ -206,7 +206,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 		if (super.doUnequip( hero, collect, single )) {
 
 			if (!second){
-				hero.belongings.weapon = null;
+				hero.belongings.setWeapon(null);
 			}
 			return true;
 

@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -902,4 +903,13 @@ public class Item implements Bundlable {
 		return null;
 	}
 
+	public void sendSelfUpdate(){
+		sendSelfUpdate(null);
+	}
+	public void sendSelfUpdate(Hero heroToFlush){
+		sendUpdateItemFull(this);
+		if (heroToFlush != null){
+			SendData.flush(heroToFlush);
+		}
+	}
 }

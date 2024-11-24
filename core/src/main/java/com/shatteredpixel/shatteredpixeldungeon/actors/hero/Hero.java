@@ -720,7 +720,7 @@ public class Hero extends Char {
 
 			//and augments + brawler's stance! My goodness, so many options now compared to 2014!
 			if (RingOfForce.unarmedGetsWeaponAugment(this)){
-				delay = ((Weapon)belongings.weapon).augment.delayFactor(delay);
+				delay = ((Weapon) belongings.getRealWeapon()).augment.delayFactor(delay);
 			}
 
 			return delay/speed;
