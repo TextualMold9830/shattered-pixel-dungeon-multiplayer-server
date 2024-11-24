@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
 
@@ -41,9 +41,5 @@ public class BlobEmitter extends Emitter {
 	}
 
 	public RectF bound = new RectF(0, 0, 1, 1);
-	
-	@Override
-	protected void emit( int index ) {
 
-	}
 }

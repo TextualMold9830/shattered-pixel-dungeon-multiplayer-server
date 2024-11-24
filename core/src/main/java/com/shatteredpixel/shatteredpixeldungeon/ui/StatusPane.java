@@ -40,7 +40,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.GameMath;

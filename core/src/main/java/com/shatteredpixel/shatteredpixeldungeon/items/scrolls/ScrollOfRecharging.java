@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 
 public class ScrollOfRecharging extends Scroll {
 

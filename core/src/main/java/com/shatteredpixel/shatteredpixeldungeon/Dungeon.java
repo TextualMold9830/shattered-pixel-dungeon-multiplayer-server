@@ -1215,6 +1215,7 @@ public class Dungeon {
 			if (hero == null) {
 				continue;
 			}
+
 			if (hero.fieldOfView[pos]) {
 				return true;
 			}

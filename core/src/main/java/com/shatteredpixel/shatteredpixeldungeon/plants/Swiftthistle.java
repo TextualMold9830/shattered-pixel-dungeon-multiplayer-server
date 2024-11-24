@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;

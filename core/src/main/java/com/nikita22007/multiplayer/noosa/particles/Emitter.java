@@ -1,12 +1,9 @@
 /*
  * Pixel Dungeon
- * Copyright (C) 2012-2015  Oleg Dolya
+ * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2016 Evan Debenham
- *
- * Pixel Dungeon Multiplayer
- * Copyright (C) 2021-2023 Shaposhnikov Nikita
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +21,16 @@
 
 package com.nikita22007.multiplayer.noosa.particles;
 
-import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.watabou.glwrap.Blending;
+import com.watabou.noosa.Game;
+import com.watabou.noosa.Group;
+import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
+import com.watabou.utils.Random;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.annotation.Documented;
 
 /**
  * Emitter emits visual particles from random place in its area.
@@ -37,13 +39,15 @@ import org.json.JSONObject;
  * <p>
  * Emitter emits {@link #quantity} count of particles with {@link #interval} delay.
  * If {@code quantity == 0} emitter should be stopped manually */
-public class Emitter {
+public class Emitter extends Group {
 
-	protected boolean lightMode = false;
+	public static boolean freezeEmitters = false;
+
 	/**
 	 * X position of left-top angle of emitter's area
 	 */
 	public float x;
+
 	/**
 	 * Y position of left-top angle of emitter's area
 	 */
@@ -56,82 +60,62 @@ public class Emitter {
 	 * Height of emitter's area
 	 */
 	public float height;
-
 	/**
 	 * If target != null, emitter's will use target's position instead of itself
 	 */
-	protected CharSprite target;
+	protected Visual target;
 	/**
-	 * If target != null, emitter's will use target's size instead of itself
+	 * If target != null and fillTarget, emitter's will use target's size instead of itself
 	 */
 	public boolean fillTarget = true;
-	
+
 	protected float interval;
 	protected int quantity;
 
-	/**
-	 * if {@code on == false}, Emitter stops emitting
-	 */
 	public boolean on = false;
+
+	private boolean started = false;
+	public boolean autoKill = true;
+
+	protected int count;
+	protected float time;
 
 	/**
 	 * Factory which producing particles
 	 */
 	protected Factory factory;
-	private Integer cell = null;
-	private PointF shift = new PointF(0, 0);
 
 
-	public void cellPos(int cell) {
-		cellPos(cell, 0, 0);
+	private int id = -1;
+	private static int lastId = 0;
+	protected final int getNextId() {
+		return ++lastId;
 	}
 
-	public void cellPos(int cell, float width, float height){
-		this.cell = cell;
-		this.width = width;
-		this.height = height;
-	}
-
-	public void cellPosWithShift(int cell, float shiftX, float shiftY) {
-		cellPosWithShift(cell, new PointF(shiftX, shiftY));
-	}
-
-	public void cellPosWithShift(int cell, PointF shift) {
-		cellPosWithShift(cell, shift, 0,0);
-	}
-
-	public void cellPosWithShift(int cell, float shiftX,float shiftY, float width, float height) {
-		cellPosWithShift(cell, new PointF(shiftX, shiftY), width, height);
-	}
-
-	public void cellPosWithShift(int cell, PointF shift, float width, float height) {
-		this.cell = cell;
-		this.shift = shift;
-		this.width = width;
-		this.height = height;
-		target = null;
+	public void pos( float x, float y ) {
+		pos( x, y, 0, 0 );
 	}
 
 	public void pos( PointF p ) {
 		pos( p.x, p.y, 0, 0 );
 	}
-	
+
 	public void pos( float x, float y, float width, float height ) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
+
 		target = null;
 	}
 
-	public void pos( CharSprite target ) {
+	public void pos( Visual target ) {
 		this.target = target;
 	}
 
-	public void pos( CharSprite target, PointF shift ) {
-		this.target = target;
-		this.shift = shift;
+	public void pos( Visual target, float x, float y, float width, float height ) {
+		pos(x, y, width, height);
+		pos(target);
 	}
 
 	/**
@@ -154,31 +138,59 @@ public class Emitter {
 
 	/**
 	 * Emits {@code quantity} particles each {@code interval} seconds
+	 * if quantity is 0, should be stopped manually
 	 * @param factory factory of particles
 	 * @param interval interval between emitting
+	 * @param quantity count of particles
 	 */
 	public void start( Factory factory, float interval, int quantity ) {
 
-		if (quantity == 0) {
-			//todo
-			return;
-		}
-
 		this.factory = factory;
-		this.lightMode = factory.lightMode();
-		
+
 		this.interval = interval;
 		this.quantity = quantity;
-		
+
+		count = 0;
+		time = Random.Float( interval );
+
 		on = true;
+		started = true;
+		sendSelf();
+	}
+
+
+	protected boolean isFrozen(){
+		return Game.timeTotal > 1 && freezeEmitters;
+	}
+
+	@Override
+	public void update() {
+
+	}
+
+	@Override
+	public void revive() {
+		//ensure certain emitter variables default to true
+		started = false;
+		visible = true;
+		fillTarget = true;
+		autoKill = true;
+		super.revive();
+	}
+
+	public void onParentChanged() {
+		super.onParentChanged();
 		sendSelf();
 	}
 
 	protected void sendSelf() {
+		if (parent == null) {
+			return;
+		}
 		JSONObject actionObj = new JSONObject();
 		try {
 			actionObj.put("action_type", "emitter_visual");
-
+			actionObj.put("id", id);
 			if ((target != null) && (target.ch != null) && (target.ch.id() != -1)) {
 				actionObj.put("target_char", target.ch.id());
 				actionObj.put("fill_target", fillTarget);
@@ -204,27 +216,12 @@ public class Emitter {
 		}
 		SendData.sendCustomActionForAll(actionObj);
 	}
-
 	abstract public static class Factory {
+
+		abstract public void emit( Emitter emitter, int index, float x, float y );
 
 		public boolean lightMode() {
 			return false;
-		}
-
-		public abstract String factoryName();
-
-		public JSONObject customParams() {
-			return new JSONObject();
-		}
-
-		public final JSONObject toJsonObject() {
-			JSONObject result =  customParams();
-			try {
-			result = result == null? new JSONObject(): result;
-			result.put("factory_type", factoryName());
-				result.put("light_mode", lightMode());
-			} catch (JSONException ignored) {}
-			return result;
 		}
 	}
 }

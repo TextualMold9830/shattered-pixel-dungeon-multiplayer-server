@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoMob;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Component;
 
 public class BossHealthBar {

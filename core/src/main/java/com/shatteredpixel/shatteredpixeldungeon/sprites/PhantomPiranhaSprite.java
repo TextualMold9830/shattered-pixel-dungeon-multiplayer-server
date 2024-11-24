@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 
 public class PhantomPiranhaSprite extends MobSprite {
 

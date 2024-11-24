@@ -40,7 +40,7 @@ public class Gizmo {
 	}
 	
 	public void destroy() {
-		parent = null;
+		setParent(null);
 	}
 	
 	public void update() {
@@ -97,5 +97,15 @@ public class Gizmo {
 		if (parent != null) {
 			parent.remove( this );
 		}
+	}
+
+	public final void setParent(Group parent) {
+		if (this.parent != parent) {
+			this.parent = parent;
+			onParentChanged();
+		}
+	}
+	public void onParentChanged() {
+
 	}
 }

@@ -37,7 +37,7 @@ import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.PointerArea;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 
 import java.util.LinkedHashMap;
 

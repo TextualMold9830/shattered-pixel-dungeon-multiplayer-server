@@ -21,9 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects.particles;
 
-import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.particles.Emitter.Factory;
-import com.watabou.noosa.particles.PixelParticle;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter.Factory;
+import com.watabou.noosa.particles.PixelParticle;;
 
 public class SacrificialParticle extends PixelParticle.Shrinking {
 

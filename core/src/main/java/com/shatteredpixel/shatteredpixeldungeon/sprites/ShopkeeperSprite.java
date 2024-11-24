@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.particles.PixelParticle;
+import com.watabou.noosa.particles.PixelParticle;;
 
 public class ShopkeeperSprite extends MobSprite {
 	

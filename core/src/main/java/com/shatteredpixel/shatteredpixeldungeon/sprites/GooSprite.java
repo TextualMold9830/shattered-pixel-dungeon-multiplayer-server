@@ -29,9 +29,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.watabou.noosa.TextureFilm;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.particles.Emitter.Factory;
-import com.watabou.noosa.particles.PixelParticle;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter.Factory;
+import com.watabou.noosa.particles.PixelParticle;;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 

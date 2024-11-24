@@ -53,7 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -516,7 +516,7 @@ public class MagesStaff extends MeleeWeapon {
 	};
 
 	//determines particle effects to use based on wand the staff owns.
-	public class StaffParticle extends PixelParticle{
+	public class StaffParticle extends PixelParticle {
 
 		private float minSize;
 		private float maxSize;
