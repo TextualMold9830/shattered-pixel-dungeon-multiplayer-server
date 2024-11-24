@@ -733,7 +733,7 @@ public class NetworkPacket {
     public void packAndAddIronKeysCount(int count) {
         try {
             synchronized (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("iu");
+                JSONObject uiObj = dataRef.get().optJSONObject("ui");
                 uiObj = uiObj != null ? uiObj : new JSONObject();
                 uiObj.put("iron_keys_count", count);
                 dataRef.get().put("ui", uiObj);
@@ -746,7 +746,7 @@ public class NetworkPacket {
     public void packAndAddDepth(int depth) {
         try {
             synchronized (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("iu");
+                JSONObject uiObj = dataRef.get().optJSONObject("ui");
                 uiObj = uiObj != null ? uiObj : new JSONObject();
                 uiObj.put("depth", depth);
                 dataRef.get().put("ui", uiObj);
