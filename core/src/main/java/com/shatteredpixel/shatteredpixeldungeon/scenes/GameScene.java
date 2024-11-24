@@ -45,7 +45,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
-import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -323,7 +322,6 @@ public class GameScene extends PixelScene {
 
 		for (Blob blob : Dungeon.level.blobs.values()) {
 			blob.emitter = null;
-			addBlobSprite(blob);
 		}
 
 		spells = new Group();
@@ -837,9 +835,6 @@ public class GameScene extends PixelScene {
 	}
 	
 	private void addBlobSprite( final Blob gas ) {
-		if (gas.emitter == null) {
-			gases.add( new BlobEmitter( gas ) );
-		}
 	}
 	
 	private synchronized void addMobSprite( Mob mob ) {
@@ -913,9 +908,6 @@ public class GameScene extends PixelScene {
 	
 	public static void add( Blob gas ) {
 		Actor.add( gas );
-		if (scene != null) {
-			scene.addBlobSprite( gas );
-		}
 	}
 	
 	public static void add( Heap heap ) {
