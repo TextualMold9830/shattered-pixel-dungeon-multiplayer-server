@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TeleportationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ToxicTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -55,6 +56,8 @@ import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -212,27 +215,30 @@ public class PrisonLevel extends RegularLevel {
 	
 	public static class Torch extends Emitter {
 		
-		private int pos;
-		
 		public Torch( int pos ) {
 			super();
-			
-			this.pos = pos;
 			
 			PointF p = DungeonTilemap.tileCenterToWorld( pos );
 			pos( p.x - 1, p.y + 2, 2, 0 );
 			
-			pour( FlameParticle.FACTORY, 0.15f );
+			//pour( FlameParticle.FACTORY, 0.15f );
 			
-			add( new Halo( 12, 0xFFFFCC, 0.4f ).point( p.x, p.y + 1 ) );
+			//add( new Halo( 12, 0xFFFFCC, 0.4f ).point( p.x, p.y + 1 ) );
+			addTorch(pos,12, 0xFFFFCC, 0.4f);
 		}
-		
-		@Override
-		public void update() {
-			//TODO: check this
-			if (visible == Dungeon.visibleforAnyHero(pos)) {
-				super.update();
+		public static void addTorch(int pos, float radius, int color, float brightness) {
+			JSONObject actionObj = new JSONObject();
+			try {
+				actionObj.put("action_type", "emitter_decor");
+				actionObj.put("type", "torch");
+				actionObj.put("pos", pos);
+				actionObj.put("radius", radius);
+				actionObj.put("color", color);
+				actionObj.put("brightness", brightness);
+			} catch (JSONException e) {
+				throw new RuntimeException(e);
 			}
+			SendData.sendCustomActionForAll(actionObj);
 		}
 	}
 }

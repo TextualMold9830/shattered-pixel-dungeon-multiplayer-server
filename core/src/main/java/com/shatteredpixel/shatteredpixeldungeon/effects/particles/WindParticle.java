@@ -22,12 +22,16 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects.particles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.nikita22007.multiplayer.noosa.particles.Emitter.Factory;
 import com.watabou.noosa.particles.PixelParticle;;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class WindParticle extends PixelParticle {
 
@@ -35,6 +39,11 @@ public class WindParticle extends PixelParticle {
 		@Override
 		public void emit( Emitter emitter, int index, float x, float y ) {
 			((WindParticle)emitter.recycle( WindParticle.class )).reset( x, y );
+		}
+
+		@Override
+		public @NotNull String factoryName() {
+			return "wind_level";
 		}
 	};
 	
@@ -73,29 +82,24 @@ public class WindParticle extends PixelParticle {
 		float p = left / lifespan;
 		am = (p < 0.5f ? p : 1 - p) * size * 0.2f;
 	}
-
+	public static void addWind(int pos) {
+		JSONObject actionObj = new JSONObject();
+		try {
+			actionObj.put("action_type", "emitter_decor");
+			actionObj.put("type", "wind");
+			actionObj.put("pos", pos);
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
+		SendData.sendCustomActionForAll(actionObj);
+	}
 	public static class Wind extends Emitter {
-		
-		private int pos;
 		
 		public Wind( int pos ) {
 			super();
-
-			this.pos = pos;
-			PointF p = DungeonTilemap.tileToWorld( pos );
-			pos(p.x, p.y, DungeonTilemap.SIZE, DungeonTilemap.SIZE);
-			
-			pour(FACTORY, 2.5f);
-		}
-		
-		@Override
-		public void update() {
-			//TODO: check this
-			if (visible = (Dungeon.visibleforAnyHero(pos))) {
-				
-				super.update();
-
-			}
+			cell(pos, DungeonTilemap.SIZE, DungeonTilemap.SIZE);
+			//pour(FACTORY, 2.5f);
+			addWind(pos);
 		}
 	}
 }

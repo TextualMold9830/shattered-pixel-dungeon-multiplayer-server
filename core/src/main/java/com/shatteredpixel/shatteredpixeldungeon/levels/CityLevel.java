@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WarpingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WeakeningTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
@@ -52,6 +53,9 @@ import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CityLevel extends RegularLevel {
 
@@ -190,8 +194,24 @@ public class CityLevel extends RegularLevel {
 				SmokeParticle p = (SmokeParticle)emitter.recycle( SmokeParticle.class );
 				p.reset( x, y );
 			}
+
+			@Override
+			public @NotNull String factoryName() {
+				return "smoke_level";
+			}
 		};
-		
+		public static void addSmoke(int pos) {
+			JSONObject actionObj = new JSONObject();
+			try {
+				actionObj.put("action_type", "emitter_decor");
+				actionObj.put("type", "smoke");
+				actionObj.put("pos", pos);
+			} catch (JSONException e) {
+				throw new RuntimeException(e);
+			}
+			SendData.sendCustomActionForAll(actionObj);
+		}
+
 		public Smoke( int pos ) {
 			super();
 			
@@ -199,8 +219,9 @@ public class CityLevel extends RegularLevel {
 			
 			PointF p = DungeonTilemap.tileCenterToWorld( pos );
 			pos( p.x - 6, p.y - 4, 12, 12 );
-			
-			pour( factory, 0.2f );
+
+			//pour( factory, 0.2f );
+			addSmoke(pos);
 		}
 		
 		@Override

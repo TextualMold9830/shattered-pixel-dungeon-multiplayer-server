@@ -505,39 +505,20 @@ Emitter.Factory
 }
 
 
-factories:
-speck
+SPD factories:
 
-blast
-earth
-elmo
-energy
-flame
-flow
-leaf
-poison_missile
-poison_splash
-purple_missile
-purple_burst
-sartificial
-shadow_missile
-shadow_curse
-shadow_up
-shaft
-snow
-smoke
-spark
-splash
-web
-wind
-wool
+staff_particle
+sink_level //use emiter_decor instead ot this to automatically spawn ripples
+smoke_level
 
-goo
+//magic_particle_factory
+//magic_particle_attracting
+
 
 Emitter_decor
 {
     "action_type" : "emitter_decor"
-    "type": "sink" / "smoke" / "torch"
+    "type": "sink" / "smoke" / "torch" / "wind"
     "pos": 3
 
     "color": 0xFFFFCC //torch

@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TeleportationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ToxicTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WornDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.SurfaceScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -56,6 +57,9 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SewerLevel extends RegularLevel {
 
@@ -203,23 +207,45 @@ public class SewerLevel extends RegularLevel {
 		private float rippleDelay = 0;
 		
 		private static final Emitter.Factory factory = new Factory() {
-			
 			@Override
 			public void emit( Emitter emitter, int index, float x, float y ) {
 				WaterParticle p = (WaterParticle)emitter.recycle( WaterParticle.class );
 				p.reset( x, y );
 			}
+
+			@Override
+			public @NotNull String factoryName() {
+				return "sink_level";
+			}
 		};
-		
+		private static JSONObject sinkObject(int pos){
+			JSONObject actionObj = new JSONObject();
+			try {
+				actionObj.put("action_type", "emitter_decor");
+				actionObj.put("type", "sink");
+				actionObj.put("pos", pos);
+			} catch (JSONException e) {
+				throw new RuntimeException(e);
+			}
+			return actionObj;
+		}
+		public static void addSink(int pos) {
+			SendData.sendCustomActionForAll(sinkObject(pos));
+		}
+		public static void addSink(int pos, Hero hero) {
+			SendData.sendCustomAction(sinkObject(pos), hero);
+		}
 		public Sink( int pos ) {
 			super();
 			
 			this.pos = pos;
 			
 			PointF p = DungeonTilemap.tileCenterToWorld( pos );
+			cell(pos, -2, +3, 4, 0);
 			pos( p.x - 2, p.y + 3, 4, 0 );
 			
-			pour( factory, 0.1f );
+			//pour( factory, 0.1f );
+			addSink(pos);
 		}
 		
 		@Override
