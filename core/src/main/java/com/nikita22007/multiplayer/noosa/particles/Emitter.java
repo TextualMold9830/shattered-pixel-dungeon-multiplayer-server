@@ -21,12 +21,16 @@
 
 package com.nikita22007.multiplayer.noosa.particles;
 
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,10 +89,11 @@ public class Emitter extends Group {
 	 */
 	protected Factory factory;
 
+	private Integer cell = null;
 
 	private int id = -1;
 	private static int lastId = 0;
-	protected final int getNextId() {
+	protected synchronized final int getNextId() {
 		return ++lastId;
 	}
 
@@ -100,6 +105,25 @@ public class Emitter extends Group {
 		pos( p.x, p.y, 0, 0 );
 	}
 
+	public void cell(int pos) {
+		cell = pos;
+		this.x = 0;
+		this.y = 0;
+	}
+	public void cell(int pos, float width, float height) {
+		cell = pos;
+		this.x = 0;
+		this.y = 0;
+		this.width = width;
+		this.height = 0;
+	}
+	public void cell(int pos, int x, int y,  float width, float height) {
+		cell = pos;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = 0;
+	}
 	public void pos( float x, float y, float width, float height ) {
 		this.x = x;
 		this.y = y;
@@ -107,6 +131,7 @@ public class Emitter extends Group {
 		this.height = height;
 
 		target = null;
+		cell = null;
 	}
 
 	public void pos( Visual target ) {
@@ -155,6 +180,11 @@ public class Emitter extends Group {
 
 		on = true;
 		started = true;
+		if (quantity == 0) {
+			if (id == -1) {
+				id = getNextId();
+			}
+		}
 		sendSelf();
 	}
 
@@ -191,18 +221,25 @@ public class Emitter extends Group {
 		try {
 			actionObj.put("action_type", "emitter_visual");
 			actionObj.put("id", id);
-			if ((target != null) && (target.ch != null) && (target.ch.id() != -1)) {
-				actionObj.put("target_char", target.ch.id());
-				actionObj.put("fill_target", fillTarget);
-			} else if (cell != null){
-				actionObj.put("pos", cell);
-			} else {
+			if (target != null){
+				if ((target instanceof CharSprite) && ((CharSprite) target).ch != null && ((CharSprite) target).ch.id() != -1){
+						actionObj.put("target_char", ((CharSprite) target).ch.id());
+						actionObj.put("shift_x", x);
+						actionObj.put("shift_y", y);
+				} else {
+					actionObj.put("position_x", x + target.x);
+					actionObj.put("position_y", x + target.y);
+				}
+				} else if (cell != null){
+					actionObj.put("pos", cell);
+					actionObj.put("shift_x", x);
+					actionObj.put("shift_y", y);
+				} else {
 				actionObj.put("position_x", x);
 				actionObj.put("position_y", y);
 			}
 
-			actionObj.put("shift_x", shift.x);
-			actionObj.put("shift_y", shift.y);
+			actionObj.put("fill_target", fillTarget);
 
 			actionObj.put("width", width);
 			actionObj.put("height", height);
@@ -222,6 +259,23 @@ public class Emitter extends Group {
 
 		public boolean lightMode() {
 			return false;
+		}
+
+		@NotNull
+		public abstract String factoryName();
+
+		@Nullable
+		public JSONObject customParams() {
+			return new JSONObject();
+		}
+		public final JSONObject toJsonObject() {
+			JSONObject result = customParams();
+			try {
+				result = result == null? new JSONObject(): result;
+				result.put("factory_type", factoryName());
+				result.put("light_mode", lightMode());
+			} catch (JSONException ignored) {}
+			return result;
 		}
 	}
 }
