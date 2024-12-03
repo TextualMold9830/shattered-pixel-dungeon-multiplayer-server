@@ -221,7 +221,6 @@ public class SendData {
     }
 
     public static void sendInterLevelSceneFadeOut(int ID) {
-        Gdx.app.log("sendInterLevelSceneFadeOut", String.valueOf(ID));
         if ((ID != -1)&&  (clients[ID] != null)) {
             clients[ID].flush();
             if (clients[ID].clientHero == null) {

@@ -137,11 +137,12 @@ public class InterLevelSceneServer {
 		}
 
 		//flush the texture cache whenever moving between regions, helps reduce memory load
-		int region = (int)Math.ceil(loadingDepth / 5f);
-		if (region != lastRegion){
-			TextureCache.clear();
-			lastRegion = region;
-		}
+		//These seem to cause some issues
+//		int region = (int)Math.ceil(loadingDepth / 5f);
+//		if (region != lastRegion){
+//			TextureCache.clear();
+//			lastRegion = region;
+//		}
 
 		if      (lastRegion == 1)    loadingAsset = Assets.Interfaces.LOADING_SEWERS;
 		else if (lastRegion == 2)    loadingAsset = Assets.Interfaces.LOADING_PRISON;
