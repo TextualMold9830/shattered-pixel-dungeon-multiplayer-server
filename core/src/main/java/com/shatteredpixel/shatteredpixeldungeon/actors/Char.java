@@ -897,6 +897,7 @@ public abstract class Char extends Actor {
 		} else if (HP == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
+		sendSelf();
 	}
 
 	//these are misc. sources of physical damage which do not apply armor, they get a different icon
