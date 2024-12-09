@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbili
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -78,15 +79,19 @@ abstract public class ClassArmor extends Armor {
 	@Override
 	public boolean doUnequip( Hero hero, boolean collect, boolean single ) {
 		if (super.doUnequip( hero, collect, single )) {
-			if (charger != null){
-				charger.detach();
-				charger = null;
-			}
+			stopCharging();
 			return true;
 
 		} else {
 			return false;
 
+		}
+	}
+
+	private void stopCharging() {
+		if (charger != null){
+			charger.detach();
+			charger = null;
 		}
 	}
 
@@ -330,6 +335,11 @@ abstract public class ClassArmor extends Armor {
 				return true;
 			}
 			return false;
+		}
+		@Override
+		public void detach() {
+			super.detach();
+			ClassArmor.this.stopCharging();
 		}
 
 		@Override
