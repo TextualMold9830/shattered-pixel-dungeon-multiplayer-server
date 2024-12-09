@@ -221,9 +221,10 @@ public abstract class Wand extends Item {
 	}
 
 	public void stopCharging() {
-		if (charger != null) {
-			charger.detach();
+		if (charger != null){
+			Charger oldCharger = charger;
 			charger = null;
+			oldCharger.detach();
 		}
 	}
 	
