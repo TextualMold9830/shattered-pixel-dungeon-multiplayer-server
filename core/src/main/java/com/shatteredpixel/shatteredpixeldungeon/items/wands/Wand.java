@@ -743,7 +743,13 @@ public abstract class Wand extends Item {
 			}
 			return false;
 		}
-		
+
+		@Override
+		public void detach() {
+			super.detach();
+			Wand.this.stopCharging();
+		}
+
 		@Override
 		public boolean act() {
 			if (curCharges < maxCharges && target.buff(MagicImmune.class) == null)
