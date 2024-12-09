@@ -26,6 +26,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import org.jetbrains.annotations.NotNull;
 
 public class MagicalHolster extends Bag {
 
@@ -45,7 +47,12 @@ public class MagicalHolster extends Bag {
 		}
 	}
 
-	public int capacity(){
+    @Override
+    public @NotNull Icons getBagIcon() {
+        return Icons.WAND_HOLSTER;
+    }
+
+    public int capacity(){
 		return 19;
 	}
 	

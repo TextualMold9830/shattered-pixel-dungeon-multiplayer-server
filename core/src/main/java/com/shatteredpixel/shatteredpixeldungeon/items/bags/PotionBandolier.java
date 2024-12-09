@@ -25,6 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import org.jetbrains.annotations.NotNull;
 
 public class PotionBandolier extends Bag {
 
@@ -41,7 +43,12 @@ public class PotionBandolier extends Bag {
 		}
 	}
 
-	public int capacity(){
+    @Override
+    public @NotNull Icons getBagIcon() {
+        return Icons.POTION_BANDOLIER;
+    }
+
+    public int capacity(){
 		return 19;
 	}
 

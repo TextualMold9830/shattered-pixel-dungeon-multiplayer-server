@@ -24,7 +24,7 @@ public class LobbyLevel extends DeadEndLevel {
                                             Terrain.WATER;
         }
 
-        int entrance = (SIZE-1) * width() + SIZE / 2 + 1;
+        int entrance = exit();
 
         //different exit behaviour depending on main branch or side one
         if (Dungeon.branch == 0) {

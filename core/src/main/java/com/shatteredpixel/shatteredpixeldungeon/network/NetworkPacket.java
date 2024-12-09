@@ -552,10 +552,10 @@ public class NetworkPacket {
 
         JSONObject bagObj = itemObj;
         try {
+            bagObj.put("bag_icon", bag.getBagIcon());
             bagObj.put("size", bag.capacity());
             bagObj.put("items", bagItems);
             bagObj.put("owner", hero != null ? hero.id() : null);
-            bagObj.put("icon", bag.icon);
         } catch (JSONException e) {
             Log.e("Packet", "JSONException inside packBag. " + e.toString());
         }

@@ -522,7 +522,7 @@ public class Item implements Bundlable {
 	}
 
 	@Contract("true,null->fail")
-	public Item identify( boolean byHero, Hero hero ) {
+	public Item identify( boolean byHero, @Nullable Hero hero ) {
 
 		if (byHero && hero != null && hero.isAlive()){
 			Catalog.setSeen(getClass());
@@ -790,6 +790,7 @@ public class Item implements Bundlable {
 			}
 			itemObj.put("sprite_sheet", spriteSheet());
 			itemObj.put("image", image());
+			itemObj.put("icon", icon);
 			itemObj.put("name", name());
 			itemObj.put("stackable", stackable);
 			itemObj.put("quantity", quantity());

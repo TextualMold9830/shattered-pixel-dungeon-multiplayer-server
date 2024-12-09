@@ -27,6 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Spell;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import org.jetbrains.annotations.NotNull;
 
 public class ScrollHolder extends Bag {
 
@@ -43,7 +45,12 @@ public class ScrollHolder extends Bag {
 		}
 	}
 
-	public int capacity(){
+    @Override
+    public @NotNull Icons getBagIcon() {
+        return Icons.SCROLL_HOLDER;
+    }
+
+    public int capacity(){
 		return 19;
 	}
 	

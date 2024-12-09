@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.SpecialSlot;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
@@ -197,7 +198,13 @@ public class Belongings implements Iterable<Item> {
 			}
 			return null;
 		}
-		{
+
+        @Override
+        public @NotNull Icons getBagIcon() {
+            return Icons.BACKPACK;
+        }
+
+        {
 			image = ItemSpriteSheet.BACKPACK;
 		}
 		public int capacity(Hero hero){

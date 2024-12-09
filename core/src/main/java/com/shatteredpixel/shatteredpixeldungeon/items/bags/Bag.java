@@ -28,16 +28,18 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.DeviceCompat;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Bag extends Item implements Iterable<Item> {
+public abstract class Bag extends Item implements Iterable<Item> {
 	public Item getItemInSlot(List<Integer> slot) {
 		int slot_id = slot.get(0);
 		slot.remove(0);
@@ -232,10 +234,12 @@ public class Bag extends Item implements Iterable<Item> {
 	}
 
 	@Override
-	public Iterator<Item> iterator() {
+	public @NotNull Iterator<Item> iterator() {
 		return new ItemIterator();
 	}
-	
+
+	public abstract @NotNull Icons getBagIcon();
+
 	private class ItemIterator implements Iterator<Item> {
 
 		private int index = 0;
