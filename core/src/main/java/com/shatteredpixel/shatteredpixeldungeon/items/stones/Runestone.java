@@ -26,10 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-
-import java.util.ArrayList;
 
 public abstract class Runestone extends Item {
 	
@@ -63,12 +60,12 @@ public abstract class Runestone extends Item {
 	
 	@Override
 	public int value() {
-		return 15 * quantity;
+		return 15 * quantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 3 * quantity;
+		return 3 * quantity();
 	}
 
 	public static class PlaceHolder extends Runestone {

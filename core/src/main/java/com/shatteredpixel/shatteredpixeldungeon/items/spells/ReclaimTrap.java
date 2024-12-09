@@ -63,7 +63,7 @@ public class ReclaimTrap extends TargetedSpell {
 	@Override
 	protected void affectTarget(Ballistica bolt, Hero hero) {
 		if (storedTrap == null) {
-			quantity++; //storing a trap doesn't consume the spell
+			quantity(quantity() + 1); //storing a trap doesn't consume the spell
 			Trap t = Dungeon.level.traps.get(bolt.collisionPos);
 			if (t != null && t.active && t.visible) {
 				t.disarm(); //even disarms traps that normally wouldn't be
@@ -117,12 +117,12 @@ public class ReclaimTrap extends TargetedSpell {
 	
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(60 * (quantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(12 * (quantity() /(float)Recipe.OUT_QUANTITY));
 	}
 	
 	private static final String STORED_TRAP = "stored_trap";

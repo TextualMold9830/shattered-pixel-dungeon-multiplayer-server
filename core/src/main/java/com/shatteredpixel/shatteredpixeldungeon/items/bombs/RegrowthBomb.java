@@ -113,6 +113,6 @@ public class RegrowthBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity() * (20 + 30);
 	}
 }

@@ -113,7 +113,7 @@ abstract public class MissileWeapon extends Weapon {
 	public Item upgrade(Hero hero) {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
-			if (quantity > 1) {
+			if (quantity() > 1) {
 				MissileWeapon upgraded = (MissileWeapon) split(1);
 				upgraded.parent = null;
 				
@@ -268,11 +268,11 @@ abstract public class MissileWeapon extends Weapon {
 		//2: 66.67% (2/3)
 		//3: 26.67% (4/15)
 		//4: 6.67%  (1/15)
-		quantity = 2;
+		quantity(2);
 		if (Random.Int(3) == 0) {
-			quantity++;
+			quantity(quantity() + 1);
 			if (Random.Int(5) == 0) {
-				quantity++;
+				quantity(quantity() + 1);
 			}
 		}
 		return this;
@@ -280,7 +280,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	public String status() {
 		//show quantity even when it is 1
-		return Integer.toString( quantity );
+		return Integer.toString(quantity());
 	}
 	
 	@Override
@@ -408,7 +408,7 @@ abstract public class MissileWeapon extends Weapon {
 			durability += ((MissileWeapon)other).durability;
 			durability -= MAX_DURABILITY;
 			while (durability <= 0){
-				quantity -= 1;
+				quantity(quantity() - 1);
 				durability += MAX_DURABILITY;
 			}
 		}
@@ -491,7 +491,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	public int value() {
-		return 6 * tier * quantity * (level() + 1);
+		return 6 * tier * quantity() * (level() + 1);
 	}
 	
 	private static final String DURABILITY = "durability";

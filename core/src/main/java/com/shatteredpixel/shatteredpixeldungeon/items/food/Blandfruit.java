@@ -155,7 +155,7 @@ public class Blandfruit extends Food {
 
 	@Override
 	public int value() {
-		return 20 * quantity;
+		return 20 * quantity();
 	}
 
 	public Item cook(Seed seed){

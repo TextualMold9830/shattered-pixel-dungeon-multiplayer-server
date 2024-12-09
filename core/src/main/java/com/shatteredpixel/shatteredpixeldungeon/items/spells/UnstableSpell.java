@@ -119,12 +119,12 @@ public class UnstableSpell extends Spell {
 	//lower values, as it's cheaper to make
 	@Override
 	public int value() {
-		return 40 * quantity;
+		return 40 * quantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 8 * quantity;
+		return 8 * quantity();
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {

@@ -144,7 +144,7 @@ public class Honeypot extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * quantity();
 	}
 
 	//The bee's broken 'home', all this item does is let its bee know where it is, and who owns it (if anyone).
@@ -212,7 +212,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if (bees.size() >= quantity()) {
 						break;
 					}
 				}
@@ -227,7 +227,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.id()){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if (bees.size() >= quantity()) {
 						break;
 					}
 				}
@@ -248,7 +248,7 @@ public class Honeypot extends Item {
 		
 		@Override
 		public int value() {
-			return 5 * quantity;
+			return 5 * quantity();
 		}
 	}
 }

@@ -87,6 +87,6 @@ public class ShrapnelBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 50);
+		return quantity() * (20 + 50);
 	}
 }

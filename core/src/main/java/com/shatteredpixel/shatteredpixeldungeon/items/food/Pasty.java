@@ -225,7 +225,7 @@ public class Pasty extends Food {
 	
 	@Override
 	public int value() {
-		return 20 * quantity;
+		return 20 * quantity();
 	}
 
 	public static class FishLeftover extends Food {
@@ -237,7 +237,7 @@ public class Pasty extends Food {
 
 		@Override
 		public int value() {
-			return 10 * quantity;
+			return 10 * quantity();
 		}
 	}
 }

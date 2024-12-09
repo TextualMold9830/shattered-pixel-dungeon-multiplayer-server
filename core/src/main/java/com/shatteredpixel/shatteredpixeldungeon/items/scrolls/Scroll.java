@@ -184,7 +184,7 @@ public abstract class Scroll extends Item {
 
 	protected void readAnimation() {
 		//TODO: check this, might want to add this in the classes calling this
-		Invisibility.dispel(findOwner());
+		Invisibility.dispel(curUser);
 		curUser.spend( TIME_TO_READ );
 		curUser.busy();
 		((HeroSprite) curUser.getSprite()).read();
@@ -249,12 +249,12 @@ public abstract class Scroll extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * quantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 6 * quantity;
+		return 6 * quantity();
 	}
 	
 	public static class PlaceHolder extends Scroll {

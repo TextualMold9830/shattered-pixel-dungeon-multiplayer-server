@@ -72,6 +72,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -357,6 +358,7 @@ public class Potion extends Item {
 	}
 	
 	@Override
+	@Contract("true,null->fail")
 	public Item identify( boolean byHero, Hero hero ) {
 		super.identify(byHero, hero);
 
@@ -425,12 +427,12 @@ public class Potion extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * quantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 6 * quantity;
+		return 6 * quantity();
 	}
 
 	public static class PlaceHolder extends Potion {

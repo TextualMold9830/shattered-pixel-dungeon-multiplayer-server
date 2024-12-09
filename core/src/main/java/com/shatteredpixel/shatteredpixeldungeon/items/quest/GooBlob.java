@@ -43,11 +43,11 @@ public class GooBlob extends Item {
 
 	@Override
 	public int value() {
-		return quantity * 30;
+		return quantity() * 30;
 	}
 
 	@Override
 	public int energyVal() {
-		return quantity * 3;
+		return quantity() * 3;
 	}
 }

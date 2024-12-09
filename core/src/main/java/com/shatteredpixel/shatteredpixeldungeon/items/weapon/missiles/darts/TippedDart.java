@@ -87,7 +87,7 @@ public abstract class TippedDart extends Dart {
 				protected void onSelect(int index) {
 					if (index == 0){
 						detachAll(hero.belongings.backpack);
-						new Dart().quantity(quantity).collect(getOwnerHero());
+						new Dart().quantity(quantity()).collect(getOwnerHero());
 						
 						hero.spend( 1f );
 						hero.busy();
@@ -196,7 +196,7 @@ public abstract class TippedDart extends Dart {
 	@Override
 	public int value() {
 		//value of regular dart plus half of the seed
-		return 8 * quantity;
+		return 8 * quantity();
 	}
 	
 	private static HashMap<Class<?extends Plant.Seed>, Class<?extends TippedDart>> types = new HashMap<>();

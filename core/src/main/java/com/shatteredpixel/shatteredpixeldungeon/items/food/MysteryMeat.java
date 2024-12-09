@@ -48,7 +48,7 @@ public class MysteryMeat extends Food {
 	}
 
 	public int value() {
-		return 5 * quantity;
+		return 5 * quantity();
 	}
 
 	public static void effect(Hero hero){

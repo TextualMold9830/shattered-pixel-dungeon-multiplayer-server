@@ -96,7 +96,7 @@ public class Item implements Bundlable {
 	public int icon = -1; //used as an identifier for items with randomized images
 	
 	public boolean stackable = false;
-	protected int quantity = 1;
+	private int quantity = 1;
 	public boolean dropsDownHeap = false;
 	
 	private int level = 0;
@@ -231,8 +231,8 @@ public class Item implements Bundlable {
 	//takes two items and merges them (if possible)
 	public Item merge( Item other ){
 		if (isSimilar( other )){
-			quantity += other.quantity;
-			other.quantity = 0;
+			quantity(quantity() + other.quantity());
+			other.quantity(0);
 		}
 		return this;
 	}
@@ -241,7 +241,7 @@ public class Item implements Bundlable {
 	}
 	public List<Integer> collect(Bag container, List<Integer> path) {
 
-		if (quantity <= 0){
+		if (quantity() <= 0){
 			return null;
 		}
 
@@ -338,7 +338,7 @@ public class Item implements Bundlable {
 			this.storeInBundle(copy);
 			split.restoreFromBundle(copy);
 			split.quantity(amount);
-			quantity -= amount;
+			quantity(quantity() - amount);
 			
 			return split;
 		}
@@ -357,12 +357,12 @@ public class Item implements Bundlable {
 	
 	public final Item detach( Bag container ) {
 		
-		if (quantity <= 0) {
+		if (quantity() <= 0) {
 			
 			return null;
 			
 		} else
-		if (quantity == 1) {
+		if (quantity() == 1) {
 
 			if (stackable){
 				Dungeon.quickslot.convertToPlaceholder(this);
@@ -551,8 +551,8 @@ public class Item implements Bundlable {
 		if (visiblyUpgraded() != 0)
 			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
 
-		if (quantity > 1)
-			name = Messages.format( TXT_TO_STRING_X, name, quantity );
+		if (quantity() > 1)
+			name = Messages.format( TXT_TO_STRING_X, name, quantity());
 
 		return name;
 
@@ -593,9 +593,15 @@ public class Item implements Bundlable {
 	public int quantity() {
 		return quantity;
 	}
-	
-	public Item quantity( int value ) {
-		quantity = value;
+
+	public Item quantity(int quantity) {
+		return quantity(quantity, true);
+	}
+	public Item quantity(int quantity,  boolean send) {
+		this.quantity = quantity;
+		if (send){
+			sendUpdateItemFull(this);
+		}
 		return this;
 	}
 
@@ -613,7 +619,7 @@ public class Item implements Bundlable {
 		Item item = Reflection.newInstance(getClass());
 		if (item == null) return null;
 		
-		item.quantity = 0;
+		item.quantity(0);
 		item.level = level;
 		return item;
 	}
@@ -623,7 +629,7 @@ public class Item implements Bundlable {
 	}
 	
 	public String status() {
-		return quantity != 1 ? Integer.toString( quantity ) : null;
+		return quantity() != 1 ? Integer.toString(quantity()) : null;
 	}
 	public String status(Hero hero){
 		return status();
@@ -643,7 +649,7 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
-		bundle.put( QUANTITY, quantity );
+		bundle.put( QUANTITY, quantity());
 		bundle.put( LEVEL, level );
 		bundle.put( LEVEL_KNOWN, levelKnown );
 		bundle.put( CURSED, cursed );
@@ -656,7 +662,7 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		quantity	= bundle.getInt( QUANTITY );
+		quantity(bundle.getInt( QUANTITY ));
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		

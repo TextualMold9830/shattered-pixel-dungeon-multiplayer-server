@@ -159,7 +159,7 @@ public enum HeroClass {
 	private static void initWarrior( Hero hero ) {
 		(hero.belongings.setWeapon(new WornShortsword())).identify(hero);
 		ThrowingStone stones = new ThrowingStone();
-		stones.quantity(3).collect(hero);
+		stones.quantity(3, false).collect(hero);
 		Dungeon.quickslot.setSlot(0, stones);
 
 		if (hero.belongings.getRealArmor() != null){

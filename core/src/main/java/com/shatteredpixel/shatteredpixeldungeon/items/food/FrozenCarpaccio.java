@@ -48,7 +48,7 @@ public class FrozenCarpaccio extends Food {
 	}
 	
 	public int value() {
-		return 10 * quantity;
+		return 10 * quantity();
 	}
 
 	public static void effect(Hero hero){
@@ -75,7 +75,7 @@ public class FrozenCarpaccio extends Food {
 	
 	public static Food cook( MysteryMeat ingredient ) {
 		FrozenCarpaccio result = new FrozenCarpaccio();
-		result.quantity = ingredient.quantity();
+		result.quantity(ingredient.quantity());
 		return result;
 	}
 }

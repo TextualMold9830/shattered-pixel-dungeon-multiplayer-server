@@ -33,6 +33,6 @@ public class SmallRation extends Food {
 	
 	@Override
 	public int value() {
-		return 10 * quantity;
+		return 10 * quantity();
 	}
 }
