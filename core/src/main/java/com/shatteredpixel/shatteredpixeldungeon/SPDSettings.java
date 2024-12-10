@@ -32,6 +32,7 @@ import com.watabou.utils.GameSettings;
 import com.watabou.utils.Point;
 
 import java.util.Locale;
+import java.util.UUID;
 
 public class SPDSettings extends GameSettings {
 	// Multiplayer
@@ -496,5 +497,14 @@ public class SPDSettings extends GameSettings {
 	
 	public static boolean windowMaximized(){
 		return getBoolean( KEY_WINDOW_MAXIMIZED, false );
+	}
+	//Todo add a way to clear this
+	public static String serverUUID() {
+		String uuid = getString("server_uuid", null);
+		if (uuid == null) {
+			uuid = UUID.randomUUID().toString();
+			put("server_uuid", uuid);
+		}
+		return uuid;
 	}
 }

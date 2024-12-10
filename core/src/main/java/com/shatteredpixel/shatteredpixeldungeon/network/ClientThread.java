@@ -81,10 +81,16 @@ class ClientThread implements Callable<String> {
             return;
         }
         sendServerType();
+        sendServerUUID();
         if (clientHero != null){
             sendInitData();
         }
         updateTask();
+    }
+
+    private void sendServerUUID() {
+        packet.addServerUUID();
+        flush();
     }
 
     protected void updateTask() {

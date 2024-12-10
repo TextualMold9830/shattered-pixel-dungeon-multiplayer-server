@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -39,6 +40,7 @@ public class NetworkPacket {
     public static final String PLANTS = "plants";
     public static final String BUFFS = "buffs";
 
+
     enum CellState {
         VISITED,
         UNVISITED,
@@ -69,6 +71,15 @@ public class NetworkPacket {
                 data.put("server_type", serverType);
             } catch (JSONException e) {
                 Log.w("NetworkPacket", "Failed to add serverType. " + e.toString());
+            }
+        }
+    }
+    public void addServerUUID() {
+        synchronized (dataRef) {
+            try {
+                dataRef.get().put("server_uuid", SPDSettings.serverUUID());
+            } catch (JSONException e) {
+                Log.w("NetworkPacket", "Failed to add action. " + e.toString());
             }
         }
     }
