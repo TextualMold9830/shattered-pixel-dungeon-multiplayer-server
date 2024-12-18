@@ -15,3 +15,8 @@ include ':services'
     //news
     include ':services:news:debugNews'
     include ':services:news:shatteredNews'
+
+include 'synchronizationAnnotations'
+include 'serverCodeGenerator'
+
+include('server')

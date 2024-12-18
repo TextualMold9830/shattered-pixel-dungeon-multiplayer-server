@@ -6,4 +6,10 @@ sourceCompatibility = targetCompatibility = appJavaCompatibility
 dependencies {
     api project(':SPD-classes')
     implementation project(':services')
+    implementation project(':synchronizationAnnotations')
+    //annotationProcessor ':synchronizationAnnotation:'
+    //annotationProcessor 'ru.nikita22007.synchronization.annotationProcessors.CustomProcessor'
+    //annotationProcessor ':synchronizationAnnotations:ru.nikita22007.synchronization.annotationProcessors.CustomProcessor'
+    annotationProcessor( project(':synchronizationAnnotations'))
+    implementation "org.json:json:20170516"
 }

@@ -453,4 +453,8 @@ public class SPDSettings extends GameSettings {
 	public static boolean windowMaximized(){
 		return getBoolean( KEY_WINDOW_MAXIMIZED, false );
 	}
+
+    public static int serverUUID() {
+		return 	-1;
+    };
 }

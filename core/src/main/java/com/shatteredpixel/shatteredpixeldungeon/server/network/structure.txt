@@ -1,0 +1,590 @@
+client:
+{
+    "hero_class": "class"
+    "window":
+    {
+        "id": 0
+        "button": 0
+        "result": {}
+    }
+    "cell_listener": 00 //pos
+    "action": {
+        "action_name" = "DROP"
+        "slot" = [0,4]
+    }
+    "toolbar_action": {
+        action_name: "SLEEP"
+    }
+}
+
+server:
+{
+    "server_actions":
+    [
+        {
+            "type": "server_full" / "disconnect"/ "custom"
+            "custom_message": "no"
+        }
+    ]
+    "texturepack":"base64EncodedZipFile"
+    "map":
+    {
+        "cells": //array of changed cells
+        [
+            {
+                "position": 0000
+                "id": 000
+                "state": "unvisited"/"visited"/"mapped"
+            }
+        ]
+        "entrance": 000
+        "exit": 000
+        "visible_positions": [0,1,2]
+    }
+
+    level_params: //can't change during level, only during interlevel scene
+    {
+        width = 32
+        height = 32
+        tiles_texture //level.tilesTex()
+        water_texture //level.waterTex()
+    }
+    "heaps:"
+    {
+        "pos": 0
+        "hidden": false
+        //item is visible sprite. If heap.type != HEAP/FOR_SALE then
+        "visible_item": item //  if null: heap removing
+        "visible_sprite": -1//if != -1  and != null: show special sprite in  world (chest,bones,tomb etc)
+    }
+    "plants":
+    [
+        {
+            "pos": 0
+            "plant_info": //if null: remove
+            {
+                "sprite_id": 1
+                "texture": "plants.png"
+                "name" : "sungrass"
+                "desc": "sungrass grass"
+            }
+        }
+    ]
+    "actors":
+    [
+        {
+            "type": "blob"/"character"/"hero"
+            "id": 0
+            // char/hero:
+            "hp": 0
+            "max_hp": 1
+            "name": "missingno"
+            "position": 0
+
+            "sprite_name": "rat_sprite"
+            OR
+            "sprite_asset": "rat.json"
+
+            "animation_name": "idle"
+            "description": "unknown creature" //if mob
+            "states": ["burning"]
+            //blob:
+            "positions": [0,1,2]
+            "type": "class_name"
+        }
+    ]
+    "hero":
+    {
+        "actor_id": 0
+        "class": "random"
+        "subclass_id": 0
+        "strength": 0
+        "lvl": 0
+        "exp": 0
+        "gold": 0
+        "ready": false
+   }
+   "buffs" //array of changed buffs
+   [
+       "id": 1
+       "icon": 2
+       "target_id": 4 //target actor id; null to detach
+       "desc": "Some (de)buff"
+   ]
+   "inventory":
+   {
+        "backpack": bag
+        "specials_slots" //note,  that you  can't delete special slots, only add
+        [
+            {
+                "id": 0
+                "sprite": "items.png"
+                "image_id": 127
+                "item": item/"null"
+            }
+        ]
+   }
+   "sprites":
+    [
+        {
+            "name": "rat_sprite"
+            "texture": "rat" //in client -> texture + ".png"
+            animations:
+            [
+                {
+                    "name": "idle"
+                    "fps": 2
+                    "looped": true
+                    "frames": [0,0,0,1]
+                }
+            ]
+        }
+    ]
+    "interlevel_scene":
+    {
+        //getting this object causes scene switching if current scene is not IterlevelScene
+        "state": "fade_out" //If the current scene is not an InterlevelScene, "state" field will be ignored and set to "fade_in"
+        "type": "RESURRECT"
+        "custom_message": "missingno" //optional, use mode message if not presented
+        "scroll_speed": 1f //optional, use mode scroll speed if not presented
+        "loading_texture": "interfaces/loading_sewers.png" //optional, uses "interfaces/shadow.png" if not presented; do not change during InterlevelScene
+        "fade_time": "fast_fade" //optional, depends on mode if not presented
+        "reset_level" = true //clear level
+
+    }
+    "window":
+    {
+        "id":  1
+        "type": "///"
+        "params":
+        {
+            key: val;
+        }  // if "type != custom"
+        "custom_window_structure": //if "type" == "custom"
+        {
+
+        }
+    }
+    "ui":
+    {
+        "resume_button_visible": false
+        "iron_keys_count": -1
+        "depth": -1
+        "cell_listener_prompt": "" //empty/null == null
+        "attack_indicator_target":  2 // character id. -1 == no target
+    }
+    "badge":
+    {
+        "name": "none"
+        "level": 0
+    }
+    "actions":
+    [
+        action
+    ]
+    "messages":
+    [
+        {
+            "text": "hello world!"
+            "color": 0xFF0000
+        }
+    ]
+}
+
+
+
+item:
+{
+    "actions":
+    [
+        {
+            "name": "Drop"
+            "code": "DROP"
+        }
+    ]
+    "defaultAction": "give"/ "null" // if "null" then defaultAction == null :)
+    "sprite_sheet": "items.png"
+    "image": 0;
+    "glowing":
+    {
+        "color": 0x334411 //rgb int
+        "period": 1f //float, seconds
+    }
+    "name": "smth"
+    "info": "missingno"
+
+    "stackable": false //why it needs?
+    "quantity": 1
+
+    "durability": 0
+    "max_durability": 0
+
+    "known": true //for scrolls/rings/etc
+    "level": 0 // uses visiblyUpgraded()
+    "cursed": false // uses  visiblyCursed()
+    "identified": false
+    "level_known": false
+    "show_bar": false
+
+    "ui":
+    {
+        top_left...
+        top_right
+        bottom_right:
+        {
+            visible:  true
+            text:  "+2?"
+            color: 0xFF8800
+        }
+        background: 0xFF00FF //if has not, will calculated
+    }
+
+    //"unique": false
+
+    //bag elements
+    "bag_size": 0  //if message  has  thi field and it !=null, create a bag
+    "items":
+    [
+       item  //it is recursive structure. May be we should to move bags in other place
+    ]
+    owner: char_id
+}
+
+action move char:
+{
+    "action_type": "sprite_action"
+    "action": "move" / "run"
+    "from": 0
+    "to": 1
+    "actor_id" 0
+    "animation_state_after_move": "idle" // ...
+}
+
+action "sprite_action"
+{
+    action_type: "sprite_action"
+    "action": "turn"
+    "from": 0
+    "to": 1
+}
+
+action swap char:
+{
+    "action_type":  "sprite_action"
+    "action": "swap"
+    "from": 0
+    "to": 1
+    "actor_id" 0
+}
+
+effects.pushing
+action push
+{
+    "action_type": "sprite_action"
+    "action": "pushing"/"push"
+    "from": 0
+    "to": 1
+    "actor_id": 3
+}
+
+action AlphaTweener:
+{
+    "action_type": "sprite_action"
+    "action": "alpha_tweener"
+    "actor_id":1
+    "start_alpha": 1f
+    "target_alpha": 1f
+    "interval": 3f
+}
+
+sprite action flash:
+{
+    "action_type": "sprite_action"
+    "action": "flash"
+    "actor_id":1
+    "flash_time": 3f
+}
+
+action destroy char
+{
+    "action_type": "destroy_char"
+    "id": 0
+}
+
+action show_status
+{
+    "action_type": "show_status"
+    "x": 0.0f
+    "y": 0.0f
+    "key": 123 //may be missing
+    "text": "invisible"
+    "color": 0xFFFF00
+    "ignore_position": true //  use  char sprite on position=key if can
+}
+
+action add_item_to_bag
+{
+    "action_type": "add_item_to_bag"
+    "slot":
+    [
+        0,  //bag(A) in slot 0 of inventory
+        3,  //bag(B) in slot 3 of bag(A)
+        2  //slot of bag(B) in which
+        //item will be placed. Other items are moved to the next slot
+    ]
+    // if slot = [N], where N<0 it means that item in special slot with id (-N-1)
+    "item": item  //can me null
+    "update_mode": "place"/"replace"/"update"/"remove"
+    // place: move other items to the next slot
+    // replace: changes item to other. Previous item will be destroyed
+    // update: changes item fields. it is same item in the quickslot. Item field has diff
+    // remove: removes item. item field in action  will be ignored
+}
+
+//spells
+avtion visual_spell_sprite
+{
+    "action_type": "spell_sprite"
+    "target": 2 //id of target char
+    "spell": 3 //spell id
+}
+//effects
+action visual_degradation
+{
+    "action_type": "degradation"
+    "position_x": x //float
+    "position_y": y //float
+    "matrix":  [x1,y1,x2,y2...] //int
+    "color": 0xFFFFCC //optional. Used for {@link #Identification} because it used different color
+}
+
+action visual_show_banner
+{
+    "action_type": "show_banner"
+    "banner": BOSS_SLAIN
+    "color": 0x000000, // int RGB COLOR
+    "fade_time": 1f //float, seconds
+    "show_time": 9999999f //float, seconds
+}
+
+action game_scene_flash
+{
+    "action_type": "game_scene_flash"
+    "color": color
+    "light": true
+}
+
+action lightning_visual
+{
+    "action_type": "lightning_visual"
+    "cells": [0,1,2]
+    "duration": 1f;
+}
+
+action deathray_visual
+{
+    "action_type": "death_ray_centered_visual"
+    "start_pos": 2
+    "end_pos": 4
+    "duration": 1f;
+}
+
+action wound_visual
+{
+    "action_type": "wound_visual"
+    "pos": 2
+    "time_to_fade": 1f;
+}
+
+action ripple_visual
+{
+    "action_type": "ripple_visual"
+    "pos": 2
+}
+
+action magic_missile_visual
+{
+    "action_type": "magic_missile_visual"
+    "type": "bluelight"
+    "from": 2
+    "to": 3
+}
+
+action missile_sprite_visual
+//com.nikita22007.multiplayer.server.sprites.MissileSprite
+{
+    "action_type": "missile_sprite_visual"
+    "from": 2
+    "to": 4
+    "speed": 240f
+     // calculable "duration": distance.length / speed
+    "angular_speed": 720f //degrees
+    "angle": 0f //degrees
+    //item:
+    item_sprite_sheet: "items.png" //index in spritesheet
+    item_image: 3 //index in spritesheet
+    item_glowing: glowing //see item
+}
+
+action item_drop_visual
+{
+    "action_type": "heap_drop_visual"
+    "from": 1
+    "to": 3
+    "item": item
+}
+
+action CheckedCell
+{
+    "action_type": "checked_cell_visual"
+    "pos": 2
+}
+
+effects.Enchanting
+action enchanting visual
+{
+    "action_type": "enchanting_visual"
+    "target": 3 // Char.id()
+    "item": Item
+}
+
+action flare
+{
+    "action_type": "flare_visual"
+
+    "position_x": 1f
+    "position_y": 2f
+    OR
+    "pos": 1 //cell
+
+    "color": 0xFFFFFF //(hardlight)
+    "duration": 3f
+    "light_mode": false
+    "rays": 3 //count of rays
+    "radius": 5f
+    "angle": 45 //degrees
+    "angular_speed" 180 //degrees
+}
+
+action emitter_visual
+{
+    "action_type": emitter_visual
+
+    "pos": 2
+    OR
+    "target_char": 3 //id
+    "fill_target": true
+    OR
+    "position_x": 4f
+    "position_y": 3f
+
+    "shift_x": 4f //pixels, from top-left of target.sprite or cell
+    "shift_y": 5f //pixels, from top-left of target.sprite or cell
+
+    "width": 1f
+    "height": 32f
+
+    "interval": 1f;
+    "quantity": 20;
+
+    "factory": Emitter.Factory
+
+}
+
+Emitter.Factory
+{
+    "factory_type": "speck"
+    "light_mode": false
+
+    //CUSTOM PARMS
+    "type" : 2 //Speck factory
+
+    "first_color", "second_color" //leaf
+
+    "color", "dir", "cone" //splash
+}
+
+
+factories:
+speck
+
+blast
+earth
+elmo
+energy
+flame
+flow
+leaf
+poison_missile
+poison_splash
+purple_missile
+purple_burst
+sartificial
+shadow_missile
+shadow_curse
+shadow_up
+shaft
+snow
+smoke
+spark
+splash
+web
+wind
+wool
+
+goo
+
+Emitter_decor
+{
+    "action_type" : "emitter_decor"
+    "type": "sink" / "smoke" / "torch"
+    "pos": 3
+
+    "color": 0xFFFFCC //torch
+}
+
+/// sound
+action play_sample //play sample by id, load it, if is not loaded.
+{
+    "action_type": "play_sample"
+    "sample": "snd_boss.mp3"
+    "left_volume" : 1f
+    "right_volume": 1f
+    "rate": 1.1f
+}
+
+action load_sample
+{
+    "action_type": "load_sample"
+    "samples": [
+        "snd_boss.mp3"
+    ]
+}
+
+action reload_sample //if sample is not inside new list, it removes.
+{
+    "action_type": "reload_sample"
+    "samples": [
+        "snd_boss.mp3"
+    ]
+}
+
+action unload_sample
+{
+    "action_type": "unload_sample"
+    "sample": "snd_boss.mp3"
+}
+
+//camera
+
+action shake_camera
+{
+    "action_type": "shake_camera"
+    "magnitude": 1f
+    "duration": 2f
+}
+
+
+
+server_actions
+type: "reset_level" -> clears level
