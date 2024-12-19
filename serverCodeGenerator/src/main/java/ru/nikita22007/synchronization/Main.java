@@ -16,6 +16,7 @@ public class Main {
 
         System.out.println("Adding processors");
         spoon.addProcessor(new DeleteClientClasses());
+        spoon.addProcessor(new AddJsonSerializableImplementation());
         spoon.addProcessor(new AddIdField());
 
 

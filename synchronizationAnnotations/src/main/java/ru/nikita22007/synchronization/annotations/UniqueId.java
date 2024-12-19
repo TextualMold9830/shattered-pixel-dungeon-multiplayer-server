@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 public @interface UniqueId {
-    String idFieldName() default "id";
+    String idFieldName() default "uniqueId";
 }
