@@ -5,9 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 
 @Retention(RetentionPolicy.SOURCE)
-public @interface ClientSide {
-
+public @interface SynchronizedSetter {
+    boolean customSynchronization() default false;
 }

@@ -1,10 +1,13 @@
 package ru.nikita22007.synchronization.processors.server;
 
 
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.json.JSONObject;
 import ru.nikita22007.synchronization.annotations.SynchronizationField;
 import ru.nikita22007.synchronization.annotations.SynchronizedClass;
+import ru.nikita22007.synchronization.annotations.SynchronizedSetter;
 import ru.nikita22007.synchronization.network.JsonSerializable;
+import ru.nikita22007.synchronization.util.StringUtils;
 import spoon.processing.AbstractAnnotationProcessor;
 import spoon.processing.AbstractProcessor;
 import spoon.processing.AnnotationProcessor;
@@ -17,6 +20,7 @@ import spoon.reflect.reference.CtTypeReference;
 
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class AddJsonPackMethods extends AbstractAnnotationProcessor<SynchronizedClass, CtClass> {
@@ -47,7 +51,7 @@ public class AddJsonPackMethods extends AbstractAnnotationProcessor<Synchronized
         );
         ctBlock.addStatement(jsonObjectCtVariable);
         for (Object field : annotatedFields) {
-            ctBlock.addStatement(SaveFieldToJsonStatement((CtField)field, jsonObjectCtVariable));
+            ctBlock.addStatement(SaveFieldToJsonStatement((CtField)field, jsonObjectCtVariable, element));
         }
 
         CtVariableAccess<JSONObject> returnVariable =  factory.Code().createVariableRead(jsonObjectCtVariable.getReference(), false);
@@ -59,35 +63,49 @@ public class AddJsonPackMethods extends AbstractAnnotationProcessor<Synchronized
         element.addMethod(toJsonMethod);
     }
 
-    private CtStatement SaveFieldToJsonStatement(CtField field, CtLocalVariable<JSONObject> jsonObjectCtVariable) {
+    private CtStatement SaveFieldToJsonStatement(CtField field, CtLocalVariable<JSONObject> jsonObjectCtVariable, CtClass baseClass) {
         Factory factory = getFactory();
         CtTypeReference fieldType = field.getType();
         CtTypeReference<JSONObject> jsonObjectType = factory.createCtTypeReference(JSONObject.class);
         CtTypeReference<JsonSerializable> jsonSerializableType = factory.createCtTypeReference(JsonSerializable.class);
         CtType dataType = field.getType().getTypeDeclaration();
-        CtExpression value;
         CtTypeReference resultDataType = fieldType;
-        if (dataType.isSubtypeOf(factory.createCtTypeReference(JsonSerializable.class))) {
+        CtMethod getter = findGetter(field,baseClass);
+        CtInvocation access = factory.createInvocation(factory.createThisAccess(), getter.getReference(), List.of());
+        CtExpression value = access;
+        if (dataType.isSubtypeOf(jsonSerializableType)) {
             CtMethod<JSONObject> getObjectMethod = dataType.getMethod(jsonObjectType, "toJsonObject");
-            CtVariableAccess<JSONObject> access = factory.Code().createVariableRead(field.getReference(), field.isStatic());
             value = factory.createInvocation(access,
                     getObjectMethod.getReference(),
                     List.of()
             );
             resultDataType = jsonObjectType;
-        } else {
-            value = factory.Code().createVariableRead(field.getReference(), field.isStatic());
         }
         CtVariableAccess<JSONObject> jsonObjectVariableReadStatment = factory.Code().createVariableRead(jsonObjectCtVariable.getReference(), false);
         CtMethod<JSONObject> method = jsonObjectType.getTypeDeclaration().getMethod(jsonObjectType, "put", factory.createCtTypeReference(String.class), factory.createCtTypeReference(Object.class));
-        CtExecutableReference<JSONObject> putmethodReference = method.getReference( );
+        CtExecutableReference<JSONObject> putMethodReference = method.getReference( );
         CtStatement writedata = factory.createInvocation(
                 jsonObjectVariableReadStatment,
-                putmethodReference,
+                putMethodReference,
                 factory.createCodeSnippetExpression("\""+field.getSimpleName() + "\""),
                 value
         );
         return writedata;
+    }
+
+
+        private CtMethod findGetter(CtField field, CtClass clazz){
+        SynchronizationField fieldAnnotation = field.getAnnotation(SynchronizationField.class);
+        String getterName = fieldAnnotation.setterName();
+        if (Objects.equals(getterName, "")) {
+            getterName = "get"+ StringUtils.capitalize(field.getSimpleName());
+            CtMethod method =  clazz.getMethod(field.getType(), getterName);
+            if (method == null) {
+                getterName = "is" + StringUtils.capitalize(field.getSimpleName());
+                return clazz.getMethod(field.getType(), getterName);
+            }
+        }
+        return clazz.getMethod(field.getType(), getterName);
     }
 }
 
