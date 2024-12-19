@@ -1,10 +1,33 @@
-apply plugin: 'java-library'
+apply plugin: 'java'
+
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = appJavaCompatibility
 
+ext.appMainClass = "ru.nikita22007.synchronization.Main"
+def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+task debug(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+
+    main = appMainClass
+    systemProperty 'Specification-Title', appName
+    systemProperty 'Implementation-Title', appPackageName
+    systemProperty 'Specification-Version', appVersionName + "-INDEV"
+    systemProperty 'Implementation-Version', appVersionCode
+
+    if (osName.contains('mac')) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}
+
 dependencies {
     //implementation("com.google.auto.service:auto-service:1.1.1")
-    implementation("fr.inria.gforge.spoon:spoon-core:10.3.0")
     //annotationProcessor("com.google.auto.service:auto-service:1.1.1")
+    //implementation(":core")
+    //implementation(":SPD-classes")
+    //implementation 'fr.inria.gforge.spoon:spoon-core:11.1.1-beta-18'
+    implementation 'fr.inria.gforge.spoon:spoon-core:10.4.2'
+    implementation("org.json:json:20231013")
+    implementation project(":synchronizationAnnotations")
 }

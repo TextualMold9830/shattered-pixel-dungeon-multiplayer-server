@@ -5,9 +5,10 @@ package com.shatteredpixel.shatteredpixeldungeon.server.network;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
-import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
+import com.shatteredpixel.shatteredpixeldungeon.server.plugins.PluginLoader;
+import com.shatteredpixel.shatteredpixeldungeon.server.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.server.plugins.PluginManifest;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 
@@ -16,14 +17,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class Server extends Thread {
     public static ArrayList<String> textures = new ArrayList<>();
     // will return in the future
-    public static PluginManager pluginManager = new PluginManager(new PluginLoader(ShatteredPixelDungeon.platform.loadPlugins()));
+    public static PluginManager pluginManager = new PluginManager(new PluginLoader(new LinkedList<PluginManifest>()));
 
     //primitive vars
     public static String serviceName;
@@ -56,7 +57,7 @@ public class Server extends Thread {
                         while (!interrupted()) {
                             if (Game.instance != null) {
                                 if ((Game.scene() instanceof GameScene)) {
-                                    Game.instance.server_step();
+                                    //Game.instance.server_step();
                                     sleep(0);
                                 } else {
                                     sleep(500);
@@ -130,6 +131,7 @@ public class Server extends Thread {
                     new DataOutputStream(client.getOutputStream()).writeInt(Codes.SERVER_FULL);
                     client.close();
                 } else if (clients[i] == null) {
+                    /*
                     synchronized (heroes) {
                         Hero emptyHero = null;
                         for (Hero hero : heroes) {
@@ -144,6 +146,7 @@ public class Server extends Thread {
                         }
                         clients[i] = new ClientThread(i, client, emptyHero); //found
                     }
+                     */
                     break;
                 }
             }

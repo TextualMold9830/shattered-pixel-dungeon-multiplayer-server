@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.FIELD})
 
 @Retention(RetentionPolicy.SOURCE)
 public @interface SynchronizationField {

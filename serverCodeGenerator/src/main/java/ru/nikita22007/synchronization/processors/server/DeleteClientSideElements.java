@@ -1,14 +1,12 @@
 package ru.nikita22007.synchronization.processors.server;
 
 import ru.nikita22007.synchronization.annotations.ClientSide;
-import ru.nikita22007.synchronization.annotations.ServerSide;
 import spoon.processing.AbstractProcessor;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtElement;
 
-public class DeleteClientClasses extends AbstractProcessor<CtClass> {
+public class DeleteClientSideElements extends AbstractProcessor<CtElement> {
     @Override
-    public void process(CtClass element) {
+    public void process(CtElement element) {
         if (element.hasAnnotation(ClientSide.class)) {
             element.delete();
         }

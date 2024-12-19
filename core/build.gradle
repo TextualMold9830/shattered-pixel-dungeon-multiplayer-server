@@ -12,4 +12,6 @@ dependencies {
     //annotationProcessor ':synchronizationAnnotations:ru.nikita22007.synchronization.annotationProcessors.CustomProcessor'
     annotationProcessor( project(':synchronizationAnnotations'))
     implementation "org.json:json:20170516"
+    implementation ('org.jetbrains:annotations:24.1.0')
+
 }

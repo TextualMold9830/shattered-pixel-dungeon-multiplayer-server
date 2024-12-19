@@ -29,10 +29,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.Game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class PlatformSupport {
-	
+
 	public abstract void updateDisplaySize();
 	
 	public abstract void updateSystemUI();

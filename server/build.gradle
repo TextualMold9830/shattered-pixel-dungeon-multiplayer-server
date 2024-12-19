@@ -3,5 +3,9 @@ apply plugin: 'java-library'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = appJavaCompatibility
 
+
 dependencies {
+    implementation project(':synchronizationAnnotations')
+    implementation "org.json:json:20170516"
+    implementation ('org.jetbrains:annotations:24.1.0')
 }

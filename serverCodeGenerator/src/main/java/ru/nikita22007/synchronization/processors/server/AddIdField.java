@@ -1,8 +1,10 @@
 package ru.nikita22007.synchronization.processors.server;
 
+import ru.nikita22007.synchronization.annotations.SynchronizationField;
 import ru.nikita22007.synchronization.annotations.UniqueId;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtField;
 import spoon.reflect.declaration.ModifierKind;
 import spoon.reflect.factory.Factory;
 
@@ -19,12 +21,15 @@ public class AddIdField extends AbstractProcessor<CtClass> {
             if (element.getField(idName) != null) {
                 return;
             }
-            element.addField(factory.createField(
+
+            CtField field = factory.createField(
                     element,
                     new HashSet<>(Collections.singletonList(ModifierKind.PRIVATE)),
                     factory.createCtTypeReference(long.class),
-                    annotation.idFieldName()
-            ));
+                    idName
+            );
+            field.addAnnotation(factory.createAnnotation(factory.createCtTypeReference(SynchronizationField.class).setShadow(false)));
+            element.addFieldAtTop(field);
 
         }
     }

@@ -50,11 +50,16 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
+import ru.nikita22007.synchronization.annotations.SynchronizationField;
+import ru.nikita22007.synchronization.annotations.SynchronizedClass;
+import ru.nikita22007.synchronization.annotations.UniqueId;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+@SynchronizedClass
+@UniqueId
 public class Item implements Bundlable {
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
@@ -66,7 +71,8 @@ public class Item implements Bundlable {
 	
 	public static final String AC_DROP		= "DROP";
 	public static final String AC_THROW		= "THROW";
-	
+
+	@SynchronizationField
 	protected String defaultAction;
 	public boolean usesTargeting;
 

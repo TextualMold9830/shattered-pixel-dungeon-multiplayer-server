@@ -170,77 +170,7 @@ public class NetworkPacket {
 
     protected JSONObject packActor(@NotNull Actor actor, boolean heroAsHero) {
 
-        JSONObject object = new JSONObject();
-        try {
-            if (actor instanceof Char) {
-                Char character = (Char) actor;
-                int id = actor.id();
-                if (id <= 0) {
-                    return new JSONObject();
-                }
-                object.put("id", id);
-                if (actor instanceof Hero) {
-                    Hero hero = (Hero) actor;
-                    if (heroAsHero) {
-                        object.put("type", "hero");
-                    } else {
-                        object.put("type", "character");
-                    }
-                    object.put("class", hero.heroClass);
-                    object.put("tier", hero.tier());
-                }else {
-                    object.put("type", "character");
-                    if (character.getSprite() != null) {
-                        String spriteAsset = character.getSprite().getSpriteAsset();
-                        if (spriteAsset != null) {
-                            object.put("sprite_asset",spriteAsset);
-                        } else
-                        {
-                            object.put("sprite_name", ((Char) actor).getSprite().spriteName());
-                        }
-                    }
-                }
-                String name = character.name();
-                int hp = character.HP;
-                int ht = character.HT;
-                int pos = character.pos;
-                object.put("hp", hp);
-                object.put("max_hp", ht);
-                object.put("position", pos);
-                object.put("name", name);
-
-                object.put("emo", character.getEmoJsonObject());
-                CharSprite sprite = character.getSprite();
-                if (sprite != null) {
-                    JSONArray states = putToJSONArray(((Char) actor).getSprite().states().toArray());
-                    object.put("states", states);
-                }
-                if (actor instanceof Mob) {
-                    String desc = ((Mob) actor).description();
-                    object.put("description", desc);
-                }
-            } else if (actor instanceof Blob) {
-                int id = actor.id();
-                object.put("id", id);
-                object.put("type", "blob");
-                object.put("blob_type", toSnakeCase(actor.getClass().getSimpleName()));
-                JSONArray positions = new JSONArray();
-                for (int i = 0; i < ((Blob) actor).cur.length; i++) {
-                    if (((Blob) actor).cur[i] > 0) {
-                        positions.put(i);
-                    }
-                }
-                object.put("positions", positions);
-            } else if (actor instanceof Buff) {
-                //no warning
-            } else {
-                Log.w("NetworkPacket", "remove actor. Actor class: " + actor.getClass().toString());
-            }
-        } catch (JSONException e) {
-
-        }
-
-        return object;
+        return new JSONObject();
     }
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {
@@ -541,7 +471,7 @@ public class NetworkPacket {
 
     @NotNull
     public JSONObject packBag(@NotNull Bag bag, Hero hero) {
-        return Item.packItem(bag, hero);
+        return new JSONObject();
     }
 
     @NotNull
@@ -554,7 +484,7 @@ public class NetworkPacket {
 
         for (Item item : bag.items) {
             JSONObject serializedItem;
-            serializedItem = Item.packItem(item, hero);
+            serializedItem = new JSONObject();
             if (serializedItem.length() == 0) {
                 Log.w("Packet", "item hadn't serialized");
             }
@@ -563,7 +493,6 @@ public class NetworkPacket {
 
         JSONObject bagObj = itemObj;
         try {
-            bagObj.put("bag_icon", bag.getBagIcon());
             bagObj.put("size", bag.capacity());
             bagObj.put("items", bagItems);
             bagObj.put("owner", hero != null ? hero.id() : null);
@@ -631,18 +560,7 @@ public class NetworkPacket {
     public void addSpecialSlots(Hero hero) {
 
         JSONArray slotsArr = new JSONArray();
-        for (SpecialSlot slot : hero.belongings.getSpecialSlots()) {
-            JSONObject slotObj = new JSONObject();
-            try {
-                slotObj.put("id", slot.id);
-                slotObj.put("sprite", slot.sprite);
-                slotObj.put("image_id", slot.image_id);
-                slotObj.put("item", (slot.item != null) ? Item.packItem(slot.item, hero) : JSONObject.NULL);
-            } catch (JSONException e) {
-                Log.wtf("NetworkPacket", "JsonException while adding special slot" + e.toString());
-            }
-            slotsArr.put(slotObj);
-        }
+
         try {
             synchronized (dataRef) {
                 JSONObject data = dataRef.get();
@@ -683,7 +601,7 @@ public class NetworkPacket {
         if (heap == null) {
             return null;
         }
-        return heap.toJsonObject(observer);
+        return new JSONObject();
     }
 
     public void addHeapRemoving(Heap heap) {

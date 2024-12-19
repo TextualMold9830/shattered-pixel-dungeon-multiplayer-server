@@ -10,7 +10,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.ClientThread.CHARSET;
+import static com.shatteredpixel.shatteredpixeldungeon.server.network.ClientThread.CHARSET;
 
 
 public class RelayThread extends Thread {
