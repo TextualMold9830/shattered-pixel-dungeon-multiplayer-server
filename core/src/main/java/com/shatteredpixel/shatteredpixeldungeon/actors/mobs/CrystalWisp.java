@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CrystalWispSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
 
 public class CrystalWisp extends Mob{
 
@@ -76,7 +77,7 @@ public class CrystalWisp extends Mob{
 
 	@Override
 	public int damageRoll() {
-		return Char.combatRoll( 5, 10 );
+		return Random.NormalIntRange( 5, 10 );
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class CrystalWisp extends Mob{
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Char.combatRoll(0, 5);
+		return super.drRoll() + Random.NormalIntRange(0, 5);
 	}
 
 	@Override
@@ -114,6 +115,13 @@ public class CrystalWisp extends Mob{
 		}
 	}
 
+
+	@Override
+	public void die(@NotNull DamageCause damageCause) {
+		flying = false;
+		super.die(damageCause);
+	}
+
 	//used so resistances can differentiate between melee and magical attacks
 	public static class LightBeam {}
 
@@ -124,7 +132,7 @@ public class CrystalWisp extends Mob{
 		Char enemy = this.enemy;
 		if (hit( this, enemy, true )) {
 
-			int dmg = Char.combatRoll( 5, 10 );
+			int dmg = Random.NormalIntRange( 5, 10 );
 			enemy.damage( dmg, new DamageCause(new LightBeam(), this) );
 
 			if (!enemy.isAlive() && enemy instanceof Hero) {

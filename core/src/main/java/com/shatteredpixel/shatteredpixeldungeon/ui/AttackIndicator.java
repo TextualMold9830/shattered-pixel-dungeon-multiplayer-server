@@ -72,7 +72,7 @@ public class AttackIndicator {
 			}
 		}
 		
-		if (!candidates.contains( lastTarget )) {
+		if (lastTarget == null || !candidates.contains( lastTarget )) {
 			if (candidates.isEmpty()) {
 				setLastTarget(lastTarget);
 			} else {

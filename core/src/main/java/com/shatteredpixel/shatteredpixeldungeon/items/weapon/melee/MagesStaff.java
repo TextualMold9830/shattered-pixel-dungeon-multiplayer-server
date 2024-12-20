@@ -32,7 +32,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -228,7 +227,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		if (owner instanceof Hero && ((Hero) owner).hasTalent(Talent.WAND_PRESERVATION)){
 			Talent.WandPreservationCounter counter = Buff.affect(owner, Talent.WandPreservationCounter.class);
-			if (counter.count() < 5 && Random.Float() < 0.34f + 0.33f* ((Hero) owner).pointsInTalent(Talent.WAND_PRESERVATION)){
+			if (counter.count() == 0){
 				counter.countUp(1);
 				this.wand.level(0);
 				if (!this.wand.collect((Hero) owner)) {
@@ -236,13 +235,6 @@ public class MagesStaff extends MeleeWeapon {
 				}
 				GLog.newLine();
 				GLog.p(Messages.get(this, "preserved"));
-			} else {
-				ArcaneResin resin = new ArcaneResin();
-				if (!resin.collect((Hero) owner)) {
-					Dungeon.level.drop(resin, owner.pos);
-				}
-				GLog.newLine();
-				GLog.p(Messages.get(this, "preserved_resin"));
 			}
 		}
 
@@ -256,16 +248,18 @@ public class MagesStaff extends MeleeWeapon {
 
 		//if the staff's level is being overridden by the wand, preserve 1 upgrade
 		if (wand.trueLevel() >= this.trueLevel() && this.trueLevel() > 0) targetLevel++;
-		
+
 		level(targetLevel);
 		this.wand = wand;
 		updateWand(false);
 		wand.curCharges = Math.min(wand.maxCharges, wand.curCharges+oldStaffcharges);
 		if (owner != null){
 			applyWandChargeBuff(owner);
- 		} else if (((Hero)owner).belongings.contains(this)){
-			applyWandChargeBuff(owner);
 		}
+		//TODO: check this
+		/*else if (owner instanceof Hero && ((Hero)owner).belongings.contains(this)){
+			applyWandChargeBuff(owner);
+		}*/
 
 		//This is necessary to reset any particles.
 		//FIXME this is gross, should implement a better way to fully reset quickslot visuals
@@ -276,11 +270,12 @@ public class MagesStaff extends MeleeWeapon {
 			Dungeon.quickslot.setSlot( slot, this );
 			updateQuickslot();
 		}
-		
+
 		Badges.validateItemLevelAquired(this);
 
 		return this;
 	}
+
 
 	public void gainCharge( float amt ){
 		gainCharge(amt, false);

@@ -23,22 +23,50 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BadgesGrid;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
+import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournal;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Music;
+import com.watabou.utils.SparseArray;
 
-public class BadgesScene extends PixelScene {
+public class JournalScene extends PixelScene {
+
+	public static final int WIDTH_P     = 126;
+	public static final int WIDTH_L     = 216;
+
+	private static int lastIDX = 0;
 
 	@Override
 	public void create() {
 
 		super.create();
+
+		Badges.loadGlobal();
+		Journal.loadGlobal();
+
+		Potion.clearColors();
+		Scroll.clearLabels();
+		Ring.clearGems();
+
+		//need to re-initialize the texture here, as it may be invalid
+		new TerrainFeaturesTilemap(new SparseArray<>(), new SparseArray<>());
 
 		Music.INSTANCE.playTracks(
 				new String[]{Assets.Music.THEME_1, Assets.Music.THEME_2},
@@ -50,30 +78,26 @@ public class BadgesScene extends PixelScene {
 		int w = Camera.main.width;
 		int h = Camera.main.height;
 
-		Archs archs = new Archs();
-		archs.setSize( w, h );
-		add( archs );
-
-		float margin = 5;
 		float top = 20;
 
-		RenderedTextBlock title = PixelScene.renderTextBlock( Messages.get(this, "title"), 9 );
-		title.hardlight(Window.TITLE_COLOR);
+		IconTitle title = new IconTitle( Icons.JOURNAL.get(), Messages.get(this, "title") );
+		title.setSize(200, 0);
 		title.setPos(
-				(w - title.width()) / 2f,
+				(w - title.reqWidth()) / 2f,
 				(top - title.height()) / 2f
 		);
 		align(title);
 		add(title);
 
-		Badges.loadGlobal();
-		BadgesGrid grid = new BadgesGrid(true);
-		grid.setRect(margin, top, w-(2*margin), h-top-margin);
-		add(grid);
+		NinePatch panel = Chrome.get(Chrome.Type.TOAST);
 
-		ExitButton btnExit = new ExitButton();
-		btnExit.setPos( Camera.main.width - btnExit.width(), 0 );
-		add( btnExit );
+		int pw = (landscape() ? WIDTH_L : WIDTH_P) + panel.marginHor();
+		int ph = h - 50 + panel.marginVer();
+
+		panel.size(pw, ph);
+		panel.x = (w - pw) / 2f;
+		panel.y = top;
+		add(panel);
 
 		fadeIn();
 	}

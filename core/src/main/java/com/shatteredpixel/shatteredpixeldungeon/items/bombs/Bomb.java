@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImag
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -53,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -89,6 +91,10 @@ public class Bomb extends Item {
 		return true;
 	}
 
+	protected int explosionRange(){
+		return 1;
+	}
+
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
@@ -117,15 +123,7 @@ public class Bomb extends Item {
 		if (!Dungeon.level.pit[ cell ] && lightingFuse) {
 			Actor.addDelayed(fuse = createFuse().ignite(this), 2);
 		}
-		if (Actor.findChar( cell ) != null && !(Actor.findChar( cell ) instanceof Hero) ){
-			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8)
-				if (Dungeon.level.passable[cell + i])
-					candidates.add(cell + i);
-			int newCell = candidates.isEmpty() ? cell : Random.element(candidates);
-			Dungeon.level.drop( this, newCell ).sprite.drop( cell );
-		} else
-			super.onThrow( cell );
+		super.onThrow( cell );
 	}
 
 	@Override
@@ -136,7 +134,7 @@ public class Bomb extends Item {
 		}
 		return super.doPickUp(hero, pos);
 	}
-
+	@Deprecated
 	public void explode(int cell, Hero hero){
 		//We're blowing up, so no need for a fuse anymore.
 		this.fuse = null;
@@ -167,9 +165,10 @@ public class Bomb extends Item {
 					
 					//destroys items / triggers bombs caught in the blast.
 					Heap heap = Dungeon.level.heaps.get(c);
-					if (heap != null)
+					if (heap != null) {
 						heap.explode();
-					
+					}
+
 					Char ch = Actor.findChar(c);
 					if (ch != null) {
 						affected.add(ch);
@@ -184,13 +183,7 @@ public class Bomb extends Item {
 					continue;
 				}
 
-				int dmg = Char.combatRoll(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
-
-				//those not at the center of the blast take less damage
-				if (ch.pos != cell){
-					dmg = Math.round(dmg*0.67f);
-				}
-
+				int dmg = Random.NormalIntRange(4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth());
 				dmg -= ch.drRoll();
 				if (dmg > 0){
 					if (curItem == this) {
@@ -214,6 +207,9 @@ public class Bomb extends Item {
 				Dungeon.observe();
 			}
 		}
+	}
+	public void explode(int cell){
+		explode(cell, null);
 	}
 	
 	@Override
@@ -243,15 +239,18 @@ public class Bomb extends Item {
 
 	@Override
 	public int value() {
-		return 20 * quantity();
+		return 15 * quantity();
 	}
 	
 	@Override
 	public String desc() {
-		if (fuse == null)
-			return super.desc()+ "\n\n" + Messages.get(this, "desc_fuse");
-		else
-			return super.desc() + "\n\n" + Messages.get(this, "desc_burning");
+		int depth = Dungeon.scalingDepth();
+		String desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
+		if (fuse == null) {
+			return desc + "\n\n" + Messages.get(this, "desc_fuse");
+		} else {
+			return desc + "\n\n" + Messages.get(this, "desc_burning");
+		}
 	}
 
 	private static final String FUSE = "fuse";
@@ -315,6 +314,7 @@ public class Bomb extends Item {
 		}
 		protected void trigger(Heap heap, Hero hero){
 			heap.remove(bomb);
+			Catalog.countUse(bomb.getClass());
 			bomb.explode(heap.pos, hero);
 			Actor.remove(this);
 		}
@@ -358,8 +358,8 @@ public class Bomb extends Item {
 			validIngredients.put(PotionOfLiquidFlame.class,     Firebomb.class);
 			validIngredients.put(ScrollOfRage.class,            Noisemaker.class);
 			
-			validIngredients.put(PotionOfInvisibility.class,    Flashbang.class);
-			validIngredients.put(ScrollOfRecharging.class,      ShockBomb.class);
+			validIngredients.put(PotionOfInvisibility.class,    SmokeBomb.class);
+			validIngredients.put(ScrollOfRecharging.class,      FlashBangBomb.class);
 			
 			validIngredients.put(PotionOfHealing.class,         RegrowthBomb.class);
 			validIngredients.put(ScrollOfRemoveCurse.class,     HolyBomb.class);
@@ -376,8 +376,8 @@ public class Bomb extends Item {
 			bombCosts.put(Firebomb.class,       1);
 			bombCosts.put(Noisemaker.class,     1);
 			
-			bombCosts.put(Flashbang.class,      2);
-			bombCosts.put(ShockBomb.class,      2);
+			bombCosts.put(SmokeBomb.class,      2);
+			bombCosts.put(FlashBangBomb.class,      2);
 
 			bombCosts.put(RegrowthBomb.class,   3);
 			bombCosts.put(HolyBomb.class,       3);
@@ -423,7 +423,13 @@ public class Bomb extends Item {
 					result = Reflection.newInstance(validIngredients.get(i.getClass()));
 				}
 			}
-			
+
+			if (result instanceof ArcaneBomb){
+				Catalog.countUse(GooBlob.class);
+			} else if (result instanceof ShrapnelBomb){
+				Catalog.countUse(MetalShard.class);
+			}
+
 			return result;
 		}
 		

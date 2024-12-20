@@ -121,7 +121,7 @@ public class WarpBeacon extends ArmorAbility {
 									int heroDmg = 5 * hero.pointsInTalent(Talent.TELEFRAG);
 									hero.damage(Math.min(heroDmg, heroHP-1), new Char.DamageCause( WarpBeacon.this, hero));
 
-									int damage = Char.combatRoll(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
+									int damage = Hero.heroDamageIntRange(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
 									existing.getSprite().flash();
 									existing.getSprite().bloodBurstA(existing.getSprite().center(), damage);
 									existing.damage(damage, new Char.DamageCause( WarpBeacon.this, hero));

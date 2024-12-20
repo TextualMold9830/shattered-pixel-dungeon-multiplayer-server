@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -31,29 +33,36 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.utils.BArray;
+import com.watabou.utils.PathFinder;
 
-public class Flashbang extends Bomb {
+public class SmokeBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.FLASHBANG;
+		image = ItemSpriteSheet.SMOKE_BOMB;
+	}
+
+	@Override
+	protected int explosionRange() {
+		return 2;
 	}
 
 	@Override
 	public void explode(int cell, Hero hero) {
 		super.explode(cell, hero);
 
-		Level l = Dungeon.level;
-		for (Char ch : Actor.chars()){
-			if (ch.fieldOfView != null && ch.fieldOfView[cell]){
-				int power = 16 - 4*l.distance(ch.pos, cell);
-				if (power > 0){
-					Buff.prolong(ch, Blindness.class, power);
-					Buff.prolong(ch, Cripple.class, power);
-					if (ch instanceof Hero){
-						GameScene.flash(0x80FFFFFF);
-					}
-				}
+		int centerVolume = 1000; //40*25
+		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange() );
+		for (int i = 0; i < PathFinder.distance.length; i++) {
+			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+				GameScene.add( Blob.seed( i, 40, SmokeScreen.class ) );
+				centerVolume -= 40;
 			}
+		}
+
+		//excess volume if some cells were blocked
+		if (centerVolume > 0){
+			GameScene.add( Blob.seed( cell, centerVolume, SmokeScreen.class ) );
 		}
 		
 	}

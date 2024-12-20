@@ -203,7 +203,7 @@ public class WndBag extends WndTabbed {
 		}
 		return result;
 	}
-	
+
 	private class BagTab extends IconTab {
 
 		private Bag bag;
@@ -265,6 +265,9 @@ public class WndBag extends WndTabbed {
 		public abstract String textPrompt();
 		public Class<?extends Bag> preferredBag(){
 			return null; //defaults to last bag opened
+		}
+		public boolean hideAfterSelecting(){
+			return true; //defaults to hiding the window when an item is picked
 		}
 		public abstract boolean itemSelectable( Item item );
 		public void onSelect(Item item){};

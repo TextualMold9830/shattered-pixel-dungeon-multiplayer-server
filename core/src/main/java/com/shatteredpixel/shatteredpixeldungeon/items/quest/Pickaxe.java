@@ -248,6 +248,11 @@ public class Pickaxe extends MeleeWeapon {
 		return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 	}
 
+	public String upgradeAbilityStat(int level){
+		int dmgBoost = 8 + 2*level;
+		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	}
+
 	private static final String BLOODSTAINED = "bloodStained";
 	
 	@Override

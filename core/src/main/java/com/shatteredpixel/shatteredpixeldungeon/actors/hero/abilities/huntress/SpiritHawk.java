@@ -49,6 +49,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -149,8 +150,13 @@ public class SpiritHawk extends ArmorAbility {
 			defenseSkill = 60;
 
 			flying = true;
-			viewDistance = (int)GameMath.gate(6, 6+owner.pointsInTalent(Talent.EAGLE_EYE), 8);
-			baseSpeed = 2f + owner.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
+			if (getOwner() != null) {
+				viewDistance = (int) GameMath.gate(6, 6 + owner.pointsInTalent(Talent.EAGLE_EYE), 8);
+				baseSpeed = 2f + owner.pointsInTalent(Talent.SWIFT_SPIRIT) / 2f;
+			} else {
+				viewDistance = 6;
+				baseSpeed = 2f;
+			}
 			attacksAutomatically = false;
 
 			immunities.addAll(new BlobImmunity().immunities());
@@ -181,7 +187,7 @@ public class SpiritHawk extends ArmorAbility {
 
 		@Override
 		public int damageRoll() {
-			return Char.combatRoll(5, 10);
+			return Random.NormalIntRange(5, 10);
 		}
 
 		@Override
@@ -225,6 +231,12 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
+		public void die(@NotNull DamageCause damageCause) {
+			flying = false;
+			super.die(damageCause);
+		}
+
+		@Override
 		public void spend(float time) {
 			super.spend(time);
 			timeRemaining -= time;
@@ -258,8 +270,11 @@ public class SpiritHawk extends ArmorAbility {
 		@Override
 		public String description() {
 			String message = Messages.get(this, "desc", (int)timeRemaining);
-			if (dodgesUsed < 2*owner.pointsInTalent(Talent.SWIFT_SPIRIT)){
-				message += "\n" + Messages.get(this, "desc_dodges", (2*owner.pointsInTalent(Talent.SWIFT_SPIRIT) - dodgesUsed));
+			if (Actor.chars().contains(this)){
+				message += "\n\n" + Messages.get(this, "desc_remaining", (int)timeRemaining);
+				if (dodgesUsed < 2*owner.pointsInTalent(Talent.SWIFT_SPIRIT)){
+					message += "\n" + Messages.get(this, "desc_dodges", (2*owner.pointsInTalent(Talent.SWIFT_SPIRIT) - dodgesUsed));
+				}
 			}
 			return message;
 		}

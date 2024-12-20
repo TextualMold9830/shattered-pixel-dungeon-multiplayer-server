@@ -27,10 +27,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Rotberry;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RotHeartSprite;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -97,11 +99,13 @@ public class RotHeart extends Mob {
 	@Override
 	public void destroy() {
 		super.destroy();
+		Bestiary.skipCountingEncounters = true;
 		for (Mob mob : Dungeon.level.mobs.toArray(new Mob[Dungeon.level.mobs.size()])){
 			if (mob instanceof RotLasher){
 				mob.die(new DamageCause(null));
 			}
 		}
+		Bestiary.skipCountingEncounters = false;
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class RotHeart extends Mob {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Char.combatRoll(0, 5);
+		return super.drRoll() + Random.NormalIntRange(0, 5);
 	}
 	
 	{

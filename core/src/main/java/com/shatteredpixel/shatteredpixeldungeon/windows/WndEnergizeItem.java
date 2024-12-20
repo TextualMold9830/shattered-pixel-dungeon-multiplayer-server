@@ -33,11 +33,12 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class WndEnergizeItem extends WndInfoItem {
 
-	private static final float GAP		= 2;
-	private static final int BTN_HEIGHT	= 18;
+	private static final float GAP = 2;
+	private static final int BTN_HEIGHT = 18;
 
 	private WndBag owner;
 
@@ -50,48 +51,48 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		if (item.quantity() == 1) {
 
-			RedButton btnEnergize = new RedButton( Messages.get(this, "energize", item.energyVal()) ) {
+			RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 				@Override
 				protected void onClick() {
-					energize( item, getOwnerHero() );
+					energizeAll(item, getOwnerHero());
 					hide();
 				}
 			};
-			btnEnergize.setRect( 0, pos + GAP, width, BTN_HEIGHT );
+			btnEnergize.setRect(0, pos + GAP, width, BTN_HEIGHT);
 			btnEnergize.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergize );
+			add(btnEnergize);
 
 			pos = btnEnergize.bottom();
 
 		} else {
 
 			int energyAll = item.energyVal();
-			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll / item.quantity()) ) {
+			RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll / item.quantity())) {
 				@Override
 				protected void onClick() {
-					energizeOne( item, getOwnerHero() );
+					energizeOne(item, getOwnerHero());
 					hide();
 				}
 			};
-			btnEnergize1.setRect( 0, pos + GAP, width, BTN_HEIGHT );
+			btnEnergize1.setRect(0, pos + GAP, width, BTN_HEIGHT);
 			btnEnergize1.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergize1 );
-			RedButton btnEnergizeAll = new RedButton( Messages.get(this, "energize_all", energyAll ) ) {
+			add(btnEnergize1);
+			RedButton btnEnergizeAll = new RedButton(Messages.get(this, "energize_all", energyAll)) {
 				@Override
 				protected void onClick() {
-					energize( item, getOwnerHero() );
+					energizeAll(item, getOwnerHero());
 					hide();
 				}
 			};
-			btnEnergizeAll.setRect( 0, btnEnergize1.bottom() + 1, width, BTN_HEIGHT );
+			btnEnergizeAll.setRect(0, btnEnergize1.bottom() + 1, width, BTN_HEIGHT);
 			btnEnergizeAll.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergizeAll );
+			add(btnEnergizeAll);
 
 			pos = btnEnergizeAll.bottom();
 
 		}
 
-		resize( width, (int)pos );
+		resize(width, (int) pos);
 
 	}
 
@@ -106,7 +107,8 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static void energize( Item item, Hero hero ) {
+
+	public static void energizeAll(Item item, Hero hero ) {
 
 
 		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false )) {
@@ -133,26 +135,44 @@ public class WndEnergizeItem extends WndInfoItem {
 	public static void energizeOne( Item item, Hero hero ) {
 
 		if (item.quantity() <= 1) {
-			energize( item, hero );
+			energizeAll(item, hero);
+		} else {
+			energize(item.detach(hero.belongings.backpack), hero);
+		}
+
+
+		item = item.detach(hero.belongings.backpack);
+
+		AlchemyScene alchemyScene = AlchemyScene.getActiveAlchemyScene(hero);
+		if (alchemyScene != null) {
+
+			Dungeon.energy += item.energyVal();
+			alchemyScene.createEnergy();
+			if (!item.isIdentified()) {
+				//TODO: check this
+				//AlchemyScene.showIdentify(item);
+			}
+
 		} else {
 
+			//energizing items doesn't spend time
+			hero.spend(-hero.cooldown());
+			new EnergyCrystal(item.energyVal()).doPickUp(hero);
+			item.identify(hero);
+			GLog.h("You energized: " + item.name());
 
-			item = item.detach( hero.belongings.backpack );
-
-			AlchemyScene alchemyScene = AlchemyScene.getActiveAlchemyScene(hero);
-			if (alchemyScene != null){
-
-				Dungeon.energy += item.energyVal();
-				alchemyScene.createEnergy();
-
-			} else {
-
-				//selling items in the sell interface doesn't spend time
-				hero.spend(-hero.cooldown());
-
-				new EnergyCrystal(item.energyVal()).doPickUp(hero);
-			}
 		}
+	}
+	private static void energize(Item item, Hero hero){
+
+
+			Dungeon.energy += item.energyVal();
+			//energizing items doesn't spend time
+			hero.spend(-hero.cooldown());
+			new EnergyCrystal(item.energyVal()).doPickUp(hero);
+			item.identify(hero);
+			GLog.h("You energized: " + item.name());
+
 	}
 
 	public static WndBag openItemSelector(Hero hero){
@@ -188,5 +208,6 @@ public class WndEnergizeItem extends WndInfoItem {
 			}
 		}
 	};
-
 }
+
+

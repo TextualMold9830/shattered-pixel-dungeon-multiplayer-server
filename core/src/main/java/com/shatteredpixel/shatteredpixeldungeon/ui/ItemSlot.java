@@ -153,8 +153,14 @@ public class ItemSlot extends Button {
 		}
 
 		if (itemIcon != null){
-			itemIcon.x = x + width - (ItemSpriteSheet.Icons.SIZE + itemIcon.width())/2f - margin.right;
-			itemIcon.y = y + (ItemSpriteSheet.Icons.SIZE - itemIcon.height)/2f + margin.top;
+			//center the icon slightly if there is enough room
+			if (width >= 24 || height >= 24) {
+				itemIcon.x = x + width - (ItemSpriteSheet.Icons.SIZE + itemIcon.width()) / 2f - margin.right;
+				itemIcon.y = y + (ItemSpriteSheet.Icons.SIZE - itemIcon.height) / 2f + margin.top;
+			} else {
+				itemIcon.x = x + width - itemIcon.width() - margin.right;
+				itemIcon.y = y + margin.top;
+			}
 			PixelScene.align(itemIcon);
 		}
 		
@@ -250,7 +256,7 @@ public class ItemSlot extends Button {
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
 				extra.text( Messages.format( TXT_STRENGTH, str ) );
 				//FIXME
-				//if (str > Dungeon.heroes.STR()) {
+				//if (Dungeon.hero != null && str > Dungeon.heroes.STR()) {
 				if (false) {
 					extra.hardlight( DEGRADED );
 				} else if (item instanceof Weapon && ((Weapon) item).masteryPotionBonus){

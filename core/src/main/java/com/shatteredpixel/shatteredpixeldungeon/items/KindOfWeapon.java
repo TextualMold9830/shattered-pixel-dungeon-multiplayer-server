@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 abstract public class KindOfWeapon extends EquipableItem {
 
@@ -237,7 +238,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 	};
 
 	public int damageRoll( Char owner ) {
-		return Char.combatRoll( min(owner), max(owner) );
+		if (owner instanceof Hero){
+			return Hero.heroDamageIntRange(min(owner), max(owner));
+		} else {
+			return Random.NormalIntRange(min(owner), max(owner));
+		}
 	}
 	
 	public float accuracyFactor( Char owner, Char target ) {

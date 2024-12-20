@@ -29,6 +29,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.BatSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.watabou.utils.Random;
+import org.jetbrains.annotations.NotNull;
 
 public class Bat extends Mob {
 
@@ -50,7 +52,7 @@ public class Bat extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Char.combatRoll( 5, 18 );
+		return Random.NormalIntRange( 5, 18 );
 	}
 	
 	@Override
@@ -60,9 +62,16 @@ public class Bat extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Char.combatRoll(0, 4);
+		return super.drRoll() + Random.NormalIntRange(0, 4);
 	}
-	
+
+
+	@Override
+	public void die(@NotNull DamageCause damageCause) {
+		flying = false;
+		super.die(damageCause);
+	}
+
 	@Override
 	public int attackProc( Char enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );

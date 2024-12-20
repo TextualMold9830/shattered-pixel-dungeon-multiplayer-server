@@ -50,7 +50,11 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public int STRReq(int lvl) {
-		return STRReq(tier+1, lvl); //20 base strength req, up from 18
+		int req = STRReq(tier+1, lvl); //20 base strength req, up from 18
+		if (masteryPotionBonus){
+			req -= 2;
+		}
+		return req;
 	}
 
 	@Override
@@ -89,8 +93,8 @@ public class Greataxe extends MeleeWeapon {
 				beforeAbilityUsed(hero, enemy);
 				hero.attackIndicator.target(enemy);
 
-				//+(12+(2*lvl)) damage, roughly +50% base damage, +55% scaling
-				int dmgBoost = augment.damageFactor(12 + 2*buffedLvl());
+				//+(15+(2*lvl)) damage, roughly +60% base damage, +55% scaling
+				int dmgBoost = augment.damageFactor(15 + 2*buffedLvl());
 
 				if (hero.attack(enemy, 1, dmgBoost, Char.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
@@ -110,11 +114,16 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo(Hero hero) {
-		int dmgBoost = levelKnown ? 12 + 2*buffedLvl() : 12;
+		int dmgBoost = levelKnown ? 15 + 2*buffedLvl() : 15;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0, hero)+dmgBoost, max(0, hero)+dmgBoost);
 		}
+	}
+
+	public String upgradeAbilityStat(int level){
+		int dmgBoost = 15 + 2*level;
+		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
 	}
 }

@@ -21,66 +21,69 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
-import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class ShockBomb extends Bomb {
+public class FlashBangBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.SHOCK_BOMB;
+		image = ItemSpriteSheet.FLASHBANG;
 	}
-	
+
+	@Override
+	protected int explosionRange() {
+		return 2;
+	}
+
 	@Override
 	public void explode(int cell, Hero hero) {
 		super.explode(cell, hero);
 
 		ArrayList<Char> affected = new ArrayList<>();
-		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 3 );
+		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange() );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
-			if (PathFinder.distance[i] < Integer.MAX_VALUE
-				&& Actor.findChar(i) != null) {
+			if (PathFinder.distance[i] < Integer.MAX_VALUE && Actor.findChar(i) != null) {
 				affected.add(Actor.findChar(i));
-			}
-		}
-
-		for (Char ch : affected.toArray(new Char[0])){
-			Ballistica LOS = new Ballistica(cell, ch.pos, Ballistica.PROJECTILE);
-			if (LOS.collisionPos != ch.pos){
-				affected.remove(ch);
 			}
 		}
 
 		ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 		for (Char ch : affected){
-			int power = 16 - 4*Dungeon.level.distance(ch.pos, cell);
-			if (power > 0){
-				//32% to 8% regular bomb damage
-				int damage = Math.round(Char.combatRoll(5 + Dungeon.scalingDepth(), 10 + 2*Dungeon.scalingDepth()) * (power/50f));
-				if (curItem == this) {
-					ch.damage(damage, new Char.DamageCause(this, curUser));
-				} else {
-					Log.e("Shock bomb explosion curr item is not this");
-					ch.damage(damage, new Char.DamageCause(this, null));
-				}
-				if (ch.isAlive()) Buff.prolong(ch, Paralysis.class, power);
-				arcs.add(new Lightning.Arc(DungeonTilemap.tileCenterToWorld(cell), ch.getSprite().center()));
+			//25% bonus damage and 10 turns of stun
+			int damage = Math.round(Random.NormalIntRange(4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth()) / 4f);
+			ch.damage(damage, new Char.DamageCause(new Electricity(), null));
+			if (ch.isAlive()) Buff.prolong(ch, Paralysis.class, Paralysis.DURATION);
+			arcs.add(new Lightning.Arc(DungeonTilemap.tileCenterToWorld(cell), ch.getSprite().center()));
+
+			if (ch instanceof Hero){
+				GameScene.flash(0x80FFFFFF);
+			}
+
+			if (ch instanceof Hero && !ch.isAlive()) {
+				Badges.validateDeathFromFriendlyMagic();
+				GLog.n(Messages.get(this, "ondeath"));
+				Dungeon.fail(this);
 			}
 		}
 

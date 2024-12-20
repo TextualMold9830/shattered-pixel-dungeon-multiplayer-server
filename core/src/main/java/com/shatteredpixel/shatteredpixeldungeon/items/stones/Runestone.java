@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public abstract class Runestone extends Item {
@@ -41,6 +42,7 @@ public abstract class Runestone extends Item {
 				(Dungeon.level.pit[cell] && Actor.findChar(cell) == null)){
 			super.onThrow( cell );
 		} else {
+			Catalog.countUse(getClass());
 			activate(cell, hero);
 			if (Actor.findChar(cell) == null) Dungeon.level.pressCell( cell );
 			Invisibility.dispel(hero);

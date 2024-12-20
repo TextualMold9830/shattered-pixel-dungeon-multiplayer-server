@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
@@ -208,6 +209,7 @@ public class Feint extends ArmorAbility {
 				}
 				if (getOwner().hasTalent(Talent.EXPOSE_WEAKNESS)) {
 					Buff.prolong(enemy, Vulnerable.class, 2f * getOwner().pointsInTalent(Talent.EXPOSE_WEAKNESS));
+					Buff.prolong(enemy, Weakness.class, 2f * getOwner().pointsInTalent(Talent.EXPOSE_WEAKNESS));
 				}
 				if (getOwner().hasTalent(Talent.COUNTER_ABILITY)) {
 					Buff.prolong(getOwner(), Talent.CounterAbilityTacker.class, 3f);

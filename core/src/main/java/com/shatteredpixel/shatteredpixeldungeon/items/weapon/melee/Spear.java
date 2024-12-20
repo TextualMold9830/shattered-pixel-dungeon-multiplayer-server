@@ -61,19 +61,24 @@ public class Spear extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		//+(7+1.5*lvl) damage, roughly +65% base damage, +60% scaling
-		int dmgBoost = augment.damageFactor(7 + Math.round(1.5f*buffedLvl()));
+		//+(9+2*lvl) damage, roughly +83% base damage, +80% scaling
+		int dmgBoost = augment.damageFactor(9 + Math.round(2f*buffedLvl()));
 		Spear.spikeAbility(hero, target, 1, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo(Hero hero) {
-		int dmgBoost = levelKnown ? 7 + Math.round(1.5f*buffedLvl()) : 7;
+		int dmgBoost = levelKnown ? 9 + Math.round(2f*buffedLvl()) : 9;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0, hero)+dmgBoost, max(0, hero)+dmgBoost);
 		}
+	}
+
+	public String upgradeAbilityStat(int level){
+		int dmgBoost = 9 + Math.round(2f*level);
+		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
 	}
 
 	public static void spikeAbility(Hero hero, Integer target, float dmgMulti, int dmgBoost, MeleeWeapon wep){
@@ -110,7 +115,7 @@ public class Spear extends MeleeWeapon {
 						trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 						//knock them back along that ballistica
 						WandOfBlastWave.throwChar(enemy, trajectory, 1, true, false, hero);
-					} else {
+					} else if (!enemy.isAlive()) {
 						wep.onAbilityKill(hero, enemy);
 					}
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);

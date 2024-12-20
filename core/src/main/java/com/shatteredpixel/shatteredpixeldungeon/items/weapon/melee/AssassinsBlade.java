@@ -52,12 +52,12 @@ public class AssassinsBlade extends MeleeWeapon {
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 50% toward max to max on surprise, instead of min to max.
 				int diff = max(owner) - min(owner);
-				int damage = augment.damageFactor(Char.combatRoll(
+				int damage = augment.damageFactor(Hero.heroDamageIntRange(
 						min(owner) + Math.round(diff*0.50f),
 						max(owner)));
 				int exStr = hero.STR() - STRReq();
 				if (exStr > 0) {
-					damage += Char.combatRoll(0, exStr);
+					damage += Hero.heroDamageIntRange(0, exStr);
 				}
 				return damage;
 			}
@@ -86,6 +86,11 @@ public class AssassinsBlade extends MeleeWeapon {
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);
 		}
+	}
+
+	@Override
+	public String upgradeAbilityStat(int level) {
+		return Integer.toString(2+level);
 	}
 
 }

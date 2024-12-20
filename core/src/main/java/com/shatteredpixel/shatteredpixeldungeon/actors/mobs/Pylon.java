@@ -138,7 +138,7 @@ public class Pylon extends Mob {
 	private void shockChar( Char ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.getSprite().flash();
-			ch.damage(Char.combatRoll(10, 20),new DamageCause( new Electricity(), this));
+			ch.damage(Random.NormalIntRange(10, 20),new DamageCause( new Electricity(), this));
 
 			if (ch instanceof Hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
@@ -235,8 +235,8 @@ public class Pylon extends Mob {
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
-		super.restoreFromBundle(bundle);
 		alignment = bundle.getEnum(ALIGNMENT, Alignment.class);
+		super.restoreFromBundle(bundle);
 		targetNeighbor = bundle.getInt(TARGET_NEIGHBOUR);
 	}
 

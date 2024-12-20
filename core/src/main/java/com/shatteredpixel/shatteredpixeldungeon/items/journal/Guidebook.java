@@ -61,7 +61,7 @@ public class Guidebook extends Item {
 		} else {
 			GLog.p(Messages.get(GameScene.class, "tutorial_guidebook_desktop", KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.JOURNAL, ControllerHandler.isControllerConnected()))));
 		}
-		GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
+		GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO, hero);
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 		return true;

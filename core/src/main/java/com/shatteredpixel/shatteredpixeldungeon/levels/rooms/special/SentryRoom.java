@@ -36,7 +36,10 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHaste;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -184,13 +187,19 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		//1 floor set higher in probability, never cursed
-		do {
-			if (Random.Int(2) == 0) {
-				prize = Generator.randomWeapon((Dungeon.depth / 5) + 1);
-			} else {
-				prize = Generator.randomArmor((Dungeon.depth / 5) + 1);
+		//1 floor set higher in probability, never cursed
+		if (Random.Int(2) == 0) {
+			prize = Generator.randomWeapon((Dungeon.depth / 5) + 1);
+			if (((Weapon)prize).hasCurseEnchant()){
+				((Weapon) prize).enchant(null);
 			}
-		} while (prize.cursed || Challenges.isItemBlocked(prize));
+		} else {
+			prize = Generator.randomArmor((Dungeon.depth / 5) + 1);
+			if (((Armor)prize).hasCurseGlyph()){
+				((Armor) prize).inscribe(null);
+			}
+		}
+		prize.cursed = false;
 		prize.cursedKnown = true;
 
 		//33% chance for an extra update.
@@ -231,6 +240,10 @@ public class SentryRoom extends SpecialRoom {
 
 		@Override
 		protected boolean act() {
+			if (Dungeon.visibleforAnyHero(pos)){
+				Bestiary.setSeen(getClass());
+			}
+
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()) {
 				fieldOfView = new boolean[Dungeon.level.length()];
 			}
@@ -285,7 +298,7 @@ public class SentryRoom extends SpecialRoom {
 
 		public void onZapComplete(Hero hero){
 			if (hit(this, hero, true)) {
-				hero.damage(Char.combatRoll(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new DamageCause(new Eye.DeathGaze(), this));
+				hero.damage(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new DamageCause(new Eye.DeathGaze(), this));
 				if (!hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);

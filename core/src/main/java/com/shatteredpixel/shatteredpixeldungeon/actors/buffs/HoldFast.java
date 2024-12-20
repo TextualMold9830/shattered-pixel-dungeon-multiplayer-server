@@ -22,12 +22,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Random;
 
 public class HoldFast extends Buff {
 
@@ -49,7 +51,7 @@ public class HoldFast extends Buff {
 
 	public int armorBonus(){
 		if (pos == target.pos && target instanceof Hero){
-			return Char.combatRoll(0, 2* ((Hero) target).pointsInTalent(Talent.HOLD_FAST));
+			return Random.NormalIntRange(((Hero) target).pointsInTalent(Talent.HOLD_FAST), 2*((Hero) target).pointsInTalent(Talent.HOLD_FAST));
 		} else {
 			detach();
 			return 0;
@@ -68,7 +70,8 @@ public class HoldFast extends Buff {
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc", 2*((Hero) target).pointsInTalent(Talent.HOLD_FAST));
+		//Hold fast should only be applies to a hero
+		return Messages.get(this, "desc", ((Hero) target ).pointsInTalent(Talent.HOLD_FAST), 2*((Hero) target).pointsInTalent(Talent.HOLD_FAST));
 	}
 
 	private static final String POS = "pos";

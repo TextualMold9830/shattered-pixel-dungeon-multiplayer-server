@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Point;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -44,14 +45,19 @@ public class ShrapnelBomb extends Bomb {
 	public boolean explodesDestructively() {
 		return false;
 	}
-	
+
+	@Override
+	protected int explosionRange() {
+		return 8;
+	}
+
 	@Override
 	public void explode(int cell, Hero hero) {
 		super.explode(cell, hero);
 		
 		boolean[] FOV = new boolean[Dungeon.level.length()];
 		Point c = Dungeon.level.cellToPoint(cell);
-		ShadowCaster.castShadow(c.x, c.y, Dungeon.level.width(), FOV, Dungeon.level.losBlocking, 8);
+		ShadowCaster.castShadow(c.x, c.y, Dungeon.level.width(), FOV, Dungeon.level.losBlocking, explosionRange());
 		
 		ArrayList<Char> affected = new ArrayList<>();
 		
@@ -68,9 +74,8 @@ public class ShrapnelBomb extends Bomb {
 		}
 		
 		for (Char ch : affected){
-			//regular bomb damage, which falls off at a rate of 5% per tile of distance
-			int damage = Math.round(Char.combatRoll( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
-			damage = Math.round(damage * (1f - .05f*Dungeon.level.distance(cell, ch.pos)));
+			//regular bomb damage over an FOV up to 8-range
+			int damage = Random.NormalIntRange( 4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth() );
 			damage -= ch.drRoll();
 			if (curItem == this) {
 				ch.damage(damage, new Char.DamageCause(this, curUser));

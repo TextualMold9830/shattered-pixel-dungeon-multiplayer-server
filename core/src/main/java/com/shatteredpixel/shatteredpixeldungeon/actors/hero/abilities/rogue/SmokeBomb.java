@@ -55,6 +55,7 @@ import com.watabou.noosa.TextureFilm;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 public class SmokeBomb extends ArmorAbility {
 
@@ -171,14 +172,16 @@ public class SmokeBomb extends ArmorAbility {
 
 			alignment = Alignment.ALLY;
 
-			HP = HT = 20*owner.pointsInTalent(Talent.BODY_REPLACEMENT);
+			HT = 20;
+			if (owner != null) HT *= owner.pointsInTalent(Talent.BODY_REPLACEMENT);
+			HP = HT;
 		}
 
 		@Override
 		public int drRoll() {
 			int dr = super.drRoll();
 
-			dr += Char.combatRoll(owner.pointsInTalent(Talent.BODY_REPLACEMENT),
+			dr += Random.NormalIntRange(owner.pointsInTalent(Talent.BODY_REPLACEMENT),
 					3*owner.pointsInTalent(Talent.BODY_REPLACEMENT));
 
 			return dr;

@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWea
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
@@ -227,7 +228,7 @@ public class Item implements Bundlable {
 	protected void onThrow( int cell, Hero hero ) {
 		onThrow(cell);
 	}
-	
+
 	//takes two items and merges them (if possible)
 	public Item merge( Item other ){
 		if (isSimilar( other )){
@@ -318,7 +319,7 @@ public class Item implements Bundlable {
 
 	}
 	
-	public boolean collect(Hero hero) {
+	public final boolean collect(Hero hero) {
 		return collect( hero.belongings.backpack );
 	}
 	
@@ -580,6 +581,19 @@ public class Item implements Bundlable {
 		return desc(hero);
 	}
 	public String info(){
+
+		if (true) {
+			Notes.CustomRecord note;
+			if (this instanceof EquipableItem) {
+				note = Notes.findCustomRecord(((EquipableItem) this).customNoteID);
+			} else {
+				note = Notes.findCustomRecord(getClass());
+			}
+			if (note != null){
+				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
+				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+			}
+		}
 		return desc();
 	}
 	

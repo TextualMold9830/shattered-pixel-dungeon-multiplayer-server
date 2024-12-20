@@ -21,10 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-//This buff is from ChaliceOfBlood(Artifact) target will always be hero
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ChaoticCenser;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 
 public class Regeneration extends Buff {
 	
@@ -39,6 +41,18 @@ public class Regeneration extends Buff {
 	@Override
 	public boolean act() {
 		if (target.isAlive()) {
+
+			//if other trinkets ever get buffs like this should probably make the buff attaching
+			// behaviour more like wands/rings/artifacts
+			if (ChaoticCenser.averageTurnsUntilGas() != -1){
+				Buff.affect(target, ChaoticCenser.CenserGasTracker.class);
+			}
+
+			//cancel regenning entirely in thie case
+			if (SaltCube.healthRegenMultiplier() == 0){
+				spend(REGENERATION_DELAY);
+				return true;
+			}
 
 			if (target.HP < regencap() && !((Hero)target).isStarving()) {
 				if (regenOn((Hero) target)) {
@@ -61,6 +75,7 @@ public class Regeneration extends Buff {
 					delay /= RingOfEnergy.artifactChargeMultiplier(target);
 				}
 			}
+			delay /= SaltCube.healthRegenMultiplier();
 			spend( delay );
 			
 		} else {
@@ -80,6 +95,18 @@ public class Regeneration extends Buff {
 		LockedFloor lock = hero.buff(LockedFloor.class);
 		if (lock != null && !lock.regenOn()){
 			return false;
+		}
+		return true;
+	}
+	//Find if any hero has locked floor buff
+	public static boolean regenOn(){
+		for (Hero hero: Dungeon.heroes){
+			if (hero != null) {
+				LockedFloor lock = hero.buff(LockedFloor.class);
+				if (lock != null && !lock.regenOn()){
+					return false;
+				}
+			}
 		}
 		return true;
 	}

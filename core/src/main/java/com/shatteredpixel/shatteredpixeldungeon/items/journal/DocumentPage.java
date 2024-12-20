@@ -52,12 +52,16 @@ public abstract class DocumentPage extends Item {
 	@Override
 	public final boolean doPickUp(Hero hero, int pos) {
 		GameScene.pickUpJournal(this, pos);
-		GameScene.flashForDocument(document(), page());
-		if (document() == Document.ALCHEMY_GUIDE){
+		GameScene.flashForDocument(document(), page(), hero);
+		if (document() == Document.ADVENTURERS_GUIDE){
 			WndJournal.last_index = 1;
+		} else if (document() == Document.ALCHEMY_GUIDE) {
+			WndJournal.last_index = 2;
 			WndJournal.AlchemyTab.currentPageIdx = document().pageIdx(page());
-		} else {
-			WndJournal.last_index = 0;
+		} else if (document().isLoreDoc()){
+			WndJournal.last_index = 3;
+			//TODO: check this
+			//WndJournal.CatalogTab.currentItemIdx = 3;
 		}
 		document().findPage(page);
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );

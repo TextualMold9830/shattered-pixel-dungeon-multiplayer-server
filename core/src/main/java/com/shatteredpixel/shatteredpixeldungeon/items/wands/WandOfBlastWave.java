@@ -168,7 +168,7 @@ public class WandOfBlastWave extends DamageWand {
 					} else {
 						damageCause = new Char.DamageCause(new Knockback(), null);
 					}
-					ch.damage(Char.combatRoll(finalDist, 2*finalDist), damageCause);
+					ch.damage(Random.NormalIntRange(finalDist, 2*finalDist), damageCause);
 					if (ch.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
 					} else if (ch instanceof Hero){
@@ -229,6 +229,11 @@ public class WandOfBlastWave extends DamageWand {
 	}
 
 	@Override
+	public String upgradeStat2(int level) {
+		return Integer.toString(3 + level);
+	}
+
+	@Override
 	public void fx(Ballistica bolt, Callback callback) {
 		MagicMissile.boltFromChar( curUser.getSprite().parent,
 				MagicMissile.FORCE,
@@ -252,19 +257,21 @@ public class WandOfBlastWave extends DamageWand {
 		private static final float TIME_TO_FADE = 0.2f;
 
 		private float time;
+		private float size;
 
 		public BlastWave(){
 			super(Effects.get(Effects.Type.RIPPLE));
 			origin.set(width / 2, height / 2);
 		}
 
-		public void reset(int pos) {
+		public void reset(int pos, float size) {
 			revive();
 
 			x = (pos % Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - width) / 2;
 			y = (pos / Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - height) / 2;
 
 			time = TIME_TO_FADE;
+			this.size = size;
 		}
 
 		@Override
@@ -276,16 +283,20 @@ public class WandOfBlastWave extends DamageWand {
 			} else {
 				float p = time / TIME_TO_FADE;
 				alpha(p);
-				scale.y = scale.x = (1-p)*3;
+				scale.y = scale.x = (1-p)*size;
 			}
 		}
 
 		//FIXME
-		public static void blast(int pos, Hero hero) {
-			Group parent = hero.getSprite().parent;
+		public static void blast(int pos, Char user) {
+			blast(pos, 3, user);
+		}
+
+		public static void blast(int pos, float radius, Char user) {
+			Group parent = user.getSprite().parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
 			parent.bringToFront(b);
-			b.reset(pos);
+			b.reset(pos, radius);
 		}
 
 	}
