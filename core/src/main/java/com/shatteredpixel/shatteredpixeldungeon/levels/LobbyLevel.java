@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
+import com.watabou.utils.DeviceCompat;
 
 public class LobbyLevel extends DeadEndLevel {
     private static int SIZE = 7;
