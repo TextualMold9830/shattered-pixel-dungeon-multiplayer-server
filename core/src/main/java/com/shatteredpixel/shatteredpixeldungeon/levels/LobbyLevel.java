@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 
@@ -53,11 +54,13 @@ public class LobbyLevel extends DeadEndLevel {
     }
 
     @Override protected void createItems(){
-        super.createItems();
-        Potion potion =new PotionOfStrength();
-        potion.quantity(10);
-        this.drop(potion,exit()-this.width());
+        if(DeviceCompat.isDebug()) {
+            super.createItems();
+            Potion potion = new PotionOfExperience();
+            potion.quantity(10);
+            this.drop(potion, exit() - this.width());
 
-        this.drop(new PotionOfStrength(),exit()-this.width() + 1);
+            this.drop(new PotionOfExperience(), exit() - this.width() + 1);
+        }
     }
 }

@@ -8,9 +8,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
@@ -124,6 +126,10 @@ class ClientThread implements Callable<String> {
                         if (clientHero == null) {
                             InitPlayerHero(data.getString(token));
                         }
+                        break;
+                    }
+                    case ("talent_upgrade"): {
+                        TalentButton.upgradeTalent(clientHero, Talent.valueOf(data.getString("talent_upgrade")));
                         break;
                     }
                     case ("cell_listener"): {

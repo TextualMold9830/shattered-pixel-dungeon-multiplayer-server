@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -26,8 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.nikita22007.multiplayer.utils.Utils.putToJSONArray;
@@ -302,6 +302,24 @@ public class NetworkPacket {
             object.put("strength", strength);
             object.put("lvl", lvl);
             object.put("exp", exp);
+            JSONArray[] talentsArray = new JSONArray[4];
+            for (int i =  0; i < talentsArray.length; i++) {
+                JSONArray talents = new JSONArray();
+                LinkedHashMap<Talent, Integer> heroTalents = hero.talents.get(i);
+                for (Map.Entry<Talent, Integer> talentIntegerEntry : heroTalents.entrySet()) {
+                    JSONObject talentObject = new JSONObject();
+                    talentObject.put("icon", talentIntegerEntry.getKey().icon());
+                    talentObject.put("points", talentIntegerEntry.getValue());
+                    talents.put(talentObject);
+                }
+                talentsArray[i] = talents;
+            }
+            JSONArray talents = new JSONArray();
+            for (JSONArray talentArray : talentsArray) {
+                talents.put(talentArray);
+            }
+            object.put("talents", talents);
+            System.out.println(talents.toString(3));
         } catch (JSONException e) {
 
         }

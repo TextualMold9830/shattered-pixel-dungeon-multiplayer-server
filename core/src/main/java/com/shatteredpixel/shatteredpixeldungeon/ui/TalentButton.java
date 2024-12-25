@@ -267,4 +267,21 @@ public class TalentButton extends Button {
 			return null;
 		}
 	}
+	public static void upgradeTalent(Hero hero, Talent talent){
+		int tier = -1;
+		for (int i = 0; i < hero.talents.size(); i++) {
+			for (Talent searchTalent : hero.talents.get(i).keySet()) {
+				if (talent == searchTalent) {
+					tier = i+1;
+					break;
+				}
+			}
+			if (tier != -1) {
+				break;
+			}
+		}
+		if (hero.talentPointsAvailable(tier) > 0) {
+			hero.upgradeTalent(talent);
+		}
+	}
 }
