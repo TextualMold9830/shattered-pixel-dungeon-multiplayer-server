@@ -255,15 +255,17 @@ public class Item implements Bundlable {
 				return path;
 			}
 		}
-
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				List<Integer> newPath = collect( (Bag)item, path );
+				List<Integer> newPath = new ArrayList(path);
+				newPath.add(items.indexOf(item));
+				newPath = collect( (Bag)item, newPath );
 				if (newPath != null) {
 					return newPath;
 				}
 			}
 		}
+
 
 		if (!container.canHold(this)){
 			return null;
