@@ -28,7 +28,7 @@ public class Surprise {
         try {
             actionObj.put("action_type", "surprise_visual");
             actionObj.put("pos", p);
-            actionObj.put("andge", angle);
+            actionObj.put("angle", angle);
             actionObj.put("time_to_fade", TIME_TO_FADE);
         } catch (JSONException ignore) {
         }
