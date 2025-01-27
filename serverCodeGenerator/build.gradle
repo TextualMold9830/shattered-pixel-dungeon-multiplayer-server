@@ -27,8 +27,15 @@ dependencies {
     //implementation(":core")
     //implementation(":SPD-classes")
     //implementation 'fr.inria.gforge.spoon:spoon-core:11.1.1-beta-18'
-    implementation (":core")
+    //implementation (":core")
     implementation 'fr.inria.gforge.spoon:spoon-core:10.4.2'
     implementation("org.json:json:20231013")
     implementation project(":synchronizationAnnotations")
+    implementation(group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29')
+}
+tasks.register('logInfo') {
+    logging.captureStandardOutput LogLevel.INFO
+    doFirst {
+        println 'A task message which is logged at INFO level'
+    }
 }

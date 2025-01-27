@@ -1,6 +1,7 @@
 package ru.nikita22007.synchronization.processors.server;
 
 
+import org.apache.log4j.LogManager;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.json.JSONObject;
 import ru.nikita22007.synchronization.annotations.SynchronizationField;
@@ -24,6 +25,11 @@ import java.util.Objects;
 import java.util.Set;
 
 public class AddJsonPackMethods extends AbstractAnnotationProcessor<SynchronizedClass, CtClass> {
+    @Override
+    public void init() {
+        super.init();
+        clearConsumedAnnotationTypes();
+    }
     @Override
     public void process(SynchronizedClass annotation, CtClass element) {
         Object[] annotatedFields =  (
@@ -71,11 +77,18 @@ public class AddJsonPackMethods extends AbstractAnnotationProcessor<Synchronized
         CtType dataType = field.getType().getTypeDeclaration();
         CtTypeReference resultDataType = fieldType;
         CtMethod getter = findGetter(field,baseClass);
-        CtInvocation access = factory.createInvocation(factory.createThisAccess(), getter.getReference(), List.of());
-        CtExpression value = access;
+        CtExpression value;
+        if (getter == null) {
+            LogManager.getLogger(this.getClass()).warn("No getter for " + field.getSimpleName() + ". Using without getter" );
+            //value = factory.createVariableRead(field.getReference(), false);//todo this line crashes code
+            value = factory.createCodeSnippetExpression("this."+field.getSimpleName());
+        } else {
+            CtInvocation access = factory.createInvocation(factory.createThisAccess(), getter.getReference(), List.of());
+            value = access;
+        }
         if (dataType.isSubtypeOf(jsonSerializableType)) {
             CtMethod<JSONObject> getObjectMethod = dataType.getMethod(jsonObjectType, "toJsonObject");
-            value = factory.createInvocation(access,
+            value = factory.createInvocation(value,
                     getObjectMethod.getReference(),
                     List.of()
             );
