@@ -21,13 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.watabou.input.GameAction;
-import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Visual;
 
 public class ActionIndicator {
@@ -41,7 +35,7 @@ public class ActionIndicator {
 	}
 
 	protected void onClick() {
-		if (action != null && owner.ready) {
+		if (action != null && owner.isReady()) {
 			action.doAction(owner);
 		}
 	}

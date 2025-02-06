@@ -27,7 +27,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -59,10 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -125,7 +121,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
@@ -706,7 +701,7 @@ public class GameScene extends PixelScene {
 				}
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
-						if (hero.ready && hero.paralysed == 0) {
+						if (hero.isReady() && hero.paralysed == 0) {
 							log.newLine();
 						}
 					}
@@ -732,7 +727,7 @@ public class GameScene extends PixelScene {
 				}
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
-						hero.cellSelector.enable(hero.ready);
+						hero.cellSelector.enable(hero.isReady());
 					}
 				}
 				if (!toDestroy.isEmpty()) {
@@ -1240,7 +1235,7 @@ public class GameScene extends PixelScene {
 					cellSelector.getListener().onSelect(null);
 				}
 				cellSelector.setListener(listener);
-				cellSelector.enabled = listener.getOwner().ready;
+				cellSelector.enabled = listener.getOwner().isReady();
 				if (scene != null) {
 					scene.prompt(listener.prompt());
 				}

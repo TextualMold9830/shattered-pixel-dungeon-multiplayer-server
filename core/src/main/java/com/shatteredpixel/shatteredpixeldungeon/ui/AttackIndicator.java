@@ -21,20 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
-import com.watabou.input.GameAction;
-import com.watabou.noosa.Game;
 import com.watabou.utils.Random;
-import com.watabou.utils.Reflection;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -82,7 +72,7 @@ public class AttackIndicator {
 	}
 
 	protected void onClick() {
-		if ((lastTarget != null) && owner.ready) {
+		if ((lastTarget != null) && owner.isReady()) {
 			if (owner.handle(lastTarget.pos)) {
 				owner.next();
 			}

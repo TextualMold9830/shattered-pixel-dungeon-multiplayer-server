@@ -166,7 +166,7 @@ public class CellSelector extends ScrollArea {
 	}
 	
 	public void select( int cell, int button ) {
-		if (enabled && owner.ready && !GameScene.interfaceBlockingHero()
+		if (enabled && owner.isReady() && !GameScene.interfaceBlockingHero()
 				&& listener != null && cell != -1) {
 
 			switch (button){
@@ -398,9 +398,9 @@ public class CellSelector extends ScrollArea {
 			heldDelay -= Game.elapsed;
 		}
 
-		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && owner.ready){
+		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && owner.isReady()){
 			processKeyHold();
-		} else if (owner.ready) {
+		} else if (owner.isReady()) {
 			lastCellMoved = -1;
 		}
 	}
@@ -409,7 +409,7 @@ public class CellSelector extends ScrollArea {
 	private int lastCellMoved = 0;
 
 	private boolean moveFromActions(GameAction... actions){
-		if (owner == null || !owner.ready){
+		if (owner == null || !owner.isReady()){
 			return false;
 		}
 
@@ -481,17 +481,17 @@ public class CellSelector extends ScrollArea {
 		Hero hero = getOwner();
 		//prioritize moving by controller stick over moving via keys
 		if (!directionFromAction(leftStickAction).isZero() && heldDelay < 0) {
-			enabled = hero.ready = true;
+			enabled = hero.setReady(true);
 			Dungeon.observe(hero);
 			if (moveFromActions(leftStickAction)) {
-				hero.ready = false;
+				hero.setReady(false);
 			}
 		} else if (!(directionFromAction(heldAction1).offset(directionFromAction(heldAction2)).isZero())
 				&& heldDelay <= 0){
-			enabled = hero.ready = true;
+			enabled = hero.setReady(true);
 			Dungeon.observe(hero);
 			if (moveFromActions(heldAction1, heldAction2)) {
-				hero.ready = false;
+				hero.setReady(false);
 			}
 		}
 	}

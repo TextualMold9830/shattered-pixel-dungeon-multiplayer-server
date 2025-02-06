@@ -215,7 +215,7 @@ public class Hero extends Char {
 	private int attackSkill = 10;
 	private int defenseSkill = 5;
 
-	public boolean ready = false;
+	private boolean ready = false;
 	public boolean damageInterrupt = true;
 	public HeroAction curAction = null;
 	public HeroAction lastAction = null;
@@ -815,8 +815,8 @@ public class Hero extends Char {
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring(this);
 		}
-		
-		if (!ready) {
+
+		if (!isReady()) {
 			//do a full observe (including fog update) if not resting.
 			if (!resting || buff(MindVision.class) != null || buff(Awareness.class) != null) {
 				Dungeon.observe(this);
@@ -862,8 +862,8 @@ public class Hero extends Char {
 		} else {
 			
 			resting = false;
-			
-			ready = false;
+
+			setReady(false);
 			
 			if (curAction instanceof HeroAction.Move) {
 				actResult = actMove( (HeroAction.Move)curAction );
@@ -908,7 +908,7 @@ public class Hero extends Char {
 	}
 	
 	public void busy() {
-		ready = false;
+		setReady(false);
 	}
 	
 	private void ready() {
@@ -916,7 +916,7 @@ public class Hero extends Char {
 		curAction = null;
 		damageInterrupt = true;
 		waitOrPickup = false;
-		ready = true;
+		setReady(true);
 		canSelfTrample = true;
 
 		attackIndicator.updateState();
@@ -2309,7 +2309,7 @@ public class Hero extends Char {
 		}
 		curAction = null;
 
-		if (!ready) {
+		if (!isReady()) {
 			super.onOperateComplete();
 		}
 	}
@@ -2511,6 +2511,25 @@ public class Hero extends Char {
 	public void next() {
 		if (isAlive())
 			super.next();
+	}
+
+	public boolean isReady() {
+		return ready;
+	}
+
+	public boolean setReady(boolean ready) {
+		this.ready = ready;
+		SendData.sendHeroReady(this.networkID, ready);
+		return this.ready;
+	}
+
+	public void resendReady() {
+		setReady(getReady());
+	}
+
+
+	public boolean getReady() {
+		return ready;
 	}
 
 	public static interface Doom {

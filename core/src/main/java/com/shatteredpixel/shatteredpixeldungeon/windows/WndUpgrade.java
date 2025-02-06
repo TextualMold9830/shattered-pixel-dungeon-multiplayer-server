@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -442,7 +441,7 @@ public class WndUpgrade extends Window {
 		btnCancel.setRect(btnUpgrade.right()+1, bottom+2*GAP, WIDTH/2f, 16);
 		add(btnCancel);
 
-		btnUpgrade.enable(getOwnerHero().ready);
+		btnUpgrade.enable(getOwnerHero().isReady());
 
 		btnUpgrade.icon(new ItemSprite(upgrader));
 		btnCancel.icon(Icons.EXIT.get());
@@ -456,7 +455,7 @@ public class WndUpgrade extends Window {
 	@Override
 	public synchronized void update() {
 		super.update();
-		if (!btnUpgrade.active && getOwnerHero().ready){
+		if (!btnUpgrade.active && getOwnerHero().isReady()){
 			btnUpgrade.enable(true);
 		}
 	}
