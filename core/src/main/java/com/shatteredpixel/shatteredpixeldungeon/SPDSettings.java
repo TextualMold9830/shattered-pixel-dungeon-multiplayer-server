@@ -58,8 +58,7 @@ public class SPDSettings extends GameSettings {
 
 	public static String serverName = "SPD-server";
 	public static String serverName(){
-		return //getString(KEY_SERVER_NAME, "SPD-server");
-		"BUGGY_SERVER_PLEASE_DO_NOT_JOIN_UNLESS_ASKED_TO";
+		return getString(KEY_SERVER_NAME, "SPD-server");
 	}
 	public static void serverName(String serverName){
 		put(KEY_SERVER_NAME, serverName);
