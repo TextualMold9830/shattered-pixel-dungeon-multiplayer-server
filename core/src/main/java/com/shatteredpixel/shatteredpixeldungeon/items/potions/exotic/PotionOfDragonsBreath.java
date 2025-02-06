@@ -93,30 +93,25 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 
 			if (cell == null && identifiedByUse){
 				showingWindow = true;
-				ShatteredPixelDungeon.runOnRenderThread(new Callback() {
+				GameScene.show( new WndOptions(getOwner(),new ItemSprite(PotionOfDragonsBreath.this),
+						Messages.titleCase(name()),
+						Messages.get(ExoticPotion.class, "warning"),
+						Messages.get(ExoticPotion.class, "yes"),
+						Messages.get(ExoticPotion.class, "no") ) {
 					@Override
-					public void call() {
-						GameScene.show( new WndOptions(new ItemSprite(PotionOfDragonsBreath.this),
-								Messages.titleCase(name()),
-								Messages.get(ExoticPotion.class, "warning"),
-								Messages.get(ExoticPotion.class, "yes"),
-								Messages.get(ExoticPotion.class, "no") ) {
-							@Override
-							protected void onSelect( int index ) {
-								showingWindow = false;
-								switch (index) {
-									case 0:
-										curUser.spendAndNext(1f);
-										identifiedByUse = false;
-										break;
-									case 1:
-										GameScene.selectCell(curUser, targeter);
-										break;
-								}
-							}
-							public void onBackPressed() {}
-						} );
+					protected void onSelect( int index ) {
+						showingWindow = false;
+						switch (index) {
+							case 0:
+								curUser.spendAndNext(1f);
+								identifiedByUse = false;
+								break;
+								case 1:
+									GameScene.selectCell(curUser, targeter);
+									break;
+						}
 					}
+					public void onBackPressed() {}
 				});
 			} else if (cell != null) {
 				if (!identifiedByUse) {

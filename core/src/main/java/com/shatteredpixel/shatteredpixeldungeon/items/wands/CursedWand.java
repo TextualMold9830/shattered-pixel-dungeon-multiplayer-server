@@ -1126,7 +1126,7 @@ public class CursedWand {
 								@Override
 								public void call() {
 									GameScene.show(
-											new WndOptions(Icons.get(Icons.WARNING),
+											new WndOptions(((Hero) user), Icons.get(Icons.WARNING),
 													"CURSED WAND ERROR",
 													"this application will now self-destruct",
 													"abort",

@@ -100,7 +100,7 @@ public class AlchemistsToolkit extends Artifact {
 					options = new String[]{ Messages.get(this, "energize_1")};
 				}
 
-				GameScene.show(new WndOptions(new ItemSprite(image),
+				GameScene.show(new WndOptions(hero, new ItemSprite(image),
 						Messages.titleCase(name()),
 						Messages.get(this, "energize_desc"),
 						options){

@@ -83,7 +83,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 			}
 		}
 
-		GameScene.show(new WndOptions(
+		GameScene.show(new WndOptions(hero,
 				new ItemSprite(this),
 				Messages.titleCase(trueName()),
 				Messages.get(PotionOfDivineInspiration.class, "select_tier"),

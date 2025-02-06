@@ -143,7 +143,7 @@ public class UnstableSpellbook extends Artifact {
 					final ExploitHandler handler = Buff.affect(hero, ExploitHandler.class);
 					handler.scroll = scroll;
 
-					GameScene.show(new WndOptions(new ItemSprite(this),
+					GameScene.show(new WndOptions(hero, new ItemSprite(this),
 							Messages.get(this, "prompt"),
 							Messages.get(this, "read_empowered"),
 							scroll.trueName(),

@@ -161,7 +161,7 @@ public class WndTradeItem extends WndInfoItem {
 							Dungeon.level.drop(item, heap.pos).sprite.drop();
 						}
 					} else {
-						GameScene.show(new WndOptions(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
+						GameScene.show(new WndOptions(hero, new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
 								Messages.titleCase(Messages.get(MasterThievesArmband.class, "name")),
 								Messages.get(WndTradeItem.class, "steal_warn"),
 								Messages.get(WndTradeItem.class, "steal_warn_yes"),

@@ -130,34 +130,28 @@ public class CavesLevel extends RegularLevel {
 				GLog.w(Messages.get(Blacksmith.class, "cant_enter_old"));
 			} else if (smith == null || !Blacksmith.Quest.given() || Blacksmith.Quest.completed()) {
 				GLog.w(Messages.get(Blacksmith.class, "entrance_blocked"));
-			} else if (!Blacksmith.Quest.started() && Blacksmith.Quest.Type() != Blacksmith.Quest.OLD){
+			} else if (!Blacksmith.Quest.started() && Blacksmith.Quest.Type() != Blacksmith.Quest.OLD) {
 				final Pickaxe pick = hero.belongings.getItem(Pickaxe.class);
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						if (pick == null){
-							GameScene.show( new WndTitledMessage(new BlacksmithSprite(),
-									Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-									Messages.get(Blacksmith.class, "lost_pick"), hero)
-							);
-						} else {
-							GameScene.show( new WndOptions( new BlacksmithSprite(),
-									Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-									Messages.get(Blacksmith.class, "quest_start_prompt"),
-									Messages.get(Blacksmith.class, "enter_yes"),
-									Messages.get(Blacksmith.class, "enter_no")){
-								@Override
-								protected void onSelect(int index) {
-									if (index == 0){
-										Blacksmith.Quest.start();
-										CavesLevel.super.activateTransition(hero, transition);
-									}
-								}
-							} );
+				if (pick == null) {
+					GameScene.show(new WndTitledMessage(new BlacksmithSprite(),
+							Messages.titleCase(Messages.get(Blacksmith.class, "name")),
+							Messages.get(Blacksmith.class, "lost_pick"), hero)
+					);
+				} else {
+					GameScene.show(new WndOptions(hero, new BlacksmithSprite(),
+							Messages.titleCase(Messages.get(Blacksmith.class, "name")),
+							Messages.get(Blacksmith.class, "quest_start_prompt"),
+							Messages.get(Blacksmith.class, "enter_yes"),
+							Messages.get(Blacksmith.class, "enter_no")) {
+						@Override
+						protected void onSelect(int index) {
+							if (index == 0) {
+								Blacksmith.Quest.start();
+								CavesLevel.super.activateTransition(hero, transition);
+							}
 						}
-
-					}
-				});
+					});
+				}
 			}
 			return false;
 

@@ -57,11 +57,8 @@ public class Chasm implements Hero.Doom {
 	
 	public static void heroJump( final Hero hero ) {
 		heroPos = hero.pos;
-		Game.runOnRenderThread(new Callback() {
-			@Override
-			public void call() {
 				GameScene.show(
-						new WndOptions( new Image(Dungeon.level.tilesTex(), 176, 16, 16, 16),
+						new WndOptions(hero,  new Image(Dungeon.level.tilesTex(), 176, 16, 16, 16),
 								Messages.get(Chasm.class, "chasm"),
 								Messages.get(Chasm.class, "jump"),
 								Messages.get(Chasm.class, "yes"),
@@ -91,10 +88,7 @@ public class Chasm implements Hero.Doom {
 									}
 								}
 							}
-						}
-				);
-			}
-		});
+						});
 	}
 	
 	public static void heroFall( int pos, Hero hero ) {

@@ -51,7 +51,7 @@ public abstract class InventoryScroll extends Scroll {
 	}
 	
 	private void confirmCancelation(Hero hero) {
-		GameScene.show( new WndOptions(new ItemSprite(this),
+		GameScene.show( new WndOptions(hero, new ItemSprite(this),
 				Messages.titleCase(name()),
 				Messages.get(this, "warning"),
 				Messages.get(this, "yes"),

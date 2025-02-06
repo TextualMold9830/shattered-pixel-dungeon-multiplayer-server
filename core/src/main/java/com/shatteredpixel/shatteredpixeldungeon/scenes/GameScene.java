@@ -574,7 +574,7 @@ public class GameScene extends PixelScene {
 									}
 								}
 								if (ankh != null && GamesInProgress.gameExists(GamesInProgress.curSlot)) {
-									add(new WndResurrect(ankh));
+									add(new WndResurrect(hero, ankh));
 								} else {
 									gameOver(hero);
 								}
@@ -1321,7 +1321,7 @@ public class GameScene extends PixelScene {
 				} else {
 					String[] names = getObjectNames(objects).toArray(new String[0]);
 
-					GameScene.show(new WndOptions(Icons.get(Icons.INFO),
+					GameScene.show(new WndOptions(hero, Icons.get(Icons.INFO),
 							Messages.get(GameScene.class, "choose_examine"),
 							Messages.get(GameScene.class, "multiple_examine"),
 							names) {
@@ -1397,9 +1397,11 @@ public class GameScene extends PixelScene {
 			public static class DefaultCellListener extends CellSelector.Listener {
 				@Override
 				public void onSelect(Integer cell) {
-					if (cell == null) return;
-					if (getOwner().handle(cell)) {
-						getOwner().next();
+					if(Dungeon.level != null) {
+						if (cell == null) return;
+						if (getOwner().handle(cell)) {
+							getOwner().next();
+						}
 					}
 				}
 

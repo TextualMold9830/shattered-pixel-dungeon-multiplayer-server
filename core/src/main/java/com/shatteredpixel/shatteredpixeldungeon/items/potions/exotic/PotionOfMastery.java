@@ -84,7 +84,7 @@ public class PotionOfMastery extends ExoticPotion {
 		public void onSelect(Item item, Hero hero) {
 
 			if (item == null && identifiedByUse){
-				GameScene.show( new WndOptions(new ItemSprite(PotionOfMastery.this),
+				GameScene.show( new WndOptions(hero, new ItemSprite(PotionOfMastery.this),
 						Messages.titleCase(name()),
 						Messages.get(ExoticPotion.class, "warning"),
 						Messages.get(ExoticPotion.class, "yes"),

@@ -2085,7 +2085,7 @@ public class Hero extends Char {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						GameScene.show( new WndResurrect(finalAnkh) );
+						GameScene.show( new WndResurrect(Hero.this ,finalAnkh) );
 					}
 				});
 

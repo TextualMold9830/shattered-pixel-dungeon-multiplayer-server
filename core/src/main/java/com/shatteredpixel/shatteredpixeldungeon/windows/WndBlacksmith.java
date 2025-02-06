@@ -59,7 +59,7 @@ public class WndBlacksmith extends Window {
 	private static final int GAP  = 2;
 
 	public WndBlacksmith( Blacksmith troll, Hero hero ) {
-		super();
+		super(hero);
 
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
 
@@ -80,7 +80,7 @@ public class WndBlacksmith extends Window {
 		RedButton pickaxe = new RedButton(Messages.get(this, "pickaxe", pickaxeCost), 6){
 			@Override
 			protected void onClick() {
-				GameScene.show(new WndOptions(
+				GameScene.show(new WndOptions(hero,
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
 						Messages.get(WndBlacksmith.class, "pickaxe_verify") + (pickaxeCost == 0 ? "\n\n" + Messages.get(WndBlacksmith.class, "pickaxe_free") : ""),
@@ -143,7 +143,7 @@ public class WndBlacksmith extends Window {
 		RedButton smith = new RedButton(Messages.get(this, "smith", 2000), 6){
 			@Override
 			protected void onClick() {
-				GameScene.show(new WndOptions(
+				GameScene.show(new WndOptions(hero,
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
 						Messages.get(WndBlacksmith.class, "smith_verify"),
@@ -168,7 +168,7 @@ public class WndBlacksmith extends Window {
 		RedButton cashOut = new RedButton(Messages.get(this, "cashout"), 6){
 			@Override
 			protected void onClick() {
-				GameScene.show(new WndOptions(
+				GameScene.show(new WndOptions(hero,
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
 						Messages.get(WndBlacksmith.class, "cashout_verify", Blacksmith.Quest.favor),

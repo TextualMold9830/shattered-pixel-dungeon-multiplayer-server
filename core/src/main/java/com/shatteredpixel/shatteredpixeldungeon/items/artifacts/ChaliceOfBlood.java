@@ -79,7 +79,7 @@ public class ChaliceOfBlood extends Artifact {
 			if (damage > hero.HP*0.75) {
 
 				GameScene.show(
-					new WndOptions(new ItemSprite(this),
+					new WndOptions(hero, new ItemSprite(this),
 							Messages.titleCase(name()),
 							Messages.get(this, "prick_warn"),
 							Messages.get(this, "yes"),

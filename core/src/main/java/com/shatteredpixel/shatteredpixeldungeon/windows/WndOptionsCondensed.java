@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -31,12 +32,12 @@ import java.util.ArrayList;
 //similar to WndOptions, but tries to place multiple buttons per row
 public class WndOptionsCondensed extends WndOptions {
 
-	public WndOptionsCondensed(Image icon, String title, String message, String... options) {
-		super(icon, title, message, options);
+	public WndOptionsCondensed(Hero hero, Image icon, String title, String message, String... options) {
+		super(hero, icon, title, message, options);
 	}
 
-	public WndOptionsCondensed( String title, String message, String... options ) {
-		super(title, message, options);
+	public WndOptionsCondensed(Hero hero, String title, String message, String... options ) {
+		super(hero, title, message, options);
 	}
 
 	@Override

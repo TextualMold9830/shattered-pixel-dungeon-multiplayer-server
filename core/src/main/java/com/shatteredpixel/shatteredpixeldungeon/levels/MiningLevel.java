@@ -262,24 +262,19 @@ public class MiningLevel extends CavesLevel {
 			}
 
 			String finalWarnText = warnText;
-			Game.runOnRenderThread(new Callback() {
+			GameScene.show(new WndOptions(hero, new BlacksmithSprite(),
+					Messages.titleCase(Messages.get(Blacksmith.class, "name")),
+					finalWarnText,
+					Messages.get(Blacksmith.class, "exit_yes"),
+					Messages.get(Blacksmith.class, "exit_no")){
 				@Override
-				public void call() {
-					GameScene.show(new WndOptions( new BlacksmithSprite(),
-							Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-							finalWarnText,
-							Messages.get(Blacksmith.class, "exit_yes"),
-							Messages.get(Blacksmith.class, "exit_no")){
-						@Override
-						protected void onSelect(int index) {
-							if (index == 0){
-								Blacksmith.Quest.complete(getOwnerHero());
-								MiningLevel.super.activateTransition(hero, transition);
-							}
-						}
-					} );
+				protected void onSelect(int index) {
+					if (index == 0){
+						Blacksmith.Quest.complete(getOwnerHero());
+						MiningLevel.super.activateTransition(hero, transition);
+					}
 				}
-			});
+			} );
 			return false;
 
 		} else {

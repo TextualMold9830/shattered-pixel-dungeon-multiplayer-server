@@ -294,7 +294,7 @@ public class TitleScene extends PixelScene {
 		protected void onClick() {
 			if (Updates.updateAvailable()){
 				AvailableUpdateData update = Updates.updateData();
-
+				//Todo check this
 				ShatteredPixelDungeon.scene().addToFront( new WndOptions(
 						Icons.get(Icons.CHANGES),
 						update.versionName == null ? Messages.get(this,"title") : Messages.get(this,"versioned_title", update.versionName),

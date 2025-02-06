@@ -22,13 +22,25 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WndOptions extends Window {
 
@@ -56,20 +68,44 @@ public class WndOptions extends Window {
 	}
 	public WndOptions(Hero hero, Image icon, String title, String message, String... options) {
 		super(hero);
-		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
-
-		float pos = 0;
-		if (title != null) {
-			IconTitle tfTitle = new IconTitle(icon, title);
-			tfTitle.setRect(0, pos, width, 0);
-			add(tfTitle);
-
-			pos = tfTitle.bottom() + 2*MARGIN;
-		}
-
-		layoutBody(pos, message, options);
+		WndOptionsParams params = new WndOptionsParams();
+		params.title = title;
+		params.message = message;
+		params.options = List.of(options);
+//		if (icon instanceof ItemSprite) {
+//			ItemSprite sprite = (ItemSprite) icon;
+//			Item item = new Item();
+//			item.image = sprite.image;
+//			params.item = item;
+//		} else {
+			params.icon = icon;
+		//}
+		sendWnd(params);
 	}
-	
+	public WndOptions(Hero owner, String title, String message, String... options) {
+		super(owner);
+		WndOptionsParams params = new WndOptionsParams();
+		params.title = title;
+		params.message = message;
+		params.options = List.of(options);
+		sendWnd(params);
+	}
+
+
+	protected void sendWnd(Image icon, @NotNull String title, @Nullable Integer titleColor, @NotNull String message, String... options) {
+		WndOptionsParams params = new WndOptionsParams();
+		params.title = title;
+		params.titleColor = titleColor;
+		params.message = message;
+		params.icon = icon;
+		params.options = List.of(options);
+		sendWnd(params);
+	}
+
+	protected void sendWnd(WndOptionsParams params) {
+		SendData.sendWindow(getOwnerHero().networkID, "wnd_option", getId(), params.toJSONObject(getOwnerHero()));
+	}
+
 	public WndOptions( String title, String message, String... options ) {
 		super();
 
@@ -130,6 +166,46 @@ public class WndOptions extends Window {
 		}
 
 		resize( width, (int)(pos - MARGIN) );
+	}
+	protected static final class WndOptionsParams {
+		public @Nullable Item item;
+		public @Nullable CharSprite charSprite;
+		public @NotNull String title = "Untitled";
+		public @Nullable Integer titleColor = null;
+		public @NotNull String message = "MissingNo";
+		public List<String> options = new ArrayList<String>(3);
+		public @Nullable Image icon;
+
+		public JSONObject toJSONObject(Hero owner) {
+			JSONObject params = new JSONObject();
+
+			try {
+				params.put("title", title);
+				params.put("title_color", titleColor);
+				params.put("message", message);
+				JSONArray optionsArr = new JSONArray();
+				for (int i = 0; i < options.size(); i += 1) {
+					optionsArr.put(options.get(i));
+				}
+				params.put("options", optionsArr);
+				if (item != null) {
+					params.put("item", item.toJsonObject(owner));
+				} else if (charSprite != null) {
+					String spriteAsset = charSprite.getSpriteAsset();
+					if (spriteAsset != null) {
+						params.put("sprite_asset", spriteAsset);
+					} else {
+						params.put("sprite_class", charSprite.spriteName());
+					}
+				}
+				if (icon != null) {
+					params.put("image", icon.toJson());
+				}
+			} catch (JSONException ignored) {
+			}
+			return params;
+		}
+
 	}
 
 	protected boolean enabled( int index ){

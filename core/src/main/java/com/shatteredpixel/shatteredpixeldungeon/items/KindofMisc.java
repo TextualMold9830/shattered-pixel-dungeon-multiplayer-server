@@ -83,7 +83,7 @@ public abstract class KindofMisc extends EquipableItem {
 			}
 
 			GameScene.show(
-					new WndOptions(new ItemSprite(this),
+					new WndOptions(hero, new ItemSprite(this),
 							Messages.get(KindofMisc.class, "unequip_title"),
 							Messages.get(KindofMisc.class, "unequip_message"),
 							miscs[0] == null ? "---" : Messages.titleCase(miscs[0].title()),

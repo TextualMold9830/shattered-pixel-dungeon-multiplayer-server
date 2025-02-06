@@ -92,7 +92,7 @@ public abstract class TippedDart extends Dart {
 				};
 			}
 
-			GameScene.show(new WndOptions(new ItemSprite(this),
+			GameScene.show(new WndOptions(hero, new ItemSprite(this),
 					Messages.titleCase(name()),
 					Messages.get(this, "clean_desc"),
 					options){

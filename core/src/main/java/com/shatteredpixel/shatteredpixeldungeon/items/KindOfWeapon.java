@@ -53,7 +53,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 			String secondaryName = Messages.titleCase(hero.belongings.secondWep != null ? hero.belongings.secondWep.trueName() : Messages.get(KindOfWeapon.class, "empty"));
 			if (primaryName.length() > 18) primaryName = primaryName.substring(0, 15) + "...";
 			if (secondaryName.length() > 18) secondaryName = secondaryName.substring(0, 15) + "...";
-			GameScene.show(new WndOptions(
+			GameScene.show(new WndOptions(hero,
 					new ItemSprite(this),
 					Messages.titleCase(name()),
 					Messages.get(KindOfWeapon.class, "which_equip_msg"),

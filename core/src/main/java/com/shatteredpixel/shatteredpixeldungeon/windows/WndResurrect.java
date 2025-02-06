@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
@@ -55,9 +56,9 @@ public class WndResurrect extends Window {
 
 	RedButton btnContinue;
 	
-	public WndResurrect( final Ankh ankh ) {
+	public WndResurrect(Hero hero, final Ankh ankh ) {
 		
-		super();
+		super(hero);
 		
 		instance = this;
 		
@@ -98,7 +99,7 @@ public class WndResurrect extends Window {
 			@Override
 			protected void onClick() {
 				if (btnItem1.item() == null || btnItem2.item() == null){
-					GameScene.show(new WndOptions(Icons.WARNING.get(),
+					GameScene.show(new WndOptions(getOwnerHero(), Icons.WARNING.get(),
 							Messages.get(WndResurrect.class, "warn_title"),
 							Messages.get(WndResurrect.class, "warn_body"),
 							Messages.get(WndResurrect.class, "warn_yes"),

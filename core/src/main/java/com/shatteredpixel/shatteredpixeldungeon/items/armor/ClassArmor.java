@@ -208,7 +208,7 @@ abstract public class ClassArmor extends Armor {
 			
 		} else if (action.equals(AC_TRANSFER)){
 
-			GameScene.show(new WndOptions(new ItemSprite(ItemSpriteSheet.CROWN),
+			GameScene.show(new WndOptions(hero, new ItemSprite(ItemSpriteSheet.CROWN),
 					Messages.get(ClassArmor.class, "transfer_title"),
 					Messages.get(ClassArmor.class, "transfer_desc"),
 					Messages.get(ClassArmor.class, "transfer_prompt"),

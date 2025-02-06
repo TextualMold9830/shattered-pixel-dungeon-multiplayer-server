@@ -454,7 +454,7 @@ public class MagesStaff extends MeleeWeapon {
 					}
 
 					GameScene.show(
-							new WndOptions(new ItemSprite(item),
+							new WndOptions(hero, new ItemSprite(item),
 									Messages.titleCase(item.name()),
 									bodyText,
 									Messages.get(MagesStaff.class, "yes"),
