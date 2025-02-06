@@ -162,7 +162,7 @@ public abstract class Plant implements Bundlable {
 					|| Dungeon.level.pit[cell]
 					|| Dungeon.level.traps.get(cell) != null
 					|| Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
-				super.onThrow( cell );
+				super.onThrow( cell, hero );
 			} else {
 				Catalog.countUse(getClass());
 				Dungeon.level.plant( this, cell );
@@ -188,7 +188,7 @@ public abstract class Plant implements Bundlable {
 			if (action.equals( AC_PLANT )) {
 
 				hero.busy();
-				((Seed)detach( hero.belongings.backpack )).onThrow( hero.pos );
+				((Seed)detach( hero.belongings.backpack )).onThrow( hero.pos, hero );
 				hero.spend( TIME_TO_PLANT );
 
 				hero.getSprite().operate( hero.pos );

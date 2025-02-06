@@ -739,7 +739,7 @@ public class Item implements Bundlable {
 						public void call() {
 							curUser = user;
 							Item i = Item.this.detach(user.belongings.backpack);
-							if (i != null) i.onThrow(cell);
+							if (i != null) i.onThrow(cell, user);
 							if (curUser.hasTalent(Talent.IMPROVISED_PROJECTILES)
 									&& !(Item.this instanceof MissileWeapon)
 									&& curUser.buff(Talent.ImprovisedProjectileCooldown.class) == null){
@@ -768,7 +768,7 @@ public class Item implements Bundlable {
 							curUser = user;
 							Item i = Item.this.detach(user.belongings.backpack);
 							user.spend(delay);
-							if (i != null) i.onThrow(cell);
+							if (i != null) i.onThrow(cell, user);
 							user.next();
 						}
 					});

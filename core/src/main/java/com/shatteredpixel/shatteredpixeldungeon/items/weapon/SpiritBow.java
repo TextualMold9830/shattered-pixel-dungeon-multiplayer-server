@@ -423,7 +423,7 @@ public class SpiritBow extends Weapon {
 									public void call() {
 										if (enemy.isAlive()) {
 											curUser = user;
-											onThrow(cell);
+											onThrow(cell, user);
 										}
 
 										flurryCount--;

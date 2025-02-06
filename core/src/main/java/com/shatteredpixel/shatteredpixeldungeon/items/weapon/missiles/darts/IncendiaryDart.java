@@ -45,12 +45,12 @@ public class IncendiaryDart extends TippedDart {
 			GameScene.add(Blob.seed(cell, 4, Fire.class));
 			decrementDurability(hero);
 			if (durability > 0){
-				super.onThrow(cell);
+				super.onThrow(cell, hero);
 			} else {
 				Dungeon.level.drop(new Dart(), cell).sprite.drop();
 			}
 		} else{
-			super.onThrow(cell);
+			super.onThrow(cell, hero);
 		}
 	}
 	

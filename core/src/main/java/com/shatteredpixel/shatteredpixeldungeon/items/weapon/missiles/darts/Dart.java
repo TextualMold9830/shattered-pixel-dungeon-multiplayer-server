@@ -169,7 +169,7 @@ public class Dart extends MissileWeapon {
 		updateCrossbow(hero);
 		//we have to set this here, as on-hit effects can move the target we aim at
 		chargedShotPos = cell;
-		super.onThrow(cell);
+		super.onThrow(cell, hero);
 	}
 
 	protected boolean processingChargedShot = false;

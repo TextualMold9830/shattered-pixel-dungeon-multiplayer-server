@@ -40,7 +40,7 @@ public abstract class Runestone extends Item {
 		///inventory stones are thrown like normal items, other stones don't trigger when thrown into pits
 		if (this instanceof InventoryStone ||
 				(Dungeon.level.pit[cell] && Actor.findChar(cell) == null)){
-			super.onThrow( cell );
+			super.onThrow( cell, hero );
 		} else {
 			Catalog.countUse(getClass());
 			activate(cell, hero);

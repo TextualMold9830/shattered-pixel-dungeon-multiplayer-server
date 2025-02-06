@@ -309,7 +309,7 @@ public class Potion extends Item {
 	protected void onThrow( int cell, Hero hero ) {
 		if (Dungeon.level.map[cell] == Terrain.WELL || Dungeon.level.pit[cell]) {
 			
-			super.onThrow( cell );
+			super.onThrow( cell, hero);
 			
 		} else  {
 
