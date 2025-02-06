@@ -190,16 +190,15 @@ public class NetworkPacket {
                     object.put("tier", hero.tier());
                 }else {
                     object.put("type", "character");
+                }
                     if (character.getSprite() != null) {
                         String spriteAsset = character.getSprite().getSpriteAsset();
                         if (spriteAsset != null) {
-                            object.put("sprite_asset",spriteAsset);
-                        } else
-                        {
+                            object.put("sprite_asset", spriteAsset);
+                        } else {
                             object.put("sprite_name", ((Char) actor).getSprite().spriteName());
                         }
                     }
-                }
                 String name = character.name();
                 int hp = character.HP;
                 int ht = character.HT;
