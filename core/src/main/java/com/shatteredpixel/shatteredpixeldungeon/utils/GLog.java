@@ -22,8 +22,11 @@
 package com.shatteredpixel.shatteredpixeldungeon.utils;
 
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Signal;
+
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendMessage;
 
 public class GLog {
 
@@ -32,6 +35,7 @@ public class GLog {
 	public static final String POSITIVE		= "++ ";
 	public static final String NEGATIVE		= "-- ";
 	public static final String WARNING		= "** ";
+	public static final String CUSTOM = "&&";
 	public static final String HIGHLIGHT	= "@@ ";
 
 	public static final String NEW_LINE	    = "\n";
@@ -50,6 +54,18 @@ public class GLog {
 		
 		DeviceCompat.log( TAG, text );
 		update.dispatch( text );
+		iWithTarget(null, text, args);
+	}
+	public static void iWithTarget( Integer ID,  String text, Object... args ) {
+
+		if (args.length > 0) {
+			text = Utils.format( text, args );
+		}
+
+		sendMessage(ID, text);
+	}
+	public static void withColor(String text, int color, Object... args) {
+		i(CUSTOM+Integer.toHexString(color), text, args);
 	}
 	
 	public static void p( String text, Object... args ) {

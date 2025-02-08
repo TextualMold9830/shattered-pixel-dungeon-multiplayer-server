@@ -328,10 +328,10 @@ public class SendData {
         }
     }
 
-    public static void sendMessageToAll(String message, int color) {
+    public static void sendMessageToAll(String message) {
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", message).put("color", color);
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
@@ -345,10 +345,10 @@ public class SendData {
         }
     }
 
-    public static void sendMessage(int ID, String message, int color) {
+    public static void sendMessage(int ID, String message) {
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", message).put("color", color);
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
@@ -360,15 +360,15 @@ public class SendData {
         client.flush();
     }
 
-    public static void sendMessageExcept(Integer exceptId, String message, int color) {
+    public static void sendMessageExcept(Integer exceptId, String message) {
         if (exceptId == null)
         {
-            sendMessageToAll(message, color);
+            sendMessageToAll(message);
             return;
         }
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", message).put("color", color);
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
