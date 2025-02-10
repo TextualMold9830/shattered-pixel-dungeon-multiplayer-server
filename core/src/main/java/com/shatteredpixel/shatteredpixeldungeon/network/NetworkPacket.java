@@ -35,6 +35,8 @@ import static com.watabou.pixeldungeon.utils.Utils.toSnakeCase;
 
 public class NetworkPacket {
     public static final String CELLS = "cells";
+    public static final String STATES = "states";
+    public static String CELLS_MAP = "cells_map";
     public static final String MAP = "map";
     public static final String ACTORS = "actors";
     public static final String PLANTS = "plants";
@@ -48,6 +50,15 @@ public class NetworkPacket {
 
         public String toString() {
             return this.name().toLowerCase();
+        }
+        public int toInt(){
+            switch (this) {
+                case UNVISITED : return 0;
+                case VISITED :return  1;
+                case MAPPED : return 2;
+            };
+            //This never happens, screw Java 8
+            return -1;
         }
     }
 
@@ -453,6 +464,45 @@ public class NetworkPacket {
             );
         }
     }
+    public void packAndAddLevelCellsSeparateState(Level level){
+        addCellsToMapArray(level.map);
+        for (int i = 0; i < level.length(); i++) {
+            addState(getCellState(level.visited[i], level.mapped[i]).toInt());
+        }
+    }
+    protected void addState(CellState state) {
+        addState(state.toInt());
+    }
+    protected void addState(int state) {
+        try {
+            synchronized (dataRef) {
+                JSONObject data = dataRef.get();
+                if (!data.has(MAP)) {
+                    data.put(MAP, new JSONObject());
+                }
+                JSONObject map = data.getJSONObject(MAP);
+                if (!map.has(STATES)) {
+                    map.put(CELLS, new JSONArray());
+                }
+                map.accumulate(STATES, state);
+            }
+        } catch (JSONException ignored) {
+        }
+
+    }
+    protected void addCellsToMapArray(int[] cells) {
+        try {
+            synchronized (dataRef) {
+                JSONObject data = dataRef.get();
+                if (!data.has(MAP)) {
+                    data.put(MAP, new JSONObject());
+                }
+                JSONObject map = data.getJSONObject(MAP);
+                map.put(CELLS_MAP, cells);
+            }
+        } catch (JSONException ignored) {
+        }
+    }
 
     public void packAndAddLevelHeaps(SparseArray <Heap> heaps, Hero observer) {
         for (Heap heap : heaps.values()) {
@@ -464,7 +514,7 @@ public class NetworkPacket {
         packAndAddLevelParams(level);
         packAndAddLevelEntrance(level.entrance());
         packAndAddLevelExit(level.exit());
-        packAndAddLevelCells(level);
+        packAndAddLevelCellsSeparateState(level);
         packAndAddLevelHeaps(level.heaps, observer);
         packAndAddPlants(level);
     }
