@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.badlogic.gdx.Gdx;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.*;
 import com.watabou.noosa.Game;
@@ -121,6 +122,8 @@ public class ShatteredPixelDungeon extends Game {
 	@Override
 	public void create() {
 		super.create();
+
+		SPDSettings.language(Languages.ENGLISH);
 
 		updateSystemUI();
 		SPDAction.loadBindings();
