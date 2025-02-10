@@ -345,19 +345,23 @@ public class SendData {
         }
     }
 
-    public static void sendMessage(int ID, String message) {
+    public static void sendMessage(Integer ID, String message) {
         JSONObject messageObj;
         try {
             messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
-        ClientThread client = clients[ID];
-        if (client == null) {
-            return;
+        if(ID != null) {
+            ClientThread client = clients[ID];
+            if (client == null) {
+                return;
+            }
+            client.packet.addChatMessage(messageObj);
+            client.flush();
+        } else {
+            sendMessageToAll(message);
         }
-        client.packet.addChatMessage(messageObj);
-        client.flush();
     }
 
     public static void sendMessageExcept(Integer exceptId, String message) {
