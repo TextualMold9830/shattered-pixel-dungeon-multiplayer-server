@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class TrapMechanism extends Trinket {
 
 	{
-		image = ItemSpriteSheet.TRAP_MECHANISM;
+		setImage(ItemSpriteSheet.TRAP_MECHANISM);
 	}
 
 	@Override

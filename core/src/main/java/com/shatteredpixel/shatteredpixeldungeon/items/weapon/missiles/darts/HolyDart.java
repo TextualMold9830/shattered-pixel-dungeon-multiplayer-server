@@ -33,7 +33,7 @@ import com.watabou.noosa.audio.Sample;
 public class HolyDart extends TippedDart {
 
 	{
-		image = ItemSpriteSheet.HOLY_DART;
+		setImage(ItemSpriteSheet.HOLY_DART);
 	}
 	
 	@Override

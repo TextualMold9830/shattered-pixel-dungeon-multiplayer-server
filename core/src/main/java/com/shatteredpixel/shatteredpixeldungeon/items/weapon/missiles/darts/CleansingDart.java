@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class CleansingDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.CLEANSING_DART;
+		setImage(ItemSpriteSheet.CLEANSING_DART);
 	}
 	
 	@Override

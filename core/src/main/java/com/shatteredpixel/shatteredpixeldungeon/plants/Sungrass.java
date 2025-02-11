@@ -61,7 +61,7 @@ public class Sungrass extends Plant {
 	
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_SUNGRASS;
+			setImage(ItemSpriteSheet.SEED_SUNGRASS);
 
 			plantClass = Sungrass.class;
 

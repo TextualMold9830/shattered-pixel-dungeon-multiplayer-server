@@ -52,7 +52,7 @@ import com.watabou.utils.Random;
 public class WandOfBlastWave extends DamageWand {
 
 	{
-		image = ItemSpriteSheet.WAND_BLAST_WAVE;
+		setImage(ItemSpriteSheet.WAND_BLAST_WAVE);
 
 		collisionProperties = Ballistica.PROJECTILE;
 	}

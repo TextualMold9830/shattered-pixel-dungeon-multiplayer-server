@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class WarScythe extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.WAR_SCYTHE;
+		setImage(ItemSpriteSheet.WAR_SCYTHE);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 0.9f;
 
@@ -57,8 +57,8 @@ public class WarScythe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int bleedAmt = levelKnown ? Math.round(30f + 4.5f*buffedLvl()) : 30;
-		if (levelKnown){
+		int bleedAmt = isLevelKnown() ? Math.round(30f + 4.5f*buffedLvl()) : 30;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));
 		} else {
 			return Messages.get(this, "typical_ability_desc", bleedAmt);

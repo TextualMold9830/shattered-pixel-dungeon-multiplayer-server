@@ -38,7 +38,7 @@ import com.watabou.utils.Bundle;
 public class ElixirOfMight extends Elixir {
 
 	{
-		image = ItemSpriteSheet.ELIXIR_MIGHT;
+		setImage(ItemSpriteSheet.ELIXIR_MIGHT);
 
 		unique = true;
 

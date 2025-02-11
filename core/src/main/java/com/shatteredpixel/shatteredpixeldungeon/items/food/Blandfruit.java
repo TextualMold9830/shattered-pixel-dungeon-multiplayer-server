@@ -58,8 +58,8 @@ public class Blandfruit extends Food {
 	public ItemSprite.Glowing potionGlow = null;
 
 	{
-		stackable = true;
-		image = ItemSpriteSheet.BLANDFRUIT;
+		setStackable(true);
+		setImage(ItemSpriteSheet.BLANDFRUIT);
 
 		//only applies when blandfruit is cooked
 		energy = Hunger.STARVING;
@@ -155,7 +155,7 @@ public class Blandfruit extends Food {
 
 	@Override
 	public int value() {
-		return 20 * quantity;
+		return 20 * getQuantity();
 	}
 
 	public Item cook(Seed seed){
@@ -167,7 +167,7 @@ public class Blandfruit extends Food {
 		potionAttrib = potion;
 		potionAttrib.anonymize();
 
-		potionAttrib.image = ItemSpriteSheet.BLANDFRUIT;
+		potionAttrib.setImage(ItemSpriteSheet.BLANDFRUIT);
 
 		if (potionAttrib instanceof PotionOfHealing)        potionGlow = new ItemSprite.Glowing( 0x2EE62E );
 		if (potionAttrib instanceof PotionOfStrength)       potionGlow = new ItemSprite.Glowing( 0xCC0022 );
@@ -296,8 +296,8 @@ public class Blandfruit extends Food {
 	public static class Chunks extends Food {
 
 		{
-			stackable = true;
-			image = ItemSpriteSheet.BLAND_CHUNKS;
+			setStackable(true);
+			setImage(ItemSpriteSheet.BLAND_CHUNKS);
 
 			energy = Hunger.STARVING;
 

@@ -42,7 +42,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfSirensSong extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_SIREN;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_SIREN);
 	}
 
 	protected static boolean identifiedByUse = false;

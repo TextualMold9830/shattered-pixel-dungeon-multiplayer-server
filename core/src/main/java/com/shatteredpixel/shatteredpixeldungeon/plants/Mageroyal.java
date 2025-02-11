@@ -56,7 +56,7 @@ public class Mageroyal extends Plant {
 
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_MAGEROYAL;
+			setImage(ItemSpriteSheet.SEED_MAGEROYAL);
 
 			plantClass = Mageroyal.class;
 		}

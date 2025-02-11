@@ -53,9 +53,9 @@ abstract public class ClassArmor extends Armor {
 	private static final String AC_TRANSFER = "TRANSFER";
 	
 	{
-		levelKnown = true;
-		cursedKnown = true;
-		defaultAction = AC_ABILITY;
+		setLevelKnown(true);
+		setCursedKnown(true);
+		setDefaultAction(AC_ABILITY);
 
 		bones = false;
 	}
@@ -124,14 +124,14 @@ abstract public class ClassArmor extends Armor {
 			classArmor.seal = armor.seal;
 		}
 		classArmor.glyphHardened = armor.glyphHardened;
-		classArmor.cursed = armor.cursed;
+		classArmor.setCursed(armor.isCursed());
 		classArmor.curseInfusionBonus = armor.curseInfusionBonus;
 		classArmor.masteryPotionBonus = armor.masteryPotionBonus;
-		if (armor.levelKnown && armor.cursedKnown) {
+		if (armor.isLevelKnown() && armor.isCursedKnown()) {
 			classArmor.identify();
 		} else {
-			classArmor.levelKnown = armor.levelKnown;
-			classArmor.cursedKnown = true;
+			classArmor.setLevelKnown(armor.isLevelKnown());
+			classArmor.setCursedKnown(true);
 		}
 
 		classArmor.charge = 50;
@@ -190,13 +190,13 @@ abstract public class ClassArmor extends Armor {
 			if (hero.armorAbility == null){
 				GameScene.show(new WndChooseAbility(null, this, hero));
 			} else if (!isEquipped( hero )) {
-				usesTargeting = false;
+				setUsesTargeting(false);
 				GLog.w( Messages.get(this, "not_equipped") );
 			} else if (charge < hero.armorAbility.chargeUse(hero)) {
-				usesTargeting = false;
+				setUsesTargeting(false);
 				GLog.w( Messages.get(this, "low_charge") );
 			} else  {
-				usesTargeting = hero.armorAbility.useTargeting();
+				setUsesTargeting(hero.armorAbility.useTargeting());
 				hero.armorAbility.use(this, hero);
 			}
 			
@@ -236,7 +236,7 @@ abstract public class ClassArmor extends Armor {
 								level(armor.trueLevel());
 								tier = armor.tier;
 								augment = armor.augment;
-								cursed = armor.cursed;
+								setCursed(armor.isCursed());
 								curseInfusionBonus = armor.curseInfusionBonus;
 								masteryPotionBonus = armor.masteryPotionBonus;
 								if (armor.checkSeal() != null) {
@@ -270,11 +270,11 @@ abstract public class ClassArmor extends Armor {
 									inscribe(armor.glyph);
 								}
 
-								if (armor.levelKnown && armor.cursedKnown) {
+								if (armor.isLevelKnown() && armor.isCursedKnown()) {
 									identify();
 								} else {
-									levelKnown = armor.levelKnown;
-									cursedKnown = true;
+									setLevelKnown(armor.isLevelKnown());
+									setCursedKnown(true);
 								}
 
 								GLog.p( Messages.get(ClassArmor.class, "transfer_complete") );

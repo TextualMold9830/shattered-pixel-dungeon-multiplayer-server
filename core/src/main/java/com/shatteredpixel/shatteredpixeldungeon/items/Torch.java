@@ -39,11 +39,11 @@ public class Torch extends Item {
 	public static final float TIME_TO_LIGHT = 1;
 	
 	{
-		image = ItemSpriteSheet.TORCH;
+		setImage(ItemSpriteSheet.TORCH);
 		
-		stackable = true;
+		setStackable(true);
 		
-		defaultAction = AC_LIGHT;
+		setDefaultAction(AC_LIGHT);
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class Torch extends Item {
 	
 	@Override
 	public int value() {
-		return 8 * quantity;
+		return 8 * getQuantity();
 	}
 
 }

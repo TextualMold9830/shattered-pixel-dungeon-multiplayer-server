@@ -50,7 +50,7 @@ import java.util.ArrayList;
 public class BeaconOfReturning extends Spell {
 	
 	{
-		image = ItemSpriteSheet.RETURN_BEACON;
+		setImage(ItemSpriteSheet.RETURN_BEACON);
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
@@ -218,12 +218,12 @@ public class BeaconOfReturning extends Spell {
 	
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(60 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(12 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

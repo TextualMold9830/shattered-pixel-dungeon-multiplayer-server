@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfEvasion extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_EVASION;
+		setIcon(ItemSpriteSheet.Icons.RING_EVASION);
 	}
 
 	public String statsInfo() {

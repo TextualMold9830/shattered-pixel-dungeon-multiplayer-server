@@ -54,7 +54,7 @@ import java.util.ArrayList;
 public class MasterThievesArmband extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_ARMBAND;
+		setImage(ItemSpriteSheet.ARTIFACT_ARMBAND);
 
 		levelCap = 10;
 
@@ -62,7 +62,7 @@ public class MasterThievesArmband extends Artifact {
 		partialCharge = 0;
 		chargeCap = 5+level()/2;
 
-		defaultAction = AC_STEAL;
+		setDefaultAction(AC_STEAL);
 	}
 
 	public static final String AC_STEAL = "STEAL";
@@ -73,7 +73,7 @@ public class MasterThievesArmband extends Artifact {
 		if (isEquipped(hero)
 				&& charge > 0
 				&& hero.buff(MagicImmune.class) == null
-				&& !cursed) {
+				&& !isCursed()) {
 			actions.add(AC_STEAL);
 		}
 		return actions;
@@ -91,18 +91,18 @@ public class MasterThievesArmband extends Artifact {
 
 			if (!isEquipped( hero )) {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
 			} else if (charge < 1) {
 				GLog.i( Messages.get(this, "no_charge") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
-			} else if (cursed) {
+			} else if (isCursed()) {
 				GLog.w( Messages.get(this, "cursed") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
 			} else {
-				usesTargeting = true;
+				setUsesTargeting(true);
 				GameScene.selectCell(targeter);
 			}
 
@@ -216,7 +216,7 @@ public class MasterThievesArmband extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 		if (charge < chargeCap) {
 			partialCharge += 0.1f * amount;
 			while (partialCharge >= 1f) {
@@ -243,7 +243,7 @@ public class MasterThievesArmband extends Artifact {
 		String desc = super.desc();
 
 		if ( isEquipped (Dungeon.hero) ){
-			if (cursed){
+			if (isCursed()){
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			} else {
 				desc += "\n\n" + Messages.get(this, "desc_worn");

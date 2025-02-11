@@ -33,7 +33,7 @@ import com.watabou.utils.PathFinder;
 public class PotionOfFrost extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_FROST;
+		setIcon(ItemSpriteSheet.Icons.POTION_FROST);
 	}
 	
 	@Override
@@ -58,6 +58,6 @@ public class PotionOfFrost extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

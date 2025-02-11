@@ -58,19 +58,19 @@ public class Starflower extends Plant {
 	public static class Seed extends Plant.Seed{
 
 		{
-			image = ItemSpriteSheet.SEED_STARFLOWER;
+			setImage(ItemSpriteSheet.SEED_STARFLOWER);
 
 			plantClass = Starflower.class;
 		}
 		
 		@Override
 		public int value() {
-			return 30 * quantity;
+			return 30 * getQuantity();
 		}
 
 		@Override
 		public int energyVal() {
-			return 3 * quantity;
+			return 3 * getQuantity();
 		}
 	}
 }

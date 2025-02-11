@@ -40,7 +40,7 @@ public class StoneOfDisarming extends Runestone {
 	private static final int DIST = 8;
 	
 	{
-		image = ItemSpriteSheet.STONE_DISARM;
+		setImage(ItemSpriteSheet.STONE_DISARM);
 	}
 
 	@Override

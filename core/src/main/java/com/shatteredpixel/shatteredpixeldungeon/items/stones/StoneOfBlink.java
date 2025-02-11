@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class StoneOfBlink extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_BLINK;
+		setImage(ItemSpriteSheet.STONE_BLINK);
 	}
 	
 	private static Ballistica throwPath;

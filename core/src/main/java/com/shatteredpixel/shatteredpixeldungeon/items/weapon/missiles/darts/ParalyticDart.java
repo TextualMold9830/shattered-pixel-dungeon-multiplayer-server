@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ParalyticDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.PARALYTIC_DART;
+		setImage(ItemSpriteSheet.PARALYTIC_DART);
 	}
 	
 	@Override

@@ -43,11 +43,11 @@ import java.util.ArrayList;
 public class ArcaneResin extends Item {
 
 	{
-		image = ItemSpriteSheet.ARCANE_RESIN;
+		setImage(ItemSpriteSheet.ARCANE_RESIN);
 
-		stackable = true;
+		setStackable(true);
 
-		defaultAction = AC_APPLY;
+		setDefaultAction(AC_APPLY);
 
 		bones = true;
 	}
@@ -152,7 +152,7 @@ public class ArcaneResin extends Item {
 			return ingredients.size() == 1
 					&& ingredients.get(0) instanceof Wand
 					&& ingredients.get(0).isIdentified()
-					&& !ingredients.get(0).cursed;
+					&& !ingredients.get(0).isCursed();
 		}
 
 		@Override

@@ -54,7 +54,7 @@ import java.util.ArrayList;
 public class PotionOfDragonsBreath extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_DRGBREATH;
+		setIcon(ItemSpriteSheet.Icons.POTION_DRGBREATH);
 	}
 
 	protected static boolean identifiedByUse = false;

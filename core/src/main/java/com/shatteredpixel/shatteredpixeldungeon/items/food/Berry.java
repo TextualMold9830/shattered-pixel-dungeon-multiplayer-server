@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Berry extends Food {
 
 	{
-		image = ItemSpriteSheet.BERRY;
+		setImage(ItemSpriteSheet.BERRY);
 		energy = Hunger.HUNGRY/3f; //100 food value
 
 		bones = false;
@@ -64,7 +64,7 @@ public class Berry extends Food {
 
 	@Override
 	public int value() {
-		return 5 * quantity;
+		return 5 * getQuantity();
 	}
 
 	public static class SeedCounter extends CounterBuff{{revivePersists = true;}};

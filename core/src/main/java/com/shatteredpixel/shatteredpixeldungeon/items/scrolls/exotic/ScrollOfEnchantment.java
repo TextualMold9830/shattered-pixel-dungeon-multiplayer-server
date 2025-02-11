@@ -46,7 +46,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfEnchantment extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_ENCHANT;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_ENCHANT);
 
 		unique = true;
 

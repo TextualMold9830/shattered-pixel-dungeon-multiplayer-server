@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 public class Quarterstaff extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.QUARTERSTAFF;
+		setImage(ItemSpriteSheet.QUARTERSTAFF);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1f;
 
@@ -63,7 +63,7 @@ public class Quarterstaff extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 4+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 4);

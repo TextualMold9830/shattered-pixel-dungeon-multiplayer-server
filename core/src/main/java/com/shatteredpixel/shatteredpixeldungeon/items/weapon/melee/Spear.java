@@ -40,7 +40,7 @@ import com.watabou.utils.Callback;
 public class Spear extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SPEAR;
+		setImage(ItemSpriteSheet.SPEAR);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 0.9f;
 
@@ -69,8 +69,8 @@ public class Spear extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 7 + Math.round(1.5f*buffedLvl()) : 7;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 7 + Math.round(1.5f*buffedLvl()) : 7;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

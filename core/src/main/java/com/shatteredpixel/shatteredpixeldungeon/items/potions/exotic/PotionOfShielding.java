@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionOfShielding extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_SHIELDING;
+		setIcon(ItemSpriteSheet.Icons.POTION_SHIELDING);
 	}
 	
 	@Override

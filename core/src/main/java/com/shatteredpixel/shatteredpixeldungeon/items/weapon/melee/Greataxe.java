@@ -37,7 +37,7 @@ import com.watabou.utils.Callback;
 public class Greataxe extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GREATAXE;
+		setImage(ItemSpriteSheet.GREATAXE);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -112,8 +112,8 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 12 + 2*buffedLvl() : 12;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 12 + 2*buffedLvl() : 12;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

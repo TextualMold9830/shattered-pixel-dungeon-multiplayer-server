@@ -38,7 +38,7 @@ import com.watabou.utils.PathFinder;
 public class CausticBrew extends Brew {
 	
 	{
-		image = ItemSpriteSheet.BREW_CAUSTIC;
+		setImage(ItemSpriteSheet.BREW_CAUSTIC);
 	}
 	
 	@Override

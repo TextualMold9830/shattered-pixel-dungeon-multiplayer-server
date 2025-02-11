@@ -36,7 +36,7 @@ import com.watabou.utils.Callback;
 public class HeavyBoomerang extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.BOOMERANG;
+		setImage(ItemSpriteSheet.BOOMERANG);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1f;
 		

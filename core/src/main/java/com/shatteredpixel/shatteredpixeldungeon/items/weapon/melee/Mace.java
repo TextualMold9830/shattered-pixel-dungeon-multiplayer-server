@@ -40,7 +40,7 @@ import com.watabou.utils.Callback;
 public class Mace extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.MACE;
+		setImage(ItemSpriteSheet.MACE);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1f;
 
@@ -68,8 +68,8 @@ public class Mace extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 5 + Math.round(1.5f*buffedLvl()) : 5;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 5 + Math.round(1.5f*buffedLvl()) : 5;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

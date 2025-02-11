@@ -58,21 +58,21 @@ public class EtherealChains extends Artifact {
 	public static final String AC_CAST       = "CAST";
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CHAINS;
+		setImage(ItemSpriteSheet.ARTIFACT_CHAINS);
 
 		levelCap = 5;
 		exp = 0;
 
 		charge = 5;
 
-		defaultAction = AC_CAST;
-		usesTargeting = true;
+		setDefaultAction(AC_CAST);
+		setUsesTargeting(true);
 	}
 
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped(hero) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped(hero) && charge > 0 && !isCursed() && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_CAST);
 		}
 		return actions;
@@ -95,18 +95,18 @@ public class EtherealChains extends Artifact {
 
 			if (!isEquipped( hero )) {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
 			} else if (charge < 1) {
 				GLog.i( Messages.get(this, "no_charge") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
-			} else if (cursed) {
+			} else if (isCursed()) {
 				GLog.w( Messages.get(this, "cursed") );
-				usesTargeting = false;
+				setUsesTargeting(false);
 
 			} else {
-				usesTargeting = true;
+				setUsesTargeting(true);
 				GameScene.selectCell(caster);
 			}
 
@@ -277,7 +277,7 @@ public class EtherealChains extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 		int chargeTarget = 5+(level()*2);
 		if (charge < chargeTarget*2){
 			partialCharge += 0.5f*amount;
@@ -295,7 +295,7 @@ public class EtherealChains extends Artifact {
 
 		if (isEquipped( Dungeon.hero )){
 			desc += "\n\n";
-			if (cursed)
+			if (isCursed())
 				desc += Messages.get(this, "desc_cursed");
 			else
 				desc += Messages.get(this, "desc_equipped");

@@ -40,7 +40,7 @@ import com.watabou.noosa.audio.Sample;
 public class PotionOfCleansing extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_CLEANSE;
+		setIcon(ItemSpriteSheet.Icons.POTION_CLEANSE);
 	}
 	
 	@Override

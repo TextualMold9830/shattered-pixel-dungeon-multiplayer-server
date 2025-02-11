@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ElixirOfArcaneArmor extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_ARCANE;
+		setImage(ItemSpriteSheet.ELIXIR_ARCANE);
 	}
 	
 	@Override

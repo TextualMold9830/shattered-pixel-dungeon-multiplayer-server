@@ -39,7 +39,7 @@ import com.watabou.utils.Callback;
 public class Sickle extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SICKLE;
+		setImage(ItemSpriteSheet.SICKLE);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -67,8 +67,8 @@ public class Sickle extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int bleedAmt = levelKnown ? Math.round(15f + 2.5f*buffedLvl()) : 15;
-		if (levelKnown){
+		int bleedAmt = isLevelKnown() ? Math.round(15f + 2.5f*buffedLvl()) : 15;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));
 		} else {
 			return Messages.get(this, "typical_ability_desc", bleedAmt);

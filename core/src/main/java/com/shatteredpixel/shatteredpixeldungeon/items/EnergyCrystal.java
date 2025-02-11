@@ -34,8 +34,8 @@ import java.util.ArrayList;
 public class EnergyCrystal extends Item {
 
 	{
-		image = ItemSpriteSheet.ENERGY;
-		stackable = true;
+		setImage(ItemSpriteSheet.ENERGY);
+		setStackable(true);
 	}
 
 	public EnergyCrystal() {
@@ -43,7 +43,7 @@ public class EnergyCrystal extends Item {
 	}
 
 	public EnergyCrystal( int value ) {
-		this.quantity = value;
+		this.setQuantity(value);
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class EnergyCrystal extends Item {
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
 
-		Dungeon.energy += quantity;
+		Dungeon.energy += getQuantity();
 		//TODO track energy collected maybe? We do already track recipes crafted though..
 
 		GameScene.pickUp( this, pos );
-		hero.sprite.showStatusWithIcon( 0x44CCFF, Integer.toString(quantity), FloatingText.ENERGY );
+		hero.sprite.showStatusWithIcon( 0x44CCFF, Integer.toString(getQuantity()), FloatingText.ENERGY );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );

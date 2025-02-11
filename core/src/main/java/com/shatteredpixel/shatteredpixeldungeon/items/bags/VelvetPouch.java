@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class VelvetPouch extends Bag {
 
 	{
-		image = ItemSpriteSheet.POUCH;
+		setImage(ItemSpriteSheet.POUCH);
 	}
 
 	@Override

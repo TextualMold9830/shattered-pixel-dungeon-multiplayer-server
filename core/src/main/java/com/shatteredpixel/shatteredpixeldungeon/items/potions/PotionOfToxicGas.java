@@ -32,7 +32,7 @@ import com.watabou.noosa.audio.Sample;
 public class PotionOfToxicGas extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_TOXICGAS;
+		setIcon(ItemSpriteSheet.Icons.POTION_TOXICGAS);
 	}
 
 	@Override
@@ -51,6 +51,6 @@ public class PotionOfToxicGas extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

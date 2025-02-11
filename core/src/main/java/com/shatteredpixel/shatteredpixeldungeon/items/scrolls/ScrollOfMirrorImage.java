@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class ScrollOfMirrorImage extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_MIRRORIMG;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_MIRRORIMG);
 	}
 
 	private static final int NIMAGES	= 2;
@@ -90,6 +90,6 @@ public class ScrollOfMirrorImage extends Scroll {
 
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

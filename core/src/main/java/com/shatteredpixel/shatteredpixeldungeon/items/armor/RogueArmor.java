@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RogueArmor extends ClassArmor {
 
 	{
-		image = ItemSpriteSheet.ARMOR_ROGUE;
+		setImage(ItemSpriteSheet.ARMOR_ROGUE);
 	}
 
 }

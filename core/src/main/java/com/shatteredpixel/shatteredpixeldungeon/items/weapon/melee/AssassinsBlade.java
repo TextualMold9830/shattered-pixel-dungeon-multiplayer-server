@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class AssassinsBlade extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.ASSASSINS_BLADE;
+		setImage(ItemSpriteSheet.ASSASSINS_BLADE);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 0.9f;
 
@@ -81,7 +81,7 @@ public class AssassinsBlade extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 2+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);

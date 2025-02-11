@@ -53,7 +53,7 @@ import java.util.ArrayList;
 public class TalismanOfForesight extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_TALISMAN;
+		setImage(ItemSpriteSheet.ARTIFACT_TALISMAN);
 
 		exp = 0;
 		levelCap = 10;
@@ -62,7 +62,7 @@ public class TalismanOfForesight extends Artifact {
 		partialCharge = 0;
 		chargeCap = 100;
 
-		defaultAction = AC_SCRY;
+		setDefaultAction(AC_SCRY);
 	}
 
 	public static final String AC_SCRY = "SCRY";
@@ -71,7 +71,7 @@ public class TalismanOfForesight extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
-				&& !cursed
+				&& !isCursed()
 				&& hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_SCRY);
 		}
@@ -98,7 +98,7 @@ public class TalismanOfForesight extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 		if (charge < chargeCap){
 			partialCharge += 2*amount;
 			while (partialCharge >= 1f){
@@ -119,7 +119,7 @@ public class TalismanOfForesight extends Artifact {
 		String desc = super.desc();
 
 		if ( isEquipped( Dungeon.hero ) ){
-			if (!cursed) {
+			if (!isCursed()) {
 				desc += "\n\n" + Messages.get(this, "desc_worn");
 
 			} else {

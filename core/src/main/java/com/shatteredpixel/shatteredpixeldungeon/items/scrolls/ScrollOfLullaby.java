@@ -35,7 +35,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfLullaby extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_LULLABY;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_LULLABY);
 	}
 
 	@Override
@@ -62,6 +62,6 @@ public class ScrollOfLullaby extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

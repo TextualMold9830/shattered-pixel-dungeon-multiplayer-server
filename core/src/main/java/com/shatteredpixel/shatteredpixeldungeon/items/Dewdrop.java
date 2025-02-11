@@ -39,9 +39,9 @@ import com.watabou.noosa.audio.Sample;
 public class Dewdrop extends Item {
 	
 	{
-		image = ItemSpriteSheet.DEWDROP;
+		setImage(ItemSpriteSheet.DEWDROP);
 		
-		stackable = true;
+		setStackable(true);
 		dropsDownHeap = true;
 	}
 	
@@ -117,15 +117,15 @@ public class Dewdrop extends Item {
 	@Override
 	public Item merge( Item other ){
 		if (isSimilar( other )){
-			quantity = 1;
-			other.quantity = 0;
+			setQuantity(1);
+			other.setQuantity(0);
 		}
 		return this;
 	}
 
 	@Override
 	public Item quantity(int value) {
-		quantity = Math.min( value, 1);
+		setQuantity(Math.min( value, 1));
 		return this;
 	}
 

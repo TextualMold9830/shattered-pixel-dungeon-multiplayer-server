@@ -61,7 +61,7 @@ import java.util.Collections;
 public class UnstableSpellbook extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_SPELLBOOK;
+		setImage(ItemSpriteSheet.ARTIFACT_SPELLBOOK);
 
 		levelCap = 10;
 
@@ -69,7 +69,7 @@ public class UnstableSpellbook extends Artifact {
 		partialCharge = 0;
 		chargeCap = (int)(level()*0.6f)+2;
 
-		defaultAction = AC_READ;
+		setDefaultAction(AC_READ);
 	}
 
 	public static final String AC_READ = "READ";
@@ -96,10 +96,10 @@ public class UnstableSpellbook extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && charge > 0 && !isCursed() && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_READ);
 		}
-		if (isEquipped( hero ) && level() < levelCap && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && level() < levelCap && !isCursed() && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_ADD);
 		}
 		return actions;
@@ -117,7 +117,7 @@ public class UnstableSpellbook extends Artifact {
 			if (hero.buff( Blindness.class ) != null) GLog.w( Messages.get(this, "blinded") );
 			else if (!isEquipped( hero ))             GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (charge <= 0)                     GLog.i( Messages.get(this, "no_charge") );
-			else if (cursed)                          GLog.i( Messages.get(this, "cursed") );
+			else if (isCursed())                          GLog.i( Messages.get(this, "cursed") );
 			else {
 				charge--;
 
@@ -224,7 +224,7 @@ public class UnstableSpellbook extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !isCursed() && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
@@ -253,7 +253,7 @@ public class UnstableSpellbook extends Artifact {
 		String desc = super.desc();
 
 		if (isEquipped(Dungeon.hero)) {
-			if (cursed) {
+			if (isCursed()) {
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			}
 			

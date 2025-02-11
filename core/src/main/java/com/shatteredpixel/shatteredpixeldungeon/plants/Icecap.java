@@ -57,7 +57,7 @@ public class Icecap extends Plant {
 	
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_ICECAP;
+			setImage(ItemSpriteSheet.SEED_ICECAP);
 
 			plantClass = Icecap.class;
 		}

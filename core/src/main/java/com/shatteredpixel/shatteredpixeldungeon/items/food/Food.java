@@ -50,10 +50,10 @@ public class Food extends Item {
 	public float energy = Hunger.HUNGRY;
 	
 	{
-		stackable = true;
-		image = ItemSpriteSheet.RATION;
+		setStackable(true);
+		setImage(ItemSpriteSheet.RATION);
 
-		defaultAction = AC_EAT;
+		setDefaultAction(AC_EAT);
 
 		bones = true;
 	}
@@ -135,6 +135,6 @@ public class Food extends Item {
 	
 	@Override
 	public int value() {
-		return 10 * quantity;
+		return 10 * getQuantity();
 	}
 }

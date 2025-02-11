@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class CapeOfThorns extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CAPE;
+		setImage(ItemSpriteSheet.ARTIFACT_CAPE);
 
 		levelCap = 10;
 
@@ -40,7 +40,7 @@ public class CapeOfThorns extends Artifact {
 		chargeCap = 100;
 		cooldown = 0;
 
-		defaultAction = "NONE"; //so it can be quickslotted
+		setDefaultAction("NONE"); //so it can be quickslotted
 	}
 
 	@Override

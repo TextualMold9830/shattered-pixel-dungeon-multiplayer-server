@@ -35,11 +35,11 @@ public abstract class Elixir extends Potion {
 
 	@Override
 	public int value() {
-		return quantity * 60;
+		return getQuantity() * 60;
 	}
 
 	@Override
 	public int energyVal() {
-		return quantity * 12;
+		return getQuantity() * 12;
 	}
 }

@@ -331,7 +331,7 @@ public class Ghost extends NPC {
 				//clear weapon's starting properties
 				weapon.level(0);
 				weapon.enchant(null);
-				weapon.cursed = false;
+				weapon.setCursed(false);
 
 				//50%:+0, 30%:+1, 15%:+2, 5%:+3
 				float itemLevelRoll = Random.Float();

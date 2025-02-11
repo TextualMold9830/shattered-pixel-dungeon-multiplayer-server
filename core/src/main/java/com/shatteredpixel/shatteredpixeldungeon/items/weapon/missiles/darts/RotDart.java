@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RotDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.ROT_DART;
+		setImage(ItemSpriteSheet.ROT_DART);
 	}
 	
 	@Override

@@ -35,7 +35,7 @@ import com.watabou.utils.PathFinder;
 public class ShockingBrew extends Brew {
 	
 	{
-		image = ItemSpriteSheet.BREW_SHOCKING;
+		setImage(ItemSpriteSheet.BREW_SHOCKING);
 	}
 	
 	@Override

@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionBandolier extends Bag {
 
 	{
-		image = ItemSpriteSheet.BANDOLIER;
+		setImage(ItemSpriteSheet.BANDOLIER);
 	}
 
 	@Override

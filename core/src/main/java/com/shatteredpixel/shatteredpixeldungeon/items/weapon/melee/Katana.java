@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Katana extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.KATANA;
+		setImage(ItemSpriteSheet.KATANA);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1.1f;
 
@@ -62,8 +62,8 @@ public class Katana extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 6 + Math.round(1.5f*buffedLvl()) : 6;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 6 + Math.round(1.5f*buffedLvl()) : 6;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

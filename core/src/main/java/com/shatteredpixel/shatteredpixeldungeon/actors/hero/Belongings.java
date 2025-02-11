@@ -49,7 +49,7 @@ public class Belongings implements Iterable<Item> {
 
 	public static class Backpack extends Bag {
 		{
-			image = ItemSpriteSheet.BACKPACK;
+			setImage(ItemSpriteSheet.BACKPACK);
 		}
 		public int capacity(){
 			int cap = super.capacity();
@@ -345,7 +345,7 @@ public class Belongings implements Iterable<Item> {
 		}
 		for (Item item : backpack) {
 			if (item instanceof EquipableItem || item instanceof Wand) {
-				item.cursedKnown = true;
+				item.setCursedKnown(true);
 			}
 		}
 		Item.updateQuickslot();

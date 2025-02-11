@@ -55,12 +55,12 @@ import com.watabou.utils.Random;
 public class WandOfWarding extends Wand {
 
 	{
-		image = ItemSpriteSheet.WAND_WARDING;
+		setImage(ItemSpriteSheet.WAND_WARDING);
 	}
 
 	@Override
 	public int collisionProperties(int target) {
-		if (cursed)                                 return super.collisionProperties(target);
+		if (isCursed())                                 return super.collisionProperties(target);
 		else if (!Dungeon.level.heroFOV[target])    return Ballistica.PROJECTILE;
 		else                                        return Ballistica.STOP_TARGET;
 	}
@@ -196,7 +196,7 @@ public class WandOfWarding extends Wand {
 
 	@Override
 	public String statsDesc() {
-		if (levelKnown)
+		if (isLevelKnown())
 			return Messages.get(this, "stats_desc", level()+2);
 		else
 			return Messages.get(this, "stats_desc", 2);

@@ -41,7 +41,7 @@ import com.watabou.utils.Callback;
 public class Sai extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SAI;
+		setImage(ItemSpriteSheet.SAI);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1.3f;
 
@@ -69,8 +69,8 @@ public class Sai extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 3 + Math.round(0.67f*buffedLvl()) : 3;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 3 + Math.round(0.67f*buffedLvl()) : 3;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));

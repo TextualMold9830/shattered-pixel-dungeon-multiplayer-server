@@ -130,8 +130,8 @@ public abstract class Plant implements Bundlable {
 		private static final float TIME_TO_PLANT = 1f;
 		
 		{
-			stackable = true;
-			defaultAction = AC_THROW;
+			setStackable(true);
+			setDefaultAction(AC_THROW);
 		}
 		
 		protected Class<? extends Plant> plantClass;
@@ -203,12 +203,12 @@ public abstract class Plant implements Bundlable {
 		
 		@Override
 		public int value() {
-			return 10 * quantity;
+			return 10 * getQuantity();
 		}
 
 		@Override
 		public int energyVal() {
-			return 2 * quantity;
+			return 2 * getQuantity();
 		}
 
 		@Override
@@ -228,7 +228,7 @@ public abstract class Plant implements Bundlable {
 		public static class PlaceHolder extends Seed {
 			
 			{
-				image = ItemSpriteSheet.SEED_HOLDER;
+				setImage(ItemSpriteSheet.SEED_HOLDER);
 			}
 			
 			@Override

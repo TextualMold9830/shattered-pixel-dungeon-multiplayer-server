@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Javelin extends MissileWeapon {
 
 	{
-		image = ItemSpriteSheet.JAVELIN;
+		setImage(ItemSpriteSheet.JAVELIN);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1f;
 		

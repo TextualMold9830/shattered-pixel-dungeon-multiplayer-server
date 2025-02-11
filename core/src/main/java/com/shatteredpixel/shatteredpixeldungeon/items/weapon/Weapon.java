@@ -115,7 +115,7 @@ abstract public class Weapon extends KindOfWeapon {
 			damage = enchantment.proc( this, attacker, defender, damage );
 		}
 		
-		if (!levelKnown && attacker == Dungeon.hero) {
+		if (!isLevelKnown() && attacker == Dungeon.hero) {
 			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.hero, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
@@ -131,7 +131,7 @@ abstract public class Weapon extends KindOfWeapon {
 	
 	public void onHeroGainExp( float levelPercent, Hero hero ){
 		levelPercent *= Talent.itemIDSpeedFactor(hero, this);
-		if (!levelKnown && isEquipped(hero) && availableUsesToID <= USES_TO_ID/2f) {
+		if (!isLevelKnown() && isEquipped(hero) && availableUsesToID <= USES_TO_ID/2f) {
 			//gains enough uses to ID over 0.5 levels
 			availableUsesToID = Math.min(USES_TO_ID/2f, availableUsesToID + levelPercent * USES_TO_ID);
 		}
@@ -290,14 +290,14 @@ abstract public class Weapon extends KindOfWeapon {
 			}
 		}
 		
-		cursed = false;
+		setCursed(false);
 
 		return super.upgrade();
 	}
 	
 	@Override
 	public String name() {
-		return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name( super.name() ) : super.name();
+		return enchantment != null && (isCursedKnown() || !enchantment.curse()) ? enchantment.name( super.name() ) : super.name();
 	}
 	
 	@Override
@@ -319,7 +319,7 @@ abstract public class Weapon extends KindOfWeapon {
 		float effectRoll = Random.Float();
 		if (effectRoll < 0.3f * ParchmentScrap.curseChanceMultiplier()) {
 			enchant(Enchantment.randomCurse());
-			cursed = true;
+			setCursed(true);
 		} else if (effectRoll >= 1f - (0.1f * ParchmentScrap.enchantChanceMultiplier())){
 			enchant();
 		}
@@ -357,7 +357,7 @@ abstract public class Weapon extends KindOfWeapon {
 
 	@Override
 	public ItemSprite.Glowing glowing() {
-		return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.glowing() : null;
+		return enchantment != null && (isCursedKnown() || !enchantment.curse()) ? enchantment.glowing() : null;
 	}
 
 	public static abstract class Enchantment implements Bundlable {

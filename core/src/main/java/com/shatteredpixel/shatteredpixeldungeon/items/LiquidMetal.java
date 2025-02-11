@@ -46,11 +46,11 @@ import java.util.ArrayList;
 public class LiquidMetal extends Item {
 
 	{
-		image = ItemSpriteSheet.LIQUID_METAL;
+		setImage(ItemSpriteSheet.LIQUID_METAL);
 
-		stackable = true;
+		setStackable(true);
 
-		defaultAction = AC_APPLY;
+		setDefaultAction(AC_APPLY);
 
 		bones = true;
 	}
@@ -107,7 +107,7 @@ public class LiquidMetal extends Item {
 
 	@Override
 	public int value() {
-		return quantity;
+		return getQuantity();
 	}
 
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

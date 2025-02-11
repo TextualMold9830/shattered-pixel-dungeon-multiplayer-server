@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class BowFragment extends RemainsItem {
 
 	{
-		image = ItemSpriteSheet.BOW_FRAGMENT;
+		setImage(ItemSpriteSheet.BOW_FRAGMENT);
 	}
 
 	@Override

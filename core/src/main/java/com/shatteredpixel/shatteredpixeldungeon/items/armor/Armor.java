@@ -210,8 +210,8 @@ public class Armor extends EquipableItem {
 			
 			hero.belongings.armor = this;
 			
-			cursedKnown = true;
-			if (cursed) {
+			setCursedKnown(true);
+			if (isCursed()) {
 				equipCursed( hero );
 				GLog.n( Messages.get(Armor.class, "equip_cursed") );
 			}
@@ -432,7 +432,7 @@ public class Armor extends EquipableItem {
 			}
 		}
 		
-		cursed = false;
+		setCursed(false);
 
 		if (seal != null && seal.level() == 0)
 			seal.upgrade();
@@ -446,7 +446,7 @@ public class Armor extends EquipableItem {
 			damage = glyph.proc( this, attacker, defender, damage );
 		}
 		
-		if (!levelKnown && defender == Dungeon.hero) {
+		if (!isLevelKnown() && defender == Dungeon.hero) {
 			float uses = Math.min( availableUsesToID, Talent.itemIDSpeedFactor(Dungeon.hero, this) );
 			availableUsesToID -= uses;
 			usesLeftToID -= uses;
@@ -463,7 +463,7 @@ public class Armor extends EquipableItem {
 	@Override
 	public void onHeroGainExp(float levelPercent, Hero hero) {
 		levelPercent *= Talent.itemIDSpeedFactor(hero, this);
-		if (!levelKnown && isEquipped(hero) && availableUsesToID <= USES_TO_ID/2f) {
+		if (!isLevelKnown() && isEquipped(hero) && availableUsesToID <= USES_TO_ID/2f) {
 			//gains enough uses to ID over 0.5 levels
 			availableUsesToID = Math.min(USES_TO_ID/2f, availableUsesToID + levelPercent * USES_TO_ID);
 		}
@@ -471,14 +471,14 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public String name() {
-		return glyph != null && (cursedKnown || !glyph.curse()) ? glyph.name( super.name() ) : super.name();
+		return glyph != null && (isCursedKnown() || !glyph.curse()) ? glyph.name( super.name() ) : super.name();
 	}
 	
 	@Override
 	public String info() {
 		String info = desc();
 		
-		if (levelKnown) {
+		if (isLevelKnown()) {
 
 			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(), DRMax(), STRReq());
 			
@@ -503,7 +503,7 @@ public class Armor extends EquipableItem {
 			case NONE:
 		}
 		
-		if (glyph != null  && (cursedKnown || !glyph.curse())) {
+		if (glyph != null  && (isCursedKnown() || !glyph.curse())) {
 			info += "\n\n" +  Messages.capitalize(Messages.get(Armor.class, "inscribed", glyph.name()));
 			if (glyphHardened) info += " " + Messages.get(Armor.class, "glyph_hardened");
 			info += " " + glyph.desc();
@@ -511,13 +511,13 @@ public class Armor extends EquipableItem {
 			info += "\n\n" + Messages.get(Armor.class, "hardened_no_glyph");
 		}
 		
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (isCursed() && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed_worn");
-		} else if (cursedKnown && cursed) {
+		} else if (isCursedKnown() && isCursed()) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed");
 		} else if (seal != null) {
 			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level()));
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			if (glyph != null && glyph.curse()) {
 				info += "\n\n" + Messages.get(Armor.class, "weak_cursed");
 			} else {
@@ -532,7 +532,7 @@ public class Armor extends EquipableItem {
 	public Emitter emitter() {
 		if (seal == null) return super.emitter();
 		Emitter emitter = new Emitter();
-		emitter.pos(ItemSpriteSheet.film.width(image)/2f + 2f, ItemSpriteSheet.film.height(image)/3f);
+		emitter.pos(ItemSpriteSheet.film.width(getImage())/2f + 2f, ItemSpriteSheet.film.height(getImage())/3f);
 		emitter.fillTarget = false;
 		emitter.pour(Speck.factory( Speck.RED_LIGHT ), 0.6f);
 		return emitter;
@@ -557,7 +557,7 @@ public class Armor extends EquipableItem {
 		float effectRoll = Random.Float();
 		if (effectRoll < 0.3f * ParchmentScrap.curseChanceMultiplier()) {
 			inscribe(Glyph.randomCurse());
-			cursed = true;
+			setCursed(true);
 		} else if (effectRoll >= 1f - (0.15f * ParchmentScrap.enchantChanceMultiplier())){
 			inscribe();
 		}
@@ -592,10 +592,10 @@ public class Armor extends EquipableItem {
 		if (hasGoodGlyph()) {
 			price *= 1.5;
 		}
-		if (cursedKnown && (cursed || hasCurseGlyph())) {
+		if (isCursedKnown() && (isCursed() || hasCurseGlyph())) {
 			price /= 2;
 		}
-		if (levelKnown && level() > 0) {
+		if (isLevelKnown() && level() > 0) {
 			price *= (level() + 1);
 		}
 		if (price < 1) {
@@ -639,7 +639,7 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public ItemSprite.Glowing glowing() {
-		return glyph != null && (cursedKnown || !glyph.curse()) ? glyph.glowing() : null;
+		return glyph != null && (isCursedKnown() || !glyph.curse()) ? glyph.glowing() : null;
 	}
 	
 	public static abstract class Glyph implements Bundlable {

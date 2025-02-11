@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public abstract class InventoryStone extends Runestone {
 	
 	{
-		defaultAction = AC_USE;
+		setDefaultAction(AC_USE);
 	}
 	
 	public static final String AC_USE	= "USE";

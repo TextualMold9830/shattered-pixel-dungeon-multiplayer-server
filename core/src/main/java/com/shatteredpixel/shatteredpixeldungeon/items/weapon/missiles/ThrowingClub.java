@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ThrowingClub extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.THROWING_CLUB;
+		setImage(ItemSpriteSheet.THROWING_CLUB);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1.1f;
 		

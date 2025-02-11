@@ -30,7 +30,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfForesight extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_FORESIGHT;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_FORESIGHT);
 	}
 	
 	@Override

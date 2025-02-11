@@ -41,7 +41,7 @@ import com.watabou.utils.Random;
 public class WandOfMagicMissile extends DamageWand {
 
 	{
-		image = ItemSpriteSheet.WAND_MAGIC_MISSILE;
+		setImage(ItemSpriteSheet.WAND_MAGIC_MISSILE);
 	}
 
 	public int min(int lvl){

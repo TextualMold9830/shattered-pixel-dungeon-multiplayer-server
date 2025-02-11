@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfAccuracy extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_ACCURACY;
+		setIcon(ItemSpriteSheet.Icons.RING_ACCURACY);
 	}
 	
 	public String statsInfo() {

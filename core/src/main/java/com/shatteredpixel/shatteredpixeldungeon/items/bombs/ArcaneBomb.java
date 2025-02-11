@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class ArcaneBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.ARCANE_BOMB;
+		setImage(ItemSpriteSheet.ARCANE_BOMB);
 	}
 	
 	@Override
@@ -93,6 +93,6 @@ public class ArcaneBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

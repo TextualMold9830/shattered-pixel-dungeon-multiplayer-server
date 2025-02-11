@@ -35,7 +35,7 @@ import com.watabou.noosa.audio.Sample;
 public class StoneOfFear extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_FEAR;
+		setImage(ItemSpriteSheet.STONE_FEAR);
 	}
 	
 	@Override

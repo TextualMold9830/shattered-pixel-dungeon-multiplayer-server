@@ -70,14 +70,14 @@ import java.util.HashMap;
 public class SandalsOfNature extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_SANDALS;
+		setImage(ItemSpriteSheet.ARTIFACT_SANDALS);
 
 		levelCap = 3;
 
 		charge = 0;
 		chargeCap = 100;
 
-		defaultAction = AC_ROOT;
+		setDefaultAction(AC_ROOT);
 	}
 
 	public static final String AC_FEED = "FEED";
@@ -124,11 +124,11 @@ public class SandalsOfNature extends Artifact {
 		if (hero.buff(MagicImmune.class) != null){
 			return actions;
 		}
-		if (isEquipped( hero ) && !cursed) {
+		if (isEquipped( hero ) && !isCursed()) {
 			actions.add(AC_FEED);
 		}
 		if (isEquipped( hero )
-				&& !cursed
+				&& !isCursed()
 				&& curSeedEffect != null
 				&& charge >= seedChargeReqs.get(curSeedEffect)) {
 			actions.add(AC_ROOT);
@@ -146,7 +146,7 @@ public class SandalsOfNature extends Artifact {
 
 			GameScene.selectItem(itemSelector);
 
-		} else if (action.equals(AC_ROOT) && !cursed){
+		} else if (action.equals(AC_ROOT) && !isCursed()){
 
 			if (!isEquipped( hero ))                                GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (curSeedEffect == null)                         GLog.i( Messages.get(this, "no_effect") );
@@ -164,7 +164,7 @@ public class SandalsOfNature extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 		if (charge < chargeCap) {
 			partialCharge += 2*amount;
 			while (partialCharge >= 1f){
@@ -200,7 +200,7 @@ public class SandalsOfNature extends Artifact {
 		if ( isEquipped ( Dungeon.hero ) ) {
 			desc += "\n\n";
 
-			if (!cursed) {
+			if (!isCursed()) {
 				desc += Messages.get(this, "desc_hint");
 			} else {
 				desc += Messages.get(this, "desc_cursed");
@@ -223,10 +223,10 @@ public class SandalsOfNature extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		if (level() < 0)        image = ItemSpriteSheet.ARTIFACT_SANDALS;
-		else if (level() == 0)  image = ItemSpriteSheet.ARTIFACT_SHOES;
-		else if (level() == 1)  image = ItemSpriteSheet.ARTIFACT_BOOTS;
-		else if (level() >= 2)  image = ItemSpriteSheet.ARTIFACT_GREAVES;
+		if (level() < 0)        setImage(ItemSpriteSheet.ARTIFACT_SANDALS);
+		else if (level() == 0)  setImage(ItemSpriteSheet.ARTIFACT_SHOES);
+		else if (level() == 1)  setImage(ItemSpriteSheet.ARTIFACT_BOOTS);
+		else if (level() >= 2)  setImage(ItemSpriteSheet.ARTIFACT_GREAVES);
 		return super.upgrade();
 	}
 
@@ -254,9 +254,9 @@ public class SandalsOfNature extends Artifact {
 		}
 		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
 
-		if (level() == 1)  image = ItemSpriteSheet.ARTIFACT_SHOES;
-		else if (level() == 2)  image = ItemSpriteSheet.ARTIFACT_BOOTS;
-		else if (level() >= 3)  image = ItemSpriteSheet.ARTIFACT_GREAVES;
+		if (level() == 1)  setImage(ItemSpriteSheet.ARTIFACT_SHOES);
+		else if (level() == 2)  setImage(ItemSpriteSheet.ARTIFACT_BOOTS);
+		else if (level() >= 3)  setImage(ItemSpriteSheet.ARTIFACT_GREAVES);
 	}
 
 	public class Naturalism extends ArtifactBuff{

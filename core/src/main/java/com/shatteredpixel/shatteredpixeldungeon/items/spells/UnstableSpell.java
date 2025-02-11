@@ -49,7 +49,7 @@ import java.util.HashSet;
 public class UnstableSpell extends Spell {
 
 	{
-		image = ItemSpriteSheet.UNSTABLE_SPELL;
+		setImage(ItemSpriteSheet.UNSTABLE_SPELL);
 	}
 	
 	private static HashMap<Class<? extends Scroll>, Float> scrollChances = new HashMap<>();
@@ -119,12 +119,12 @@ public class UnstableSpell extends Spell {
 	//lower values, as it's cheaper to make
 	@Override
 	public int value() {
-		return 40 * quantity;
+		return 40 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 8 * quantity;
+		return 8 * getQuantity();
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {

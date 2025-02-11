@@ -84,14 +84,14 @@ import java.util.ArrayList;
 public class DriedRose extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_ROSE1;
+		setImage(ItemSpriteSheet.ARTIFACT_ROSE1);
 
 		levelCap = 10;
 
 		charge = 100;
 		chargeCap = 100;
 
-		defaultAction = AC_SUMMON;
+		setDefaultAction(AC_SUMMON);
 	}
 
 	private boolean talkedTo = false;
@@ -117,7 +117,7 @@ public class DriedRose extends Artifact {
 		}
 		if (isEquipped( hero )
 				&& charge == chargeCap
-				&& !cursed
+				&& !isCursed()
 				&& hero.buff(MagicImmune.class) == null
 				&& ghostID == 0) {
 			actions.add(AC_SUMMON);
@@ -125,7 +125,7 @@ public class DriedRose extends Artifact {
 		if (ghostID != 0){
 			actions.add(AC_DIRECT);
 		}
-		if (isIdentified() && !cursed){
+		if (isIdentified() && !isCursed()){
 			actions.add(AC_OUTFIT);
 		}
 		
@@ -154,7 +154,7 @@ public class DriedRose extends Artifact {
 			else if (ghost != null)         GLog.i( Messages.get(this, "spawned") );
 			else if (!isEquipped( hero ))   GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (charge != chargeCap)   GLog.i( Messages.get(this, "no_charge") );
-			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
+			else if (isCursed())                GLog.i( Messages.get(this, "cursed") );
 			else {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
 				for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
@@ -232,7 +232,7 @@ public class DriedRose extends Artifact {
 		String desc = super.desc();
 
 		if (isEquipped( Dungeon.hero )){
-			if (!cursed){
+			if (!isCursed()){
 
 				if (level() < levelCap)
 					desc+= "\n\n" + Messages.get(this, "desc_hint");
@@ -300,7 +300,7 @@ public class DriedRose extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 
 		if (ghost == null){
 			if (charge < chargeCap) {
@@ -327,9 +327,9 @@ public class DriedRose extends Artifact {
 	@Override
 	public Item upgrade() {
 		if (level() >= 9)
-			image = ItemSpriteSheet.ARTIFACT_ROSE3;
+			setImage(ItemSpriteSheet.ARTIFACT_ROSE3);
 		else if (level() >= 4)
-			image = ItemSpriteSheet.ARTIFACT_ROSE2;
+			setImage(ItemSpriteSheet.ARTIFACT_ROSE2);
 
 		//For upgrade transferring via well of transmutation
 		droppedPetals = Math.max( level(), droppedPetals );
@@ -481,10 +481,10 @@ public class DriedRose extends Artifact {
 	public static class Petal extends Item {
 
 		{
-			stackable = true;
+			setStackable(true);
 			dropsDownHeap = true;
 			
-			image = ItemSpriteSheet.PETAL;
+			setImage(ItemSpriteSheet.PETAL);
 		}
 
 		@Override
@@ -929,7 +929,7 @@ public class DriedRose extends Artifact {
 								} else if (!item.isIdentified()) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
 									hide();
-								} else if (item.cursed) {
+								} else if (item.isCursed()) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
 									hide();
 								} else if (((MeleeWeapon)item).STRReq() > rose.ghostStrength()) {
@@ -1004,7 +1004,7 @@ public class DriedRose extends Artifact {
 								} else if (!item.isIdentified()) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
 									hide();
-								} else if (item.cursed) {
+								} else if (item.isCursed()) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
 									hide();
 								} else if (((Armor)item).STRReq() > rose.ghostStrength()) {

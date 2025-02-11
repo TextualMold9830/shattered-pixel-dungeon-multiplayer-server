@@ -321,7 +321,7 @@ public class Wandmaker extends NPC {
 
 				given = false;
 				wand1 = (Wand) Generator.random(Generator.Category.WAND);
-				wand1.cursed = false;
+				wand1.setCursed(false);
 				wand1.upgrade();
 
 				wand2 = (Wand) Generator.random(Generator.Category.WAND);
@@ -333,7 +333,7 @@ public class Wandmaker extends NPC {
 				for (Item i :toUndo){
 					Generator.undoDrop(i);
 				}
-				wand2.cursed = false;
+				wand2.setCursed(false);
 				wand2.upgrade();
 				
 			}

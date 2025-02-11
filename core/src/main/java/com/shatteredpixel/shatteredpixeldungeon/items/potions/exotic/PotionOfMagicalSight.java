@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionOfMagicalSight extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_MAGISIGHT;
+		setIcon(ItemSpriteSheet.Icons.POTION_MAGISIGHT);
 	}
 	
 	@Override

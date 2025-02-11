@@ -41,7 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class ScrollOfUpgrade extends InventoryScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_UPGRADE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_UPGRADE);
 		preferredBag = Belongings.Backpack.class;
 
 		unique = true;
@@ -65,16 +65,16 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		//...yes this is rather messy
 		if (item instanceof Weapon){
 			Weapon w = (Weapon) item;
-			boolean wasCursed = w.cursed;
+			boolean wasCursed = w.isCursed();
 			boolean wasHardened = w.enchantHardened;
 			boolean hadCursedEnchant = w.hasCurseEnchant();
 			boolean hadGoodEnchant = w.hasGoodEnchant();
 
 			w.upgrade();
 
-			if (w.cursedKnown && hadCursedEnchant && !w.hasCurseEnchant()){
+			if (w.isCursedKnown() && hadCursedEnchant && !w.hasCurseEnchant()){
 				removeCurse( Dungeon.hero );
-			} else if (w.cursedKnown && wasCursed && !w.cursed){
+			} else if (w.isCursedKnown() && wasCursed && !w.isCursed()){
 				weakenCurse( Dungeon.hero );
 			}
 			if (wasHardened && !w.enchantHardened){
@@ -85,16 +85,16 @@ public class ScrollOfUpgrade extends InventoryScroll {
 
 		} else if (item instanceof Armor){
 			Armor a = (Armor) item;
-			boolean wasCursed = a.cursed;
+			boolean wasCursed = a.isCursed();
 			boolean wasHardened = a.glyphHardened;
 			boolean hadCursedGlyph = a.hasCurseGlyph();
 			boolean hadGoodGlyph = a.hasGoodGlyph();
 
 			a.upgrade();
 
-			if (a.cursedKnown && hadCursedGlyph && !a.hasCurseGlyph()){
+			if (a.isCursedKnown() && hadCursedGlyph && !a.hasCurseGlyph()){
 				removeCurse( Dungeon.hero );
-			} else if (a.cursedKnown && wasCursed && !a.cursed){
+			} else if (a.isCursedKnown() && wasCursed && !a.isCursed()){
 				weakenCurse( Dungeon.hero );
 			}
 			if (wasHardened && !a.glyphHardened){
@@ -104,11 +104,11 @@ public class ScrollOfUpgrade extends InventoryScroll {
 			}
 
 		} else if (item instanceof Wand || item instanceof Ring) {
-			boolean wasCursed = item.cursed;
+			boolean wasCursed = item.isCursed();
 
 			item.upgrade();
 
-			if (item.cursedKnown && wasCursed && !item.cursed){
+			if (item.isCursedKnown() && wasCursed && !item.isCursed()){
 				removeCurse( Dungeon.hero );
 			}
 
@@ -137,11 +137,11 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 50 * quantity : super.value();
+		return isKnown() ? 50 * getQuantity() : super.value();
 	}
 
 	@Override
 	public int energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+		return isKnown() ? 10 * getQuantity() : super.energyVal();
 	}
 }

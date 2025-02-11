@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class ShrapnelBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.SHRAPNEL_BOMB;
+		setImage(ItemSpriteSheet.SHRAPNEL_BOMB);
 	}
 	
 	@Override
@@ -80,6 +80,6 @@ public class ShrapnelBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 50);
+		return getQuantity() * (20 + 50);
 	}
 }

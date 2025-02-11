@@ -156,7 +156,7 @@ public class CrystalMimic extends Mimic {
 		if (item != null && !item.unique && item.level() < 1 ) {
 
 			GLog.w( Messages.get(this, "ate", item.name()) );
-			if (!item.stackable) {
+			if (!item.isStackable()) {
 				Dungeon.quickslot.convertToPlaceholder(item);
 			}
 			item.updateQuickslot();
@@ -177,8 +177,8 @@ public class CrystalMimic extends Mimic {
 	protected void generatePrize( boolean useDecks ) {
 		//Crystal mimic already contains a prize item. Just guarantee it isn't cursed.
 		for (Item i : items){
-			i.cursed = false;
-			i.cursedKnown = true;
+			i.setCursed(false);
+			i.setCursedKnown(true);
 		}
 	}
 

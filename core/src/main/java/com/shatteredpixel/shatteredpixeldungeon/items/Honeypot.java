@@ -43,12 +43,12 @@ public class Honeypot extends Item {
 	public static final String AC_SHATTER	= "SHATTER";
 	
 	{
-		image = ItemSpriteSheet.HONEYPOT;
+		setImage(ItemSpriteSheet.HONEYPOT);
 
-		defaultAction = AC_THROW;
-		usesTargeting = true;
+		setDefaultAction(AC_THROW);
+		setUsesTargeting(true);
 
-		stackable = true;
+		setStackable(true);
 	}
 	
 	@Override
@@ -144,15 +144,15 @@ public class Honeypot extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	//The bee's broken 'home', all this item does is let its bee know where it is, and who owns it (if anyone).
 	public static class ShatteredPot extends Item {
 
 		{
-			image = ItemSpriteSheet.SHATTPOT;
-			stackable = true;
+			setImage(ItemSpriteSheet.SHATTPOT);
+			setStackable(true);
 		}
 
 		@Override
@@ -212,7 +212,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if (bees.size() >= getQuantity()) {
 						break;
 					}
 				}
@@ -227,7 +227,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.id()){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if (bees.size() >= getQuantity()) {
 						break;
 					}
 				}
@@ -248,7 +248,7 @@ public class Honeypot extends Item {
 		
 		@Override
 		public int value() {
-			return 5 * quantity;
+			return 5 * getQuantity();
 		}
 	}
 }

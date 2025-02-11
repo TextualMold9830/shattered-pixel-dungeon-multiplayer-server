@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class MossyClump extends Trinket {
 
 	{
-		image = ItemSpriteSheet.MOSSY_CLUMP;
+		setImage(ItemSpriteSheet.MOSSY_CLUMP);
 	}
 
 	@Override

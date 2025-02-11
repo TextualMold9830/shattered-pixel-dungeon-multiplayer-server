@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class PotionOfHaste extends Potion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_HASTE;
+		setIcon(ItemSpriteSheet.Icons.POTION_HASTE);
 	}
 	
 	@Override
@@ -46,6 +46,6 @@ public class PotionOfHaste extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

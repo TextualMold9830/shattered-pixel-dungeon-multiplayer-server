@@ -51,13 +51,13 @@ import java.util.ArrayList;
 abstract public class MissileWeapon extends Weapon {
 
 	{
-		stackable = true;
-		levelKnown = true;
+		setStackable(true);
+		setLevelKnown(true);
 		
 		bones = true;
 
-		defaultAction = AC_THROW;
-		usesTargeting = true;
+		setDefaultAction(AC_THROW);
+		setUsesTargeting(true);
 	}
 	
 	protected boolean sticky = true;
@@ -113,7 +113,7 @@ abstract public class MissileWeapon extends Weapon {
 	public Item upgrade() {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
-			if (quantity > 1) {
+			if (getQuantity() > 1) {
 				MissileWeapon upgraded = (MissileWeapon) split(1);
 				upgraded.parent = null;
 				
@@ -263,16 +263,16 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	public Item random() {
-		if (!stackable) return this;
+		if (!isStackable()) return this;
 		
 		//2: 66.67% (2/3)
 		//3: 26.67% (4/15)
 		//4: 6.67%  (1/15)
-		quantity = 2;
+		setQuantity(2);
 		if (Random.Int(3) == 0) {
-			quantity++;
+			setQuantity(getQuantity() + 1);
 			if (Random.Int(5) == 0) {
-				quantity++;
+				setQuantity(getQuantity() + 1);
 			}
 		}
 		return this;
@@ -280,7 +280,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	public String status() {
 		//show quantity even when it is 1
-		return Integer.toString( quantity );
+		return Integer.toString(getQuantity());
 	}
 	
 	@Override
@@ -405,7 +405,7 @@ abstract public class MissileWeapon extends Weapon {
 			durability += ((MissileWeapon)other).durability;
 			durability -= MAX_DURABILITY;
 			while (durability <= 0){
-				quantity -= 1;
+				setQuantity(getQuantity() - 1);
 				durability += MAX_DURABILITY;
 			}
 		}
@@ -457,16 +457,16 @@ abstract public class MissileWeapon extends Weapon {
 			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
 		}
 
-		if (enchantment != null && (cursedKnown || !enchantment.curse())){
+		if (enchantment != null && (isCursedKnown() || !enchantment.curse())){
 			info += "\n\n" + Messages.get(Weapon.class, "enchanted", enchantment.name());
 			info += " " + Messages.get(enchantment, "desc");
 		}
 
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (isCursed() && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
-		} else if (cursedKnown && cursed) {
+		} else if (isCursedKnown() && isCursed()) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
 		}
 
@@ -488,7 +488,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	public int value() {
-		return 6 * tier * quantity * (level() + 1);
+		return 6 * tier * getQuantity() * (level() + 1);
 	}
 	
 	private static final String DURABILITY = "durability";
@@ -512,7 +512,7 @@ abstract public class MissileWeapon extends Weapon {
 	public static class PlaceHolder extends MissileWeapon {
 
 		{
-			image = ItemSpriteSheet.MISSILE_HOLDER;
+			setImage(ItemSpriteSheet.MISSILE_HOLDER);
 		}
 
 		@Override

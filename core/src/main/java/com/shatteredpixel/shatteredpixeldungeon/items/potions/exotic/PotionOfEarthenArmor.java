@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionOfEarthenArmor extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_EARTHARMR;
+		setIcon(ItemSpriteSheet.Icons.POTION_EARTHARMR);
 	}
 	
 	@Override

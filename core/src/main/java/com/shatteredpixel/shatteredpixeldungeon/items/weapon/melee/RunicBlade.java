@@ -39,7 +39,7 @@ import com.watabou.utils.Callback;
 public class RunicBlade extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.RUNIC_BLADE;
+		setImage(ItemSpriteSheet.RUNIC_BLADE);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -105,7 +105,7 @@ public class RunicBlade extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 300+50*buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 300);

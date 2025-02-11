@@ -44,7 +44,7 @@ import java.util.ArrayList;
 public class RegrowthBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.REGROWTH_BOMB;
+		setImage(ItemSpriteSheet.REGROWTH_BOMB);
 	}
 	
 	@Override
@@ -113,6 +113,6 @@ public class RegrowthBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

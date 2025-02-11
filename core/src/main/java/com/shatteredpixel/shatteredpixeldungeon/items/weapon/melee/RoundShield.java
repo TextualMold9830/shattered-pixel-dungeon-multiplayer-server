@@ -36,7 +36,7 @@ import com.watabou.utils.Bundle;
 public class RoundShield extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.ROUND_SHIELD;
+		setImage(ItemSpriteSheet.ROUND_SHIELD);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 
@@ -69,7 +69,7 @@ public class RoundShield extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 5+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 5);

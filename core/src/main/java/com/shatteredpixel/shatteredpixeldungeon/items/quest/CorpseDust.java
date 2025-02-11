@@ -44,10 +44,10 @@ import java.util.ArrayList;
 public class CorpseDust extends Item {
 	
 	{
-		image = ItemSpriteSheet.DUST;
+		setImage(ItemSpriteSheet.DUST);
 		
-		cursed = true;
-		cursedKnown = true;
+		setCursed(true);
+		setCursedKnown(true);
 		
 		unique = true;
 	}

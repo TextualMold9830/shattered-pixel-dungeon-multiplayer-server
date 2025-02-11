@@ -66,7 +66,7 @@ public class Statue extends Mob {
 			weapon = (MeleeWeapon) Generator.randomUsingDefaults(Generator.Category.WEAPON);
 		}
 		levelGenStatue = useDecks;
-		weapon.cursed = false;
+		weapon.setCursed(false);
 		weapon.enchant( Enchantment.random() );
 	}
 	

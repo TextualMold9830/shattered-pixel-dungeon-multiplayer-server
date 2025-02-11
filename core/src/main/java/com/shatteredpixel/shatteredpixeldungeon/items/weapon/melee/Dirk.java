@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Dirk extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.DIRK;
+		setImage(ItemSpriteSheet.DIRK);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1f;
 
@@ -81,7 +81,7 @@ public class Dirk extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 2+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);

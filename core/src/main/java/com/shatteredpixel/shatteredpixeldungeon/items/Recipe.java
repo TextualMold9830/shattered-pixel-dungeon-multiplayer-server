@@ -256,12 +256,12 @@ public abstract class Recipe {
 	public static boolean usableInRecipe(Item item){
 		if (item instanceof EquipableItem){
 			//only thrown weapons and wands allowed among equipment items
-			return item.isIdentified() && !item.cursed && item instanceof MissileWeapon;
+			return item.isIdentified() && !item.isCursed() && item instanceof MissileWeapon;
 		} else if (item instanceof Wand) {
-			return item.isIdentified() && !item.cursed;
+			return item.isIdentified() && !item.isCursed();
 		} else {
 			//other items can be unidentified, but not cursed
-			return !item.cursed;
+			return !item.isCursed();
 		}
 	}
 }

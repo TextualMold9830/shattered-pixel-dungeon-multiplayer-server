@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class ScrollOfRetribution extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_RETRIB;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_RETRIB);
 	}
 	
 	@Override
@@ -83,6 +83,6 @@ public class ScrollOfRetribution extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

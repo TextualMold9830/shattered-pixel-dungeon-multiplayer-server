@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class WondrousResin extends Trinket {
 
 	{
-		image = ItemSpriteSheet.WONDROUS_RESIN;
+		setImage(ItemSpriteSheet.WONDROUS_RESIN);
 	}
 
 	@Override

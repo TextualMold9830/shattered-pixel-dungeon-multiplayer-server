@@ -34,7 +34,7 @@ import com.watabou.utils.PathFinder;
 public class BlizzardBrew extends Brew {
 	
 	{
-		image = ItemSpriteSheet.BREW_BLIZZARD;
+		setImage(ItemSpriteSheet.BREW_BLIZZARD);
 	}
 	
 	@Override

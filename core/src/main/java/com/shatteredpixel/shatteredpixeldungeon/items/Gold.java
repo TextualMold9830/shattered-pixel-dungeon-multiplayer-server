@@ -38,8 +38,8 @@ import java.util.ArrayList;
 public class Gold extends Item {
 
 	{
-		image = ItemSpriteSheet.GOLD;
-		stackable = true;
+		setImage(ItemSpriteSheet.GOLD);
+		setStackable(true);
 	}
 	
 	public Gold() {
@@ -47,7 +47,7 @@ public class Gold extends Item {
 	}
 	
 	public Gold( int value ) {
-		this.quantity = value;
+		this.setQuantity(value);
 	}
 	
 	@Override
@@ -58,12 +58,12 @@ public class Gold extends Item {
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
 		
-		Dungeon.gold += quantity;
-		Statistics.goldCollected += quantity;
+		Dungeon.gold += getQuantity();
+		Statistics.goldCollected += getQuantity();
 		Badges.validateGoldCollected();
 
 		GameScene.pickUp( this, pos );
-		hero.sprite.showStatusWithIcon( CharSprite.NEUTRAL, Integer.toString(quantity), FloatingText.GOLD );
+		hero.sprite.showStatusWithIcon( CharSprite.NEUTRAL, Integer.toString(getQuantity()), FloatingText.GOLD );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 		
 		Sample.INSTANCE.play( Assets.Sounds.GOLD, 1, 1, Random.Float( 0.9f, 1.1f ) );
@@ -84,7 +84,7 @@ public class Gold extends Item {
 	
 	@Override
 	public Item random() {
-		quantity = Random.IntRange( 30 + Dungeon.depth * 10, 60 + Dungeon.depth * 20 );
+		setQuantity(Random.IntRange( 30 + Dungeon.depth * 10, 60 + Dungeon.depth * 20 ));
 		return this;
 	}
 

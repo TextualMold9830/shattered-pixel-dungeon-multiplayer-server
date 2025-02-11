@@ -39,7 +39,7 @@ import com.watabou.utils.Bundle;
 public class Flail extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.FLAIL;
+		setImage(ItemSpriteSheet.FLAIL);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 0.8f;
 
@@ -126,8 +126,8 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 8 + 2*buffedLvl() : 8;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 8 + 2*buffedLvl() : 8;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));

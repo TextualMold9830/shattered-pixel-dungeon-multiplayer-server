@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class SupplyRation extends Food {
 
 	{
-		image = ItemSpriteSheet.SUPPLY_RATION;
+		setImage(ItemSpriteSheet.SUPPLY_RATION);
 		energy = 2*Hunger.HUNGRY/3f; //200 food value
 
 		bones = false;
@@ -69,7 +69,7 @@ public class SupplyRation extends Food {
 
 	@Override
 	public int value() {
-		return 10 * quantity;
+		return 10 * getQuantity();
 	}
 
 }

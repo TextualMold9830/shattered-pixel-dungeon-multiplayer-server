@@ -151,10 +151,10 @@ public class Blacksmith extends NPC {
 						tell(Messages.get(this, "blood_2"));
 					} else {
 						if (pick.isEquipped(Dungeon.hero)) {
-							boolean wasCursed = pick.cursed;
-							pick.cursed = false; //so that it can always be removed
+							boolean wasCursed = pick.isCursed();
+							pick.setCursed(false); //so that it can always be removed
 							pick.doUnequip(Dungeon.hero, false);
-							pick.cursed = wasCursed;
+							pick.setCursed(wasCursed);
 						}
 						pick.detach(Dungeon.hero.belongings.backpack);
 						Quest.pickaxe = pick;
@@ -174,10 +174,10 @@ public class Blacksmith extends NPC {
 						tell(Messages.get(this, "gold_2"));
 					} else {
 						if (pick.isEquipped(Dungeon.hero)) {
-							boolean wasCursed = pick.cursed;
-							pick.cursed = false; //so that it can always be removed
+							boolean wasCursed = pick.isCursed();
+							pick.setCursed(false); //so that it can always be removed
 							pick.doUnequip(Dungeon.hero, false);
-							pick.cursed = wasCursed;
+							pick.setCursed(wasCursed);
 						}
 						pick.detach(Dungeon.hero.belongings.backpack);
 						Quest.pickaxe = pick;
@@ -462,7 +462,7 @@ public class Blacksmith extends NPC {
 				} else if (i instanceof Armor){
 					((Armor) i).inscribe(null);
 				}
-				i.cursed = false;
+				i.setCursed(false);
 			}
 
 			// 30% base chance to be enchanted, stored separately so status isn't revealed early
@@ -514,10 +514,10 @@ public class Blacksmith extends NPC {
 
 			Pickaxe pick = Dungeon.hero.belongings.getItem(Pickaxe.class);
 			if (pick.isEquipped(Dungeon.hero)) {
-				boolean wasCursed = pick.cursed;
-				pick.cursed = false; //so that it can always be removed
+				boolean wasCursed = pick.isCursed();
+				pick.setCursed(false); //so that it can always be removed
 				pick.doUnequip(Dungeon.hero, false);
-				pick.cursed = wasCursed;
+				pick.setCursed(wasCursed);
 			}
 			pick.detach(Dungeon.hero.belongings.backpack);
 			Quest.pickaxe = pick;

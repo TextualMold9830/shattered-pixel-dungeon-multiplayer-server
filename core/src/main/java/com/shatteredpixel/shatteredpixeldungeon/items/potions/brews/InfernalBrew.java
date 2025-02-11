@@ -34,7 +34,7 @@ import com.watabou.utils.PathFinder;
 public class InfernalBrew extends Brew {
 	
 	{
-		image = ItemSpriteSheet.BREW_INFERNAL;
+		setImage(ItemSpriteSheet.BREW_INFERNAL);
 	}
 	
 	@Override

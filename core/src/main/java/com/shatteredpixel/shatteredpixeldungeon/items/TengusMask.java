@@ -45,10 +45,10 @@ public class TengusMask extends Item {
 	private static final String AC_WEAR	= "WEAR";
 	
 	{
-		stackable = false;
-		image = ItemSpriteSheet.MASK;
+		setStackable(false);
+		setImage(ItemSpriteSheet.MASK);
 
-		defaultAction = AC_WEAR;
+		setDefaultAction(AC_WEAR);
 
 		unique = true;
 	}

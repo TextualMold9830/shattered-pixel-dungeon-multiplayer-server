@@ -40,7 +40,7 @@ import com.watabou.utils.Random;
 public class ElixirOfAquaticRejuvenation extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_AQUA;
+		setImage(ItemSpriteSheet.ELIXIR_AQUA);
 	}
 	
 	@Override

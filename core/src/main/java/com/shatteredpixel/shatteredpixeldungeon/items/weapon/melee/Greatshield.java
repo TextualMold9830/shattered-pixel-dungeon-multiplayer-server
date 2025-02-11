@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Greatshield extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GREATSHIELD;
+		setImage(ItemSpriteSheet.GREATSHIELD);
 
 		tier = 5;
 	}
@@ -60,7 +60,7 @@ public class Greatshield extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 3+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 3);

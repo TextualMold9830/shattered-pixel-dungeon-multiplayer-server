@@ -31,7 +31,7 @@ import com.watabou.noosa.audio.Sample;
 public class CloakScrap extends RemainsItem {
 
 	{
-		image = ItemSpriteSheet.CLOAK_SCRAP;
+		setImage(ItemSpriteSheet.CLOAK_SCRAP);
 	}
 
 	@Override

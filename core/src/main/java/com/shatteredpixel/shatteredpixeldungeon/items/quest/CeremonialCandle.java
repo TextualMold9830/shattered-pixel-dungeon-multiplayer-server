@@ -51,12 +51,12 @@ public class CeremonialCandle extends Item {
 	public static int ritualPos;
 
 	{
-		image = ItemSpriteSheet.CANDLE;
+		setImage(ItemSpriteSheet.CANDLE);
 
-		defaultAction = AC_THROW;
+		setDefaultAction(AC_THROW);
 
 		unique = true;
-		stackable = true;
+		setStackable(true);
 	}
 
 	@Override

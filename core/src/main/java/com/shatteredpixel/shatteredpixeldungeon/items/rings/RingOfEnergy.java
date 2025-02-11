@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfEnergy extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_ENERGY;
+		setIcon(ItemSpriteSheet.Icons.RING_ENERGY);
 	}
 
 	public String statsInfo() {

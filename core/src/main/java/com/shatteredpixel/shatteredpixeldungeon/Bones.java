@@ -137,7 +137,7 @@ public class Bones {
 			//if there are few items, there is an increasingly high chance of leaving nothing
 			if (Random.Int(3) < items.size()) {
 				item = Random.element(items);
-				if (item.stackable){
+				if (item.isStackable()){
 					item.quantity(Random.NormalIntRange(1, (item.quantity() + 1) / 2));
 					if (item.quantity() > 3){
 						item.quantity(3);
@@ -208,8 +208,8 @@ public class Bones {
 						Artifact artifact = Reflection.newInstance(((Artifact)item).getClass());
 						
 						if (artifact != null){
-							artifact.cursed = true;
-							artifact.cursedKnown = true;
+							artifact.setCursed(true);
+							artifact.setCursedKnown(true);
 						}
 
 						item = artifact;
@@ -221,8 +221,8 @@ public class Bones {
 
 				if (item != null) {
 					if (item.isUpgradable() && !(item instanceof MissileWeapon)) {
-						item.cursed = true;
-						item.cursedKnown = true;
+						item.setCursed(true);
+						item.setCursedKnown(true);
 					}
 
 					if (item.isUpgradable()) {
@@ -231,7 +231,7 @@ public class Bones {
 							item.degrade(item.level() - 3);
 						}
 						//thrown weapons are always IDed, otherwise set unknown
-						item.levelKnown = item instanceof MissileWeapon;
+						item.setLevelKnown(item instanceof MissileWeapon);
 					}
 
 					item.reset();

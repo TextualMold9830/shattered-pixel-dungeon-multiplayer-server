@@ -36,7 +36,7 @@ import com.watabou.noosa.particles.Emitter;
 public class ScrollOfRecharging extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_RECHARGE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_RECHARGE);
 	}
 
 	@Override
@@ -65,6 +65,6 @@ public class ScrollOfRecharging extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

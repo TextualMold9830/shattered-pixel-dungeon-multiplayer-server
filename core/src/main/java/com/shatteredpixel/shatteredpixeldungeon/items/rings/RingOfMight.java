@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfMight extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_MIGHT;
+		setIcon(ItemSpriteSheet.Icons.RING_MIGHT);
 	}
 
 	@Override

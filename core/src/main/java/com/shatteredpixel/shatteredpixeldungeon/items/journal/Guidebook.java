@@ -39,7 +39,7 @@ import com.watabou.noosa.audio.Sample;
 public class Guidebook extends Item {
 
 	{
-		image = ItemSpriteSheet.MASTERY;
+		setImage(ItemSpriteSheet.MASTERY);
 	}
 
 	@Override

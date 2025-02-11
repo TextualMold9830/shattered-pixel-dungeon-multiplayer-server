@@ -50,7 +50,7 @@ public class Stormvine extends Plant {
 
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_STORMVINE;
+			setImage(ItemSpriteSheet.SEED_STORMVINE);
 
 			plantClass = Stormvine.class;
 		}

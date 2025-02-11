@@ -59,10 +59,10 @@ public class SpiritBow extends Weapon {
 	public static final String AC_SHOOT		= "SHOOT";
 	
 	{
-		image = ItemSpriteSheet.SPIRIT_BOW;
+		setImage(ItemSpriteSheet.SPIRIT_BOW);
 		
-		defaultAction = AC_SHOOT;
-		usesTargeting = true;
+		setDefaultAction(AC_SHOOT);
+		setUsesTargeting(true);
 		
 		unique = true;
 		bones = false;
@@ -158,7 +158,7 @@ public class SpiritBow extends Weapon {
 			case NONE:
 		}
 
-		if (enchantment != null && (cursedKnown || !enchantment.curse())){
+		if (enchantment != null && (isCursedKnown() || !enchantment.curse())){
 			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
 			if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
 			info += " " + enchantment.desc();
@@ -166,11 +166,11 @@ public class SpiritBow extends Weapon {
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
 		
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (isCursed() && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
-		} else if (cursedKnown && cursed) {
+		} else if (isCursedKnown() && isCursed()) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
 		}
 		
@@ -292,7 +292,7 @@ public class SpiritBow extends Weapon {
 	public class SpiritArrow extends MissileWeapon {
 		
 		{
-			image = ItemSpriteSheet.SPIRIT_ARROW;
+			setImage(ItemSpriteSheet.SPIRIT_ARROW);
 
 			hitSound = Assets.Sounds.HIT_ARROW;
 		}

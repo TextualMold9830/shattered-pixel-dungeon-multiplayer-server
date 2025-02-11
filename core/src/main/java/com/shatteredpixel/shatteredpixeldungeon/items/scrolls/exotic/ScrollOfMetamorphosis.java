@@ -49,7 +49,7 @@ import java.util.Set;
 public class ScrollOfMetamorphosis extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_METAMORPH;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_METAMORPH);
 
 		talentFactor = 2f;
 	}

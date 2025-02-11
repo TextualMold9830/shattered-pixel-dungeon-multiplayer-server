@@ -54,7 +54,7 @@ public class ArmoredStatue extends Statue {
 		super.createWeapon(useDecks);
 
 		armor = Generator.randomArmor();
-		armor.cursed = false;
+		armor.setCursed(false);
 		armor.inscribe(Armor.Glyph.random());
 	}
 

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class GoldenKey extends Key {
 	
 	{
-		image = ItemSpriteSheet.GOLDEN_KEY;
+		setImage(ItemSpriteSheet.GOLDEN_KEY);
 	}
 
 	public GoldenKey() {

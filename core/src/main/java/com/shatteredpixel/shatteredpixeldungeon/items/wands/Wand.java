@@ -91,8 +91,8 @@ public abstract class Wand extends Item {
 	protected int collisionProperties = Ballistica.MAGIC_BOLT;
 	
 	{
-		defaultAction = AC_ZAP;
-		usesTargeting = true;
+		setDefaultAction(AC_ZAP);
+		setUsesTargeting(true);
 		bones = true;
 	}
 	
@@ -259,9 +259,9 @@ public abstract class Wand extends Item {
 			desc += "\n\n" + Messages.get(Wand.class, "resin_many", resinBonus);
 		}
 
-		if (cursed && cursedKnown) {
+		if (isCursed() && isCursedKnown()) {
 			desc += "\n\n" + Messages.get(Wand.class, "cursed");
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			desc += "\n\n" + Messages.get(Wand.class, "not_cursed");
 		}
 
@@ -283,7 +283,7 @@ public abstract class Wand extends Item {
 	
 	@Override
 	public String status() {
-		if (levelKnown) {
+		if (isLevelKnown()) {
 			return (curChargeKnown ? curCharges : "?") + "/" + maxCharges;
 		} else {
 			return null;
@@ -292,7 +292,7 @@ public abstract class Wand extends Item {
 	
 	@Override
 	public int level() {
-		if (!cursed && curseInfusionBonus){
+		if (!isCursed() && curseInfusionBonus){
 			curseInfusionBonus = false;
 			updateLevel();
 		}
@@ -308,7 +308,7 @@ public abstract class Wand extends Item {
 		super.upgrade();
 
 		if (Random.Int(3) == 0) {
-			cursed = false;
+			setCursed(false);
 		}
 
 		if (resinBonus > 0){
@@ -423,7 +423,7 @@ public abstract class Wand extends Item {
 			}
 		}
 		
-		curCharges -= cursed ? 1 : chargesPerCast();
+		curCharges -= isCursed() ? 1 : chargesPerCast();
 
 		//remove magic charge at a higher priority, if we are benefiting from it are and not the
 		//wand that just applied it
@@ -477,7 +477,7 @@ public abstract class Wand extends Item {
 		
 		//30% chance to be cursed
 		if (Random.Float() < 0.3f) {
-			cursed = true;
+			setCursed(true);
 		}
 
 		return this;
@@ -493,10 +493,10 @@ public abstract class Wand extends Item {
 	@Override
 	public int value() {
 		int price = 75;
-		if (cursed && cursedKnown) {
+		if (isCursed() && isCursedKnown()) {
 			price /= 2;
 		}
-		if (levelKnown) {
+		if (isLevelKnown()) {
 			if (level() > 0) {
 				price *= (level() + 1);
 			} else if (level() < 0) {
@@ -552,14 +552,14 @@ public abstract class Wand extends Item {
 	}
 
 	public int collisionProperties(int target){
-		if (cursed)     return Ballistica.MAGIC_BOLT;
+		if (isCursed())     return Ballistica.MAGIC_BOLT;
 		else            return collisionProperties;
 	}
 
 	public static class PlaceHolder extends Wand {
 
 		{
-			image = ItemSpriteSheet.WAND_HOLDER;
+			setImage(ItemSpriteSheet.WAND_HOLDER);
 		}
 
 		@Override
@@ -667,8 +667,8 @@ public abstract class Wand extends Item {
 						}
 					}
 					
-					if (curWand.cursed){
-						if (!curWand.cursedKnown){
+					if (curWand.isCursed()){
+						if (!curWand.isCursedKnown()){
 							GLog.n(Messages.get(Wand.class, "curse_discover", curWand.name()));
 						}
 						CursedWand.cursedZap(curWand,
@@ -700,7 +700,7 @@ public abstract class Wand extends Item {
 						});
 
 					}
-					curWand.cursedKnown = true;
+					curWand.setCursedKnown(true);
 					
 				}
 				

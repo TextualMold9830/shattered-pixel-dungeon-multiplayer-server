@@ -33,7 +33,7 @@ import com.watabou.noosa.audio.Sample;
 public class ElixirOfDragonsBlood extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_DRAGON;
+		setImage(ItemSpriteSheet.ELIXIR_DRAGON);
 	}
 	
 	@Override

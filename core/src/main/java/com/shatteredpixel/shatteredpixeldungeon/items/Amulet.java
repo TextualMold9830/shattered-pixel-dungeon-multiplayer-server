@@ -42,7 +42,7 @@ public class Amulet extends Item {
 	private static final String AC_END = "END";
 	
 	{
-		image = ItemSpriteSheet.AMULET;
+		setImage(ItemSpriteSheet.AMULET);
 		
 		unique = true;
 	}

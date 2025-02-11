@@ -38,7 +38,7 @@ import com.watabou.noosa.audio.Sample;
 public class ElixirOfHoneyedHealing extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_HONEY;
+		setImage(ItemSpriteSheet.ELIXIR_HONEY);
 	}
 	
 	@Override

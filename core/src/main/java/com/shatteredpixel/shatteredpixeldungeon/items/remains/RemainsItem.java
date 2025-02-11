@@ -33,7 +33,7 @@ public abstract class RemainsItem extends Item {
 	{
 		bones = false;
 
-		defaultAction = AC_USE;
+		setDefaultAction(AC_USE);
 	}
 
 	public static final String AC_USE =  "USE";

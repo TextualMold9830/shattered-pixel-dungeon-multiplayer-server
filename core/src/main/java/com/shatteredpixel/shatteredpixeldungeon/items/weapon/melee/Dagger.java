@@ -43,7 +43,7 @@ import com.watabou.utils.PathFinder;
 public class Dagger extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.DAGGER;
+		setImage(ItemSpriteSheet.DAGGER);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1.1f;
 
@@ -95,7 +95,7 @@ public class Dagger extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 2+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);

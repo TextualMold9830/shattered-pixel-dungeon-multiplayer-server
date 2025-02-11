@@ -116,7 +116,7 @@ public class Artifact extends KindofMisc {
 
 	@Override
 	public int visiblyUpgraded() {
-		return levelKnown ? Math.round((level()*10)/(float)levelCap): 0;
+		return isLevelKnown() ? Math.round((level()*10)/(float)levelCap): 0;
 	}
 
 	@Override
@@ -137,10 +137,10 @@ public class Artifact extends KindofMisc {
 
 	@Override
 	public String info() {
-		if (cursed && cursedKnown && !isEquipped( Dungeon.hero )) {
+		if (isCursed() && isCursedKnown() && !isEquipped( Dungeon.hero )) {
 			return desc() + "\n\n" + Messages.get(Artifact.class, "curse_known");
 			
-		} else if (!isIdentified() && cursedKnown && !isEquipped( Dungeon.hero)) {
+		} else if (!isIdentified() && isCursedKnown() && !isEquipped( Dungeon.hero)) {
 			return desc()+ "\n\n" + Messages.get(Artifact.class, "not_cursed");
 			
 		} else {
@@ -153,7 +153,7 @@ public class Artifact extends KindofMisc {
 	public String status() {
 		
 		//if the artifact isn't IDed, or is cursed, don't display anything
-		if (!isIdentified() || cursed){
+		if (!isIdentified() || isCursed()){
 			return null;
 		}
 
@@ -184,7 +184,7 @@ public class Artifact extends KindofMisc {
 		
 		//30% chance to be cursed
 		if (Random.Float() < 0.3f) {
-			cursed = true;
+			setCursed(true);
 		}
 		return this;
 	}
@@ -194,7 +194,7 @@ public class Artifact extends KindofMisc {
 		int price = 100;
 		if (level() > 0)
 			price += 20*visiblyUpgraded();
-		if (cursed && cursedKnown) {
+		if (isCursed() && isCursedKnown()) {
 			price /= 2;
 		}
 		if (price < 1) {

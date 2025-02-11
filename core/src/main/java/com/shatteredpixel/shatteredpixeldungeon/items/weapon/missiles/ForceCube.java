@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class ForceCube extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.FORCE_CUBE;
+		setImage(ItemSpriteSheet.FORCE_CUBE);
 		
 		tier = 5;
 		baseUses = 5;

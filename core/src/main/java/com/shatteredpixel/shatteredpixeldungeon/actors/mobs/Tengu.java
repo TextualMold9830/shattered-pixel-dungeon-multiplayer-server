@@ -705,7 +705,7 @@ public class Tengu extends Mob {
 				dropsDownHeap = true;
 				unique = true;
 				
-				image = ItemSpriteSheet.TENGU_BOMB;
+				setImage(ItemSpriteSheet.TENGU_BOMB);
 			}
 			
 			@Override
@@ -1099,7 +1099,7 @@ public class Tengu extends Mob {
 				dropsDownHeap = true;
 				unique = true;
 				
-				image = ItemSpriteSheet.TENGU_SHOCKER;
+				setImage(ItemSpriteSheet.TENGU_SHOCKER);
 			}
 			
 			@Override

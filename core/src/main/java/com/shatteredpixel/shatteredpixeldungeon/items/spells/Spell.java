@@ -40,8 +40,8 @@ public abstract class Spell extends Item {
 	protected float talentChance = 1;
 	
 	{
-		stackable = true;
-		defaultAction = AC_CAST;
+		setStackable(true);
+		setDefaultAction(AC_CAST);
 	}
 	
 	@Override

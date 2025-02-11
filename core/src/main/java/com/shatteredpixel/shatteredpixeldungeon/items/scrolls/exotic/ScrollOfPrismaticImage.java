@@ -35,7 +35,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfPrismaticImage extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_PRISIMG;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_PRISIMG);
 	}
 	
 	@Override

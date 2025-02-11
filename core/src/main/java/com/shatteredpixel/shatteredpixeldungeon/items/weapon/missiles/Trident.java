@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Trident extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.TRIDENT;
+		setImage(ItemSpriteSheet.TRIDENT);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 0.9f;
 		

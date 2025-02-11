@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public abstract class Trinket extends Item {
 
 	{
-		levelKnown = true;
+		setLevelKnown(true);
 
 		unique = true;
 	}
@@ -65,7 +65,7 @@ public abstract class Trinket extends Item {
 	public static class PlaceHolder extends Trinket {
 
 		{
-			image = ItemSpriteSheet.TRINKET_HOLDER;
+			setImage(ItemSpriteSheet.TRINKET_HOLDER);
 		}
 
 		@Override

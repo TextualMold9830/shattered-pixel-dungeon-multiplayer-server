@@ -33,7 +33,7 @@ import com.watabou.utils.PathFinder;
 public class PotionOfStormClouds extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_STRMCLOUD;
+		setIcon(ItemSpriteSheet.Icons.POTION_STRMCLOUD);
 	}
 	
 	@Override

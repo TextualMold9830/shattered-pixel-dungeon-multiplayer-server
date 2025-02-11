@@ -36,7 +36,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfTerror extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_TERROR;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_TERROR);
 	}
 
 	@Override
@@ -76,6 +76,6 @@ public class ScrollOfTerror extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

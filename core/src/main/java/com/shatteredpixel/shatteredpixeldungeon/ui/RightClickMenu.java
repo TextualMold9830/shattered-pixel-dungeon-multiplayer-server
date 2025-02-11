@@ -104,7 +104,7 @@ public class RightClickMenu extends Component {
 					if (item != null){
 						item.execute(Dungeon.hero, options[finalI]);
 
-						if (options[finalI].equals(item.defaultAction()) && item.usesTargeting){
+						if (options[finalI].equals(item.defaultAction()) && item.isUsesTargeting()){
 							InventoryPane.useTargeting();
 						}
 					}

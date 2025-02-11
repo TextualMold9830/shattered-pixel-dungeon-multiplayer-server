@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class GuidePage extends DocumentPage {
 	
 	{
-		image = ItemSpriteSheet.GUIDE_PAGE;
+		setImage(ItemSpriteSheet.GUIDE_PAGE);
 	}
 	
 	@Override

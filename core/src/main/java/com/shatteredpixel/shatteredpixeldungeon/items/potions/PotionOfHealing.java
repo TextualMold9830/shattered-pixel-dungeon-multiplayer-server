@@ -43,7 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class PotionOfHealing extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_HEALING;
+		setIcon(ItemSpriteSheet.Icons.POTION_HEALING);
 
 		bones = true;
 	}
@@ -86,6 +86,6 @@ public class PotionOfHealing extends Potion {
 
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

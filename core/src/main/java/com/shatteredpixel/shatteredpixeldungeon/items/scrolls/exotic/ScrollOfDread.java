@@ -35,7 +35,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfDread extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_DREAD;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_DREAD);
 	}
 	
 	@Override

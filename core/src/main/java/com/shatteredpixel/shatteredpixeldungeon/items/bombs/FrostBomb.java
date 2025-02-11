@@ -36,7 +36,7 @@ import com.watabou.utils.PathFinder;
 public class FrostBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.FROST_BOMB;
+		setImage(ItemSpriteSheet.FROST_BOMB);
 	}
 	
 	@Override
@@ -57,6 +57,6 @@ public class FrostBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

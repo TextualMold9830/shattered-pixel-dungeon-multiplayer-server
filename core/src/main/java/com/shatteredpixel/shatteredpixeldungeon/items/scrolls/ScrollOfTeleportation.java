@@ -51,7 +51,7 @@ import java.util.ArrayList;
 public class ScrollOfTeleportation extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_TELEPORT;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_TELEPORT);
 	}
 
 	@Override
@@ -320,6 +320,6 @@ public class ScrollOfTeleportation extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

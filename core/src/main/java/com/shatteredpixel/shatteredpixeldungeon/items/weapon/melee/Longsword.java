@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Longsword extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.LONGSWORD;
+		setImage(ItemSpriteSheet.LONGSWORD);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -60,8 +60,8 @@ public class Longsword extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 4 + buffedLvl() : 4;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 4 + buffedLvl() : 4;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

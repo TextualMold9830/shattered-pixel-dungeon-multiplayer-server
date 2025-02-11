@@ -42,7 +42,7 @@ import java.util.ArrayList;
 public class ShockBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.SHOCK_BOMB;
+		setImage(ItemSpriteSheet.SHOCK_BOMB);
 	}
 	
 	@Override
@@ -85,6 +85,6 @@ public class ShockBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

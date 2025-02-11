@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ElixirOfIcyTouch extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_ICY;
+		setImage(ItemSpriteSheet.ELIXIR_ICY);
 	}
 	
 	@Override

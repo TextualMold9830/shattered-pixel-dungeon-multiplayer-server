@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class Crossbow extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.CROSSBOW;
+		setImage(ItemSpriteSheet.CROSSBOW);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 		
@@ -78,7 +78,7 @@ public class Crossbow extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		if (levelKnown){
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", 3+buffedLvl());
 		} else {
 			return Messages.get(this, "typical_ability_desc", 3);

@@ -33,7 +33,7 @@ import com.watabou.noosa.audio.Sample;
 public class PotionOfInvisibility extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_INVIS;
+		setIcon(ItemSpriteSheet.Icons.POTION_INVIS);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class PotionOfInvisibility extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 
 }

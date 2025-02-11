@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class HandAxe extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.HAND_AXE;
+		setImage(ItemSpriteSheet.HAND_AXE);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -57,8 +57,8 @@ public class HandAxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 4 + Math.round(1.5f*buffedLvl()) : 4;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 4 + Math.round(1.5f*buffedLvl()) : 4;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

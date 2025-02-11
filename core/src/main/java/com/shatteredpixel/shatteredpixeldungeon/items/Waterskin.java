@@ -45,9 +45,9 @@ public class Waterskin extends Item {
 	private static final String TXT_STATUS	= "%d/%d";
 
 	{
-		image = ItemSpriteSheet.WATERSKIN;
+		setImage(ItemSpriteSheet.WATERSKIN);
 
-		defaultAction = AC_DRINK;
+		setDefaultAction(AC_DRINK);
 
 		unique = true;
 	}
@@ -162,7 +162,7 @@ public class Waterskin extends Item {
 	public void collectDew( Dewdrop dew ) {
 
 		GLog.i( Messages.get(this, "collected") );
-		volume += dew.quantity;
+		volume += dew.getQuantity();
 		if (volume >= MAX_VOLUME) {
 			volume = MAX_VOLUME;
 			GLog.p( Messages.get(this, "full") );

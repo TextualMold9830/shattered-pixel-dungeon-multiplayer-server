@@ -49,7 +49,7 @@ import com.watabou.utils.Random;
 public class WandOfCorrosion extends Wand {
 
 	{
-		image = ItemSpriteSheet.WAND_CORROSION;
+		setImage(ItemSpriteSheet.WAND_CORROSION);
 
 		collisionProperties = Ballistica.STOP_TARGET | Ballistica.STOP_SOLID;
 	}
@@ -119,7 +119,7 @@ public class WandOfCorrosion extends Wand {
 
 	@Override
 	public String statsDesc() {
-		if (levelKnown)
+		if (isLevelKnown())
 			return Messages.get(this, "stats_desc", 2+buffedLvl());
 		else
 			return Messages.get(this, "stats_desc", 2);

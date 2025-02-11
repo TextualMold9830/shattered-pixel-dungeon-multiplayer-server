@@ -30,7 +30,7 @@ import com.watabou.noosa.audio.Sample;
 public class BrokenStaff extends RemainsItem {
 
 	{
-		image = ItemSpriteSheet.BROKEN_STAFF;
+		setImage(ItemSpriteSheet.BROKEN_STAFF);
 	}
 
 	@Override

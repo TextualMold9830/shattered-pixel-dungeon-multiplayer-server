@@ -103,7 +103,7 @@ public abstract class EquipableItem extends Item {
 	public void cast( final Hero user, int dst ) {
 
 		if (isEquipped( user )) {
-			if (quantity == 1 && !this.doUnequip( user, false, false )) {
+			if (getQuantity() == 1 && !this.doUnequip( user, false, false )) {
 				return;
 			}
 		}
@@ -124,7 +124,7 @@ public abstract class EquipableItem extends Item {
 
 	public boolean doUnequip( Hero hero, boolean collect, boolean single ) {
 
-		if (cursed
+		if (isCursed()
 				&& hero.buff(MagicImmune.class) == null
 				&& (!hero.belongings.lostInventory() || keptThroughLostInventory())) {
 			GLog.w(Messages.get(EquipableItem.class, "unequip_cursed"));

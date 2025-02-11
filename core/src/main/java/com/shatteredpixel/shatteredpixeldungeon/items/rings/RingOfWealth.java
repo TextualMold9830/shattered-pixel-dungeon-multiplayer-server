@@ -55,7 +55,7 @@ import java.util.HashSet;
 public class RingOfWealth extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_WEALTH;
+		setIcon(ItemSpriteSheet.Icons.RING_WEALTH);
 	}
 
 	private float triesToDrop = Float.MIN_VALUE;
@@ -303,8 +303,8 @@ public class RingOfWealth extends Ring {
 				result.level(minLevel);
 			}
 		}
-		result.cursed = false;
-		result.cursedKnown = true;
+		result.setCursed(false);
+		result.setCursedKnown(true);
 		if (result.level() >= 2) {
 			latestDropTier = 4;
 		} else {

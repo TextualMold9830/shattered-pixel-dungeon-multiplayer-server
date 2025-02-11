@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class ChaliceOfBlood extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CHALICE1;
+		setImage(ItemSpriteSheet.ARTIFACT_CHALICE1);
 
 		levelCap = 10;
 	}
@@ -59,7 +59,7 @@ public class ChaliceOfBlood extends Artifact {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
 				&& level() < levelCap
-				&& !cursed
+				&& !isCursed()
 				&& !hero.isInvulnerable(getClass())
 				&& hero.buff(MagicImmune.class) == null)
 			actions.add(AC_PRICK);
@@ -136,17 +136,17 @@ public class ChaliceOfBlood extends Artifact {
 	@Override
 	public Item upgrade() {
 		if (level() >= 6)
-			image = ItemSpriteSheet.ARTIFACT_CHALICE3;
+			setImage(ItemSpriteSheet.ARTIFACT_CHALICE3);
 		else if (level() >= 2)
-			image = ItemSpriteSheet.ARTIFACT_CHALICE2;
+			setImage(ItemSpriteSheet.ARTIFACT_CHALICE2);
 		return super.upgrade();
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		if (level() >= 7) image = ItemSpriteSheet.ARTIFACT_CHALICE3;
-		else if (level() >= 3) image = ItemSpriteSheet.ARTIFACT_CHALICE2;
+		if (level() >= 7) setImage(ItemSpriteSheet.ARTIFACT_CHALICE3);
+		else if (level() >= 3) setImage(ItemSpriteSheet.ARTIFACT_CHALICE2);
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class ChaliceOfBlood extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 
 		//grants 5 turns of healing up-front, if hero isn't starving
 		if (target.isStarving()) return;
@@ -184,7 +184,7 @@ public class ChaliceOfBlood extends Artifact {
 
 		if (isEquipped (Dungeon.hero)){
 			desc += "\n\n";
-			if (cursed)
+			if (isCursed())
 				desc += Messages.get(this, "desc_cursed");
 			else if (level() == 0)
 				desc += Messages.get(this, "desc_1");

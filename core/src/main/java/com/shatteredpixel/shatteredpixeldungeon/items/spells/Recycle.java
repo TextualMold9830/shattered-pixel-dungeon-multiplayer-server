@@ -45,7 +45,7 @@ import com.watabou.utils.Reflection;
 public class Recycle extends InventorySpell {
 	
 	{
-		image = ItemSpriteSheet.RECYCLE;
+		setImage(ItemSpriteSheet.RECYCLE);
 
 		talentFactor = 2;
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
@@ -94,12 +94,12 @@ public class Recycle extends InventorySpell {
 	
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(60 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(12 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

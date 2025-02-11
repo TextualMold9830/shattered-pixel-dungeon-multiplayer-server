@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class FishingSpear extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.FISHING_SPEAR;
+		setImage(ItemSpriteSheet.FISHING_SPEAR);
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1.1f;
 		

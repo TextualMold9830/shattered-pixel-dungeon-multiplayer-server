@@ -37,7 +37,7 @@ import com.watabou.noosa.audio.Sample;
 public class PotionOfLevitation extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_LEVITATE;
+		setIcon(ItemSpriteSheet.Icons.POTION_LEVITATE);
 	}
 
 	@Override
@@ -63,6 +63,6 @@ public class PotionOfLevitation extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

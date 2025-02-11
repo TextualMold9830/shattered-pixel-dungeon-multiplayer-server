@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Shortsword extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SHORTSWORD;
+		setImage(ItemSpriteSheet.SHORTSWORD);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1.1f;
 
@@ -60,8 +60,8 @@ public class Shortsword extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 3 + buffedLvl() : 3;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 3 + buffedLvl() : 3;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

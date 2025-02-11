@@ -32,7 +32,7 @@ import java.util.GregorianCalendar;
 public class DimensionalSundial extends Trinket {
 
 	{
-		image = ItemSpriteSheet.SUNDIAL;
+		setImage(ItemSpriteSheet.SUNDIAL);
 	}
 
 	@Override

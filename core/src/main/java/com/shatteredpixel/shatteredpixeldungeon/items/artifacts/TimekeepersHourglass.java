@@ -56,7 +56,7 @@ import java.util.ArrayList;
 public class TimekeepersHourglass extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_HOURGLASS;
+		setImage(ItemSpriteSheet.ARTIFACT_HOURGLASS);
 
 		levelCap = 5;
 
@@ -64,7 +64,7 @@ public class TimekeepersHourglass extends Artifact {
 		partialCharge = 0;
 		chargeCap = 5+level();
 
-		defaultAction = AC_ACTIVATE;
+		setDefaultAction(AC_ACTIVATE);
 	}
 
 	public static final String AC_ACTIVATE = "ACTIVATE";
@@ -76,7 +76,7 @@ public class TimekeepersHourglass extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
-				&& !cursed
+				&& !isCursed()
 				&& hero.buff(MagicImmune.class) == null
 				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_ACTIVATE);
@@ -101,7 +101,7 @@ public class TimekeepersHourglass extends Artifact {
 					GLog.i( Messages.get(this, "deactivate") );
 				}
 			} else if (charge <= 0)         GLog.i( Messages.get(this, "no_charge") );
-			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
+			else if (isCursed())                GLog.i( Messages.get(this, "cursed") );
 			else GameScene.show(
 						new WndOptions(new ItemSprite(this),
 								Messages.titleCase(name()),
@@ -162,7 +162,7 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !isCursed() && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
@@ -191,7 +191,7 @@ public class TimekeepersHourglass extends Artifact {
 		String desc = super.desc();
 
 		if (isEquipped( Dungeon.hero )){
-			if (!cursed) {
+			if (!isCursed()) {
 				if (level() < levelCap )
 					desc += "\n\n" + Messages.get(this, "desc_hint");
 
@@ -470,13 +470,13 @@ public class TimekeepersHourglass extends Artifact {
 	public static class sandBag extends Item {
 
 		{
-			image = ItemSpriteSheet.SANDBAG;
+			setImage(ItemSpriteSheet.SANDBAG);
 		}
 
 		@Override
 		public boolean doPickUp(Hero hero, int pos) {
 			TimekeepersHourglass hourglass = hero.belongings.getItem( TimekeepersHourglass.class );
-			if (hourglass != null && !hourglass.cursed) {
+			if (hourglass != null && !hourglass.isCursed()) {
 				hourglass.upgrade();
 				Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 				if (hourglass.level() == hourglass.levelCap)

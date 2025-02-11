@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ExoticCrystals extends Trinket {
 
 	{
-		image = ItemSpriteSheet.EXOTIC_CRYSTALS;
+		setImage(ItemSpriteSheet.EXOTIC_CRYSTALS);
 	}
 
 	@Override

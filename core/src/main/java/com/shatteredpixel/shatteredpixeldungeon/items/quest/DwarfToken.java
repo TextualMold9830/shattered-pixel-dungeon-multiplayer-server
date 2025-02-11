@@ -27,9 +27,9 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class DwarfToken extends Item {
 	
 	{
-		image = ItemSpriteSheet.TOKEN;
+		setImage(ItemSpriteSheet.TOKEN);
 		
-		stackable = true;
+		setStackable(true);
 		unique = true;
 	}
 	

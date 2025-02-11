@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class ScrollOfIdentify extends InventoryScroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_IDENTIFY;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_IDENTIFY);
 
 		bones = true;
 	}
@@ -54,6 +54,6 @@ public class ScrollOfIdentify extends InventoryScroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

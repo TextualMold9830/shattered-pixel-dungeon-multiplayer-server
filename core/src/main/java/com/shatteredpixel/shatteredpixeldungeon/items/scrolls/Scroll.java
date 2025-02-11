@@ -94,8 +94,8 @@ public abstract class Scroll extends Item {
 	protected float talentChance = 1;
 	
 	{
-		stackable = true;
-		defaultAction = AC_READ;
+		setStackable(true);
+		setDefaultAction(AC_READ);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -138,7 +138,7 @@ public abstract class Scroll extends Item {
 	//useful for items that appear in UIs, or which are only spawned for their effects
 	protected boolean anonymous = false;
 	public void anonymize(){
-		if (!isKnown()) image = ItemSpriteSheet.SCROLL_HOLDER;
+		if (!isKnown()) setImage(ItemSpriteSheet.SCROLL_HOLDER);
 		anonymous = true;
 	}
 	
@@ -147,7 +147,7 @@ public abstract class Scroll extends Item {
 	public void reset(){
 		super.reset();
 		if (handler != null && handler.contains(this)) {
-			image = handler.image(this);
+			setImage(handler.image(this));
 			rune = handler.label(this);
 		}
 	}
@@ -258,18 +258,18 @@ public abstract class Scroll extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 6 * quantity;
+		return 6 * getQuantity();
 	}
 	
 	public static class PlaceHolder extends Scroll {
 		
 		{
-			image = ItemSpriteSheet.SCROLL_HOLDER;
+			setImage(ItemSpriteSheet.SCROLL_HOLDER);
 		}
 		
 		@Override

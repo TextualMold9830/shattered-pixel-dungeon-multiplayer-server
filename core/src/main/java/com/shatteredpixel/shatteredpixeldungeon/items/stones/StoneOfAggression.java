@@ -38,7 +38,7 @@ import com.watabou.noosa.audio.Sample;
 public class StoneOfAggression extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_AGGRESSION;
+		setImage(ItemSpriteSheet.STONE_AGGRESSION);
 	}
 	
 	@Override

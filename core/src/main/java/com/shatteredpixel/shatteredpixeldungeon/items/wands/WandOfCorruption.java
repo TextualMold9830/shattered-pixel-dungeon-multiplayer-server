@@ -79,7 +79,7 @@ import java.util.HashMap;
 public class WandOfCorruption extends Wand {
 
 	{
-		image = ItemSpriteSheet.WAND_CORRUPTION;
+		setImage(ItemSpriteSheet.WAND_CORRUPTION);
 	}
 	
 	//Note that some debuffs here have a 0% chance to be applied.

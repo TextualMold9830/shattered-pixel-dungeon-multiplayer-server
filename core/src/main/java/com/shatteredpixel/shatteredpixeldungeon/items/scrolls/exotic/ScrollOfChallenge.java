@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public class ScrollOfChallenge extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_CHALLENGE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_CHALLENGE);
 	}
 	
 	@Override

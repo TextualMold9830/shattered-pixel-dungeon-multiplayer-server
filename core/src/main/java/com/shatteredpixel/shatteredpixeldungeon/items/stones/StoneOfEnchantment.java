@@ -36,7 +36,7 @@ public class StoneOfEnchantment extends InventoryStone {
 	
 	{
 		preferredBag = Belongings.Backpack.class;
-		image = ItemSpriteSheet.STONE_ENCHANT;
+		setImage(ItemSpriteSheet.STONE_ENCHANT);
 
 		unique = true;
 	}
@@ -75,12 +75,12 @@ public class StoneOfEnchantment extends InventoryStone {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 5 * quantity;
+		return 5 * getQuantity();
 	}
 
 }

@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ParchmentScrap extends Trinket {
 
 	{
-		image = ItemSpriteSheet.PARCHMENT_SCRAP;
+		setImage(ItemSpriteSheet.PARCHMENT_SCRAP);
 	}
 
 	@Override

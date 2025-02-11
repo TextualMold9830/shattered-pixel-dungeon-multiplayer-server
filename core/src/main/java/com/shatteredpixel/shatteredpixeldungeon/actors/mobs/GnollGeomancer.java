@@ -724,7 +724,7 @@ public class GnollGeomancer extends Mob {
 
 	public static class Boulder extends Item {
 		{
-			image = ItemSpriteSheet.GEO_BOULDER;
+			setImage(ItemSpriteSheet.GEO_BOULDER);
 		}
 	}
 

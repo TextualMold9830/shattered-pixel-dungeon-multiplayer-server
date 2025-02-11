@@ -58,7 +58,7 @@ import com.watabou.utils.Reflection;
 public class ScrollOfTransmutation extends InventoryScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_TRANSMUTE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_TRANSMUTE);
 		
 		bones = true;
 
@@ -104,7 +104,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			if (result != item) {
 				int slot = Dungeon.quickslot.getSlot(item);
 				if (item.isEquipped(Dungeon.hero)) {
-					item.cursed = false; //to allow it to be unequipped
+					item.setCursed(false); //to allow it to be unequipped
 					if (item instanceof Artifact && result instanceof Ring){
 						//if we turned an equipped artifact into a ring, ring goes into inventory
 						((EquipableItem) item).doUnequip(Dungeon.hero, false);
@@ -123,7 +123,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 					item.detach(Dungeon.hero.belongings.backpack);
 					if (!result.collect()) {
 						Dungeon.level.drop(result, curUser.pos).sprite.drop();
-					} else if (result.stackable && Dungeon.hero.belongings.getSimilar(result) != null){
+					} else if (result.isStackable() && Dungeon.hero.belongings.getSimilar(result) != null){
 						result = Dungeon.hero.belongings.getSimilar(result);
 					}
 				}
@@ -168,9 +168,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			if (a == null){
 				//if no artifacts are left, generate a random +0 ring with shared ID/curse state
 				Item result = Generator.randomUsingDefaults(Generator.Category.RING);
-				result.levelKnown = item.levelKnown;
-				result.cursed = item.cursed;
-				result.cursedKnown = item.cursedKnown;
+				result.setLevelKnown(item.isLevelKnown());
+				result.setCursed(item.isCursed());
+				result.setCursedKnown(item.isCursedKnown());
 				result.level(0);
 				return result;
 			} else {
@@ -235,9 +235,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.enchantment = w.enchantment;
 		n.curseInfusionBonus = w.curseInfusionBonus;
 		n.masteryPotionBonus = w.masteryPotionBonus;
-		n.levelKnown = w.levelKnown;
-		n.cursedKnown = w.cursedKnown;
-		n.cursed = w.cursed;
+		n.setLevelKnown(w.isLevelKnown());
+		n.setCursedKnown(w.isCursedKnown());
+		n.setCursed(w.isCursed());
 		n.augment = w.augment;
 		n.enchantHardened = w.enchantHardened;
 		
@@ -260,9 +260,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n.degrade( -level );
 		}
 		
-		n.levelKnown = r.levelKnown;
-		n.cursedKnown = r.cursedKnown;
-		n.cursed = r.cursed;
+		n.setLevelKnown(r.isLevelKnown());
+		n.setCursedKnown(r.isCursedKnown());
+		n.setCursed(r.isCursed());
 		
 		return n;
 	}
@@ -284,9 +284,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				}
 			}
 
-			n.cursedKnown = a.cursedKnown;
-			n.cursed = a.cursed;
-			n.levelKnown = a.levelKnown;
+			n.setCursedKnown(a.isCursedKnown());
+			n.setCursed(a.isCursed());
+			n.setLevelKnown(a.isLevelKnown());
 			n.transferUpgrade(a.visiblyUpgraded());
 			return n;
 		}
@@ -301,8 +301,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		} while ( Challenges.isItemBlocked(n) || n.getClass() == t.getClass());
 
 		n.level(t.trueLevel());
-		n.levelKnown = t.levelKnown;
-		n.cursed = t.cursed;
+		n.setLevelKnown(t.isLevelKnown());
+		n.setCursed(t.isCursed());
 
 		return n;
 	}
@@ -317,10 +317,10 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		int level = w.trueLevel();
 		n.upgrade( level );
 
-		n.levelKnown = w.levelKnown;
+		n.setLevelKnown(w.isLevelKnown());
 		n.curChargeKnown = w.curChargeKnown;
-		n.cursedKnown = w.cursedKnown;
-		n.cursed = w.cursed;
+		n.setCursedKnown(w.isCursedKnown());
+		n.setCursed(w.isCursed());
 		n.curseInfusionBonus = w.curseInfusionBonus;
 		n.resinBonus = w.resinBonus;
 
@@ -368,11 +368,11 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 50 * quantity : super.value();
+		return isKnown() ? 50 * getQuantity() : super.value();
 	}
 
 	@Override
 	public int energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+		return isKnown() ? 10 * getQuantity() : super.energyVal();
 	}
 }

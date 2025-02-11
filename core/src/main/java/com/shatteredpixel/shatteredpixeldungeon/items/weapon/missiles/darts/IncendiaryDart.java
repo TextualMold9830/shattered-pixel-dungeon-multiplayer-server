@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class IncendiaryDart extends TippedDart {
 
 	{
-		image = ItemSpriteSheet.INCENDIARY_DART;
+		setImage(ItemSpriteSheet.INCENDIARY_DART);
 	}
 	
 	@Override

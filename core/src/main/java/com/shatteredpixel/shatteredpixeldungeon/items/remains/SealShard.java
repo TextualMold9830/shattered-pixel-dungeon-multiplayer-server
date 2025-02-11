@@ -33,7 +33,7 @@ import com.watabou.noosa.audio.Sample;
 public class SealShard extends RemainsItem {
 
 	{
-		image = ItemSpriteSheet.SEAL_SHARD;
+		setImage(ItemSpriteSheet.SEAL_SHARD);
 	}
 
 	@Override

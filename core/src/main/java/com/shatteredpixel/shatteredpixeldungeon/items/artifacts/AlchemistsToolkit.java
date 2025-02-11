@@ -44,8 +44,8 @@ import java.util.ArrayList;
 public class AlchemistsToolkit extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_TOOLKIT;
-		defaultAction = AC_BREW;
+		setImage(ItemSpriteSheet.ARTIFACT_TOOLKIT);
+		setDefaultAction(AC_BREW);
 
 		levelCap = 10;
 		
@@ -61,7 +61,7 @@ public class AlchemistsToolkit extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && !isCursed() && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_BREW);
 			if (level() < levelCap) {
 				actions.add(AC_ENERGIZE);
@@ -79,7 +79,7 @@ public class AlchemistsToolkit extends Artifact {
 
 		if (action.equals(AC_BREW)){
 			if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
-			else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
+			else if (isCursed())                    GLog.w( Messages.get(this, "cursed") );
 			else if (warmUpDelay > 0)           GLog.w( Messages.get(this, "not_ready") );
 			else {
 				AlchemyScene.assignToolkit(this);
@@ -88,7 +88,7 @@ public class AlchemistsToolkit extends Artifact {
 			
 		} else if (action.equals(AC_ENERGIZE)){
 			if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
-			else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
+			else if (isCursed())                    GLog.w( Messages.get(this, "cursed") );
 			else if (Dungeon.energy < 6)        GLog.w( Messages.get(this, "need_energy") );
 			else {
 
@@ -101,7 +101,7 @@ public class AlchemistsToolkit extends Artifact {
 					options = new String[]{ Messages.get(this, "energize_1")};
 				}
 
-				GameScene.show(new WndOptions(new ItemSprite(image),
+				GameScene.show(new WndOptions(new ItemSprite(getImage()),
 						Messages.titleCase(name()),
 						Messages.get(this, "energize_desc"),
 						options){
@@ -143,7 +143,7 @@ public class AlchemistsToolkit extends Artifact {
 
 	@Override
 	public String status() {
-		if (isEquipped(Dungeon.hero) && warmUpDelay > 0 && !cursed){
+		if (isEquipped(Dungeon.hero) && warmUpDelay > 0 && !isCursed()){
 			return Messages.format( "%d%%", Math.max(0, 100 - (int)warmUpDelay) );
 		} else {
 			return super.status();
@@ -182,7 +182,7 @@ public class AlchemistsToolkit extends Artifact {
 		String result = Messages.get(this, "desc");
 
 		if (isEquipped(Dungeon.hero)) {
-			if (cursed)                 result += "\n\n" + Messages.get(this, "desc_cursed");
+			if (isCursed())                 result += "\n\n" + Messages.get(this, "desc_cursed");
 			else if (warmUpDelay > 0)   result += "\n\n" + Messages.get(this, "desc_warming");
 			else                        result += "\n\n" + Messages.get(this, "desc_hint");
 		}

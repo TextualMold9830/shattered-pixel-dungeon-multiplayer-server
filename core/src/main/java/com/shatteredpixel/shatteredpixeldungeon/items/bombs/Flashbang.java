@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Flashbang extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.FLASHBANG;
+		setImage(ItemSpriteSheet.FLASHBANG);
 	}
 
 	@Override
@@ -60,6 +60,6 @@ public class Flashbang extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 40);
+		return getQuantity() * (20 + 40);
 	}
 }

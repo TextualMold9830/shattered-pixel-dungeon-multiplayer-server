@@ -34,7 +34,7 @@ import com.watabou.noosa.audio.Sample;
 public class StoneOfDeepSleep extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_SLEEP;
+		setImage(ItemSpriteSheet.STONE_SLEEP);
 	}
 	
 	@Override

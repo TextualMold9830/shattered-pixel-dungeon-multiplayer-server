@@ -44,7 +44,7 @@ import com.watabou.utils.PathFinder;
 public class ScrollOfRemoveCurse extends InventoryScroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_REMCURSE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_REMCURSE);
 		preferredBag = Belongings.Backpack.class;
 	}
 
@@ -83,7 +83,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	public static boolean uncursable( Item item ){
 		if (item.isEquipped(Dungeon.hero) && Dungeon.hero.buff(Degrade.class) != null) {
 			return true;
-		} if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.cursedKnown) || item.cursed)){
+		} if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.isCursedKnown()) || item.isCursed())){
 			return true;
 		} else if (item instanceof Weapon){
 			return ((Weapon)item).hasCurseEnchant();
@@ -117,10 +117,10 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 		boolean procced = false;
 		for (Item item : items) {
 			if (item != null) {
-				item.cursedKnown = true;
-				if (item.cursed) {
+				item.setCursedKnown(true);
+				if (item.isCursed()) {
 					procced = true;
-					item.cursed = false;
+					item.setCursed(false);
 				}
 			}
 			if (item instanceof Weapon){
@@ -153,6 +153,6 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

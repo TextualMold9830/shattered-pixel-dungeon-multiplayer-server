@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class ScrollOfPsionicBlast extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_PSIBLAST;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_PSIBLAST);
 	}
 	
 	@Override

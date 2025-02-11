@@ -33,7 +33,7 @@ import com.watabou.noosa.Game;
 public class ScrollOfPassage extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_PASSAGE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_PASSAGE);
 	}
 	
 	@Override

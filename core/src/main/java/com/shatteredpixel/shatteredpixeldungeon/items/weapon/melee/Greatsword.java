@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Greatsword extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GREATSWORD;
+		setImage(ItemSpriteSheet.GREATSWORD);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 
@@ -60,8 +60,8 @@ public class Greatsword extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 5 + buffedLvl() : 5;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 5 + buffedLvl() : 5;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

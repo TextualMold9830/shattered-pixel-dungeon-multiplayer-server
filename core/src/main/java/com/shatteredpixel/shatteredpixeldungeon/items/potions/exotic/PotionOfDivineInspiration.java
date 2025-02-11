@@ -43,7 +43,7 @@ import com.watabou.utils.Random;
 public class PotionOfDivineInspiration extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_DIVINE;
+		setIcon(ItemSpriteSheet.Icons.POTION_DIVINE);
 
 		talentFactor = 2f;
 	}

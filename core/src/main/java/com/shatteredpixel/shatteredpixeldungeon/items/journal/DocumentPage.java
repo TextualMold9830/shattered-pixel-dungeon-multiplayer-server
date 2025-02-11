@@ -34,7 +34,7 @@ import com.watabou.utils.Bundle;
 public abstract class DocumentPage extends Item {
 	
 	{
-		image = ItemSpriteSheet.MASTERY;
+		setImage(ItemSpriteSheet.MASTERY);
 	}
 
 	public abstract Document document();

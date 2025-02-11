@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfArcana extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_ARCANA;
+		setIcon(ItemSpriteSheet.Icons.RING_ARCANA);
 	}
 
 	public String statsInfo() {

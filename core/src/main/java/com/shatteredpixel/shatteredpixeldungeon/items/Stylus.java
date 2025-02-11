@@ -44,11 +44,11 @@ public class Stylus extends Item {
 	private static final String AC_INSCRIBE = "INSCRIBE";
 	
 	{
-		image = ItemSpriteSheet.STYLUS;
+		setImage(ItemSpriteSheet.STYLUS);
 		
-		stackable = true;
+		setStackable(true);
 
-		defaultAction = AC_INSCRIBE;
+		setDefaultAction(AC_INSCRIBE);
 
 		bones = true;
 	}
@@ -88,7 +88,7 @@ public class Stylus extends Item {
 		if (!armor.isIdentified() ){
 			GLog.w( Messages.get(this, "identify"));
 			return;
-		} else if (armor.cursed || armor.hasCurseGlyph()){
+		} else if (armor.isCursed() || armor.hasCurseGlyph()){
 			GLog.w( Messages.get(this, "cursed"));
 			return;
 		}
@@ -110,7 +110,7 @@ public class Stylus extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

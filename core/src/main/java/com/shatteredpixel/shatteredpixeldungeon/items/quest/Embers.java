@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Embers extends Item {
 
 	{
-		image = ItemSpriteSheet.EMBER;
+		setImage(ItemSpriteSheet.EMBER);
 
 		unique = true;
 	}

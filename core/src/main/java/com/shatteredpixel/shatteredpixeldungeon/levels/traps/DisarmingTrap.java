@@ -81,7 +81,7 @@ public class DisarmingTrap extends Trap{
 			Hero hero = Dungeon.hero;
 			KindOfWeapon weapon = hero.belongings.weapon;
 
-			if (weapon != null && !weapon.cursed) {
+			if (weapon != null && !weapon.isCursed()) {
 
 				int cell;
 				int tries = 20;

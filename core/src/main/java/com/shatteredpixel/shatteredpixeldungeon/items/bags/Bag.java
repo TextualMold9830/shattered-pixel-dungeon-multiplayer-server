@@ -40,9 +40,9 @@ public class Bag extends Item implements Iterable<Item> {
 	public static final String AC_OPEN	= "OPEN";
 	
 	{
-		image = 11;
+		setImage(11);
 		
-		defaultAction = AC_OPEN;
+		setDefaultAction(AC_OPEN);
 
 		unique = true;
 	}
@@ -185,7 +185,7 @@ public class Bag extends Item implements Iterable<Item> {
 
 		if (items.contains(item) || item instanceof Bag || items.size() < capacity()){
 			return true;
-		} else if (item.stackable) {
+		} else if (item.isStackable()) {
 			for (Item i : items) {
 				if (item.isSimilar( i )) {
 					return true;

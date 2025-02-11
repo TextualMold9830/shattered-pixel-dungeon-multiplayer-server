@@ -33,7 +33,7 @@ import com.watabou.utils.PathFinder;
 public class PotionOfShroudingFog extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_SHROUDFOG;
+		setIcon(ItemSpriteSheet.Icons.POTION_SHROUDFOG);
 	}
 	
 	@Override

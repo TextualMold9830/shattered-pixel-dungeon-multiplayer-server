@@ -63,7 +63,7 @@ public class SummonElemental extends Spell {
 	public static final String AC_IMBUE = "IMBUE";
 
 	{
-		image = ItemSpriteSheet.SUMMON_ELE;
+		setImage(ItemSpriteSheet.SUMMON_ELE);
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}

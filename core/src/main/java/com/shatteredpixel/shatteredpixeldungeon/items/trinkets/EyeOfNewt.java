@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class EyeOfNewt extends Trinket {
 
 	{
-		image = ItemSpriteSheet.EYE_OF_NEWT;
+		setImage(ItemSpriteSheet.EYE_OF_NEWT);
 	}
 
 	@Override

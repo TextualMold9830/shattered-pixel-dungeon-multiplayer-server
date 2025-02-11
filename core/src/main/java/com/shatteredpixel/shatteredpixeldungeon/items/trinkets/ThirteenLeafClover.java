@@ -28,7 +28,7 @@ import com.watabou.utils.Random;
 public class ThirteenLeafClover extends Trinket {
 
 	{
-		image = ItemSpriteSheet.CLOVER;
+		setImage(ItemSpriteSheet.CLOVER);
 	}
 
 	@Override

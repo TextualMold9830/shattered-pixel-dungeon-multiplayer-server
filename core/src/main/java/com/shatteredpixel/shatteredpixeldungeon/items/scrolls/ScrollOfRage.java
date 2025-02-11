@@ -36,7 +36,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfRage extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_RAGE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_RAGE);
 	}
 
 	@Override
@@ -61,6 +61,6 @@ public class ScrollOfRage extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

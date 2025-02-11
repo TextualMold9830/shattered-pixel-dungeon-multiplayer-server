@@ -141,8 +141,8 @@ public class Potion extends Item {
 	protected float talentChance = 1;
 	
 	{
-		stackable = true;
-		defaultAction = AC_DRINK;
+		setStackable(true);
+		setDefaultAction(AC_DRINK);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -185,7 +185,7 @@ public class Potion extends Item {
 	//useful for items that appear in UIs, or which are only spawned for their effects
 	protected boolean anonymous = false;
 	public void anonymize(){
-		if (!isKnown()) image = ItemSpriteSheet.POTION_HOLDER;
+		if (!isKnown()) setImage(ItemSpriteSheet.POTION_HOLDER);
 		anonymous = true;
 	}
 
@@ -193,7 +193,7 @@ public class Potion extends Item {
 	public void reset(){
 		super.reset();
 		if (handler != null && handler.contains(this)) {
-			image = handler.image(this);
+			setImage(handler.image(this));
 			color = handler.label(this);
 		}
 	}
@@ -391,7 +391,7 @@ public class Potion extends Item {
 	}
 	
 	protected int splashColor(){
-		return anonymous ? 0x00AAFF : ItemSprite.pick( image, 5, 9 );
+		return anonymous ? 0x00AAFF : ItemSprite.pick(getImage(), 5, 9 );
 	}
 	
 	protected void splash( int cell ) {
@@ -417,18 +417,18 @@ public class Potion extends Item {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 6 * quantity;
+		return 6 * getQuantity();
 	}
 
 	public static class PlaceHolder extends Potion {
 		
 		{
-			image = ItemSpriteSheet.POTION_HOLDER;
+			setImage(ItemSpriteSheet.POTION_HOLDER);
 		}
 		
 		@Override

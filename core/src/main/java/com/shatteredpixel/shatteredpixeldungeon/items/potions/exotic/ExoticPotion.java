@@ -104,7 +104,7 @@ public class ExoticPotion extends Potion {
 	public void reset() {
 		super.reset();
 		if (handler != null && handler.contains(exoToReg.get(this.getClass()))) {
-			image = handler.image(exoToReg.get(this.getClass())) + 16;
+			setImage(handler.image(exoToReg.get(this.getClass())) + 16);
 			color = handler.label(exoToReg.get(this.getClass()));
 		}
 	}
@@ -112,13 +112,13 @@ public class ExoticPotion extends Potion {
 	@Override
 	//20 gold more than its none-exotic equivalent
 	public int value() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 20) * quantity;
+		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 20) * getQuantity();
 	}
 
 	@Override
 	//4 more energy than its none-exotic equivalent
 	public int energyVal() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 4) * quantity;
+		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 4) * getQuantity();
 	}
 
 	public static class PotionToExotic extends Recipe{

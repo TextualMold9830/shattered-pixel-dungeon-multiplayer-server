@@ -58,7 +58,7 @@ public class Swiftthistle extends Plant {
 	
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_SWIFTTHISTLE;
+			setImage(ItemSpriteSheet.SEED_SWIFTTHISTLE);
 			
 			plantClass = Swiftthistle.class;
 		}

@@ -37,9 +37,9 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class PhaseShift extends TargetedSpell {
 	
 	{
-		image = ItemSpriteSheet.PHASE_SHIFT;
+		setImage(ItemSpriteSheet.PHASE_SHIFT);
 
-		usesTargeting = true;
+		setUsesTargeting(true);
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
@@ -67,12 +67,12 @@ public class PhaseShift extends TargetedSpell {
 	
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(60 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(12 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

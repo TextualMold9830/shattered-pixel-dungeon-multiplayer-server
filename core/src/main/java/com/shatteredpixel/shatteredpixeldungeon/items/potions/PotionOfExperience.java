@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionOfExperience extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_EXP;
+		setIcon(ItemSpriteSheet.Icons.POTION_EXP);
 
 		bones = true;
 
@@ -47,11 +47,11 @@ public class PotionOfExperience extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 50 * quantity : super.value();
+		return isKnown() ? 50 * getQuantity() : super.value();
 	}
 
 	@Override
 	public int energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+		return isKnown() ? 10 * getQuantity() : super.energyVal();
 	}
 }

@@ -46,7 +46,7 @@ import java.util.HashSet;
 public class ScrollOfDivination extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_DIVINATE;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_DIVINATE);
 	}
 	
 	@Override

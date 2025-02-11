@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class HolyBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.HOLY_BOMB;
+		setImage(ItemSpriteSheet.HOLY_BOMB);
 	}
 	
 	@Override
@@ -80,6 +80,6 @@ public class HolyBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

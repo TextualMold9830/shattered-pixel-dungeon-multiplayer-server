@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class StoneOfBlast extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_BLAST;
+		setImage(ItemSpriteSheet.STONE_BLAST);
 	}
 	
 	@Override

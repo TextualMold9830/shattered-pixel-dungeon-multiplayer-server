@@ -101,7 +101,7 @@ public abstract class ExoticScroll extends Scroll {
 	public void reset() {
 		super.reset();
 		if (handler != null && handler.contains(exoToReg.get(this.getClass()))) {
-			image = handler.image(exoToReg.get(this.getClass())) + 16;
+			setImage(handler.image(exoToReg.get(this.getClass())) + 16);
 			rune = handler.label(exoToReg.get(this.getClass()));
 		}
 	}
@@ -109,13 +109,13 @@ public abstract class ExoticScroll extends Scroll {
 	@Override
 	//20 gold more than its none-exotic equivalent
 	public int value() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 30) * quantity;
+		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 30) * getQuantity();
 	}
 
 	@Override
 	//6 more energy than its none-exotic equivalent
 	public int energyVal() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 6) * quantity;
+		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 6) * getQuantity();
 	}
 	
 	public static class ScrollToExotic extends Recipe {

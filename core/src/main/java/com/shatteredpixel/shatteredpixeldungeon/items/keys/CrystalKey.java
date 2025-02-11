@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class CrystalKey extends Key {
 	
 	{
-		image = ItemSpriteSheet.CRYSTAL_KEY;
+		setImage(ItemSpriteSheet.CRYSTAL_KEY);
 	}
 	
 	public CrystalKey() {

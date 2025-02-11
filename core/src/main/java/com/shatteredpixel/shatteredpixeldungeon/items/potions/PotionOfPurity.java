@@ -46,7 +46,7 @@ public class PotionOfPurity extends Potion {
 	private static ArrayList<Class> affectedBlobs;
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_PURITY;
+		setIcon(ItemSpriteSheet.Icons.POTION_PURITY);
 		
 		affectedBlobs = new ArrayList<>(new BlobImmunity().immunities());
 	}
@@ -99,6 +99,6 @@ public class PotionOfPurity extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 }

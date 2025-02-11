@@ -32,7 +32,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfMysticalEnergy extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_MYSTENRG;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_MYSTENRG);
 	}
 	
 	@Override

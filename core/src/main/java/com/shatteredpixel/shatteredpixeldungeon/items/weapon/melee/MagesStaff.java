@@ -70,14 +70,14 @@ public class MagesStaff extends MeleeWeapon {
 	private static final float STAFF_SCALE_FACTOR = 0.75f;
 
 	{
-		image = ItemSpriteSheet.MAGES_STAFF;
+		setImage(ItemSpriteSheet.MAGES_STAFF);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1.1f;
 
 		tier = 1;
 
-		defaultAction = AC_ZAP;
-		usesTargeting = true;
+		setDefaultAction(AC_ZAP);
+		setUsesTargeting(true);
 
 		unique = true;
 		bones = false;
@@ -96,7 +96,7 @@ public class MagesStaff extends MeleeWeapon {
 	public MagesStaff(Wand wand){
 		this();
 		wand.identify();
-		wand.cursed = false;
+		wand.setCursed(false);
 		this.wand = wand;
 		updateWand(false);
 		wand.curCharges = wand.maxCharges;
@@ -149,8 +149,8 @@ public class MagesStaff extends MeleeWeapon {
 				return;
 			}
 
-			if (cursed || hasCurseEnchant()) wand.cursed = true;
-			else                             wand.cursed = false;
+			if (isCursed() || hasCurseEnchant()) wand.setCursed(true);
+			else                             wand.setCursed(false);
 			wand.execute(hero, AC_ZAP);
 		}
 	}
@@ -341,7 +341,7 @@ public class MagesStaff extends MeleeWeapon {
 			return super.name();
 		} else {
 			String name = Messages.get(wand, "staff_name");
-			return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name( name ) : name;
+			return enchantment != null && (isCursedKnown() || !enchantment.curse()) ? enchantment.name( name ) : name;
 		}
 	}
 
@@ -351,7 +351,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		if (wand != null){
 			info += "\n\n" + Messages.get(this, "has_wand", Messages.get(wand, "name"));
-			if ((!cursed && !hasCurseEnchant()) || !cursedKnown)    info += " " + wand.statsDesc();
+			if ((!isCursed() && !hasCurseEnchant()) || !isCursedKnown())    info += " " + wand.statsDesc();
 			else                                                    info += " " + Messages.get(this, "cursed_wand");
 
 			if (Dungeon.hero.subClass == HeroSubClass.BATTLEMAGE){
@@ -427,7 +427,7 @@ public class MagesStaff extends MeleeWeapon {
 				if (!item.isIdentified()) {
 					GLog.w(Messages.get(MagesStaff.class, "id_first"));
 					return;
-				} else if (item.cursed){
+				} else if (item.isCursed()){
 					GLog.w(Messages.get(MagesStaff.class, "cursed"));
 					return;
 				}

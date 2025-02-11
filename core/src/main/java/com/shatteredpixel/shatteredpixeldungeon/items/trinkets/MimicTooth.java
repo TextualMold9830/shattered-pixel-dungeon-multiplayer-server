@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class MimicTooth extends Trinket {
 
 	{
-		image = ItemSpriteSheet.MIMIC_TOOTH;
+		setImage(ItemSpriteSheet.MIMIC_TOOTH);
 	}
 
 	@Override

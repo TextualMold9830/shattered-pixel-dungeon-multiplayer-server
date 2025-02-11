@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class HealingDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.HEALING_DART;
+		setImage(ItemSpriteSheet.HEALING_DART);
 	}
 	
 	@Override

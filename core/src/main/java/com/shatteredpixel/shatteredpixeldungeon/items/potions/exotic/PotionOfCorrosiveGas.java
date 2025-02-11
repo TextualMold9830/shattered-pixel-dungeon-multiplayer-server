@@ -33,7 +33,7 @@ import com.watabou.utils.PathFinder;
 public class PotionOfCorrosiveGas extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_CORROGAS;
+		setIcon(ItemSpriteSheet.Icons.POTION_CORROGAS);
 	}
 	
 	@Override

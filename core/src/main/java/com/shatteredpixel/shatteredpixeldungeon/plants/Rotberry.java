@@ -64,7 +64,7 @@ public class Rotberry extends Plant {
 
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_ROTBERRY;
+			setImage(ItemSpriteSheet.SEED_ROTBERRY);
 
 			plantClass = Rotberry.class;
 
@@ -73,12 +73,12 @@ public class Rotberry extends Plant {
 		
 		@Override
 		public int value() {
-			return 30 * quantity;
+			return 30 * getQuantity();
 		}
 
 		@Override
 		public int energyVal() {
-			return 3 * quantity;
+			return 3 * getQuantity();
 		}
 	}
 }

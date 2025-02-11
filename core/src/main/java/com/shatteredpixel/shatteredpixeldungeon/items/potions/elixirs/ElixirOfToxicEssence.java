@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ElixirOfToxicEssence extends Elixir {
 	
 	{
-		image = ItemSpriteSheet.ELIXIR_TOXIC;
+		setImage(ItemSpriteSheet.ELIXIR_TOXIC);
 	}
 	
 	@Override

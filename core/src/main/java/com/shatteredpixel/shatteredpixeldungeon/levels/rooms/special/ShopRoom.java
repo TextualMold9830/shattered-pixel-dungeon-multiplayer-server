@@ -246,7 +246,7 @@ public class ShopRoom extends SpecialRoom {
 			break;
 		}
 		w.enchant(null);
-		w.cursed = false;
+		w.setCursed(false);
 		w.level(0);
 		w.identify(false);
 		itemsToSpawn.add(w);
@@ -294,7 +294,7 @@ public class ShopRoom extends SpecialRoom {
 		itemsToSpawn.add( new StoneOfAugmentation() );
 
 		TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem(TimekeepersHourglass.class);
-		if (hourglass != null && hourglass.isIdentified() && !hourglass.cursed){
+		if (hourglass != null && hourglass.isIdentified() && !hourglass.isCursed()){
 			int bags = 0;
 			//creates the given float percent of the remaining bags to be dropped.
 			//this way players who get the hourglass late can still max it, usually.
@@ -331,8 +331,8 @@ public class ShopRoom extends SpecialRoom {
 			default:
 				rare = new Stylus();
 		}
-		rare.cursed = false;
-		rare.cursedKnown = true;
+		rare.setCursed(false);
+		rare.setCursedKnown(true);
 		itemsToSpawn.add( rare );
 
 		//use a new generator here to prevent items in shop stock affecting levelgen RNG (e.g. sandbags)

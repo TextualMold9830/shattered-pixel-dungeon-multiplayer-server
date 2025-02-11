@@ -50,6 +50,7 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
+import ru.nikita22007.synchronization.annotations.ServerSide;
 import ru.nikita22007.synchronization.annotations.SynchronizationField;
 import ru.nikita22007.synchronization.annotations.SynchronizedClass;
 import ru.nikita22007.synchronization.annotations.UniqueId;
@@ -73,32 +74,44 @@ public class Item implements Bundlable {
 	public static final String AC_THROW		= "THROW";
 
 	@SynchronizationField
-	protected String defaultAction;
-	public boolean usesTargeting;
+	private String defaultAction;
+	@SynchronizationField
+	private boolean usesTargeting;
 
 	//TODO should these be private and accessed through methods?
-	public int image = 0;
-	public int icon = -1; //used as an identifier for items with randomized images
-	
-	public boolean stackable = false;
-	protected int quantity = 1;
-	public boolean dropsDownHeap = false;
-	
-	private int level = 0;
+	@SynchronizationField
+	private int image = 0;
+	@SynchronizationField
+	private int icon = -1; //used as an identifier for items with randomized images
 
-	public boolean levelKnown = false;
-	
-	public boolean cursed;
-	public boolean cursedKnown;
+	@ServerSide
+	private boolean stackable = false;
+	@SynchronizationField
+	private int quantity = 1;
+	@ServerSide
+	public boolean dropsDownHeap = false;
+
+	@SynchronizationField
+	private int level = 0;
+	@SynchronizationField
+	private boolean levelKnown = false;
+
+	@ServerSide
+	protected boolean cursed;
+	@SynchronizationField
+	private boolean cursedKnown;
 	
 	// Unique items persist through revival
+	@ServerSide
 	public boolean unique = false;
 
 	// These items are preserved even if the hero's inventory is lost via unblessed ankh
 	// this is largely set by the resurrection window, items can override this to always be kept
+	@ServerSide
 	public boolean keptThoughLostInvent = false;
 
 	// whether an item can be included in heroes remains
+	@ServerSide
 	public boolean bones = false;
 	
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
@@ -178,7 +191,7 @@ public class Item implements Bundlable {
 
 	//can be overridden if default action is variable
 	public String defaultAction(){
-		return defaultAction;
+		return getDefaultAction();
 	}
 	
 	public void execute( Hero hero ) {
@@ -198,15 +211,15 @@ public class Item implements Bundlable {
 	//takes two items and merges them (if possible)
 	public Item merge( Item other ){
 		if (isSimilar( other )){
-			quantity += other.quantity;
-			other.quantity = 0;
+			setQuantity(getQuantity() + other.getQuantity());
+			other.setQuantity(0);
 		}
 		return this;
 	}
 	
 	public boolean collect( Bag container ) {
 
-		if (quantity <= 0){
+		if (getQuantity() <= 0){
 			return true;
 		}
 
@@ -228,7 +241,7 @@ public class Item implements Bundlable {
 			return false;
 		}
 		
-		if (stackable) {
+		if (isStackable()) {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
@@ -294,7 +307,7 @@ public class Item implements Bundlable {
 			this.storeInBundle(copy);
 			split.restoreFromBundle(copy);
 			split.quantity(amount);
-			quantity -= amount;
+			setQuantity(getQuantity() - amount);
 			
 			return split;
 		}
@@ -313,14 +326,14 @@ public class Item implements Bundlable {
 	
 	public final Item detach( Bag container ) {
 		
-		if (quantity <= 0) {
+		if (getQuantity() <= 0) {
 			
 			return null;
 			
 		} else
-		if (quantity == 1) {
+		if (getQuantity() == 1) {
 
-			if (stackable){
+			if (isStackable()){
 				Dungeon.quickslot.convertToPlaceholder(this);
 			}
 
@@ -367,12 +380,12 @@ public class Item implements Bundlable {
 
 	//returns the true level of the item, ignoring all modifiers aside from upgrades
 	public final int trueLevel(){
-		return level;
+		return getLevel();
 	}
 
 	//returns the persistant level of the item, only affected by modifiers which are persistent (e.g. curse infusion)
 	public int level(){
-		return level;
+		return getLevel();
 	}
 	
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
@@ -388,14 +401,14 @@ public class Item implements Bundlable {
 	}
 
 	public void level( int value ){
-		level = value;
+		setLevel(value);
 
 		updateQuickslot();
 	}
 	
 	public Item upgrade() {
 		
-		this.level++;
+		this.setLevel(this.getLevel() + 1);
 
 		updateQuickslot();
 		
@@ -412,7 +425,7 @@ public class Item implements Bundlable {
 	
 	public Item degrade() {
 		
-		this.level--;
+		this.setLevel(this.getLevel() - 1);
 		
 		return this;
 	}
@@ -426,15 +439,15 @@ public class Item implements Bundlable {
 	}
 	
 	public int visiblyUpgraded() {
-		return levelKnown ? level() : 0;
+		return isLevelKnown() ? level() : 0;
 	}
 
 	public int buffedVisiblyUpgraded() {
-		return levelKnown ? buffedLvl() : 0;
+		return isLevelKnown() ? buffedLvl() : 0;
 	}
 	
 	public boolean visiblyCursed() {
-		return cursed && cursedKnown;
+		return isCursed() && isCursedKnown();
 	}
 	
 	public boolean isUpgradable() {
@@ -442,7 +455,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isIdentified() {
-		return levelKnown && cursedKnown;
+		return isLevelKnown() && isCursedKnown();
 	}
 	
 	public boolean isEquipped( Hero hero ) {
@@ -460,8 +473,8 @@ public class Item implements Bundlable {
 			if (!isIdentified()) Talent.onItemIdentified(Dungeon.hero, this);
 		}
 
-		levelKnown = true;
-		cursedKnown = true;
+		setLevelKnown(true);
+		setCursedKnown(true);
 		Item.updateQuickslot();
 		
 		return this;
@@ -482,8 +495,8 @@ public class Item implements Bundlable {
 		if (visiblyUpgraded() != 0)
 			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
 
-		if (quantity > 1)
-			name = Messages.format( TXT_TO_STRING_X, name, quantity );
+		if (getQuantity() > 1)
+			name = Messages.format( TXT_TO_STRING_X, name, getQuantity());
 
 		return name;
 
@@ -498,7 +511,7 @@ public class Item implements Bundlable {
 	}
 	
 	public int image() {
-		return image;
+		return getImage();
 	}
 	
 	public ItemSprite.Glowing glowing() {
@@ -516,11 +529,11 @@ public class Item implements Bundlable {
 	}
 	
 	public int quantity() {
-		return quantity;
+		return getQuantity();
 	}
 	
 	public Item quantity( int value ) {
-		quantity = value;
+		setQuantity(value);
 		return this;
 	}
 
@@ -538,8 +551,8 @@ public class Item implements Bundlable {
 		Item item = Reflection.newInstance(getClass());
 		if (item == null) return null;
 		
-		item.quantity = 0;
-		item.level = level;
+		item.setQuantity(0);
+		item.setLevel(getLevel());
 		return item;
 	}
 	
@@ -548,7 +561,7 @@ public class Item implements Bundlable {
 	}
 	
 	public String status() {
-		return quantity != 1 ? Integer.toString( quantity ) : null;
+		return getQuantity() != 1 ? Integer.toString(getQuantity()) : null;
 	}
 
 	public static void updateQuickslot() {
@@ -565,11 +578,11 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
-		bundle.put( QUANTITY, quantity );
-		bundle.put( LEVEL, level );
-		bundle.put( LEVEL_KNOWN, levelKnown );
-		bundle.put( CURSED, cursed );
-		bundle.put( CURSED_KNOWN, cursedKnown );
+		bundle.put( QUANTITY, getQuantity());
+		bundle.put( LEVEL, getLevel());
+		bundle.put( LEVEL_KNOWN, isLevelKnown());
+		bundle.put( CURSED, isCursed());
+		bundle.put( CURSED_KNOWN, isCursedKnown());
 		if (Dungeon.quickslot.contains(this)) {
 			bundle.put( QUICKSLOT, Dungeon.quickslot.getSlot(this) );
 		}
@@ -578,9 +591,9 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		quantity	= bundle.getInt( QUANTITY );
-		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
-		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
+		setQuantity(bundle.getInt( QUANTITY ));
+		setLevelKnown(bundle.getBoolean( LEVEL_KNOWN ));
+		setCursedKnown(bundle.getBoolean( CURSED_KNOWN ));
 		
 		int level = bundle.getInt( LEVEL );
 		if (level > 0) {
@@ -589,7 +602,7 @@ public class Item implements Bundlable {
 			degrade( -level );
 		}
 		
-		cursed	= bundle.getBoolean( CURSED );
+		setCursed(bundle.getBoolean( CURSED ));
 
 		//only want to populate slot on first load.
 		if (Dungeon.hero == null) {
@@ -690,4 +703,84 @@ public class Item implements Bundlable {
 			return Messages.get(Item.class, "prompt");
 		}
 	};
+
+	public String getDefaultAction() {
+		return defaultAction;
+	}
+
+	public void setDefaultAction(String defaultAction) {
+		this.defaultAction = defaultAction;
+	}
+
+	public boolean isUsesTargeting() {
+		return usesTargeting;
+	}
+
+	public void setUsesTargeting(boolean usesTargeting) {
+		this.usesTargeting = usesTargeting;
+	}
+
+	public int getImage() {
+		return image;
+	}
+
+	public void setImage(int image) {
+		this.image = image;
+	}
+
+	public int getIcon() {
+		return icon;
+	}
+
+	public void setIcon(int icon) {
+		this.icon = icon;
+	}
+
+	public boolean isStackable() {
+		return stackable;
+	}
+
+	public void setStackable(boolean stackable) {
+		this.stackable = stackable;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public boolean isLevelKnown() {
+		return levelKnown;
+	}
+
+	public void setLevelKnown(boolean levelKnown) {
+		this.levelKnown = levelKnown;
+	}
+
+	public boolean isCursed() {
+		return cursed;
+	}
+
+	public void setCursed(boolean cursed) {
+		this.cursed = cursed;
+	}
+
+	public boolean isCursedKnown() {
+		return cursedKnown;
+	}
+
+	public void setCursedKnown(boolean cursedKnown) {
+		this.cursedKnown = cursedKnown;
+	}
 }

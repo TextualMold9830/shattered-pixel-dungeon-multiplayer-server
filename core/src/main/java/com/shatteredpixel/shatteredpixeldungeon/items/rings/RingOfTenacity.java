@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfTenacity extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_TENACITY;
+		setIcon(ItemSpriteSheet.Icons.RING_TENACITY);
 	}
 
 	public String statsInfo() {

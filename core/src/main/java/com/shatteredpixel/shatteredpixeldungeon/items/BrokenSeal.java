@@ -53,13 +53,13 @@ public class BrokenSeal extends Item {
 	public static final String AC_INFO = "INFO_WINDOW";
 
 	{
-		image = ItemSpriteSheet.SEAL;
+		setImage(ItemSpriteSheet.SEAL);
 
-		cursedKnown = levelKnown = true;
+		setCursedKnown(setLevelKnown(true));
 		unique = true;
 		bones = false;
 
-		defaultAction = AC_INFO;
+		setDefaultAction(AC_INFO);
 	}
 
 	private Armor.Glyph glyph;
@@ -144,10 +144,10 @@ public class BrokenSeal extends Item {
 			BrokenSeal seal = (BrokenSeal) curItem;
 			if (item != null && item instanceof Armor) {
 				Armor armor = (Armor)item;
-				if (!armor.levelKnown){
+				if (!armor.isLevelKnown()){
 					GLog.w(Messages.get(BrokenSeal.class, "unknown_armor"));
 
-				} else if (armor.cursed && (seal.getGlyph() == null || !seal.getGlyph().curse())){
+				} else if (armor.isCursed() && (seal.getGlyph() == null || !seal.getGlyph().curse())){
 					GLog.w(Messages.get(BrokenSeal.class, "cursed_armor"));
 
 				} else if (armor.glyph != null && seal.getGlyph() != null

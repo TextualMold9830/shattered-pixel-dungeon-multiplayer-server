@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Gloves extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GLOVES;
+		setImage(ItemSpriteSheet.GLOVES);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1.3f;
 
@@ -59,8 +59,8 @@ public class Gloves extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 2 + Math.round(0.5f*buffedLvl()) : 2;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 2 + Math.round(0.5f*buffedLvl()) : 2;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));

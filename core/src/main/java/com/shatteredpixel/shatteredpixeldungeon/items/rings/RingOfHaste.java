@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfHaste extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_HASTE;
+		setIcon(ItemSpriteSheet.Icons.RING_HASTE);
 	}
 
 	public String statsInfo() {

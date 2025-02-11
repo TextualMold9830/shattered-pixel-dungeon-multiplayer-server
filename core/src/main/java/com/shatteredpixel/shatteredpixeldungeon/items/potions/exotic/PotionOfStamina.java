@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PotionOfStamina extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_STAMINA;
+		setIcon(ItemSpriteSheet.Icons.POTION_STAMINA);
 	}
 	
 	@Override

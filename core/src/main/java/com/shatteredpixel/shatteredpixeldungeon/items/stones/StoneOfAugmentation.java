@@ -40,7 +40,7 @@ public class StoneOfAugmentation extends InventoryStone {
 	
 	{
 		preferredBag = Belongings.Backpack.class;
-		image = ItemSpriteSheet.STONE_AUGMENTATION;
+		setImage(ItemSpriteSheet.STONE_AUGMENTATION);
 	}
 
 	@Override
@@ -74,12 +74,12 @@ public class StoneOfAugmentation extends InventoryStone {
 	
 	@Override
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 5 * quantity;
+		return 5 * getQuantity();
 	}
 	
 	public class WndAugment extends Window {

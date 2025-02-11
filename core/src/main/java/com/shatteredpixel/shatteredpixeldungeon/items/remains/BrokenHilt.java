@@ -31,7 +31,7 @@ import com.watabou.noosa.audio.Sample;
 public class BrokenHilt extends RemainsItem {
 
 	{
-		image = ItemSpriteSheet.BROKEN_HILT;
+		setImage(ItemSpriteSheet.BROKEN_HILT);
 	}
 
 	@Override

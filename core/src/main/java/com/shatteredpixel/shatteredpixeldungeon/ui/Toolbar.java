@@ -178,7 +178,7 @@ public class Toolbar extends Component {
 							} else {
 
 								item.execute(Dungeon.hero);
-								if (item.usesTargeting) {
+								if (item.isUsesTargeting()) {
 									QuickSlotButton.useTargeting(idx);
 								}
 							}

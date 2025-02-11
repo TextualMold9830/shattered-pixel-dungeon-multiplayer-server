@@ -103,7 +103,7 @@ public class MeleeWeapon extends Weapon {
 		super.execute(hero, action);
 
 		if (action.equals(AC_ABILITY)){
-			usesTargeting = false;
+			setUsesTargeting(false);
 			if (!isEquipped(hero)) {
 				if (hero.hasTalent(Talent.SWIFT_EQUIP)){
 					if (hero.buff(Talent.SwiftEquipCooldown.class) == null
@@ -127,7 +127,7 @@ public class MeleeWeapon extends Weapon {
 					duelistAbility(hero, hero.pos);
 					updateQuickslot();
 				} else {
-					usesTargeting = useTargeting();
+					setUsesTargeting(useTargeting());
 					GameScene.selectCell(new CellSelector.Listener() {
 						@Override
 						public void onSelect(Integer cell) {
@@ -331,7 +331,7 @@ public class MeleeWeapon extends Weapon {
 
 		String info = desc();
 
-		if (levelKnown) {
+		if (isLevelKnown()) {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
 			if (STRReq() > Dungeon.hero.STR()) {
 				info += " " + Messages.get(Weapon.class, "too_heavy");
@@ -358,7 +358,7 @@ public class MeleeWeapon extends Weapon {
 			case NONE:
 		}
 
-		if (enchantment != null && (cursedKnown || !enchantment.curse())){
+		if (enchantment != null && (isCursedKnown() || !enchantment.curse())){
 			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
 			if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
 			info += " " + enchantment.desc();
@@ -366,11 +366,11 @@ public class MeleeWeapon extends Weapon {
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
 
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (isCursed() && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
-		} else if (cursedKnown && cursed) {
+		} else if (isCursedKnown() && isCursed()) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed");
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			if (enchantment != null && enchantment.curse()) {
 				info += "\n\n" + Messages.get(Weapon.class, "weak_cursed");
 			} else {
@@ -411,10 +411,10 @@ public class MeleeWeapon extends Weapon {
 		if (hasGoodEnchant()) {
 			price *= 1.5;
 		}
-		if (cursedKnown && (cursed || hasCurseEnchant())) {
+		if (isCursedKnown() && (isCursed() || hasCurseEnchant())) {
 			price /= 2;
 		}
-		if (levelKnown && level() > 0) {
+		if (isLevelKnown() && level() > 0) {
 			price *= (level() + 1);
 		}
 		if (price < 1) {

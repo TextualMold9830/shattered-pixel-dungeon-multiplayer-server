@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Tomahawk extends MissileWeapon {
 
 	{
-		image = ItemSpriteSheet.TOMAHAWK;
+		setImage(ItemSpriteSheet.TOMAHAWK);
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 0.9f;
 

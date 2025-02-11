@@ -36,7 +36,7 @@ import com.watabou.noosa.audio.Sample;
 public class ScrollOfMagicMapping extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_MAGICMAP;
+		setIcon(ItemSpriteSheet.Icons.SCROLL_MAGICMAP);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class ScrollOfMagicMapping extends Scroll {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 40 * getQuantity() : super.value();
 	}
 	
 	public static void discover( int cell ) {

@@ -41,7 +41,7 @@ import java.util.ArrayList;
 public class StoneOfShock extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_SHOCK;
+		setImage(ItemSpriteSheet.STONE_SHOCK);
 	}
 	
 	@Override

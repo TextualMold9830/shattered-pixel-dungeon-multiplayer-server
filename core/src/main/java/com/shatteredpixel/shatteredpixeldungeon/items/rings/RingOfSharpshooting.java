@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfSharpshooting extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_SHARPSHOOT;
+		setIcon(ItemSpriteSheet.Icons.RING_SHARPSHOOT);
 	}
 
 	public String statsInfo() {

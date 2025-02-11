@@ -35,7 +35,7 @@ import java.io.IOException;
 public class SkeletonKey extends Key {
 	
 	{
-		image = ItemSpriteSheet.SKELETON_KEY;
+		setImage(ItemSpriteSheet.SKELETON_KEY);
 	}
 	
 	public SkeletonKey() {

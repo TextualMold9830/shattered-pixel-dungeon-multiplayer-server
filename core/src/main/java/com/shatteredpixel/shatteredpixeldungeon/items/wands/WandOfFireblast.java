@@ -52,7 +52,7 @@ import java.util.ArrayList;
 public class WandOfFireblast extends DamageWand {
 
 	{
-		image = ItemSpriteSheet.WAND_FIREBOLT;
+		setImage(ItemSpriteSheet.WAND_FIREBOLT);
 
 		//only used for targeting, actual projectile logic is Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID
 		collisionProperties = Ballistica.WONT_STOP;
@@ -200,7 +200,7 @@ public class WandOfFireblast extends DamageWand {
 
 	@Override
 	protected int chargesPerCast() {
-		if (cursed || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null){
+		if (isCursed() || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null){
 			return 1;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.
@@ -209,7 +209,7 @@ public class WandOfFireblast extends DamageWand {
 
 	@Override
 	public String statsDesc() {
-		if (levelKnown)
+		if (isLevelKnown())
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(), max());
 		else
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));

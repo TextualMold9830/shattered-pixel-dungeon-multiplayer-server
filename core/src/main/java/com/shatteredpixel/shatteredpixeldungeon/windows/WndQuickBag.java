@@ -103,7 +103,7 @@ public class WndQuickBag extends Window {
 
 					hide();
 					item.execute(Dungeon.hero);
-					if (item.usesTargeting && bag != null){
+					if (item.isUsesTargeting() && bag != null){
 						int idx = Dungeon.quickslot.getSlot(WndQuickBag.bag);
 						if (idx != -1){
 							QuickSlotButton.useTargeting(idx);

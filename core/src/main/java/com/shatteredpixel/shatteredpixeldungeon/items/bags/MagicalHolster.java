@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class MagicalHolster extends Bag {
 
 	{
-		image = ItemSpriteSheet.HOLSTER;
+		setImage(ItemSpriteSheet.HOLSTER);
 	}
 
 	public static final float HOLSTER_SCALE_FACTOR = 0.85f;

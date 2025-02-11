@@ -28,13 +28,13 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class StewedMeat extends Food {
 	
 	{
-		image = ItemSpriteSheet.STEWED;
+		setImage(ItemSpriteSheet.STEWED);
 		energy = Hunger.HUNGRY/2f;
 	}
 	
 	@Override
 	public int value() {
-		return 8 * quantity;
+		return 8 * getQuantity();
 	}
 	
 	public static class oneMeat extends Recipe.SimpleRecipe{

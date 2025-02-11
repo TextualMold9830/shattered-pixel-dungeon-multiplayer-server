@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PlateArmor extends Armor {
 
 	{
-		image = ItemSpriteSheet.ARMOR_PLATE;
+		setImage(ItemSpriteSheet.ARMOR_PLATE);
 	}
 	
 	public PlateArmor() {

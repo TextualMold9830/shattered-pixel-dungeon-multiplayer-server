@@ -62,15 +62,15 @@ public class LloydsBeacon extends Artifact {
 	public int returnPos;
 	
 	{
-		image = ItemSpriteSheet.ARTIFACT_BEACON;
+		setImage(ItemSpriteSheet.ARTIFACT_BEACON);
 
 		levelCap = 3;
 
 		charge = 0;
 		chargeCap = 3+level();
 
-		defaultAction = AC_ZAP;
-		usesTargeting = true;
+		setDefaultAction(AC_ZAP);
+		setUsesTargeting(true);
 	}
 	
 	private static final String DEPTH	= "depth";

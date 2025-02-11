@@ -74,7 +74,7 @@ public class Fadeleaf extends Plant {
 	
 	public static class Seed extends Plant.Seed {
 		{
-			image = ItemSpriteSheet.SEED_FADELEAF;
+			setImage(ItemSpriteSheet.SEED_FADELEAF);
 
 			plantClass = Fadeleaf.class;
 		}

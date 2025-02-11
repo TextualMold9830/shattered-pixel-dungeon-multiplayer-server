@@ -37,7 +37,7 @@ import com.watabou.utils.Random;
 public class MysteryMeat extends Food {
 
 	{
-		image = ItemSpriteSheet.MEAT;
+		setImage(ItemSpriteSheet.MEAT);
 		energy = Hunger.HUNGRY/2f;
 	}
 	
@@ -48,7 +48,7 @@ public class MysteryMeat extends Food {
 	}
 
 	public int value() {
-		return 5 * quantity;
+		return 5 * getQuantity();
 	}
 
 	public static void effect(Hero hero){
@@ -75,7 +75,7 @@ public class MysteryMeat extends Food {
 	public static class PlaceHolder extends MysteryMeat {
 		
 		{
-			image = ItemSpriteSheet.FOOD_HOLDER;
+			setImage(ItemSpriteSheet.FOOD_HOLDER);
 		}
 		
 		@Override

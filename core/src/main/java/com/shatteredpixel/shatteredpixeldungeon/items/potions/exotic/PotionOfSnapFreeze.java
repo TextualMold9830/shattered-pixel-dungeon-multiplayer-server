@@ -35,7 +35,7 @@ import com.watabou.utils.PathFinder;
 public class PotionOfSnapFreeze extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_SNAPFREEZ;
+		setIcon(ItemSpriteSheet.Icons.POTION_SNAPFREEZ);
 	}
 	
 	@Override

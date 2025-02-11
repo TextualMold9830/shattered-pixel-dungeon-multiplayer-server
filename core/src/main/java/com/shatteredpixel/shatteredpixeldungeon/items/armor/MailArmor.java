@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class MailArmor extends Armor {
 
 	{
-		image = ItemSpriteSheet.ARMOR_MAIL;
+		setImage(ItemSpriteSheet.ARMOR_MAIL);
 	}
 	
 	public MailArmor() {

@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Gauntlet extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.GAUNTLETS;
+		setImage(ItemSpriteSheet.GAUNTLETS);
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1.2f;
 		
@@ -57,8 +57,8 @@ public class Gauntlet extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 4 + Math.round(0.75f*buffedLvl()) : 4;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 4 + Math.round(0.75f*buffedLvl()) : 4;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));

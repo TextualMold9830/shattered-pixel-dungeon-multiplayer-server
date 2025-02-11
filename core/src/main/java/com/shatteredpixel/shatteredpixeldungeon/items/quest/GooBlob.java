@@ -27,8 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class GooBlob extends Item {
 	
 	{
-		image = ItemSpriteSheet.BLOB;
-		stackable = true;
+		setImage(ItemSpriteSheet.BLOB);
+		setStackable(true);
 	}
 	
 	@Override
@@ -43,11 +43,11 @@ public class GooBlob extends Item {
 
 	@Override
 	public int value() {
-		return quantity * 30;
+		return getQuantity() * 30;
 	}
 
 	@Override
 	public int energyVal() {
-		return quantity * 3;
+		return getQuantity() * 3;
 	}
 }

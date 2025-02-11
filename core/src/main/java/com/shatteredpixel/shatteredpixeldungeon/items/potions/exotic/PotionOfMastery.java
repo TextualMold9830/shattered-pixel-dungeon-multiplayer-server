@@ -41,7 +41,7 @@ import com.watabou.utils.Random;
 public class PotionOfMastery extends ExoticPotion {
 	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_MASTERY;
+		setIcon(ItemSpriteSheet.Icons.POTION_MASTERY);
 
 		unique = true;
 

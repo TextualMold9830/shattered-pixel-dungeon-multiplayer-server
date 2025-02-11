@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PhantomMeat extends Food {
 
 	{
-		image = ItemSpriteSheet.PHANTOM_MEAT;
+		setImage(ItemSpriteSheet.PHANTOM_MEAT);
 		energy = Hunger.STARVING;
 	}
 
@@ -45,7 +45,7 @@ public class PhantomMeat extends Food {
 	}
 
 	public int value() {
-		return 30 * quantity;
+		return 30 * getQuantity();
 	}
 
 	public static void effect(Hero hero){

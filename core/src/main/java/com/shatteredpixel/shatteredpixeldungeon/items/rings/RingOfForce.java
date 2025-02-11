@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class RingOfForce extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_FORCE;
+		setIcon(ItemSpriteSheet.Icons.RING_FORCE);
 	}
 
 	@Override

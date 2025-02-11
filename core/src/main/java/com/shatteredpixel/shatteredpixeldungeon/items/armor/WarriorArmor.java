@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class WarriorArmor extends ClassArmor {
 
 	{
-		image = ItemSpriteSheet.ARMOR_WARRIOR;
+		setImage(ItemSpriteSheet.ARMOR_WARRIOR);
 	}
 
 }

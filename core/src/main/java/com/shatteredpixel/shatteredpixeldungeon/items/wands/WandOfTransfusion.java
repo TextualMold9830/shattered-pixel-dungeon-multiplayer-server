@@ -53,7 +53,7 @@ import com.watabou.utils.Random;
 public class WandOfTransfusion extends DamageWand {
 
 	{
-		image = ItemSpriteSheet.WAND_TRANSFUSION;
+		setImage(ItemSpriteSheet.WAND_TRANSFUSION);
 
 		collisionProperties = Ballistica.PROJECTILE;
 	}
@@ -190,7 +190,7 @@ public class WandOfTransfusion extends DamageWand {
 	@Override
 	public String statsDesc() {
 		int selfDMG = Math.round(Dungeon.hero.HT*0.05f);
-		if (levelKnown)
+		if (isLevelKnown())
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max());
 		else
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 5, min(0), max(0));

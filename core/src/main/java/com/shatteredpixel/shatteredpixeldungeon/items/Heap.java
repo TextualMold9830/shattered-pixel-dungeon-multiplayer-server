@@ -117,9 +117,9 @@ public class Heap implements Bundlable {
 	
 	public Heap setHauntedIfCursed(){
 		for (Item item : items) {
-			if (item.cursed) {
+			if (item.isCursed()) {
 				haunted = true;
-				item.cursedKnown = true;
+				item.setCursedKnown(true);
 				break;
 			}
 		}
@@ -152,7 +152,7 @@ public class Heap implements Bundlable {
 	
 	public void drop( Item item ) {
 		
-		if (item.stackable && type != Type.FOR_SALE) {
+		if (item.isStackable() && type != Type.FOR_SALE) {
 			
 			for (Item i : items) {
 				if (i.isSimilar( item )) {
@@ -223,7 +223,7 @@ public class Heap implements Bundlable {
 				items.remove( item );
 				evaporated = true;
 			} else if (item instanceof MysteryMeat || item instanceof FrozenCarpaccio) {
-				replace( item, ChargrilledMeat.cook( item.quantity ) );
+				replace( item, ChargrilledMeat.cook(item.getQuantity()) );
 				burnt = true;
 			} else if (item instanceof Bomb) {
 				items.remove( item );

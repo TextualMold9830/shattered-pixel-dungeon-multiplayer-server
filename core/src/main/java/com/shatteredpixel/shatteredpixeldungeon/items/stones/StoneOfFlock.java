@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class StoneOfFlock extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_FLOCK;
+		setImage(ItemSpriteSheet.STONE_FLOCK);
 	}
 	
 	@Override

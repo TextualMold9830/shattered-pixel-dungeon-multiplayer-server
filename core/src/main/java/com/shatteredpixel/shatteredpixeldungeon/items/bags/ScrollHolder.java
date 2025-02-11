@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class ScrollHolder extends Bag {
 
 	{
-		image = ItemSpriteSheet.HOLDER;
+		setImage(ItemSpriteSheet.HOLDER);
 	}
 
 	@Override

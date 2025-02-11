@@ -42,7 +42,7 @@ import com.watabou.utils.Callback;
 public class TelekineticGrab extends TargetedSpell {
 
 	{
-		image = ItemSpriteSheet.TELE_GRAB;
+		setImage(ItemSpriteSheet.TELE_GRAB);
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
@@ -118,12 +118,12 @@ public class TelekineticGrab extends TargetedSpell {
 
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(60 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return (int)(12 * (getQuantity() /(float)Recipe.OUT_QUANTITY));
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

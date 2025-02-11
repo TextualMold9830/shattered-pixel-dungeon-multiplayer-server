@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class DisplacingDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.DISPLACING_DART;
+		setImage(ItemSpriteSheet.DISPLACING_DART);
 	}
 	
 	@Override

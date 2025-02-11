@@ -36,7 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class MagicalInfusion extends InventorySpell {
 	
 	{
-		image = ItemSpriteSheet.MAGIC_INFUSE;
+		setImage(ItemSpriteSheet.MAGIC_INFUSE);
 
 		unique = true;
 
@@ -60,10 +60,10 @@ public class MagicalInfusion extends InventorySpell {
 		} else if (item instanceof Armor && ((Armor) item).glyph != null) {
 			((Armor) item).upgrade(true);
 		} else {
-			boolean wasCursed = item.cursed;
+			boolean wasCursed = item.isCursed();
 			boolean wasCurseInfused = item instanceof Wand && ((Wand) item).curseInfusionBonus;
 			item.upgrade();
-			if (wasCursed) item.cursed = true;
+			if (wasCursed) item.setCursed(true);
 			if (wasCurseInfused) ((Wand) item).curseInfusionBonus = true;
 		}
 		
@@ -75,12 +75,12 @@ public class MagicalInfusion extends InventorySpell {
 	
 	@Override
 	public int value() {
-		return 60 * quantity;
+		return 60 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 12 * quantity;
+		return 12 * getQuantity();
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

@@ -27,8 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class MetalShard extends Item {
 	
 	{
-		image = ItemSpriteSheet.SHARD;
-		stackable = true;
+		setImage(ItemSpriteSheet.SHARD);
+		setStackable(true);
 	}
 	
 	@Override
@@ -43,11 +43,11 @@ public class MetalShard extends Item {
 	
 	@Override
 	public int value() {
-		return quantity * 50;
+		return getQuantity() * 50;
 	}
 
 	@Override
 	public int energyVal() {
-		return quantity * 3;
+		return getQuantity() * 3;
 	}
 }

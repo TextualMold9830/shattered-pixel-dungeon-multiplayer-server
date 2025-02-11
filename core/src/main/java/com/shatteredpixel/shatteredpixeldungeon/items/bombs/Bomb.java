@@ -64,12 +64,12 @@ import java.util.LinkedHashMap;
 public class Bomb extends Item {
 	
 	{
-		image = ItemSpriteSheet.BOMB;
+		setImage(ItemSpriteSheet.BOMB);
 
-		defaultAction = AC_LIGHTTHROW;
-		usesTargeting = true;
+		setDefaultAction(AC_LIGHTTHROW);
+		setUsesTargeting(true);
 
-		stackable = true;
+		setStackable(true);
 	}
 
 	public Fuse fuse;
@@ -238,7 +238,7 @@ public class Bomb extends Item {
 
 	@Override
 	public int value() {
-		return 20 * quantity;
+		return 20 * getQuantity();
 	}
 	
 	@Override
@@ -321,8 +321,8 @@ public class Bomb extends Item {
 	public static class DoubleBomb extends Bomb{
 
 		{
-			image = ItemSpriteSheet.DBL_BOMB;
-			stackable = false;
+			setImage(ItemSpriteSheet.DBL_BOMB);
+			setStackable(false);
 		}
 
 		@Override

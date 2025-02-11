@@ -49,7 +49,7 @@ import java.util.ArrayList;
 public class CloakOfShadows extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CLOAK;
+		setImage(ItemSpriteSheet.ARTIFACT_CLOAK);
 
 		exp = 0;
 		levelCap = 10;
@@ -58,7 +58,7 @@ public class CloakOfShadows extends Artifact {
 		partialCharge = 0;
 		chargeCap = Math.min(level()+3, 10);
 
-		defaultAction = AC_STEALTH;
+		setDefaultAction(AC_STEALTH);
 
 		unique = true;
 		bones = false;
@@ -70,7 +70,7 @@ public class CloakOfShadows extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if ((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_CLOAK))
-				&& !cursed
+				&& !isCursed()
 				&& hero.buff(MagicImmune.class) == null
 				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_STEALTH);
@@ -89,7 +89,7 @@ public class CloakOfShadows extends Artifact {
 
 			if (activeBuff == null){
 				if (!isEquipped(hero) && !hero.hasTalent(Talent.LIGHT_CLOAK)) GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-				else if (cursed)       GLog.i( Messages.get(this, "cursed") );
+				else if (isCursed())       GLog.i( Messages.get(this, "cursed") );
 				else if (charge <= 0)  GLog.i( Messages.get(this, "no_charge") );
 				else {
 					hero.spend( 1f );
@@ -175,7 +175,7 @@ public class CloakOfShadows extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (isCursed() || target.buff(MagicImmune.class) != null) return;
 
 		if (charge < chargeCap) {
 			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.LIGHT_CLOAK)/3f;

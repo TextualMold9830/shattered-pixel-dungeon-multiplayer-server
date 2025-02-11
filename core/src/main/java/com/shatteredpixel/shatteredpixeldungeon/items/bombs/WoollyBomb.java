@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class WoollyBomb extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.WOOLY_BOMB;
+		setImage(ItemSpriteSheet.WOOLY_BOMB);
 	}
 	
 	@Override
@@ -74,6 +74,6 @@ public class WoollyBomb extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return getQuantity() * (20 + 30);
 	}
 }

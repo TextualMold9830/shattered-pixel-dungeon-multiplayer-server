@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class IronKey extends Key {
 	
 	{
-		image = ItemSpriteSheet.IRON_KEY;
+		setImage(ItemSpriteSheet.IRON_KEY);
 	}
 
 	public IronKey() {

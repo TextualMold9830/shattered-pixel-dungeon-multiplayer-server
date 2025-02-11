@@ -236,16 +236,16 @@ public class ItemSlot extends Button {
 			status.resetColor();
 		}
 
-		if (item.icon != -1 && (item.isIdentified() || (item instanceof Ring && ((Ring) item).isKnown()))){
+		if (item.getIcon() != -1 && (item.isIdentified() || (item instanceof Ring && ((Ring) item).isKnown()))){
 			extra.text( null );
 
 			itemIcon = new Image(Assets.Sprites.ITEM_ICONS);
-			itemIcon.frame(ItemSpriteSheet.Icons.film.get(item.icon));
+			itemIcon.frame(ItemSpriteSheet.Icons.film.get(item.getIcon()));
 			add(itemIcon);
 
 		} else if (item instanceof Weapon || item instanceof Armor) {
 
-			if (item.levelKnown){
+			if (item.isLevelKnown()){
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
 				extra.text( Messages.format( TXT_STRENGTH, str ) );
 				if (str > Dungeon.hero.STR()) {

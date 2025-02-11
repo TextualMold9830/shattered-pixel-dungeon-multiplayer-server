@@ -35,7 +35,7 @@ import com.watabou.noosa.Image;
 public class ElixirOfFeatherFall extends Elixir {
 
 	{
-		image = ItemSpriteSheet.ELIXIR_FEATHER;
+		setImage(ItemSpriteSheet.ELIXIR_FEATHER);
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
@@ -74,12 +74,12 @@ public class ElixirOfFeatherFall extends Elixir {
 
 	@Override
 	public int value() {
-		return (int)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+		return (int)(60 * (getQuantity() /(float) Recipe.OUT_QUANTITY));
 	}
 
 	@Override
 	public int energyVal() {
-		return (int)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+		return (int)(12 * (getQuantity() /(float) Recipe.OUT_QUANTITY));
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

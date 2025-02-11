@@ -36,7 +36,7 @@ import com.watabou.utils.Bundle;
 public class Noisemaker extends Bomb {
 	
 	{
-		image = ItemSpriteSheet.NOISEMAKER;
+		setImage(ItemSpriteSheet.NOISEMAKER);
 	}
 
 	@Override
@@ -151,6 +151,6 @@ public class Noisemaker extends Bomb {
 	@Override
 	public int value() {
 		//prices of ingredients
-		return quantity * (20 + 40);
+		return getQuantity() * (20 + 40);
 	}
 }

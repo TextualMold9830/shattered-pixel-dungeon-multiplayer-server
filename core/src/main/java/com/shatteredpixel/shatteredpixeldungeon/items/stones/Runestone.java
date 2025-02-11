@@ -30,8 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public abstract class Runestone extends Item {
 	
 	{
-		stackable = true;
-		defaultAction = AC_THROW;
+		setStackable(true);
+		setDefaultAction(AC_THROW);
 	}
 
 	@Override
@@ -61,18 +61,18 @@ public abstract class Runestone extends Item {
 	
 	@Override
 	public int value() {
-		return 15 * quantity;
+		return 15 * getQuantity();
 	}
 
 	@Override
 	public int energyVal() {
-		return 3 * quantity;
+		return 3 * getQuantity();
 	}
 
 	public static class PlaceHolder extends Runestone {
 		
 		{
-			image = ItemSpriteSheet.STONE_HOLDER;
+			setImage(ItemSpriteSheet.STONE_HOLDER);
 		}
 		
 		@Override

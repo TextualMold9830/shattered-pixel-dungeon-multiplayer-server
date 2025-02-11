@@ -55,7 +55,7 @@ public class HornOfPlenty extends Artifact {
 
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_HORN1;
+		setImage(ItemSpriteSheet.ARTIFACT_HORN1);
 
 		levelCap = 10;
 
@@ -63,7 +63,7 @@ public class HornOfPlenty extends Artifact {
 		partialCharge = 0;
 		chargeCap = 5 + level()/2;
 
-		defaultAction = AC_SNACK;
+		setDefaultAction(AC_SNACK);
 	}
 	
 	private int storedFoodEnergy = 0;
@@ -80,7 +80,7 @@ public class HornOfPlenty extends Artifact {
 			actions.add(AC_SNACK);
 			actions.add(AC_EAT);
 		}
-		if (isEquipped( hero ) && level() < levelCap && !cursed) {
+		if (isEquipped( hero ) && level() < levelCap && !isCursed()) {
 			actions.add(AC_STORE);
 		}
 		return actions;
@@ -140,10 +140,10 @@ public class HornOfPlenty extends Artifact {
 
 				Badges.validateFoodEaten();
 
-				if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-				else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
-				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
+				if (charge >= 8)        setImage(ItemSpriteSheet.ARTIFACT_HORN4);
+				else if (charge >= 5)   setImage(ItemSpriteSheet.ARTIFACT_HORN3);
+				else if (charge >= 2)   setImage(ItemSpriteSheet.ARTIFACT_HORN2);
+				else                    setImage(ItemSpriteSheet.ARTIFACT_HORN1);
 
 				updateQuickslot();
 			}
@@ -162,7 +162,7 @@ public class HornOfPlenty extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !isCursed() && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
@@ -173,10 +173,10 @@ public class HornOfPlenty extends Artifact {
 					partialCharge = 0;
 				}
 
-				if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-				else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
-				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
+				if (charge >= 8)        setImage(ItemSpriteSheet.ARTIFACT_HORN4);
+				else if (charge >= 5)   setImage(ItemSpriteSheet.ARTIFACT_HORN3);
+				else if (charge >= 2)   setImage(ItemSpriteSheet.ARTIFACT_HORN2);
+				else                    setImage(ItemSpriteSheet.ARTIFACT_HORN1);
 
 				updateQuickslot();
 			}
@@ -188,7 +188,7 @@ public class HornOfPlenty extends Artifact {
 		String desc = super.desc();
 
 		if ( isEquipped( Dungeon.hero ) ){
-			if (!cursed) {
+			if (!isCursed()) {
 				if (level() < levelCap)
 					desc += "\n\n" +Messages.get(this, "desc_hint");
 			} else {
@@ -257,9 +257,9 @@ public class HornOfPlenty extends Artifact {
 
 		storedFoodEnergy = bundle.getInt(STORED);
 		
-		if (charge >= 8)       image = ItemSpriteSheet.ARTIFACT_HORN4;
-		else if (charge >= 5)  image = ItemSpriteSheet.ARTIFACT_HORN3;
-		else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+		if (charge >= 8)       setImage(ItemSpriteSheet.ARTIFACT_HORN4);
+		else if (charge >= 5)  setImage(ItemSpriteSheet.ARTIFACT_HORN3);
+		else if (charge >= 2)   setImage(ItemSpriteSheet.ARTIFACT_HORN2);
 	}
 
 	public class hornRecharge extends ArtifactBuff{
@@ -284,10 +284,10 @@ public class HornOfPlenty extends Artifact {
 					charge++;
 					partialCharge -= 1;
 
-					if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-					else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-					else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
-					else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
+					if (charge >= 8)        setImage(ItemSpriteSheet.ARTIFACT_HORN4);
+					else if (charge >= 5)   setImage(ItemSpriteSheet.ARTIFACT_HORN3);
+					else if (charge >= 2)   setImage(ItemSpriteSheet.ARTIFACT_HORN2);
+					else                    setImage(ItemSpriteSheet.ARTIFACT_HORN1);
 
 					updateQuickslot();
 

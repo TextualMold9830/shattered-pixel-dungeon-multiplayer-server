@@ -38,7 +38,7 @@ public class RegionLorePage {
 
 	public static class Sewers extends DocumentPage {
 		{
-			image = ItemSpriteSheet.SEWER_PAGE;
+			setImage(ItemSpriteSheet.SEWER_PAGE);
 		}
 
 		@Override
@@ -49,7 +49,7 @@ public class RegionLorePage {
 
 	public static class Prison extends DocumentPage {
 		{
-			image = ItemSpriteSheet.PRISON_PAGE;
+			setImage(ItemSpriteSheet.PRISON_PAGE);
 		}
 
 		@Override
@@ -60,7 +60,7 @@ public class RegionLorePage {
 
 	public static class Caves extends DocumentPage {
 		{
-			image = ItemSpriteSheet.CAVES_PAGE;
+			setImage(ItemSpriteSheet.CAVES_PAGE);
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public class RegionLorePage {
 
 	public static class City extends DocumentPage {
 		{
-			image = ItemSpriteSheet.CITY_PAGE;
+			setImage(ItemSpriteSheet.CITY_PAGE);
 		}
 
 		@Override
@@ -82,7 +82,7 @@ public class RegionLorePage {
 
 	public static class Halls extends DocumentPage {
 		{
-			image = ItemSpriteSheet.HALLS_PAGE;
+			setImage(ItemSpriteSheet.HALLS_PAGE);
 		}
 
 		@Override

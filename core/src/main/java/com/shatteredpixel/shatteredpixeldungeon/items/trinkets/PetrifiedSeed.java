@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class PetrifiedSeed extends Trinket {
 
 	{
-		image = ItemSpriteSheet.PETRIFIED_SEED;
+		setImage(ItemSpriteSheet.PETRIFIED_SEED);
 	}
 
 	@Override

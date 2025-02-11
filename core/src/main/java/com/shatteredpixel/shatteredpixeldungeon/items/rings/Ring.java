@@ -100,7 +100,7 @@ public class Ring extends KindofMisc {
 	//useful for items that appear in UIs, or which are only spawned for their effects
 	protected boolean anonymous = false;
 	public void anonymize(){
-		if (!isKnown()) image = ItemSpriteSheet.RING_HOLDER;
+		if (!isKnown()) setImage(ItemSpriteSheet.RING_HOLDER);
 		anonymous = true;
 	}
 	
@@ -108,7 +108,7 @@ public class Ring extends KindofMisc {
 		super.reset();
 		levelsToID = 1;
 		if (handler != null && handler.contains(this)){
-			image = handler.image(this);
+			setImage(handler.image(this));
 			gem = handler.label(this);
 		}
 	}
@@ -166,13 +166,13 @@ public class Ring extends KindofMisc {
 		
 		String desc = isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 		
-		if (cursed && isEquipped( Dungeon.hero )) {
+		if (isCursed() && isEquipped( Dungeon.hero )) {
 			desc += "\n\n" + Messages.get(Ring.class, "cursed_worn");
 			
-		} else if (cursed && cursedKnown) {
+		} else if (isCursed() && isCursedKnown()) {
 			desc += "\n\n" + Messages.get(Ring.class, "curse_known");
 			
-		} else if (!isIdentified() && cursedKnown){
+		} else if (!isIdentified() && isCursedKnown()){
 			desc += "\n\n" + Messages.get(Ring.class, "not_cursed");
 			
 		}
@@ -193,7 +193,7 @@ public class Ring extends KindofMisc {
 		super.upgrade();
 		
 		if (Random.Int(3) == 0) {
-			cursed = false;
+			setCursed(false);
 		}
 		
 		return this;
@@ -227,7 +227,7 @@ public class Ring extends KindofMisc {
 		
 		//30% chance to be cursed
 		if (Random.Float() < 0.3f) {
-			cursed = true;
+			setCursed(true);
 		}
 		
 		return this;
@@ -248,10 +248,10 @@ public class Ring extends KindofMisc {
 	@Override
 	public int value() {
 		int price = 75;
-		if (cursed && cursedKnown) {
+		if (isCursed() && isCursedKnown()) {
 			price /= 2;
 		}
-		if (levelKnown) {
+		if (isLevelKnown()) {
 			if (level() > 0) {
 				price *= (level() + 1);
 			} else if (level() < 0) {
@@ -323,7 +323,7 @@ public class Ring extends KindofMisc {
 
 	//just used for ring descriptions
 	public int soloBonus(){
-		if (cursed){
+		if (isCursed()){
 			return Math.min( 0, Ring.this.level()-2 );
 		} else {
 			return Ring.this.level()+1;
@@ -332,7 +332,7 @@ public class Ring extends KindofMisc {
 
 	//just used for ring descriptions
 	public int soloBuffedBonus(){
-		if (cursed){
+		if (isCursed()){
 			return Math.min( 0, Ring.this.buffedLvl()-2 );
 		} else {
 			return Ring.this.buffedLvl()+1;

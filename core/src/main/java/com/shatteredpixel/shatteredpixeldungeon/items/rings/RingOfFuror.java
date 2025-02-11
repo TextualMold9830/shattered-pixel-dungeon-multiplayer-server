@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class RingOfFuror extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_FUROR;
+		setIcon(ItemSpriteSheet.Icons.RING_FUROR);
 	}
 
 	public String statsInfo() {

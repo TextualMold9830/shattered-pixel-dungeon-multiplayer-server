@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class Bolas extends MissileWeapon {
 	
 	{
-		image = ItemSpriteSheet.BOLAS;
+		setImage(ItemSpriteSheet.BOLAS);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 		

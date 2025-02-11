@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class Whip extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.WHIP;
+		setImage(ItemSpriteSheet.WHIP);
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1.1f;
 
@@ -99,8 +99,8 @@ public class Whip extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 2 + Math.round(0.5f*buffedLvl()) : 2;
-		if (levelKnown){
+		int dmgBoost = isLevelKnown() ? 2 + Math.round(0.5f*buffedLvl()) : 2;
+		if (isLevelKnown()){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
 			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);

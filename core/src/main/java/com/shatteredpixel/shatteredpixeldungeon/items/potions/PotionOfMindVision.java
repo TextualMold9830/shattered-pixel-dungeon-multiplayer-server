@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class PotionOfMindVision extends Potion {
 
 	{
-		icon = ItemSpriteSheet.Icons.POTION_MINDVIS;
+		setIcon(ItemSpriteSheet.Icons.POTION_MINDVIS);
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class PotionOfMindVision extends Potion {
 	
 	@Override
 	public int value() {
-		return isKnown() ? 30 * quantity : super.value();
+		return isKnown() ? 30 * getQuantity() : super.value();
 	}
 }

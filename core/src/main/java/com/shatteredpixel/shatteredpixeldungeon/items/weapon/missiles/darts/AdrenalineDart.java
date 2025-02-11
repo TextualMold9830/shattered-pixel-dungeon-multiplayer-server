@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class AdrenalineDart extends TippedDart {
 	
 	{
-		image = ItemSpriteSheet.ADRENALINE_DART;
+		setImage(ItemSpriteSheet.ADRENALINE_DART);
 	}
 	
 	@Override

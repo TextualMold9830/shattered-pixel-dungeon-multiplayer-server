@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class AlchemyPage extends DocumentPage {
 	
 	{
-		image = ItemSpriteSheet.ALCH_PAGE;
+		setImage(ItemSpriteSheet.ALCH_PAGE);
 	}
 	
 	@Override

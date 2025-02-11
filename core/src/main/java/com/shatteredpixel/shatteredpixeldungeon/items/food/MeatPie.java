@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class MeatPie extends Food {
 	
 	{
-		image = ItemSpriteSheet.MEAT_PIE;
+		setImage(ItemSpriteSheet.MEAT_PIE);
 		energy = Hunger.STARVING*2f;
 	}
 	
@@ -45,7 +45,7 @@ public class MeatPie extends Food {
 	
 	@Override
 	public int value() {
-		return 40 * quantity;
+		return 40 * getQuantity();
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
