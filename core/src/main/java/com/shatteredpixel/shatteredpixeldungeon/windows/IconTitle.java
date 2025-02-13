@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+import org.json.JSONObject;
 
 public class IconTitle extends Component {
 
@@ -145,5 +146,14 @@ public class IconTitle extends Component {
 	public void health( float value ) {
 		health.level( healthLvl = value );
 		layout();
+	}
+	public JSONObject toJson(){
+		JSONObject object = new JSONObject();
+		if (!Float.isNaN(healthLvl)) {
+			object.put("health_lvl", healthLvl);
+		}
+		object.put("icon", imIcon.toJson());
+		object.put("tf_label", tfLabel.toJson());
+		return object;
 	}
 }
