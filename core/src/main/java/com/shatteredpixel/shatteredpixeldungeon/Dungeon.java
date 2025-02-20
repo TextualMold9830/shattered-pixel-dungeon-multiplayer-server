@@ -65,14 +65,9 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
-import com.watabou.utils.BArray;
-import com.watabou.utils.Bundlable;
-import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
-import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
-import com.watabou.utils.SparseArray;
+import com.watabou.utils.*;
 
+import com.watabou.utils.Random;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -231,7 +226,9 @@ public class Dungeon {
 		initialVersion = version = Game.versionCode;
 		challenges = SPDSettings.challenges();
 		mobsToChampion = -1;
-
+		if (!DeviceCompat.isDebug()) {
+			initSeed();
+		}
 		Actor.clear();
 		Actor.resetNextID();
 
