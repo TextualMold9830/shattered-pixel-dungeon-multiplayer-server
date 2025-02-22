@@ -1310,7 +1310,7 @@ public class GameScene extends PixelScene {
 				ArrayList<Object> objects = getObjectsAtCell(cell);
 
 				if (objects.isEmpty()) {
-					GameScene.show(new WndInfoCell(cell));
+					GameScene.show(new WndInfoCell(cell, hero));
 				} else if (objects.size() == 1) {
 					examineObject(objects.get(0), hero);
 				} else {
