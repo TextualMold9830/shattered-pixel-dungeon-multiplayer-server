@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.watabou.noosa.Image;
 import com.watabou.utils.SparseArray;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -874,6 +875,13 @@ public class NetworkPacket {
             Actor target = buff.target;
             buffObj.put("target_id", target == null ? JSONObject.NULL : target.id());
             buffObj.put("desc", buff.toString());
+            Image temp = new Image();
+            buff.tintIcon(temp);
+            JSONObject hardlight = new JSONObject();
+            hardlight.put("rm", temp.rm);
+            hardlight.put("gm", temp.gm);
+            hardlight.put("bm", temp.bm);
+            buffObj.put("hardlight", hardlight);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
