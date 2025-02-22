@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
@@ -33,12 +34,17 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
+import org.json.JSONObject;
 
 public class WndInfoCell extends Window {
+
 	
 	private static final float GAP	= 2;
 	
 	private static final int WIDTH = 120;
+	//used for toJson
+	String desc;
+	IconTitle titlebar;
 
 	public static Image cellImage( int cell ){
 		int tile = Dungeon.level.map[cell];
@@ -97,68 +103,7 @@ public class WndInfoCell extends Window {
 			return Dungeon.level.tileName(Dungeon.level.map[cell]);
 		}
 	}
-	
-	public WndInfoCell( int cell ) {
-		
-		super();
 
-		CustomTilemap customTile = null;
-		int x = cell % Dungeon.level.width();
-		int y = cell / Dungeon.level.width();
-		for (CustomTilemap i : Dungeon.level.customTiles){
-			if ((x >= i.tileX && x < i.tileX+i.tileW) &&
-					(y >= i.tileY && y < i.tileY+i.tileH)){
-				if (i.image(x - i.tileX, y - i.tileY) != null) {
-					x -= i.tileX;
-					y -= i.tileY;
-					customTile = i;
-					break;
-				}
-			}
-		}
-
-
-		String desc = "";
-
-		IconTitle titlebar = new IconTitle();
-		titlebar.icon(cellImage(cell));
-		titlebar.label(cellName(cell));
-
-		if (customTile != null){
-			String customDesc = customTile.desc(x, y);
-			if (customDesc != null) {
-				desc += customDesc;
-			} else {
-				desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
-			}
-
-		} else {
-
-			desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
-		}
-		titlebar.setRect(0, 0, WIDTH, 0);
-		add(titlebar);
-
-		RenderedTextBlock info = PixelScene.renderTextBlock(6);
-		add(info);
-
-		if (Dungeon.visibleforAnyHero(cell)) {
-			for (Blob blob : Dungeon.level.blobs.values()) {
-				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
-					if (desc.length() > 0) {
-						desc += "\n\n";
-					}
-					desc += blob.tileDesc();
-				}
-			}
-		}
-		
-		info.text( desc.length() == 0 ? Messages.get(this, "nothing") : desc );
-		info.maxWidth(WIDTH);
-		info.setPos(titlebar.left(), titlebar.bottom() + 2*GAP);
-		
-		resize( WIDTH, (int)info.bottom()+2 );
-	}
 	public WndInfoCell(int cell, Hero hero) {
 
 		super(hero);
@@ -197,11 +142,7 @@ public class WndInfoCell extends Window {
 
 			desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
 		}
-		titlebar.setRect(0, 0, WIDTH, 0);
-		add(titlebar);
-
-		RenderedTextBlock info = PixelScene.renderTextBlock(6);
-		add(info);
+		this.titlebar = titlebar;
 
 		if (hero.fieldOfView[cell]) {
 			for (Blob blob : Dungeon.level.blobs.values()) {
@@ -214,10 +155,14 @@ public class WndInfoCell extends Window {
 			}
 		}
 
-		info.text( desc.length() == 0 ? Messages.get(this, "nothing") : desc );
-		info.maxWidth(WIDTH);
-		info.setPos(titlebar.left(), titlebar.bottom() + 2*GAP);
+		this.desc = desc.length() == 0 ? Messages.get(this, "nothing") : desc;
+		SendData.sendWindow(hero.networkID, "info_cell", getId(), toJson());
 
-		resize( WIDTH, (int)info.bottom()+2 );
+	}
+	public JSONObject toJson(){
+		JSONObject object = new JSONObject();
+		object.put("desc", desc);
+		object.put("title_bar", titlebar.toJson());
+		return object;
 	}
 }
