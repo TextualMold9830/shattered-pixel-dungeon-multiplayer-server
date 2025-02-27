@@ -142,41 +142,48 @@ public class Bomb extends Item {
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 
 		if (explodesDestructively()) {
-			
-			ArrayList<Char> affected = new ArrayList<>();
+
+			ArrayList<Integer> affectedCells = new ArrayList<>();
+			ArrayList<Char> affectedChars = new ArrayList<>();
 			
 			if (Dungeon.visibleforAnyHero(cell)) {
 				CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
 			}
 			
 			boolean terrainAffected = false;
-			for (int n : PathFinder.NEIGHBOURS9) {
-				int c = cell + n;
-				if (c >= 0 && c < Dungeon.level.length()) {
-					if (Dungeon.visibleforAnyHero(c)) {
-						CellEmitter.get(c).burst(SmokeParticle.FACTORY, 4);
-					}
-					
-					if (Dungeon.level.flamable[c]) {
-						Dungeon.level.destroy(c);
-						GameScene.updateMap(c);
-						terrainAffected = true;
-					}
-					
-					//destroys items / triggers bombs caught in the blast.
-					Heap heap = Dungeon.level.heaps.get(c);
-					if (heap != null) {
-						heap.explode();
-					}
-
-					Char ch = Actor.findChar(c);
+			boolean[] explodable = new boolean[Dungeon.level.length()];
+			BArray.not( Dungeon.level.solid, explodable);
+			BArray.or( Dungeon.level.flamable, explodable, explodable);
+			PathFinder.buildDistanceMap( cell, explodable, explosionRange() );
+			for (int i = 0; i < PathFinder.distance.length; i++) {
+				if (PathFinder.distance[i] != Integer.MAX_VALUE) {
+					affectedCells.add(i);
+					Char ch = Actor.findChar(i);
 					if (ch != null) {
-						affected.add(ch);
+						affectedChars.add(ch);
 					}
 				}
 			}
+
+			for (int i : affectedCells){
+				if (Dungeon.level.heroFOV[i]) {
+					CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
+				}
+
+				if (Dungeon.level.flamable[i]) {
+					Dungeon.level.destroy(i);
+					GameScene.updateMap(i);
+					terrainAffected = true;
+				}
+
+				//destroys items / triggers bombs caught in the blast.
+				Heap heap = Dungeon.level.heaps.get(i);
+				if (heap != null) {
+					heap.explode();
+				}
+			}
 			
-			for (Char ch : affected){
+			for (Char ch : affectedChars){
 
 				//if they have already been killed by another bomb
 				if(!ch.isAlive()){
@@ -211,7 +218,7 @@ public class Bomb extends Item {
 	public void explode(int cell){
 		explode(cell, null);
 	}
-	
+
 	@Override
 	public boolean isUpgradable() {
 		return false;

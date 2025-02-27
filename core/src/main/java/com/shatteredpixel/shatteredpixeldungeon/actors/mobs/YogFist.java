@@ -185,6 +185,16 @@ public abstract class YogFist extends Mob {
 	}
 
 
+	@Override
+	public void die(Object cause) {
+		super.die(cause);
+		for ( Char c : Actor.chars() ){
+			if (c instanceof YogDzewa){
+				((YogDzewa) c).processFistDeath();
+			}
+		}
+	}
+
 	protected abstract void zap();
 
 	public void onZapComplete(){
@@ -490,7 +500,7 @@ public abstract class YogFist extends Mob {
 			if (!isInvulnerable(src.getClass()) && !(src instanceof Viscosity.DeferedDamage)){
 				dmg = Math.round( dmg * resist( src.getClass() ));
 				if (dmg >= 0) {
-					Buff.affect(this, Viscosity.DeferedDamage.class).prolong(dmg);
+					Buff.affect(this, Viscosity.DeferedDamage.class).extend(dmg);
 					getSprite().showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg));
 				}
 			} else{

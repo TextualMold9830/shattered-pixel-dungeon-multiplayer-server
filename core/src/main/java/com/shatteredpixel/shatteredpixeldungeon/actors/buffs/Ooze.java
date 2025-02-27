@@ -43,7 +43,7 @@ public class Ooze extends Buff {
 
 	private static final String LEFT	= "left";
 	private static final String ACTED   = "acted";
-	
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
@@ -81,6 +81,10 @@ public class Ooze extends Buff {
 	public void set(float left){
 		this.left = left;
 		acted = false;
+	}
+
+	public void extend( float duration ) {
+		left += duration;
 	}
 
 	@Override

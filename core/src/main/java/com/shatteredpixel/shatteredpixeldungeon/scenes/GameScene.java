@@ -58,6 +58,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
@@ -97,7 +100,18 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toast;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.*;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndGame;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndHero;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoCell;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoMob;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoPlant;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoTrap;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.glwrap.Blending;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.KeyBindings;
@@ -112,6 +126,8 @@ import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
@@ -366,31 +382,7 @@ public class GameScene extends PixelScene {
 				break;
 			case DESCEND:
 			case FALL:
-				if (Dungeon.depth == Statistics.deepestFloor) {
-					switch (Dungeon.depth) {
-						case 1:
-						case 6:
-						case 11:
-						case 16:
-						case 21:
-							int region = (Dungeon.depth + 4) / 5;
-							if (!Document.INTROS.isPageRead(region)) {
-								add(new WndStory(Document.INTROS.pageBody(region)).setDelays(0.6f, 1.4f));
-								Document.INTROS.readPage(region);
-							}
-							break;
-					}
-				}
-				for (Hero hero : Dungeon.heroes) {
-					if (hero != null) {
-						if (hero.isAlive()) {
-							Badges.validateNoKilling();
-						}
-						break;
-					}
-				}
-				//TODO: check this
-				if (Dungeon.heroes[0] != null && Dungeon.heroes[0].isAlive()) {
+				if (Dungeon.hero.isAlive()) {
 					Badges.validateNoKilling();
 				}
 				break;
@@ -554,7 +546,42 @@ public class GameScene extends PixelScene {
 
 					InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
 
-					fadeIn();
+			
+		}
+
+		//Tutorial
+		if (SPDSettings.intro()){
+
+			if (Document.ADVENTURERS_GUIDE.isPageFound(Document.GUIDE_INTRO)){
+				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
+			} else if (ControllerHandler.isControllerConnected()) {
+				GameLog.wipe();
+				GLog.p(Messages.get(GameScene.class, "tutorial_move_controller"));
+			} else if (SPDSettings.interfaceSize() == 0) {
+				GameLog.wipe();
+				GLog.p(Messages.get(GameScene.class, "tutorial_move_mobile"));
+			} else {
+				GameLog.wipe();
+				GLog.p(Messages.get(GameScene.class, "tutorial_move_desktop"));
+			}
+			toolbar.visible = toolbar.active = false;
+			status.visible = status.active = false;
+			if (inventory != null) inventory.visible = inventory.active = false;
+		}
+
+		if (!SPDSettings.intro() &&
+				Rankings.INSTANCE.totalNumber > 0 &&
+				!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_DIEING)){
+			GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
+		}
+
+		TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
+		if (cata != null && cata.hasRolledTrinkets()){
+			addToFront(new TrinketCatalyst.WndTrinket(cata));
+		}
+
+		if (!invVisible) toggleInvPane();
+		fadeIn();
 
 					//re-show WndResurrect if needed
 					for (Hero hero : Dungeon.heroes) {
@@ -606,25 +633,33 @@ public class GameScene extends PixelScene {
 				}
 			}
 
-			public boolean waitForActorThread ( int msToWait, boolean interrupt){
-				if (actorThread == null || !actorThread.isAlive()) {
-					return true;
-				}
-				synchronized (actorThread) {
-					if (interrupt) actorThread.interrupt();
-					try {
-						actorThread.wait(msToWait);
-					} catch (InterruptedException e) {
-						ShatteredPixelDungeon.reportException(e);
-					}
-					return !Actor.processing();
-				}
+	public boolean waitForActorThread(int msToWait, boolean interrupt){
+		if (actorThread == null || !actorThread.isAlive()) {
+			return true;
+		}
+		synchronized (actorThread) {
+			if (interrupt) actorThread.interrupt();
+			try {
+				actorThread.wait(msToWait);
+			} catch (InterruptedException e) {
+				ShatteredPixelDungeon.reportException(e);
 			}
-
-			@Override
-			public synchronized void onPause () {
-				//TODO: check this
-			}
+			return !Actor.processing();
+		}
+	}
+	
+	@Override
+	public synchronized void onPause() {
+		try {
+            //TODO: check this
+            waitForActorThread(500, false);
+			Dungeon.saveAll();
+			Badges.saveGlobal();
+			Journal.saveGlobal();
+		} catch (IOException e) {
+			ShatteredPixelDungeon.reportException(e);
+		}
+	}
 
 			private static Thread actorThread;
 
@@ -643,7 +678,7 @@ public class GameScene extends PixelScene {
 			public static boolean updateTags = false;
 			private static float waterOfs = 0;
 
-			@Override
+			private static float waterOfs = 0;@Override
 			public synchronized void update () {
 				Server.parseActions();
 				lastOffset = null;
@@ -670,9 +705,12 @@ public class GameScene extends PixelScene {
 
 				if (!Emitter.freezeEmitters) {
 					waterOfs -= 5 * Game.elapsed;
+			water.offsetTo( 0, waterOfs );
+			waterOfs = water.offsetY(); //re-assign to account for auto adjust
+		}
 					water.offsetTo(0, waterOfs);
 					waterOfs = water.offsetY(); //re-assign to account for auto adjust
-				}
+
 				//TODO: check this
 				if (!Actor.processing()) {
 					if (actorThread == null || !actorThread.isAlive()) {
@@ -866,7 +904,6 @@ public class GameScene extends PixelScene {
 					}
 				}
 			}
-
 			private synchronized void prompt (String text ){
 
 				if (prompt != null) {
@@ -1029,7 +1066,16 @@ public class GameScene extends PixelScene {
 							target.getSprite().showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
 						}
 					}
-					scene.menu.flashForPage(doc, page);
+					if (doc == Document.ADVENTURERS_GUIDE){
+				if (!page.equals(Document.GUIDE_INTRO)) {
+					if (SPDSettings.interfaceSize() == 0) {
+						GLog.p(Messages.get(Guidebook.class, "hint_mobile"));
+					} else {
+						GLog.p(Messages.get(Guidebook.class, "hint_desktop", KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.JOURNAL, ControllerHandler.isControllerConnected()))));
+					}
+				}
+				Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
+			}scene.menu.flashForPage(doc, page);
 				}
 			}
 
@@ -1378,11 +1424,14 @@ public class GameScene extends PixelScene {
 				} else if (o instanceof Plant) {
 					GameScene.show(new WndInfoPlant((Plant) o, hero));
 					//plants can be harmful to trample, so let the player ID just by examine
-					Bestiary.setSeen(o.getClass());
+					Bestiary.setSeen(o.getClass());//plants can be harmful to trample, so let the player ID just by examine
+			Bestiary.setSeen(o.getClass());
 				} else if (o instanceof Trap) {
 					GameScene.show(new WndInfoTrap((Trap) o, hero));
 					//traps are often harmful to trigger, so let the player ID just by examine
 					Bestiary.setSeen(o.getClass());
+			//traps are often harmful to trigger, so let the player ID just by examine
+			Bestiary.setSeen(o.getClass());
 				} else {
 					GameScene.show(new WndMessage(Messages.get(GameScene.class, "dont_know")));
 				}

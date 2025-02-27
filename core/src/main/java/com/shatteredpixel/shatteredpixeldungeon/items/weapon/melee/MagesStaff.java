@@ -442,13 +442,9 @@ public class MagesStaff extends MeleeWeapon {
 					}
 
 					String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
-					int preservesLeft = owner.hasTalent(Talent.WAND_PRESERVATION) ? 5 : 0;
-					if (owner.buff(Talent.WandPreservationCounter.class) != null){
-						preservesLeft -= owner.buff(Talent.WandPreservationCounter.class).count();
-					}
-					if (owner.hasTalent(Talent.WAND_PRESERVATION)){
-						int preserveChance = owner.pointsInTalent(Talent.WAND_PRESERVATION) == 1 ? 67 : 100;
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent", preserveChance, preservesLeft);
+					if (owner.hasTalent(Talent.WAND_PRESERVATION)
+						&& owner.buff(Talent.WandPreservationCounter.class) == null){
+						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent");
 					} else {
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_lost");
 					}

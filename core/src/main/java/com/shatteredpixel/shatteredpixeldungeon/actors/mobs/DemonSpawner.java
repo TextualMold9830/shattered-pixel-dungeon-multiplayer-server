@@ -149,6 +149,11 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
+	public Notes.Landmark landmark() {
+		return Notes.Landmark.DEMON_SPAWNER;
+	}
+
+	@Override
 	public void die(@NotNull DamageCause cause) {
 		if (spawnRecorded){
 			Statistics.spawnersAlive--;

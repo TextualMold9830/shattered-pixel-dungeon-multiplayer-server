@@ -118,7 +118,8 @@ public class CrystalGuardian extends Mob{
 	@Override
 	public int defenseProc(Char enemy, int damage) {
 		if (recovering){
-			getSprite().showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
+			//this triggers before blocking, so the dmg as block-bypassing
+			getSprite().showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(damage), FloatingText.PHYS_DMG_NO_BLOCK);
 			HP = Math.max(1, HP-damage);
 			damage = -1;
 		}

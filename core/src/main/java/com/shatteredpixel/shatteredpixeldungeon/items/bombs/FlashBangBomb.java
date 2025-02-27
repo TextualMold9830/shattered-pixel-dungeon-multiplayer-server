@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
@@ -50,7 +51,10 @@ public class FlashBangBomb extends Bomb {
 	{
 		image = ItemSpriteSheet.FLASHBANG;
 	}
-
+@Override
+	protected int explosionRange() {
+		return 2;
+	}
 	@Override
 	protected int explosionRange() {
 		return 2;

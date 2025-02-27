@@ -60,9 +60,10 @@ public class Gold extends Item {
 	public boolean doPickUp(Hero hero, int pos) {
 
 		Catalog.setSeen(getClass());
+		Statistics.itemTypesDiscovered.add(getClass());
 
-		Dungeon.gold += quantity();
-		Statistics.goldCollected += quantity();
+		Dungeon.gold += quantity;
+		Statistics.goldCollected += quantity;
 		Badges.validateGoldCollected();
 
 		GameScene.pickUp( this, pos );

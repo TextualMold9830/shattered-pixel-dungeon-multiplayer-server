@@ -120,7 +120,7 @@ public abstract class InventoryScroll extends Scroll {
 				((InventoryScroll)curItem).onItemSelected( item, getOwner() );
 
 				if (!(curItem instanceof ScrollOfUpgrade)) {
-					((InventoryScroll) curItem).readAnimation();
+	if (!(curItem instanceof ScrollOfUpgrade)) {				((InventoryScroll) curItem).readAnimation();
 					Sample.INSTANCE.play(Assets.Sounds.READ);
 				}
 				

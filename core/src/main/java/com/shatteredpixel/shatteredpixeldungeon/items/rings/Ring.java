@@ -23,12 +23,14 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.SpiritForm;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemStatusHandler;
@@ -50,6 +52,7 @@ import java.util.LinkedHashMap;
 public class Ring extends KindofMisc {
 	
 	protected Buff buff;
+	protected Class<? extends RingBuff> buffClass;
 
 	private static final LinkedHashMap<String, Integer> gems = new LinkedHashMap<String, Integer>() {
 		{
@@ -83,7 +86,6 @@ public class Ring extends KindofMisc {
 	public static void clearGems(){
 		handler = null;
 	}
-
 	public static void save( Bundle bundle ) {
 		handler.save( bundle );
 	}
@@ -162,12 +164,18 @@ public class Ring extends KindofMisc {
 
 //			if (Dungeon.heroes.isAlive()) {
 				Catalog.setSeen(getClass());
+				Statistics.itemTypesDiscovered.add(getClass());
+			}
 		}
 	}
 	
 	@Override
 	public String name() {
 		return isKnown() ? super.name() : Messages.get(Ring.class, gem);
+	}
+@Override
+	public String desc() {
+		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
 	@Override
@@ -179,7 +187,7 @@ public class Ring extends KindofMisc {
 	public String info(Hero hero){
 
 		//skip custom notes if anonymized and un-Ided
-		String desc;
+		//skip custom notes if anonymized and un-IdedString desc;
 		if (anonymous && (handler == null || !handler.isKnown( this ))){
 			desc = desc();
 
@@ -253,6 +261,13 @@ public class Ring extends KindofMisc {
 		setKnown();
 		levelsToID = 0;
 		return super.identify(byHero, hero);
+	}
+
+	public boolean readyToIdentify(){
+		return !isIdentified() && levelsToID <= 0;
+	}
+public void setIDReady(){
+		levelsToID = -1;
 	}
 
 	public boolean readyToIdentify(){
@@ -370,6 +385,13 @@ public class Ring extends KindofMisc {
 		for (RingBuff buff : target.buffs(type)) {
 			bonus += buff.level();
 		}
+		SpiritForm.SpiritFormBuff spiritForm = target.buff(SpiritForm.SpiritFormBuff.class);
+		if (bonus == 0
+				&& spiritForm != null
+				&& spiritForm.ring() != null
+				&& spiritForm.ring().buffClass == type){
+			bonus += spiritForm.ring().soloBonus();
+		}
 		return bonus;
 	}
 
@@ -381,6 +403,12 @@ public class Ring extends KindofMisc {
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
 			bonus += buff.buffedLvl();
+		}
+		if (bonus == 0
+				&& target.buff(SpiritForm.SpiritFormBuff.class) != null
+				&& target.buff(SpiritForm.SpiritFormBuff.class).ring() != null
+				&& target.buff(SpiritForm.SpiritFormBuff.class).ring().buffClass == type){
+			bonus += target.buff(SpiritForm.SpiritFormBuff.class).ring().soloBuffedBonus();
 		}
 		return bonus;
 	}

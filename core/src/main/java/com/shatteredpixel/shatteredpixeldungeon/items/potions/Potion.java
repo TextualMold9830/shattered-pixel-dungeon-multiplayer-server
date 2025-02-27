@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -155,7 +156,7 @@ public class Potion extends Item {
 	public static void clearColors() {
 		handler = null;
 	}
-	
+
 	public static void save( Bundle bundle ) {
 		handler.save( bundle );
 	}
@@ -366,6 +367,7 @@ public class Potion extends Item {
 			
 			if (HeroHelp.haveAliveHero()) {
 				Catalog.setSeen(getClass());
+				Statistics.itemTypesDiscovered.add(getClass());
 			}
 		}
 	}

@@ -46,7 +46,7 @@ public class Bat extends Mob {
 		
 		flying = true;
 		
-		loot = new PotionOfHealing();
+		loot = PotionOfHealing.class;
 		lootChance = 0.1667f; //by default, see lootChance()
 	}
 	
@@ -65,13 +65,18 @@ public class Bat extends Mob {
 		return super.drRoll() + Random.NormalIntRange(0, 4);
 	}
 
+	@Override
+	public void die(Object cause) {
+		flying = false;
+		super.die(cause);
+	}
+
 
 	@Override
 	public void die(@NotNull DamageCause damageCause) {
 		flying = false;
 		super.die(damageCause);
 	}
-
 	@Override
 	public int attackProc( Char enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );

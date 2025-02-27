@@ -44,6 +44,8 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+
 public class CurseInfusion extends InventorySpell {
 	
 	{

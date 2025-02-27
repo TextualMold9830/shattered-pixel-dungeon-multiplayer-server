@@ -34,7 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
@@ -202,6 +204,7 @@ public class Dungeon {
 	public static boolean dailyReplay;
 	public static String customSeedText = "";
 	public static long seed;
+	public static long lastPlayed;
 
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
@@ -464,7 +467,7 @@ public class Dungeon {
 
 		//Place hero at the entrance if they are out of the map (often used for pos = -1)
 		// or if they are in invalid terrain terrain (except in the mining level, where that happens normally)
-		if ((pos != -3) && (pos < 0 || pos >= level.length() || level.invalidHeroPos(pos))){
+		if (pos < 0 || pos >= level.length() || level.invalidHeroPos(pos)){
 			pos = level.getTransition(null).cell();
 		}
 		
@@ -614,6 +617,7 @@ public class Dungeon {
 	private static final String CUSTOM_SEED	= "custom_seed";
 	private static final String DAILY	    = "daily";
 	private static final String DAILY_REPLAY= "daily_replay";
+	private static final String LAST_PLAYED = "last_played";
 	private static final String CHALLENGES	= "challenges";
 	private static final String MOBS_TO_CHAMPION	= "mobs_to_champion";
 	private static final String HERO		= "hero";
@@ -640,6 +644,7 @@ public class Dungeon {
 			bundle.put( CUSTOM_SEED, customSeedText );
 			bundle.put( DAILY, daily );
 			bundle.put( DAILY_REPLAY, dailyReplay );
+			bundle.put( LAST_PLAYED, lastPlayed = Game.realTime);
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
 			//todo fixme
@@ -892,6 +897,7 @@ public class Dungeon {
 		info.customSeed = bundle.getString( CUSTOM_SEED );
 		info.daily = bundle.getBoolean( DAILY );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
+		info.lastPlayed = bundle.getLong( LAST_PLAYED );
 
 		Hero.preview( info, bundle.getBundle( HERO ) );
 		Statistics.preview( info, bundle );
@@ -982,7 +988,7 @@ public class Dungeon {
 
 		GameScene.updateFog(l, t, width, height);
 
-		if (hero.buff(MindVision.class) != null) {
+		if (hero.buff(MindVision.class) != null || hero.buff(DivineSense.DivineSenseTracker.class) != null) {
 			for (Mob m : level.mobs.toArray(new Mob[0])) {
 				if (m instanceof Mimic && m.alignment == Char.Alignment.NEUTRAL && ((Mimic) m).stealthy()) {
 					continue;
@@ -1033,7 +1039,8 @@ public class Dungeon {
 		for (Char ch : Actor.chars()) {
 			if (ch instanceof WandOfWarding.Ward
 					|| ch instanceof WandOfRegrowth.Lotus
-					|| ch instanceof SpiritHawk.HawkAlly) {
+					|| ch instanceof SpiritHawk.HawkAlly
+					|| ch.buff(PowerOfMany.PowerBuff.class) != null) {
 				x = ch.pos % level.width();
 				y = ch.pos / level.width();
 
@@ -1123,24 +1130,22 @@ public class Dungeon {
 		return PathFinder.getStep( ch.pos, to, findPassable(ch, pass, visible, chars) );
 
 	}
-	
+
 	public static int flee( Char ch, int from, boolean[] pass, boolean[] visible, boolean chars ) {
 		boolean[] passable = findPassable(ch, pass, visible, false, true);
 		passable[ch.pos] = true;
 
-		//only consider other chars impassable if our retreat step may collide with them
-		if (chars) {
-			for (Char c : Actor.chars()) {
-				if (c.pos == from || Dungeon.level.adjacent(c.pos, ch.pos)) {
-					passable[c.pos] = false;
-				}
-			}
-		}
-
 		//chars affected by terror have a shorter lookahead and can't approach the fear source
 		boolean canApproachFromPos = ch.buff(Terror.class) == null && ch.buff(Dread.class) == null;
-		return PathFinder.getStepBack( ch.pos, from, canApproachFromPos ? 8 : 4, passable, canApproachFromPos );
-		
+		int step = PathFinder.getStepBack( ch.pos, from, canApproachFromPos ? 8 : 4, passable, canApproachFromPos );
+
+		//only consider chars impassable if our retreat step runs into them
+		while (step != -1 && Actor.findChar(step) != null && chars){
+			passable[step] = false;
+			step = PathFinder.getStepBack( ch.pos, from, canApproachFromPos ? 8 : 4, passable, canApproachFromPos );
+		}
+		return step;
+
 	}
 	public static void removeHero(Hero hero){
 		if (SPDSettings.killOnDisconnect) {

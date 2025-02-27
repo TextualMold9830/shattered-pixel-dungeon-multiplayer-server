@@ -75,7 +75,7 @@ public class Food extends Item {
 			
 			detach( hero.belongings.backpack );
 			Catalog.countUse(getClass());
-			
+
 			satisfy(hero);
 			GLog.i( Messages.get(this, "eat_msg") );
 			
@@ -103,7 +103,8 @@ public class Food extends Item {
 			|| hero.hasTalent(Talent.ENERGIZING_MEAL)
 			|| hero.hasTalent(Talent.MYSTICAL_MEAL)
 			|| hero.hasTalent(Talent.INVIGORATING_MEAL)
-			|| hero.hasTalent(Talent.FOCUSED_MEAL)){
+			|| hero.hasTalent(Talent.FOCUSED_MEAL)
+			|| Dungeon.hero.hasTalent(Talent.ENLIGHTENING_MEAL)){
 			return TIME_TO_EAT - 2;
 		} else {
 			return TIME_TO_EAT;

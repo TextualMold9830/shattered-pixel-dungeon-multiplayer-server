@@ -66,7 +66,7 @@ public class HornOfPlenty extends Artifact {
 
 		defaultAction = AC_SNACK;
 	}
-	
+
 	private int storedFoodEnergy = 0;
 
 	public static final String AC_SNACK = "SNACK";
@@ -114,46 +114,56 @@ public class HornOfPlenty extends Artifact {
 					chargesToUse = 1;
 				}
 
-				hunger.satisfy(satietyPerCharge * chargesToUse);
-
-				Statistics.foodEaten++;
-
-				charge -= chargesToUse;
-				Talent.onArtifactUsed(hero);
-
-				hero.getSprite().operate(hero.pos);
-				hero.busy();
-				SpellSprite.show(hero, SpellSprite.FOOD);
-				Sample.INSTANCE.play(Assets.Sounds.EAT);
-				GLog.i( Messages.get(this, "eat") );
-
-				if (hero.hasTalent(Talent.IRON_STOMACH)
-						|| hero.hasTalent(Talent.ENERGIZING_MEAL)
-						|| hero.hasTalent(Talent.MYSTICAL_MEAL)
-						|| hero.hasTalent(Talent.INVIGORATING_MEAL)
-						|| hero.hasTalent(Talent.FOCUSED_MEAL)){
-					hero.spend(Food.TIME_TO_EAT - 2);
-				} else {
-					hero.spend(Food.TIME_TO_EAT);
-				}
-
-				Talent.onFoodEaten(hero, satietyPerCharge * chargesToUse, this);
-
-				Badges.validateFoodEaten();
-
-				if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-				else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
-				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
-
-				updateQuickslot();
+				doEatEffect(hero, chargesToUse);
 			}
 
 		} else if (action.equals(AC_STORE)){
 
-			GameScene.selectItem(itemSelector, hero);
+			GameScene.selectItem(itemSelector);
 
 		}
+	}
+
+	public void doEatEffect(Hero hero, int chargesToUse){
+		int satietyPerCharge = (int) (Hunger.STARVING/5f);
+		if (Dungeon.isChallenged(Challenges.NO_FOOD)){
+			satietyPerCharge /= 3;
+		}
+
+		Buff.affect(hero, Hunger.class).satisfy(satietyPerCharge * chargesToUse);
+
+		Statistics.foodEaten++;
+
+		charge -= chargesToUse;
+		Talent.onArtifactUsed(hero);
+
+		hero.getSprite().operate(hero.pos);
+		hero.busy();
+		SpellSprite.show(hero, SpellSprite.FOOD);
+		Sample.INSTANCE.play(Assets.Sounds.EAT);
+		GLog.i( Messages.get(this, "eat") );
+
+		if (hero.hasTalent(Talent.IRON_STOMACH)
+				|| hero.hasTalent(Talent.ENERGIZING_MEAL)
+				|| hero.hasTalent(Talent.MYSTICAL_MEAL)
+				|| hero.hasTalent(Talent.INVIGORATING_MEAL)
+				|| hero.hasTalent(Talent.FOCUSED_MEAL)
+				|| Dungeon.hero.hasTalent(Talent.ENLIGHTENING_MEAL)){
+			hero.spend(Food.TIME_TO_EAT - 2);
+		} else {
+			hero.spend(Food.TIME_TO_EAT);
+		}
+
+		Talent.onFoodEaten(hero, satietyPerCharge * chargesToUse, this);
+
+		Badges.validateFoodEaten();
+
+		if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
+		else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
+		else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+		else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
+
+		updateQuickslot();
 	}
 
 	@Override

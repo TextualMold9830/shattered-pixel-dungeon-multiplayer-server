@@ -89,7 +89,7 @@ public abstract class InventorySpell extends Spell {
 				
 				((InventorySpell)curItem).onItemSelected( item, getOwner() );
 				if (!(curItem instanceof MagicalInfusion)) {
-					curUser.spend(1f);
+					if (!(curItem instanceof MagicalInfusion)) {curUser.spend(1f);
 					curUser.busy();
 					(curUser.getSprite()).operate(curUser.pos);
 

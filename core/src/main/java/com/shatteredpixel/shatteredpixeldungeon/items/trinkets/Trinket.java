@@ -78,23 +78,22 @@ public abstract class Trinket extends Item {
 		super.restoreFromBundle(bundle);
 		levelKnown = cursedKnown = true; //for pre-2.5 saves
 	}
+    protected static int trinketLevel(Class<? extends Trinket> trinketType) {
+        int bestLevel = -1;
+        for (Hero hero : Dungeon.heroes) {
+            if (hero != null && hero.belongings != null){
+                Trinket trinket = hero.belongings.getItem(trinketType);
 
-	protected static int trinketLevel(Class<? extends Trinket> trinketType) {
-		int bestLevel = -1;
-		for (Hero hero : Dungeon.heroes) {
-			if (hero != null && hero.belongings != null){
-				Trinket trinket = hero.belongings.getItem(trinketType);
+                if (trinket != null) {
+                    if (bestLevel < trinket.buffedLvl(hero)) {
+                        bestLevel = trinket.buffedLvl(hero);
+                    }
+                }
+            }
 
-			if (trinket != null) {
-				if (bestLevel < trinket.buffedLvl(hero)) {
-					bestLevel = trinket.buffedLvl(hero);
-				}
-			}
-		}
-
-	}
-		return bestLevel;
-}
+        }
+        return bestLevel;
+    }
 	public static class PlaceHolder extends Trinket {
 
 		{
@@ -115,6 +114,11 @@ public abstract class Trinket extends Item {
 		public String info() {
 				return "";
 			}
+
+		@Override
+		public String statsDesc() {
+			return "";
+		}
 
 		@Override
 		public String statsDesc() {

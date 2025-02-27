@@ -94,6 +94,7 @@ public class Ghost extends NPC {
 		if (AscensionChallenge.highestStack() > -1) {
 			die(new DamageCause(null));
 			Notes.remove( landmark() );
+			Notes.remove( landmark() );
 			return true;
 		}
 		if (Dungeon.visibleforAnyHero(pos) && !Quest.completed()){

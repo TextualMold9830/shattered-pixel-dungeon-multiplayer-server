@@ -58,6 +58,9 @@ public class WondrousResin extends Trinket {
 		if (forcePositive){
 			return 1;
 		}
+		if (forcePositive){
+			return 1;
+		}
 		return positiveCurseEffectChance( trinketLevel(WondrousResin.class, hero));
 	}
 

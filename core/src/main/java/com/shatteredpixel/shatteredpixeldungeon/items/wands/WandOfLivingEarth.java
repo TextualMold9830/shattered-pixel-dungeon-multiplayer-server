@@ -30,6 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
@@ -81,6 +83,10 @@ public class WandOfLivingEarth extends DamageWand {
 			}
 		}
 
+		if (Stasis.getStasisAlly() instanceof EarthGuardian){
+			guardian = (EarthGuardian)Stasis.getStasisAlly();
+		}
+
 		RockArmor buff = curUser.buff(RockArmor.class);
 		//only grant armor if we are shooting at an enemy, a hiding mimic, or the guardian
 		if ((guardian == null || ch != guardian) && (ch == null
@@ -109,6 +115,10 @@ public class WandOfLivingEarth extends DamageWand {
 			//create a new guardian
 			guardian = new EarthGuardian(hero);
 			guardian.setInfo(curUser, buffedLvl(), buff.armor);
+
+			if (buff.powerOfManyTurns > 0){
+				Buff.affect(guardian, PowerOfMany.PowerBuff.class, buff.powerOfManyTurns);
+			}
 
 			//if the collision pos is occupied (likely will be), then spawn the guardian in the
 			//adjacent cell which is closes to the user of the wand.
@@ -171,7 +181,9 @@ public class WandOfLivingEarth extends DamageWand {
 						curUser.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					}
 				} else {
-					guardian.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
+					if (guardian.sprite != null) { //may be in stasis
+						guardian.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
+					}
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
 					if (ch.alignment == Char.Alignment.ENEMY || ch.buff(Amok.class) != null) {
 						guardian.aggro(ch);
@@ -255,7 +267,22 @@ public class WandOfLivingEarth extends DamageWand {
 		private int wandLevel;
 		private int armor;
 
-		private void addArmor( int wandLevel, int toAdd ){
+		private float powerOfManyTurns = 0;
+
+		@Override
+		public boolean act() {
+			if (powerOfManyTurns > 0){
+				powerOfManyTurns--;
+				if (powerOfManyTurns <= 0){
+					powerOfManyTurns = 0;
+					BuffIndicator.refreshHero();
+				}
+			}
+			spend(TICK);
+			return true;
+		}
+
+		private void addArmor(int wandLevel, int toAdd ){
 			this.wandLevel = Math.max(this.wandLevel, wandLevel);
 			armor += toAdd;
 			armor = Math.min(armor, 2*armorToGuardian());
@@ -276,6 +303,10 @@ public class WandOfLivingEarth extends DamageWand {
 			}
 		}
 
+		public boolean isEmpowered(){
+			return powerOfManyTurns > 0;
+		}
+
 		@Override
 		public int icon() {
 			return BuffIndicator.ARMOR;
@@ -283,7 +314,11 @@ public class WandOfLivingEarth extends DamageWand {
 
 		@Override
 		public void tintIcon(Image icon) {
-			icon.brightness(0.6f);
+			if (isEmpowered()){
+				icon.hardlight(1.8f, 1.8f, 0.6f);
+			} else {
+				icon.brightness(0.6f);
+			}
 		}
 
 		@Override
@@ -298,17 +333,24 @@ public class WandOfLivingEarth extends DamageWand {
 
 		@Override
 		public String desc() {
-			return Messages.get( this, "desc", armor, armorToGuardian());
+			String desc = Messages.get( this, "desc", armor, armorToGuardian());
+			if (isEmpowered()){
+				desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);
+			}
+			return desc;
 		}
 
 		private static final String WAND_LEVEL = "wand_level";
 		private static final String ARMOR = "armor";
+
+		private static final String POWER_TURNS = "power_turns";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(WAND_LEVEL, wandLevel);
 			bundle.put(ARMOR, armor);
+			bundle.put(POWER_TURNS, powerOfManyTurns);
 		}
 
 		@Override
@@ -316,6 +358,7 @@ public class WandOfLivingEarth extends DamageWand {
 			super.restoreFromBundle(bundle);
 			wandLevel = bundle.getInt(WAND_LEVEL);
 			armor = bundle.getInt(ARMOR);
+			powerOfManyTurns = bundle.getFloat(POWER_TURNS);
 		}
 	}
 
@@ -350,7 +393,7 @@ public class WandOfLivingEarth extends DamageWand {
 				this.wandLevel = wandLevel;
 				HT = 16 + 8 * wandLevel;
 			}
-			if (HP != 0){
+			if (HP != 0 && sprite != null){
 				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthToAdd), FloatingText.HEALING);
 			}
 			HP = Math.min(HT, HP + healthToAdd);
@@ -398,7 +441,7 @@ public class WandOfLivingEarth extends DamageWand {
 			}
 
 			return desc;
-			
+
 		}
 		
 		{
@@ -429,6 +472,9 @@ public class WandOfLivingEarth extends DamageWand {
 			public boolean act(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
 					Buff.affect(owner, RockArmor.class).addArmor(wandLevel, HP);
+					if (buff(PowerOfMany.PowerBuff.class) != null){
+						Buff.affect(owner, RockArmor.class).powerOfManyTurns = buff(PowerOfMany.PowerBuff.class).cooldown()+1;
+					}
 					owner.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
 					destroy();
 					getSprite().die();

@@ -31,6 +31,7 @@ public class RingOfArcana extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_ARCANA;
+		buffClass = Arcana.class;
 	}
 
 	public String statsInfo(Hero hero) {

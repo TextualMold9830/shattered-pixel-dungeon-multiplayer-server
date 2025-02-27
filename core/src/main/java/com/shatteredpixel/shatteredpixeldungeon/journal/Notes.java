@@ -83,7 +83,7 @@ public class Notes {
 		public int quantity() { return 1; }
 
 		protected abstract int order();
-		
+
 		public abstract String title();
 
 		public abstract String desc();
@@ -240,7 +240,7 @@ public class Notes {
 				case STATUE:            return Messages.get(Statue.class, "desc");
 
 				case GHOST:         return Messages.get(Ghost.class, "desc");
-				case RAT_KING:      return Messages.get(RatKing.class, "desc");
+				case RAT_KING:      return new RatKing().description(); //variable description based on holiday/run state
 				case WANDMAKER:     return Messages.get(Wandmaker.class, "desc");
 				case TROLL:         return Messages.get(Blacksmith.class, "desc");
 				case IMP:           return Messages.get(Imp.class, "desc");
@@ -317,7 +317,7 @@ public class Notes {
 			//TODO: check this
 			return key.desc(null);
 		}
-		
+
 		public Class<? extends Key> type(){
 			return key.getClass();
 		}
@@ -501,7 +501,7 @@ public class Notes {
 			body = bundle.getString(BODY);
 		}
 	}
-	
+
 	private static ArrayList<Record> records;
 	
 	public static void reset() {
@@ -539,7 +539,7 @@ public class Notes {
 	public static boolean contains( Landmark landmark ){
 		return records.contains(new LandmarkRecord( landmark, Dungeon.depth));
 	}
-	
+
 	public static boolean remove( Landmark landmark ) {
 		return records.remove( new LandmarkRecord(landmark, Dungeon.depth) );
 	}
@@ -650,5 +650,5 @@ public class Notes {
 			return r1.order() - r2.order();
 		}
 	};
-	
+
 }

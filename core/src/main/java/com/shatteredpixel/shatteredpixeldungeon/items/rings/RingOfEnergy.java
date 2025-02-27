@@ -33,6 +33,7 @@ public class RingOfEnergy extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_ENERGY;
+		buffClass = Energy.class;
 	}
 
 	public String statsInfo(Hero hero) {
@@ -54,14 +55,19 @@ public class RingOfEnergy extends Ring {
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
 		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.175f, level+1)-1f)) + "%";
 	}
-
 	@Override
 	protected RingBuff buff( ) {
 		return new Energy();
 	}
 	
 	public static float wandChargeMultiplier( Char target ){
-		return (float)Math.pow(1.175, getBuffedBonus(target, Energy.class));
+		float bonus = (float)Math.pow(1.175, getBuffedBonus(target, Energy.class));
+
+		if (target instanceof Hero && ((Hero) target).heroClass != HeroClass.CLERIC && ((Hero) target).hasTalent(Talent.LIGHT_READING)){
+			bonus *= 1f + (0.2f * ((Hero) target).pointsInTalent(Talent.LIGHT_READING)/3f);
+		}
+
+		return bonus;
 	}
 
 	public static float artifactChargeMultiplier( Char target ){

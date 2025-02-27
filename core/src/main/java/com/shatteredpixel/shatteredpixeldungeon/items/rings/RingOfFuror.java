@@ -31,6 +31,7 @@ public class RingOfFuror extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_FUROR;
+		buffClass = Furor.class;
 	}
 
 	public String statsInfo(Hero hero) {

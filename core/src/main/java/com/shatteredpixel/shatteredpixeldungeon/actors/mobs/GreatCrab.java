@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -82,7 +83,7 @@ public class GreatCrab extends Crab {
 		if (enemySeen
 				&& state != SLEEPING
 				&& paralysed == 0
-				&& src instanceof Wand
+				&& (src instanceof Wand || src instanceof ClericSpell)
 				&& enemy instanceof Hero
 				&& enemy.invisible == 0){
 			GLog.n( Messages.get(this, "noticed") );

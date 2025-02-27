@@ -25,6 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -37,13 +39,30 @@ public abstract class Runestone extends Item {
 	}
 	//FIXME
 	protected void onThrow(int cell, Hero hero) {
+
+	//anonymous stones don't count as consumed, do not drop, etc.
+	//useful for stones which are only spawned for their effects
+	protected boolean anonymous = false;
+	public void anonymize(){
+		image = ItemSpriteSheet.STONE_HOLDER;
+		anonymous = true;
+	}
+
+	@Override
+	protected void onThrow(int cell) {
 		///inventory stones are thrown like normal items, other stones don't trigger when thrown into pits
 		if (this instanceof InventoryStone ||
+				Dungeon.hero.buff(MagicImmune.class) != null ||
 				(Dungeon.level.pit[cell] && Actor.findChar(cell) == null)){
-			super.onThrow( cell, hero );
+			if (!anonymous) super.onThrow( cell, hero );
 		} else {
 			Catalog.countUse(getClass());
 			activate(cell, hero);
+			if (!anonymous) {
+				Catalog.countUse(getClass());
+				Talent.onRunestoneUsed(curUser, cell, getClass());
+			}
+			activate(cell);
 			if (Actor.findChar(cell) == null) Dungeon.level.pressCell( cell );
 			Invisibility.dispel(hero);
 		}

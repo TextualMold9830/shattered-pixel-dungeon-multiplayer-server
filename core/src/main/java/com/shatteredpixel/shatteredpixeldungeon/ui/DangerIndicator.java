@@ -118,7 +118,7 @@ public class DangerIndicator extends Tag {
 //			if (Dungeon.heroes.canAttack(target)) AttackIndicator.target(target);
 //
 //			if (Dungeon.heroes.curAction == null && target.sprite != null) {
-//				Camera.main.panTo(target.sprite.center(), 5f);
+//				Camera.main.panFollow(target.sprite, 5f);
 //			}
 //		}
 	}

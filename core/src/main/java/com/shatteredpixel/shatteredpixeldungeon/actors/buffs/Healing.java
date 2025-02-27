@@ -38,7 +38,6 @@ public class Healing extends Buff {
 	private int flatHealPerTick;
 
 	private boolean healingLimited = false;
-
 	{
 		//unlike other buffs, this one acts after the hero and takes priority against other effects
 		//healing is much more useful if you get some of it off before taking damage
@@ -96,7 +95,6 @@ public class Healing extends Buff {
 			healingLeft = Math.round(healingLeft*VialOfBlood.totalHealMultiplier());
 		}
 	}
-
 	public void increaseHeal( int amount ){
 		healingLeft += amount;
 	}
@@ -112,7 +110,6 @@ public class Healing extends Buff {
 	private static final String FLAT = "flat";
 
 	private static final String HEALING_LIMITED = "healing_limited";
-
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);

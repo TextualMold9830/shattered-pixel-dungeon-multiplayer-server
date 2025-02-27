@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
@@ -180,7 +181,6 @@ public class MeleeWeapon extends Weapon {
 			Buff.affect(hero, Barrier.class).setShield(shieldAmt);
 			hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 		}
-
 		updateQuickslot();
 	}
 
@@ -310,6 +310,7 @@ public class MeleeWeapon extends Weapon {
 		if (levelKnown) {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq());
 			if (hero != null) {
+				if (Dungeon.hero != null) {
 				if (STRReq() > hero.STR()) {
 					info += " " + Messages.get(Weapon.class, "too_heavy");
 				} else if (hero.STR() > STRReq()) {
@@ -336,7 +337,11 @@ public class MeleeWeapon extends Weapon {
 			case NONE:
 		}
 
-		if (enchantment != null && (cursedKnown || !enchantment.curse())){
+		if (isEquipped(Dungeon.hero) && !hasCurseEnchant() && Dungeon.hero.buff(HolyWeapon.HolyWepBuff.class) != null
+				&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
+			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", Messages.get(HolyWeapon.class, "ench_name", Messages.get(Enchantment.class, "enchant"))));
+			info += " " + Messages.get(HolyWeapon.class, "ench_desc");
+		} else if (enchantment != null && (cursedKnown || !enchantment.curse())){
 			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
 			if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
 			info += " " + enchantment.desc();
@@ -362,8 +367,8 @@ public class MeleeWeapon extends Weapon {
 		}
 		
 		return info;
+        }
 	}
-	
 	public String statsInfo(){
 		return Messages.get(this, "stats_desc");
 	}
@@ -576,7 +581,7 @@ public class MeleeWeapon extends Weapon {
 			hero.actionIndicator.setAction(this);
 			Item.updateQuickslot();
 			hero.attackIndicator.updateState();
-		}
-	}
-
+        }
+    }
 }
+

@@ -66,4 +66,8 @@ public class ItemButton extends Component {
 		item = null;
 	}
 
+	public ItemSlot slot(){
+		return slot;
+	}
+
 }

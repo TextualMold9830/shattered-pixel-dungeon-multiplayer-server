@@ -31,6 +31,7 @@ public class RingOfHaste extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_HASTE;
+		buffClass = Haste.class;
 	}
 
 	public String statsInfo(Hero hero) {
@@ -51,7 +52,6 @@ public class RingOfHaste extends Ring {
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
 		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.175f, level+1)-1f)) + "%";
 	}
-
 	@Override
 	protected RingBuff buff( ) {
 		return new Haste();

@@ -90,13 +90,8 @@ public class ArcaneBomb extends Bomb {
 		for (Char ch : affected){
 			//pierces armor, and damage in 5x5 instead of 3x3
 			int damage = Math.round(Random.NormalIntRange( 4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth() ));
-			if (curItem == this) {
-				ch.damage(damage , new Char.DamageCause(this, curUser));
-			} else {
-				Log.e("Acracne bomb explosion curr item is not this");
-				ch.damage(damage, new Char.DamageCause(this, null));
-			}
-			if (ch instanceof Hero && !ch.isAlive()){
+			ch.damage(damage, this);
+			if (ch instanceof H ero && !ch.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);
 			}

@@ -63,6 +63,7 @@ public class PotionOfHealing extends Potion {
 			Healing healing = Buff.affect(ch, Healing.class);
 			healing.setHeal((int) (0.8f * ch.HT + 14), 0.25f, 0);
 			healing.applyVialEffect();
+			healing.applyVialEffect();
 			if (ch instanceof Hero){
 				GLog.p( Messages.get(PotionOfHealing.class, "heal") );
 			}

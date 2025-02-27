@@ -31,6 +31,7 @@ public class RingOfAccuracy extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_ACCURACY;
+		buffClass = Accuracy.class;
 	}
 	
 	public String statsInfo(Hero hero) {

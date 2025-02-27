@@ -38,9 +38,11 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
@@ -86,7 +88,9 @@ public class WandOfBlastWave extends DamageWand {
 				wandProc(ch, chargesPerCast(), hero);
 				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
-				if (ch.pos == bolt.collisionPos + i) {
+				//do not push chars that are dieing over a pit, or that move due to the damage
+				if ((ch.isAlive() || ch.flying || !Dungeon.level.pit[ch.pos])
+						&& ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
 					int strength = 1 + Math.round(buffedLvl() / 2f);
 					throwChar(ch, trajectory, strength, false, true, this);
@@ -101,7 +105,9 @@ public class WandOfBlastWave extends DamageWand {
 			wandProc(ch, chargesPerCast(), hero);
 			ch.damage(damageRoll(hero), new Char.DamageCause(this, curUser));
 
-			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
+			//do not push chars that are dieing over a pit, or that move due to the damage
+			if ((ch.isAlive() || ch.flying || !Dungeon.level.pit[ch.pos])
+					&& bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
 				Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
 				int strength = buffedLvl() + 3;
 				throwChar(ch, trajectory, strength, false, true, this);
@@ -175,6 +181,7 @@ public class WandOfBlastWave extends DamageWand {
 						if (cause instanceof WandOfBlastWave){
 							Badges.validateDeathFromFriendlyMagic();
 						}
+						GLog.n(Messages.get(WandOfBlastWave.class, "knockback_ondeath"));
 						Dungeon.fail(cause);
 					}
 				}
@@ -293,6 +300,10 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		public static void blast(int pos, float radius, Char user) {
+			blast(pos, 3);
+		}
+
+		public static void blast(int pos, float radius) {
 			Group parent = user.getSprite().parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
 			parent.bringToFront(b);

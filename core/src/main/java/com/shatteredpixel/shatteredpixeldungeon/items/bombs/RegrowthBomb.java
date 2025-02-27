@@ -52,7 +52,10 @@ public class RegrowthBomb extends Bomb {
 	public boolean explodesDestructively() {
 		return false;
 	}
-
+@Override
+	protected int explosionRange() {
+		return 3;
+	}
 	@Override
 	protected int explosionRange() {
 		return 3;

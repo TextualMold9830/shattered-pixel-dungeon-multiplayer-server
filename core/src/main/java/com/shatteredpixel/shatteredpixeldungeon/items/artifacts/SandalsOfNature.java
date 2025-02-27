@@ -237,6 +237,12 @@ public class SandalsOfNature extends Artifact {
 				&& (level() < 3 || curSeedEffect != item.getClass());
 	}
 
+	@Override
+	public void resetForTrinity(int visibleLevel) {
+		super.reset();
+		curSeedEffect = null;
+	}
+
 	private static final String SEEDS = "seeds";
 	private static final String CUR_SEED_EFFECT = "cur_seed_effect";
 
@@ -321,7 +327,7 @@ public class SandalsOfNature extends Artifact {
 		}
 	};
 
-	protected CellSelector.Listener cellSelector = new CellSelector.Listener(){
+	public CellSelector.Listener cellSelector = new CellSelector.Listener(){
 
 		@Override
 		public void onSelect(Integer cell) {
@@ -343,6 +349,10 @@ public class SandalsOfNature extends Artifact {
 					plant.activate(Actor.findChar(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
+
+					if (Actor.findChar(cell) != null){
+						artifactProc(Actor.findChar(cell), visiblyUpgraded(), seedChargeReqs.get(curSeedEffect));
+					}
 
 					charge -= seedChargeReqs.get(curSeedEffect);
 					Talent.onArtifactUsed(findOwner());

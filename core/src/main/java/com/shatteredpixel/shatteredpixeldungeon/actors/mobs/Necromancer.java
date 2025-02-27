@@ -45,7 +45,6 @@ import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
 import org.jetbrains.annotations.NotNull;
 
 public class Necromancer extends Mob {
@@ -59,7 +58,7 @@ public class Necromancer extends Mob {
 		EXP = 7;
 		maxLvl = 14;
 		
-		loot = new PotionOfHealing();
+		loot = PotionOfHealing.class;
 		lootChance = 0.2f; //see lootChance()
 		
 		properties.add(Property.UNDEAD);

@@ -91,7 +91,7 @@ public class MossyClump extends Trinket {
 				Random.pushGenerator(Dungeon.seed + 1);
 				feelings.add(true);
 				feelings.add(true);
-				feelings.add(true);
+				feelings.add(false);
 				feelings.add(false);
 				feelings.add(false);
 				feelings.add(false);

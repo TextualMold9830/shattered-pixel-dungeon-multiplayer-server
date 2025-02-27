@@ -31,6 +31,7 @@ public class RingOfSharpshooting extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_SHARPSHOOT;
+		buffClass = Aim.class;
 	}
 
 	public String statsInfo(Hero hero) {
