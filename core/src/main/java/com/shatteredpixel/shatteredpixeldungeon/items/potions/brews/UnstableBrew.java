@@ -102,7 +102,7 @@ public class UnstableBrew extends Brew {
 	}
 	
 	@Override
-	public void shatter(int cell) {
+	public void shatter(int cell, Hero hero) {
 		Potion p = Reflection.newInstance(Random.chances(potionChances));
 
 		//reroll the potion if it wasn't a good potion to throw
@@ -112,7 +112,7 @@ public class UnstableBrew extends Brew {
 
 		p.anonymize();
 		curItem = p;
-		p.shatter(cell);
+		p.shatter(cell, hero);
 	}
 	
 	@Override

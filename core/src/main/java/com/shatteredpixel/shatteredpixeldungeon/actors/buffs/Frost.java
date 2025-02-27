@@ -73,7 +73,7 @@ public class Frost extends FlavourBuff {
 					Item toFreeze = Random.element(freezable).detach( hero.belongings.backpack );
 					GLog.w( Messages.capitalize(Messages.get(this, "freezes", toFreeze.title())) );
 					if (toFreeze instanceof Potion){
-						((Potion) toFreeze).shatter(hero.pos);
+						((Potion) toFreeze).shatter(hero.pos, hero);
 					} else if (toFreeze instanceof MysteryMeat){
 						FrozenCarpaccio carpaccio = new FrozenCarpaccio();
 						if (!carpaccio.collect( hero.belongings.backpack )) {
@@ -87,7 +87,7 @@ public class Frost extends FlavourBuff {
 				Item item = ((Thief) target).item;
 
 				if (item instanceof Potion && !item.unique) {
-					((Potion) ((Thief) target).item).shatter(target.pos);
+					((Potion) ((Thief) target).item).shatter(target.pos, null);
 					((Thief) target).item = null;
 				} else if (item instanceof MysteryMeat){
 					((Thief) target).item = new FrozenCarpaccio();

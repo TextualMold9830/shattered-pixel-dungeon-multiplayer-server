@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfStormClouds;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -35,7 +36,7 @@ public class AquaBrew extends Brew {
 	}
 
 	@Override
-	public void shatter(int cell) {
+	public void shatter(int cell, Hero hero) {
 		GeyserTrap geyser = new GeyserTrap();
 		geyser.pos = cell;
 		geyser.source = this;

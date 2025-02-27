@@ -47,7 +47,7 @@ public class CausticBrew extends Brew {
 	}
 	
 	@Override
-	public void shatter(int cell) {
+	public void shatter(int cell, Hero hero) {
 
 		splash( cell );
 		if (Dungeon.visibleforAnyHero(cell)) {
