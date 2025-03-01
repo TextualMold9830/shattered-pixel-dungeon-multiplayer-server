@@ -237,4 +237,10 @@ public abstract class ClericSpell {
 		spells.add(Stasis.INSTANCE);
 		return spells;
 	}
+	public static int getSpellID(ClericSpell spell){
+		return getAllSpells().indexOf(spell);
+	}
+	public static ClericSpell getSpellByID(int id){
+		return getAllSpells().get(id);
+	}
 }

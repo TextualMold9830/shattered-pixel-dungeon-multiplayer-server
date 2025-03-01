@@ -9,12 +9,18 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndClericSpells;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
@@ -193,6 +199,11 @@ class ClientThread implements Callable<String> {
                         );
                         break;
                     }
+                    case "cleric_spell":
+                        JSONObject clericSpellObject = data.getJSONObject(token);
+                        boolean info = clericSpellObject.getBoolean("info");
+                        Window.onClericSpellButtonPressed(clientHero, clericSpellObject.getInt("spell_id"), info);
+                        break;
                     case "toolbar_action": {
                         JSONObject actionObj = data.getJSONObject(token);
                         switch (actionObj.getString("action_name").toUpperCase(Locale.ENGLISH)) {

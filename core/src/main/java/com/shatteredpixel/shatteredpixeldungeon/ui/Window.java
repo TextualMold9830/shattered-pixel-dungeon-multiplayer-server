@@ -27,8 +27,10 @@ import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShadowBox;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndClericSpells;
 import com.watabou.input.KeyBindings;
 import com.watabou.input.KeyEvent;
 import com.watabou.input.PointerEvent;
@@ -173,22 +175,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	}
 	
 	public void resize( int w, int h ) {
-		this.width = w;
-		this.height = h;
-		
-		chrome.size(
-			width + chrome.marginHor(),
-			height + chrome.marginVer() );
-		
-		camera.resize( (int)chrome.width, (int)chrome.height );
 
-		camera.x = (int)(Game.width - camera.screenWidth()) / 2;
-		camera.x += xOffset * camera.zoom;
-
-		camera.y = (int)(Game.height - camera.screenHeight()) / 2;
-		camera.y += yOffset * camera.zoom;
-
-		shadow.boxRect( camera.x / camera.zoom, camera.y / camera.zoom, chrome.width(), chrome.height );
 	}
 	public Window( int width, int height, NinePatch chrome, Hero owner ) {
 		this(width, height, chrome);
@@ -282,6 +269,38 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 			window.onBackPressed();
 		} else {
 			window.onSelect(button, res);
+		}
+	}
+	public static void onClericSpellButtonPressed(Hero hero, int spellID, boolean info){
+		final int heroId = HeroHelp.getHeroID(hero);
+		WndClericSpells window = null;
+		int key = -1;
+		try {
+			//Find WndClericSpells
+			for (Map.Entry<Integer, Window> wndEntry : windows.get(heroId).entrySet()) {
+				if (wndEntry.getValue() instanceof WndClericSpells){
+					window = (WndClericSpells) wndEntry.getValue();
+					key = wndEntry.getKey();
+					break;
+				}
+			}
+		} catch (NullPointerException e) {
+			Log.i("Window", "No such window.");
+			return;
+		}
+		if (window != null) {
+			if (spellID == -1) {
+				window.onBackPressed();
+			} else {
+				for (WndClericSpells.SpellButton button : window.spellBtns) {
+					if (button.spellID == spellID) {
+						button.info = info;
+						button.onClick();
+						//Need to dispose of Window
+						windows.get(heroId).remove(key);
+					}
+				}
+			}
 		}
 	}
 	public void onSelect(int button, @Nullable JSONObject args) {

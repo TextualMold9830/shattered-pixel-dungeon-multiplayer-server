@@ -178,6 +178,7 @@ public class HolyTome extends Artifact {
 		}
 
 		updateQuickslot();
+		sendSelfUpdate();
 	}
 
 	public void directCharge(float amount){

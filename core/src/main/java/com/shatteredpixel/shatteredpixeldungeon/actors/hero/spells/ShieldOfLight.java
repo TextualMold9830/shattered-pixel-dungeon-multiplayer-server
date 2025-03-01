@@ -79,7 +79,9 @@ public class ShieldOfLight extends TargetedClericSpell {
 		hero.getSprite().operate(hero.pos);
 
 		//1 turn less as the casting is instant
-		Buff.prolong( hero, ShieldOfLightTracker.class, 3f).object = ch.id();
+		ShieldOfLightTracker shieldOfLightTracker = Buff.prolong(hero, ShieldOfLightTracker.class, 3f);
+		shieldOfLightTracker.source = hero;
+		shieldOfLightTracker.object = ch.id();
 
 		hero.busy();
 		hero.getSprite().operate(hero.pos);
@@ -87,7 +89,9 @@ public class ShieldOfLight extends TargetedClericSpell {
 
 		Char ally = PowerOfMany.getPoweredAlly();
 		if (ally != null && ally.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null){
-			Buff.prolong( ally, ShieldOfLightTracker.class, 3f).object = ch.id();
+			shieldOfLightTracker = Buff.prolong(ally, ShieldOfLightTracker.class, 3f);
+			shieldOfLightTracker.source = hero;
+			shieldOfLightTracker.object = ch.id();
 			ally.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.15f, 6);
 		}
 
