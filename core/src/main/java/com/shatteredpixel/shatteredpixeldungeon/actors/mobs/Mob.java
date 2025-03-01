@@ -993,22 +993,23 @@ public abstract class Mob extends Char {
 
 	public float lootChance(Hero hero){
 		float lootChance = this.lootChance;
+		float dropBonus = 1f;
+		if(hero != null) {
+			dropBonus = RingOfWealth.dropChanceMultiplier(hero);
 
-		float dropBonus = RingOfWealth.dropChanceMultiplier( hero);
-
-		Talent.BountyHunterTracker bhTracker = hero.buff(Talent.BountyHunterTracker.class);
-		if (bhTracker != null){
-			Preparation prep = hero.buff(Preparation.class);
-			if (prep != null){
-				// 2/4/8/16% per prep level, multiplied by talent points
-				float bhBonus = 0.02f * (float)Math.pow(2, prep.attackLevel()-1);
-				bhBonus *= hero.pointsInTalent(Talent.BOUNTY_HUNTER);
-				dropBonus += bhBonus;
+			Talent.BountyHunterTracker bhTracker = hero.buff(Talent.BountyHunterTracker.class);
+			if (bhTracker != null) {
+				Preparation prep = hero.buff(Preparation.class);
+				if (prep != null) {
+					// 2/4/8/16% per prep level, multiplied by talent points
+					float bhBonus = 0.02f * (float) Math.pow(2, prep.attackLevel() - 1);
+					bhBonus *= hero.pointsInTalent(Talent.BOUNTY_HUNTER);
+					dropBonus += bhBonus;
+				}
 			}
+
+			dropBonus += ShardOfOblivion.lootChanceMultiplier(hero) - 1f;
 		}
-
-		dropBonus += ShardOfOblivion.lootChanceMultiplier(hero)-1f;
-
 		return lootChance * dropBonus;
 	}
 	
