@@ -601,9 +601,9 @@ public abstract class Level implements Bundlable {
 		ScrollOfChallenge.ChallengeArena arena = hero.buff(ScrollOfChallenge.ChallengeArena.class);
 		if (arena != null) arena.detach();
 
-		Char ally = Stasis.getStasisAlly();
+		Char ally = Stasis.getStasisAlly(hero);
 		if (Char.hasProp(ally, Char.Property.IMMOVABLE)){
-			Dungeon.hero.buff(Stasis.StasisBuff.class).act();
+			hero.buff(Stasis.StasisBuff.class).act();
 			GLog.w(Messages.get(Stasis.StasisBuff.class, "left_behind"));
 		}
 

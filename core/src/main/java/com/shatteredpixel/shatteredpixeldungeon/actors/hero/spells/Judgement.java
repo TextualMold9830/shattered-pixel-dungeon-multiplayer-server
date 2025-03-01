@@ -60,7 +60,7 @@ public class Judgement extends ClericSpell {
 	@Override
 	public void onCast(HolyTome tome, Hero hero) {
 
-		hero.sprite.attack(hero.pos, new Callback() {
+		hero.getSprite().attack(hero.pos, new Callback() {
 			@Override
 			public void call() {
 				GameScene.flash( 0x80FFFFFF );
@@ -70,8 +70,8 @@ public class Judgement extends ClericSpell {
 				damageBase += 5*hero.buff(AscendedForm.AscendBuff.class).spellCasts;
 
 				for (Char ch : Actor.chars()){
-					if (ch.alignment != hero.alignment && Dungeon.level.heroFOV[ch.pos]){
-						ch.damage( Random.NormalIntRange(damageBase, 2*damageBase), Judgement.this);
+					if (ch.alignment != hero.alignment && hero.fieldOfView[ch.pos]){
+						ch.damage( Random.NormalIntRange(damageBase, 2*damageBase), new Char.DamageCause(Judgement.this, hero));
 					}
 				}
 
@@ -87,13 +87,13 @@ public class Judgement extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int baseDmg = 5 + 5*Dungeon.hero.pointsInTalent(Talent.JUDGEMENT);
+	public String desc(Hero hero) {
+		int baseDmg = 5 + 5*hero.pointsInTalent(Talent.JUDGEMENT);
 		int totalBaseDmg = baseDmg;
-		if (Dungeon.hero.buff(AscendedForm.AscendBuff.class) != null) {
-			totalBaseDmg += 5 * Dungeon.hero.buff(AscendedForm.AscendBuff.class).spellCasts;
+		if (hero.buff(AscendedForm.AscendBuff.class) != null) {
+			totalBaseDmg += 5 * hero.buff(AscendedForm.AscendBuff.class).spellCasts;
 		}
 
-		return Messages.get(this, "desc", baseDmg, 2*baseDmg, totalBaseDmg, 2*totalBaseDmg) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+		return Messages.get(this, "desc", baseDmg, 2*baseDmg, totalBaseDmg, 2*totalBaseDmg) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 }

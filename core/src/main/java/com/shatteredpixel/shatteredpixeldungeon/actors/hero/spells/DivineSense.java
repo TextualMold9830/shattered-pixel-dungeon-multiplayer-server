@@ -66,7 +66,7 @@ public class DivineSense extends ClericSpell {
 		hero.spend( 1f );
 		hero.busy();
 		SpellSprite.show(hero, SpellSprite.VISION);
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		Char ally = PowerOfMany.getPoweredAlly();
 		if (ally != null && ally.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null){
@@ -77,8 +77,8 @@ public class DivineSense extends ClericSpell {
 		onSpellCast(tome, hero);
 	}
 
-	public String desc(){
-		return Messages.get(this, "desc", 4+4*Dungeon.hero.pointsInTalent(Talent.DIVINE_SENSE)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero){
+		return Messages.get(this, "desc", 4+4*hero.pointsInTalent(Talent.DIVINE_SENSE)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class DivineSenseTracker extends FlavourBuff {

@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 import com.watabou.utils.Bundle;
 
 public class Regeneration extends Buff {
-	
+
 	{
 		//unlike other buffs, this one acts after the hero and takes priority against other effects
 		//healing is much more useful if you get some of it off before taking damage
@@ -43,33 +43,29 @@ public class Regeneration extends Buff {
 	private float partialRegen = 0f;
 
 	private static final float REGENERATION_DELAY = 10; //1HP every 10 turns
-	
+
 	@Override
 	public boolean act() {
-		if (target.isAlive()) {
-
+		if (target.isAlive() && target instanceof Hero) {
+			Hero hero = (Hero) target;
 			//if other trinkets ever get buffs like this should probably make the buff attaching
 			// behaviour more like wands/rings/artifacts
 			if (ChaoticCenser.averageTurnsUntilGas() != -1){
-				Buff.affect(target, ChaoticCenser.CenserGasTracker.class);
+				Buff.affect(hero, ChaoticCenser.CenserGasTracker.class);
 			}
 
-			//cancel regenning entirely in thie case
-			if (SaltCube.healthRegenMultiplier() == 0){
-				spend(REGENERATION_DELAY);
-				return true;
-			}
-
-			if (target.HP < regencap() && !((Hero)target).isStarving()) {
-				if (regenOn((Hero) target)) {
-					target.HP += 1;
-					if (target.HP == regencap()) {
-						((Hero) target).resting = false;
+			if (regenOn() && target.HP < regencap() && !((Hero)target).isStarving()) {
+				boolean chaliceCursed = false;
+				int chaliceLevel = -1;
+				if (target.buff(MagicImmune.class) == null) {
+					if (hero.buff(ChaliceOfBlood.chaliceRegen.class) != null) {
+						chaliceCursed = hero.buff(ChaliceOfBlood.chaliceRegen.class).isCursed();
+						chaliceLevel = hero.buff(ChaliceOfBlood.chaliceRegen.class).itemLevel();
+					} else if (hero.buff(SpiritForm.SpiritFormBuff.class) != null
+							&& hero.buff(SpiritForm.SpiritFormBuff.class).artifact() instanceof ChaliceOfBlood) {
+						chaliceLevel = SpiritForm.artifactLevel(hero);
 					}
 				}
-			}
-
-			ChaliceOfBlood.chaliceRegen regenBuff = target.buff( ChaliceOfBlood.chaliceRegen.class);
 
 				float delay = REGENERATION_DELAY;
 				if (chaliceLevel != -1 && target.buff(MagicImmune.class) == null) {
@@ -94,18 +90,18 @@ public class Regeneration extends Buff {
 				}
 
 			}
-			delay /= SaltCube.healthRegenMultiplier();
+
 			spend( TICK );
-			
+
 		} else {
-			
+
 			diactivate();
-			
+
 		}
-		
+
 		return true;
 	}
-	
+
 	public int regencap(){
 		return target.HT;
 	}

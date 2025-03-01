@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -124,7 +123,7 @@ public class StoneOfIntuition extends InventoryStone {
 							item.identify(null);
 						}
 						GLog.p( Messages.get(WndGuess.class, "correct") );
-						curUser.getSprite().parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
+						curUser.getSprite().parent.add( new Identification( curUser.getSprite().center().offset( 0, -16 ) ) );
 					} else {
 						GLog.w( Messages.get(WndGuess.class, "incorrect") );
 					}

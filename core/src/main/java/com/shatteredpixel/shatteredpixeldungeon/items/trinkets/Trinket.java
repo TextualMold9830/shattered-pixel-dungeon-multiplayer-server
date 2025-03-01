@@ -120,11 +120,6 @@ public abstract class Trinket extends Item {
 			return "";
 		}
 
-		@Override
-		public String statsDesc() {
-			return "";
-		}
-
 	}
 
 	public static class UpgradeTrinket extends Recipe {

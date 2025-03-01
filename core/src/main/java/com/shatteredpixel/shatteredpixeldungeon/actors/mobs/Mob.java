@@ -725,12 +725,12 @@ public abstract class Mob extends Char {
 	
 	@Override
 	public int defenseSkill( Char enemy ) {
-		if (buff(GuidingLight.Illuminated.class) != null && Dungeon.hero.heroClass == HeroClass.CLERIC){
+		if (buff(GuidingLight.Illuminated.class) != null){
 			//if the attacker is the cleric, they must be using a weapon they have the str for
 			if (enemy instanceof Hero){
 				Hero h = (Hero) enemy;
-				if (!(h.belongings.attackingWeapon() instanceof Weapon)
-						|| ((Weapon) h.belongings.attackingWeapon()).STRReq() <= h.STR()){
+				if ((!(h.belongings.attackingWeapon() instanceof Weapon)
+						|| ((Weapon) h.belongings.attackingWeapon()).STRReq() <= h.STR()) && h.heroClass == HeroClass.CLERIC){
 					return 0;
 				}
 			} else {
@@ -861,12 +861,12 @@ public abstract class Mob extends Char {
 					alerted = true;
 					//assume the hero is hitting us in these common cases
 					if (src instanceof Wand || src instanceof ClericSpell || src instanceof ArmorAbility) {
-						aggro(Dungeon.hero);
-						target = Dungeon.hero.pos;
+						aggro(source.getDamageOwner());
+						target = source.getDamageOwner().pos;
 					}
 				} else {
 					if (src instanceof Wand || src instanceof ClericSpell || src instanceof ArmorAbility) {
-						recentlyAttackedBy.add(Dungeon.hero);
+						recentlyAttackedBy.add(source.getDamageOwner());
 					}
 				}
 			}
@@ -1551,7 +1551,7 @@ public abstract class Mob extends Char {
 			}
 
 			//can only have one empowered ally at once, prioritize incoming ally
-			if (Stasis.getStasisAlly() != null){
+			if (Stasis.getStasisAlly(hero) != null){
 				for (Mob mob : level.mobs.toArray( new Mob[0] )) {
 					if (mob.buff(PowerOfMany.PowerBuff.class) != null){
 						mob.buff(PowerOfMany.PowerBuff.class).detach();

@@ -88,7 +88,7 @@ public class HallowedGround extends TargetedClericSpell {
 			return;
 		}
 
-		if (Dungeon.level.solid[target] || !Dungeon.level.heroFOV[target]){
+		if (Dungeon.level.solid[target] || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "invalid_target"));
 			return;
 		}
@@ -104,7 +104,9 @@ public class HallowedGround extends TargetedClericSpell {
 					GameScene.updateMap( i );
 					CellEmitter.get(i).burst(LeafParticle.LEVEL_SPECIFIC, 2);
 				}
-				GameScene.add(Blob.seed(i, 20, HallowedTerrain.class));
+				HallowedTerrain hallowedTerrain = Blob.seed(i, 20, HallowedTerrain.class);
+				hallowedTerrain.source = hero;
+				GameScene.add(hallowedTerrain);
 				CellEmitter.get(i).burst(ShaftParticle.FACTORY, 2);
 
 				Char ch = Actor.findChar(i);
@@ -131,7 +133,7 @@ public class HallowedGround extends TargetedClericSpell {
 		Buff.affect(hero, HallowedFurrowTracker.class).countUp(1);
 
 		Sample.INSTANCE.play(Assets.Sounds.MELD);
-		hero.sprite.zap(target);
+		hero.getSprite().zap(target);
 		hero.spendAndNext( 1f );
 
 		onSpellCast(tome, hero);
@@ -140,18 +142,17 @@ public class HallowedGround extends TargetedClericSpell {
 
 	private void affectChar( Char ch ){
 		if (ch.alignment == Char.Alignment.ALLY){
-
-			if (ch == Dungeon.hero || ch.HP == ch.HT){
+			if (ch instanceof Hero || ch.HP == ch.HT){
 				Buff.affect(ch, Barrier.class).incShield(10);
-				ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, "10", FloatingText.SHIELDING );
+				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "10", FloatingText.SHIELDING );
 			} else {
 				int barrier = 10 - (ch.HT - ch.HP);
 				barrier = Math.max(barrier, 0);
 				ch.HP += 10 - barrier;
-				ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(10-barrier), FloatingText.HEALING );
+				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(10-barrier), FloatingText.HEALING );
 				if (barrier > 0){
 					Buff.affect(ch, Barrier.class).incShield(barrier);
-					ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(barrier), FloatingText.SHIELDING );
+					ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(barrier), FloatingText.SHIELDING );
 				}
 			}
 		} else if (!ch.flying) {
@@ -159,12 +160,17 @@ public class HallowedGround extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(){
-		int area = 1 + 2*Dungeon.hero.pointsInTalent(Talent.HALLOWED_GROUND);
-		return Messages.get(this, "desc", area) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero){
+		int area = 1 + 2*hero.pointsInTalent(Talent.HALLOWED_GROUND);
+		return Messages.get(this, "desc", area) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class HallowedTerrain extends Blob {
+		Hero source;
+
+		public void setSource(Hero source) {
+			this.source = source;
+		}
 
 		@Override
 		protected void evolve() {
@@ -176,7 +182,7 @@ public class HallowedGround extends TargetedClericSpell {
 			ArrayList<Char> affected = new ArrayList<>();
 
 			// on avg, hallowed ground produces 9/17/25 tiles of grass, 100/67/50% of total tiles
-			int chance = 10 + 10*Dungeon.hero.pointsInTalent(Talent.HALLOWED_GROUND);
+			int chance = 10 + 10*source.pointsInTalent(Talent.HALLOWED_GROUND);
 
 			for (int i = area.left-1; i <= area.right; i++) {
 				for (int j = area.top-1; j <= area.bottom; j++) {
@@ -193,7 +199,7 @@ public class HallowedGround extends TargetedClericSpell {
 						if (c == Terrain.GRASS && Dungeon.level.plants.get(c) == null) {
 							if (Random.Int(chance) == 0) {
 								if (!Regeneration.regenOn()
-										|| (Dungeon.hero.buff(HallowedFurrowTracker.class) != null && Dungeon.hero.buff(HallowedFurrowTracker.class).count() > 5)){
+										|| (source.buff(HallowedFurrowTracker.class) != null && source.buff(HallowedFurrowTracker.class).count() > 5)){
 									Level.set(cell, Terrain.FURROWED_GRASS);
 								} else {
 									Level.set(cell, Terrain.HIGH_GRASS);
@@ -222,10 +228,10 @@ public class HallowedGround extends TargetedClericSpell {
 
 			Char ally = PowerOfMany.getPoweredAlly();
 			if (ally != null && ally.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null){
-				if (affected.contains(Dungeon.hero) && !affected.contains(ally)){
+				if (affected.contains(source) && !affected.contains(ally)){
 					affected.add(ally);
-				} else if (!affected.contains(Dungeon.hero) && affected.contains(ally)){
-					affected.add(Dungeon.hero);
+				} else if (!affected.contains(source) && affected.contains(ally)){
+					affected.add(source);
 				}
 			}
 
@@ -237,12 +243,12 @@ public class HallowedGround extends TargetedClericSpell {
 
 		private void affectChar( Char ch ){
 			if (ch.alignment == Char.Alignment.ALLY){
-				if (ch == Dungeon.hero || ch.HP == ch.HT){
+				if (ch instanceof Hero || ch.HP == ch.HT){
 					Buff.affect(ch, Barrier.class).incShield(1);
-					ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.SHIELDING );
+					ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.SHIELDING );
 				} else {
 					ch.HP++;
-					ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.HEALING );
+					ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.HEALING );
 				}
 			} else if (!ch.flying && ch.buff(Roots.class) == null){
 				Buff.prolong(ch, Cripple.class, 1f);

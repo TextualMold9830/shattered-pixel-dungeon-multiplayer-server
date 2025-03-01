@@ -80,8 +80,8 @@ public class WandOfWarding extends Wand {
 			}
 		}
 
-		if (Stasis.getStasisAlly() instanceof Ward){
-			currentWardEnergy += ((Ward) Stasis.getStasisAlly()).tier;
+		if (Stasis.getStasisAlly(owner) instanceof Ward){
+			currentWardEnergy += ((Ward) Stasis.getStasisAlly(owner)).tier;
 		}
 
 		int maxWardEnergy = 0;

@@ -54,8 +54,8 @@ public class MindForm extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", itemLevel()) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", itemLevel(hero)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -68,19 +68,19 @@ public class MindForm extends ClericSpell {
 		return super.canCast(hero) && hero.hasTalent(Talent.MIND_FORM);
 	}
 
-	public static int effectLevel(){
-		return 2 + Dungeon.hero.pointsInTalent(Talent.MIND_FORM);
+	public static int effectLevel(Hero hero){
+		return 2 + hero.pointsInTalent(Talent.MIND_FORM);
 	}
 
 	@Override
 	public void onCast(HolyTome tome, Hero hero) {
 
-		GameScene.show(new Trinity.WndItemtypeSelect(tome, this));
+		GameScene.show(new Trinity.WndItemtypeSelect(tome, this, hero));
 
 	}
 
-	public static int itemLevel(){
-		return 2 + Dungeon.hero.pointsInTalent(Talent.MIND_FORM);
+	public static int itemLevel(Hero hero){
+		return 2 + hero.pointsInTalent(Talent.MIND_FORM);
 	}
 
 	//TODO selecting
@@ -92,21 +92,21 @@ public class MindForm extends ClericSpell {
 			this.effect = effect;
 		}
 
-		private Wand wand(){
+		private Wand wand(Hero hero){
 			if (effect instanceof Wand){
-				((Wand) effect).level(effectLevel());
+				((Wand) effect).level(effectLevel(hero));
 				((Wand) effect).curCharges = ((Wand) effect).maxCharges;
-				((Wand) effect).identify(false);
+				((Wand) effect).identify(false, hero);
 				return (Wand)effect;
 			}
 			return null;
 		}
 
-		private MissileWeapon thrown(){
+		private MissileWeapon thrown(Hero hero){
 			if (effect instanceof MissileWeapon){
-				((MissileWeapon) effect).level(effectLevel());
+				((MissileWeapon) effect).level(effectLevel(hero));
 				((MissileWeapon) effect).repair(100);
-				((MissileWeapon) effect).identify(false);
+				((MissileWeapon) effect).identify(false, hero);
 				((MissileWeapon) effect).spawnedForEffect = true;
 				return (MissileWeapon) effect;
 			}
@@ -118,19 +118,19 @@ public class MindForm extends ClericSpell {
 			if (target == null){
 				return;
 			}
-			if (wand() != null){
-				Wand wand = wand();
-				if (wand.tryToZap(Dungeon.hero, target)) {
+			if (wand(getOwner()) != null){
+				Wand wand = wand(getOwner());
+				if (wand.tryToZap(getOwner(), target)) {
 
-					final Ballistica shot = new Ballistica( Dungeon.hero.pos, target, wand.collisionProperties(target));
+					final Ballistica shot = new Ballistica( getOwner().pos, target, wand.collisionProperties(target));
 					int cell = shot.collisionPos;
 
-					if (target == Dungeon.hero.pos || cell == Dungeon.hero.pos) {
+					if (target == getOwner().pos || cell == getOwner().pos) {
 						GLog.i( Messages.get(Wand.class, "self_target") );
 						return;
 					}
 
-					Dungeon.hero.sprite.zap(cell);
+					getOwner().getSprite().zap(cell);
 
 					//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
 					if (Actor.findChar(target) != null)
@@ -141,32 +141,32 @@ public class MindForm extends ClericSpell {
 					wand.fx(shot, new Callback() {
 						public void call() {
 							wand.onZap(shot);
-							if (Random.Float() < WondrousResin.extraCurseEffectChance()){
+							if (Random.Float() < WondrousResin.extraCurseEffectChance(getOwner())){
 								WondrousResin.forcePositive = true;
 								CursedWand.cursedZap(wand,
-										Dungeon.hero,
-										new Ballistica(Dungeon.hero.pos, cell, Ballistica.MAGIC_BOLT), new Callback() {
+										getOwner(),
+										new Ballistica(getOwner().pos, cell, Ballistica.MAGIC_BOLT), new Callback() {
 											@Override
 											public void call() {
 												WondrousResin.forcePositive = false;
 											}
 										});
 							}
-							((ClassArmor)Dungeon.hero.belongings.armor()).charge -= Trinity.trinityChargeUsePerEffect(wand.getClass());
-							wand.wandUsed();
+							((ClassArmor)getOwner().belongings.armor()).charge -= Trinity.trinityChargeUsePerEffect(wand.getClass(), getOwner());
+							wand.wandUsed(getOwner());
 						}
 					});
 				}
-			} else if (thrown() != null){
-				MissileWeapon thrown = thrown();
-				thrown.cast(Dungeon.hero, target);
-				((ClassArmor)Dungeon.hero.belongings.armor()).charge -= Trinity.trinityChargeUsePerEffect(thrown.getClass());
+			} else if (thrown(getOwner()) != null){
+				MissileWeapon thrown = thrown(getOwner());
+				thrown.cast(getOwner(), target);
+				((ClassArmor)getOwner().belongings.armor()).charge -= Trinity.trinityChargeUsePerEffect(thrown.getClass(), getOwner());
 			}
 		}
 
 		@Override
 		public String prompt() {
-			if (wand() != null){
+			if (wand(getOwner()) != null){
 				return Messages.get(Wand.class, "prompt");
 			} else {
 				return Messages.get(Item.class, "prompt");

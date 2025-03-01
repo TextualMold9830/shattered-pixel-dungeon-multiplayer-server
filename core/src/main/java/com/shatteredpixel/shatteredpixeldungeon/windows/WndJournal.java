@@ -777,7 +777,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					title = Messages.titleCase( item.name() );
 					//some items don't include direct stats, generally when they're not applicable
 					if (item instanceof ClassArmor || item instanceof SpiritBow){
-						desc += item.desc();
+						//desc += item.desc();
 					} else {
 						desc += item.info();
 					}
@@ -1067,13 +1067,13 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 
 			@Override
 			protected void createChildren() {
-				if (Dungeon.hero != null) {
+				if (false) {
 				btnLocal = new RedButton(Messages.get(this, "this_run")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
 						global = false;
-						updateList();
+						//updateList();
 					}
 				};
 				btnLocal.icon(Icons.BADGES.get());

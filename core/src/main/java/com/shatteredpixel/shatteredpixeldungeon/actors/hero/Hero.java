@@ -1475,10 +1475,10 @@ public class Hero extends Char {
 			if (!wasEnemy || enemy.alignment == Alignment.ENEMY) {
 				if (buff(HolyWeapon.HolyWepBuff.class) != null) {
 					int dmg = subClass == HeroSubClass.PALADIN ? 6 : 2;
-					enemy.damage(Math.round(dmg * Weapon.Enchantment.genericProcChanceMultiplier(this)), HolyWeapon.INSTANCE);
+					enemy.damage(Math.round(dmg * Weapon.Enchantment.genericProcChanceMultiplier(this)), new Char.DamageCause(HolyWeapon.INSTANCE, this));
 				}
 				if (buff(Smite.SmiteTracker.class) != null) {
-					enemy.damage(Smite.bonusDmg(this, enemy), Smite.INSTANCE);
+					enemy.damage(Smite.bonusDmg(this, enemy), new Char.DamageCause(Smite.INSTANCE, this));
 				}
 			}
 		}
@@ -1550,11 +1550,11 @@ public class Hero extends Char {
 	@Override
 	public int glyphLevel(Class<? extends Armor.Glyph> cls) {
 		if (belongings.armor() != null && belongings.armor().hasGlyph(cls, this)){
-			return Math.max(super.glyphLevel(cls), belongings.armor.buffedLvl());
+			return Math.max(super.glyphLevel(cls), belongings.armor().buffedLvl());
 		} else if (buff(BodyForm.BodyFormBuff.class) != null
 				&& buff(BodyForm.BodyFormBuff.class).glyph() != null
 				&& buff(BodyForm.BodyFormBuff.class).glyph().getClass() == cls){
-			return belongings.armor() != null ? belongings.armor.buffedLvl() : 0;
+			return belongings.armor() != null ? belongings.armor().buffedLvl() : 0;
 		} else {
 			return super.glyphLevel(cls);
 		}

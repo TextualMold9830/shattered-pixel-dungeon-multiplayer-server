@@ -191,6 +191,7 @@ public abstract class Char extends Actor {
 		sendSelf();
 	}
 
+
 	//these are relative to the hero
 	public enum Alignment{
 		ENEMY,
@@ -443,11 +444,12 @@ public abstract class Char extends Actor {
 
 			if (enemy.buff(GuidingLight.Illuminated.class) != null){
 				enemy.buff(GuidingLight.Illuminated.class).detach();
-				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.SEARING_LIGHT)){
-					dmg += 2 + 2*Dungeon.hero.pointsInTalent(Talent.SEARING_LIGHT);
+				if (this instanceof Hero && ((Hero) this).hasTalent(Talent.SEARING_LIGHT)){
+					dmg += 2 + 2* ((Hero) this).pointsInTalent(Talent.SEARING_LIGHT);
 				}
-				if (this != Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.PRIEST){
-					enemy.damage(Dungeon.hero.lvl, GuidingLight.INSTANCE);
+				if (!(this instanceof Hero) && enemy.buff(GuidingLight.Illuminated.class).source.subClass == HeroSubClass.PRIEST){
+					Hero cause = enemy.buff(GuidingLight.Illuminated.class).source;
+					enemy.damage(cause.lvl, new DamageCause(GuidingLight.INSTANCE, cause));
 				}
 			}
 
@@ -461,7 +463,7 @@ public abstract class Char extends Actor {
 			if (buff( PowerOfMany.PowerBuff.class) != null){
 				if (buff( BeamingRay.BeamingRayBoost.class) != null
 					&& buff( BeamingRay.BeamingRayBoost.class).object == enemy.id()){
-					dmg *= 1.3f + 0.05f*Dungeon.hero.pointsInTalent(Talent.BEAMING_RAY);
+					dmg *= 1.3f + 0.05f*buff(BeamingRay.BeamingRayBoost.class).source.pointsInTalent(Talent.BEAMING_RAY);
 				} else {
 					dmg *= 1.25f;
 				}
@@ -486,13 +488,15 @@ public abstract class Char extends Actor {
 			if (enemy.buff(ScrollOfChallenge.ChallengeArena.class) != null){
 				dmg *= 0.67f;
 			}
-
-			if (Dungeon.hero.alignment == enemy.alignment
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(enemy.pos, Dungeon.hero.pos) <= 2 || enemy.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)){
-				dmg *= 0.925f - 0.075f*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					if (hero.alignment == enemy.alignment
+							&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+							&& (Dungeon.level.distance(enemy.pos, hero.pos) <= 2 || enemy.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
+						dmg *= 0.925f - 0.075f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+					}
+				}
 			}
-
 			if (enemy.buff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null){
 				dmg *= 0.2f;
 			}
@@ -632,59 +636,67 @@ public abstract class Char extends Actor {
 	}
 
 	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
-		float acuStat = attacker.attackSkill( defender );
-		float defStat = defender.defenseSkill( attacker );
+		float acuStat = attacker.attackSkill(defender);
+		float defStat = defender.defenseSkill(attacker);
 
-		if (defender instanceof Hero && ((Hero) defender).damageInterrupt){
+		if (defender instanceof Hero && ((Hero) defender).damageInterrupt) {
 			((Hero) defender).interrupt();
 		}
 
 		//invisible chars always hit (for the hero this is surprise attacking)
-		if (attacker.invisible > 0 && attacker.canSurpriseAttack()){
+		if (attacker.invisible > 0 && attacker.canSurpriseAttack()) {
 			acuStat = INFINITE_ACCURACY;
 		}
 
-		if (defender.buff(MonkEnergy.MonkAbility.Focus.FocusBuff.class) != null){
+		if (defender.buff(MonkEnergy.MonkAbility.Focus.FocusBuff.class) != null) {
 			defStat = INFINITE_EVASION;
 		}
 
 		//if accuracy or evasion are large enough, treat them as infinite.
 		//note that infinite evasion beats infinite accuracy
-		if (defStat >= INFINITE_EVASION){
+		if (defStat >= INFINITE_EVASION) {
 			return false;
-		} else if (acuStat >= INFINITE_ACCURACY){
+		} else if (acuStat >= INFINITE_ACCURACY) {
 			return true;
 		}
 
-		float acuRoll = Random.Float( acuStat );
+		float acuRoll = Random.Float(acuStat);
 		if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
-		if (attacker.buff(  Hex.class) != null) acuRoll *= 0.8f;
-		if (attacker.buff( Daze.class) != null) acuRoll *= 0.5f;
-		for (ChampionEnemy buff : attacker.buffs(ChampionEnemy.class)){
+		if (attacker.buff(Hex.class) != null) acuRoll *= 0.8f;
+		if (attacker.buff(Daze.class) != null) acuRoll *= 0.5f;
+		for (ChampionEnemy buff : attacker.buffs(ChampionEnemy.class)) {
 			acuRoll *= buff.evasionAndAccuracyFactor();
 		}
 		acuRoll *= AscensionChallenge.statModifier(attacker);
-if (Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.BLESS)
-				&& attacker.alignment == Alignment.ALLY){
-			// + 3%/5%
-			acuRoll *= 1.01f + 0.02f*Dungeon.hero.pointsInTalent(Talent.BLESS);
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.heroClass != HeroClass.CLERIC
+						&& hero.hasTalent(Talent.BLESS)
+						&& attacker.alignment == Alignment.ALLY) {
+					// + 3%/5%
+					acuRoll *= 1.01f + 0.02f * hero.pointsInTalent(Talent.BLESS);
+				}
+			}
 		}
 
-		float defRoll = Random.Float( defStat );
+		float defRoll = Random.Float(defStat);
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
-		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
-		if (defender.buff( Daze.class) != null) defRoll *= 0.5f;
-		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)){
+		if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
+		if (defender.buff(Daze.class) != null) defRoll *= 0.5f;
+		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)) {
 			defRoll *= buff.evasionAndAccuracyFactor();
 		}
 		defRoll *= AscensionChallenge.statModifier(defender);
-if (Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.BLESS)
-				&& defender.alignment == Alignment.ALLY){
-			// + 3%/5%
-			defRoll *= 1.01f + 0.02f*Dungeon.hero.pointsInTalent(Talent.BLESS);
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+			if (hero.heroClass != HeroClass.CLERIC
+					&& hero.hasTalent(Talent.BLESS)
+					&& defender.alignment == Alignment.ALLY) {
+				// + 3%/5%
+				defRoll *= 1.01f + 0.02f * hero.pointsInTalent(Talent.BLESS);
+			}
 		}
+	}
 
 		return (acuRoll * accMulti) >= defRoll;
 	}
@@ -732,25 +744,30 @@ if (Dungeon.hero.heroClass != HeroClass.CLERIC
 
 		ShieldOfLight.ShieldOfLightTracker shield = buff( ShieldOfLight.ShieldOfLightTracker.class);
 		if (shield != null && shield.object == enemy.id()){
-			int min = 1 + Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
+
+			int min = 1 + buff(ShieldOfLight.ShieldOfLightTracker.class).source.pointsInTalent(Talent.SHIELD_OF_LIGHT);
 			damage -= Random.NormalIntRange(min, 2*min);
 			damage = Math.max(damage, 0);
-		} else if (this == Dungeon.hero
-				&& Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.SHIELD_OF_LIGHT)
+		} else if (this instanceof Hero
+				&& ((Hero) this).heroClass != HeroClass.CLERIC
+				&& ((Hero) this).hasTalent(Talent.SHIELD_OF_LIGHT)
 				&& TargetHealthIndicator.instance.target() == enemy){
 			//33/50%
-			if (Random.Int(6) < 1+Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT)){
+			if (Random.Int(6) < 1+ ((Hero) this).pointsInTalent(Talent.SHIELD_OF_LIGHT)){
 				damage -= 1;
 			}
 		}
 
 		// hero and pris images skip this as they already benefit from hero's armor glyph proc
 		if (!(this instanceof Hero || this instanceof PrismaticImage)) {
-			if (Dungeon.hero.alignment == alignment && Dungeon.hero.belongings.armor() != null
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-				damage = Dungeon.hero.belongings.armor().proc( enemy, this, damage );
+			for (Hero hero : Dungeon.heroes) {
+				if (hero != null) {
+				if (hero.alignment == alignment && hero.belongings.armor() != null
+						&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+						&& (Dungeon.level.distance(pos, hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
+					damage = hero.belongings.armor().proc(enemy, this, damage);
+				}
+				}
 			}
 		}
 
@@ -758,15 +775,17 @@ if (Dungeon.hero.heroClass != HeroClass.CLERIC
 	}
 //Returns the level a glyph is at for a char, or -1 if they are not benefitting from that glyph
 	//This function is needed as (unlike enchantments) many glyphs trigger in a variety of cases
+	//TODO: check this
 	public int glyphLevel(Class<? extends Armor.Glyph> cls){
-		if (Dungeon.hero != null && Dungeon.level != null
-				&& this != Dungeon.hero && Dungeon.hero.alignment == alignment
-				&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-				&& (Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-			return Dungeon.hero.glyphLevel(cls);
-		} else {
-			return -1;
+		for(Hero hero: Dungeon.heroes) {
+			if (hero != null && Dungeon.level != null
+					&& this != hero && hero.alignment == alignment
+					&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+					&& (Dungeon.level.distance(pos, hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
+				return hero.glyphLevel(cls);
+			}
 		}
+		return -1;
 	}
 
 	public float speed() {
@@ -851,16 +870,21 @@ if (Dungeon.hero.heroClass != HeroClass.CLERIC
 
 		//if dmg is from a character we already reduced it in defenseProc
 		if (!(src instanceof Char)) {
-			if (Dungeon.hero.alignment == alignment
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-				damage *= 0.925f - 0.075f*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					if (hero.alignment == alignment
+							&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+							&& (Dungeon.level.distance(pos, hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
+						damage *= 0.925f - 0.075f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+					}
+				}
 			}
 		}
 
 		if (buff(PowerOfMany.PowerBuff.class) != null){
 			if (buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null){
-				damage *= 0.70f - 0.05f*Dungeon.hero.pointsInTalent(Talent.LIFE_LINK);
+
+				damage *= 0.70f - 0.05f*buff(LifeLinkSpell.LifeLinkSpellBuff.class).source.pointsInTalent(Talent.LIFE_LINK);
 			} else {
 				damage *= 0.75f;
 			}
@@ -998,8 +1022,8 @@ if (Dungeon.hero.heroClass != HeroClass.CLERIC
 			}
 
 			//special case for monk using unarmed abilities
-			if (src == Dungeon.hero
-					&& Dungeon.hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+			if (src instanceof Hero
+					&& ((Hero)src).buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
 				icon = FloatingText.PHYS_DMG_NO_BLOCK;
 			}
 

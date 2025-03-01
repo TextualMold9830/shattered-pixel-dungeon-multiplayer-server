@@ -24,7 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
@@ -96,6 +98,8 @@ public class ArmoredStatue extends Statue {
 			dmg -= AntiMagic.drRoll(this, armor.buffedLvl());
 			dmg = Math.max(dmg, 0);
         }
+		super.damage( dmg, source );
+
     }
 	public int glyphLevel(Class<? extends Armor.Glyph> cls) {
 		if (armor != null && armor.hasGlyph(cls, this)){
@@ -104,10 +108,7 @@ public class ArmoredStatue extends Statue {
 			return super.glyphLevel(cls);
 		}
 
-		super.damage( dmg, source );
-
 		//for the rose status indicator
-		Item.updateQuickslot();
 	}
 
 	@Override

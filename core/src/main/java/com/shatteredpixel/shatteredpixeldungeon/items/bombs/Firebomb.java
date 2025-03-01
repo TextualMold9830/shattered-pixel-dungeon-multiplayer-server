@@ -39,10 +39,6 @@ public class Firebomb extends Bomb {
 	{
 		image = ItemSpriteSheet.FIRE_BOMB;
 	}
-@Override
-	protected int explosionRange() {
-		return 2;
-	}
 	@Override
 	protected int explosionRange() {
 		return 2;

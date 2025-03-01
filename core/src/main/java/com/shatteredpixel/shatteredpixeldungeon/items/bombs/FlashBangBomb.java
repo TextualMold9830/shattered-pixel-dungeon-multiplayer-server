@@ -51,15 +51,10 @@ public class FlashBangBomb extends Bomb {
 	{
 		image = ItemSpriteSheet.FLASHBANG;
 	}
-@Override
-	protected int explosionRange() {
-		return 2;
-	}
 	@Override
 	protected int explosionRange() {
 		return 2;
 	}
-
 	@Override
 	public void explode(int cell, Hero hero) {
 		super.explode(cell, hero);

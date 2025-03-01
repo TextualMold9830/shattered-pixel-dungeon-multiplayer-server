@@ -37,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RightClickMenu;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.input.PointerEvent;
@@ -56,7 +55,7 @@ public class WndClericSpells extends Window {
 	public static int BTN_SIZE = 20;
 
 	public WndClericSpells(HolyTome tome, Hero cleric, boolean info){
-
+		super(cleric);
 		IconTitle title;
 		if (!info){
 			title = new IconTitle(new ItemSprite(tome), Messages.titleCase(Messages.get(this, "cast_title")));
@@ -142,8 +141,7 @@ public class WndClericSpells extends Window {
 			this.spell = spell;
 			this.tome = tome;
 			this.info = info;
-
-			if (!tome.canCast(Dungeon.hero, spell)){
+			if (!tome.canCast(getOwnerHero(), spell)){
 				icon.alpha( 0.3f );
 			}
 
@@ -154,7 +152,7 @@ public class WndClericSpells extends Window {
 		@Override
 		protected void onPointerUp() {
 			super.onPointerUp();
-			if (!tome.canCast(Dungeon.hero, spell)){
+			if (!tome.canCast(getOwnerHero(), spell)){
 				icon.alpha( 0.3f );
 			}
 		}
@@ -173,19 +171,20 @@ public class WndClericSpells extends Window {
 		@Override
 		protected void onClick() {
 			if (info){
-				GameScene.show(new WndTitledMessage(new HeroIcon(spell), Messages.titleCase(spell.name()), spell.desc()));
+				GameScene.show(new WndTitledMessage(new HeroIcon(spell), Messages.titleCase(spell.name()), spell.desc(getOwnerHero())));
 			} else {
 				hide();
 
 
-				if(!tome.canCast(Dungeon.hero, spell)){
+				if(!tome.canCast(getOwnerHero(), spell)){
 					GLog.w(Messages.get(HolyTome.class, "no_spell"));
 				} else {
-					spell.onCast(tome, Dungeon.hero);
+					spell.onCast(tome, getOwnerHero());
 
 					if (spell.targetingFlags() != -1 && Dungeon.quickslot.contains(tome)){
 						tome.targetingSpell = spell;
-						QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(tome));
+						//todo: check this
+						//QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(tome));
 					}
 				}
 
@@ -195,57 +194,14 @@ public class WndClericSpells extends Window {
 		@Override
 		protected boolean onLongClick() {
 			hide();
-			tome.setQuickSpell(spell);
+			tome.setQuickSpell(spell, getOwnerHero());
 			return true;
 		}
 
-		@Override
-		protected void onRightClick() {
-			super.onRightClick();
-			RightClickMenu r = new RightClickMenu(new Image(icon),
-					Messages.titleCase(spell.name()),
-					Messages.get(WndClericSpells.class, "cast"),
-					Messages.get(WndClericSpells.class, "info"),
-					Messages.get(WndClericSpells.class, "quick_cast")){
-				@Override
-				public void onSelect(int index) {
-					switch (index){
-						default:
-							//do nothing
-							break;
-						case 0:
-							hide();
-							if(!tome.canCast(Dungeon.hero, spell)){
-								GLog.w(Messages.get(HolyTome.class, "no_spell"));
-							} else {
-								spell.onCast(tome, Dungeon.hero);
-
-								if (spell.targetingFlags() != -1 && Dungeon.quickslot.contains(tome)){
-									tome.targetingSpell = spell;
-									QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(tome));
-								}
-							}
-							break;
-						case 1:
-							GameScene.show(new WndTitledMessage(new HeroIcon(spell), Messages.titleCase(spell.name()), spell.desc()));
-							break;
-						case 2:
-							hide();
-							tome.setQuickSpell(spell);
-							break;
-					}
-				}
-			};
-			parent.addToFront(r);
-			r.camera = camera();
-			PointF mousePos = PointerEvent.currentHoverPos();
-			mousePos = camera.screenToCamera((int)mousePos.x, (int)mousePos.y);
-			r.setPos(mousePos.x-3, mousePos.y-3);
-		}
 
 		@Override
 		protected String hoverText() {
-			return "_" + Messages.titleCase(spell.name()) + "_\n" + spell.shortDesc();
+			return "_" + Messages.titleCase(spell.name()) + "_\n" + spell.shortDesc(getOwnerHero());
 		}
 	}
 

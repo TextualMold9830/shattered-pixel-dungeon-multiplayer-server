@@ -62,7 +62,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		weapon.augment = augment;
 		useAnimation();
-		ScrollOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgradeAnimation(curUser);
 		if (!anonymous) {
 			curItem.detach(curUser.belongings.backpack);
 			Catalog.countUse(getClass());
@@ -74,7 +74,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		armor.augment = augment;
 		useAnimation();
-		ScrollOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgradeAnimation(curUser);
 		if (!anonymous) {
 			curItem.detach(curUser.belongings.backpack);
 			Catalog.countUse(getClass());
@@ -152,7 +152,7 @@ public class StoneOfAugmentation extends InventoryStone {
 				@Override
 				protected void onClick() {
 					hide();
-					if (!anonymous) StoneOfAugmentation.this.collect();
+					if (!anonymous) StoneOfAugmentation.this.collect(hero);
 				}
 			};
 			btnCancel.setRect( MARGIN, pos + MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT );
@@ -163,7 +163,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		@Override
 		public void onBackPressed() {
-			if (!anonymous) StoneOfAugmentation.this.collect();
+			if (!anonymous) StoneOfAugmentation.this.collect(getOwnerHero());
 			super.onBackPressed();
 		}
 	}

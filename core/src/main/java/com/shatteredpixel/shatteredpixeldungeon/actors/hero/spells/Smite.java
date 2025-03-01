@@ -56,10 +56,10 @@ public class Smite extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int min = 5 + Dungeon.hero.lvl/2;
-		int max = 10 + Dungeon.hero.lvl;
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		int min = 5 + hero.lvl/2;
+		int max = 10 + hero.lvl;
+		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -86,16 +86,16 @@ public class Smite extends TargetedClericSpell {
 
 		//we apply here because of projecting
 		SmiteTracker tracker = Buff.affect(hero, SmiteTracker.class);
-		if (hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target] || !hero.canAttack(enemy)) {
+		if (hero.isCharmedBy(enemy) || !hero.fieldOfView[target] || !hero.canAttack(enemy)) {
 			GLog.w(Messages.get(this, "invalid_enemy"));
 			tracker.detach();
 			return;
 		}
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.getSprite().attack(enemy.pos, new Callback() {
 			@Override
 			public void call() {
-				AttackIndicator.target(enemy);
+				hero.attackIndicator.target(enemy);
 
 				float accMult = 1;
 				if (!(hero.belongings.attackingWeapon() instanceof Weapon)
@@ -104,7 +104,7 @@ public class Smite extends TargetedClericSpell {
 				}
 				if (hero.attack(enemy, 1, 0, accMult)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					enemy.sprite.burst(0xFFFFFFFF, 10);
+					enemy.getSprite().burst(0xFFFFFFFF, 10);
 				}
 				tracker.detach();
 

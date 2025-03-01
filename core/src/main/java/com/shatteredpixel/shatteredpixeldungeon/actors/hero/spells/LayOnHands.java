@@ -48,8 +48,8 @@ public class LayOnHands extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", 5 + 5*Dungeon.hero.pointsInTalent(Talent.LAY_ON_HANDS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", 5 + 5*hero.pointsInTalent(Talent.LAY_ON_HANDS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -84,10 +84,10 @@ public class LayOnHands extends TargetedClericSpell {
 		affectChar(hero, ch);
 
 		if (ch == hero){
-			hero.sprite.operate(ch.pos);
+			hero.getSprite().operate(ch.pos);
 			hero.next();
 		} else {
-			hero.sprite.zap(ch.pos);
+			hero.getSprite().zap(ch.pos);
 			hero.next();
 		}
 
@@ -113,7 +113,7 @@ public class LayOnHands extends TargetedClericSpell {
 			totalBarrier = Math.min(3*totalHeal - barrier.shielding(), totalBarrier);
 			totalBarrier = Math.max(0, totalBarrier);
 			Buff.affect(ch, Barrier.class).incShield(totalBarrier);
-			ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING );
+			ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING );
 		} else {
 			if (ch.HT - ch.HP < totalHeal){
 				totalBarrier = totalHeal - (ch.HT - ch.HP);
@@ -121,15 +121,15 @@ public class LayOnHands extends TargetedClericSpell {
 				totalBarrier = Math.max(0, totalBarrier);
 				if (ch.HP != ch.HT) {
 					ch.HP = ch.HT;
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - totalBarrier), FloatingText.HEALING);
+					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - totalBarrier), FloatingText.HEALING);
 				}
 				if (totalBarrier > 0) {
 					barrier.incShield(totalBarrier);
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING);
+					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING);
 				}
 			} else {
 				ch.HP = ch.HP + totalHeal;
-				ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
+				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
 			}
 		}
 	}

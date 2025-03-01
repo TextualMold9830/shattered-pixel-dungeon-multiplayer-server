@@ -166,7 +166,7 @@ public class Bomb extends Item {
 			}
 
 			for (int i : affectedCells){
-				if (Dungeon.level.heroFOV[i]) {
+				if (hero.fieldOfView[i]) {
 					CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
 				}
 

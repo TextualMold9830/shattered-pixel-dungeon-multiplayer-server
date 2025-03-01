@@ -210,7 +210,7 @@ public class Feint extends ArmorAbility {
 				if (getOwner().hasTalent(Talent.EXPOSE_WEAKNESS)) {
 					Buff.prolong(enemy, Vulnerable.class, 2f * getOwner().pointsInTalent(Talent.EXPOSE_WEAKNESS));
 					Buff.prolong(enemy, Weakness.class, 2f * getOwner().pointsInTalent(Talent.EXPOSE_WEAKNESS));
-					Buff.prolong(enemy, Weakness.class, 2f * Dungeon.hero.pointsInTalent(Talent.EXPOSE_WEAKNESS));
+					Buff.prolong(enemy, Weakness.class, 2f * getOwner().pointsInTalent(Talent.EXPOSE_WEAKNESS));
 				}
 				if (getOwner().hasTalent(Talent.COUNTER_ABILITY)) {
 					Buff.prolong(getOwner(), Talent.CounterAbilityTacker.class, 3f);

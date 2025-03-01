@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -133,7 +134,7 @@ public class UnstableSpellbook extends Artifact {
 			}
 
 		} else if (action.equals( AC_ADD )) {
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 		}
 	}
 
@@ -205,14 +206,14 @@ public class UnstableSpellbook extends Artifact {
 		if (scroll instanceof ScrollOfLullaby
 				|| scroll instanceof ScrollOfRemoveCurse || scroll instanceof ScrollOfTerror) {
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-				if (Dungeon.level.heroFOV[mob.pos]) {
-					artifactProc(mob, visiblyUpgraded(), 1);
+				if (user.fieldOfView[mob.pos]) {
+					artifactProc(mob, visiblyUpgraded(), 1, user);
 				}
 			}
 		//except rage, which affects everything even if it isn't visible
 		} else if (scroll instanceof ScrollOfRage){
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-				artifactProc(mob, visiblyUpgraded(), 1);
+				artifactProc(mob, visiblyUpgraded(), 1, user);
 			}
 		}
 	}

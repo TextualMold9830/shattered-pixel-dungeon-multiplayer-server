@@ -162,9 +162,9 @@ public class SewerLevel extends RegularLevel {
 
 					@Override
 					public void afterCreate() {
-						Badges.validateHappyEnd();
+						Badges.validateHappyEnd(hero);
 						Dungeon.win( Amulet.class );
-						Dungeon.deleteGame( GamesInProgress.curSlot, true );
+						Dungeon.deleteGame( true );
 						Badges.saveGlobal();
 					}
 				});

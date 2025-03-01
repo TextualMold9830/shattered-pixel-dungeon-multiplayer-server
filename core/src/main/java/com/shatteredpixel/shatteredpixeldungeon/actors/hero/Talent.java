@@ -565,10 +565,10 @@ public enum Talent {
 		}
 
 		if (talent == LIGHT_READING && hero.heroClass == HeroClass.CLERIC){
-			for (Item item : Dungeon.hero.belongings.backpack){
+			for (Item item : hero.belongings.backpack){
 				if (item instanceof HolyTome){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
-						((HolyTome) item).activate(Dungeon.hero);
+						((HolyTome) item).activate(hero);
 					}
 				}
 			}
@@ -576,7 +576,7 @@ public enum Talent {
 
 		//if we happen to have spirit form applied with a ring of might
 		if (talent == SPIRIT_FORM){
-			Dungeon.hero.updateHT(false);
+			hero.updateHT(false);
 		}
 	}
 
@@ -775,7 +775,7 @@ public enum Talent {
 			} else {
 				// 10/15%
 				if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
-					Reflection.newInstance(cls).collect();
+					Reflection.newInstance(cls).collect(hero);
 					GLog.p("refunded!");
 				}
 			}
@@ -794,7 +794,7 @@ public enum Talent {
 				}
 				// 10/15%
 				if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
-					Reflection.newInstance(cls).collect();
+					Reflection.newInstance(cls).collect(hero);
 					GLog.p("refunded!");
 				}
 			}
@@ -806,23 +806,23 @@ public enum Talent {
 			Buff.prolong(hero, EnhancedRings.class, 3f*hero.pointsInTalent(ENHANCED_RINGS));
 		}
 
-		if (Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.DIVINE_SENSE)){
-			Buff.prolong(Dungeon.hero, DivineSense.DivineSenseTracker.class, Dungeon.hero.cooldown()+1);
+		if (hero.heroClass != HeroClass.CLERIC
+				&& hero.hasTalent(Talent.DIVINE_SENSE)){
+			Buff.prolong(hero, DivineSense.DivineSenseTracker.class, hero.cooldown()+1);
 		}
 
 		// 10/20/30%
-		if (Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.CLEANSE)
-				&& Random.Int(10) < Dungeon.hero.pointsInTalent(Talent.CLEANSE)){
+		if (hero.heroClass != HeroClass.CLERIC
+				&& hero.hasTalent(Talent.CLEANSE)
+				&& Random.Int(10) < hero.pointsInTalent(Talent.CLEANSE)){
 			boolean removed = false;
-			for (Buff b : Dungeon.hero.buffs()) {
+			for (Buff b : hero.buffs()) {
 				if (b.type == Buff.buffType.NEGATIVE) {
 					b.detach();
 					removed = true;
 				}
 			}
-			if (removed) new Flare( 6, 32 ).color(0xFF4CD2, true).show( Dungeon.hero.sprite, 2f );
+			if (removed) new Flare( 6, 32 ).color(0xFF4CD2, true).show( hero.getSprite(), 2f );
 		}
 	}
 

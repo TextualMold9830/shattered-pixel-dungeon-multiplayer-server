@@ -39,11 +39,6 @@ public class FrostBomb extends Bomb {
 	{
 		image = ItemSpriteSheet.FROST_BOMB;
 	}
-@Override
-	protected int explosionRange() {
-		return 2;
-	}
-
 	@Override
 	protected int explosionRange() {
 		return 2;

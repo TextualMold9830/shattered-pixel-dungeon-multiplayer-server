@@ -119,7 +119,7 @@ public class HornOfPlenty extends Artifact {
 
 		} else if (action.equals(AC_STORE)){
 
-			GameScene.selectItem(itemSelector);
+			GameScene.selectItem(itemSelector, hero);
 
 		}
 	}
@@ -148,7 +148,7 @@ public class HornOfPlenty extends Artifact {
 				|| hero.hasTalent(Talent.MYSTICAL_MEAL)
 				|| hero.hasTalent(Talent.INVIGORATING_MEAL)
 				|| hero.hasTalent(Talent.FOCUSED_MEAL)
-				|| Dungeon.hero.hasTalent(Talent.ENLIGHTENING_MEAL)){
+				|| hero.hasTalent(Talent.ENLIGHTENING_MEAL)){
 			hero.spend(Food.TIME_TO_EAT - 2);
 		} else {
 			hero.spend(Food.TIME_TO_EAT);

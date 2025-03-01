@@ -32,7 +32,7 @@ public abstract class TargetedClericSpell extends ClericSpell {
 
 	@Override
 	public void onCast(HolyTome tome, Hero hero ){
-		GameScene.selectCell(new CellSelector.Listener() {
+		GameScene.selectCell(hero, new CellSelector.Listener() {
 			@Override
 			public void onSelect(Integer cell) {
 				onTargetSelected(tome, hero, cell);

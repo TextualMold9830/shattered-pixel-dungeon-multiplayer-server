@@ -20,6 +20,7 @@ public class RelayThread extends Thread {
     private BufferedReader reader;
     protected Socket clientSocket;
     private Callback callback = null;
+    static int restartCount = 0;
 
     public RelayThread(){
         this.callback = new Callback() {
@@ -77,23 +78,32 @@ public class RelayThread extends Thread {
             writer.write(name.toString());
             writer.write('\n');
             writer.flush();
-            Thread.sleep(2000);
             while (true) {
                 String json = reader.readLine();
-                Gdx.app.log("RelayThread", json);
                 if (json == null){
-                    GLog.h("relay thread stopped");
+                    // we silence relay related messages for the first three times. We do not want confused users.
+                    if (restartCount < 3) {
+                        GLog.h("relay thread stopped");
+                    }
                     socket.close();
                     this.callback.onDisconnect();
+                    if (restartCount < 10) {
+                        if (restartCount < 3) {
+                            System.out.println("Restarting relay");
+                        }
+                        new RelayThread().start();
+                        restartCount++;
+                    } else {
+                        System.out.println("Starting relay failed");
+                    }
                     return;
                 }
                 JSONObject port_obj = new JSONObject(json);
                 int port = port_obj.getInt("port");
                 Socket client = new Socket(relayServerAddress, port);
                 Server.startClientThread(client);
-                Gdx.app.log("RelayThread", "Client connected");
             }
-        } catch (IOException | JSONException | InterruptedException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
             GLog.h("relay thread stopped");
             this.callback.onDisconnect();

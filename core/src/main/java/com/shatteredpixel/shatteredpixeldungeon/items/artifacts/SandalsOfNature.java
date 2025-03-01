@@ -351,7 +351,7 @@ public class SandalsOfNature extends Artifact {
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
 
 					if (Actor.findChar(cell) != null){
-						artifactProc(Actor.findChar(cell), visiblyUpgraded(), seedChargeReqs.get(curSeedEffect));
+						artifactProc(Actor.findChar(cell), visiblyUpgraded(), seedChargeReqs.get(curSeedEffect), getOwner());
 					}
 
 					charge -= seedChargeReqs.get(curSeedEffect);

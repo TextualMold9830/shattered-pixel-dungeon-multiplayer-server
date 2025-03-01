@@ -53,12 +53,12 @@ public abstract class ClericSpell {
 		return Messages.get(this, "name");
 	}
 
-	public String shortDesc(){
-		return Messages.get(this, "short_desc") + " " + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String shortDesc(Hero hero){
+		return Messages.get(this, "short_desc") + " " + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
-	public String desc(){
-		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero){
+		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public boolean usesTargeting(){

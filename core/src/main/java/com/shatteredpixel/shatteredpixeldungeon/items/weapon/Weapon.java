@@ -125,8 +125,8 @@ abstract public class Weapon extends KindOfWeapon {
 		boolean wasAlly = defender.alignment == Char.Alignment.ALLY;
 		if (attacker.buff(MagicImmune.class) == null) {
 			Enchantment trinityEnchant = null;
-			if (Dungeon.hero.buff(BodyForm.BodyFormBuff.class) != null && this instanceof MeleeWeapon){
-				trinityEnchant = Dungeon.hero.buff(BodyForm.BodyFormBuff.class).enchant();
+			if (attacker.buff(BodyForm.BodyFormBuff.class) != null && this instanceof MeleeWeapon){
+				trinityEnchant = attacker.buff(BodyForm.BodyFormBuff.class).enchant();
 				if (enchantment != null && trinityEnchant != null && trinityEnchant.getClass() == enchantment.getClass()){
 					trinityEnchant = null;
 				}
@@ -146,7 +146,7 @@ abstract public class Weapon extends KindOfWeapon {
 				}
 				if (defender.isAlive() && !becameAlly) {
 					int dmg = ((Hero) attacker).subClass == HeroSubClass.PALADIN ? 6 : 2;
-					defender.damage(Math.round(dmg * Enchantment.genericProcChanceMultiplier(attacker)), HolyWeapon.INSTANCE);
+					defender.damage(Math.round(dmg * Enchantment.genericProcChanceMultiplier(attacker)), new Char.DamageCause(HolyWeapon.INSTANCE, attacker));
 				}
 
 			} else {
@@ -164,7 +164,7 @@ abstract public class Weapon extends KindOfWeapon {
 
 			if (attacker instanceof Hero && isEquipped((Hero) attacker) &&
 					attacker.buff(Smite.SmiteTracker.class) != null && !becameAlly){
-				defender.damage(Smite.bonusDmg((Hero) attacker, defender), Smite.INSTANCE);
+				defender.damage(Smite.bonusDmg((Hero) attacker, defender), new Char.DamageCause(Smite.INSTANCE, attacker));
 			}
 		}
 		
@@ -384,8 +384,9 @@ abstract public class Weapon extends KindOfWeapon {
 	
 	@Override
 	public String name() {
-		if (isEquipped(Dungeon.hero) && !hasCurseEnchant() && Dungeon.hero.buff(HolyWeapon.HolyWepBuff.class) != null
-			&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
+		Hero hero = findOwner();
+		if (isEquipped(hero) && !hasCurseEnchant() && hero.buff(HolyWeapon.HolyWepBuff.class) != null
+			&& (hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
 				return Messages.get(HolyWeapon.class, "ench_name", super.name());
 			} else {
 				return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name(super.name()) : super.name();
@@ -480,8 +481,9 @@ abstract public class Weapon extends KindOfWeapon {
 
 	@Override
 	public ItemSprite.Glowing glowing() {
-		if (isEquipped(Dungeon.hero) && !hasCurseEnchant() && Dungeon.hero.buff(HolyWeapon.HolyWepBuff.class) != null
-				&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
+		Hero hero = findOwner();
+		if (isEquipped(hero) && !hasCurseEnchant() && hero.buff(HolyWeapon.HolyWepBuff.class) != null
+				&& (hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
 			return HOLY;
 		} else {
 			return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.glowing() : null;

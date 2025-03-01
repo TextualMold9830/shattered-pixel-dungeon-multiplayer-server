@@ -47,8 +47,8 @@ public class BodyForm extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", duration()) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", duration(hero)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -64,12 +64,12 @@ public class BodyForm extends ClericSpell {
 	@Override
 	public void onCast(HolyTome tome, Hero hero) {
 
-		GameScene.show(new Trinity.WndItemtypeSelect(tome, this));
+		GameScene.show(new Trinity.WndItemtypeSelect(tome, this, hero));
 
 	}
 
-	public static int duration(){
-		return Math.round(13.33f + 6.67f* Dungeon.hero.pointsInTalent(Talent.BODY_FORM));
+	public static int duration(Hero hero){
+		return Math.round(13.33f + 6.67f* hero.pointsInTalent(Talent.BODY_FORM));
 	}
 
 	public static class BodyFormBuff extends FlavourBuff {
@@ -92,7 +92,7 @@ public class BodyForm extends ClericSpell {
 
 		@Override
 		public float iconFadePercent() {
-			return Math.max(0, (duration() - visualcooldown()) / duration());
+			return Math.max(0, (duration((Hero) target) - visualcooldown()) / duration((Hero) target));
 		}
 
 		public void setEffect(Bundlable effect){

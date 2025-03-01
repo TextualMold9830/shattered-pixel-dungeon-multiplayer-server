@@ -53,8 +53,8 @@ public class RecallInscription extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", Dungeon.hero.pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", hero.pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -68,16 +68,16 @@ public class RecallInscription extends ClericSpell {
 
 		item.setCurrent(hero);
 
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		Enchanting.show(hero, item);
 
 		if (item instanceof Scroll){
 			((Scroll) item).anonymize();
-			((Scroll) item).doRead();
+			((Scroll) item).doRead(hero);
 		} else if (item instanceof Runestone){
 			((Runestone) item).anonymize();
 			if (item instanceof InventoryStone){
-				((InventoryStone) item).directActivate();
+				((InventoryStone) item).directActivate(hero);
 			} else {
 				item.doThrow(hero);
 			}
@@ -139,7 +139,7 @@ public class RecallInscription extends ClericSpell {
 
 		@Override
 		public float iconFadePercent() {
-			float duration = Dungeon.hero.pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10;
+			float duration = ((Hero)target).pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10;
 			return Math.max(0, (duration - visualcooldown()) / duration);
 		}
 

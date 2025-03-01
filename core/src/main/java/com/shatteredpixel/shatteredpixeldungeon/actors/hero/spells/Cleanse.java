@@ -55,11 +55,11 @@ public class Cleanse extends ClericSpell {
 		return 2;
 	}
 
-	public String desc(){
-		int immunity = 2 * (Dungeon.hero.pointsInTalent(Talent.CLEANSE)-1);
+	public String desc(Hero hero){
+		int immunity = 2 * (hero.pointsInTalent(Talent.CLEANSE)-1);
 		if (immunity > 0) immunity++;
-		int shield = 10 * Dungeon.hero.pointsInTalent(Talent.CLEANSE);
-		return Messages.get(this, "desc", immunity, shield) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+		int shield = 10 * hero.pointsInTalent(Talent.CLEANSE);
+		return Messages.get(this, "desc", immunity, shield) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Cleanse extends ClericSpell {
 		affected.add(hero);
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Dungeon.level.heroFOV[mob.pos] && mob.alignment == Char.Alignment.ALLY) {
+			if (hero.fieldOfView[mob.pos] && mob.alignment == Char.Alignment.ALLY) {
 				affected.add(mob);
 			}
 		}
@@ -97,14 +97,14 @@ public class Cleanse extends ClericSpell {
 
 			if (hero.pointsInTalent(Talent.CLEANSE) > 1) {
 				//0, 2, or 4. 1 less than displayed as spell is instant
-				Buff.affect(ch, PotionOfCleansing.Cleanse.class, 2 * (Dungeon.hero.pointsInTalent(Talent.CLEANSE)-1));
+				Buff.affect(ch, PotionOfCleansing.Cleanse.class, 2 * (hero.pointsInTalent(Talent.CLEANSE)-1));
 			}
 			Buff.affect(ch, Barrier.class).setShield(10 * hero.pointsInTalent(Talent.CLEANSE));
-			new Flare( 6, 32 ).color(0xFF4CD2, true).show( ch.sprite, 2f );
+			new Flare( 6, 32 ).color(0xFF4CD2, true).show(ch.getSprite(), 2f );
 		}
 
 		hero.busy();
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		Sample.INSTANCE.play(Assets.Sounds.READ);
 
 		onSpellCast(tome, hero);

@@ -91,7 +91,7 @@ public class MnemonicPrayer extends TargetedClericSpell {
 		}
 
 		Char ch = Actor.findChar(target);
-		if (ch == null || !Dungeon.level.heroFOV[target]){
+		if (ch == null || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}
@@ -112,11 +112,11 @@ public class MnemonicPrayer extends TargetedClericSpell {
 
 		if (ch == hero){
 			hero.busy();
-			hero.sprite.operate(ch.pos);
+			hero.getSprite().operate(ch.pos);
 			hero.spend( 1f );
 			BuffIndicator.refreshHero();
 		} else {
-			hero.sprite.zap(ch.pos);
+			hero.getSprite().zap(ch.pos);
 			hero.spendAndNext( 1f );
 		}
 
@@ -128,7 +128,7 @@ public class MnemonicPrayer extends TargetedClericSpell {
 		if (ch.alignment == Char.Alignment.ALLY){
 
 			Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
-			ch.sprite.emitter().start(Speck.factory(Speck.UP), 0.15f, 4);
+			ch.getSprite().emitter().start(Speck.factory(Speck.UP), 0.15f, 4);
 
 			for (Buff b : ch.buffs()){
 				if (b.type != Buff.buffType.POSITIVE || b.mnemonicExtended || b.icon() == BuffIndicator.NONE){
@@ -166,7 +166,7 @@ public class MnemonicPrayer extends TargetedClericSpell {
 		} else {
 
 			Sample.INSTANCE.play(Assets.Sounds.DEBUFF);
-			ch.sprite.emitter().start(Speck.factory(Speck.DOWN), 0.15f, 4);
+			ch.getSprite().emitter().start(Speck.factory(Speck.DOWN), 0.15f, 4);
 
 			for (Buff b : ch.buffs()){
 				if (b instanceof GuidingLight.WasIlluminatedTracker){
@@ -195,8 +195,8 @@ public class MnemonicPrayer extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(){
-		return Messages.get(this, "desc", 2 + Dungeon.hero.pointsInTalent(Talent.MNEMONIC_PRAYER)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero){
+		return Messages.get(this, "desc", 2 + hero.pointsInTalent(Talent.MNEMONIC_PRAYER)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 }

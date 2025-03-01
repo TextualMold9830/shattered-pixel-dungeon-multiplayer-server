@@ -35,24 +35,24 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 public abstract class InventorySpell extends Spell {
-	
+
 	@Override
 	protected void onCast(Hero hero) {
-		GameScene.selectItem( itemSelector, hero );
+		GameScene.selectItem(itemSelector, hero);
 	}
 
-	private String inventoryTitle(){
+	private String inventoryTitle() {
 		return Messages.get(this, "inv_title");
 	}
 
-	protected Class<?extends Bag> preferredBag = null;
+	protected Class<? extends Bag> preferredBag = null;
 
-	protected boolean usableOnItem( Item item ){
+	protected boolean usableOnItem(Item item) {
 		return true;
 	}
-	
-	protected abstract void onItemSelected( Item item, Hero hero );
-	
+
+	protected abstract void onItemSelected(Item item, Hero hero);
+
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
@@ -71,14 +71,14 @@ public abstract class InventorySpell extends Spell {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
-			
+		public void onSelect(Item item) {
+
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
-			if (!(curItem instanceof InventorySpell)){
+			if (!(curItem instanceof InventorySpell)) {
 				return;
 			}
-			
+
 			if (item != null) {
 
 				//Infusion opens a separate window that can be cancelled
@@ -86,23 +86,23 @@ public abstract class InventorySpell extends Spell {
 				if (!(curItem instanceof MagicalInfusion)) {
 					curItem = detach(curUser.belongings.backpack);
 				}
-				
-				((InventorySpell)curItem).onItemSelected( item, getOwner() );
+
+				((InventorySpell) curItem).onItemSelected(item, getOwner());
 				if (!(curItem instanceof MagicalInfusion)) {
-					if (!(curItem instanceof MagicalInfusion)) {curUser.spend(1f);
-					curUser.busy();
-					(curUser.getSprite()).operate(curUser.pos);
+						curUser.spend(1f);
+						curUser.busy();
+						(curUser.getSprite()).operate(curUser.pos);
 
-					Sample.INSTANCE.play(Assets.Sounds.READ);
-					Invisibility.dispel(getOwner());
+						Sample.INSTANCE.play(Assets.Sounds.READ);
+						Invisibility.dispel(getOwner());
 
-					Catalog.countUse(curItem.getClass());
-					if (Random.Float() < ((Spell) curItem).talentChance) {
-						Talent.onScrollUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor);
+						Catalog.countUse(curItem.getClass());
+						if (Random.Float() < ((Spell) curItem).talentChance) {
+							Talent.onScrollUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor, curItem.getClass());
+						}
 					}
+
 				}
-				
 			}
-		}
-	};
-}
+		};
+	}

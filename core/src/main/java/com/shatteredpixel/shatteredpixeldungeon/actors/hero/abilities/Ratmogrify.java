@@ -165,8 +165,6 @@ public class Ratmogrify extends ArmorAbility {
 				rat.die(new Char.DamageCause(this, hero));
 			} else {
 				Dungeon.level.occupyCell(rat);
-			} else {
-				Dungeon.level.occupyCell(rat);
 			}
 		}
 
@@ -301,14 +299,6 @@ public class Ratmogrify extends ArmorAbility {
 			}
 		}
 
-		@Override
-		public void destroy() {
-			super.destroy();
-			if (alignment == Alignment.ENEMY && original != null) {
-				Bestiary.setSeen(original.getClass());
-				Bestiary.countEncounter(original.getClass());
-			}
-		}
 
 		@Override
 		public String name() {

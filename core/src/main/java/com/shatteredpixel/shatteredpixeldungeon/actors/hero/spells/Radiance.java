@@ -66,7 +66,7 @@ public class Radiance extends ClericSpell {
 		}
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
+			if (mob.alignment != Char.Alignment.ALLY && hero.fieldOfView[mob.pos]) {
 				Buff.affect(mob, GuidingLight.Illuminated.class);
 				Buff.affect(mob, GuidingLight.WasIlluminatedTracker.class);
 				Buff.affect(mob, Paralysis.class, 3f);
@@ -75,7 +75,7 @@ public class Radiance extends ClericSpell {
 
 		hero.spend( 1f );
 		hero.busy();
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		onSpellCast(tome, hero);
 

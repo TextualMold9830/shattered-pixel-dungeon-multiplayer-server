@@ -58,10 +58,10 @@ public class HolyLance extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int min = 15 + 15*Dungeon.hero.pointsInTalent(Talent.HOLY_LANCE);
-		int max = Math.round(27.5f + 27.5f*Dungeon.hero.pointsInTalent(Talent.HOLY_LANCE));
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		int min = 15 + 15*hero.pointsInTalent(Talent.HOLY_LANCE);
+		int max = Math.round(27.5f + 27.5f*hero.pointsInTalent(Talent.HOLY_LANCE));
+		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -100,38 +100,38 @@ public class HolyLance extends TargetedClericSpell {
 			QuickSlotButton.target(Actor.findChar(target));
 		}
 
-		hero.sprite.zap( target );
+		hero.getSprite().zap( target );
 		hero.busy();
 
 		Sample.INSTANCE.play(Assets.Sounds.ZAP);
 
 		Char enemy = Actor.findChar(aim.collisionPos);
 		if (enemy != null) {
-			((MissileSprite) hero.sprite.parent.recycle(MissileSprite.class)).
-					reset(hero.sprite,
-							enemy.sprite,
+			((MissileSprite) hero.getSprite().parent.recycle(MissileSprite.class)).
+					reset(hero.getSprite(),
+                            enemy.getSprite(),
 							new HolyLanceVFX(),
 							new Callback() {
 								@Override
 								public void call() {
-									int min = 15 + 15*Dungeon.hero.pointsInTalent(Talent.HOLY_LANCE);
-									int max = Math.round(27.5f + 27.5f*Dungeon.hero.pointsInTalent(Talent.HOLY_LANCE));
+									int min = 15 + 15*hero.pointsInTalent(Talent.HOLY_LANCE);
+									int max = Math.round(27.5f + 27.5f*hero.pointsInTalent(Talent.HOLY_LANCE));
 									if (Char.hasProp(enemy, Char.Property.UNDEAD) || Char.hasProp(enemy, Char.Property.DEMONIC)){
 										min = max;
 									}
-									enemy.damage(Random.NormalIntRange(min, max), HolyLance.this);
+									enemy.damage(Random.NormalIntRange(min, max), new Char.DamageCause(HolyLance.this, hero));
 									Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.8f, 1f) );
 									Sample.INSTANCE.play( Assets.Sounds.HIT_STAB, 1, Random.Float(0.8f, 1f) );
 
-									enemy.sprite.burst(0xFFFFFFFF, 10);
+									enemy.getSprite().burst(0xFFFFFFFF, 10);
 									hero.spendAndNext(1f);
 									onSpellCast(tome, hero);
 									FlavourBuff.affect(hero, LanceCooldown.class, 50f);
 								}
 							});
 		} else {
-			((MissileSprite) hero.sprite.parent.recycle(MissileSprite.class)).
-					reset(hero.sprite,
+			((MissileSprite) hero.getSprite().parent.recycle(MissileSprite.class)).
+					reset(hero.getSprite(),
 							target,
 							new HolyLanceVFX(),
 							new Callback() {

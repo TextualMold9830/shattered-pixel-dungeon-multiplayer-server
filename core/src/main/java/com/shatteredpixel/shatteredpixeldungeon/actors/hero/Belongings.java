@@ -67,12 +67,12 @@ public class Belongings implements Iterable<Item> {
 
 	private Hero owner;
 	public ArrayList<SpecialSlot> getSpecialSlots() {
-		ArrayList<SpecialSlot> slots = new ArrayList<>(4);
+		ArrayList<SpecialSlot> slots = new ArrayList<>(5);
 		slots.add(new SpecialSlot(0, "items.png", ItemSpriteSheet.WEAPON_HOLDER, weapon()));
 		slots.add(new SpecialSlot(1, "items.png", ItemSpriteSheet.ARMOR_HOLDER, getRealArmor()));
-		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.SOMETHING, misc()));
-		slots.add(new SpecialSlot(4, "items.png", ItemSpriteSheet.RING_HOLDER, ring()));
-		slots.add(new SpecialSlot(5, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, getRealArtifact()));
+		slots.add(new SpecialSlot(2, "items.png", ItemSpriteSheet.ARTIFACT_HOLDER, getRealArtifact()));
+		slots.add(new SpecialSlot(3, "items.png", ItemSpriteSheet.SOMETHING, misc()));
+		slots.add(new SpecialSlot(4, "items.png", ItemSpriteSheet.RING_HOLDER, getRealRing()));
 		return slots;
 	}
 
@@ -491,7 +491,7 @@ public class Belongings implements Iterable<Item> {
 			if (ShardOfOblivion.passiveIDDisabled() && secondWep() instanceof Weapon){
 				((Weapon) secondWep()).setIDReady();
 			} else {
-				secondWep().identify();
+				secondWep().identify(owner);
 				Badges.validateItemLevelAquired(secondWep());
 			}
 		}

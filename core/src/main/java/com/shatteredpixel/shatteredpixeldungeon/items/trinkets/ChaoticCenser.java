@@ -115,32 +115,10 @@ public class ChaoticCenser extends Trinket {
 						&& TargetHealthIndicator.instance.target() != null
 						&& TargetHealthIndicator.instance.target().alignment == Char.Alignment.ENEMY
 						&& TargetHealthIndicator.instance.target().isAlive()) {
-					triggerChance = 1f;
-				} else if (Dungeon.level.openSpace[target.pos]){
-					triggerChance = 0.2f;
-				}
-
-			} else if (left <= -30) {
-				triggerChance = 1f;
-
-			}
-
-			if (triggerChance > 0) {
-				if (safeAreaDelay >= 0) {
-					boolean safeArea = false;
-
-					//shops are a safe area
-					for (Char ch : Actor.chars()) {
-						if (ch instanceof Shopkeeper
-								&& Dungeon.level.distance(target.pos, ch.pos) <= 6
-								&& new Ballistica(target.pos, ch.pos, Ballistica.PROJECTILE).collisionPos == ch.pos) {
-							safeArea = true;
-						}
-					}
 
 					if (produceGas(TargetHealthIndicator.instance.target())){
 						Sample.INSTANCE.play(Assets.Sounds.GAS, 0.5f);
-						Dungeon.hero.interrupt();
+						((Hero)target).interrupt();
 						left += Random.IntRange((int) (avgTurns * 0.9f), (int) (avgTurns * 1.1f));
 					}
 				}
@@ -156,13 +134,11 @@ public class ChaoticCenser extends Trinket {
 		}
 
 		private static String LEFT = "left";
-		private static String SAFE_AREA_DELAY = "safe_area_delay";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(LEFT, left);
-			bundle.put(SAFE_AREA_DELAY, safeAreaDelay);
 		}
 
 		@Override
@@ -170,7 +146,6 @@ public class ChaoticCenser extends Trinket {
 			super.restoreFromBundle(bundle);
 			if (bundle.contains(LEFT)){
 				left = bundle.getInt(LEFT);
-				safeAreaDelay = bundle.getInt(SAFE_AREA_DELAY);
 			}
 		}
 	}
@@ -201,20 +176,12 @@ public class ChaoticCenser extends Trinket {
 				break;
 		}
 
-		Char target = null;
-		if (TargetHealthIndicator.instance != null && TargetHealthIndicator.instance.isVisible()
-				&& TargetHealthIndicator.instance.target() != null
-				&& TargetHealthIndicator.instance.target().alignment == Char.Alignment.ENEMY
-				&& TargetHealthIndicator.instance.target().isAlive()) {
-			target = TargetHealthIndicator.instance.target();
-		}
-
 		HashMap<Integer, Float> candidateCells = new HashMap<>();
-		PathFinder.buildDistanceMap(Dungeon.hero.pos, BArray.not(Dungeon.level.solid, null), 6);
+		PathFinder.buildDistanceMap(target.pos, BArray.not(Dungeon.level.solid, null), 6);
 
 		//spawn gas in a random visible cell 2-6 tiles away
 		for (int i = 0; i < Dungeon.level.length(); i++){
-			if (Dungeon.level.heroFOV[i] && PathFinder.distance[i] < Integer.MAX_VALUE) {
+			if (target.fieldOfView[i] && PathFinder.distance[i] < Integer.MAX_VALUE) {
 				if (PathFinder.distance[i] >= 2 && PathFinder.distance[i] <= 6) {
 					candidateCells.put(i, 0f);
 				}
@@ -223,11 +190,11 @@ public class ChaoticCenser extends Trinket {
 
 		//strongly prefer cells closer to target
 		int targetpos = target.pos;
-		if (Dungeon.level.trueDistance(target.pos, Dungeon.hero.pos) >= 4){
+		if (Dungeon.level.trueDistance(target.pos, target.pos) >= 4){
 			//if target is a distance from the hero, aim in front of them instead
 			for (int i : PathFinder.NEIGHBOURS8){
 				while (!Dungeon.level.solid[targetpos+i]
-						&& Dungeon.level.trueDistance(target.pos+i, Dungeon.hero.pos) < Dungeon.level.trueDistance(targetpos, Dungeon.hero.pos)){
+						&& Dungeon.level.trueDistance(target.pos+i, target.pos) < Dungeon.level.trueDistance(targetpos, target.pos)){
 					targetpos = target.pos+i;
 				}
 			}
@@ -253,9 +220,9 @@ public class ChaoticCenser extends Trinket {
 		if (!candidateCells.isEmpty()) {
 			Integer targetCell = Random.chances(candidateCells);
 			if (targetCell != null) {
-				Buff.affect(Dungeon.hero, GasSpewer.class, Dungeon.hero.cooldown()).set(targetCell, gasToSpawn, (int)gasQuantity);
+				Buff.affect(target, GasSpewer.class, target.cooldown()).set(targetCell, gasToSpawn, (int)gasQuantity);
 				GLog.w(Messages.get(ChaoticCenser.class, "spew", Messages.titleCase(Messages.get(gasToSpawn, "name")) ));
-				target.sprite.parent.addToBack(new TargetedCell(targetCell, 0xFF0000));
+				target.getSprite().parent.addToBack(new TargetedCell(targetCell, 0xFF0000));
 				return true;
 			}
 		}
@@ -295,7 +262,7 @@ public class ChaoticCenser extends Trinket {
 					((CorrosiveGas)Dungeon.level.blobs.get(CorrosiveGas.class)).setStrength( 2 + Dungeon.scalingDepth()/5, ChaoticCenser.class);
 				}
 
-				MagicMissile.boltFromChar(Dungeon.hero.sprite.parent, MISSILE_VFX.get(gasType), Dungeon.hero.sprite, targetCell, null);
+				MagicMissile.boltFromChar(target.getSprite().parent, MISSILE_VFX.get(gasType), target.getSprite(), targetCell, null);
 				Sample.INSTANCE.play(Assets.Sounds.GAS);
 			}
 
@@ -371,5 +338,4 @@ public class ChaoticCenser extends Trinket {
 		MISSILE_VFX.put(Blizzard.class, MagicMissile.SPECK + Speck.BLIZZARD);
 		MISSILE_VFX.put(CorrosiveGas.class, MagicMissile.SPECK + Speck.CORROSION);
 	}
-
 }

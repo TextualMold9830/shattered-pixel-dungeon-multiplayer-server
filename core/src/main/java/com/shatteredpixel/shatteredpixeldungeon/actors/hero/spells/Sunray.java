@@ -53,11 +53,11 @@ public class Sunray extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int min = Dungeon.hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
-		int max = Dungeon.hero.pointsInTalent(Talent.SUNRAY) == 2 ? 12 : 8;
-		int dur = Dungeon.hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
-		return Messages.get(this, "desc", min, max, dur) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		int min = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
+		int max = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 12 : 8;
+		int dur = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
+		return Messages.get(this, "desc", min, max, dur) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -86,26 +86,26 @@ public class Sunray extends TargetedClericSpell {
 
 		hero.busy();
 		Sample.INSTANCE.play( Assets.Sounds.RAY );
-		hero.sprite.zap(target);
+		hero.getSprite().zap(target);
 
-		hero.sprite.parent.add(
-				new Beam.SunRay(hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(aim.collisionPos)));
+		hero.getSprite().parent.add(
+				new Beam.SunRay(hero.getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(aim.collisionPos)));
 
 		Char ch = Actor.findChar( aim.collisionPos );
 		if (ch != null) {
-			ch.sprite.burst(0xFFFFFF44, 5);
+			ch.getSprite().burst(0xFFFFFF44, 5);
 
 			if (Char.hasProp(ch, Char.Property.UNDEAD) || Char.hasProp(ch, Char.Property.DEMONIC)){
 				if (hero.pointsInTalent(Talent.SUNRAY) == 2) {
-					ch.damage(12, Sunray.this);
+					ch.damage(12, new Char.DamageCause(Sunray.this, hero));
 				} else {
-					ch.damage(8, Sunray.this);
+					ch.damage(8, new Char.DamageCause(Sunray.this, hero));
 				}
 			} else {
 				if (hero.pointsInTalent(Talent.SUNRAY) == 2) {
-					ch.damage(Random.NormalIntRange(6, 12), Sunray.this);
+					ch.damage(Random.NormalIntRange(6, 12), new Char.DamageCause(Sunray.this, hero));
 				} else {
-					ch.damage(Random.NormalIntRange(4, 8), Sunray.this);
+					ch.damage(Random.NormalIntRange(4, 8), new Char.DamageCause(Sunray.this, hero));
 				}
 			}
 

@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -47,15 +46,15 @@ public class LifeLinkSpell extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", 4 + 2*Dungeon.hero.pointsInTalent(Talent.LIFE_LINK), 30 + 5*Dungeon.hero.pointsInTalent(Talent.LIFE_LINK)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", 4 + 2*hero.pointsInTalent(Talent.LIFE_LINK), 30 + 5*hero.pointsInTalent(Talent.LIFE_LINK)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
 	public boolean canCast(Hero hero) {
 		return super.canCast(hero)
 				&& hero.hasTalent(Talent.LIFE_LINK)
-				&& (PowerOfMany.getPoweredAlly() != null || Stasis.getStasisAlly() != null);
+				&& (PowerOfMany.getPoweredAlly() != null || Stasis.getStasisAlly(hero) != null);
 	}
 
 	@Override
@@ -71,22 +70,25 @@ public class LifeLinkSpell extends ClericSpell {
 		Char ally = PowerOfMany.getPoweredAlly();
 
 		if (ally != null) {
-			hero.sprite.zap(ally.pos);
-			hero.sprite.parent.add(
-					new Beam.HealthRay(hero.sprite.center(), ally.sprite.center()));
+			hero.getSprite().zap(ally.pos);
+			hero.getSprite().parent.add(
+					new Beam.HealthRay(hero.getSprite().center(), ally.getSprite().center()));
 
-			Buff.prolong(hero, LifeLink.class, duration).object = ally.id();
+			LifeLink lifeLink = Buff.prolong(hero, LifeLink.class, duration);
+			lifeLink.source = hero;
+			lifeLink.object = ally.id();
 		} else {
-			ally = Stasis.getStasisAlly();
-			hero.sprite.operate(hero.pos);
-			hero.sprite.parent.add(
-					new Beam.HealthRay(DungeonTilemap.tileCenterToWorld(hero.pos), hero.sprite.center()));
+			ally = Stasis.getStasisAlly(hero);
+			hero.getSprite().operate(hero.pos);
+			hero.getSprite().parent.add(
+					new Beam.HealthRay(DungeonTilemap.tileCenterToWorld(hero.pos), hero.getSprite().center()));
 		}
 
-		Buff.prolong(ally, LifeLink.class, duration).object = hero.id();
-		Buff.prolong(ally, LifeLinkSpellBuff.class, duration);
+		LifeLink lifeLink = Buff.prolong(ally, LifeLink.class, duration);
+		lifeLink.source = hero;
+		lifeLink.object = hero.id();
 
-		if (ally == Stasis.getStasisAlly()){
+		if (ally == Stasis.getStasisAlly(hero)){
 			ally.buff(LifeLink.class).clearTime();
 			ally.buff(LifeLinkSpellBuff.class).clearTime();
 		}
@@ -97,8 +99,8 @@ public class LifeLinkSpell extends ClericSpell {
 
 	}
 
-	public static class LifeLinkSpellBuff extends FlavourBuff{
-
+	public static class LifeLinkSpellBuff extends FlavourBuff {
+		public Hero source;
 		{
 			type = buffType.POSITIVE;
 		}
@@ -110,7 +112,7 @@ public class LifeLinkSpell extends ClericSpell {
 
 		@Override
 		public float iconFadePercent() {
-			int duration = 4 + 2*Dungeon.hero.pointsInTalent(Talent.LIFE_LINK);
+			int duration = 4 + 2*source.pointsInTalent(Talent.LIFE_LINK);
 			return Math.max(0, (duration - visualcooldown()) / duration);
 		}
 	}

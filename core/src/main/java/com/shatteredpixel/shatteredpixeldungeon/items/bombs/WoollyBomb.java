@@ -41,10 +41,6 @@ public class WoollyBomb extends Bomb {
 	{
 		image = ItemSpriteSheet.WOOLY_BOMB;
 	}
-@Override
-	protected int explosionRange() {
-		return 2;
-	}
 	@Override
 	protected int explosionRange() {
 		return 2;

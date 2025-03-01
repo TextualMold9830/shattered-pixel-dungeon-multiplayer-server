@@ -67,7 +67,8 @@ public class ItemButton extends Component {
 	}
 
 	public ItemSlot slot(){
-		return slot;
+		//TOOD: check this
+		return new ItemSlot();
 	}
 
 }

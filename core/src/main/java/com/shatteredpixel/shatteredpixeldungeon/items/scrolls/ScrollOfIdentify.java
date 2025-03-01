@@ -52,10 +52,10 @@ public class ScrollOfIdentify extends InventoryScroll {
 		
 		curUser.getSprite().parent.add( new Identification( curUser.getSprite().center().offset( 0, -16 ) ) );
 
-		IDItem(item);
+		IDItem(item, hero);
 	}
 
-	public static void IDItem( Item item ){
+	public static void IDItem( Item item, Hero hero ){
 		if (ShardOfOblivion.passiveIDDisabled()) {
 			if (item instanceof Weapon){
 				((Weapon) item).setIDReady();

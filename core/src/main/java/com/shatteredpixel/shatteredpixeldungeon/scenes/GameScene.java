@@ -22,15 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.nikita22007.multiplayer.server.ui.Banner;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -137,6 +129,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
@@ -382,9 +375,7 @@ public class GameScene extends PixelScene {
 				break;
 			case DESCEND:
 			case FALL:
-				if (Dungeon.hero.isAlive()) {
-					Badges.validateNoKilling();
-				}
+				Badges.validateNoKilling();
 				break;
 		}
 
@@ -500,60 +491,60 @@ public class GameScene extends PixelScene {
 					GLog.w(Dungeon.level.feeling.desc());
 					Notes.add(Notes.Landmark.CHASM_FLOOR);
 					break;
-					case WATER:
-						GLog.w(Dungeon.level.feeling.desc());
-						Notes.add(Notes.Landmark.WATER_FLOOR);
-						break;
-						case GRASS:
-							GLog.w(Dungeon.level.feeling.desc());
-							Notes.add(Notes.Landmark.GRASS_FLOOR);
-							break;
-						case DARK:
-							GLog.w(Dungeon.level.feeling.desc());
-							Notes.add(Notes.Landmark.DARK_FLOOR);
-							break;
-						case LARGE:
-							GLog.w(Dungeon.level.feeling.desc());
-							Notes.add(Notes.Landmark.LARGE_FLOOR);
-							break;
-						case TRAPS:
-							GLog.w(Dungeon.level.feeling.desc());
-							Notes.add(Notes.Landmark.TRAPS_FLOOR);
-							break;
-						case SECRETS:
-							GLog.w(Dungeon.level.feeling.desc());
-							Notes.add(Notes.Landmark.SECRETS_FLOOR);
-							break;
-					}
+				case WATER:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.WATER_FLOOR);
+					break;
+				case GRASS:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.GRASS_FLOOR);
+					break;
+				case DARK:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.DARK_FLOOR);
+					break;
+				case LARGE:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.LARGE_FLOOR);
+					break;
+				case TRAPS:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.TRAPS_FLOOR);
+					break;
+				case SECRETS:
+					GLog.w(Dungeon.level.feeling.desc());
+					Notes.add(Notes.Landmark.SECRETS_FLOOR);
+					break;
+			}
 
-					for (Mob mob : Dungeon.level.mobs) {
-						if (!mob.buffs(ChampionEnemy.class).isEmpty()) {
-							GLog.w(Messages.get(ChampionEnemy.class, "warn"));
-						}
-					}
-					for (Hero hero : Dungeon.heroes) {
-						if (hero == null) continue;
-						if (hero.buff(AscensionChallenge.class) != null) {
-							hero.buff(AscensionChallenge.class).saySwitch();
-						}
-					}
-					DimensionalSundial.sundialWarned = true;
-					if (DimensionalSundial.spawnMultiplierAtCurrentTime() > 1) {
-						GLog.w(Messages.get(DimensionalSundial.class, "warning"));
-					} else {
-						DimensionalSundial.sundialWarned = false;
-					}
+			for (Mob mob : Dungeon.level.mobs) {
+				if (!mob.buffs(ChampionEnemy.class).isEmpty()) {
+					GLog.w(Messages.get(ChampionEnemy.class, "warn"));
+				}
+			}
+			for (Hero hero : Dungeon.heroes) {
+				if (hero == null) continue;
+				if (hero.buff(AscensionChallenge.class) != null) {
+					hero.buff(AscensionChallenge.class).saySwitch();
+				}
+			}
+			DimensionalSundial.sundialWarned = true;
+			if (DimensionalSundial.spawnMultiplierAtCurrentTime() > 1) {
+				GLog.w(Messages.get(DimensionalSundial.class, "warning"));
+			} else {
+				DimensionalSundial.sundialWarned = false;
+			}
 
-					InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
+			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.NONE;
 
-			
+
 		}
 
 		//Tutorial
-		if (SPDSettings.intro()){
+		if (SPDSettings.intro()) {
 
-			if (Document.ADVENTURERS_GUIDE.isPageFound(Document.GUIDE_INTRO)){
-				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
+			if (Document.ADVENTURERS_GUIDE.isPageFound(Document.GUIDE_INTRO)) {
+				//GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
 			} else if (ControllerHandler.isControllerConnected()) {
 				GameLog.wipe();
 				GLog.p(Messages.get(GameScene.class, "tutorial_move_controller"));
@@ -564,76 +555,71 @@ public class GameScene extends PixelScene {
 				GameLog.wipe();
 				GLog.p(Messages.get(GameScene.class, "tutorial_move_desktop"));
 			}
-			toolbar.visible = toolbar.active = false;
-			status.visible = status.active = false;
-			if (inventory != null) inventory.visible = inventory.active = false;
 		}
 
 		if (!SPDSettings.intro() &&
 				Rankings.INSTANCE.totalNumber > 0 &&
-				!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_DIEING)){
-			GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
+				!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_DIEING)) {
+		//	GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
 		}
 
-		TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
-		if (cata != null && cata.hasRolledTrinkets()){
-			addToFront(new TrinketCatalyst.WndTrinket(cata));
-		}
-
-		if (!invVisible) toggleInvPane();
+//		TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
+//		if (cata != null && cata.hasRolledTrinkets()) {
+//			addToFront(new TrinketCatalyst.WndTrinket(cata));
+//		}
+//
+//		if (!invVisible) toggleInvPane();
 		fadeIn();
 
-					//re-show WndResurrect if needed
-					for (Hero hero : Dungeon.heroes) {
-						if (hero != null) {
+		//re-show WndResurrect if needed
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
 
-							if (!hero.isAlive()) {
-								//check if hero has an unblessed ankh
-								Ankh ankh = null;
-								for (Ankh i : hero.belongings.getAllItems(Ankh.class)) {
-									if (!i.isBlessed()) {
-										ankh = i;
-									}
-								}
-								if (ankh != null && GamesInProgress.gameExists(GamesInProgress.curSlot)) {
-									add(new WndResurrect(hero, ankh));
-								} else {
-									gameOver(hero);
-								}
-							}
-
+				if (!hero.isAlive()) {
+					//check if hero has an unblessed ankh
+					Ankh ankh = null;
+					for (Ankh i : hero.belongings.getAllItems(Ankh.class)) {
+						if (!i.isBlessed()) {
+							ankh = i;
 						}
 					}
-				}
-			}
-
-
-			public void destroy () {
-
-				//tell the actor thread to finish, then wait for it to complete any actions it may be doing.
-				if (!waitForActorThread(4500, true)) {
-					Throwable t = new Throwable();
-					t.setStackTrace(actorThread.getStackTrace());
-					throw new RuntimeException("timeout waiting for actor thread! ", t);
+					if (ankh != null && GamesInProgress.gameExists(GamesInProgress.curSlot)) {
+						add(new WndResurrect(hero, ankh));
+					} else {
+						gameOver(hero);
+					}
 				}
 
-				Emitter.freezeEmitters = false;
-
-				scene = null;
-				Badges.saveGlobal();
-				Journal.saveGlobal();
-
-				super.destroy();
 			}
+		}
+	}
 
-			public static void endActorThread () {
-				if (actorThread != null && actorThread.isAlive()) {
-					Actor.keepActorThreadAlive = false;
-					actorThread.interrupt();
-				}
-			}
+	public void destroy() {
 
-	public boolean waitForActorThread(int msToWait, boolean interrupt){
+		//tell the actor thread to finish, then wait for it to complete any actions it may be doing.
+		if (!waitForActorThread(4500, true)) {
+			Throwable t = new Throwable();
+			t.setStackTrace(actorThread.getStackTrace());
+			throw new RuntimeException("timeout waiting for actor thread! ", t);
+		}
+
+		Emitter.freezeEmitters = false;
+
+		scene = null;
+		Badges.saveGlobal();
+		Journal.saveGlobal();
+
+		super.destroy();
+	}
+
+	public static void endActorThread() {
+		if (actorThread != null && actorThread.isAlive()) {
+			Actor.keepActorThreadAlive = false;
+			actorThread.interrupt();
+		}
+	}
+
+	public boolean waitForActorThread(int msToWait, boolean interrupt) {
 		if (actorThread == null || !actorThread.isAlive()) {
 			return true;
 		}
@@ -647,12 +633,12 @@ public class GameScene extends PixelScene {
 			return !Actor.processing();
 		}
 	}
-	
+
 	@Override
 	public synchronized void onPause() {
 		try {
-            //TODO: check this
-            waitForActorThread(500, false);
+			//TODO: check this
+			waitForActorThread(500, false);
 			Dungeon.saveAll();
 			Badges.saveGlobal();
 			Journal.saveGlobal();
@@ -661,412 +647,416 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-			private static Thread actorThread;
+	private static Thread actorThread;
 
-			//sometimes UI changes can be prompted by the actor thread.
-			// We queue any removed element destruction, rather than destroying them in the actor thread.
-			private ArrayList<Gizmo> toDestroy = new ArrayList<>();
+	//sometimes UI changes can be prompted by the actor thread.
+	// We queue any removed element destruction, rather than destroying them in the actor thread.
+	private ArrayList<Gizmo> toDestroy = new ArrayList<>();
 
-			//the actor thread processes at a maximum of 60 times a second
-			//this caps the speed of resting for higher refresh rate displays
-			private float notifyDelay = 1 / 60f;
+	//the actor thread processes at a maximum of 60 times a second
+	//this caps the speed of resting for higher refresh rate displays
+	private float notifyDelay = 1 / 60f;
 
-			//todo send it
-			public static boolean updateItemDisplays = false;
+	//todo send it
+	public static boolean updateItemDisplays = false;
 
-			public static boolean tagDisappeared = false;
-			public static boolean updateTags = false;
-			private static float waterOfs = 0;
+	public static boolean tagDisappeared = false;
+	public static boolean updateTags = false;
+	private static float waterOfs = 0;
 
-			private static float waterOfs = 0;@Override
-			public synchronized void update () {
-				Server.parseActions();
-				lastOffset = null;
 
-				if (updateItemDisplays) {
-					updateItemDisplays = false;
-					//QuickSlotButton.refresh();
-					//todo send this
+	@Override
+	public synchronized void update() {
+		Server.parseActions();
+		lastOffset = null;
+
+		if (updateItemDisplays) {
+			updateItemDisplays = false;
+			//QuickSlotButton.refresh();
+			//todo send this
 			/*
 			if (hero.actionIndicator.action instanceof MeleeWeapon.Charger) {
 				//Champion weapon swap uses items, needs refreshing whenever item displays are updated
 				hero.actionIndicator.refresh();
 			}
 			*/
-				}
+		}
 
-				if (Dungeon.heroes == null || scene == null) {
-					return;
-				}
+		if (Dungeon.heroes == null || scene == null) {
+			return;
+		}
 
-				super.update();
+		super.update();
 
-				if (notifyDelay > 0) notifyDelay -= Game.elapsed;
+		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
-				if (!Emitter.freezeEmitters) {
-					waterOfs -= 5 * Game.elapsed;
-			water.offsetTo( 0, waterOfs );
+		if (!Emitter.freezeEmitters) {
+			waterOfs -= 5 * Game.elapsed;
+			water.offsetTo(0, waterOfs);
 			waterOfs = water.offsetY(); //re-assign to account for auto adjust
 		}
-					water.offsetTo(0, waterOfs);
-					waterOfs = water.offsetY(); //re-assign to account for auto adjust
+		water.offsetTo(0, waterOfs);
+		waterOfs = water.offsetY(); //re-assign to account for auto adjust
 
-				//TODO: check this
-				if (!Actor.processing()) {
-					if (actorThread == null || !actorThread.isAlive()) {
+		//TODO: check this
+		if (!Actor.processing()) {
+			if (actorThread == null || !actorThread.isAlive()) {
 
-						actorThread = new Thread() {
-							@Override
-							public void run() {
-								Actor.process();
-							}
-						};
-
-						//if cpu cores are limited, game should prefer drawing the current frame
-						if (Runtime.getRuntime().availableProcessors() == 1) {
-							actorThread.setPriority(Thread.NORM_PRIORITY - 1);
-						}
-						actorThread.setName("SHPD Actor Thread");
-						Thread.currentThread().setName("SHPD Render Thread");
-						Actor.keepActorThreadAlive = true;
-						actorThread.start();
-					} else if (notifyDelay <= 0f) {
-						notifyDelay += 1 / 60f;
-						synchronized (actorThread) {
-							actorThread.notify();
-						}
+				actorThread = new Thread() {
+					@Override
+					public void run() {
+						Actor.process();
 					}
+				};
+
+				//if cpu cores are limited, game should prefer drawing the current frame
+				if (Runtime.getRuntime().availableProcessors() == 1) {
+					actorThread.setPriority(Thread.NORM_PRIORITY - 1);
 				}
-				for (Hero hero : Dungeon.heroes) {
-					if (hero != null) {
-						if (hero.isReady() && hero.paralysed == 0) {
-							log.newLine();
-						}
-					}
-				}
-
-				if (updateTags) {
-					tagResume = resume.visible;
-
-					layoutTags();
-
-				} else if (
-						tagResume != resume.visible) {
-
-					boolean tagAppearing =
-							(resume.visible && !tagResume);
-					tagResume = resume.visible;
-
-					//if a new tag appears, re-layout tags immediately
-					//otherwise, wait until the hero acts, so as to not suddenly change their position
-					if (tagAppearing) layoutTags();
-					else tagDisappeared = true;
-
-				}
-				for (Hero hero : Dungeon.heroes) {
-					if (hero != null) {
-						hero.cellSelector.enable(hero.isReady());
-					}
-				}
-				if (!toDestroy.isEmpty()) {
-					for (Gizmo g : toDestroy) {
-						g.destroy();
-					}
-					toDestroy.clear();
+				actorThread.setName("SHPD Actor Thread");
+				Thread.currentThread().setName("SHPD Render Thread");
+				Actor.keepActorThreadAlive = true;
+				actorThread.start();
+			} else if (notifyDelay <= 0f) {
+				notifyDelay += 1 / 60f;
+				synchronized (actorThread) {
+					actorThread.notify();
 				}
 			}
-
-			private static Point lastOffset = null;
-
-			@Override
-			public synchronized Gizmo erase (Gizmo g){
-				Gizmo result = super.erase(g);
-				if (result instanceof Window) {
-					lastOffset = ((Window) result).getOffset();
-				}
-				return result;
-			}
-			private boolean tagResume = false;
-
-			public static void layoutTags () {
-
-				updateTags = false;
-
-				if (scene == null) return;
-
-				//move the camera center up a bit if we're on full UI and it is taking up lots of space
-				{
-					Camera.main.setCenterOffset(0, 0);
-				}
-				//Camera.main.panTo(Dungeon.hero.sprite.center(), 5f);
-
-				//primarily for phones displays with notches
-				//TODO Android never draws into notch atm, perhaps allow it for center notches?
-				RectF insets = DeviceCompat.getSafeInsets();
-				insets = insets.scale(1f / uiCamera.zoom);
-
-				boolean tagsOnLeft = SPDSettings.flipTags();
-				float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
-				float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
-
-				float y = 0;
-				if (SPDSettings.interfaceSize() == 0) {
-					if (tagsOnLeft) {
-						scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);
-					} else {
-						scene.log.setRect(insets.left, y, uiCamera.width - tagWidth - insets.left, 0);
-					}
-				} else {
-					if (tagsOnLeft) {
-						scene.log.setRect(tagWidth, y, 160 - tagWidth, 0);
-					} else {
-						scene.log.setRect(insets.left, y, 160 - insets.left, 0);
-					}
-				}
-
-				float pos = 0;
-
-				if (scene.tagResume) {
-					scene.resume.setRect(tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE);
-					scene.resume.flip(tagsOnLeft);
+		}
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (hero.isReady() && hero.paralysed == 0) {
+					log.newLine();
 				}
 			}
+		}
 
-			@Override
-			protected void onBackPressed () {
-				add(new WndGame());
+		if (updateTags) {
+			tagResume = resume.visible;
+
+			layoutTags();
+
+		} else if (
+				tagResume != resume.visible) {
+
+			boolean tagAppearing =
+					(resume.visible && !tagResume);
+			tagResume = resume.visible;
+
+			//if a new tag appears, re-layout tags immediately
+			//otherwise, wait until the hero acts, so as to not suddenly change their position
+			if (tagAppearing) layoutTags();
+			else tagDisappeared = true;
+
+		}
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				hero.cellSelector.enable(hero.isReady());
 			}
-
-			public void addCustomTile (CustomTilemap visual){
-				customTiles.add(visual.create());
+		}
+		if (!toDestroy.isEmpty()) {
+			for (Gizmo g : toDestroy) {
+				g.destroy();
 			}
+			toDestroy.clear();
+		}
+	}
 
-			public void addCustomWall (CustomTilemap visual){
-				customWalls.add(visual.create());
+	private static Point lastOffset = null;
+
+	@Override
+	public synchronized Gizmo erase(Gizmo g) {
+		Gizmo result = super.erase(g);
+		if (result instanceof Window) {
+			lastOffset = ((Window) result).getOffset();
+		}
+		return result;
+	}
+
+	private boolean tagResume = false;
+
+	public static void layoutTags() {
+
+		updateTags = false;
+
+		if (scene == null) return;
+
+		//move the camera center up a bit if we're on full UI and it is taking up lots of space
+		{
+			Camera.main.setCenterOffset(0, 0);
+		}
+		//Camera.main.panTo(Dungeon.hero.sprite.center(), 5f);
+
+		//primarily for phones displays with notches
+		//TODO Android never draws into notch atm, perhaps allow it for center notches?
+		RectF insets = DeviceCompat.getSafeInsets();
+		insets = insets.scale(1f / uiCamera.zoom);
+
+		boolean tagsOnLeft = SPDSettings.flipTags();
+		float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
+		float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
+
+		float y = 0;
+		if (SPDSettings.interfaceSize() == 0) {
+			if (tagsOnLeft) {
+				scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);
+			} else {
+				scene.log.setRect(insets.left, y, uiCamera.width - tagWidth - insets.left, 0);
 			}
-
-			private void addHeapSprite (Heap heap ){
-				ItemSprite sprite = heap.sprite = (ItemSprite) heaps.recycle(ItemSprite.class);
-				sprite.revive();
-				sprite.link(heap);
-				heaps.add(sprite);
+		} else {
+			if (tagsOnLeft) {
+				scene.log.setRect(tagWidth, y, 160 - tagWidth, 0);
+			} else {
+				scene.log.setRect(insets.left, y, 160 - insets.left, 0);
 			}
+		}
 
-			private void addDiscardedSprite (Heap heap ){
-				heap.sprite = (DiscardedItemSprite) heaps.recycle(DiscardedItemSprite.class);
-				heap.sprite.revive();
-				heap.sprite.link(heap);
-				heaps.add(heap.sprite);
-			}
+		float pos = 0;
 
-			private void addPlantSprite (Plant plant ){
+		if (scene.tagResume) {
+			scene.resume.setRect(tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE);
+			scene.resume.flip(tagsOnLeft);
+		}
+	}
 
-			}
+	@Override
+	protected void onBackPressed() {
+		add(new WndGame());
+	}
 
-			private void addTrapSprite (Trap trap ){
+	public void addCustomTile(CustomTilemap visual) {
+		customTiles.add(visual.create());
+	}
 
-			}
+	public void addCustomWall(CustomTilemap visual) {
+		customWalls.add(visual.create());
+	}
 
-			private void addBlobSprite ( final Blob gas ){
-				if (gas.emitter == null) {
-					gases.add(new BlobEmitter(gas));
-				}
-			}
+	private void addHeapSprite(Heap heap) {
+		ItemSprite sprite = heap.sprite = (ItemSprite) heaps.recycle(ItemSprite.class);
+		sprite.revive();
+		sprite.link(heap);
+		heaps.add(sprite);
+	}
 
-			private synchronized void addMobSprite (Mob mob ){
-				CharSprite sprite = mob.sprite();
-				sprite.visible = Dungeon.visibleforAnyHero(mob.pos);
-				mobs.add(sprite);
-				sprite.link(mob);
-				sortMobSprites();
-			}
+	private void addDiscardedSprite(Heap heap) {
+		heap.sprite = (DiscardedItemSprite) heaps.recycle(DiscardedItemSprite.class);
+		heap.sprite.revive();
+		heap.sprite.link(heap);
+		heaps.add(heap.sprite);
+	}
 
-			//ensures that mob sprites are drawn from top to bottom, in case of overlap
-			public static void sortMobSprites () {
-				if (scene != null) {
-					synchronized (scene) {
-						scene.mobs.sort(new Comparator() {
-							@Override
-							public int compare(Object a, Object b) {
-								//elements that aren't visual go to the end of the list
-								if (a instanceof Visual && b instanceof Visual) {
-									return (int) Math.signum((((Visual) a).y + ((Visual) a).height())
-											- (((Visual) b).y + ((Visual) b).height()));
-								} else if (a instanceof Visual) {
-									return -1;
-								} else if (b instanceof Visual) {
-									return 1;
-								} else {
-									return 0;
-								}
-							}
-						});
-					}
-				}
-			}
-			private synchronized void prompt (String text ){
+	private void addPlantSprite(Plant plant) {
 
-				if (prompt != null) {
-					prompt.killAndErase();
-					toDestroy.add(prompt);
-					prompt = null;
-				}
+	}
 
-				if (text != null) {
-					prompt = new Toast(text) {
-						@Override
-						protected void onClose() {
-							//cancel();
-						}
-					};
-					prompt.camera = uiCamera;
-					prompt.setPos((uiCamera.width - prompt.width()) / 2, uiCamera.height - 60);
+	private void addTrapSprite(Trap trap) {
 
-					add(prompt);
-				}
-			}
+	}
 
+	private void addBlobSprite(final Blob gas) {
+		if (gas.emitter == null) {
+			gases.add(new BlobEmitter(gas));
+		}
+	}
 
-			// -------------------------------------------------------
+	private synchronized void addMobSprite(Mob mob) {
+		CharSprite sprite = mob.sprite();
+		sprite.visible = Dungeon.visibleforAnyHero(mob.pos);
+		mobs.add(sprite);
+		sprite.link(mob);
+		sortMobSprites();
+	}
 
-			public static void add (Plant plant ){
-				if (scene != null) {
-					scene.addPlantSprite(plant);
-				}
-			}
-
-			public static void add (Trap trap ){
-				if (scene != null) {
-					scene.addTrapSprite(trap);
-				}
-			}
-
-			public static void add (Blob gas ){
-				Actor.add(gas);
-				if (scene != null) {
-					scene.addBlobSprite(gas);
-				}
-			}
-
-			public static void add (Heap heap ){
-				if (scene != null) {
-					//heaps that aren't added as part of levelgen don't count for exploration bonus
-					heap.autoExplored = true;
-					scene.addHeapSprite(heap);
-				}
-			}
-
-			public static void discard (Heap heap ){
-				if (scene != null) {
-					scene.addDiscardedSprite(heap);
-				}
-			}
-
-			public static void add (Mob mob ){
-				Dungeon.level.mobs.add(mob);
-				if (scene != null) {
-					scene.addMobSprite(mob);
-					Actor.add(mob);
-				}
-			}
-
-			public static void addSprite (Mob mob ){
-				scene.addMobSprite(mob);
-			}
-
-			public static void add (Mob mob,float delay ){
-				Dungeon.level.mobs.add(mob);
-				scene.addMobSprite(mob);
-				Actor.addDelayed(mob, delay);
-			}
-
-			public static void add (EmoIcon icon ){
-				scene.emoicons.add(icon);
-			}
-
-			public static void add (CharHealthIndicator indicator ){
-				if (scene != null) scene.healthIndicators.add(indicator);
-			}
-
-			public static void add (CustomTilemap t,boolean wall ){
-				if (scene == null) return;
-				if (wall) {
-					scene.addCustomWall(t);
-				} else {
-					scene.addCustomTile(t);
-				}
-			}
-
-			public static void effect (Visual effect ){
-				if (scene != null) scene.effects.add(effect);
-			}
-
-			public static void effectOverFog (Visual effect ){
-				scene.overFogEffects.add(effect);
-			}
-
-			public static void ripple ( int pos ){
-				JSONObject actionObj = new JSONObject();
-				try {
-					actionObj.put("action_type", "ripple_visual");
-					actionObj.put("pos", pos);
-				} catch (JSONException ignore) {
-				}
-				SendData.sendCustomActionForAll(actionObj);
-			}
-
-			public static synchronized SpellSprite spellSprite () {
-				return (SpellSprite) scene.spells.recycle(SpellSprite.class);
-			}
-
-			public static synchronized Emitter emitter () {
-				if (scene != null) {
-					Emitter emitter = (Emitter) scene.emitters.recycle(Emitter.class);
-					emitter.revive();
-					return emitter;
-				} else {
-					return null;
-				}
-			}
-
-			public static synchronized Emitter floorEmitter () {
-				if (scene != null) {
-					Emitter emitter = (Emitter) scene.floorEmitters.recycle(Emitter.class);
-					emitter.revive();
-					return emitter;
-				} else {
-					return null;
-				}
-			}
-
-			public static FloatingText status () {
-				return scene != null ? (FloatingText) scene.statuses.recycle(FloatingText.class) : null;
-			}
-
-			public static void pickUp (Item item,int pos ){
-			}
-
-			public static void pickUpJournal (Item item,int pos ){
-				if (scene != null) {
-					//todo send this
-				}
-			}
-			//TODO: send this to hero
-			public static void flashForDocument (Document doc, String page, Hero target ){
-				if (scene != null) {
-					if (target != null) {
-						if (doc == Document.ADVENTURERS_GUIDE) {
-							if (!page.equals(Document.GUIDE_INTRO)) {
-								if (SPDSettings.interfaceSize() == 0) {
-									GLog.p(Messages.get(Guidebook.class, "hint_mobile"));
-								} else {
-									GLog.p(Messages.get(Guidebook.class, "hint_desktop", KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.JOURNAL, ControllerHandler.isControllerConnected()))));
-								}
-							}
-							target.getSprite().showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
+	//ensures that mob sprites are drawn from top to bottom, in case of overlap
+	public static void sortMobSprites() {
+		if (scene != null) {
+			synchronized (scene) {
+				scene.mobs.sort(new Comparator() {
+					@Override
+					public int compare(Object a, Object b) {
+						//elements that aren't visual go to the end of the list
+						if (a instanceof Visual && b instanceof Visual) {
+							return (int) Math.signum((((Visual) a).y + ((Visual) a).height())
+									- (((Visual) b).y + ((Visual) b).height()));
+						} else if (a instanceof Visual) {
+							return -1;
+						} else if (b instanceof Visual) {
+							return 1;
+						} else {
+							return 0;
 						}
 					}
-					if (doc == Document.ADVENTURERS_GUIDE){
+				});
+			}
+		}
+	}
+
+	private synchronized void prompt(String text) {
+
+		if (prompt != null) {
+			prompt.killAndErase();
+			toDestroy.add(prompt);
+			prompt = null;
+		}
+
+		if (text != null) {
+			prompt = new Toast(text) {
+				@Override
+				protected void onClose() {
+					//cancel();
+				}
+			};
+			prompt.camera = uiCamera;
+			prompt.setPos((uiCamera.width - prompt.width()) / 2, uiCamera.height - 60);
+
+			add(prompt);
+		}
+	}
+
+
+	// -------------------------------------------------------
+
+	public static void add(Plant plant) {
+		if (scene != null) {
+			scene.addPlantSprite(plant);
+		}
+	}
+
+	public static void add(Trap trap) {
+		if (scene != null) {
+			scene.addTrapSprite(trap);
+		}
+	}
+
+	public static void add(Blob gas) {
+		Actor.add(gas);
+		if (scene != null) {
+			scene.addBlobSprite(gas);
+		}
+	}
+
+	public static void add(Heap heap) {
+		if (scene != null) {
+			//heaps that aren't added as part of levelgen don't count for exploration bonus
+			heap.autoExplored = true;
+			scene.addHeapSprite(heap);
+		}
+	}
+
+	public static void discard(Heap heap) {
+		if (scene != null) {
+			scene.addDiscardedSprite(heap);
+		}
+	}
+
+	public static void add(Mob mob) {
+		Dungeon.level.mobs.add(mob);
+		if (scene != null) {
+			scene.addMobSprite(mob);
+			Actor.add(mob);
+		}
+	}
+
+	public static void addSprite(Mob mob) {
+		scene.addMobSprite(mob);
+	}
+
+	public static void add(Mob mob, float delay) {
+		Dungeon.level.mobs.add(mob);
+		scene.addMobSprite(mob);
+		Actor.addDelayed(mob, delay);
+	}
+
+	public static void add(EmoIcon icon) {
+		scene.emoicons.add(icon);
+	}
+
+	public static void add(CharHealthIndicator indicator) {
+		if (scene != null) scene.healthIndicators.add(indicator);
+	}
+
+	public static void add(CustomTilemap t, boolean wall) {
+		if (scene == null) return;
+		if (wall) {
+			scene.addCustomWall(t);
+		} else {
+			scene.addCustomTile(t);
+		}
+	}
+
+	public static void effect(Visual effect) {
+		if (scene != null) scene.effects.add(effect);
+	}
+
+	public static void effectOverFog(Visual effect) {
+		scene.overFogEffects.add(effect);
+	}
+
+	public static void ripple(int pos) {
+		JSONObject actionObj = new JSONObject();
+		try {
+			actionObj.put("action_type", "ripple_visual");
+			actionObj.put("pos", pos);
+		} catch (JSONException ignore) {
+		}
+		SendData.sendCustomActionForAll(actionObj);
+	}
+
+	public static synchronized SpellSprite spellSprite() {
+		return (SpellSprite) scene.spells.recycle(SpellSprite.class);
+	}
+
+	public static synchronized Emitter emitter() {
+		if (scene != null) {
+			Emitter emitter = (Emitter) scene.emitters.recycle(Emitter.class);
+			emitter.revive();
+			return emitter;
+		} else {
+			return null;
+		}
+	}
+
+	public static synchronized Emitter floorEmitter() {
+		if (scene != null) {
+			Emitter emitter = (Emitter) scene.floorEmitters.recycle(Emitter.class);
+			emitter.revive();
+			return emitter;
+		} else {
+			return null;
+		}
+	}
+
+	public static FloatingText status() {
+		return scene != null ? (FloatingText) scene.statuses.recycle(FloatingText.class) : null;
+	}
+
+	public static void pickUp(Item item, int pos) {
+	}
+
+	public static void pickUpJournal(Item item, int pos) {
+		if (scene != null) {
+			//todo send this
+		}
+	}
+
+	//TODO: send this to hero
+	public static void flashForDocument(Document doc, String page, Hero target) {
+		if (scene != null) {
+			if (target != null) {
+				if (doc == Document.ADVENTURERS_GUIDE) {
+					if (!page.equals(Document.GUIDE_INTRO)) {
+						if (SPDSettings.interfaceSize() == 0) {
+							GLog.p(Messages.get(Guidebook.class, "hint_mobile"));
+						} else {
+							GLog.p(Messages.get(Guidebook.class, "hint_desktop", KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.JOURNAL, ControllerHandler.isControllerConnected()))));
+						}
+					}
+					target.getSprite().showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
+				}
+			}
+			if (doc == Document.ADVENTURERS_GUIDE) {
 				if (!page.equals(Document.GUIDE_INTRO)) {
 					if (SPDSettings.interfaceSize() == 0) {
 						GLog.p(Messages.get(Guidebook.class, "hint_mobile"));
@@ -1074,390 +1064,394 @@ public class GameScene extends PixelScene {
 						GLog.p(Messages.get(Guidebook.class, "hint_desktop", KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.JOURNAL, ControllerHandler.isControllerConnected()))));
 					}
 				}
-				Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
-			}scene.menu.flashForPage(doc, page);
-				}
+				//hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(Guidebook.class, "hint_status"));
+			}
+			scene.menu.flashForPage(doc, page);
+		}
+	}
+
+	public static void endIntro() {
+		if (scene != null) {
+			SPDSettings.intro(false);
+			GameLog.wipe();
+			if (SPDSettings.interfaceSize() == 0) {
+				GLog.p(Messages.get(GameScene.class, "tutorial_ui_mobile"));
+			} else {
+				GLog.p(Messages.get(GameScene.class, "tutorial_ui_desktop",
+						KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.HERO_INFO, ControllerHandler.isControllerConnected())),
+						KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.INVENTORY, ControllerHandler.isControllerConnected()))));
 			}
 
-			public static void endIntro () {
-				if (scene != null) {
-					SPDSettings.intro(false);
-					GameLog.wipe();
-					if (SPDSettings.interfaceSize() == 0) {
-						GLog.p(Messages.get(GameScene.class, "tutorial_ui_mobile"));
+			//clear hidden doors, it's floor 1 so there are only the entrance ones
+			for (int i = 0; i < Dungeon.level.length(); i++) {
+				if (Dungeon.level.map[i] == Terrain.SECRET_DOOR) {
+					Dungeon.level.discover(i);
+					discoverTile(i, Terrain.SECRET_DOOR);
+				}
+			}
+		}
+	}
+
+	public static void updateKeyDisplay() {
+		if (scene != null && scene.menu != null) scene.menu.updateKeys();
+	}
+
+	public static void showlevelUpStars() {
+		//todo addToSend
+		if (scene != null && scene.status() != null) return;
+	}
+
+	//TODO: check this
+	public static void updateAvatar() {
+		//if (scene != null && scene.status() != null) scene.status.updateAvatar();
+	}
+
+	public static void resetMap() {
+		if (scene != null) {
+			scene.tiles.map(Dungeon.level.map, Dungeon.level.width());
+			scene.visualGrid.map(Dungeon.level.map, Dungeon.level.width());
+			scene.terrainFeatures.map(Dungeon.level.map, Dungeon.level.width());
+			scene.raisedTerrain.map(Dungeon.level.map, Dungeon.level.width());
+			scene.walls.map(Dungeon.level.map, Dungeon.level.width());
+		}
+		updateFog();
+	}
+
+	//updates the whole map
+	public static void updateMap() {
+		if (scene != null) {
+			scene.tiles.updateMap();
+			scene.visualGrid.updateMap();
+			scene.terrainFeatures.updateMap();
+			scene.raisedTerrain.updateMap();
+			scene.walls.updateMap();
+			updateFog();
+		}
+	}
+
+	public static void updateMap(int cell) {
+		if (scene != null) {
+			scene.tiles.updateMapCell(cell);
+			scene.visualGrid.updateMapCell(cell);
+			scene.terrainFeatures.updateMapCell(cell);
+			scene.raisedTerrain.updateMapCell(cell);
+			scene.walls.updateMapCell(cell);
+			//update adjacent cells too
+			updateFog(cell, 1);
+		}
+	}
+
+	public static void plantSeed(int cell) {
+		if (scene != null) {
+			scene.terrainFeatures.growPlant(cell);
+		}
+	}
+
+	public static void discoverTile(int pos, int oldValue) {
+		SendData.sendActionDiscoverTile(pos, oldValue);
+	}
+
+	public static void show(Window wnd) {
+		if (scene != null) {
+			if (wnd.getOwnerHero() != null) {
+				cancel(wnd.getOwnerHero());
+			} else {
+				scene.addToFront(wnd);
+			}
+		}
+	}
+
+	public static boolean showingWindow() {
+		if (scene == null) return false;
+
+		for (Gizmo g : scene.members) {
+			if (g instanceof Window) return true;
+		}
+
+		return false;
+	}
+
+	public static boolean interfaceBlockingHero() {
+		if (scene == null) return false;
+
+		if (showingWindow()) return true;
+
+		return false;
+	}
+
+	public static void centerNextWndOnInvPane() {
+
+	}
+
+	public static void updateFog() {
+		if (scene != null) {
+			scene.wallBlocking.updateMap();
+		}
+	}
+
+	public static void updateFog(int x, int y, int w, int h) {
+		if (scene != null) {
+			scene.wallBlocking.updateArea(x, y, w, h);
+		}
+	}
+
+	public static void updateFog(int cell, int radius) {
+		if (scene != null) {
+			scene.wallBlocking.updateArea(cell, radius);
+		}
+	}
+
+	public static void afterObserve() {
+		if (scene != null) {
+			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
+				if (mob.getSprite() != null) {
+					if (mob instanceof Mimic && mob.state == mob.PASSIVE && ((Mimic) mob).stealthy() && Dungeon.level.visited[mob.pos]) {
+						//mimics stay visible in fog of war after being first seen
+						mob.getSprite().visible = true;
 					} else {
-						GLog.p(Messages.get(GameScene.class, "tutorial_ui_desktop",
-								KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.HERO_INFO, ControllerHandler.isControllerConnected())),
-								KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.INVENTORY, ControllerHandler.isControllerConnected()))));
+						mob.getSprite().visible = Dungeon.visibleforAnyHero(mob.pos);
 					}
-
-					//clear hidden doors, it's floor 1 so there are only the entrance ones
-					for (int i = 0; i < Dungeon.level.length(); i++) {
-						if (Dungeon.level.map[i] == Terrain.SECRET_DOOR) {
-							Dungeon.level.discover(i);
-							discoverTile(i, Terrain.SECRET_DOOR);
-						}
+				}
+				if (mob instanceof Ghoul) {
+					for (Ghoul.GhoulLifeLink link : mob.buffs(Ghoul.GhoulLifeLink.class)) {
+						link.updateVisibility();
 					}
 				}
 			}
+		}
+	}
 
-			public static void updateKeyDisplay () {
-				if (scene != null && scene.menu != null) scene.menu.updateKeys();
-			}
+	public static void flash(int color) {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("action_type", "game_scene_flash");
+			obj.put("color", color);
+			obj.put("light", true);
+		} catch (JSONException ignored) {
 
-			public static void showlevelUpStars () {
-				//todo addToSend
-				if (scene != null && scene.status() != null) return;
-			}
-			//TODO: check this
-			public static void updateAvatar () {
-				//if (scene != null && scene.status() != null) scene.status.updateAvatar();
-			}
+		}
+		SendData.sendCustomActionForAll(obj);
+	}
 
-			public static void resetMap () {
-				if (scene != null) {
-					scene.tiles.map(Dungeon.level.map, Dungeon.level.width());
-					scene.visualGrid.map(Dungeon.level.map, Dungeon.level.width());
-					scene.terrainFeatures.map(Dungeon.level.map, Dungeon.level.width());
-					scene.raisedTerrain.map(Dungeon.level.map, Dungeon.level.width());
-					scene.walls.map(Dungeon.level.map, Dungeon.level.width());
+	public static void flash(int color, boolean lightmode) {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("action_type", "game_scene_flash");
+			obj.put("color", color);
+			obj.put("light", lightmode);
+		} catch (JSONException ignored) {
+
+		}
+		SendData.sendCustomActionForAll(obj);
+	}
+
+	@Deprecated
+	public static void gameOver(Hero hero) {
+		Banner.show(hero, BannerSprites.Type.GAME_OVER, 0x000000, 1f);
+		com.nikita22007.multiplayer.noosa.audio.Sample.INSTANCE.play(Assets.Sounds.DEATH);
+	}
+
+	//FIXME
+	public static void bossSlain() {
+		for (Hero hero : Dungeon.heroes) {
+			if (hero == null) {
+				continue;
+			}
+			com.nikita22007.multiplayer.server.ui.Banner.show(hero, BannerSprites.Type.BOSS_SLAIN, 0xFFFFFF, 0.3f, 5f);
+		}
+		Sample.INSTANCE.play(Assets.Sounds.BOSS);
+
+	}
+
+	public static void handleCell(Hero hero, int cell) {
+		hero.cellSelector.select(cell, PointerEvent.LEFT);
+	}
+
+	public static void selectCell(Hero hero, CellSelector.Listener listener) {
+		CellSelector cellSelector = hero.cellSelector;
+
+		if (cellSelector.getListener() != null && cellSelector.getListener() != hero.defaultCellListener) {
+			cellSelector.getListener().onSelect(null);
+		}
+		cellSelector.setListener(listener);
+		cellSelector.enabled = listener.getOwner().isReady();
+		if (scene != null) {
+			scene.prompt(listener.prompt());
+		}
+	}
+
+	public static boolean cancelCellSelector(Hero hero) {
+		if (hero.cellSelector.getListener() != null && hero.cellSelector.getListener() != hero.defaultCellListener) {
+			hero.cellSelector.resetKeyHold();
+			hero.cellSelector.cancel();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static WndBag selectItem(WndBag.ItemSelector listener, Hero hero) {
+		cancel(hero);
+
+		if (scene != null) {
+			{
+				WndBag wnd = WndBag.getBag(listener, hero);
+				show(wnd);
+				return wnd;
+			}
+		}
+
+		return null;
+	}
+
+	public static boolean cancel(Hero hero) {
+		hero.cellSelector.resetKeyHold();
+		if (hero.curAction != null || hero.resting) {
+
+			hero.curAction = null;
+			hero.resting = false;
+			return true;
+
+		} else {
+
+			return cancelCellSelector(hero);
+
+		}
+	}
+
+	public static void ready(@NotNull Hero hero) {
+		selectCell(hero, hero.defaultCellListener);
+		//todo use Hero
+		QuickSlotButton.cancel();
+		if (tagDisappeared) {
+			tagDisappeared = false;
+			updateTags = true;
+		}
+	}
+
+	//FIXME
+	public static void checkKeyHold(Hero hero) {
+		hero.cellSelector.processKeyHold();
+	}
+
+	public static void resetKeyHold(Hero hero) {
+		hero.cellSelector.resetKeyHold();
+	}
+
+	public static void examineCell(Integer cell, Hero hero) {
+		if (cell == null
+				|| cell < 0
+				|| cell > Dungeon.level.length()
+				|| (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell])) {
+			return;
+		}
+
+		ArrayList<Object> objects = getObjectsAtCell(cell);
+
+		if (objects.isEmpty()) {
+			GameScene.show(new WndInfoCell(cell, hero));
+		} else if (objects.size() == 1) {
+			examineObject(objects.get(0), hero);
+		} else {
+			String[] names = getObjectNames(objects).toArray(new String[0]);
+
+			GameScene.show(new WndOptions(hero, Icons.get(Icons.INFO),
+					Messages.get(GameScene.class, "choose_examine"),
+					Messages.get(GameScene.class, "multiple_examine"),
+					names) {
+				@Override
+				protected void onSelect(int index) {
+					examineObject(objects.get(index), getOwnerHero());
 				}
-				updateFog();
-			}
+			});
 
-			//updates the whole map
-			public static void updateMap () {
-				if (scene != null) {
-					scene.tiles.updateMap();
-					scene.visualGrid.updateMap();
-					scene.terrainFeatures.updateMap();
-					scene.raisedTerrain.updateMap();
-					scene.walls.updateMap();
-					updateFog();
-				}
-			}
+		}
+	}
 
-			public static void updateMap ( int cell ){
-				if (scene != null) {
-					scene.tiles.updateMapCell(cell);
-					scene.visualGrid.updateMapCell(cell);
-					scene.terrainFeatures.updateMapCell(cell);
-					scene.raisedTerrain.updateMapCell(cell);
-					scene.walls.updateMapCell(cell);
-					//update adjacent cells too
-					updateFog(cell, 1);
-				}
-			}
+	private static ArrayList<Object> getObjectsAtCell(int cell) {
+		ArrayList<Object> objects = new ArrayList<>();
+		for (Hero hero : Dungeon.heroes) {
+			if (hero != null) {
+				if (cell == hero.pos) {
+					objects.add(Dungeon.heroes);
 
-			public static void plantSeed ( int cell ){
-				if (scene != null) {
-					scene.terrainFeatures.growPlant(cell);
-				}
-			}
-
-			public static void discoverTile ( int pos, int oldValue ){
-				SendData.sendActionDiscoverTile(pos, oldValue);
-			}
-
-			public static void show (Window wnd ){
-				if (scene != null) {
-					if (wnd.getOwnerHero() != null) {
-						cancel(wnd.getOwnerHero());
-					} else {
-						scene.addToFront(wnd);
-					}
-				}
-			}
-
-			public static boolean showingWindow () {
-				if (scene == null) return false;
-
-				for (Gizmo g : scene.members) {
-					if (g instanceof Window) return true;
-				}
-
-				return false;
-			}
-
-			public static boolean interfaceBlockingHero () {
-				if (scene == null) return false;
-
-				if (showingWindow()) return true;
-
-				return false;
-			}
-
-			public static void centerNextWndOnInvPane () {
-
-			}
-
-			public static void updateFog () {
-				if (scene != null) {
-					scene.wallBlocking.updateMap();
-				}
-			}
-
-			public static void updateFog ( int x, int y, int w, int h){
-				if (scene != null) {
-					scene.wallBlocking.updateArea(x, y, w, h);
-				}
-			}
-
-			public static void updateFog ( int cell, int radius ){
-				if (scene != null) {
-					scene.wallBlocking.updateArea(cell, radius);
-				}
-			}
-
-			public static void afterObserve () {
-				if (scene != null) {
-					for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-						if (mob.getSprite() != null) {
-							if (mob instanceof Mimic && mob.state == mob.PASSIVE && ((Mimic) mob).stealthy() && Dungeon.level.visited[mob.pos]) {
-								//mimics stay visible in fog of war after being first seen
-								mob.getSprite().visible = true;
-							} else {
-								mob.getSprite().visible = Dungeon.visibleforAnyHero(mob.pos);
-							}
-						}
-						if (mob instanceof Ghoul) {
-							for (Ghoul.GhoulLifeLink link : mob.buffs(Ghoul.GhoulLifeLink.class)) {
-								link.updateVisibility();
-							}
-						}
-					}
-				}
-			}
-
-			public static void flash ( int color ){
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("action_type", "game_scene_flash");
-					obj.put("color", color);
-					obj.put("light", true);
-				} catch (JSONException ignored) {
-
-				}
-				SendData.sendCustomActionForAll(obj);
-			}
-
-			public static void flash ( int color, boolean lightmode ){
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("action_type", "game_scene_flash");
-					obj.put("color", color);
-					obj.put("light", lightmode);
-				} catch (JSONException ignored) {
-
-				}
-				SendData.sendCustomActionForAll(obj);
-			}
-			@Deprecated
-			public static void gameOver (Hero hero){
-				Banner.show(hero, BannerSprites.Type.GAME_OVER, 0x000000, 1f);
-				com.nikita22007.multiplayer.noosa.audio.Sample.INSTANCE.play(Assets.Sounds.DEATH);
-			}
-
-			//FIXME
-			public static void bossSlain () {
-				for (Hero hero : Dungeon.heroes) {
-					if (hero == null) {
-						continue;
-					}
-					com.nikita22007.multiplayer.server.ui.Banner.show(hero, BannerSprites.Type.BOSS_SLAIN, 0xFFFFFF, 0.3f, 5f);
-				}
-				Sample.INSTANCE.play(Assets.Sounds.BOSS);
-
-			}
-
-			public static void handleCell (Hero hero,int cell ){
-				hero.cellSelector.select(cell, PointerEvent.LEFT);
-			}
-
-			public static void selectCell (Hero hero, CellSelector.Listener listener ){
-				CellSelector cellSelector = hero.cellSelector;
-
-				if (cellSelector.getListener() != null && cellSelector.getListener() != hero.defaultCellListener) {
-					cellSelector.getListener().onSelect(null);
-				}
-				cellSelector.setListener(listener);
-				cellSelector.enabled = listener.getOwner().isReady();
-				if (scene != null) {
-					scene.prompt(listener.prompt());
+				} else if (Dungeon.visibleforAnyHero(cell)) {
+					Mob mob = (Mob) Actor.findChar(cell);
+					if (mob != null) objects.add(mob);
 				}
 			}
+		}
+		Heap heap = Dungeon.level.heaps.get(cell);
+		if (heap != null && heap.isSeen()) objects.add(heap);
 
-			public static boolean cancelCellSelector (Hero hero){
-				if (hero.cellSelector.getListener() != null && hero.cellSelector.getListener() != hero.defaultCellListener) {
-					hero.cellSelector.resetKeyHold();
-					hero.cellSelector.cancel();
-					return true;
-				} else {
-					return false;
-				}
+		Plant plant = Dungeon.level.plants.get(cell);
+		if (plant != null) objects.add(plant);
+
+		Trap trap = Dungeon.level.traps.get(cell);
+		if (trap != null && trap.visible) objects.add(trap);
+
+		return objects;
+	}
+
+	private static ArrayList<String> getObjectNames(ArrayList<Object> objects) {
+		ArrayList<String> names = new ArrayList<>();
+		for (Object obj : objects) {
+			if (obj instanceof Hero) names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
+			else if (obj instanceof Mob) names.add(Messages.titleCase(((Mob) obj).name()));
+			else if (obj instanceof Heap) names.add(Messages.titleCase(((Heap) obj).title()));
+			else if (obj instanceof Plant) names.add(Messages.titleCase(((Plant) obj).name()));
+			else if (obj instanceof Trap) names.add(Messages.titleCase(((Trap) obj).name()));
+		}
+		return names;
+	}
+
+	public static void examineObject(Object o, Hero hero) {
+		if (o instanceof Hero) {
+			GameScene.show(new WndHero((Hero) o));
+		} else if (o instanceof Mob && ((Mob) o).isActive()) {
+			GameScene.show(new WndInfoMob((Mob) o, hero));
+			if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)) {
+				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_SURPRISE_ATKS, hero);
 			}
-
-			public static WndBag selectItem (WndBag.ItemSelector listener, Hero hero ){
-				cancel(hero);
-
-				if (scene != null) {
-					{
-						WndBag wnd = WndBag.getBag(listener, hero);
-						show(wnd);
-						return wnd;
-					}
-				}
-
-				return null;
-			}
-
-			public static boolean cancel (Hero hero){
-				hero.cellSelector.resetKeyHold();
-				if (hero.curAction != null || hero.resting) {
-
-					hero.curAction = null;
-					hero.resting = false;
-					return true;
-
-				} else {
-
-					return cancelCellSelector(hero);
-
-				}
-			}
-
-			public static void ready (@NotNull Hero hero){
-				selectCell(hero, hero.defaultCellListener);
-				//todo use Hero
-				QuickSlotButton.cancel();
-				if (tagDisappeared) {
-					tagDisappeared = false;
-					updateTags = true;
-				}
-			}
-
-			//FIXME
-			public static void checkKeyHold (Hero hero){
-				hero.cellSelector.processKeyHold();
-			}
-
-			public static void resetKeyHold (Hero hero){
-				hero.cellSelector.resetKeyHold();
-			}
-
-			public static void examineCell (Integer cell, Hero hero ){
-				if (cell == null
-						|| cell < 0
-						|| cell > Dungeon.level.length()
-						|| (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell])) {
-					return;
-				}
-
-				ArrayList<Object> objects = getObjectsAtCell(cell);
-
-				if (objects.isEmpty()) {
-					GameScene.show(new WndInfoCell(cell, hero));
-				} else if (objects.size() == 1) {
-					examineObject(objects.get(0), hero);
-				} else {
-					String[] names = getObjectNames(objects).toArray(new String[0]);
-
-					GameScene.show(new WndOptions(hero, Icons.get(Icons.INFO),
-							Messages.get(GameScene.class, "choose_examine"),
-							Messages.get(GameScene.class, "multiple_examine"),
-							names) {
-						@Override
-						protected void onSelect(int index) {
-							examineObject(objects.get(index), getOwnerHero());
-						}
-					});
-
-				}
-			}
-
-			private static ArrayList<Object> getObjectsAtCell ( int cell ){
-				ArrayList<Object> objects = new ArrayList<>();
-				for (Hero hero : Dungeon.heroes) {
-					if (hero != null) {
-						if (cell == hero.pos) {
-							objects.add(Dungeon.heroes);
-
-						} else if (Dungeon.visibleforAnyHero(cell)) {
-							Mob mob = (Mob) Actor.findChar(cell);
-							if (mob != null) objects.add(mob);
-						}
-					}
-				}
-				Heap heap = Dungeon.level.heaps.get(cell);
-				if (heap != null && heap.isSeen()) objects.add(heap);
-
-				Plant plant = Dungeon.level.plants.get(cell);
-				if (plant != null) objects.add(plant);
-
-				Trap trap = Dungeon.level.traps.get(cell);
-				if (trap != null && trap.visible) objects.add(trap);
-
-				return objects;
-			}
-
-			private static ArrayList<String> getObjectNames (ArrayList < Object > objects) {
-				ArrayList<String> names = new ArrayList<>();
-				for (Object obj : objects) {
-					if (obj instanceof Hero) names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
-					else if (obj instanceof Mob) names.add(Messages.titleCase(((Mob) obj).name()));
-					else if (obj instanceof Heap) names.add(Messages.titleCase(((Heap) obj).title()));
-					else if (obj instanceof Plant) names.add(Messages.titleCase(((Plant) obj).name()));
-					else if (obj instanceof Trap) names.add(Messages.titleCase(((Trap) obj).name()));
-				}
-				return names;
-			}
-			public static void examineObject (Object o, Hero hero){
-				if (o instanceof Hero) {
-					GameScene.show(new WndHero((Hero) o));
-				} else if (o instanceof Mob && ((Mob) o).isActive()) {
-					GameScene.show(new WndInfoMob((Mob) o, hero));
-					if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)) {
-						GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_SURPRISE_ATKS, hero);
-					}
-				} else if (o instanceof Heap && !((Heap) o).isEmpty()) {
-					GameScene.show(new WndInfoItem((Heap) o, hero));
-				} else if (o instanceof Plant) {
-					GameScene.show(new WndInfoPlant((Plant) o, hero));
-					//plants can be harmful to trample, so let the player ID just by examine
-					Bestiary.setSeen(o.getClass());//plants can be harmful to trample, so let the player ID just by examine
+		} else if (o instanceof Heap && !((Heap) o).isEmpty()) {
+			GameScene.show(new WndInfoItem((Heap) o, hero));
+		} else if (o instanceof Plant) {
+			GameScene.show(new WndInfoPlant((Plant) o, hero));
+			//plants can be harmful to trample, so let the player ID just by examine
+			Bestiary.setSeen(o.getClass());//plants can be harmful to trample, so let the player ID just by examine
 			Bestiary.setSeen(o.getClass());
-				} else if (o instanceof Trap) {
-					GameScene.show(new WndInfoTrap((Trap) o, hero));
-					//traps are often harmful to trigger, so let the player ID just by examine
-					Bestiary.setSeen(o.getClass());
+		} else if (o instanceof Trap) {
+			GameScene.show(new WndInfoTrap((Trap) o, hero));
 			//traps are often harmful to trigger, so let the player ID just by examine
 			Bestiary.setSeen(o.getClass());
-				} else {
-					GameScene.show(new WndMessage(Messages.get(GameScene.class, "dont_know")));
+			//traps are often harmful to trigger, so let the player ID just by examine
+			Bestiary.setSeen(o.getClass());
+		} else {
+			GameScene.show(new WndMessage(Messages.get(GameScene.class, "dont_know")));
+		}
+	}
+
+	//FIXME
+	public static class DefaultCellListener extends CellSelector.Listener {
+		@Override
+		public void onSelect(Integer cell) {
+			if (Dungeon.level != null) {
+				if (cell == null) return;
+				if (getOwner().handle(cell)) {
+					getOwner().next();
 				}
 			}
+		}
 
-			//FIXME
-			public static class DefaultCellListener extends CellSelector.Listener {
-				@Override
-				public void onSelect(Integer cell) {
-					if(Dungeon.level != null) {
-						if (cell == null) return;
-						if (getOwner().handle(cell)) {
-							getOwner().next();
-						}
-					}
-				}
+		@Override
+		public String prompt() {
+			return null;
+		}
+	}
 
-				@Override
-				public String prompt() {
-					return null;
-				}
-			}
-
-			public static void addHeroSprite (Hero hero){
-				CharSprite sprite = hero.getSprite();
-				sprite.visible = true;
-				sprite.link(hero);
-			}
+	public static void addHeroSprite(Hero hero) {
+		CharSprite sprite = hero.getSprite();
+		sprite.visible = true;
+		sprite.link(hero);
+	}
 }

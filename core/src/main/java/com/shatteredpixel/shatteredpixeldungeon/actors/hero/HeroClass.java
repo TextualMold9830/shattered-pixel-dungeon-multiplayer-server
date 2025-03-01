@@ -245,18 +245,19 @@ public enum HeroClass {
 	}
 
 	private static void initCleric( Hero hero ) {
-
-		(hero.belongings.weapon = new Cudgel()).identify();
-		hero.belongings.weapon.activate(hero);
+		Cudgel weapon = new Cudgel();
+		weapon.identify(null);
+		hero.belongings.setWeapon(weapon);
+		hero.belongings.weapon().activate(hero);
 
 		HolyTome tome = new HolyTome();
-		(hero.belongings.artifact = tome).identify();
-		hero.belongings.artifact.activate( hero );
-
+		tome.identify(null);
+		(hero.belongings.setArtifact(tome)).identify(hero);
+		hero.belongings.getRealArtifact().activate( hero );
 		Dungeon.quickslot.setSlot(0, tome);
 
-		new PotionOfPurity().identify();
-		new ScrollOfRemoveCurse().identify();
+		new PotionOfPurity().identify(hero);
+		new ScrollOfRemoveCurse().identify(hero);
 	}
 
 	public String title() {

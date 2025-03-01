@@ -68,7 +68,7 @@ public class ShieldOfLight extends TargetedClericSpell {
 		}
 
 		Char ch = Actor.findChar(target);
-		if (ch == null || ch.alignment == Char.Alignment.ALLY || !Dungeon.level.heroFOV[target]){
+		if (ch == null || ch.alignment == Char.Alignment.ALLY || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}
@@ -76,19 +76,19 @@ public class ShieldOfLight extends TargetedClericSpell {
 		QuickSlotButton.target(ch);
 
 		Sample.INSTANCE.play(Assets.Sounds.READ);
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		//1 turn less as the casting is instant
 		Buff.prolong( hero, ShieldOfLightTracker.class, 3f).object = ch.id();
 
 		hero.busy();
-		hero.sprite.operate(hero.pos);
-		hero.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.15f, 6);
+		hero.getSprite().operate(hero.pos);
+		hero.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.15f, 6);
 
 		Char ally = PowerOfMany.getPoweredAlly();
 		if (ally != null && ally.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null){
 			Buff.prolong( ally, ShieldOfLightTracker.class, 3f).object = ch.id();
-			ally.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.15f, 6);
+			ally.getSprite().emitter().start(Speck.factory(Speck.LIGHT), 0.15f, 6);
 		}
 
 		onSpellCast(tome, hero);
@@ -96,14 +96,14 @@ public class ShieldOfLight extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int min = 1 + Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
+	public String desc(Hero hero) {
+		int min = 1 + hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
 		int max = 2*min;
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class ShieldOfLightTracker extends FlavourBuff {
-
+		public Hero source;
 		public int object = 0;
 
 		private static final float DURATION = 4;

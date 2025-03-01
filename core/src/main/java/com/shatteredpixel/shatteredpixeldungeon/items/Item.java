@@ -98,7 +98,7 @@ public class Item implements Bundlable {
 	public int icon = -1; //used as an identifier for items with randomized images
 	
 	public boolean stackable = false;
-	private int quantity = 1;
+	protected int quantity = 1;
 	public boolean dropsDownHeap = false;
 	
 	private int level = 0;
@@ -536,8 +536,6 @@ public class Item implements Bundlable {
 
 		if (byHero && hero != null && hero.isAlive()){
 			Catalog.setSeen(getClass());
-            //todo: might remove onItemIdentified
-			if (!isIdentified()) Talent.onItemIdentified(hero, this);
 			Statistics.itemTypesDiscovered.add(getClass());
 		}
 

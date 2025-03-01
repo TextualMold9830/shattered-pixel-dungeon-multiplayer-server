@@ -300,15 +300,13 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		public static void blast(int pos, float radius, Char user) {
-			blast(pos, 3);
-		}
-
-		public static void blast(int pos, float radius) {
 			Group parent = user.getSprite().parent;
 			BlastWave b = (BlastWave) parent.recycle(BlastWave.class);
 			parent.bringToFront(b);
 			b.reset(pos, radius);
 		}
+
+
 
 	}
 }

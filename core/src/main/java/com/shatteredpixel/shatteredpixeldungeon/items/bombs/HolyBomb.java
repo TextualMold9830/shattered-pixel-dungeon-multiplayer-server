@@ -43,10 +43,6 @@ public class HolyBomb extends Bomb {
 	{
 		image = ItemSpriteSheet.HOLY_BOMB;
 	}
-@Override
-	protected int explosionRange() {
-		return 2;
-	}
 	@Override
 	protected int explosionRange() {
 		return 2;

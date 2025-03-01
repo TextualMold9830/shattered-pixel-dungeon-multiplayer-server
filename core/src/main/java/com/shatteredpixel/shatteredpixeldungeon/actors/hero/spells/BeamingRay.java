@@ -55,8 +55,8 @@ public class BeamingRay extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", 4*Dungeon.hero.pointsInTalent(Talent.BEAMING_RAY), 30 + 5*Dungeon.hero.pointsInTalent(Talent.BEAMING_RAY)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", 4*hero.pointsInTalent(Talent.BEAMING_RAY), 30 + 5*hero.pointsInTalent(Talent.BEAMING_RAY)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class BeamingRay extends TargetedClericSpell {
 	public boolean canCast(Hero hero) {
 		return super.canCast(hero)
 				&& hero.hasTalent(Talent.BEAMING_RAY)
-				&& (PowerOfMany.getPoweredAlly() != null || Stasis.getStasisAlly() != null);
+				&& (PowerOfMany.getPoweredAlly() != null || Stasis.getStasisAlly(hero) != null);
 	}
 
 	@Override
@@ -81,15 +81,15 @@ public class BeamingRay extends TargetedClericSpell {
 
 		if (ally == null){
 			//temporary, for distance checks
-			ally = Dungeon.hero;
+			ally = hero;
 		}
 
 		int telePos = target;
 
-		if (Dungeon.level.solid[telePos] || !Dungeon.level.heroFOV[telePos] || Actor.findChar(telePos) != null){
+		if (Dungeon.level.solid[telePos] || !hero.fieldOfView[telePos] || Actor.findChar(telePos) != null){
 			telePos = -1;
 			for (int i : PathFinder.NEIGHBOURS8){
-				if (Actor.findChar(target+i) == null && Dungeon.level.heroFOV[target+i]
+				if (Actor.findChar(target+i) == null && hero.fieldOfView[target+i]
 						&& (Dungeon.level.passable[target+i] || (ally.flying && Dungeon.level.avoid[target+i])) ){
 					if (telePos == -1 || Dungeon.level.trueDistance(telePos, ally.pos) > Dungeon.level.trueDistance(target+i, ally.pos)){
 						telePos =  target+i;
@@ -103,8 +103,8 @@ public class BeamingRay extends TargetedClericSpell {
 			return;
 		}
 
-		if (ally == Dungeon.hero){
-			ally = Stasis.getStasisAlly();
+		if (ally instanceof Hero){
+			ally = Stasis.getStasisAlly(hero);
 		}
 
 		int range = 4*hero.pointsInTalent(Talent.BEAMING_RAY);
@@ -121,22 +121,24 @@ public class BeamingRay extends TargetedClericSpell {
 			chTarget = Actor.findChar(target);
 		}
 
-		if (ally == Stasis.getStasisAlly()){
+		if (ally == Stasis.getStasisAlly(hero)){
 			ally.pos = telePos;
 			GameScene.add((Mob) ally);
 			hero.buff(Stasis.StasisBuff.class).detach();
-			hero.sprite.parent.add(
-					new Beam.SunRay(hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(telePos)));
+			hero.getSprite().parent.add(
+					new Beam.SunRay(hero.getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(telePos)));
 
 			if (ally.buff(LifeLink.class) != null){
-				Buff.prolong(Dungeon.hero, LifeLink.class, ally.buff(LifeLink.class).cooldown()).object = ally.id();
+				LifeLink lifeLink = Buff.prolong(hero, LifeLink.class, ally.buff(LifeLink.class).cooldown());
+				lifeLink.source = hero;
+				lifeLink.object = ally.id();
 			}
 		} else {
-			hero.sprite.parent.add(
-					new Beam.SunRay(ally.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(telePos)));
+			hero.getSprite().parent.add(
+					new Beam.SunRay(ally.getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(telePos)));
 		}
 
-		hero.sprite.zap(telePos);
+		hero.getSprite().zap(telePos);
 		ScrollOfTeleportation.appear(ally, telePos);
 
 		if (chTarget == null){
@@ -155,13 +157,15 @@ public class BeamingRay extends TargetedClericSpell {
 			} else if (ally instanceof Mob) {
 				((Mob) ally).aggro(chTarget);
 			}
-			FlavourBuff.prolong(ally, BeamingRayBoost.class, BeamingRayBoost.DURATION).object = chTarget.id();
+			BeamingRayBoost beamingRayBoost = FlavourBuff.prolong(ally, BeamingRayBoost.class, BeamingRayBoost.DURATION);
+			beamingRayBoost.source = hero;
+			beamingRayBoost.object = chTarget.id();
 		} else {
 			if (ally instanceof DirectableAlly) {
 				((DirectableAlly) ally).clearDefensingPos();
 			}
 			//just the buff with no target
-			FlavourBuff.prolong(ally, BeamingRayBoost.class, BeamingRayBoost.DURATION);
+			FlavourBuff.prolong(ally, BeamingRayBoost.class, BeamingRayBoost.DURATION).source = hero;
 		}
 
 		hero.spendAndNext(Actor.TICK);
@@ -172,7 +176,7 @@ public class BeamingRay extends TargetedClericSpell {
 	}
 
 	public static class BeamingRayBoost extends FlavourBuff {
-
+		public Hero source;
 		{
 			type = buffType.POSITIVE;
 		}

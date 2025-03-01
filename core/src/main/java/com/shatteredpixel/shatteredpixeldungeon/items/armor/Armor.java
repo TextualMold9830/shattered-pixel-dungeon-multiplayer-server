@@ -212,7 +212,7 @@ public class Armor extends EquipableItem {
 	@Override
 	public boolean collect(Bag container) {
 		if(super.collect(container)){
-			if (Dungeon.hero != null && Dungeon.hero.isAlive() && isIdentified() && glyph != null){
+			if (isIdentified() && glyph != null){
 				Catalog.setSeen(glyph.getClass());
 				Statistics.itemTypesDiscovered.add(glyph.getClass());
 			}
@@ -223,12 +223,12 @@ public class Armor extends EquipableItem {
 	}
 
 	@Override
-	public Item identify(boolean byHero) {
-		if (glyph != null && byHero && Dungeon.hero != null && Dungeon.hero.isAlive()){
+	public Item identify(boolean byHero, Hero hero) {
+		if (glyph != null && byHero && hero != null && hero.isAlive()){
 			Catalog.setSeen(glyph.getClass());
 			Statistics.itemTypesDiscovered.add(glyph.getClass());
 		}
-		return super.identify(byHero);
+		return super.identify(byHero, hero);
 	}
 
 	public void setIDReady(){
@@ -450,8 +450,8 @@ public class Armor extends EquipableItem {
 
 		if (defender.buff(MagicImmune.class) == null) {
 			Glyph trinityGlyph = null;
-			if (Dungeon.hero.buff(BodyForm.BodyFormBuff.class) != null){
-				trinityGlyph = Dungeon.hero.buff(BodyForm.BodyFormBuff.class).glyph();
+			if (defender.buff(BodyForm.BodyFormBuff.class) != null){
+				trinityGlyph = defender.buff(BodyForm.BodyFormBuff.class).glyph();
 				if (glyph != null && trinityGlyph != null && trinityGlyph.getClass() == glyph.getClass()){
 					trinityGlyph = null;
 				}
@@ -477,12 +477,16 @@ public class Armor extends EquipableItem {
 					damage = trinityGlyph.proc( this, attacker, defender, damage );
 				}
 				//so that this effect procs for allies using this armor via aura of protection
-				if (defender.alignment == Dungeon.hero.alignment
-						&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-						&& (Dungeon.level.distance(defender.pos, Dungeon.hero.pos) <= 2 || defender.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)
-						&& Dungeon.hero.buff(HolyWard.HolyArmBuff.class) != null) {
-					int blocking = Dungeon.hero.subClass == HeroSubClass.PALADIN ? 3 : 1;
-					damage -= Math.round(blocking * Glyph.genericProcChanceMultiplier(defender));
+				for (Hero hero: Dungeon.heroes) {
+					if ( hero != null) {
+						if (defender.alignment == hero.alignment
+								&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+								&& (Dungeon.level.distance(defender.pos, hero.pos) <= 2 || defender.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)
+								&& hero.buff(HolyWard.HolyArmBuff.class) != null) {
+							int blocking = hero.subClass == HeroSubClass.PALADIN ? 3 : 1;
+							damage -= Math.round(blocking * Glyph.genericProcChanceMultiplier(defender));
+						}
+					}
 				}
 			}
 			damage = Math.max(damage, 0);
@@ -499,7 +503,7 @@ public class Armor extends EquipableItem {
 					}
 					setIDReady();
 				} else {
-					identify();
+					identify((Hero) defender);
 					GLog.p(Messages.get(Armor.class, "identify"));
 					Badges.validateItemLevelAquired(this);
 				}
@@ -520,8 +524,9 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public String name() {
-		if (isEquipped(Dungeon.hero) && !hasCurseGlyph() && Dungeon.hero.buff(HolyWard.HolyArmBuff.class) != null
-			&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || glyph == null)){
+		Hero hero = findOwner();
+		if (isEquipped(hero) && !hasCurseGlyph() && hero.buff(HolyWard.HolyArmBuff.class) != null
+			&& (hero.subClass != HeroSubClass.PALADIN || glyph == null)){
 				return Messages.get(HolyWard.class, "glyph_name", super.name());
 			} else {
 				return glyph != null && (cursedKnown || !glyph.curse()) ? glyph.name( super.name() ) : super.name();
@@ -543,7 +548,7 @@ public class Armor extends EquipableItem {
 		} else {
 			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0));
 
-			if (Dungeon.hero != null && STRReq(0) > hero.STR()) {
+			if (hero != null && STRReq(0) > hero.STR()) {
 				info += " " + Messages.get(Armor.class, "probably_too_heavy");
 			}
 		}
@@ -558,8 +563,8 @@ public class Armor extends EquipableItem {
 			case NONE:
 		}
 
-		if (isEquipped(Dungeon.hero) && !hasCurseGlyph() && Dungeon.hero.buff(HolyWard.HolyArmBuff.class) != null
-				&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || glyph == null)){
+		if (isEquipped(hero) && !hasCurseGlyph() && hero.buff(HolyWard.HolyArmBuff.class) != null
+				&& (hero.subClass != HeroSubClass.PALADIN || glyph == null)){
 			info += "\n\n" + Messages.capitalize(Messages.get(Armor.class, "inscribed", Messages.get(HolyWard.class, "glyph_name", Messages.get(Glyph.class, "glyph"))));
 			info += " " + Messages.get(HolyWard.class, "glyph_desc");
 		} else if (glyph != null  && (cursedKnown || !glyph.curse())) {
@@ -732,8 +737,9 @@ public class Armor extends EquipableItem {
 
 	@Override
 	public ItemSprite.Glowing glowing() {
-		if (isEquipped(Dungeon.hero) && !hasCurseGlyph() && Dungeon.hero.buff(HolyWard.HolyArmBuff.class) != null
-				&& (Dungeon.hero.subClass != HeroSubClass.PALADIN || glyph == null)){
+		Hero hero = findOwner();
+		if (isEquipped(hero) && !hasCurseGlyph() && hero.buff(HolyWard.HolyArmBuff.class) != null
+				&& (hero.subClass != HeroSubClass.PALADIN || glyph == null)){
 			return HOLY;
 		} else {
 			return glyph != null && (cursedKnown || !glyph.curse()) ? glyph.glowing() : null;
@@ -771,13 +777,15 @@ public class Armor extends EquipableItem {
 
 		public static float genericProcChanceMultiplier( Char defender ){
 			float multi = RingOfArcana.enchantPowerMultiplier(defender);
-
-			if (Dungeon.hero.alignment == defender.alignment
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(defender.pos, Dungeon.hero.pos) <= 2 || defender.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)){
-				multi += 0.25f + 0.25f*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					if (hero.alignment == defender.alignment
+							&& hero.buff(AuraOfProtection.AuraBuff.class) != null
+							&& (Dungeon.level.distance(defender.pos, hero.pos) <= 2 || defender.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
+						multi += 0.25f + 0.25f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+					}
+				}
 			}
-
 			return multi;
 		}
 		

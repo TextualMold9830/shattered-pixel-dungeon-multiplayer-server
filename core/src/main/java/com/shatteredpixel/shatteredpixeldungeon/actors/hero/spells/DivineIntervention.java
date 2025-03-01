@@ -63,12 +63,14 @@ public class DivineIntervention extends ClericSpell {
 	public void onCast(HolyTome tome, Hero hero) {
 
 		Sample.INSTANCE.play(Assets.Sounds.CHARGEUP, 1, 1.2f);
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		for (Char ch : Actor.chars()){
 			if (ch.alignment == Char.Alignment.ALLY && ch != hero){
-				Buff.affect(ch, DivineShield.class).setShield(100 + 50*hero.pointsInTalent(Talent.DIVINE_INTERVENTION));
-				new Flare(6, 32).color(0xFFFF00, true).show(ch.sprite, 2f);
+				DivineShield divineShield = Buff.affect(ch, DivineShield.class);
+				divineShield.source = hero;
+				divineShield.setShield(100 + 50*hero.pointsInTalent(Talent.DIVINE_INTERVENTION));
+				new Flare(6, 32).color(0xFFFF00, true).show(ch.getSprite(), 2f);
 			}
 		}
 
@@ -77,7 +79,7 @@ public class DivineIntervention extends ClericSpell {
 
 		//we apply buffs here so that the 5 charge cost and shield boost do not stack
 		hero.buff(AscendedForm.AscendBuff.class).setShield(100 + 50*hero.pointsInTalent(Talent.DIVINE_INTERVENTION));
-		new Flare(6, 32).color(0xFFFF00, true).show(hero.sprite, 2f);
+		new Flare(6, 32).color(0xFFFF00, true).show(hero.getSprite(), 2f);
 
 		hero.buff(AscendedForm.AscendBuff.class).divineInverventionCast = true;
 		hero.buff(AscendedForm.AscendBuff.class).extend(hero.pointsInTalent(Talent.DIVINE_INTERVENTION));
@@ -85,18 +87,18 @@ public class DivineIntervention extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int shield = 100 + 50*Dungeon.hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
-		int leftBonus = Dungeon.hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
-		return Messages.get(this, "desc", shield, leftBonus) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		int shield = 100 + 50*hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
+		int leftBonus = hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
+		return Messages.get(this, "desc", shield, leftBonus) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class DivineShield extends ShieldBuff{
-
+	Hero source;
 		@Override
 		public boolean act() {
 
-			if (Dungeon.hero == null || Dungeon.hero.buff(AscendedForm.AscendBuff.class) == null){
+			if (target == null || source.buff(AscendedForm.AscendBuff.class) == null){
 				detach();
 			}
 
@@ -106,7 +108,7 @@ public class DivineIntervention extends ClericSpell {
 
 		@Override
 		public int shielding() {
-			if (Dungeon.hero == null || Dungeon.hero.buff(AscendedForm.AscendBuff.class) == null){
+			if (source == null || source.buff(AscendedForm.AscendBuff.class) == null){
 				return 0;
 			}
 			return super.shielding();
@@ -114,8 +116,8 @@ public class DivineIntervention extends ClericSpell {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add(CharSprite.State.SHIELDED);
-			else    target.sprite.remove(CharSprite.State.SHIELDED);
+			if (on) target.getSprite().add(CharSprite.State.SHIELDED);
+			else    target.getSprite().remove(CharSprite.State.SHIELDED);
 		}
 	}
 }

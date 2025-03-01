@@ -75,18 +75,20 @@ public class GuidingLight extends TargetedClericSpell {
 
 		hero.busy();
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
-		hero.sprite.zap(target);
-		MagicMissile.boltFromChar(hero.sprite.parent, MagicMissile.LIGHT_MISSILE, hero.sprite, aim.collisionPos, new Callback() {
+		hero.getSprite().zap(target);
+		MagicMissile.boltFromChar(hero.getSprite().parent, MagicMissile.LIGHT_MISSILE, hero.getSprite(), aim.collisionPos, new Callback() {
 			@Override
 			public void call() {
 
 				Char ch = Actor.findChar( aim.collisionPos );
 				if (ch != null) {
-					ch.damage(Random.NormalIntRange(2, 6), GuidingLight.this);
+					ch.damage(Random.NormalIntRange(2, 6), new Char.DamageCause(GuidingLight.this, hero));
 					Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f));
-					ch.sprite.burst(0xFFFFFF44, 3);
+					ch.getSprite().burst(0xFFFFFF44, 3);
 					if (ch.isAlive()){
-						Buff.affect(ch, Illuminated.class);
+						if (ch.buff(Illuminated.class) == null) {
+							new Illuminated(hero).attachTo(ch);
+						}
 						Buff.affect(ch, WasIlluminatedTracker.class);
 					}
 				} else {
@@ -115,12 +117,12 @@ public class GuidingLight extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(){
+	public String desc(Hero hero){
 		String desc = Messages.get(this, "desc");
-		if (Dungeon.hero.subClass == HeroSubClass.PRIEST){
+		if (hero.subClass == HeroSubClass.PRIEST){
 			desc += "\n\n" + Messages.get(this, "desc_priest");
 		}
-		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class GuidingLightPriestCooldown extends FlavourBuff {
@@ -140,6 +142,7 @@ public class GuidingLight extends TargetedClericSpell {
 	}
 
 	public static class Illuminated extends Buff {
+		public final Hero source;
 
 		{
 			type = buffType.NEGATIVE;
@@ -152,21 +155,25 @@ public class GuidingLight extends TargetedClericSpell {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add(CharSprite.State.ILLUMINATED);
-			else target.sprite.remove(CharSprite.State.ILLUMINATED);
+			if (on) target.getSprite().add(CharSprite.State.ILLUMINATED);
+			else target.getSprite().remove(CharSprite.State.ILLUMINATED);
 		}
 
 		@Override
 		public String desc() {
 			String desc = super.desc();
 
-			if (Dungeon.hero.subClass == HeroSubClass.PRIEST){
+			if (source.subClass == HeroSubClass.PRIEST){
 				desc += "\n\n" + Messages.get(this, "desc_priest");
-			} else if (Dungeon.hero.heroClass != HeroClass.CLERIC){
+			} else if (source.heroClass != HeroClass.CLERIC){
 				desc += "\n\n" + Messages.get(this, "desc_generic");
 			}
 
 			return desc;
+		}
+
+		public Illuminated(Hero source) {
+			this.source = source;
 		}
 	}
 

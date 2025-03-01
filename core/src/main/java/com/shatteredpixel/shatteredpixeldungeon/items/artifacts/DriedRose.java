@@ -206,33 +206,29 @@ public class DriedRose extends Artifact {
 
 		} else if (action.equals(AC_DIRECT)){
 			if (ghost == null && ghostID != 0){
-				findGhost();
+				findGhost(hero);
 			}
-			if (ghost != null && ghost != Stasis.getStasisAlly()){
-				GameScene.selectCell(ghostDirector);
+			if (ghost != null && ghost != Stasis.getStasisAlly(hero)){
+				GameScene.selectCell(hero, ghostDirector);
 			}
 
 		} else if (action.equals(AC_OUTFIT)){
-			GameScene.show( new WndGhostHero(this) );
+			GameScene.show( new WndGhostHero(this, hero) );
 		}
 	}
 
-	private void findGhost(){
+	private void findGhost(Hero hero){
 		Actor a = Actor.findById(ghostID);
 		if (a != null){
 			ghost = (GhostHero)a;
 		} else {
-			if (Stasis.getStasisAlly() instanceof GhostHero){
-				ghost = (GhostHero) Stasis.getStasisAlly();
-				ghostID = ghost.id();
-			} else {
-				ghostID = 0;
-			}
+            if (Stasis.getStasisAlly(hero) instanceof GhostHero) {
+                ghost = (GhostHero) Stasis.getStasisAlly(hero);
+                ghostID = ghost.id();
+            } else {
+                ghostID = 0;
             }
-			if (ghost != null) GameScene.selectCell(hero, ghostDirector);
-            else if (action.equals(AC_OUTFIT)){
-			GameScene.show( new WndGhostHero(this) );
-		}
+        }
 	}
 	
 	public int ghostStrength(){
@@ -289,10 +285,10 @@ public class DriedRose extends Artifact {
 	}
 
 	@Override
-	public String status() {
+	public String status(Hero hero) {
 		if (ghost == null && ghostID != 0){
 			try {
-				findGhost();
+				findGhost(hero);
 			} catch ( ClassCastException e ){
 				ShatteredPixelDungeon.reportException(e);
 				ghostID = 0;
@@ -331,7 +327,7 @@ public class DriedRose extends Artifact {
 		} else if (ghost.HP < ghost.HT) {
 			int heal = Math.round((1 + level()/3f)*amount);
 			ghost.HP = Math.min( ghost.HT, ghost.HP + heal);
-			if (ghost.sprite != null) {
+			if (ghost.getSprite() != null) {
 				ghost.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 			}
 			updateQuickslot();
@@ -405,7 +401,7 @@ public class DriedRose extends Artifact {
 			spend( TICK );
 			
 			if (ghost == null && ghostID != 0){
-				findGhost();
+				findGhost((Hero) target);
 			}
 
 			if (ghost != null && !ghost.isAlive()){
@@ -862,8 +858,8 @@ public class DriedRose extends Artifact {
 		private ItemButton btnWeapon;
 		private ItemButton btnArmor;
 		
-		WndGhostHero(final DriedRose rose){
-			
+		WndGhostHero(final DriedRose rose, Hero hero){
+			super(hero);
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon( new ItemSprite(rose) );
 			titlebar.label( Messages.get(this, "title") );
@@ -1012,7 +1008,7 @@ public class DriedRose extends Artifact {
 				@Override
 				protected boolean onLongClick() {
 					if (item() != null && item().name() != null){
-						GameScene.show(new WndInfoItem(item()));
+						GameScene.show(new WndInfoItem(item(), getOwnerHero()));
 						return true;
 					}
 					return false;

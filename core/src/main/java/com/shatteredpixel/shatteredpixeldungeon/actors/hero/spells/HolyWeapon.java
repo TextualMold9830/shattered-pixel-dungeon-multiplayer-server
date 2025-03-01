@@ -59,19 +59,19 @@ public class HolyWeapon extends ClericSpell {
 
 		hero.spend( 1f );
 		hero.busy();
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		if (hero.belongings.weapon() != null) Enchanting.show(hero, hero.belongings.weapon());
 
 		onSpellCast(tome, hero);
 	}
 
 	@Override
-	public String desc(){
+	public String desc(Hero hero){
 		String desc = Messages.get(this, "desc");
-		if (Dungeon.hero.subClass == HeroSubClass.PALADIN){
+		if (hero.subClass == HeroSubClass.PALADIN){
 			desc += "\n\n" + Messages.get(this, "desc_paladin");
 		}
-		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	public static class HolyWepBuff extends FlavourBuff {
@@ -94,7 +94,7 @@ public class HolyWeapon extends ClericSpell {
 
 		@Override
 		public String desc() {
-			if (Dungeon.hero.subClass == HeroSubClass.PALADIN){
+			if (((Hero)target).subClass == HeroSubClass.PALADIN){
 				return Messages.get(this, "desc_paladin", dispTurns());
 			} else {
 				return Messages.get(this, "desc", dispTurns());

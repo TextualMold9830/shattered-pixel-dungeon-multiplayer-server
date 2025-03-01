@@ -62,8 +62,8 @@ public abstract class InventoryStone extends Runestone {
 		GameScene.selectItem( itemSelector, hero );
 	}
 
-	public void directActivate(){
-		GameScene.selectItem( itemSelector );
+	public void directActivate(Hero hero){
+		GameScene.selectItem(itemSelector, hero);
 	}
 
 	protected void useAnimation() {

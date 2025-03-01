@@ -54,7 +54,7 @@ public abstract class InventoryClericSpell extends ClericSpell {
 			public void onSelect(Item item) {
 				onItemSelected(tome, hero, item);
 			}
-		});
+		}, hero);
 	}
 
 	protected String inventoryPrompt(){

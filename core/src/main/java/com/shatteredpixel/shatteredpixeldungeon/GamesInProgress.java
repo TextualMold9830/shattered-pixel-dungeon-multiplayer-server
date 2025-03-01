@@ -113,31 +113,32 @@ public class GamesInProgress {
 			
 			Info info;
 			try {
-				
+
 				Bundle bundle = FileUtils.bundleFromFile(gameFile());
 
-				if (bundle.getInt( "version" ) < ShatteredPixelDungeon.v1_4_3) {
+				if (bundle.getInt("version") < ShatteredPixelDungeon.v1_4_3) {
 					info = null;
 				} else {
 
-	if (bundle.getInt( "version" ) < ShatteredPixelDungeon.v1_4_3) {
+					if (bundle.getInt("version") < ShatteredPixelDungeon.v1_4_3) {
+						info = null;
+					} else {
+						info = new Info();
+						info.slot = slot;
+						Dungeon.preview(info, bundle);
+					}
+				}
+				} catch(IOException e){
 					info = null;
-				} else {				info = new Info();
-					info.slot = slot;
-					Dungeon.preview(info, bundle);
+				} catch(Exception e){
+					ShatteredPixelDungeon.reportException(e);
+					info = null;
 				}
 
-			} catch (IOException e) {
-				info = null;
-			} catch (Exception e){
-				ShatteredPixelDungeon.reportException( e );
-				info = null;
+				slotStates.put(slot, info);
+				return info;
+
 			}
-			
-			slotStates.put( slot, info );
-			return info;
-			
-		}
 	}
 
 	public static void set(int slot) {

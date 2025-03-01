@@ -180,7 +180,7 @@ public class MasterThievesArmband extends Artifact {
 							Buff.prolong(ch, Blindness.class, debuffDuration);
 							Buff.prolong(ch, Cripple.class, debuffDuration);
 
-							artifactProc(ch, visiblyUpgraded(), 1);
+							artifactProc(ch, visiblyUpgraded(), 1, getOwner());
 
 							charge--;
 							exp += 3;

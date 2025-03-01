@@ -58,8 +58,8 @@ public class Stasis extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", 20 + 20*Dungeon.hero.pointsInTalent(Talent.STASIS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", 20 + 20*hero.pointsInTalent(Talent.STASIS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -83,20 +83,20 @@ public class Stasis extends ClericSpell {
 		onSpellCast(tome, hero);
 
 		if (hero.buff(StasisBuff.class) != null){
-			hero.sprite.operate(hero.pos);
+			hero.getSprite().operate(hero.pos);
 			hero.buff(StasisBuff.class).act();
 			return;
 		}
 
 		Char ally = PowerOfMany.getPoweredAlly();
 
-		hero.sprite.zap(ally.pos);
-		MagicMissile.boltFromChar(hero.sprite.parent, MagicMissile.LIGHT_MISSILE, ally.sprite, hero.pos, null);
+		hero.getSprite().zap(ally.pos);
+		MagicMissile.boltFromChar(hero.getSprite().parent, MagicMissile.LIGHT_MISSILE, ally.getSprite(), hero.pos, null);
 
 		LinkedHashSet<Buff> buffs = ally.buffs();
 		Actor.remove(ally);
-		ally.sprite.killAndErase();
-		ally.sprite = null;
+		ally.getSprite().killAndErase();
+		ally.setSprite(null);
 		Dungeon.level.mobs.remove(ally);
 		for (Buff b : buffs){
 			if (b.type == Buff.buffType.POSITIVE || b.revivePersists) {
@@ -106,6 +106,7 @@ public class Stasis extends ClericSpell {
 		ally.clearTime();
 
 		Buff.prolong(hero, StasisBuff.class, 20 + 20*hero.pointsInTalent(Talent.STASIS)).stasisAlly = (Mob)ally;
+
 		Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 
 		if (hero.buff(LifeLink.class) != null && hero.buff(LifeLink.class).object == ally.id()){
@@ -118,15 +119,15 @@ public class Stasis extends ClericSpell {
 
 	}
 
-	public static Char getStasisAlly(){
-		if (Dungeon.hero != null && Dungeon.hero.buff(StasisBuff.class) != null){
-			return Dungeon.hero.buff(StasisBuff.class).stasisAlly;
+	public static Char getStasisAlly(Hero hero){
+		if (hero != null && hero.buff(StasisBuff.class) != null){
+			return hero.buff(StasisBuff.class).stasisAlly;
 		}
 		return null;
 	}
 
+	//todo: check if target is always hero
 	public static class StasisBuff extends FlavourBuff {
-
 		{
 			type = buffType.POSITIVE;
 		}
@@ -138,7 +139,8 @@ public class Stasis extends ClericSpell {
 
 		@Override
 		public float iconFadePercent() {
-			int duration = 20 + 20*Dungeon.hero.pointsInTalent(Talent.STASIS);
+			//TODO: check this
+			int duration = 20 + 20*((Hero)target).pointsInTalent(Talent.STASIS);
 			return Math.max(0, (duration - visualcooldown()) / duration);
 		}
 
@@ -168,7 +170,9 @@ public class Stasis extends ClericSpell {
 			}
 
 			if (stasisAlly.buff(LifeLink.class) != null){
-				Buff.prolong(Dungeon.hero, LifeLink.class, stasisAlly.buff(LifeLink.class).cooldown()).object = stasisAlly.id();
+				LifeLink lifeLink = Buff.prolong(target, LifeLink.class, stasisAlly.buff(LifeLink.class).cooldown());
+				lifeLink.source = (Hero) target;
+				lifeLink.object = stasisAlly.id();
 			}
 
 			ScrollOfTeleportation.appear(stasisAlly, stasisAlly.pos);

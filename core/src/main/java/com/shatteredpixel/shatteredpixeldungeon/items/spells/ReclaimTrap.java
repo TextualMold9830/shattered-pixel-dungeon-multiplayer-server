@@ -109,12 +109,12 @@ public class ReclaimTrap extends TargetedSpell {
 	}
 	
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
 		if (storedTrap != null){
 			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(storedTrap, "name"));
-		} else if (Dungeon.hero != null && Dungeon.hero.belongings.contains(this) && Dungeon.hero.buff(ReclaimedTrap.class) != null){
-			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(Dungeon.hero.buff(ReclaimedTrap.class).trap, "name"));
+		} else if (hero != null && hero.belongings.contains(this) && hero.buff(ReclaimedTrap.class) != null){
+			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(hero.buff(ReclaimedTrap.class).trap, "name"));
 		}
 		return desc;
 	}
@@ -133,10 +133,11 @@ public class ReclaimTrap extends TargetedSpell {
 	
 	@Override
 	public ItemSprite.Glowing glowing() {
+		Hero hero = findOwner();
 		if (storedTrap != null){
 			return COLORS[Reflection.newInstance(storedTrap).color];
-		} else if (Dungeon.hero != null && Dungeon.hero.belongings.contains(this) && Dungeon.hero.buff(ReclaimedTrap.class) != null){
-			return COLORS[Reflection.newInstance(Dungeon.hero.buff(ReclaimedTrap.class).trap).color];
+		} else if (hero != null && hero.belongings.contains(this) && hero.buff(ReclaimedTrap.class) != null){
+			return COLORS[Reflection.newInstance(hero.buff(ReclaimedTrap.class).trap).color];
 		}
 		return null;
 	}
@@ -182,7 +183,7 @@ public class ReclaimTrap extends TargetedSpell {
 		@Override
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Catalog.countUse(MetalShard.class);
-			return super.brew(ingredients);
+			return super.brew(ingredients, hero);
 		}
 	}
 

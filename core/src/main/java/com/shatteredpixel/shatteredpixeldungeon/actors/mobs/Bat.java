@@ -65,11 +65,6 @@ public class Bat extends Mob {
 		return super.drRoll() + Random.NormalIntRange(0, 4);
 	}
 
-	@Override
-	public void die(Object cause) {
-		flying = false;
-		super.die(cause);
-	}
 
 
 	@Override

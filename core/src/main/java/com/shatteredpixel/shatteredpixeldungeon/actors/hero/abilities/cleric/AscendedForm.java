@@ -50,9 +50,9 @@ public class AscendedForm extends ArmorAbility {
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 
 		Buff.affect(hero, AscendBuff.class).reset();
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 		Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
-		new Flare(6, 48).color(0xFFFF00, true).show(hero.sprite, 2f);
+		new Flare(6, 48).color(0xFFFF00, true).show(hero.getSprite(), 2f);
 
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
@@ -96,8 +96,8 @@ public class AscendedForm extends ArmorAbility {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add(CharSprite.State.GLOWING);
-			else    target.sprite.remove(CharSprite.State.GLOWING);
+			if (on) target.getSprite().add(CharSprite.State.GLOWING);
+			else    target.getSprite().remove(CharSprite.State.GLOWING);
 		}
 
 		public int left = 10;

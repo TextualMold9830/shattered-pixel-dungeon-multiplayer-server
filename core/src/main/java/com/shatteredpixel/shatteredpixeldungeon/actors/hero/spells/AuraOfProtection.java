@@ -45,10 +45,10 @@ public class AuraOfProtection extends ClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		int dmgReduction = Math.round(7.5f + 7.5F*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION));
-		int glyphPow = 25 + 25*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
-		return Messages.get(this, "desc", dmgReduction, glyphPow) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		int dmgReduction = Math.round(7.5f + 7.5F*hero.pointsInTalent(Talent.AURA_OF_PROTECTION));
+		int glyphPow = 25 + 25*hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+		return Messages.get(this, "desc", dmgReduction, glyphPow) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class AuraOfProtection extends ClericSpell {
 
 		hero.spend( 1f );
 		hero.busy();
-		hero.sprite.operate(hero.pos);
+		hero.getSprite().operate(hero.pos);
 
 		onSpellCast(tome, hero);
 
@@ -94,8 +94,8 @@ public class AuraOfProtection extends ClericSpell {
 		@Override
 		public void fx(boolean on) {
 			if (on && (particles == null || particles.parent == null)){
-				particles = target.sprite.emitter(); //emitter is much bigger than char so it needs to manage itself
-				particles.pos(target.sprite, -32, -32, 80, 80);
+				particles = target.getSprite().emitter(); //emitter is much bigger than char so it needs to manage itself
+				particles.pos(target.getSprite(), -32, -32, 80, 80);
 				particles.fillTarget = false;
 				particles.pour(Speck.factory(Speck.LIGHT), 0.02f);
 			} else if (!on && particles != null){

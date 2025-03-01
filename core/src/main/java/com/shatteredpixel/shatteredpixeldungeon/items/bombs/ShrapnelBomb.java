@@ -45,10 +45,6 @@ public class ShrapnelBomb extends Bomb {
 	public boolean explodesDestructively() {
 		return false;
 	}
-@Override
-	protected int explosionRange() {
-		return 8;
-	}
 	@Override
 	protected int explosionRange() {
 		return 8;

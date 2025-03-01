@@ -31,7 +31,6 @@ public class AquaBrew extends Brew {
 
 	{
 		image = ItemSpriteSheet.BREW_AQUA;
-
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
 
@@ -42,14 +41,15 @@ public class AquaBrew extends Brew {
 		geyser.source = this;
 
 		int userPos = curUser == null ? cell : curUser.pos;
-		if (userPos != cell){
-			if (userPos != cell){
-			Ballistica aim = new Ballistica(userPos, cell, Ballistica.STOP_TARGET);
-			if (aim.path.size() > aim.dist+1) {
-				geyser.centerKnockBackDirection = aim.path.get(aim.dist + 1);
+		if (userPos != cell) {
+			if (userPos != cell) {
+				Ballistica aim = new Ballistica(userPos, cell, Ballistica.STOP_TARGET);
+				if (aim.path.size() > aim.dist + 1) {
+					geyser.centerKnockBackDirection = aim.path.get(aim.dist + 1);
+				}
 			}
+			geyser.activate();
 		}
-		geyser.activate();
 	}
 
 	@Override

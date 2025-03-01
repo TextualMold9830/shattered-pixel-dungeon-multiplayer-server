@@ -54,8 +54,8 @@ public class WallOfLight extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", 1 + 2*Dungeon.hero.pointsInTalent(Talent.WALL_OF_LIGHT)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero) {
+		return Messages.get(this, "desc", 1 + 2*hero.pointsInTalent(Talent.WALL_OF_LIGHT)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class WallOfLight extends TargetedClericSpell {
 		int rightDirX = 0;
 		int rightDirY = 0;
 
-		int steps = Dungeon.hero.pointsInTalent(Talent.WALL_OF_LIGHT);
+		int steps = hero.pointsInTalent(Talent.WALL_OF_LIGHT);
 
 		switch (closestIdx){
 			case 0: //top left
@@ -225,8 +225,8 @@ public class WallOfLight extends TargetedClericSpell {
 
 		Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 
-		hero.sprite.zap(closest);
-		Dungeon.hero.spendAndNext(1f);
+		hero.getSprite().zap(closest);
+		hero.spendAndNext(1f);
 	}
 
 	private void placeWall( int pos, int knockbackDIR){

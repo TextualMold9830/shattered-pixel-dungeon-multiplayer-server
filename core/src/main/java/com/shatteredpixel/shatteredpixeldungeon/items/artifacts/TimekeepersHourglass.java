@@ -131,8 +131,8 @@ public class TimekeepersHourglass extends Artifact {
 
 									//This might be really good...
 									for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-										if (Dungeon.level.heroFOV[mob.pos]) {
-											artifactProc(mob, visiblyUpgraded(), 1);
+										if (hero.fieldOfView[mob.pos]) {
+											artifactProc(mob, visiblyUpgraded(), 1, getOwnerHero());
 										}
 									}
 

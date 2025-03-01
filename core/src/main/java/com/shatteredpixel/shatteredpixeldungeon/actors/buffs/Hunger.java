@@ -82,7 +82,7 @@ public class Hunger extends Buff implements Hero.Doom {
 					target.damage( (int)partialDamage, this);
 					partialDamage -= (int)partialDamage;
 				}
-				
+
 			} else {
 
 				float hungerDelay = 1f;
@@ -112,12 +112,6 @@ public class Hunger extends Buff implements Hero.Doom {
 				level = newLevel;
 
 			}
-
-			float hungerDelay = STEP;
-			if (target.buff(Shadows.class) != null){
-				hungerDelay *= 1.5f;
-			}
-			hungerDelay /= SaltCube.hungerGainMultiplier();
 
 			spend( TICK );
 

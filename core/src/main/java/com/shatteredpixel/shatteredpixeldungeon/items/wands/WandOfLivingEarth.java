@@ -83,8 +83,8 @@ public class WandOfLivingEarth extends DamageWand {
 			}
 		}
 
-		if (Stasis.getStasisAlly() instanceof EarthGuardian){
-			guardian = (EarthGuardian)Stasis.getStasisAlly();
+		if (Stasis.getStasisAlly(hero) instanceof EarthGuardian){
+			guardian = (EarthGuardian)Stasis.getStasisAlly(hero);
 		}
 
 		RockArmor buff = curUser.buff(RockArmor.class);
@@ -181,7 +181,7 @@ public class WandOfLivingEarth extends DamageWand {
 						curUser.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					}
 				} else {
-					if (guardian.sprite != null) { //may be in stasis
+					if (guardian.getSprite() != null) { //may be in stasis
 						guardian.getSprite().centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					}
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
@@ -393,7 +393,7 @@ public class WandOfLivingEarth extends DamageWand {
 				this.wandLevel = wandLevel;
 				HT = 16 + 8 * wandLevel;
 			}
-			if (HP != 0 && sprite != null){
+			if (HP != 0 && getSprite() != null){
 				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthToAdd), FloatingText.HEALING);
 			}
 			HP = Math.min(HT, HP + healthToAdd);

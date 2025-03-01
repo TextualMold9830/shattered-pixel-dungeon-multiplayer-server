@@ -167,14 +167,13 @@ public class Ring extends KindofMisc {
 				Statistics.itemTypesDiscovered.add(getClass());
 			}
 		}
-	}
 	
 	@Override
 	public String name() {
 		return isKnown() ? super.name() : Messages.get(Ring.class, gem);
 	}
-@Override
-	public String desc() {
+	@Override
+	public String desc(Hero hero) {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
@@ -185,7 +184,7 @@ public class Ring extends KindofMisc {
 
 	@Override
 	public String info(Hero hero){
-
+		String desc;
 		//skip custom notes if anonymized and un-Ided
 		//skip custom notes if anonymized and un-IdedString desc;
 		if (anonymous && (handler == null || !handler.isKnown( this ))){
@@ -266,13 +265,10 @@ public class Ring extends KindofMisc {
 	public boolean readyToIdentify(){
 		return !isIdentified() && levelsToID <= 0;
 	}
-public void setIDReady(){
+	public void setIDReady(){
 		levelsToID = -1;
 	}
 
-	public boolean readyToIdentify(){
-		return !isIdentified() && levelsToID <= 0;
-	}
 
 	@Override
 	public Item random() {

@@ -66,7 +66,7 @@ public class BlessSpell extends TargetedClericSpell {
 		}
 
 		Char ch = Actor.findChar(target);
-		if (ch == null || !Dungeon.level.heroFOV[target]){
+		if (ch == null || !hero.fieldOfView[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}
@@ -77,10 +77,10 @@ public class BlessSpell extends TargetedClericSpell {
 
 		if (ch == hero){
 			hero.busy();
-			hero.sprite.operate(ch.pos);
+			hero.getSprite().operate(ch.pos);
 			hero.spend( 1f );
 		} else {
-			hero.sprite.zap(ch.pos);
+			hero.getSprite().zap(ch.pos);
 			hero.spendAndNext( 1f );
 		}
 
@@ -97,11 +97,11 @@ public class BlessSpell extends TargetedClericSpell {
 	}
 
 	private void affectChar(Hero hero, Char ch){
-		new Flare(6, 32).color(0xFFFF00, true).show(ch.sprite, 2f);
+		new Flare(6, 32).color(0xFFFF00, true).show(ch.getSprite(), 2f);
 		if (ch == hero){
 			Buff.prolong(ch, Bless.class, 2f + 4*hero.pointsInTalent(Talent.BLESS));
 			Buff.affect(ch, Barrier.class).setShield(5 + 5*hero.pointsInTalent(Talent.BLESS));
-			ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(5 + 5*hero.pointsInTalent(Talent.BLESS)), FloatingText.SHIELDING );
+			ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(5 + 5*hero.pointsInTalent(Talent.BLESS)), FloatingText.SHIELDING );
 		} else {
 			Buff.prolong(ch, Bless.class, 5f + 5*hero.pointsInTalent(Talent.BLESS));
 			int totalHeal = 5 + 5*hero.pointsInTalent(Talent.BLESS);
@@ -110,22 +110,22 @@ public class BlessSpell extends TargetedClericSpell {
 				barrier = Math.max(barrier, 0);
 				if (ch.HP != ch.HT) {
 					ch.HP = ch.HT;
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - barrier), FloatingText.HEALING);
+					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - barrier), FloatingText.HEALING);
 				}
 				if (barrier > 0) {
 					Buff.affect(ch, Barrier.class).setShield(barrier);
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(barrier), FloatingText.SHIELDING);
+					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(barrier), FloatingText.SHIELDING);
 				}
 			} else {
 				ch.HP = ch.HP + totalHeal;
-				ch.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
+				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
 			}
 		}
 	}
 
-	public String desc(){
-		int talentLvl = Dungeon.hero.pointsInTalent(Talent.BLESS);
-		return Messages.get(this, "desc", 2+4*talentLvl, 5+5*talentLvl, 5+5*talentLvl, 5+5*talentLvl) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+	public String desc(Hero hero){
+		int talentLvl = hero.pointsInTalent(Talent.BLESS);
+		return Messages.get(this, "desc", 2+4*talentLvl, 5+5*talentLvl, 5+5*talentLvl, 5+5*talentLvl) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
 }

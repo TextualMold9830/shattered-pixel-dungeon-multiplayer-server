@@ -230,11 +230,7 @@ public class SpiritHawk extends ArmorAbility {
 			return result;
 		}
 
-		@Override
-		public void die(Object cause) {
-			flying = false;
-			super.die(cause);
-		}
+
 
 		@Override
 		public void die(@NotNull DamageCause damageCause) {

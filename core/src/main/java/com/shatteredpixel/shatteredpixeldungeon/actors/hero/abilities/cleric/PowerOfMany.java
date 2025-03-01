@@ -70,22 +70,22 @@ public class PowerOfMany extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public String targetingPrompt(Hero hero) {
 		Char ally = getPoweredAlly();
 
 		boolean allyExists = ally != null;
 
-		if (Dungeon.hero.buff(PrismaticGuard.class) != null
-				&& Dungeon.hero.buff(PrismaticGuard.class).isEmpowered()){
+		if (hero.buff(PrismaticGuard.class) != null
+				&& hero.buff(PrismaticGuard.class).isEmpowered()){
 			allyExists = true;
 		}
 
-		if (Dungeon.hero.buff(WandOfLivingEarth.RockArmor.class) != null
-				&& Dungeon.hero.buff(WandOfLivingEarth.RockArmor.class).isEmpowered()){
+		if (hero.buff(WandOfLivingEarth.RockArmor.class) != null
+				&& hero.buff(WandOfLivingEarth.RockArmor.class).isEmpowered()){
 			allyExists = true;
 		}
 
-		if (Stasis.getStasisAlly() != null){
+		if (Stasis.getStasisAlly(hero) != null){
 			allyExists = true;
 		}
 
@@ -119,7 +119,7 @@ public class PowerOfMany extends ArmorAbility {
 			allyExists = true;
 		}
 
-		if (Stasis.getStasisAlly() != null){
+		if (Stasis.getStasisAlly(hero) != null){
 			allyExists = true;
 		}
 
@@ -136,7 +136,7 @@ public class PowerOfMany extends ArmorAbility {
 				return;
 			}
 
-			if (!Dungeon.level.heroFOV[target]){
+			if (!hero.fieldOfView[target]){
 				GLog.w(Messages.get(this, "no_vision"));
 				return;
 			}
@@ -146,7 +146,7 @@ public class PowerOfMany extends ArmorAbility {
 
 			Char ch = Actor.findChar(target);
 			if (ch != null){
-				if (ch.alignment != Char.Alignment.ALLY || ch == Dungeon.hero){
+				if (ch.alignment != Char.Alignment.ALLY || ch == hero){
 					GLog.w(Messages.get(this, "only_allies"));
 					return;
 				}
@@ -157,7 +157,7 @@ public class PowerOfMany extends ArmorAbility {
 					return;
 				}
 
-				ch = new LightAlly(hero.lvl);
+				ch = new LightAlly(hero.lvl, hero);
 				ch.pos = target;
 				GameScene.add((Mob) ch);
 				ScrollOfTeleportation.appear(ch, ch.pos);
@@ -169,7 +169,7 @@ public class PowerOfMany extends ArmorAbility {
 			armor.charge -= chargeUse;
 			armor.updateQuickslot();
 
-			hero.sprite.zap(target);
+			hero.getSprite().zap(target);
 			Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 
 			Invisibility.dispel();
@@ -219,8 +219,8 @@ public class PowerOfMany extends ArmorAbility {
 
 		@Override
 		public void fx(boolean on) {
-			if (on) target.sprite.add(CharSprite.State.GLOWING);
-			else    target.sprite.remove(CharSprite.State.GLOWING);
+			if (on) target.getSprite().add(CharSprite.State.GLOWING);
+			else    target.getSprite().remove(CharSprite.State.GLOWING);
 		}
 
 		@Override
@@ -255,13 +255,13 @@ public class PowerOfMany extends ArmorAbility {
 
 		HeroClass cls;
 
-		public LightAlly(){
-			super();
+		public LightAlly(Hero owner){
+			super(owner);
 			cls = HeroClass.values()[Random.Int(5)];
 		}
 
-		public LightAlly(int heroLevel ){
-			this();
+		public LightAlly(int heroLevel, Hero hero ){
+			this(hero);
 			defenseSkill = heroLevel + 5; //equal to base hero defense skill
 		}
 
@@ -274,8 +274,8 @@ public class PowerOfMany extends ArmorAbility {
 			int oldPos = pos;
 			boolean result = super.act();
 			//partially simulates how the hero switches to idle animation
-			if ((pos == target || oldPos == pos) && sprite.looping()){
-				sprite.idle();
+			if ((pos == target || oldPos == pos) && getSprite().looping()){
+				getSprite().idle();
 			}
 			return result;
 		}
@@ -320,7 +320,7 @@ public class PowerOfMany extends ArmorAbility {
 			//moves 2 tiles at a time when returning to the hero
 			if (state == WANDERING
 					&& defendingPos == -1
-					&& Dungeon.level.distance(pos, Dungeon.hero.pos) > 1){
+					&& Dungeon.level.distance(pos, owner.pos) > 1){
 				speed *= 2;
 			}
 

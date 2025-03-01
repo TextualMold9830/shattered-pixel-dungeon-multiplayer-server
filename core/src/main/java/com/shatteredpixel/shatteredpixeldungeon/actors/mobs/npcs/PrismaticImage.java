@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
@@ -220,11 +221,13 @@ public class PrismaticImage extends NPC {
 	
 	@Override
 	public float speed() {
-		if (hero != null && hero.belongings.armor() != null){
-			return hero.belongings.armor().speedFactor(this, super.speed());
+        if (hero != null && hero.belongings.armor() != null) {
+            return hero.belongings.armor().speedFactor(this, super.speed());
         }
+		return super.speed();
     }
-	public int glyphLevel(Class<? extends Armor.Glyph> cls) {
+
+    public int glyphLevel(Class<? extends Armor.Glyph> cls) {
 		if (hero != null){
 			return Math.max(super.glyphLevel(cls), hero.glyphLevel(cls));
 		} else {

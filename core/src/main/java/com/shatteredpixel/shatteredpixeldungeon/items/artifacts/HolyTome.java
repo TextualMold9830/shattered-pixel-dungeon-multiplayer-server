@@ -143,7 +143,7 @@ public class HolyTome extends Artifact {
 	}
 
 	public boolean canCast( Hero hero, ClericSpell spell ){
-		return (isEquipped(hero) || (Dungeon.hero.hasTalent(Talent.LIGHT_READING) && hero.belongings.contains(this)))
+		return (isEquipped(hero) || (hero.hasTalent(Talent.LIGHT_READING) && hero.belongings.contains(this)))
 				&& hero.buff(MagicImmune.class) == null
 				&& charge >= spell.chargeUse(hero)
 				&& spell.canCast(hero);
@@ -157,7 +157,7 @@ public class HolyTome extends Artifact {
 		}
 
 		//target hero level is 1 + 2*tome level
-		int lvlDiffFromTarget = Dungeon.hero.lvl - (1+level()*2);
+		int lvlDiffFromTarget = findOwner().lvl - (1+level()*2);
 		//plus an extra one for each level after 6
 		if (level() >= 7){
 			lvlDiffFromTarget -= level()-6;
@@ -228,16 +228,16 @@ public class HolyTome extends Artifact {
 
 	private ClericSpell quickSpell = null;
 
-	public void setQuickSpell(ClericSpell spell){
+	public void setQuickSpell(ClericSpell spell, Hero hero){
 		if (quickSpell == spell){
 			quickSpell = null; //re-assigning the same spell clears the quick spell
 			if (passiveBuff != null){
-				ActionIndicator.clearAction((ActionIndicator.Action) passiveBuff);
+				hero.actionIndicator.clearAction((ActionIndicator.Action) passiveBuff);
 			}
 		} else {
 			quickSpell = spell;
 			if (passiveBuff != null){
-				ActionIndicator.setAction((ActionIndicator.Action) passiveBuff);
+				hero.actionIndicator.setAction((ActionIndicator.Action) passiveBuff);
 			}
 		}
 	}
@@ -270,7 +270,7 @@ public class HolyTome extends Artifact {
 		@Override
 		public boolean attachTo(Char target) {
 			if (super.attachTo(target)) {
-				if (quickSpell != null) ActionIndicator.setAction(this);
+				if (quickSpell != null) ((Hero)target).actionIndicator.setAction(this);
 				return true;
 			} else {
 				return false;
@@ -280,7 +280,7 @@ public class HolyTome extends Artifact {
 		@Override
 		public void detach() {
 			super.detach();
-			ActionIndicator.clearAction(this);
+			((Hero)target).actionIndicator.clearAction(this);
 		}
 
 		@Override
@@ -292,8 +292,8 @@ public class HolyTome extends Artifact {
 					float turnsToCharge = (45 - missing);
 					turnsToCharge /= RingOfEnergy.artifactChargeMultiplier(target);
 					float chargeToGain = (1f / turnsToCharge);
-					if (!isEquipped(Dungeon.hero)){
-						chargeToGain *= 0.75f*Dungeon.hero.pointsInTalent(Talent.LIGHT_READING)/3f;
+					if (!isEquipped((Hero) target)){
+						chargeToGain *= 0.75f* ((Hero) target).pointsInTalent(Talent.LIGHT_READING)/3f;
 					}
 					partialCharge += chargeToGain;
 				}
@@ -333,36 +333,37 @@ public class HolyTome extends Artifact {
 		}
 
 		@Override
-		public void doAction() {
+		public void doAction(Hero hero) {
 			if (cursed){
 				GLog.w(Messages.get(HolyTome.this, "cursed"));
 				return;
 			}
 
-			if (!canCast(Dungeon.hero, quickSpell)){
+			if (!canCast(hero, quickSpell)){
 				GLog.w(Messages.get(HolyTome.this, "no_spell"));
 				return;
 			}
+//TODO: check this
 
-			if (QuickSlotButton.targetingSlot != -1 &&
-					Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot) == HolyTome.this) {
-				targetingSpell = quickSpell;
-				int cell = QuickSlotButton.autoAim(QuickSlotButton.lastTarget, HolyTome.this);
-
-				if (cell != -1){
-					GameScene.handleCell(cell);
-				} else {
-					//couldn't auto-aim, just target the position and hope for the best.
-					GameScene.handleCell( QuickSlotButton.lastTarget.pos );
-				}
-			} else {
-				quickSpell.onCast(HolyTome.this, Dungeon.hero);
-
-				if (quickSpell.targetingFlags() != -1 && Dungeon.quickslot.contains(HolyTome.this)){
-					targetingSpell = quickSpell;
-					QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(HolyTome.this));
-				}
-			}
+//			if (QuickSlotButton.targetingSlot != -1 &&
+//					Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot) == HolyTome.this) {
+//				targetingSpell = quickSpell;
+//				int cell = QuickSlotButton.autoAim(QuickSlotButton.lastTarget, HolyTome.this);
+//
+//				if (cell != -1){
+//					GameScene.handleCell(hero, cell);
+//				} else {
+//					//couldn't auto-aim, just target the position and hope for the best.
+//					GameScene.handleCell(hero, QuickSlotButton.lastTarget.pos );
+//				}
+//			} else {
+//				quickSpell.onCast(HolyTome.this, hero);
+//
+//				if (quickSpell.targetingFlags() != -1 && Dungeon.quickslot.contains(HolyTome.this)){
+//					targetingSpell = quickSpell;
+//					QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(HolyTome.this));
+//				}
+//			}
 		}
 	}
 

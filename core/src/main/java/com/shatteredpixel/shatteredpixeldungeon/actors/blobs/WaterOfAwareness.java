@@ -77,7 +77,7 @@ public class WaterOfAwareness extends WellWater {
 		if (item.isIdentified()) {
 			return null;
 		} else {
-			ScrollOfIdentify.IDItem(item);
+			ScrollOfIdentify.IDItem(item, null);
 			
 			Sample.INSTANCE.play( Assets.Sounds.DRINK );
 			emitter.parent.add( new Identification( DungeonTilemap.tileCenterToWorld( pos ) ) );

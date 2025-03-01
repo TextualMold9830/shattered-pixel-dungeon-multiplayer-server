@@ -1,9 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.watabou.utils.DeviceCompat;
@@ -58,12 +56,12 @@ public class LobbyLevel extends DeadEndLevel {
     @Override protected void createItems(){
         if(DeviceCompat.isDebug()) {
             super.createItems();
-            Potion potion = new PotionOfExperience();
+            Potion potion = new PotionOfLiquidFlame();
             potion.quantity(10);
             this.drop(potion, exit() - this.width());
             StoneOfDeepSleep sods = new StoneOfDeepSleep();
             sods.quantity(10, false);
-            this.drop(new PotionOfExperience(), exit() - this.width() + 1);
+            this.drop(new PotionOfLevitation(), exit() - this.width() + 1);
             this.drop(sods, exit() - this.width() + 2);
         }
     }
