@@ -35,7 +35,7 @@ public class WndQuest extends WndTitledMessage {
 		super( questgiver.sprite(), Messages.titleCase( questgiver.name() ), text, hero );
 		JSONObject object = new JSONObject();
 
-		object.put("sprite_name", questgiver.getSprite().spriteName());
+		object.put("sprite_name", questgiver.getSprite().getClass().getName());
 		object.put("char_name", questgiver.name());
 		object.put("text", text);
 		SendData.sendWindow(hero.networkID, "quest", getId(), object);

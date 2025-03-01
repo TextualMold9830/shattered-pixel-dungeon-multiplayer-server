@@ -91,11 +91,11 @@ public class WindParticle extends PixelParticle {
 		@Override
 		public void update() {
 			//TODO: check this
-			if (visible = (Dungeon.visibleforAnyHero(pos))) {
-				
-				super.update();
-
-			}
+//			if (visible = (Dungeon.visibleforAnyHero(pos))) {
+//
+//				super.update();
+//
+//			}
 		}
 	}
 }

@@ -1202,8 +1202,10 @@ public class Dungeon {
 			if (hero == null) {
 				continue;
 			}
-			if (hero.fieldOfView[pos]) {
-				return true;
+			if(hero.fieldOfView.length > pos) {
+				if (hero.fieldOfView[pos]) {
+					return true;
+				}
 			}
 		}
 		return false;
