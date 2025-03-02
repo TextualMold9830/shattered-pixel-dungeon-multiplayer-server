@@ -248,7 +248,7 @@ public class NetworkPacket {
                 int id = actor.id();
                 object.put("id", id);
                 object.put("type", "blob");
-                object.put("blob_type", toSnakeCase(actor.getClass().getSimpleName()));
+                object.put("blob_type", actor.getClass().getName());
                 JSONArray positions = new JSONArray();
                 for (int i = 0; i < ((Blob) actor).cur.length; i++) {
                     if (((Blob) actor).cur[i] > 0) {
