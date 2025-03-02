@@ -37,7 +37,7 @@ public final class Flare extends Visual {
 	private final float radius;
 	private final float angle;
 
-	private float angularSpeed;
+	public float angularSpeed;
 	private float lifespan;
 
 	@Nullable
@@ -115,7 +115,7 @@ public final class Flare extends Visual {
 		visual.parent.addToBack( this );
 
 		lifespan = this.duration = duration;
-
+		SendThis();
 		return this;
 	}
 }

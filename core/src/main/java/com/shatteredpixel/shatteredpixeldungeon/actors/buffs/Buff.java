@@ -85,6 +85,7 @@ public class Buff extends Actor {
 	
 	public void detach() {
 		if (target.remove( this ) && target.getSprite() != null) fx( false );
+		SendData.sendBuff(this, true);
 	}
 	
 	@Override

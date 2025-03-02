@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TormentedSpirit;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;

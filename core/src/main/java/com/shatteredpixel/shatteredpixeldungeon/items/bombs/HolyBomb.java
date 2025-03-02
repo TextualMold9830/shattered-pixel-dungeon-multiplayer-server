@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -55,7 +55,7 @@ public class HolyBomb extends Bomb {
 		for (Hero h: Dungeon.heroes) {
 			if (h == null) continue;
 			if (h.fieldOfView[cell]) {
-				new Flare(10, 64).show(h.getSprite().parent, DungeonTilemap.tileCenterToWorld(cell), 2f);
+				new Flare(10, 64).show(cell, 2f);
 			}
 		}
 		ArrayList<Char> affected = new ArrayList<>();

@@ -55,7 +55,10 @@ public class HolyWard extends ClericSpell {
 		hero.spend( 1f );
 		hero.busy();
 		hero.getSprite().operate(hero.pos);
-		if (hero.belongings.armor() != null) Enchanting.show(hero, hero.belongings.armor());
+		if (hero.belongings.armor() != null) {
+			Enchanting.show(hero, hero.belongings.armor());
+			hero.belongings.armor().sendSelfUpdate(hero);
+		}
 
 		onSpellCast(tome, hero);
 	}
@@ -99,6 +102,7 @@ public class HolyWard extends ClericSpell {
 		@Override
 		public void detach() {
 			super.detach();
+			((Hero)target).belongings.armor().sendSelfUpdate((Hero) target);
 			Item.updateQuickslot();
 		}
 	}

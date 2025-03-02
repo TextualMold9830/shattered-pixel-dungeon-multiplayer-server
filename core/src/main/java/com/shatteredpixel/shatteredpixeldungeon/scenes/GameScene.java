@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.nikita22007.multiplayer.server.ui.Banner;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -38,7 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;

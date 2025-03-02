@@ -60,7 +60,10 @@ public class HolyWeapon extends ClericSpell {
 		hero.spend( 1f );
 		hero.busy();
 		hero.getSprite().operate(hero.pos);
-		if (hero.belongings.weapon() != null) Enchanting.show(hero, hero.belongings.weapon());
+		if (hero.belongings.weapon() != null) {
+			Enchanting.show(hero, hero.belongings.weapon());
+			hero.belongings.weapon().sendSelfUpdate(hero);
+		}
 
 		onSpellCast(tome, hero);
 	}
@@ -104,6 +107,7 @@ public class HolyWeapon extends ClericSpell {
 		@Override
 		public void detach() {
 			super.detach();
+			((Hero)target).belongings.weapon().sendSelfUpdate((Hero) target);
 			Item.updateQuickslot();
 		}
 	}

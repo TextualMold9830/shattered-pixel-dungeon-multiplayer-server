@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
@@ -119,6 +120,7 @@ public class Heap implements Bundlable {
 		}
 		sprite.link();
 		sprite.drop();
+		SendData.sendHeap(this);
 	}
 	
 	public Heap setHauntedIfCursed(){

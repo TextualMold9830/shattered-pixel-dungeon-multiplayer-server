@@ -23,8 +23,10 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.Game;
+import org.json.JSONObject;
 
 public class Enchanting extends ItemSprite {
 
@@ -106,13 +108,10 @@ public class Enchanting extends ItemSprite {
 	}
 
 	public static void show( Char ch, Item item ) {
-
-		if (!ch.getSprite().visible) {
-			return;
-		}
-
-		Enchanting sprite = new Enchanting( item );
-		sprite.target = ch;
-		ch.getSprite().parent.add( sprite );
+		JSONObject enchantingVisual = new JSONObject();
+		enchantingVisual.put("action_type", "enchanting_visual");
+		enchantingVisual.put("target", ch.id());
+		enchantingVisual.put("item", item.toJsonObject(null));
+		SendData.sendCustomActionForAll(enchantingVisual);
 	}
 }

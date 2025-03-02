@@ -43,7 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage.WildMagic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;

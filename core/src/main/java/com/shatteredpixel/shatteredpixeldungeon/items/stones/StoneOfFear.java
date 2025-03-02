@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -46,8 +46,7 @@ public class StoneOfFear extends Runestone {
 		if (ch != null && ch.alignment != Char.Alignment.ALLY ){
 			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.id();
 		}
-
-		new Flare( 5, 16 ).color( 0xFF0000, true ).show(hero.getSprite().parent, DungeonTilemap.tileCenterToWorld(cell), 2f );
+		new Flare( 5, 16 ).color( 0xFF0000, true ).show(cell, 2f );
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		
 	}

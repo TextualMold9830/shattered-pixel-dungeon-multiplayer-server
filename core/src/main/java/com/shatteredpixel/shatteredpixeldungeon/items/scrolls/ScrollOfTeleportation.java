@@ -282,7 +282,7 @@ public class ScrollOfTeleportation extends Scroll {
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
-		if (ch.fieldOfView[ch.pos] && !(ch instanceof Hero)){
+		if (Dungeon.visibleforAnyHero(pos) && !(ch instanceof Hero)){
 			CellEmitter.get(ch.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 

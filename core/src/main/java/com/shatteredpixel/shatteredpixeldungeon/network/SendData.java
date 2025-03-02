@@ -106,7 +106,6 @@ public class SendData {
             clients[ID].packet.packAndAddHeroStrength(str);
         }
     }
-
     //---------------------------UI  and mechanics
     public static void sendResumeButtonVisible(int ID, boolean visible) {
         if ((ID != -1) && (clients[ID] != null)) {
@@ -255,6 +254,15 @@ public class SendData {
         }
     }
 
+    public static void sendCharShield(int id, int shielding) {
+        for (ClientThread client : clients) {
+            if (client == null) {
+                continue;
+            }
+            client.packet.packAndAddShield(id, shielding);
+            client.flush();
+        }
+    }
     public static void sendAllChars(int ID) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].addAllCharsToSend();
@@ -519,16 +527,18 @@ public class SendData {
         }
     }
 
-    public static void sendBuff(Buff buff) {
+    public static void sendBuff(Buff buff, boolean remove) {
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.packAndAddBuff(buff);
+            clients[i].packet.packAndAddBuff(buff, remove);
             clients[i].flush();
         }
     }
-
+    public static void sendBuff(Buff buff){
+        sendBuff(buff, false);
+    }
     public static void sendFlashChar(CharSprite sprite, float flashTime) {
 
         if (sprite.ch == null){

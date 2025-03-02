@@ -58,7 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.nikita22007.multiplayer.server.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;

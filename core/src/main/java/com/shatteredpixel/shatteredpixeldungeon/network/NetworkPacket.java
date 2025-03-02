@@ -14,6 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -41,6 +42,7 @@ public class NetworkPacket {
     public static final String MAP = "map";
     public static final String ACTORS = "actors";
     public static final String PLANTS = "plants";
+    public static final String TRAPS = "traps";
     public static final String BUFFS = "buffs";
 
 
@@ -160,6 +162,15 @@ public class NetworkPacket {
         }
     }
 
+    public void packAndAddShield(int id, int shielding) {
+        synchronized (dataRef) {
+            JSONObject data = dataRef.get();
+            JSONObject object = new JSONObject();
+            object.put("id", id);
+            object.put("shielding", shielding);
+            data.put("char_shield", object);
+        }
+    }
     protected JSONObject packActorRemoving(@NotNull Actor actor) {
 
         JSONObject object = new JSONObject();
@@ -215,11 +226,14 @@ public class NetworkPacket {
                 int hp = character.HP;
                 int ht = character.HT;
                 int pos = character.pos;
+                int shield = character.shielding();
                 object.put("hp", hp);
                 object.put("max_hp", ht);
                 object.put("position", pos);
                 object.put("name", name);
-
+                if (shield > 0 && !character.needsShieldUpdate()) {
+                    object.put("shield", shield);
+                }
                 object.put("emo", character.getEmoJsonObject());
                 CharSprite sprite = character.getSprite();
                 if (sprite != null) {
@@ -518,6 +532,7 @@ public class NetworkPacket {
         packAndAddLevelCellsSeparateState(level);
         packAndAddLevelHeaps(level.heaps, observer);
         packAndAddPlants(level);
+        packAndAddTraps(level);
     }
 
     protected void addVisiblePositions(@NotNull JSONArray visiblePositionsArray) {
@@ -849,6 +864,7 @@ public class NetworkPacket {
             if (plant == null) {
                 plantObj.put("plant_info", JSONObject.NULL);
             } else {
+                PlantCache.add(pos);
                 JSONObject plantInfoObj = new JSONObject();
                 plantInfoObj.put("sprite_id", plant.image);
                 plantInfoObj.put("name", plant.name());
@@ -859,21 +875,60 @@ public class NetworkPacket {
                 if (!dataRef.get().has(PLANTS)) {
                     dataRef.get().put(PLANTS, new JSONArray());
                 }
-                dataRef.get().getJSONArray(PLANTS).put(plantObj);
+                if (PlantCache.contains(pos)) {
+                    dataRef.get().getJSONArray(PLANTS).put(plantObj);
+                    if (plant == null) {
+                        PlantCache.remove(pos);
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-    public void packAndAddBuff(Buff buff) {
+    public void packAndAddTraps(Level level) {
+        for (int pos = 0; pos < level.length(); pos++) {
+            packAndAddTrap(pos, level.traps.get(pos, null));
+        }
+    }
+    public void packAndAddTrap(int pos, Trap trap){
+        JSONObject trapObj = new JSONObject();
+        try {
+            trapObj.put("pos", pos);
+            if (trap == null || !trap.visible) {
+                trapObj.put("trap_info", JSONObject.NULL);
+            } else {
+                TrapCache.add(pos);
+                JSONObject trapInfoObj = new JSONObject();
+                trapInfoObj.put("shape", trap.shape);
+                trapInfoObj.put("color", trap.color);
+                trapInfoObj.put("active", trap.active);
+                trapInfoObj.put("name", trap.getClass().getSimpleName());
+                trapObj.put("trap_info", trapInfoObj);
+            }
+            synchronized (dataRef) {
+                if (!dataRef.get().has(TRAPS)) {
+                    dataRef.get().put(TRAPS, new JSONArray());
+                }
+                if (TrapCache.contains(pos)) {
+                    dataRef.get().getJSONArray(TRAPS).put(trapObj);
+                    if (trap == null) {
+                        TrapCache.remove(pos);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void packAndAddBuff(Buff buff, boolean remove) {
         JSONObject buffObj = new JSONObject();
         int id = buff.id();
         try {
             buffObj.put("id", id);
             buffObj.put("icon", buff.icon());
             Actor target = buff.target;
-            buffObj.put("target_id", target == null ? JSONObject.NULL : target.id());
+            buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
             buffObj.put("desc", buff.toString());
             Image temp = new Image();
             buff.tintIcon(temp);

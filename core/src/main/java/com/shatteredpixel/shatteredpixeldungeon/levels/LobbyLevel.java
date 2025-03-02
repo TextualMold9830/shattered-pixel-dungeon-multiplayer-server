@@ -56,7 +56,7 @@ public class LobbyLevel extends DeadEndLevel {
     @Override protected void createItems(){
         if(DeviceCompat.isDebug()) {
             super.createItems();
-            Potion potion = new PotionOfLiquidFlame();
+            Potion potion = new PotionOfExperience();
             potion.quantity(10);
             this.drop(potion, exit() - this.width());
             StoneOfDeepSleep sods = new StoneOfDeepSleep();

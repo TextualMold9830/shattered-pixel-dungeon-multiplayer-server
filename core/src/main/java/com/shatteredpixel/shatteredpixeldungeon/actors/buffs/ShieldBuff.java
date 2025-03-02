@@ -31,7 +31,7 @@ public abstract class ShieldBuff extends Buff {
 	@Override
 	public boolean attachTo(Char target) {
 		if (super.attachTo(target)) {
-			target.needsShieldUpdate = true;
+			target.setNeedsShieldUpdate(true);
 			return true;
 		} else {
 			return false;
@@ -40,7 +40,7 @@ public abstract class ShieldBuff extends Buff {
 	
 	@Override
 	public void detach() {
-		target.needsShieldUpdate = true;
+		target.setNeedsShieldUpdate(true);
 		super.detach();
 	}
 	
@@ -50,7 +50,7 @@ public abstract class ShieldBuff extends Buff {
 	
 	public void setShield( int shield ) {
 		if (this.shielding <= shield) this.shielding = shield;
-		if (target != null) target.needsShieldUpdate = true;
+		if (target != null) target.setNeedsShieldUpdate(true);
 	}
 	
 	public void incShield(){
@@ -59,7 +59,7 @@ public abstract class ShieldBuff extends Buff {
 
 	public void incShield( int amt ){
 		shielding += amt;
-		if (target != null) target.needsShieldUpdate = true;
+		if (target != null) target.setNeedsShieldUpdate(true);
 	}
 
 	//doesn't add shield, but postpones it detereorating
@@ -73,7 +73,7 @@ public abstract class ShieldBuff extends Buff {
 
 	public void decShield( int amt ){
 		shielding -= amt;
-		if (target != null) target.needsShieldUpdate = true;
+		if (target != null) target.setNeedsShieldUpdate(true);
 	}
 	
 	//returns the amount of damage leftover
@@ -88,7 +88,7 @@ public abstract class ShieldBuff extends Buff {
 		if (shielding == 0){
 			detach();
 		}
-		if (target != null) target.needsShieldUpdate = true;
+		if (target != null) target.setNeedsShieldUpdate(true);
 		return dmg;
 	}
 	

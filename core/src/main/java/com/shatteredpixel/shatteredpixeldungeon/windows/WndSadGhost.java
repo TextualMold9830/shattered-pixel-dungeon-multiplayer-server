@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FetidRatSprite;
@@ -39,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import org.json.JSONObject;
 
 public class WndSadGhost extends Window {
 
@@ -50,60 +52,13 @@ public class WndSadGhost extends Window {
 	Ghost ghost;
 	
 	public WndSadGhost( final Ghost ghost, final int type, Hero hero ) {
-		
 		super(hero);
-
+		JSONObject args = new JSONObject();
+		args.put("type", type);
+		args.put("weapon", Item.packItem(Ghost.Quest.weapon, hero));
+		args.put("armor", Item.packItem(Ghost.Quest.armor, hero));
 		this.ghost = ghost;
-		
-		IconTitle titlebar = new IconTitle();
-		RenderedTextBlock message;
-		switch (type){
-			case 1:default:
-				titlebar.icon( new FetidRatSprite() );
-				titlebar.label( Messages.get(this, "rat_title") );
-				message = PixelScene.renderTextBlock( Messages.get(this, "rat")+"\n\n"+Messages.get(this, "give_item"), 6 );
-				break;
-			case 2:
-				titlebar.icon( new GnollTricksterSprite() );
-				titlebar.label( Messages.get(this, "gnoll_title") );
-				message = PixelScene.renderTextBlock( Messages.get(this, "gnoll")+"\n\n"+Messages.get(this, "give_item"), 6 );
-				break;
-			case 3:
-				titlebar.icon( new GreatCrabSprite());
-				titlebar.label( Messages.get(this, "crab_title") );
-				message = PixelScene.renderTextBlock( Messages.get(this, "crab")+"\n\n"+Messages.get(this, "give_item"), 6 );
-				break;
-
-		}
-
-		titlebar.setRect( 0, 0, WIDTH, 0 );
-		add( titlebar );
-
-		message.maxWidth(WIDTH);
-		message.setPos(0, titlebar.bottom() + GAP);
-		add( message );
-
-		ItemButton btnWeapon = new ItemButton(){
-			@Override
-			protected void onClick() {
-				GameScene.show(new RewardWindow(item(), hero));
-			}
-		};
-		btnWeapon.item( Ghost.Quest.weapon );
-		btnWeapon.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
-		add( btnWeapon );
-
-		ItemButton btnArmor = new ItemButton(){
-			@Override
-			protected void onClick() {
-				GameScene.show(new RewardWindow(item(), hero));
-			}
-		};
-		btnArmor.item( Ghost.Quest.armor );
-		btnArmor.setRect( btnWeapon.right() + BTN_GAP, btnWeapon.top(), BTN_SIZE, BTN_SIZE );
-		add(btnArmor);
-
-		resize(WIDTH, (int) btnArmor.bottom() + BTN_GAP);
+		SendData.sendWindow(hero.networkID, "sad_ghost", getId(), args);
 	}
 	
 	private void selectReward( Item reward ) {
@@ -129,6 +84,18 @@ public class WndSadGhost extends Window {
 		ghost.die( new Char.DamageCause(null) );
 		
 		Ghost.Quest.complete();
+	}
+
+	@Override
+	protected void onSelect(int button) {
+		if (Ghost.Quest.processed() && !Ghost.Quest.completed()) {
+			if (button == 0) {
+				Ghost.Quest.weapon.collect(getOwnerHero());
+			} else if(button == 1){
+				Ghost.Quest.armor.collect(getOwnerHero());
+			}
+			Ghost.Quest.complete();
+		}
 	}
 
 	private class RewardWindow extends WndInfoItem {

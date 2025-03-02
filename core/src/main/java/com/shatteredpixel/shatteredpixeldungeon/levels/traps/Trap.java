@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.TrapCache;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
@@ -106,6 +107,7 @@ public abstract class Trap implements Bundlable {
 	public void disarm(){
 		active = false;
 		Dungeon.level.disarmTrap(pos);
+		TrapCache.remove(pos);
 	}
 
 	//returns the depth value the trap should use for determining its power

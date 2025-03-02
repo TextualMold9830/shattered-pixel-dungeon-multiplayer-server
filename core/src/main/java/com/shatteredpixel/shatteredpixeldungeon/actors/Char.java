@@ -191,6 +191,17 @@ public abstract class Char extends Actor {
 		sendSelf();
 	}
 
+	public boolean needsShieldUpdate() {
+		return needsShieldUpdate;
+	}
+
+	public void setNeedsShieldUpdate(boolean needsShieldUpdate) {
+		this.needsShieldUpdate = needsShieldUpdate;
+		if (needsShieldUpdate) {
+			SendData.sendCharShield(id(), shielding());
+		}
+	}
+
 
 	//these are relative to the hero
 	public enum Alignment{
@@ -810,7 +821,7 @@ public abstract class Char extends Actor {
 
 	//used so that buffs(Shieldbuff.class) isn't called every time unnecessarily
 	private int cachedShield = 0;
-	public boolean needsShieldUpdate = true; //todo add to send
+	private boolean needsShieldUpdate = true; //todo add to send
 
 	public int shielding(){
 		if (!needsShieldUpdate){
@@ -821,7 +832,7 @@ public abstract class Char extends Actor {
 		for (ShieldBuff s : buffs(ShieldBuff.class)){
 			cachedShield += s.shielding();
 		}
-		needsShieldUpdate = false;
+		setNeedsShieldUpdate(false);
 		return cachedShield;
 	}
 
