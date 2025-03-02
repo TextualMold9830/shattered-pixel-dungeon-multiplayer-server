@@ -54,7 +54,7 @@ public class Sheep extends NPC {
 			Bestiary.setSeen(getClass());
 		}
 		if (initialized) {
-			HP = 0;
+			setHP(0);
 
 			destroy();
 			getSprite().die();

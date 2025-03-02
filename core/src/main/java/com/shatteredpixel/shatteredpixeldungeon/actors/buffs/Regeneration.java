@@ -28,8 +28,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ChaoticCenser;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ChaoticCenser;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 import com.watabou.utils.Bundle;
 
 public class Regeneration extends Buff {
@@ -54,7 +52,7 @@ public class Regeneration extends Buff {
 				Buff.affect(hero, ChaoticCenser.CenserGasTracker.class);
 			}
 
-			if (regenOn() && target.HP < regencap() && !((Hero)target).isStarving()) {
+			if (regenOn() && target.getHP() < regencap() && !((Hero)target).isStarving()) {
 				boolean chaliceCursed = false;
 				int chaliceLevel = -1;
 				if (target.buff(MagicImmune.class) == null) {
@@ -82,9 +80,9 @@ public class Regeneration extends Buff {
 				partialRegen += 1f / delay;
 
 				if (partialRegen >= 1) {
-					target.HP += 1;
+					target.setHP(target.getHP() + 1);
 					partialRegen--;
-					if (target.HP == regencap()) {
+					if (target.getHP() == regencap()) {
 						((Hero) target).resting = false;
 					}
 				}
@@ -103,7 +101,7 @@ public class Regeneration extends Buff {
 	}
 
 	public int regencap(){
-		return target.HT;
+		return target.getHT();
 	}
 
 	public static boolean regenOn(Hero hero){

@@ -47,7 +47,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WardSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -257,16 +256,16 @@ public class WandOfWarding extends Wand {
 				case 1: case 2: default:
 					break; //do nothing
 				case 3:
-					HT = 35;
-					HP = 15 + (5-totalZaps)*4;
+					setHT(35);
+					setHP(15 + (5-totalZaps)*4);
 					break;
 				case 4:
-					HT = 54;
-					HP += 19;
+					setHT(54);
+					setHP(getHP() + 19);
 					break;
 				case 5:
-					HT = 84;
-					HP += 30;
+					setHT(84);
+					setHP(getHP() + 30);
 					break;
 				case 6:
 					wandHeal(wandLevel);
@@ -321,7 +320,7 @@ public class WandOfWarding extends Wand {
 					break;
 			}
 
-			HP = Math.min(HT, HP+heal);
+			setHP(Math.min(getHT(), getHP() +heal));
 			if (getSprite() != null) getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 
 		}

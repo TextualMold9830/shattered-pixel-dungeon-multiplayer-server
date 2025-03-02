@@ -432,7 +432,7 @@ public class WandOfRegrowth extends Wand {
 
 		private void setLevel( int lvl ){
 			wandLvl = lvl;
-			HP = HT = 25 + 3*lvl;
+			setHP(setHT(25 + 3*lvl));
 		}
 
 		public boolean inRange(int pos){
@@ -452,7 +452,7 @@ public class WandOfRegrowth extends Wand {
 		protected boolean act() {
 			super.act();
 
-			if (--HP <= 0){
+			if (setHP(getHP() - 1) <= 0){
 				destroy();
 				getSprite().die();
 			}

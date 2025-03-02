@@ -45,8 +45,8 @@ public class PotionOfShielding extends ExoticPotion {
 			PotionOfHealing.pharmacophobiaProc(hero);
 		} else {
 			//~75% of a potion of healing
-			Buff.affect(hero, Barrier.class).setShield((int) (0.6f * hero.HT + 10));
-			hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int) (0.6f * hero.HT + 10)), FloatingText.SHIELDING );
+			Buff.affect(hero, Barrier.class).setShield((int) (0.6f * hero.getHT() + 10));
+			hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int) (0.6f * hero.getHT() + 10)), FloatingText.SHIELDING );
 		}
 	}
 }

@@ -137,7 +137,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 			if (powerLossBuffer > 0){
 				powerLossBuffer--;
 			} else {
-				power -= GameMath.gate(0.1f, power, 1f) * 0.067f * Math.pow((target.HP / (float) target.HT), 2);
+				power -= GameMath.gate(0.1f, power, 1f) * 0.067f * Math.pow((target.getHP() / (float) target.getHT()), 2);
 
 				if (power < 1f){
 					((Hero)target).actionIndicator.clearAction(this);
@@ -175,7 +175,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	}
 
 	public boolean berserking(){
-		if (target.HP == 0
+		if (target.getHP() == 0
 				&& state == State.NORMAL
 				&& power >= 1f
 				&& target.buff(WarriorShield.class) != null
@@ -193,7 +193,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		GameScene.flash(0xFF0000);
 
-		if (target.HP > 0) {
+		if (target.getHP() > 0) {
 			turnRecovery = TURN_RECOVERY_START;
 			levelRecovery = 0;
 		} else {
@@ -202,7 +202,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		}
 
 		//base multiplier scales at 2/3/4/5/6x at 100/37/20/9/0% HP
-		float shieldMultiplier = 2f + 4*(float)Math.pow((1f-(target.HP/(float)target.HT)), 3);
+		float shieldMultiplier = 2f + 4*(float)Math.pow((1f-(target.getHP() /(float) target.getHT())), 3);
 
 		//Endless rage effect on shield and cooldown
 		if (power > 1f){
@@ -222,7 +222,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	public void damage(int damage){
 		if (state != State.NORMAL) return;
 		float maxPower = 1f + 0.1667f*((Hero)target).pointsInTalent(Talent.ENDLESS_RAGE);
-		power = Math.min(maxPower, power + (damage/(float)target.HT)/3f );
+		power = Math.min(maxPower, power + (damage/(float) target.getHT())/3f );
 		BuffIndicator.refreshHero(); //show new power immediately
 		powerLossBuffer = 3; //2 turns until rage starts dropping
 		if (power >= 1f){

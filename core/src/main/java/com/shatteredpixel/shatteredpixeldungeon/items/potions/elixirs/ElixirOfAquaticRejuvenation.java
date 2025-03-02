@@ -52,7 +52,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		if (Dungeon.isChallenged(Challenges.NO_HEALING)){
 			PotionOfHealing.pharmacophobiaProc(hero);
 		} else {
-			Buff.affect(hero, AquaHealing.class).set(Math.round(hero.HT * 1.5f));
+			Buff.affect(hero, AquaHealing.class).set(Math.round(hero.getHT() * 1.5f));
 		}
 	}
 	
@@ -76,20 +76,20 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		@Override
 		public boolean act() {
 			
-			if (!target.flying && Dungeon.level.water[target.pos] && target.HP < target.HT){
-				float healAmt = GameMath.gate( 1, target.HT/50f, left );
-				healAmt = Math.min(healAmt, target.HT - target.HP);
+			if (!target.flying && Dungeon.level.water[target.pos] && target.getHP() < target.getHT()){
+				float healAmt = GameMath.gate( 1, target.getHT() /50f, left );
+				healAmt = Math.min(healAmt, target.getHT() - target.getHP());
 				if (Random.Float() < (healAmt % 1)){
 					healAmt = (float)Math.ceil(healAmt);
 				} else {
 					healAmt = (float)Math.floor(healAmt);
 				}
-				target.HP += (int)healAmt;
+				target.setHP(target.getHP() + (int)healAmt);
 				left -= (int)healAmt;
 				target.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int)healAmt), FloatingText.HEALING );
 
-				if (target.HP >= target.HT) {
-					target.HP = target.HT;
+				if (target.getHP() >= target.getHT()) {
+					target.setHP(target.getHT());
 					if (target instanceof Hero) {
 						((Hero) target).resting = false;
 					}
@@ -119,7 +119,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 
 		@Override
 		public float iconFadePercent() {
-			float max = Math.round(target.HT * 1.5f);
+			float max = Math.round(target.getHT() * 1.5f);
 			return Math.max(0, (max - left) / max);
 		}
 

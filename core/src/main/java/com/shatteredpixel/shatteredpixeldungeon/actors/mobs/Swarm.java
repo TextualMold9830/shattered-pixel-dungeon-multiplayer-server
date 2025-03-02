@@ -44,7 +44,7 @@ public class Swarm extends Mob {
 	{
 		spriteClass = SwarmSprite.class;
 		
-		HP = HT = 50;
+		setHP(setHT(50));
 		defenseSkill = 5;
 
 		EXP = 3;
@@ -90,7 +90,7 @@ public class Swarm extends Mob {
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
 
-		if (HP >= damage + 2) {
+		if (getHP() >= damage + 2) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
 			int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
@@ -110,12 +110,12 @@ public class Swarm extends Mob {
 				clone.state = clone.HUNTING;
 				GameScene.add( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
 
-				clone.HP = (HP - damage) / 2;
+				clone.setHP((getHP() - damage) / 2);
 				Actor.add( new Pushing( clone, pos, clone.pos ) );
 
 				Dungeon.level.occupyCell(clone);
 				
-				HP -= clone.HP;
+				setHP(getHP() - clone.getHP());
 			}
 		}
 		

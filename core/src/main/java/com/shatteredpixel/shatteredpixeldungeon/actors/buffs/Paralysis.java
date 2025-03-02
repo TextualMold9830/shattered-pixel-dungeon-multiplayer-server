@@ -54,7 +54,7 @@ public class Paralysis extends FlavourBuff {
 			resist = Buff.affect(target, ParalysisResist.class);
 		}
 		resist.damage += damage;
-		if (Random.NormalIntRange(0, resist.damage) >= Random.NormalIntRange(0, target.HP)){
+		if (Random.NormalIntRange(0, resist.damage) >= Random.NormalIntRange(0, target.getHP())){
 			if (target.fieldOfView[target.pos]) {
 				target.getSprite().showStatus(CharSprite.NEUTRAL, Messages.get(this, "out"));
 			}

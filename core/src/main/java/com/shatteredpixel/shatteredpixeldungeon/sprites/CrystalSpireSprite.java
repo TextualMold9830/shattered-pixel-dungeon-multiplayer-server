@@ -62,7 +62,7 @@ public abstract class CrystalSpireSprite extends MobSprite {
 	public void updateIdle(){
 		float hpPercent = 1f;
 		if (ch != null){
-			hpPercent = ch.HP/(float)ch.HT;
+			hpPercent = ch.getHP() /(float) ch.getHT();
 		}
 
 		TextureFilm frames = new TextureFilm( texture, 24, 41 );

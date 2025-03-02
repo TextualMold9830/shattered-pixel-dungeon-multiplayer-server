@@ -83,7 +83,7 @@ public class DM300 extends Mob {
 	{
 		spriteClass = DM300Sprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300;
+		setHP(setHT(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300));
 		EXP = 30;
 		defenseSkill = 15;
 
@@ -356,10 +356,10 @@ public class DM300 extends Mob {
 				}
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 				getSprite().emitter().start(SparkParticle.STATIC, 0.05f, 20);
-				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(30 + (HT - HP)/10), FloatingText.SHIELDING);
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(30 + (getHT() - getHP())/10), FloatingText.SHIELDING);
 			}
 
-			Buff.affect(this, Barrier.class).setShield( 30 + (HT - HP)/10);
+			Buff.affect(this, Barrier.class).setShield( 30 + (getHT() - getHP())/10);
 
 		}
 	}
@@ -495,13 +495,13 @@ public class DM300 extends Mob {
 			notice();
 		}
 
-		int preHP = HP;
+		int preHP = getHP();
 		super.damage(dmg, source);
 		if (isInvulnerable(src.getClass())){
 			return;
 		}
 
-		int dmgTaken = preHP - HP;
+		int dmgTaken = preHP - getHP();
 		if (dmgTaken > 0) {
 			if (source.getDamageOwner() instanceof Hero) {
 				LockedFloor lock = source.getDamageOwner().buff(LockedFloor.class);
@@ -514,13 +514,13 @@ public class DM300 extends Mob {
 
 		int threshold;
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-			threshold = HT / 4 * (3 - pylonsActivated);
+			threshold = getHT() / 4 * (3 - pylonsActivated);
 		} else {
-			threshold = HT / 3 * (2 - pylonsActivated);
+			threshold = getHT() / 3 * (2 - pylonsActivated);
 		}
 
-		if (HP <= threshold && threshold > 0){
-			HP = threshold;
+		if (getHP() <= threshold && threshold > 0){
+			setHP(threshold);
 			supercharge();
 		}
 

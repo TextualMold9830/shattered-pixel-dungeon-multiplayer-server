@@ -63,7 +63,7 @@ public class ElixirOfMight extends Elixir {
 	}
 	@Override
 	public String desc(Hero hero){
-		return Messages.get(this, "desc", HTBoost.boost(hero != null ? hero.HT : 20));
+		return Messages.get(this, "desc", HTBoost.boost(hero != null ? hero.getHT() : 20));
 	}
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		

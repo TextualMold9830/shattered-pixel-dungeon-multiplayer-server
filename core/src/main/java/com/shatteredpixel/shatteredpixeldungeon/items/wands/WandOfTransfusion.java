@@ -91,10 +91,10 @@ public class WandOfTransfusion extends DamageWand {
 			if (ch.alignment == Char.Alignment.ALLY || ch.buff(Charm.class) != null){
 				
 				// 5% of max hp
-				int selfDmg = Math.round(curUser.HT*0.05f);
+				int selfDmg = Math.round(curUser.getHT() *0.05f);
 				
 				int healing = selfDmg + 3*buffedLvl();
-				int shielding = (ch.HP + healing) - ch.HT;
+				int shielding = (ch.getHP() + healing) - ch.getHT();
 				if (shielding > 0){
 					healing -= shielding;
 					Buff.affect(ch, Barrier.class).setShield(shielding);
@@ -102,7 +102,7 @@ public class WandOfTransfusion extends DamageWand {
 					shielding = 0;
 				}
 				
-				ch.HP += healing;
+				ch.setHP(ch.getHP() + healing);
 				
 				ch.getSprite().emitter().burst(Speck.factory(Speck.HEALING), 2 + buffedLvl() / 2);
 				if (healing > 0) {
@@ -190,7 +190,7 @@ public class WandOfTransfusion extends DamageWand {
 
 	@Override
 	public String statsDesc(Hero hero) {
-		int selfDMG = hero != null ? Math.round(hero.HT*0.05f): 1;
+		int selfDMG = hero != null ? Math.round(hero.getHT() *0.05f): 1;
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max());
 		else
@@ -199,7 +199,7 @@ public class WandOfTransfusion extends DamageWand {
 
 	@Override
 	public String upgradeStat1(int level, Hero hero) {
-		int selfDMG = hero != null ? Math.round(hero.HT*0.05f): 1;
+		int selfDMG = hero != null ? Math.round(hero.getHT() *0.05f): 1;
 		return Integer.toString(selfDMG + 3*level);
 	}
 

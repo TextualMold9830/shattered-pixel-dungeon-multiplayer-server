@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -45,7 +44,7 @@ public class Corrupting extends Weapon.Enchantment {
 		// lvl 1 ~ 23%
 		// lvl 2 ~ 26%
 		float procChance = (level+5f)/(level+25f) * procChanceMultiplier(attacker);
-		if (damage >= defender.HP
+		if (damage >= defender.getHP()
 				&& Random.Float() < procChance
 				&& !defender.isImmune(Corruption.class)
 				&& defender.buff(Corruption.class) == null

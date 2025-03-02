@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -74,7 +73,7 @@ public class VialOfBlood extends Trinket {
 	}
 
 	public static int maxHealPerTurn(int level, Hero hero){
-		int maxHP = hero == null ? 20 : hero.HT;
+		int maxHP = hero == null ? 20 : hero.getHT();
 		if (level == -1){
 			return maxHP;
 		} else {

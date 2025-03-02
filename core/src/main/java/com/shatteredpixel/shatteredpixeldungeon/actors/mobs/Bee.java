@@ -102,7 +102,7 @@ public class Bee extends Mob {
 	public void spawn(int level ) {
 		this.level = level;
 		
-		HT = (2 + level) * 4;
+		setHT((2 + level) * 4);
 		defenseSkill = 9 + level;
 	}
 
@@ -129,7 +129,7 @@ public class Bee extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( HT / 10, HT / 4 );
+		return Random.NormalIntRange( getHT() / 10, getHT() / 4 );
 	}
 	
 	@Override

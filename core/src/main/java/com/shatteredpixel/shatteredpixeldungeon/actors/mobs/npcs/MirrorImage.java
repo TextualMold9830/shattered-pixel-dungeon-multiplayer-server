@@ -47,7 +47,7 @@ public class MirrorImage extends NPC {
 	{
 		spriteClass = MirrorSprite.class;
 		
-		HP = HT = 1;
+		setHP(setHT(1));
 		defenseSkill = 1;
 		
 		alignment = Alignment.ALLY;

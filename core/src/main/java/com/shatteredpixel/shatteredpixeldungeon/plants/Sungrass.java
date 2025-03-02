@@ -48,9 +48,9 @@ public class Sungrass extends Plant {
 		
 		if (ch != null){
 			if (ch instanceof Hero && ((Hero) ch).subClass == HeroSubClass.WARDEN) {
-				Buff.affect(ch, Healing.class).setHeal(ch.HT, 0, 1);
+				Buff.affect(ch, Healing.class).setHeal(ch.getHT(), 0, 1);
 			} else {
-				Buff.affect(ch, Health.class).boost(ch.HT);
+				Buff.affect(ch, Health.class).boost(ch.getHT());
 			}
 		}
 		
@@ -89,20 +89,20 @@ public class Sungrass extends Plant {
 			}
 			
 			//for the hero, full heal takes ~50/93/111/120 turns at levels 1/10/20/30
-			partialHeal += (40 + target.HT)/150f;
+			partialHeal += (40 + target.getHT())/150f;
 			
 			if (partialHeal > 1){
 				int healThisTurn = (int)partialHeal;
 				partialHeal -= healThisTurn;
 				level -= healThisTurn;
 
-				if (target.HP < target.HT) {
+				if (target.getHP() < target.getHT()) {
 
-					target.HP += healThisTurn;
+					target.setHP(target.getHP() + healThisTurn);
 					target.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healThisTurn), FloatingText.HEALING);
 
-					if (target.HP >= target.HT) {
-						target.HP = target.HT;
+					if (target.getHP() >= target.getHT()) {
+						target.setHP(target.getHT());
 						if (target instanceof Hero) {
 							((Hero) target).resting = false;
 						}
@@ -134,7 +134,7 @@ public class Sungrass extends Plant {
 
 		@Override
 		public float iconFadePercent() {
-			return Math.max(0, (target.HT - level) / (float)target.HT);
+			return Math.max(0, (target.getHT() - level) / (float) target.getHT());
 		}
 
 		@Override

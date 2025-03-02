@@ -38,7 +38,7 @@ public class Vampiric extends Weapon.Enchantment {
 	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
 		
 		//chance to heal scales from 5%-30% based on missing HP
-		float missingPercent = (attacker.HT - attacker.HP) / (float)attacker.HT;
+		float missingPercent = (attacker.getHT() - attacker.getHP()) / (float) attacker.getHT();
 		float healChance = 0.05f + .25f*missingPercent;
 
 		healChance *= procChanceMultiplier(attacker);
@@ -51,11 +51,11 @@ public class Vampiric extends Weapon.Enchantment {
 			
 			//heals for 50% of damage dealt
 			int healAmt = Math.round(damage * 0.5f * powerMulti);
-			healAmt = Math.min( healAmt, attacker.HT - attacker.HP );
+			healAmt = Math.min( healAmt, attacker.getHT() - attacker.getHP());
 			
 			if (healAmt > 0 && attacker.isAlive()) {
 				
-				attacker.HP += healAmt;
+				attacker.setHP(attacker.getHP() + healAmt);
 				attacker.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( healAmt ), FloatingText.HEALING );
 				
 			}

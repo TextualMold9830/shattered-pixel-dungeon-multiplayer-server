@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 public abstract class NPC extends Mob {
 
 	{
-		HP = HT = 1;
+		setHP(setHT(1));
 		EXP = 0;
 
 		alignment = Alignment.NEUTRAL;

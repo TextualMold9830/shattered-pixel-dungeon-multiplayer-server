@@ -142,13 +142,13 @@ public class HallowedGround extends TargetedClericSpell {
 
 	private void affectChar( Char ch ){
 		if (ch.alignment == Char.Alignment.ALLY){
-			if (ch instanceof Hero || ch.HP == ch.HT){
+			if (ch instanceof Hero || ch.getHP() == ch.getHT()){
 				Buff.affect(ch, Barrier.class).incShield(10);
 				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "10", FloatingText.SHIELDING );
 			} else {
-				int barrier = 10 - (ch.HT - ch.HP);
+				int barrier = 10 - (ch.getHT() - ch.getHP());
 				barrier = Math.max(barrier, 0);
-				ch.HP += 10 - barrier;
+				ch.setHP(ch.getHP() + 10 - barrier);
 				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(10-barrier), FloatingText.HEALING );
 				if (barrier > 0){
 					Buff.affect(ch, Barrier.class).incShield(barrier);
@@ -243,11 +243,11 @@ public class HallowedGround extends TargetedClericSpell {
 
 		private void affectChar( Char ch ){
 			if (ch.alignment == Char.Alignment.ALLY){
-				if (ch instanceof Hero || ch.HP == ch.HT){
+				if (ch instanceof Hero || ch.getHP() == ch.getHT()){
 					Buff.affect(ch, Barrier.class).incShield(1);
 					ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.SHIELDING );
 				} else {
-					ch.HP++;
+					ch.setHP(ch.getHP() + 1);
 					ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "1", FloatingText.HEALING );
 				}
 			} else if (!ch.flying && ch.buff(Roots.class) == null){

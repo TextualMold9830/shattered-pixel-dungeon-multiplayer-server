@@ -52,12 +52,9 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -207,7 +204,7 @@ public class SpiritForm extends ClericSpell {
 			}
 			if (spawnPoints.size() > 0) {
 				Wraith w = Wraith.spawnAt(Random.element(spawnPoints), Wraith.class);
-				w.HP = w.HT = 20 + 8*artifactLevel(hero);
+				w.setHP(w.setHT(20 + 8*artifactLevel(hero)));
 				Buff.affect(w, Corruption.class);
 			}
 			Talent.onArtifactUsed(hero);

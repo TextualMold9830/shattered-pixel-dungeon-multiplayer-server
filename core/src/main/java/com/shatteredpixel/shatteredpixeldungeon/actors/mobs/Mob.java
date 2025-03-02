@@ -56,7 +56,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbili
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist.Feint;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
@@ -78,7 +77,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
@@ -147,9 +145,9 @@ public abstract class Mob extends Char {
 		super.onAdd();
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
-			float percent = HP / (float) HT;
-			HT = Math.round(HT * AscensionChallenge.statModifier(this));
-			HP = Math.round(HT * percent);
+			float percent = getHP() / (float) getHT();
+			setHT(Math.round(getHT() * AscensionChallenge.statModifier(this)));
+			setHP(Math.round(getHT() * percent));
 			firstAdded = false;
 		}
 	}
@@ -789,7 +787,7 @@ public abstract class Mob extends Char {
 		}
 
 		if (buff(SoulMark.class) != null) {
-			int restoration = Math.min(damage, HP + shielding());
+			int restoration = Math.min(damage, getHP() + shielding());
 			//TODO: change this
 			for (Hero hero : Dungeon.heroes) {
 				if (hero != null) {
@@ -799,9 +797,9 @@ public abstract class Mob extends Char {
 					if (restoration > 0) {
 						Buff.affect(hero, Hunger.class).affectHunger(restoration * hero.pointsInTalent(Talent.SOUL_EATER) / 3f);
 
-						if (hero.HP < hero.HT) {
+						if (hero.getHP() < hero.getHT()) {
 							int heal = (int) Math.ceil(restoration * 0.4f);
-							hero.HP = Math.min(hero.HT, hero.HP + heal);
+							hero.setHP(Math.min(hero.getHT(), hero.getHP() + heal));
 							hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 						}
 					}

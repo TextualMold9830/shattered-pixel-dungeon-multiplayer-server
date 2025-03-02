@@ -47,12 +47,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.GreaterHaste;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HeroDisguise;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.GreaterHaste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invulnerability;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -254,7 +251,7 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 
-		HP = HT = 20;
+		setHP(setHT(20));
 		STR = STARTING_STR;
 		
 		belongings = new Belongings( this );
@@ -266,20 +263,20 @@ public class Hero extends Char {
 	}
 	
 	public void updateHT( boolean boostHP ){
-		int curHT = HT;
+		int curHT = getHT();
 		
-		HT = 20 + 5*(lvl-1) + HTBoost;
+		setHT(20 + 5*(lvl-1) + HTBoost);
 		float multiplier = RingOfMight.HTMultiplier(this);
-		HT = Math.round(multiplier * HT);
+		setHT(Math.round(multiplier * getHT()));
 		
 		if (buff(ElixirOfMight.HTBoost.class) != null){
-			HT += buff(ElixirOfMight.HTBoost.class).boost();
+			setHT(getHT() + buff(ElixirOfMight.HTBoost.class).boost());
 		}
 		
 		if (boostHP){
-			HP += Math.max(HT - curHT, 0);
+			setHP(getHP() + Math.max(getHT() - curHT, 0));
 		}
-		HP = Math.min(HP, HT);
+		setHP(Math.min(getHP(), getHT()));
 	}
 
 	public int STR() {
@@ -1407,7 +1404,7 @@ public class Hero extends Char {
 			if (heroClass != HeroClass.DUELIST
 					&& hasTalent(Talent.AGGRESSIVE_BARRIER)
 					&& buff(Talent.AggressiveBarrierCooldown.class) == null
-					&& (HP / (float)HT) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
+					&& (getHP() / (float) getHT()) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
 				Buff.affect(this, Barrier.class).setShield(3);
 				getSprite().showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 				Buff.affect(this, Talent.AggressiveBarrierCooldown.class, 50f);
@@ -1607,10 +1604,10 @@ public class Hero extends Char {
 			else if (pointsInTalent(Talent.IRON_STOMACH) == 2)  dmg = Math.round(dmg*0.00f);
 		}
 
-		int preHP = HP + shielding();
+		int preHP = getHP() + shielding();
 		if (src instanceof Hunger) preHP -= shielding();
 		super.damage( dmg, source );
-		int postHP = HP + shielding();
+		int postHP = getHP() + shielding();
 		if (src instanceof Hunger) postHP -= shielding();
 		int effectiveDamage = preHP - postHP;
 
@@ -1622,7 +1619,7 @@ public class Hero extends Char {
 
 		//flash red when hit for serious damage.
 		float percentDMG = effectiveDamage / (float)preHP; //percent of current HP that was taken
-		float percentHP = 1 - ((HT - postHP) / (float)HT); //percent health after damage was taken
+		float percentHP = 1 - ((getHT() - postHP) / (float) getHT()); //percent health after damage was taken
 		// The flash intensity increases primarily based on damage taken and secondarily on missing HP.
 		float flashIntensity = 0.25f * (percentDMG * percentDMG) / percentHP;
 		//if the intensity is very low don't flash at all
@@ -2104,7 +2101,7 @@ public class Hero extends Char {
 			interrupt();
 
 			if (ankh.isBlessed()) {
-				this.HP = HT / 4;
+				this.setHP(getHT() / 4);
 
 				PotionOfHealing.cure(this);
 				Buff.prolong(this, Invulnerability.class, Invulnerability.DURATION);
@@ -2233,7 +2230,7 @@ public class Hero extends Char {
 	@Override
 	public boolean isAlive() {
 		
-		if (HP <= 0){
+		if (getHP() <= 0){
 			if (berserk == null) berserk = buff(Berserk.class);
 			return berserk != null && berserk.berserking();
 		} else {
@@ -2516,7 +2513,7 @@ public class Hero extends Char {
 	}
 	
 	public void resurrect() {
-		HP = HT;
+		setHP(getHT());
 		live();
 
 		MagicalHolster holster = belongings.getItem(MagicalHolster.class);

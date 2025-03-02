@@ -46,7 +46,7 @@ public class CrystalGuardian extends Mob{
 	{
 		spriteClass = CrystalGuardianSprite.class;
 
-		HP = HT = 100;
+		setHP(setHT(100));
 		defenseSkill = 14;
 
 		EXP = 10;
@@ -69,11 +69,11 @@ public class CrystalGuardian extends Mob{
 	protected boolean act() {
 		if (recovering){
 			throwItems();
-			HP = Math.min(HT, HP+5);
+			setHP(Math.min(getHT(), getHP() +5));
 			if (Dungeon.visibleforAnyHero(pos)) {
 				getSprite().showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
-			if (HP == HT){
+			if (getHP() == getHT()){
 				recovering = false;
 				if (getSprite() instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) getSprite()).endCrumple();
 			}
@@ -120,7 +120,7 @@ public class CrystalGuardian extends Mob{
 		if (recovering){
 			//this triggers before blocking, so the dmg as block-bypassing
 			getSprite().showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(damage), FloatingText.PHYS_DMG_NO_BLOCK);
-			HP = Math.max(1, HP-damage);
+			setHP(Math.max(1, getHP() -damage));
 			damage = -1;
 		}
 
@@ -129,8 +129,8 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public boolean isAlive() {
-		if (HP <= 0){
-			HP = 1;
+		if (getHP() <= 0){
+			setHP(1);
 
 			for (Buff b : buffs()){
 				if (!(b instanceof Doom || b instanceof Cripple)) {

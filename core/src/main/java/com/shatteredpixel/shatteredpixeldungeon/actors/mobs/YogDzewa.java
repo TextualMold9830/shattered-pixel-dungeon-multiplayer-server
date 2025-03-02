@@ -71,7 +71,7 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = 1000;
+		setHP(setHT(1000));
 
 		EXP = 50;
 
@@ -254,7 +254,7 @@ public class YogDzewa extends Mob {
 
 			if (abilityCooldown <= 0) {
 
-				int beams = 1 + (HT - HP) / 400;
+				int beams = 1 + (getHT() - getHP()) / 400;
 				HashSet<Integer> affectedCells = new HashSet<>();
 				for (int i = 0; i < beams; i++) {
 
@@ -401,24 +401,24 @@ public class YogDzewa extends Mob {
 	@Override
 	public void damage(int dmg, @NotNull DamageCause source) {
 		Object src = source.getCause();
-		int preHP = HP;
+		int preHP = getHP();
 		super.damage( dmg, source );
 
 		if (phase == 0 || findFist() != null) return;
 
 		if (phase < 4) {
-			HP = Math.max(HP, HT - 300 * phase);
+			setHP(Math.max(getHP(), getHT() - 300 * phase));
 		} else if (phase == 4) {
-			HP = Math.max(HP, 100);
+			setHP(Math.max(getHP(), 100));
 		}
-		int dmgTaken = preHP - HP;
+		int dmgTaken = preHP - getHP();
 
 		if (dmgTaken > 0) {
 			abilityCooldown -= dmgTaken / 10f;
 			summonCooldown -= dmgTaken / 10f;
 		}
 
-		if (phase < 4 && HP <= HT - 300*phase){
+		if (phase < 4 && getHP() <= getHT() - 300*phase){
 
 			phase++;
 
@@ -656,7 +656,7 @@ public class YogDzewa extends Mob {
 		{
 			spriteClass = LarvaSprite.class;
 
-			HP = HT = 20;
+			setHP(setHT(20));
 			defenseSkill = 12;
 			viewDistance = Light.DISTANCE;
 

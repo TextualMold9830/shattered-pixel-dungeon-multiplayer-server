@@ -45,7 +45,7 @@ public class Skeleton extends Mob {
 	{
 		spriteClass = SkeletonSprite.class;
 		
-		HP = HT = 25;
+		setHP(setHT(25));
 		defenseSkill = 9;
 		
 		EXP = 5;

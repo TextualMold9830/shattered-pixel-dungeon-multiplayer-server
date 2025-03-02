@@ -45,7 +45,7 @@ import com.watabou.utils.Random;
 public abstract class Shaman extends Mob {
 	
 	{
-		HP = HT = 35;
+		setHP(setHT(35));
 		defenseSkill = 15;
 		
 		EXP = 8;

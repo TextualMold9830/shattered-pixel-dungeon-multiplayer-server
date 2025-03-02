@@ -49,11 +49,11 @@ public class WellFed extends Buff {
 				((Hero) target).resting = false;
 			}
 			return true;
-		} else if (left % 18 == 0 && target.HP < target.HT){
-			target.HP += 1;
+		} else if (left % 18 == 0 && target.getHP() < target.getHT()){
+			target.setHP(target.getHP() + 1);
 			target.getSprite().showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.HEALING);
 
-			if (target.HP == target.HT && target instanceof Hero) {
+			if (target.getHP() == target.getHT() && target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
 		}

@@ -38,8 +38,8 @@ public class SealShard extends RemainsItem {
 
 	@Override
 	protected void doEffect(Hero hero) {
-		Buff.affect(hero, Barrier.class).incShield(Math.round(hero.HT/5f));
-		hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.HT/10), FloatingText.SHIELDING );
+		Buff.affect(hero, Barrier.class).incShield(Math.round(hero.getHT() /5f));
+		hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.getHT() /10), FloatingText.SHIELDING );
 		Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 	}
 

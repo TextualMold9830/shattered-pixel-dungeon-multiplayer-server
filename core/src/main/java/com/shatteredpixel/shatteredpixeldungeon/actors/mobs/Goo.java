@@ -54,7 +54,7 @@ import org.jetbrains.annotations.NotNull;
 public class Goo extends Mob {
 
 	{
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100;
+		setHP(setHT(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100));
 		EXP = 10;
 		defenseSkill = 8;
 		spriteClass = GooSprite.class;
@@ -70,7 +70,7 @@ public class Goo extends Mob {
 	@Override
 	public int damageRoll() {
 		int min = 1;
-		int max = (HP*2 <= HT) ? 12 : 8;
+		int max = (getHP() *2 <= getHT()) ? 12 : 8;
 		if (pumpedUp > 0) {
 			pumpedUp = 0;
 			if (enemy instanceof Hero) {
@@ -86,14 +86,14 @@ public class Goo extends Mob {
 	@Override
 	public int attackSkill( Char target ) {
 		int attack = 10;
-		if (HP*2 <= HT) attack = 15;
+		if (getHP() *2 <= getHT()) attack = 15;
 		if (pumpedUp > 0) attack *= 2;
 		return attack;
 	}
 
 	@Override
 	public int defenseSkill(Char enemy) {
-		return (int)(super.defenseSkill(enemy) * ((HP*2 <= HT)? 1.5 : 1));
+		return (int)(super.defenseSkill(enemy) * ((getHP() *2 <= getHT())? 1.5 : 1));
 	}
 
 	@Override
@@ -109,8 +109,8 @@ public class Goo extends Mob {
 			getSprite().idle();
 		}
 
-		if (!flying && Dungeon.level.water[pos] && HP < HT) {
-			HP += healInc;
+		if (!flying && Dungeon.level.water[pos] && getHP() < getHT()) {
+			setHP(getHP() + healInc);
 			Statistics.qualifiedForBossChallengeBadge = false;
 			for (Hero hero: Dungeon.heroes){
 				if (hero == null) continue;
@@ -126,10 +126,10 @@ public class Goo extends Mob {
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && healInc < 3) {
 				healInc++;
 			}
-			if (HP*2 > HT) {
+			if (getHP() *2 > getHT()) {
 				BossHealthBar.bleed(false);
 				((GooSprite) getSprite()).spray(false);
-				HP = Math.min(HP, HT);
+				setHP(Math.min(getHP(), getHT()));
 			}
 		} else {
 			healInc = 1;
@@ -188,7 +188,7 @@ public class Goo extends Mob {
 			spend( attackDelay() );
 
 			return true;
-		} else if (pumpedUp >= 2 || Random.Int( (HP*2 <= HT) ? 2 : 5 ) > 0) {
+		} else if (pumpedUp >= 2 || Random.Int( (getHP() *2 <= getHT()) ? 2 : 5 ) > 0) {
 
 			boolean visible = Dungeon.visibleforAnyHero(pos);
 
@@ -269,9 +269,9 @@ public class Goo extends Mob {
 			BossHealthBar.assignBoss( this );
 			Dungeon.level.seal();
 		}
-		boolean bleeding = (HP*2 <= HT);
+		boolean bleeding = (getHP() *2 <= getHT());
 		super.damage(dmg, source);
-		if ((HP*2 <= HT) && !bleeding){
+		if ((getHP() *2 <= getHT()) && !bleeding){
 			BossHealthBar.bleed(true);
 			getSprite().showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
 			((GooSprite) getSprite()).spray(true);
@@ -352,7 +352,7 @@ public class Goo extends Mob {
 
 		pumpedUp = bundle.getInt( PUMPEDUP );
 		if (state != SLEEPING) BossHealthBar.assignBoss(this);
-		if ((HP*2 <= HT)) BossHealthBar.bleed(true);
+		if ((getHP() *2 <= getHT())) BossHealthBar.bleed(true);
 
 		healInc = bundle.getInt(HEALINC);
 	}

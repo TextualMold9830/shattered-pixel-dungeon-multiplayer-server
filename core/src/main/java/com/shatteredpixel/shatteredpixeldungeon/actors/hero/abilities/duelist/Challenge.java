@@ -279,9 +279,9 @@ public class Challenge extends ArmorAbility {
 						//heals for 30%/50%/65%/75% of taken damage plus 5/10/15/20 bonus, based on talent points
 						hpToHeal = (int)Math.round(hpToHeal * (1f - Math.pow(0.707f, getCause().pointsInTalent(Talent.INVIGORATING_VICTORY))));
 						hpToHeal += 5*getCause().pointsInTalent(Talent.INVIGORATING_VICTORY);
-						hpToHeal = Math.min(hpToHeal, getCause().HT - getCause().HP);
+						hpToHeal = Math.min(hpToHeal, getCause().getHT() - getCause().getHP());
 						if (hpToHeal > 0){
-							getCause().HP += hpToHeal;
+							getCause().setHP(getCause().getHP() + hpToHeal);
 							getCause().getSprite().emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
 							getCause().getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hpToHeal), FloatingText.HEALING );
 						}

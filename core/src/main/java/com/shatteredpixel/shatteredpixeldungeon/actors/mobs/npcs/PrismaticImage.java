@@ -52,7 +52,7 @@ public class PrismaticImage extends NPC {
 	{
 		spriteClass = PrismaticSprite.class;
 		
-		HP = HT = 10;
+		setHP(setHT(10));
 		defenseSkill = 1;
 		
 		alignment = Alignment.ALLY;
@@ -147,8 +147,8 @@ public class PrismaticImage extends NPC {
 	public void duplicate( Hero hero, int HP ) {
 		this.hero = hero;
 		heroID = this.hero.id();
-		this.HP = HP;
-		HT = PrismaticGuard.maxHP( hero );
+		this.setHP(HP);
+		setHT(PrismaticGuard.maxHP( hero ));
 	}
 	
 	@Override

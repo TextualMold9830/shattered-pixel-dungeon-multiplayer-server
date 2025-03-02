@@ -223,8 +223,8 @@ public class NetworkPacket {
                         }
                     }
                 String name = character.name();
-                int hp = character.HP;
-                int ht = character.HT;
+                int hp = character.getHP();
+                int ht = character.getHT();
                 int pos = character.pos;
                 int shield = character.shielding();
                 object.put("hp", hp);

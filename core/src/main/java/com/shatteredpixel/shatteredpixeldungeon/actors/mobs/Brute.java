@@ -44,7 +44,7 @@ public class Brute extends Mob {
 	{
 		spriteClass = BruteSprite.class;
 		
-		HP = HT = 40;
+		setHP(setHT(40));
 		defenseSkill = 15;
 		
 		EXP = 8;
@@ -95,8 +95,8 @@ public class Brute extends Mob {
 	}
 	
 	protected void triggerEnrage(){
-		Buff.affect(this, BruteRage.class).setShield(HT/2 + 4);
-		getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(HT/2 + 4), FloatingText.SHIELDING );
+		Buff.affect(this, BruteRage.class).setShield(getHT() /2 + 4);
+		getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(getHT() /2 + 4), FloatingText.SHIELDING );
 		if (Dungeon.visibleforAnyHero(pos)) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}
@@ -127,7 +127,7 @@ public class Brute extends Mob {
 		@Override
 		public boolean act() {
 			
-			if (target.HP > 0){
+			if (target.getHP() > 0){
 				detach();
 				return true;
 			}

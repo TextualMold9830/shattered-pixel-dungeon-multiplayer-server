@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public class FungalCore extends Mob {
 
 	{
-		HP = HT = 300;
+		setHP(setHT(300));
 		spriteClass = FungalCoreSprite.class;
 
 		EXP = 20;

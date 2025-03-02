@@ -48,15 +48,15 @@ public class ScrollOfPrismaticImage extends ExoticScroll {
 		for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
 			if (m instanceof PrismaticImage){
 				found = true;
-				m.HP = m.HT;
-				m.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(m.HT), FloatingText.HEALING );
+				m.setHP(m.getHT());
+				m.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(m.getHT()), FloatingText.HEALING );
 			}
 		}
 
 		if (!found){
 			if (Stasis.getStasisAlly(hero) instanceof PrismaticImage){
 				found = true;
-				Stasis.getStasisAlly(hero).HP = Stasis.getStasisAlly(hero).HT;
+				Stasis.getStasisAlly(hero).setHP(Stasis.getStasisAlly(hero).getHT());
 			}
 		}
 

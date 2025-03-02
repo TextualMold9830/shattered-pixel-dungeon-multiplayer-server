@@ -501,7 +501,7 @@ public class CursedWand {
 					toHeal = target;
 					toDamage = user;
 				}
-				toHeal.HP = Math.min(toHeal.HT, toHeal.HP + damage/2);
+				toHeal.setHP(Math.min(toHeal.getHT(), toHeal.getHP() + damage/2));
 				toHeal.getSprite().emitter().burst(Speck.factory(Speck.HEALING), 3);
 				toHeal.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
 

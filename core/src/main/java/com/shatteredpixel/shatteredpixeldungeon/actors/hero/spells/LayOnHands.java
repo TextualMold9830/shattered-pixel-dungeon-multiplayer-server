@@ -115,12 +115,12 @@ public class LayOnHands extends TargetedClericSpell {
 			Buff.affect(ch, Barrier.class).incShield(totalBarrier);
 			ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING );
 		} else {
-			if (ch.HT - ch.HP < totalHeal){
-				totalBarrier = totalHeal - (ch.HT - ch.HP);
+			if (ch.getHT() - ch.getHP() < totalHeal){
+				totalBarrier = totalHeal - (ch.getHT() - ch.getHP());
 				totalBarrier = Math.min(3*totalHeal - barrier.shielding(), totalBarrier);
 				totalBarrier = Math.max(0, totalBarrier);
-				if (ch.HP != ch.HT) {
-					ch.HP = ch.HT;
+				if (ch.getHP() != ch.getHT()) {
+					ch.setHP(ch.getHT());
 					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - totalBarrier), FloatingText.HEALING);
 				}
 				if (totalBarrier > 0) {
@@ -128,7 +128,7 @@ public class LayOnHands extends TargetedClericSpell {
 					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalBarrier), FloatingText.SHIELDING);
 				}
 			} else {
-				ch.HP = ch.HP + totalHeal;
+				ch.setHP(ch.getHP() + totalHeal);
 				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
 			}
 		}

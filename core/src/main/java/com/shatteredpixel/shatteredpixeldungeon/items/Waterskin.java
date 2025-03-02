@@ -87,11 +87,11 @@ public class Waterskin extends Item {
 
 			if (volume > 0) {
 				
-				float missingHealthPercent = 1f - (hero.HP / (float)hero.HT);
+				float missingHealthPercent = 1f - (hero.getHP() / (float) hero.getHT());
 
 				int curShield = 0;
 				if (hero.buff(Barrier.class) != null) curShield = hero.buff(Barrier.class).shielding();
-				int maxShield = Math.round(hero.HT *0.2f*hero.pointsInTalent(Talent.SHIELDING_DEW));
+				int maxShield = Math.round(hero.getHT() *0.2f*hero.pointsInTalent(Talent.SHIELDING_DEW));
 				if (hero.hasTalent(Talent.SHIELDING_DEW)){
 					float missingShieldPercent = 1f - (curShield / (float)maxShield);
 					missingShieldPercent *= 0.2f*hero.pointsInTalent(Talent.SHIELDING_DEW);

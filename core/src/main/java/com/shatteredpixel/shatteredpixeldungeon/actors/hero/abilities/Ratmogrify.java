@@ -201,8 +201,8 @@ public class Ratmogrify extends ArmorAbility {
 		public void setup(Mob original) {
 			this.original = original;
 
-			HP = original.HP;
-			HT = original.HT;
+			setHP(original.getHP());
+			setHT(original.getHT());
 
 			defenseSkill = original.defenseSkill;
 
@@ -221,7 +221,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		public Mob getOriginal(){
 			if (original != null) {
-				original.HP = HP;
+				original.setHP(getHP());
 				original.pos = pos;
 			}
 			return original;

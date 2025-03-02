@@ -119,7 +119,7 @@ public class Honeypot extends Item {
 			Bee bee = new Bee();
 			bee.spawn( Dungeon.scalingDepth() );
 			bee.setPotInfo( pos, owner );
-			bee.HP = bee.HT;
+			bee.setHP(bee.getHT());
 			bee.pos = newPos;
 			
 			GameScene.add( bee );

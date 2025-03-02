@@ -27,7 +27,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -52,7 +51,7 @@ public class Necromancer extends Mob {
 	{
 		spriteClass = NecromancerSprite.class;
 		
-		HP = HT = 40;
+		setHP(setHT(40));
 		defenseSkill = 14;
 		
 		EXP = 7;
@@ -170,15 +169,15 @@ public class Necromancer extends Mob {
 		}
 		
 		//heal skeleton first
-		if (mySkeleton.HP < mySkeleton.HT){
+		if (mySkeleton.getHP() < mySkeleton.getHT()){
 
 			if (getSprite().visible || mySkeleton.getSprite().visible) {
 				getSprite().parent.add(new Beam.HealthRay(getSprite().center(), mySkeleton.getSprite().center()));
 			}
 			
-			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5, mySkeleton.HT);
+			mySkeleton.setHP(Math.min(mySkeleton.getHP() + mySkeleton.getHT() /5, mySkeleton.getHT()));
 			if (mySkeleton.getSprite().visible) {
-				mySkeleton.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
+				mySkeleton.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.getHT() /5 ), FloatingText.HEALING );
 			}
 			
 		//otherwise give it adrenaline
@@ -367,7 +366,7 @@ public class Necromancer extends Mob {
 				} else {
 					
 					//zap skeleton
-					if (mySkeleton.HP < mySkeleton.HT || mySkeleton.buff(Adrenaline.class) == null) {
+					if (mySkeleton.getHP() < mySkeleton.getHT() || mySkeleton.buff(Adrenaline.class) == null) {
 						if (getSprite() != null && getSprite().visible){
 							getSprite().zap(mySkeleton.pos);
 							return false;
@@ -398,7 +397,7 @@ public class Necromancer extends Mob {
 			maxLvl = -5;
 			
 			//20/25 health to start
-			HP = 20;
+			setHP(20);
 		}
 
 		@Override

@@ -64,7 +64,7 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		if (hero.HP / (float)hero.HT >= 0.5f){
+		if (hero.getHP() / (float) hero.getHT() >= 0.5f){
 			GLog.w(Messages.get(this, "ability_cant_use"));
 			return;
 		}

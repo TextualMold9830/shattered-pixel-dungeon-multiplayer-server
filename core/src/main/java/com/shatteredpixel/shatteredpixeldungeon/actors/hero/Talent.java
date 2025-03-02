@@ -586,9 +586,9 @@ public enum Talent {
 	public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
 		if (hero.hasTalent(HEARTY_MEAL)){
 			//3/5 HP healed, when hero is below 30% health
-			if (hero.HP/(float)hero.HT <= 0.3f) {
+			if (hero.getHP() /(float) hero.getHT() <= 0.3f) {
 				int healing = 1 + 2 * hero.pointsInTalent(HEARTY_MEAL);
-				hero.HP = Math.min(hero.HP + healing, hero.HT);
+				hero.setHP(Math.min(hero.getHP() + healing, hero.getHT()));
 				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
 
 			}
@@ -710,7 +710,7 @@ public enum Talent {
 				}
 			} else {
 				// 5/7.5% of max HP
-				int shieldToGive = Math.round( factor * hero.HT * (0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER))));
+				int shieldToGive = Math.round( factor * hero.getHT() * (0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER))));
 				hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 				Buff.affect(hero, Barrier.class).setShield(shieldToGive);
 			}

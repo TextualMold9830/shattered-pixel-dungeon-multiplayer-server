@@ -57,7 +57,7 @@ public class SupplyRation extends Food {
 	protected void satisfy(Hero hero) {
 		super.satisfy(hero);
 
-		hero.HP = Math.min(hero.HP + 5, hero.HT);
+		hero.setHP(Math.min(hero.getHP() + 5, hero.getHT()));
 		hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, "5", FloatingText.HEALING );
 
 		CloakOfShadows cloak = hero.belongings.getItem(CloakOfShadows.class);

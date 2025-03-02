@@ -91,7 +91,7 @@ public class DeathMark extends ArmorAbility {
 		DeathMarkTracker deathMarkTracker = new DeathMarkTracker(hero);
 		deathMarkTracker.attachTo(ch);
 		deathMarkTracker.spend(deathMarkTracker.DURATION * ch.resist(DeathMarkTracker.class));
-		Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
+		Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.getHP());
 		armor.charge -= chargeUse( hero );
 		armor.updateQuickslot();
 		hero.getSprite().zap(target);
@@ -107,7 +107,7 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	public static void processFearTheReaper( Char ch ){
-		if (ch.HP > 0 || ch.buff(DeathMarkTracker.class) == null){
+		if (ch.getHP() > 0 || ch.buff(DeathMarkTracker.class) == null){
 			return;
 		}
 		Hero hero = ch.buff(DeathMarkTracker.class).cause;
@@ -206,7 +206,7 @@ public class DeathMark extends ArmorAbility {
 			target.deathMarked = false;
 			if (!target.isAlive()){
 				target.getSprite().flash();
-				target.getSprite().bloodBurstA(target.getSprite().center(), target.HT*2);
+				target.getSprite().bloodBurstA(target.getSprite().center(), target.getHT() *2);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(new Char.DamageCause(this, null));

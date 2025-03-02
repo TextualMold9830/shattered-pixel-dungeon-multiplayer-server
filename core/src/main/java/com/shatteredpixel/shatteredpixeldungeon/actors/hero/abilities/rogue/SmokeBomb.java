@@ -172,9 +172,9 @@ public class SmokeBomb extends ArmorAbility {
 
 			alignment = Alignment.ALLY;
 
-			HT = 20;
-			if (owner != null) HT *= owner.pointsInTalent(Talent.BODY_REPLACEMENT);
-			HP = HT;
+			setHT(20);
+			if (owner != null) setHT(getHT() * owner.pointsInTalent(Talent.BODY_REPLACEMENT));
+			setHP(getHT());
 		}
 
 		@Override

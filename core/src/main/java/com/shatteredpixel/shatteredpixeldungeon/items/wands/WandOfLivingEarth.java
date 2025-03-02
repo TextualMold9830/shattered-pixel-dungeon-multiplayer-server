@@ -379,7 +379,7 @@ public class WandOfLivingEarth extends DamageWand {
 			//before other mobs
 			actPriority = MOB_PRIO + 1;
 
-			HP = HT = 0;
+			setHP(setHT(0));
 		}
 
 		public EarthGuardian(Hero owner) {
@@ -391,12 +391,12 @@ public class WandOfLivingEarth extends DamageWand {
 		public void setInfo(Hero hero, int wandLevel, int healthToAdd){
 			if (wandLevel > this.wandLevel) {
 				this.wandLevel = wandLevel;
-				HT = 16 + 8 * wandLevel;
+				setHT(16 + 8 * wandLevel);
 			}
-			if (HP != 0 && getSprite() != null){
+			if (getHP() != 0 && getSprite() != null){
 				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthToAdd), FloatingText.HEALING);
 			}
-			HP = Math.min(HT, HP + healthToAdd);
+			setHP(Math.min(getHT(), getHP() + healthToAdd));
 			//half of hero's evasion
 			defenseSkill = (hero.lvl + 4)/2;
 		}
@@ -471,7 +471,7 @@ public class WandOfLivingEarth extends DamageWand {
 			@Override
 			public boolean act(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
-					Buff.affect(owner, RockArmor.class).addArmor(wandLevel, HP);
+					Buff.affect(owner, RockArmor.class).addArmor(wandLevel, getHP());
 					if (buff(PowerOfMany.PowerBuff.class) != null){
 						Buff.affect(owner, RockArmor.class).powerOfManyTurns = buff(PowerOfMany.PowerBuff.class).cooldown()+1;
 					}

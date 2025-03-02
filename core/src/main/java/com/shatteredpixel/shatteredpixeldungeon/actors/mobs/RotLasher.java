@@ -40,7 +40,7 @@ public class RotLasher extends Mob {
 	{
 		spriteClass = RotLasherSprite.class;
 
-		HP = HT = 80;
+		setHP(setHT(80));
 		defenseSkill = 0;
 
 		EXP = 1;
@@ -57,9 +57,9 @@ public class RotLasher extends Mob {
 
 	@Override
 	protected boolean act() {
-		if (HP < HT && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
-			getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, HT - HP)), FloatingText.HEALING);
-			HP = Math.min(HT, HP + 5);
+		if (getHP() < getHT() && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
+			getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, getHT() - getHP())), FloatingText.HEALING);
+			setHP(Math.min(getHT(), getHP() + 5));
 		}
 		return super.act();
 	}

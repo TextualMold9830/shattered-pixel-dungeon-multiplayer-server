@@ -58,7 +58,7 @@ public class Statue extends Mob {
 	public Statue() {
 		super();
 		
-		HP = HT = 15 + Dungeon.depth * 5;
+		setHP(setHT(15 + Dungeon.depth * 5));
 		defenseSkill = 4 + Dungeon.depth;
 	}
 

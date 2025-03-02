@@ -43,7 +43,7 @@ public class GnollSapper extends Mob {
 
 		spriteClass = GnollSapperSprite.class;
 
-		HP = HT = 45;
+		setHP(setHT(45));
 		defenseSkill = 15;
 
 		EXP = 10;

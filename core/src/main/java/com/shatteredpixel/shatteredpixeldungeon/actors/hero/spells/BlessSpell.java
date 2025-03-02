@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -105,11 +104,11 @@ public class BlessSpell extends TargetedClericSpell {
 		} else {
 			Buff.prolong(ch, Bless.class, 5f + 5*hero.pointsInTalent(Talent.BLESS));
 			int totalHeal = 5 + 5*hero.pointsInTalent(Talent.BLESS);
-			if (ch.HT - ch.HP < totalHeal){
-				int barrier = totalHeal - (ch.HT - ch.HP);
+			if (ch.getHT() - ch.getHP() < totalHeal){
+				int barrier = totalHeal - (ch.getHT() - ch.getHP());
 				barrier = Math.max(barrier, 0);
-				if (ch.HP != ch.HT) {
-					ch.HP = ch.HT;
+				if (ch.getHP() != ch.getHT()) {
+					ch.setHP(ch.getHT());
 					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(totalHeal - barrier), FloatingText.HEALING);
 				}
 				if (barrier > 0) {
@@ -117,7 +116,7 @@ public class BlessSpell extends TargetedClericSpell {
 					ch.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(barrier), FloatingText.SHIELDING);
 				}
 			} else {
-				ch.HP = ch.HP + totalHeal;
+				ch.setHP(ch.getHP() + totalHeal);
 				ch.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(totalHeal), FloatingText.HEALING );
 			}
 		}

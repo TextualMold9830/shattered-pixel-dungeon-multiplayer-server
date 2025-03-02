@@ -246,7 +246,7 @@ public class PowerOfMany extends ArmorAbility {
 		{
 			spriteClass = LightAllySprite.class;
 
-			HP = HT = 80;
+			setHP(setHT(80));
 
 			immunities.add(AllyBuff.class);
 

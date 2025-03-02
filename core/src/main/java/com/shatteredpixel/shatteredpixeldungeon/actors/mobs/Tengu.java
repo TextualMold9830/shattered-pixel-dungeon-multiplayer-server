@@ -92,7 +92,7 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
+		setHP(setHT(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200));
 		EXP = 20;
 		defenseSkill = 15;
 		
@@ -142,20 +142,20 @@ public class Tengu extends Mob {
 
 		PrisonBossLevel.State state = ((PrisonBossLevel) Dungeon.level).state();
 
-		int hpBracket = HT / 8;
+		int hpBracket = getHT() / 8;
 
-		int curbracket = HP / hpBracket;
+		int curbracket = getHP() / hpBracket;
 
-		int beforeHitHP = HP;
+		int beforeHitHP = getHP();
 		super.damage(dmg, source);
 
 		//cannot be hit through multiple brackets at a time
-		if (HP <= (curbracket-1)*hpBracket){
-			HP = (curbracket-1)*hpBracket + 1;
+		if (getHP() <= (curbracket-1)*hpBracket){
+			setHP((curbracket-1)*hpBracket + 1);
 		}
 
-		int newBracket = HP / hpBracket;
-		dmg = beforeHitHP - HP;
+		int newBracket = getHP() / hpBracket;
+		dmg = beforeHitHP - getHP();
 		for (Hero hero: Dungeon.heroes) {
 			if (hero != null) {
 			LockedFloor lock = hero.buff(LockedFloor.class);
@@ -166,7 +166,7 @@ public class Tengu extends Mob {
 		}
 		}
 		//phase 2 of the fight is over
-		if (HP == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
+		if (getHP() == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
 			//let full attack action complete first
 			Actor.add(new Actor() {
 
@@ -185,8 +185,8 @@ public class Tengu extends Mob {
 		}
 
 		//phase 1 of the fight is over
-		if (state == PrisonBossLevel.State.FIGHT_START && HP <= HT/2){
-			HP = (HT/2);
+		if (state == PrisonBossLevel.State.FIGHT_START && getHP() <= getHT() /2){
+			setHP((getHT() /2));
 			yell(Messages.get(this, "interesting"));
 			((PrisonBossLevel)Dungeon.level).progress();
 			BossHealthBar.bleed(true);
@@ -285,7 +285,7 @@ public class Tengu extends Mob {
 				if (Dungeon.visibleforAnyHero(newPos)) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
-				float fill = 0.9f - 0.5f*((HP-(HT/2f))/(HT/2f));
+				float fill = 0.9f - 0.5f*((getHP() -(getHT() /2f))/(getHT() /2f));
 				level.placeTrapsInTenguCell(fill);
 				
 			//otherwise, jump in a larger possible area, as the room is bigger
@@ -342,8 +342,8 @@ public class Tengu extends Mob {
 		super.notice();
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
-			if (HP <= HT/2) BossHealthBar.bleed(true);
-			if (HP == HT) {
+			if (getHP() <= getHT() /2) BossHealthBar.bleed(true);
+			if (getHP() == getHT()) {
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
 					yell(Messages.get(this, "notice_gotcha", hero.name()), hero);
@@ -396,7 +396,7 @@ public class Tengu extends Mob {
 		abilityCooldown = bundle.getInt( ABILITY_COOLDOWN );
 		
 		BossHealthBar.assignBoss(this);
-		if (HP <= HT/2) BossHealthBar.bleed(true);
+		if (getHP() <= getHT() /2) BossHealthBar.bleed(true);
 	}
 	
 	//don't bother bundling this, as its purely cosmetic
@@ -465,7 +465,7 @@ public class Tengu extends Mob {
 	//expects to be called once per turn;
 	public boolean canUseAbility(){
 		
-		if (HP > HT/2) return false;
+		if (getHP() > getHT() /2) return false;
 		
 		if (abilitiesUsed >= targetAbilityUses()){
 			return false;

@@ -258,9 +258,9 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Vampiric){
 			if (targetsHit > 0){
 				int heal = Math.round(2.5f*targetsHit*powerMulti);
-				heal = Math.min( heal, hero.HT - hero.HP );
+				heal = Math.min( heal, hero.getHT() - hero.getHP());
 				if (heal > 0){
-					hero.HP += heal;
+					hero.setHP(hero.getHP() + heal);
 					hero.getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( heal ), FloatingText.HEALING );
 				}
 			}
@@ -456,7 +456,7 @@ public class ElementalStrike extends ArmorAbility {
 						&& ch.buff(Corruption.class) == null
 						&& ch instanceof Mob
 						&& ch.isAlive()) {
-					float hpMissing = 1f - (ch.HP / (float)ch.HT);
+					float hpMissing = 1f - (ch.getHP() / (float) ch.getHT());
 					float chance = 0.05f + 0.2f*hpMissing; //5-25%
 					if (Random.Float() < chance*powerMulti){
 						Corruption.corruptionHeal(ch);
@@ -469,10 +469,10 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Grim){
 			for (Char ch : affected){
 				if (ch != primaryTarget) {
-					float hpMissing = 1f - (ch.HP / (float)ch.HT);
+					float hpMissing = 1f - (ch.getHP() / (float) ch.getHT());
 					float chance = 0.06f + 0.24f*hpMissing; //6-30%
 					if (Random.Float() < chance*powerMulti){
-						ch.damage( ch.HP, new Char.DamageCause( Grim.class, hero) );
+						ch.damage(ch.getHP(), new Char.DamageCause( Grim.class, hero) );
 						ch.getSprite().emitter().burst( ShadowParticle.UP, 5 );
 					}
 				}

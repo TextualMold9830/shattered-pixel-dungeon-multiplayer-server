@@ -171,8 +171,8 @@ public abstract class Char extends Actor {
 	
 	private CharSprite sprite;
 	
-	public int HT;
-	public int HP;
+	private int HT;
+	private int HP;
 	
 	protected float baseSpeed	= 1;
 	protected PathFinder.Path path;
@@ -200,6 +200,30 @@ public abstract class Char extends Actor {
 		if (needsShieldUpdate) {
 			SendData.sendCharShield(id(), shielding());
 		}
+	}
+
+	public int getHT() {
+		return HT;
+	}
+
+	public int setHT(int HT) {
+		if (this.HT != HT){
+			this.HT = HT;
+			sendSelf();
+		}
+		return HT;
+	}
+
+	public int getHP() {
+		return HP;
+	}
+
+	public int setHP(int HP) {
+		if (this.HP != HP) {
+			this.HP = HP;
+			sendSelf();
+		}
+		return HP;
 	}
 
 
@@ -376,8 +400,8 @@ public abstract class Char extends Actor {
 		super.storeInBundle( bundle );
 
 		bundle.put( POS, pos );
-		bundle.put( TAG_HP, HP );
-		bundle.put( TAG_HT, HT );
+		bundle.put( TAG_HP, getHP());
+		bundle.put( TAG_HT, getHT());
 		bundle.put( BUFFS, buffs );
 	}
 
@@ -387,8 +411,8 @@ public abstract class Char extends Actor {
 		super.restoreFromBundle( bundle );
 
 		pos = bundle.getInt( POS );
-		HP = bundle.getInt( TAG_HP );
-		HT = bundle.getInt( TAG_HT );
+		setHP(bundle.getInt( TAG_HP ));
+		setHT(bundle.getInt( TAG_HT ));
 
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
@@ -561,7 +585,7 @@ public abstract class Char extends Actor {
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
 			//TODO: check this
 			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy, (Hero) prep.target)){
-				enemy.HP = 0;
+				enemy.setHP(0);
 				if (enemy.buff(Brute.BruteRage.class) != null){
 					enemy.buff(Brute.BruteRage.class).detach();
 				}
@@ -581,8 +605,8 @@ public abstract class Char extends Actor {
 			if (combinedLethality != null && this instanceof Hero && ((Hero) this).belongings.attackingWeapon() instanceof MeleeWeapon && combinedLethality.weapon != ((Hero) this).belongings.attackingWeapon()){
 				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
 						&& !Char.hasProp(enemy, Property.MINIBOSS) &&
-						(enemy.HP/(float)enemy.HT) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
-					enemy.HP = 0;
+						(enemy.getHP() /(float) enemy.getHT()) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
+					enemy.setHP(0);
 					if (enemy.buff(Brute.BruteRage.class) != null){
 						enemy.buff(Brute.BruteRage.class).detach();
 					}
@@ -980,23 +1004,23 @@ public abstract class Char extends Actor {
 			}
 		}
 		shielded -= dmg;
-		HP -= dmg;
+		setHP(getHP() - dmg);
 
-		if (HP > 0 && shielded > 0 && shielding() == 0){
+		if (getHP() > 0 && shielded > 0 && shielding() == 0){
 			if (this instanceof Hero && ((Hero) this).hasTalent(Talent.PROVOKED_ANGER)){
 				Buff.affect(this, Talent.ProvokedAngerTracker.class, 5f);
 			}
 		}
 
-		if (HP > 0 && buff(Grim.GrimTracker.class) != null){
+		if (getHP() > 0 && buff(Grim.GrimTracker.class) != null){
 
 			float finalChance = buff(Grim.GrimTracker.class).maxChance;
-			finalChance *= (float)Math.pow( ((HT - HP) / (float)HT), 2);
+			finalChance *= (float)Math.pow( ((getHT() - getHP()) / (float) getHT()), 2);
 
 			if (Random.Float() < finalChance) {
-				int extraDmg = Math.round(HP*resist(Grim.class));
+				int extraDmg = Math.round(getHP() *resist(Grim.class));
 				dmg += extraDmg;
-				HP -= extraDmg;
+				setHP(getHP() - extraDmg);
 
 				getSprite().emitter().burst( ShadowParticle.UP, 5 );
 				if (!isAlive() && buff(Grim.GrimTracker.class).qualifiesForBadge){
@@ -1005,9 +1029,9 @@ public abstract class Char extends Actor {
 			}
 		}
 
-		if (HP < 0 && src instanceof Char && alignment == Alignment.ENEMY){
+		if (getHP() < 0 && src instanceof Char && alignment == Alignment.ENEMY){
 			if (((Char) src).buff(Kinetic.KineticTracker.class) != null){
-				int dmgToAdd = -HP;
+				int dmgToAdd = -getHP();
 				dmgToAdd -= ((Char) src).buff(Kinetic.KineticTracker.class).conservedDamage;
 				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Char) src));
 				if (dmgToAdd > 0) {
@@ -1056,11 +1080,11 @@ public abstract class Char extends Actor {
 			getSprite().showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
 		}
 
-		if (HP < 0) HP = 0;
+		if (getHP() < 0) setHP(0);
 
 		if (!isAlive()) {
 			die( source );
-		} else if (HP == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
+		} else if (getHP() == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
 		sendSelf();
@@ -1084,7 +1108,7 @@ public abstract class Char extends Actor {
 	}
 
 	public void destroy() {
-		HP = 0;
+		setHP(0);
 		Actor.remove( this );
 
 		for (Char ch : Actor.chars().toArray(new Char[0])){
@@ -1147,7 +1171,7 @@ public abstract class Char extends Actor {
 	public boolean deathMarked = false;
 
 	public boolean isAlive() {
-		return HP > 0 || deathMarked;
+		return getHP() > 0 || deathMarked;
 	}
 
 	public boolean isActive() {

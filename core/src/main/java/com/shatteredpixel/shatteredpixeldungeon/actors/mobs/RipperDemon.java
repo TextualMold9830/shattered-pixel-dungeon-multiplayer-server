@@ -47,7 +47,7 @@ public class RipperDemon extends Mob {
 	{
 		spriteClass = RipperSprite.class;
 
-		HP = HT = 60;
+		setHP(setHT(60));
 		defenseSkill = 22;
 		viewDistance = Light.DISTANCE;
 

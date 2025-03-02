@@ -70,7 +70,7 @@ import java.util.ArrayList;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = 300;
+		setHP(setHT(300));
 		defenseSkill = 20;
 
 		viewDistance = Light.DISTANCE;
@@ -161,9 +161,9 @@ public abstract class YogFist extends Mob {
 	@Override
 	public void damage(int dmg, @NotNull DamageCause source) {
 		Object src = source.getCause();
-		int preHP = HP;
+		int preHP = getHP();
 		super.damage(dmg, source);
-		int dmgTaken = preHP - HP;
+		int dmgTaken = preHP - getHP();
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
 			LockedFloor lock = hero.buff(LockedFloor.class);
@@ -415,9 +415,9 @@ public abstract class YogFist extends Mob {
 			//ensures toxic gas acts at the appropriate time when added
 			GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
 
-			if (Dungeon.level.water[pos] && HP < HT) {
-				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(HT/50), FloatingText.HEALING);
-				HP = Math.min(HT, HP + HT/50);
+			if (Dungeon.level.water[pos] && getHP() < getHT()) {
+				getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(getHT() /50), FloatingText.HEALING);
+				setHP(Math.min(getHT(), getHP() + getHT() /50));
 			}
 
 			return super.act();
@@ -551,10 +551,10 @@ public abstract class YogFist extends Mob {
 		@Override
 		public void damage(int dmg, @NotNull DamageCause source) {
 			Object src = source.getCause();
-			int beforeHP = HP;
+			int beforeHP = getHP();
 			super.damage(dmg, source);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
+			if (isAlive() && beforeHP > getHT() /2 && getHP() < getHT() /2){
+				setHP(getHT() /2);
 				if (src instanceof Char) {
 					Buff.prolong((Char) src, Blindness.class, Blindness.DURATION * 1.5f);
 				}
@@ -626,10 +626,10 @@ public abstract class YogFist extends Mob {
 		@Override
 		public void damage(int dmg, @NotNull DamageCause source) {
 			Object src = source.getCause();
-			int beforeHP = HP;
+			int beforeHP = getHP();
 			super.damage(dmg, source);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2) {
-				HP = HT / 2;
+			if (isAlive() && beforeHP > getHT() /2 && getHP() < getHT() /2) {
+				setHP(getHT() / 2);
 				for (Hero hero : Dungeon.heroes) {
 					if (hero != null) {
 

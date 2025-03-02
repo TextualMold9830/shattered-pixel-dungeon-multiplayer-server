@@ -45,7 +45,7 @@ public class DM100 extends Mob implements Callback {
 	{
 		spriteClass = DM100Sprite.class;
 		
-		HP = HT = 20;
+		setHP(setHT(20));
 		defenseSkill = 8;
 		
 		EXP = 6;

@@ -37,7 +37,7 @@ public class FungalSpinner extends Spinner {
 	{
 		spriteClass = FungalSpinnerSprite.class;
 
-		HP = HT = 40;
+		setHP(setHT(40));
 		defenseSkill = 16;
 
 		EXP = 7;
