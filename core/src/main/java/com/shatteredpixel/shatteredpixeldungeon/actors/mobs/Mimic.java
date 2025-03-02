@@ -159,6 +159,7 @@ public class Mimic extends Mob {
 		if (alignment != Alignment.NEUTRAL || !(c instanceof Hero)){
 			return super.interact(c);
 		}
+		alignment = Alignment.ENEMY;
 		stopHiding();
 		Hero hero = (Hero) c;
 		hero.busy();
@@ -169,7 +170,6 @@ public class Mimic extends Mob {
 			return doAttack(hero);
 		} else {
 			getSprite().idle();
-			alignment = Alignment.ENEMY;
 			hero.spendAndNext(1f);
 			return true;
 		}
