@@ -62,7 +62,7 @@ public class Gold extends Item {
 		Catalog.setSeen(getClass());
 		Statistics.itemTypesDiscovered.add(getClass());
 
-		Dungeon.gold += quantity();
+		hero.setGold(hero.getGold() + quantity());
 		Statistics.goldCollected += quantity;
 		Badges.validateGoldCollected();
 

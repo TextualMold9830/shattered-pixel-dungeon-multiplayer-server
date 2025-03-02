@@ -139,7 +139,7 @@ public class WndTradeItem extends WndInfoItem {
 		};
 		btnBuy.setRect( 0, pos + GAP, width, BTN_HEIGHT );
 		btnBuy.icon(new ItemSprite(ItemSpriteSheet.GOLD));
-		btnBuy.enable( price <= getOwnerHero().gold );
+		btnBuy.enable( price <= getOwnerHero().getGold());
 		add( btnBuy );
 
 		pos = btnBuy.bottom();

@@ -247,7 +247,7 @@ public class Hero extends Char {
 	//This list is maintained so that some logic checks can be skipped
 	// for enemies we know we aren't seeing normally, resulting in better performance
 	public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
-	public int gold = 0;
+	private int gold = 0;
 	public Hero() {
 		super();
 
@@ -2569,6 +2569,15 @@ public class Hero extends Char {
 
 	public boolean getReady() {
 		return ready;
+	}
+
+	public int getGold() {
+		return gold;
+	}
+
+	public void setGold(int gold) {
+		this.gold = gold;
+		SendData.sendHeroGold(networkID, gold);
 	}
 
 	public static interface Doom {
