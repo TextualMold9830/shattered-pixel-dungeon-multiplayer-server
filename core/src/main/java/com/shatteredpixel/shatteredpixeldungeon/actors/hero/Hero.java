@@ -2032,7 +2032,7 @@ public class Hero extends Char {
 			
 			Badges.validateLevelReached(this);
 		}
-		SendData.SendHeroLevel(networkID, lvl, exp);
+		SendData.SendHeroLevel(networkID, lvl, this.exp);
 	}
 	
 	public int maxExp() {
