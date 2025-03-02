@@ -189,7 +189,7 @@ public class Blandfruit extends Food {
 	public static final String POTIONATTRIB = "potionattrib";
 	
 	@Override
-	protected void onThrow(int cell) {
+	protected void onThrow(int cell, Hero hero) {
 		if (Dungeon.level.map[cell] == Terrain.WELL || Dungeon.level.pit[cell]) {
 			super.onThrow( cell );
 			
@@ -201,7 +201,7 @@ public class Blandfruit extends Food {
 				potionAttrib instanceof PotionOfPurity) {
 
 			Catalog.countUse(getClass());
-			potionAttrib.shatter( cell );
+			potionAttrib.shatter( cell, hero );
 			Dungeon.level.drop(new Chunks(), cell).sprite.drop();
 			
 		} else {

@@ -331,7 +331,7 @@ public class Potion extends Item {
 	}
 	
 	public void apply( Hero hero ) {
-		shatter( hero.pos );
+		shatter( hero.pos, hero );
 	}
 	
 	public void shatter( int cell ) {

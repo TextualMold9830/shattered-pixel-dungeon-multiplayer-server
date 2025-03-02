@@ -54,7 +54,7 @@ public class PotionOfCleansing extends ExoticPotion {
 	@Override
 	public void shatter(int cell, Hero hero) {
 		if (Actor.findChar(cell) == null){
-			super.shatter(cell);
+			super.shatter(cell, hero);
 		} else {
 			splash( cell );
 			if (Dungeon.visibleforAnyHero(cell)) {

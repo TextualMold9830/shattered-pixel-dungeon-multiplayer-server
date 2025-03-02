@@ -385,7 +385,7 @@ public class GameScene extends PixelScene {
 				int pos = Dungeon.level.randomRespawnCell(null);
 				if (pos == -1) pos = Dungeon.level.entrance();
 				if (item instanceof Potion) {
-					((Potion) item).shatter(pos);
+					((Potion) item).shatter(pos, null);
 				} else if (item instanceof Plant.Seed && !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
 					Dungeon.level.plant((Plant.Seed) item, pos);
 				} else if (item instanceof Honeypot) {
