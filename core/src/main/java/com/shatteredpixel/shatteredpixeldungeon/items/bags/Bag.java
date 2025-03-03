@@ -85,7 +85,7 @@ public abstract class Bag extends Item implements Iterable<Item> {
 		unique = true;
 	}
 	
-	public Char owner;
+	public Hero owner;
 	
 	public ArrayList<Item> items = new ArrayList<>();
 
