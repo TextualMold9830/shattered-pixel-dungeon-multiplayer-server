@@ -63,7 +63,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		levelCap = 5;
 
-		charge = 5+level();
+		setCharge(5+level());
 		partialCharge = 0;
 		chargeCap = 5+level();
 
@@ -73,7 +73,7 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public void resetForTrinity(int visibleLevel) {
 		super.resetForTrinity(visibleLevel);
-		charge = visibleLevel/2 - 1; //grants 4-10 turns of time freeze
+		setCharge(visibleLevel/2 - 1); //grants 4-10 turns of time freeze
 	}
 
 	public static final String AC_ACTIVATE = "ACTIVATE";
@@ -87,7 +87,7 @@ public class TimekeepersHourglass extends Artifact {
 		if (isEquipped( hero )
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
-				&& (charge > 0 || activeBuff != null)) {
+				&& (getCharge() > 0 || activeBuff != null)) {
 			actions.add(AC_ACTIVATE);
 		}
 		return actions;
@@ -109,7 +109,7 @@ public class TimekeepersHourglass extends Artifact {
 					activeBuff.detach();
 					GLog.i( Messages.get(this, "deactivate") );
 				}
-			} else if (charge <= 0)         GLog.i( Messages.get(this, "no_charge") );
+			} else if (getCharge() <= 0)         GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
 			else GameScene.show(
 						new WndOptions(hero, new ItemSprite(this),
@@ -144,7 +144,7 @@ public class TimekeepersHourglass extends Artifact {
 									activeBuff = new timeFreeze();
 									Talent.onArtifactUsed(getOwnerHero());
 									activeBuff.attachTo(getOwnerHero());
-									charge--;
+									setCharge(getCharge() - 1, getOwnerHero());
 									((timeFreeze)activeBuff).processTime(0f);
 								}
 							}
@@ -179,13 +179,13 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (getCharge() < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				setCharge(getCharge() + 1, target);
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -253,20 +253,20 @@ public class TimekeepersHourglass extends Artifact {
 		@Override
 		public boolean act() {
 
-			if (charge < chargeCap
+			if (getCharge() < chargeCap
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn((Hero) target)) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
-				float chargeGain = 1 / (90f - (chargeCap - charge)*3f);
+				float chargeGain = 1 / (90f - (chargeCap - getCharge())*3f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					setCharge(getCharge() + 1, (Hero) target);
 
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0;
 					}
 				}
@@ -295,7 +295,7 @@ public class TimekeepersHourglass extends Artifact {
 
 				Invisibility.dispel(target);
 
-				int usedCharge = Math.min(charge, 2);
+				int usedCharge = Math.min(getCharge(), 2);
 				//buffs always act last, so the stasis buff should end a turn early.
 				spend(5*usedCharge);
 
@@ -305,7 +305,7 @@ public class TimekeepersHourglass extends Artifact {
 					hunger.satisfy(5 * usedCharge);
 				}
 
-				charge -= usedCharge;
+				setCharge(getCharge() - usedCharge, (Hero) target);
 
 				target.invisible++;
 				target.paralysed++;
@@ -362,13 +362,13 @@ public class TimekeepersHourglass extends Artifact {
 			//use 1/1,000 to account for rounding errors
 			while (turnsToCost < -0.001f){
 				turnsToCost += 2f;
-				charge --;
+				setCharge(getCharge() - 1, (Hero) target);
 			}
 
 			updateQuickslot();
 
-			if (charge < 0 || charge == 0 && turnsToCost <= 0){
-				charge = 0;
+			if (getCharge() < 0 || getCharge() == 0 && turnsToCost <= 0){
+				setCharge(0, (Hero) target);
 				detach();
 			}
 

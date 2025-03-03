@@ -66,7 +66,7 @@ public class LloydsBeacon extends Artifact {
 
 		levelCap = 3;
 
-		charge = 0;
+		setCharge(0);
 		chargeCap = 3+level();
 
 		defaultAction = AC_ZAP;
@@ -134,7 +134,7 @@ public class LloydsBeacon extends Artifact {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				QuickSlotButton.cancel();
 
-			} else if (charge < chargesToUse) {
+			} else if (getCharge() < chargesToUse) {
 				GLog.i( Messages.get(this, "no_charge") );
 				QuickSlotButton.cancel();
 
@@ -195,7 +195,7 @@ public class LloydsBeacon extends Artifact {
 			if (target == null) return;
 
 			Invisibility.dispel(getOwner());
-			charge -= Dungeon.scalingDepth() > 20 ? 2 : 1;
+			setCharge(getCharge() - (Dungeon.scalingDepth() > 20 ? 2 : 1));
 			updateQuickslot();
 
 			if (Actor.findChar(target) == curUser){
@@ -274,16 +274,16 @@ public class LloydsBeacon extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap){
+		if (getCharge() < chargeCap){
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				setCharge(getCharge() + 1);
 
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
-				charge = chargeCap;
+				setCharge(chargeCap);
 			}
 			updateQuickslot();
 		}
@@ -316,14 +316,14 @@ public class LloydsBeacon extends Artifact {
 	public class beaconRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && Regeneration.regenOn((Hero) target)) {
-				partialCharge += 1 / (100f - (chargeCap - charge)*10f);
+			if (getCharge() < chargeCap && !cursed && Regeneration.regenOn((Hero) target)) {
+				partialCharge += 1 / (100f - (chargeCap - getCharge())*10f);
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					setCharge(getCharge() + 1);
 
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0;
 					}
 				}

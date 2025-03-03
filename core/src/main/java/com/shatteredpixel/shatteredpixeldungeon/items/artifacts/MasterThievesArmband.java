@@ -59,7 +59,7 @@ public class MasterThievesArmband extends Artifact {
 
 		levelCap = 10;
 
-		charge = 0;
+		setCharge(0);
 		partialCharge = 0;
 		chargeCap = 5+level()/2;
 
@@ -72,7 +72,7 @@ public class MasterThievesArmband extends Artifact {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
 		if (isEquipped(hero)
-				&& charge > 0
+				&& getCharge() > 0
 				&& hero.buff(MagicImmune.class) == null
 				&& !cursed) {
 			actions.add(AC_STEAL);
@@ -94,7 +94,7 @@ public class MasterThievesArmband extends Artifact {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				usesTargeting = false;
 
-			} else if (charge < 1) {
+			} else if (getCharge() < 1) {
 				GLog.i( Messages.get(this, "no_charge") );
 				usesTargeting = false;
 
@@ -182,7 +182,7 @@ public class MasterThievesArmband extends Artifact {
 
 							artifactProc(ch, visiblyUpgraded(), 1, getOwner());
 
-							charge--;
+							setCharge(getCharge() - 1, curUser);
 							exp += 3;
 							Talent.onArtifactUsed(curUser);
 							while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
@@ -222,16 +222,16 @@ public class MasterThievesArmband extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < chargeCap) {
+		if (getCharge() < chargeCap) {
 			partialCharge += 0.1f * amount;
 			while (partialCharge >= 1f) {
-				charge++;
+				setCharge(getCharge() + 1, target);
 				partialCharge--;
 			}
-			if (charge >= chargeCap) {
+			if (getCharge() >= chargeCap) {
 				GLog.p(Messages.get(MasterThievesArmband.class, "full"));
 				partialCharge = 0;
-				charge = chargeCap;
+				setCharge(chargeCap, target);
 			}
 			updateQuickslot();
 		}
@@ -274,17 +274,17 @@ public class MasterThievesArmband extends Artifact {
 		public void gainCharge(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
 
-			if (charge < chargeCap){
+			if (getCharge() < chargeCap){
 				float chargeGain = 3f * levelPortion;
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 
 				partialCharge += chargeGain;
 				while (partialCharge > 1f){
 					partialCharge--;
-					charge++;
+					setCharge(getCharge() + 1);
 					updateQuickslot();
 
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						GLog.p( Messages.get(MasterThievesArmband.class, "full") );
 						partialCharge = 0;
 					}
@@ -301,7 +301,7 @@ public class MasterThievesArmband extends Artifact {
 			if (Random.Float() > stealChance){
 				return false;
 			} else {
-				charge -= chargesUsed;
+				setCharge(getCharge() - chargesUsed);
 				exp += 4 * chargesUsed;
 				GLog.i(Messages.get(MasterThievesArmband.class, "stole_item", item.name()));
 				assert target instanceof Hero;
@@ -327,7 +327,7 @@ public class MasterThievesArmband extends Artifact {
 			int value = item.value();
 			float valUsing = 0;
 			int chargesUsed = 0;
-			while (valUsing < value && chargesUsed < charge){
+			while (valUsing < value && chargesUsed < getCharge()){
 				valUsing += 10 + level()/2f;
 				chargesUsed++;
 			}

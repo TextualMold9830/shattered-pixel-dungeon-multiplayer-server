@@ -53,7 +53,7 @@ public class Artifact extends KindofMisc {
 	protected int levelCap = 0;
 
 	//the current artifact charge
-	protected int charge = 0;
+	private int charge = 0;
 	//the build towards next charge, usually rolls over at 1.
 	//better to keep charge as an int and use a separate float than casting.
 	protected float partialCharge = 0;
@@ -145,7 +145,7 @@ public class Artifact extends KindofMisc {
 	public void resetForTrinity(int visibleLevel){
 		level(Math.round((visibleLevel*levelCap)/10f));
 		exp = Integer.MIN_VALUE; //ensures no levelling
-		charge = chargeCap;
+		setCharge(chargeCap);
 		cooldown = 0;
 	}
 
@@ -201,16 +201,16 @@ public class Artifact extends KindofMisc {
 
 		//display as percent
 		if (chargeCap == 100)
-			return Messages.format( "%d%%", charge );
+			return Messages.format( "%d%%", getCharge());
 
 		//display as #/#
 		if (chargeCap > 0)
-			return Messages.format( "%d/%d", charge, chargeCap );
+			return Messages.format( "%d/%d", getCharge(), chargeCap );
 
 		//if there's no cap -
 		//- but there is charge anyway, display that charge
-		if (charge != 0)
-			return Messages.format( "%d", charge );
+		if (getCharge() != 0)
+			return Messages.format( "%d", getCharge());
 
 		//otherwise, if there's no charge, return null.
 		return null;
@@ -252,6 +252,19 @@ public class Artifact extends KindofMisc {
 		//do nothing by default;
 	}
 
+	public int getCharge() {
+		return charge;
+	}
+
+	public void setCharge(int charge, Hero hero) {
+		this.charge = charge;
+		if (hero != null) {
+			sendSelfUpdate(hero);
+		}
+	}
+	public void setCharge(int charge){
+		setCharge(charge, null);
+	}
 	public class ArtifactBuff extends Buff {
 
 		@Override
@@ -288,7 +301,7 @@ public class Artifact extends KindofMisc {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
 		bundle.put( EXP , exp );
-		bundle.put( CHARGE , charge );
+		bundle.put( CHARGE , getCharge());
 		bundle.put( PARTIALCHARGE , partialCharge );
 	}
 
@@ -296,8 +309,8 @@ public class Artifact extends KindofMisc {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		exp = bundle.getInt( EXP );
-		if (chargeCap > 0)  charge = Math.min( chargeCap, bundle.getInt( CHARGE ));
-		else                charge = bundle.getInt( CHARGE );
+		if (chargeCap > 0)  setCharge(Math.min( chargeCap, bundle.getInt( CHARGE )));
+		else                setCharge(bundle.getInt( CHARGE ));
 		partialCharge = bundle.getFloat( PARTIALCHARGE );
 	}
 }

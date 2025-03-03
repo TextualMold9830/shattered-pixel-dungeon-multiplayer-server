@@ -64,7 +64,7 @@ public class EtherealChains extends Artifact {
 		levelCap = 5;
 		exp = 0;
 
-		charge = 5;
+		setCharge(5);
 
 		defaultAction = AC_CAST;
 		usesTargeting = true;
@@ -73,7 +73,7 @@ public class EtherealChains extends Artifact {
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped(hero) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped(hero) && getCharge() > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_CAST);
 		}
 		return actions;
@@ -98,7 +98,7 @@ public class EtherealChains extends Artifact {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				usesTargeting = false;
 
-			} else if (charge < 1) {
+			} else if (getCharge() < 1) {
 				GLog.i( Messages.get(this, "no_charge") );
 				usesTargeting = false;
 
@@ -117,7 +117,7 @@ public class EtherealChains extends Artifact {
 	@Override
 	public void resetForTrinity(int visibleLevel) {
 		super.resetForTrinity(visibleLevel);
-		charge = 5+(level()*2); //sets charge to soft cap
+		setCharge(5+(level()*2)); //sets charge to soft cap
 	}
 
 	public CellSelector.Listener caster = new CellSelector.Listener(){
@@ -178,7 +178,7 @@ public class EtherealChains extends Artifact {
 		final int pulledPos = bestPos;
 		
 		int chargeUse = Dungeon.level.distance(enemy.pos, pulledPos);
-		if (chargeUse > charge) {
+		if (chargeUse > getCharge()) {
 			GLog.w( Messages.get(this, "no_charge") );
 			return;
 		}
@@ -195,7 +195,7 @@ public class EtherealChains extends Artifact {
 					public void call() {
 						enemy.pos = pulledPos;
 
-						charge -= chargeUse;
+						setCharge(getCharge() - chargeUse, hero);
 						Invisibility.dispel(hero);
 						Talent.onArtifactUsed(hero);
 						updateQuickslot();
@@ -246,7 +246,7 @@ public class EtherealChains extends Artifact {
 		final int newHeroPos = chain.collisionPos;
 		
 		int chargeUse = Dungeon.level.distance(hero.pos, newHeroPos);
-		if (chargeUse > charge){
+		if (chargeUse > getCharge()){
 			GLog.w( Messages.get(EtherealChains.class, "no_charge") );
 			return;
 		}
@@ -263,7 +263,7 @@ public class EtherealChains extends Artifact {
 					public void call() {
 						hero.pos = newHeroPos;
 
-						charge -= chargeUse;
+						setCharge(getCharge() - chargeUse, hero);
 						Invisibility.dispel(hero);
 						Talent.onArtifactUsed(hero);
 						updateQuickslot();
@@ -288,11 +288,11 @@ public class EtherealChains extends Artifact {
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 		int chargeTarget = 5+(level()*2);
-		if (charge < chargeTarget*2){
+		if (getCharge() < chargeTarget*2){
 			partialCharge += 0.5f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				setCharge(getCharge() + 1, target);
 				updateQuickslot();
 			}
 		}
@@ -317,12 +317,12 @@ public class EtherealChains extends Artifact {
 		@Override
 		public boolean act() {
 			int chargeTarget = 5+(level()*2);
-			if (charge < chargeTarget
+			if (getCharge() < chargeTarget
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn((Hero) target)) {
 				//gains a charge in 40 - 2*missingCharge turns
-				float chargeGain = (1 / (40f - (chargeTarget - charge)*2f));
+				float chargeGain = (1 / (40f - (chargeTarget - getCharge())*2f));
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 			} else if (cursed && Random.Int(100) == 0){
@@ -331,7 +331,7 @@ public class EtherealChains extends Artifact {
 
 			while (partialCharge >= 1) {
 				partialCharge --;
-				charge ++;
+				setCharge(getCharge() + 1);
 			}
 
 			updateQuickslot();
@@ -347,8 +347,8 @@ public class EtherealChains extends Artifact {
 			exp += Math.round(levelPortion*100);
 
 			//past the soft charge cap, gaining  charge from leveling is slowed.
-			if (charge > 5+(level()*2)){
-				levelPortion *= (5+((float)level()*2))/charge;
+			if (getCharge() > 5+(level()*2)){
+				levelPortion *= (5+((float)level()*2))/ getCharge();
 			}
 			partialCharge += levelPortion*6f;
 

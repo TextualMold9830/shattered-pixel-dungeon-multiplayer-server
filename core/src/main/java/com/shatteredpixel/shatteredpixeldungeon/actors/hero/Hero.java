@@ -1953,7 +1953,7 @@ public class Hero extends Char {
 		if (horn != null) horn.gainCharge(percent);
 		
 		AlchemistsToolkit.kitEnergy kit = buff(AlchemistsToolkit.kitEnergy.class);
-		if (kit != null) kit.gainCharge(percent);
+		if (kit != null) kit.gainCharge(percent, this);
 
 		MasterThievesArmband.Thievery armband = buff(MasterThievesArmband.Thievery.class);
 		if (armband != null) armband.gainCharge(percent);

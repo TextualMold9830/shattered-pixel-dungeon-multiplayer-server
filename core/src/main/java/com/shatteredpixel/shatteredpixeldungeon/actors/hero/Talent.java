@@ -653,7 +653,7 @@ public enum Talent {
 			if (hero.heroClass == HeroClass.CLERIC) {
 				HolyTome tome = hero.belongings.getItem(HolyTome.class);
 				if (tome != null) {
-					tome.directCharge( 0.5f * (1+hero.pointsInTalent(ENLIGHTENING_MEAL)));
+					tome.directCharge( 0.5f * (1+hero.pointsInTalent(ENLIGHTENING_MEAL)), hero);
 					ScrollOfRecharging.charge(hero);
 				}
 			} else {

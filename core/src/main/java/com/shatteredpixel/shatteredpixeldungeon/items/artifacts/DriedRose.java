@@ -90,7 +90,7 @@ public class DriedRose extends Artifact {
 
 		levelCap = 10;
 
-		charge = 100;
+		setCharge(100);
 		chargeCap = 100;
 
 		defaultAction = AC_SUMMON;
@@ -118,7 +118,7 @@ public class DriedRose extends Artifact {
 			return actions;
 		}
 		if (isEquipped( hero )
-				&& charge == chargeCap
+				&& getCharge() == chargeCap
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
 				&& ghostID == 0) {
@@ -155,7 +155,7 @@ public class DriedRose extends Artifact {
 			if (!Ghost.Quest.completed())   GameScene.show(new WndUseItem(null, this, hero));
 			else if (ghost != null)         GLog.i( Messages.get(this, "spawned") );
 			else if (!isEquipped( hero ))   GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge != chargeCap)   GLog.i( Messages.get(this, "no_charge") );
+			else if (getCharge() != chargeCap)   GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
 			else {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
@@ -196,7 +196,7 @@ public class DriedRose extends Artifact {
 
 					Invisibility.dispel(hero);
 					Talent.onArtifactUsed(hero);
-					charge = 0;
+					setCharge(0, hero);
 					partialCharge = 0;
 					updateQuickslot();
 
@@ -311,14 +311,14 @@ public class DriedRose extends Artifact {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
 		if (ghost == null){
-			if (charge < chargeCap) {
+			if (getCharge() < chargeCap) {
 				partialCharge += 4*amount;
 				while (partialCharge >= 1f){
-					charge++;
+					setCharge(getCharge() + 1, target);
 					partialCharge--;
 				}
-				if (charge >= chargeCap) {
-					charge = chargeCap;
+				if (getCharge() >= chargeCap) {
+					setCharge(chargeCap, target);
 					partialCharge = 0;
 					GLog.p(Messages.get(DriedRose.class, "charged"));
 				}
@@ -427,16 +427,16 @@ public class DriedRose extends Artifact {
 				return true;
 			}
 			
-			if (charge < chargeCap
+			if (getCharge() < chargeCap
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn((Hero) target)) {
 				//500 turns to a full charge
 				partialCharge += (1/5f * RingOfEnergy.artifactChargeMultiplier(target));
 				while (partialCharge > 1){
-					charge++;
+					setCharge(getCharge() + 1, (Hero) target);
 					partialCharge--;
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0f;
 						GLog.p( Messages.get(DriedRose.class, "charged") );
 					}
@@ -753,7 +753,7 @@ public class DriedRose extends Artifact {
 			//TODO stasis?
 			if (rose != null) {
 				rose.ghost = null;
-				rose.charge = 0;
+				rose.setCharge(0, getOwner());
 				rose.partialCharge = 0;
 				rose.ghostID = -1;
 			}

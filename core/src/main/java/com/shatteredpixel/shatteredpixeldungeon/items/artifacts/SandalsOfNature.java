@@ -75,7 +75,7 @@ public class SandalsOfNature extends Artifact {
 
 		levelCap = 3;
 
-		charge = 0;
+		setCharge(0);
 		chargeCap = 100;
 
 		defaultAction = AC_ROOT;
@@ -131,7 +131,7 @@ public class SandalsOfNature extends Artifact {
 		if (isEquipped( hero )
 				&& !cursed
 				&& curSeedEffect != null
-				&& charge >= seedChargeReqs.get(curSeedEffect)) {
+				&& getCharge() >= seedChargeReqs.get(curSeedEffect)) {
 			actions.add(AC_ROOT);
 		}
 		return actions;
@@ -151,7 +151,7 @@ public class SandalsOfNature extends Artifact {
 
 			if (!isEquipped( hero ))                                GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (curSeedEffect == null)                         GLog.i( Messages.get(this, "no_effect") );
-			else if (charge < seedChargeReqs.get(curSeedEffect))    GLog.i( Messages.get(this, "low_charge") );
+			else if (getCharge() < seedChargeReqs.get(curSeedEffect))    GLog.i( Messages.get(this, "low_charge") );
 			else {
 				GameScene.selectCell(hero, cellSelector);
 			}
@@ -166,14 +166,14 @@ public class SandalsOfNature extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < chargeCap) {
+		if (getCharge() < chargeCap) {
 			partialCharge += 2*amount;
 			while (partialCharge >= 1f){
-				charge++;
+				setCharge(getCharge() + 1, target);
 				partialCharge--;
 			}
-			if (charge >= chargeCap) {
-				charge = chargeCap;
+			if (getCharge() >= chargeCap) {
+				setCharge(chargeCap, target);
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -269,16 +269,16 @@ public class SandalsOfNature extends Artifact {
 	public class Naturalism extends ArtifactBuff{
 		public void charge() {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
-			if (charge < chargeCap){
+			if (getCharge() < chargeCap){
 				//0.5 charge per grass at +0, up to 1 at +10
 				float chargeGain = (3f + level())/6f;
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += Math.max(0, chargeGain);
 				while (partialCharge >= 1){
-					charge++;
+					setCharge(getCharge() + 1, (Hero) target);
 					partialCharge--;
 				}
-				charge = Math.min(charge, chargeCap);
+				setCharge(Math.min(getCharge(), chargeCap), (Hero) target);
 				updateQuickslot();
 			}
 		}
@@ -354,7 +354,7 @@ public class SandalsOfNature extends Artifact {
 						artifactProc(Actor.findChar(cell), visiblyUpgraded(), seedChargeReqs.get(curSeedEffect), getOwner());
 					}
 
-					charge -= seedChargeReqs.get(curSeedEffect);
+					setCharge(getCharge() - seedChargeReqs.get(curSeedEffect), getOwner());
 					Talent.onArtifactUsed(findOwner());
 					updateQuickslot();
 					curUser.spendAndNext(1f);

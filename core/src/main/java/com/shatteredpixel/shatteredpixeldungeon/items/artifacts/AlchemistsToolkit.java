@@ -49,7 +49,7 @@ public class AlchemistsToolkit extends Artifact {
 
 		levelCap = 10;
 		
-		charge = 0;
+		setCharge(0);
 		partialCharge = 0;
 	}
 
@@ -162,18 +162,18 @@ public class AlchemistsToolkit extends Artifact {
 		partialCharge += 0.25f*amount;
 		while (partialCharge >= 1){
 			partialCharge--;
-			charge++;
+			setCharge(getCharge() + 1, target);
 			updateQuickslot();
 		}
 	}
 
 	public int availableEnergy(){
-		return charge;
+		return getCharge();
 	}
 
 	public int consumeEnergy(int amount, Hero hero){
-		int result = amount - charge;
-		charge = Math.max(0, charge - amount);
+		int result = amount - getCharge();
+		setCharge(Math.max(0, getCharge() - amount), hero);
 		Talent.onArtifactUsed(hero);
 		return Math.max(0, result);
 	}
@@ -236,7 +236,7 @@ public class AlchemistsToolkit extends Artifact {
 			return true;
 		}
 
-		public void gainCharge(float levelPortion) {
+		public void gainCharge(float levelPortion, Hero hero) {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
 
 			//generates 2 energy every hero level, +1 energy per toolkit level
@@ -248,7 +248,7 @@ public class AlchemistsToolkit extends Artifact {
 
 			//charge is in increments of 1 energy.
 			while (partialCharge >= 1) {
-				charge++;
+				setCharge(getCharge() + 1, hero);
 				partialCharge -= 1;
 
 				updateQuickslot();

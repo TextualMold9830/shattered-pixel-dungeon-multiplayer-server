@@ -54,7 +54,7 @@ public class CloakOfShadows extends Artifact {
 		exp = 0;
 		levelCap = 10;
 
-		charge = Math.min(level()+3, 10);
+		setCharge(Math.min(level()+3, 10));
 		partialCharge = 0;
 		chargeCap = Math.min(level()+3, 10);
 
@@ -72,7 +72,7 @@ public class CloakOfShadows extends Artifact {
 		if ((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_CLOAK))
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
-				&& (charge > 0 || activeBuff != null)) {
+				&& (getCharge() > 0 || activeBuff != null)) {
 			actions.add(AC_STEALTH);
 		}
 		return actions;
@@ -90,7 +90,7 @@ public class CloakOfShadows extends Artifact {
 			if (activeBuff == null){
 				if (!isEquipped(hero) && !hero.hasTalent(Talent.LIGHT_CLOAK)) GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				else if (cursed)       GLog.i( Messages.get(this, "cursed") );
-				else if (charge <= 0)  GLog.i( Messages.get(this, "no_charge") );
+				else if (getCharge() <= 0)  GLog.i( Messages.get(this, "no_charge") );
 				else {
 					hero.spend( 1f );
 					hero.busy();
@@ -177,23 +177,23 @@ public class CloakOfShadows extends Artifact {
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
-		if (charge < chargeCap) {
+		if (getCharge() < chargeCap) {
 			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.LIGHT_CLOAK)/3f;
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1f) {
-				charge++;
+				setCharge(getCharge() + 1);
 				partialCharge--;
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
-				charge = chargeCap;
+				setCharge(chargeCap);
 			}
 			updateQuickslot();
 		}
 	}
 
-	public void directCharge(int amount){
-		charge = Math.min(charge+amount, chargeCap);
+	public void directCharge(int amount, Hero hero){
+		setCharge(Math.min(getCharge() +amount, chargeCap), hero);
 		updateQuickslot();
 	}
 	
@@ -229,11 +229,11 @@ public class CloakOfShadows extends Artifact {
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
+			if (getCharge() < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
 				if (activeBuff == null && Regeneration.regenOn((Hero) target)) {
 					assert target instanceof Hero;
 					Hero hero = (Hero) target;
-					float missing = (chargeCap - charge);
+					float missing = (chargeCap - getCharge());
 					if (level() > 7) missing += 5*(level() - 7)/3f;
 					float turnsToCharge = (45 - missing);
 					turnsToCharge /= RingOfEnergy.artifactChargeMultiplier(target);
@@ -245,9 +245,9 @@ public class CloakOfShadows extends Artifact {
 				}
 
 				while (partialCharge >= 1) {
-					charge++;
+					setCharge(getCharge() + 1, (target instanceof Hero) ? (Hero) target : null);
 					partialCharge -= 1;
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0;
 					}
 
@@ -322,9 +322,10 @@ public class CloakOfShadows extends Artifact {
 			turnsToCost--;
 			
 			if (turnsToCost <= 0){
-				charge--;
-				if (charge < 0) {
-					charge = 0;
+				Hero hero = target instanceof Hero ? (Hero) target : null;
+				setCharge(getCharge() - 1, hero);
+				if (getCharge() < 0) {
+					setCharge(0, hero);
 					detach();
 					GLog.w(Messages.get(this, "no_charge"));
 					((Hero) target).interrupt();
@@ -359,8 +360,8 @@ public class CloakOfShadows extends Artifact {
 		}
 
 		public void dispel(){
-			if (turnsToCost <= 0 && charge > 0){
-				charge--;
+			if (turnsToCost <= 0 && getCharge() > 0){
+				setCharge(getCharge() - 1, target instanceof Hero ? (Hero) target : null);
 			}
 			updateQuickslot();
 			detach();

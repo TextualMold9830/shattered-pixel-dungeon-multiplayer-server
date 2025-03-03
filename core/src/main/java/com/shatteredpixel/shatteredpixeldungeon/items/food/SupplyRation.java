@@ -62,7 +62,7 @@ public class SupplyRation extends Food {
 
 		CloakOfShadows cloak = hero.belongings.getItem(CloakOfShadows.class);
 		if (cloak != null) {
-			cloak.directCharge(1);
+			cloak.directCharge(1, hero);
 			ScrollOfRecharging.charge(hero);
 		}
 	}

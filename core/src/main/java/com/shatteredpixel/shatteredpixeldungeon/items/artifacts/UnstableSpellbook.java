@@ -70,7 +70,7 @@ public class UnstableSpellbook extends Artifact {
 
 		levelCap = 10;
 
-		charge = (int)(level()*0.6f)+2;
+		setCharge((int)(level()*0.6f)+2);
 		partialCharge = 0;
 		chargeCap = (int)(level()*0.6f)+2;
 
@@ -107,7 +107,7 @@ public class UnstableSpellbook extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && getCharge() > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_READ);
 		}
 		if (isEquipped( hero ) && level() < levelCap && !cursed && hero.buff(MagicImmune.class) == null) {
@@ -127,7 +127,7 @@ public class UnstableSpellbook extends Artifact {
 
 			if (hero.buff( Blindness.class ) != null) GLog.w( Messages.get(this, "blinded") );
 			else if (!isEquipped( hero ))             GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge <= 0)                     GLog.i( Messages.get(this, "no_charge") );
+			else if (getCharge() <= 0)                     GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                          GLog.i( Messages.get(this, "cursed") );
 			else {
 				doReadEffect(hero);
@@ -139,7 +139,7 @@ public class UnstableSpellbook extends Artifact {
 	}
 
 	public void doReadEffect(Hero hero){
-		charge--;
+		setCharge(getCharge() - 1, hero);
 
 		Scroll scroll;
 		do {
@@ -157,7 +157,7 @@ public class UnstableSpellbook extends Artifact {
 		curUser = hero;
 
 		//if there are charges left and the scroll has been given to the book
-		if (charge > 0 && !scrolls.contains(scroll.getClass())) {
+		if (getCharge() > 0 && !scrolls.contains(scroll.getClass())) {
 			final Scroll fScroll = scroll;
 
 			final ExploitHandler handler = Buff.affect(hero, ExploitHandler.class);
@@ -174,7 +174,7 @@ public class UnstableSpellbook extends Artifact {
 					if (index == 1){
 						Scroll scroll = Reflection.newInstance(ExoticScroll.regToExo.get(fScroll.getClass()));
 						curItem = scroll;
-						charge--;
+						setCharge(getCharge() - 1, hero);
 						scroll.anonymize();
 						checkForArtifactProc(curUser, scroll);
 						scroll.doRead(getOwnerHero());
@@ -260,13 +260,13 @@ public class UnstableSpellbook extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (getCharge() < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				setCharge(getCharge() + 1, target);
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -338,20 +338,20 @@ public class UnstableSpellbook extends Artifact {
 	public class bookRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap
+			if (getCharge() < chargeCap
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn((Hero) target)) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
-				float chargeGain = 1 / (120f - (chargeCap - charge)*5f);
+				float chargeGain = 1 / (120f - (chargeCap - getCharge())*5f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					setCharge(getCharge() + 1, (Hero) target);
 
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0;
 					}
 				}

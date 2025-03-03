@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -38,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndClericSpells;
 import com.watabou.utils.Bundle;
@@ -53,7 +51,7 @@ public class HolyTome extends Artifact {
 		exp = 0;
 		levelCap = 10;
 
-		charge = Math.min(level()+3, 10);
+		setCharge(Math.min(level()+3, 10));
 		partialCharge = 0;
 		chargeCap = Math.min(level()+3, 10);
 
@@ -145,19 +143,19 @@ public class HolyTome extends Artifact {
 	public boolean canCast( Hero hero, ClericSpell spell ){
 		return (isEquipped(hero) || (hero.hasTalent(Talent.LIGHT_READING) && hero.belongings.contains(this)))
 				&& hero.buff(MagicImmune.class) == null
-				&& charge >= spell.chargeUse(hero)
+				&& getCharge() >= spell.chargeUse(hero)
 				&& spell.canCast(hero);
 	}
 
-	public void spendCharge( float chargesSpent ){
+	public void spendCharge( float chargesSpent, Hero hero){
 		partialCharge -= chargesSpent;
 		while (partialCharge < 0){
-			charge--;
+			setCharge(getCharge() - 1, hero);
 			partialCharge++;
 		}
 
 		//target hero level is 1 + 2*tome level
-		int lvlDiffFromTarget = findOwner().lvl - (1+level()*2);
+		int lvlDiffFromTarget = hero.lvl - (1+level()*2);
 		//plus an extra one for each level after 6
 		if (level() >= 7){
 			lvlDiffFromTarget -= level()-6;
@@ -178,19 +176,18 @@ public class HolyTome extends Artifact {
 		}
 
 		updateQuickslot();
-		sendSelfUpdate();
 	}
 
-	public void directCharge(float amount){
-		if (charge < chargeCap) {
+	public void directCharge(float amount, Hero hero) {
+		if (getCharge() < chargeCap) {
 			partialCharge += amount;
 			while (partialCharge >= 1f) {
-				charge++;
+				setCharge(getCharge() + 1);
 				partialCharge--;
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
-				charge = chargeCap;
+				setCharge(chargeCap, hero);
 			}
 			updateQuickslot();
 		}
@@ -212,16 +209,16 @@ public class HolyTome extends Artifact {
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
-		if (charge < chargeCap) {
+		if (getCharge() < chargeCap) {
 			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.LIGHT_READING)/3f;
 			partialCharge += 0.25f*amount;
 			while (partialCharge >= 1f) {
-				charge++;
+				setCharge(getCharge() + 1, target);
 				partialCharge--;
 			}
-			if (charge >= chargeCap){
+			if (getCharge() >= chargeCap){
 				partialCharge = 0;
-				charge = chargeCap;
+				setCharge(chargeCap, target);
 			}
 			updateQuickslot();
 		}
@@ -286,9 +283,9 @@ public class HolyTome extends Artifact {
 
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
+			if (getCharge() < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
 				if (Regeneration.regenOn()) {
-					float missing = (chargeCap - charge);
+					float missing = (chargeCap - getCharge());
 					if (level() > 7) missing += 5*(level() - 7)/3f;
 					float turnsToCharge = (45 - missing);
 					turnsToCharge /= RingOfEnergy.artifactChargeMultiplier(target);
@@ -300,9 +297,9 @@ public class HolyTome extends Artifact {
 				}
 
 				while (partialCharge >= 1) {
-					charge++;
+					setCharge(getCharge() + 1, (Hero) target);
 					partialCharge -= 1;
-					if (charge == chargeCap){
+					if (getCharge() == chargeCap){
 						partialCharge = 0;
 					}
 
