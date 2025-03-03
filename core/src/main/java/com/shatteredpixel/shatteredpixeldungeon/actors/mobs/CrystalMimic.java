@@ -107,6 +107,8 @@ public class CrystalMimic extends Mimic {
 
 	public void stopHiding(){
 		state = FLEEING;
+		fieldOfView = new boolean[Dungeon.level.length()];
+		Dungeon.level.updateFieldOfView(this, fieldOfView);
 		if (getSprite() != null) getSprite().idle();
 		//haste for 2 turns if attacking
 		if (alignment == Alignment.NEUTRAL){

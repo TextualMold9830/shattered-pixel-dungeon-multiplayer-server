@@ -71,6 +71,8 @@ public class GoldenMimic extends Mimic {
 
 	public void stopHiding(){
 		state = HUNTING;
+		fieldOfView = new boolean[Dungeon.level.length()];
+		Dungeon.level.updateFieldOfView(this, fieldOfView);
 		if (getSprite() != null) getSprite().idle();
 		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = chooseEnemy();
