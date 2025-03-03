@@ -191,6 +191,7 @@ import java.util.LinkedHashMap;
 
 public class Hero extends Char {
 	public int networkID = -1;
+	public String uuid;
 	public String name;
 	public int energy;
 	public AttackIndicator attackIndicator;
@@ -260,6 +261,7 @@ public class Hero extends Char {
 
 		attackIndicator = new AttackIndicator(this);
 		actionIndicator = new ActionIndicator(this);
+		uuid = java.util.UUID.randomUUID().toString();
 	}
 	
 	public void updateHT( boolean boostHP ){
@@ -306,6 +308,7 @@ public class Hero extends Char {
 	private static final String LEVEL		= "lvl";
 	private static final String EXPERIENCE	= "exp";
 	private static final String HTBOOST     = "htboost";
+	private static final String UUID = "uuid";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -326,6 +329,7 @@ public class Hero extends Char {
 		bundle.put( EXPERIENCE, exp );
 		
 		bundle.put( HTBOOST, HTBoost );
+		bundle.put( UUID, uuid );
 
 		belongings.storeInBundle( bundle );
 	}
@@ -349,7 +353,7 @@ public class Hero extends Char {
 		defenseSkill = bundle.getInt( DEFENSE );
 		
 		STR = bundle.getInt( STRENGTH );
-
+		uuid = bundle.getString( UUID );
 		belongings.restoreFromBundle( bundle );
 	}
 	

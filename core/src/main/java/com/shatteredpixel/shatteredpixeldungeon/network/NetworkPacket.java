@@ -327,6 +327,7 @@ public class NetworkPacket {
             object.put("strength", strength);
             object.put("lvl", lvl);
             object.put("exp", exp);
+            object.put("uuid", hero.uuid);
             JSONArray[] talentsArray = new JSONArray[4];
             for (int i =  0; i < talentsArray.length; i++) {
                 JSONArray talents = new JSONArray();
@@ -497,7 +498,7 @@ public class NetworkPacket {
                 }
                 JSONObject map = data.getJSONObject(MAP);
                 if (!map.has(STATES)) {
-                    map.put(CELLS, new JSONArray());
+                    map.put(STATES, new JSONArray());
                 }
                 map.accumulate(STATES, state);
             }
