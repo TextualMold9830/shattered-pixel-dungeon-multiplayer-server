@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
@@ -30,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -44,6 +46,8 @@ import java.util.ArrayList;
 public class TengusMask extends Item {
 	
 	private static final String AC_WEAR	= "WEAR";
+	boolean cloned = false;
+	String boundUUID;
 	
 	{
 		stackable = false;
@@ -65,20 +69,25 @@ public class TengusMask extends Item {
 	public void execute( Hero hero, String action ) {
 
 		super.execute( hero, action );
+		if (!cloned ||hero.uuid.equals(boundUUID)) {
 
-		if (action.equals( AC_WEAR )) {
-			
-			curUser = hero;
+			if (action.equals(AC_WEAR)) {
 
-			GameScene.show( new WndChooseSubclass( this, hero ) );
-			
+				curUser = hero;
+
+				GameScene.show(new WndChooseSubclass(this, hero));
+
+			}
 		}
 	}
 	
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
-		Badges.validateMastery(hero);
-		return super.doPickUp( hero, pos );
+		if (!cloned ||hero.uuid.equals(boundUUID)) {
+			Badges.validateMastery(hero);
+			return super.doPickUp(hero, pos);
+		}
+		return false;
 	}
 	
 	@Override
@@ -114,5 +123,23 @@ public class TengusMask extends Item {
 		e.start(Speck.factory(Speck.MASK), 0.05f, 20);
 		GLog.p( Messages.get(this, "used"));
 		
+	}
+
+	@Override
+	public boolean collect(Bag container) {
+		if (cloned) {
+			return super.collect(container);
+		}
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null && hero != container.owner) {
+			TengusMask mask = new TengusMask();
+			mask.cloned = true;
+
+			}
+		}
+		TengusMask mask = new TengusMask();
+		mask.cloned = true;
+		mask.boundUUID = container.owner.uuid;
+		return mask.collect(container);
 	}
 }

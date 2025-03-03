@@ -24,8 +24,10 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -35,76 +37,28 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import org.json.JSONObject;
 
 public class WndChooseSubclass extends Window {
 	
 	private static final int WIDTH		= 130;
 	private static final float GAP		= 2;
+	TengusMask tome;
 	
 	public WndChooseSubclass(final TengusMask tome, final Hero hero ) {
-		
-		super();
+		super(hero);
+		this.tome = tome;
+		JSONObject args = new JSONObject();
+		args.put("option1", hero.heroClass.subClasses()[0].name());
+		args.put("option2", hero.heroClass.subClasses()[1].name());
+		SendData.sendWindow(hero.networkID, "choose_subclass", getId(), args);
+	}
 
-		IconTitle titlebar = new IconTitle();
-		titlebar.icon( new ItemSprite( tome.image(), null ) );
-		titlebar.label( tome.name() );
-		titlebar.setRect( 0, 0, WIDTH, 0 );
-		add( titlebar );
-
-		RenderedTextBlock message = PixelScene.renderTextBlock( 6 );
-		message.text( Messages.get(this, "message"), WIDTH );
-		message.setPos( titlebar.left(), titlebar.bottom() + GAP );
-		add( message );
-
-		float pos = message.bottom() + 3*GAP;
-
-		for (HeroSubClass subCls : hero.heroClass.subClasses()){
-			RedButton btnCls = new RedButton( subCls.shortDesc(), 6 ) {
-				@Override
-				protected void onClick() {
-					GameScene.show(new WndOptions(hero, new HeroIcon(subCls),
-							Messages.titleCase(subCls.title()),
-							Messages.get(WndChooseSubclass.this, "are_you_sure"),
-							Messages.get(WndChooseSubclass.this, "yes"),
-							Messages.get(WndChooseSubclass.this, "no")){
-						@Override
-						protected void onSelect(int index) {
-							hide();
-							if (index == 0 && WndChooseSubclass.this.parent != null){
-								WndChooseSubclass.this.hide();
-								tome.choose( subCls );
-							}
-						}
-					});
-				}
-			};
-			btnCls.leftJustify = true;
-			btnCls.multiline = true;
-			btnCls.setSize(WIDTH-20, btnCls.reqHeight()+2);
-			btnCls.setRect( 0, pos, WIDTH-20, btnCls.reqHeight()+2);
-			add( btnCls );
-
-			IconButton clsInfo = new IconButton(Icons.get(Icons.INFO)){
-				@Override
-				protected void onClick() {
-					GameScene.show(new WndInfoSubclass(getOwnerHero().heroClass, subCls, getOwnerHero()));
-				}
-			};
-			clsInfo.setRect(WIDTH-20, btnCls.top() + (btnCls.height()-20)/2, 20, 20);
-			add(clsInfo);
-
-			pos = btnCls.bottom() + GAP;
+	@Override
+	protected void onSelect(int button) {
+		if (button == 0 || button == 1) {
+			tome.choose(getOwnerHero().heroClass.subClasses()[button]);
 		}
-
-		RedButton btnCancel = new RedButton( Messages.get(this, "cancel") ) {
-			@Override
-			protected void onClick() {
-				hide();
-			}
-		};
-		btnCancel.setRect( 0, pos, WIDTH, 18 );
-		add( btnCancel );
-		
-		resize( WIDTH, (int)btnCancel.bottom() );
+		hide();
 	}
 }
