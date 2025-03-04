@@ -51,7 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Tilemap;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
@@ -287,18 +287,7 @@ public class HallsBossLevel extends Level {
 		}
 
 		Dungeon.observe();
-
-		Game.runOnRenderThread(new Callback() {
-			@Override
-			public void call() {
-				Music.INSTANCE.fadeOut(5f, new Callback() {
-					@Override
-					public void call() {
-						Music.INSTANCE.play(Assets.Music.THEME_FINALE, true);
-					}
-				});
-			}
-		});
+		Music.INSTANCE.fadeOut(5f, new Music.PlayAction(Assets.Music.THEME_FINALE, true));
 	}
 
 	@Override

@@ -33,8 +33,6 @@ import com.watabou.glwrap.Blending;
 import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.InputHandler;
-import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
@@ -199,7 +197,6 @@ public class Game implements ApplicationListener {
 		}
 		
 		sceneClass = null;
-		Music.INSTANCE.stop();
 		//Sample.INSTANCE.reset();
 	}
 	
@@ -272,7 +269,7 @@ public class Game implements ApplicationListener {
 
 		inputHandler.processAllEvents();
 
-		Music.INSTANCE.update();
+//		Music.INSTANCE.update();
 //		Sample.INSTANCE.update();
 		scene.update();
 		Camera.updateAll();

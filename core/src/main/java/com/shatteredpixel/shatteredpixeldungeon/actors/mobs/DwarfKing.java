@@ -63,7 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
@@ -525,17 +525,7 @@ public class DwarfKing extends Mob {
 				yell(Messages.get(this, "enraged", hero.name()), hero);
 			}
 			BossHealthBar.bleed(true);
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(0.5f, new Callback() {
-						@Override
-						public void call() {
-							Music.INSTANCE.play(Assets.Music.CITY_BOSS_FINALE, true);
-						}
-					});
-				}
-			});
+			Music.INSTANCE.fadeOut(0.5f, new Music.PlayAction(Assets.Music.CITY_BOSS_FINALE, true));
 		} else if (phase == 3 && preHP > 20 && getHP() < 20 && isAlive()){
 			yell( Messages.get(this, "losing") );
 		}

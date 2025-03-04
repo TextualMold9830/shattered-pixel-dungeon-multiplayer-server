@@ -55,7 +55,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Tilemap;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
@@ -343,19 +343,7 @@ public class CavesBossLevel extends Level {
 		if (customArenaVisuals != null) customArenaVisuals.updateState();
 
 		Dungeon.observe();
-
-		Game.runOnRenderThread(new Callback() {
-			@Override
-			public void call() {
-				Music.INSTANCE.fadeOut(5f, new Callback() {
-					@Override
-					public void call() {
-						Music.INSTANCE.end();
-					}
-				});
-			}
-		});
-
+		Music.INSTANCE.fadeOut(5f,new Music.EndAction());
 	}
 
 	public void activatePylon(){

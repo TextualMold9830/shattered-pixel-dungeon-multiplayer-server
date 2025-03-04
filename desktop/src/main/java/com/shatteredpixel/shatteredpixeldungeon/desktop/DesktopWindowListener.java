@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.desktop;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowListener;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 
 public class DesktopWindowListener implements Lwjgl3WindowListener {
 	
@@ -41,16 +41,8 @@ public class DesktopWindowListener implements Lwjgl3WindowListener {
 	
 	@Override
 	public void iconified ( boolean b ) { }
-	public void focusLost () {
-		if (!SPDSettings.playMusicInBackground()) {
-			Music.INSTANCE.pause();
-		}
-	}
-	public void focusGained () {
-		if (!SPDSettings.playMusicInBackground()){
-			Music.INSTANCE.resume();
-		}
-	}
+	public void focusLost () {}
+	public void focusGained () {}
 	public boolean closeRequested () { return true; }
 	public void filesDropped ( String[] strings ) { }
 	public void refreshRequested () { }

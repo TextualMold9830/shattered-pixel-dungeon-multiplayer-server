@@ -53,7 +53,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.Scene;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;

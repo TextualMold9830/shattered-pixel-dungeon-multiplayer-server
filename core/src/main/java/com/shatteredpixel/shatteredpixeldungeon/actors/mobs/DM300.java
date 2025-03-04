@@ -64,7 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.DM300Sprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -572,17 +572,8 @@ public class DM300 extends Mob {
 		} else {
 			yell(Messages.get(this, "pylons_destroyed"));
 			BossHealthBar.bleed(true);
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(0.5f, new Callback() {
-						@Override
-						public void call() {
-							Music.INSTANCE.play(Assets.Music.CAVES_BOSS_FINALE, true);
-						}
-					});
-				}
-			});
+			Music.INSTANCE.fadeOut(0.5f, new Music.PlayAction(Assets.Music.CAVES_BOSS_FINALE, true));
+
 		}
 	}
 

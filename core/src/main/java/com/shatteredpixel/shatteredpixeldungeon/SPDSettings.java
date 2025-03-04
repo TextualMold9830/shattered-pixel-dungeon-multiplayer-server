@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameSettings;
@@ -424,7 +424,6 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_MUSIC_BG     = "music_bg";
 	
 	public static void music( boolean value ) {
-		Music.INSTANCE.enable( value );
 		put( KEY_MUSIC, value );
 	}
 	
@@ -433,7 +432,6 @@ public class SPDSettings extends GameSettings {
 	}
 	
 	public static void musicVol( int value ){
-		Music.INSTANCE.volume(value*value/100f);
 		put( KEY_MUSIC_VOL, value );
 	}
 	

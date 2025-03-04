@@ -50,13 +50,18 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSadGhost;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
+
+import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_CHANCES;
+import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_LIST;
+import static com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel.SEWER_TRACK_CHANCES;
+import static com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel.SEWER_TRACK_LIST;
 
 public class Ghost extends NPC {
 
@@ -195,29 +200,10 @@ public class Ghost extends NPC {
 			if (questBoss.pos != -1) {
 				GameScene.add(questBoss);
 				Quest.given = true;
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						GameScene.show( new WndQuest( Ghost.this, txt_quest, hero ){
-							@Override
-							public void hide() {
-								super.hide();
-								Music.INSTANCE.fadeOut(1f, new Callback() {
-									@Override
-									public void call() {
-										if (Dungeon.level != null) {
-											Dungeon.level.playLevelMusic();
-										}
-									}
-								});
-							}
-						} );
-					}
-				});
+				GameScene.show( new WndQuest( Ghost.this, txt_quest, hero));
+				Music.INSTANCE.fadeOut(1f,new Music.PlayAction(Assets.Music.SEWERS_TENSE));
 			}
-
 		}
-
 		return true;
 	}
 
@@ -378,20 +364,18 @@ public class Ghost extends NPC {
 				Sample.INSTANCE.play( Assets.Sounds.GHOST );
 				processed = true;
 				Statistics.questScores[0] = 1000;
-
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						Music.INSTANCE.fadeOut(1f, new Callback() {
-							@Override
-							public void call() {
-								if (Dungeon.level != null) {
-									Dungeon.level.playLevelMusic();
-								}
-							}
-						});
+				Music.MusicAction callback;
+				if (Ghost.Quest.active() || Statistics.amuletObtained){
+					if (Statistics.amuletObtained && Dungeon.depth == 1){
+						callback = new Music.PlayAction(Assets.Music.THEME_FINALE, true);
+					} else {
+						callback = new Music.PlayAction(Assets.Music.SEWERS_TENSE, true);
 					}
-				});
+				} else {
+					callback = new Music.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false);
+				}
+				Music.INSTANCE.fadeOut(1f, callback);
+				Music.INSTANCE.fadeOut(1f, new Music.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false));
 			}
 		}
 

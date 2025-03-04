@@ -43,7 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournal;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.NinePatch;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.SparseArray;
 
 public class JournalScene extends PixelScene {

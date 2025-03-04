@@ -56,7 +56,7 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Visual;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;

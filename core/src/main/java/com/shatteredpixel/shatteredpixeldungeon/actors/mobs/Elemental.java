@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -55,7 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -66,6 +67,9 @@ import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_CHANCES;
+import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_LIST;
 
 public abstract class Elemental extends Mob {
 
@@ -415,19 +419,13 @@ public abstract class Elemental extends Mob {
 			if (alignment == Alignment.ENEMY) {
 				Dungeon.level.drop( new Embers(), pos ).sprite.drop();
 				Statistics.questScores[1] = 2000;
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						Music.INSTANCE.fadeOut(1f, new Callback() {
-							@Override
-							public void call() {
-								if (Dungeon.level != null) {
-									Dungeon.level.playLevelMusic();
-								}
-							}
-						});
-					}
-				});
+				Music.MusicAction callback;
+				if (Wandmaker.Quest.active() || Statistics.amuletObtained){
+					callback = new Music.PlayAction(Assets.Music.PRISON_TENSE, true);
+				} else {
+					callback = new Music.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+				}
+				Music.INSTANCE.fadeOut(1f, callback);
 			}
 		}
 

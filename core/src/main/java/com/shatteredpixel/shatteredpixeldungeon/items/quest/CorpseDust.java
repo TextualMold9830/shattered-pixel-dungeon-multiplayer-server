@@ -23,18 +23,20 @@ package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -151,19 +153,8 @@ public class CorpseDust extends Item {
 					mob.die(new Char.DamageCause( null));
 				}
 			}
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(1f, new Callback() {
-						@Override
-						public void call() {
-							if (Dungeon.level != null) {
-								Dungeon.level.playLevelMusic();
-							}
-						}
-					});
-				}
-			});
+			//We know that quest is active
+			Music.INSTANCE.fadeOut(1f, new Music.PlayAction(Assets.Music.PRISON_TENSE));
 		}
 
 		private static String SPAWNPOWER = "spawnpower";

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.*;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
@@ -129,9 +129,6 @@ public class ShatteredPixelDungeon extends Game {
 
 		updateSystemUI();
 		SPDAction.loadBindings();
-		
-		Music.INSTANCE.enable( SPDSettings.music() );
-		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
 
 		Server.startServer();
 		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;

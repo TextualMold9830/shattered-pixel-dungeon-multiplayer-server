@@ -50,7 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Halo;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
@@ -156,20 +156,13 @@ public class PrisonLevel extends RegularLevel {
 		}
 		if (Wandmaker.Quest.active() != wandmakerQuestWasActive) {
 			wandmakerQuestWasActive = Wandmaker.Quest.active();
-
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(1f, new Callback() {
-						@Override
-						public void call() {
-							if (Dungeon.level != null) {
-								Dungeon.level.playLevelMusic();
-							}
-						}
-					});
-				}
-			});
+			Music.MusicAction callback;
+			if (Wandmaker.Quest.active() || Statistics.amuletObtained){
+				callback = new Music.PlayAction(Assets.Music.PRISON_TENSE, true);
+			} else {
+				callback = new Music.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+			}
+			Music.INSTANCE.fadeOut(1f, callback);
 		}
 	}
 

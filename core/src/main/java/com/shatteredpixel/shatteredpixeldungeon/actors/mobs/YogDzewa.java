@@ -52,7 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -374,17 +374,8 @@ public class YogDzewa extends Mob {
 			summonCooldown = -15; //summon a burst of minions!
 			phase = 5;
 			BossHealthBar.bleed(true);
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(0.5f, new Callback() {
-						@Override
-						public void call() {
-							Music.INSTANCE.play(Assets.Music.HALLS_BOSS_FINALE, true);
-						}
-					});
-				}
-			});
+			Music.INSTANCE.fadeOut(0.5f, new Music.PlayAction(Assets.Music.HALLS_BOSS_FINALE, true));
+
 		}
 	}
 

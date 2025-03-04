@@ -43,7 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.StandardRo
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
-import com.watabou.noosa.audio.Music;
+import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Point;
@@ -190,17 +190,7 @@ public class SewerBossLevel extends SewerLevel {
 			set( entrance(), Terrain.ENTRANCE );
 			GameScene.updateMap( entrance() );
 
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					Music.INSTANCE.fadeOut(5f, new Callback() {
-						@Override
-						public void call() {
-							Music.INSTANCE.end();
-						}
-					});
-				}
-			});
+			Music.INSTANCE.fadeOut(5f, new Music.EndAction());
 		}
 	}
 	
