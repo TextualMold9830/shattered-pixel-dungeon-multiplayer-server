@@ -75,8 +75,11 @@ public class Food extends Item {
 			
 			detach( hero.belongings.backpack );
 			Catalog.countUse(getClass());
-
-			satisfy(hero);
+			for(Hero h: Dungeon.heroes) {
+				if (h != null) {
+					satisfy(h);
+				}
+			}
 			GLog.i( Messages.get(this, "eat_msg") );
 			
 			hero.getSprite().operate( hero.pos );
