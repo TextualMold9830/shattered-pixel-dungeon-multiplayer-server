@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -161,7 +162,7 @@ public class Waterskin extends Item {
 		return volume >= MAX_VOLUME;
 	}
 
-	public void collectDew( Dewdrop dew ) {
+	public void collectDew( Dewdrop dew, Hero hero ) {
 
 		GLog.i( Messages.get(this, "collected") );
 		volume += dew.quantity();
@@ -169,7 +170,7 @@ public class Waterskin extends Item {
 			volume = MAX_VOLUME;
 			GLog.p( Messages.get(this, "full") );
 		}
-
+		sendSelfUpdate(hero);
 		updateQuickslot();
 	}
 
