@@ -593,6 +593,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private final HashSet<State> stateAdditions = new HashSet<>();
 
 	public void add( State state ) {
+		states.add(state);
 		sendCharSpriteState(ch, state, false);
 		switch (state) {
 			case BURNING:
@@ -678,6 +679,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private final HashSet<State> stateRemovals = new HashSet<>();
 
 	public void remove( State state ) {
+		states.remove(state);
 		sendCharSpriteState(ch, state, true);
 		switch (state) {
 			case BURNING:
