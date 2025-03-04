@@ -33,10 +33,10 @@ public class WndTitledMessage extends Window {
 	protected static final int WIDTH_MIN    = 120;
 	protected static final int WIDTH_MAX    = 220;
 	protected static final int GAP	= 2;
-
+	//Todo: send this
 	public WndTitledMessage( Image icon, String title, String message, Hero hero ) {
-		
-		this( new IconTitle( icon, title ), message, hero );
+		super(hero);
+		//this( new IconTitle( icon, title ), message, hero );
 
 	}
 	public WndTitledMessage( Image icon, String title, String message ) {
@@ -45,33 +45,9 @@ public class WndTitledMessage extends Window {
 	public WndTitledMessage( Component titlebar, String message) {
 		this( titlebar, message, null );
 	}
+	//Todo: send this
 	public WndTitledMessage( Component titlebar, String message, Hero hero ) {
-
 		super(hero);
-
-		int width = WIDTH_MIN;
-
-		titlebar.setRect( 0, 0, width, 0 );
-		add(titlebar);
-
-		RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
-		if (!useHighlighting()) text.setHightlighting(false);
-		text.text( message, width );
-		text.setPos( titlebar.left(), titlebar.bottom() + 2*GAP );
-		add( text );
-
-		while (PixelScene.landscape()
-				&& text.bottom() > targetHeight()
-				&& width < WIDTH_MAX){
-			width += 20;
-			titlebar.setRect(0, 0, width, 0);
-			text.setPos( titlebar.left(), titlebar.bottom() + 2*GAP );
-			text.maxWidth(width);
-		}
-
-		bringToFront(titlebar);
-
-		resize( width, (int)text.bottom() + 2 );
 	}
 
 	protected boolean useHighlighting(){
