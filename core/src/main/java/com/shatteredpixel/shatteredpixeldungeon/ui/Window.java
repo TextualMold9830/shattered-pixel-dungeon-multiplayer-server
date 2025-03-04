@@ -180,6 +180,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	public Window( int width, int height, NinePatch chrome, Hero owner ) {
 		this(width, height, chrome);
 		setOwnerHero(owner);
+		attachToHero(owner);
 	}
 
 		public Point getOffset(){

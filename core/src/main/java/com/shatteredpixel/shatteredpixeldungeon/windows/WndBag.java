@@ -40,6 +40,7 @@ import com.watabou.input.GameAction;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 
+import com.watabou.pixeldungeon.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -63,11 +64,6 @@ public class WndBag extends WndTabbed {
 	public WndBag( Bag bag, ItemSelector selector, Hero hero ) {
 
 		super(hero);
-
-		WndBag instance = getInstance(hero);
-		if( instance != null ){
-			instance.hide();
-		}
 
 		setInstance(hero, this);
 
@@ -190,7 +186,15 @@ public class WndBag extends WndTabbed {
 			return Icons.get( Icons.BACKPACK );
 		}
 	}
-
+	public void onSelect(int button, @Nullable JSONObject args) {
+		if (button == -1) {
+			selector.onSelect(null);
+			hide();
+		}  else {
+			selector.onSelect(getOwnerHero().belongings.getItemInSlot(Utils.JsonArrayToListInteger(args.getJSONArray("item_path"))));
+			hide();
+		}
+	}
 	public static JSONArray listToJsonArray(List<List<Integer>> arg) {
 		JSONArray result = new JSONArray();
 		for (int i = 0; i < arg.size(); i++) {
