@@ -90,9 +90,9 @@ public class WndSadGhost extends Window {
 	protected void onSelect(int button) {
 		if (Ghost.Quest.processed() && !Ghost.Quest.completed()) {
 			if (button == 0) {
-				Ghost.Quest.weapon.collect(getOwnerHero());
+				WndSadGhost.this.selectReward( Ghost.Quest.weapon );
 			} else if(button == 1){
-				Ghost.Quest.armor.collect(getOwnerHero());
+				WndSadGhost.this.selectReward( Ghost.Quest.armor );
 			}
 			Ghost.Quest.complete();
 		}
