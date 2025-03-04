@@ -245,6 +245,9 @@ public class NetworkPacket {
                     object.put("description", desc);
                 }
             } else if (actor instanceof Blob) {
+                if (((Blob) actor).cur == null) {
+                    return new JSONObject();
+                }
                 int id = actor.id();
                 object.put("id", id);
                 object.put("type", "blob");
