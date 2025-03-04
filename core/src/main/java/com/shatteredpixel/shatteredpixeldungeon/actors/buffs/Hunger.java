@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfCha
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -58,10 +59,9 @@ public class Hunger extends Buff implements Hero.Doom {
 		level = bundle.getFloat( LEVEL );
 		partialDamage = bundle.getFloat(PARTIALDAMAGE);
 	}
-
 	@Override
 	public boolean act() {
-
+		boolean needsUpdate = false;
 		if (Dungeon.level.locked
 				|| target.buff(WellFed.class) != null
 				|| SPDSettings.intro()
@@ -99,7 +99,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 					hero.interrupt();
 					newLevel = STARVING;
-
+					needsUpdate = true;
 				} else if (newLevel >= HUNGRY && level < HUNGRY) {
 
 					GLog.w( Messages.get(this, "onhungry") );
@@ -107,7 +107,7 @@ public class Hunger extends Buff implements Hero.Doom {
 					if (!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_FOOD)){
 						GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_FOOD, hero);
 					}
-
+					needsUpdate = true;
 				}
 				level = newLevel;
 
@@ -120,7 +120,9 @@ public class Hunger extends Buff implements Hero.Doom {
 			diactivate();
 
 		}
-
+		if(needsUpdate){
+			SendData.sendBuff(this);
+		}
 		return true;
 	}
 
@@ -161,7 +163,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			GLog.n( Messages.get(this, "onstarving") );
 			target.damage( 1, this );
 		}
-
+		SendData.sendBuff(this);
 		BuffIndicator.refreshHero();
 	}
 
