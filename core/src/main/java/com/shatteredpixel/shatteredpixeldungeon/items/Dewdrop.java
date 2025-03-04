@@ -58,7 +58,7 @@ public class Dewdrop extends Item {
 
 		if (flask != null && !flask.isFull()){
 
-			flask.collectDew( this );
+			flask.collectDew( this, hero );
 			GameScene.pickUp( this, pos );
 
 		} else {
