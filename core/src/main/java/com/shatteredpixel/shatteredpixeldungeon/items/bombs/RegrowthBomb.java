@@ -56,10 +56,19 @@ public class RegrowthBomb extends Bomb {
 	protected int explosionRange() {
 		return 3;
 	}
+	Hero source;
+	@Override
+	public void execute(Hero hero, String action) {
+		//hack
+		if (action.equals( "LIGHTTHROW")) {
+			source = hero;
+		}
+		super.execute(hero, action);
+	}
 
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 		
 		if (Dungeon.visibleforAnyHero(cell)) {
 			Splash.at(cell, 0x00FF00, 30);
@@ -72,8 +81,13 @@ public class RegrowthBomb extends Bomb {
 				Char ch = Actor.findChar(i);
 				int t = Dungeon.level.map[i];
 				if (ch != null){
-					if (ch.alignment == hero.alignment) {
-						//same as a healing potion
+					if (source != null) {
+						if (ch.alignment == source.alignment) {
+							//same as a healing potion
+							PotionOfHealing.cure(ch);
+							PotionOfHealing.heal(ch);
+						}
+					} else if (ch.alignment == Char.Alignment.ALLY){
 						PotionOfHealing.cure(ch);
 						PotionOfHealing.heal(ch);
 					}

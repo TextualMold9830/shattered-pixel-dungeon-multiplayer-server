@@ -143,7 +143,7 @@ public class CursedWand {
 		}
 	}
 	public static void tryForWandProc(Char target, Item origin) {
-	tryForWandProc(target, origin, null);
+	tryForWandProc(target, origin, origin.findOwner());
 	}
 
 	//*** Cursed Effects ***
@@ -582,7 +582,7 @@ public class CursedWand {
 				}
 			}
 
-			tryForWandProc(Actor.findChar(bolt.collisionPos), origin);
+			tryForWandProc(Actor.findChar(bolt.collisionPos), origin, (user instanceof Hero) ? (Hero) user : null);
 
 			for (Char ch : affected){
 				if (ch instanceof Hero) {

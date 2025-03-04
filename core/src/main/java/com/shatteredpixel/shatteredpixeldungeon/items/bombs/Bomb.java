@@ -134,8 +134,7 @@ public class Bomb extends Item {
 		}
 		return super.doPickUp(hero, pos);
 	}
-	@Deprecated
-	public void explode(int cell, Hero hero){
+	public void explode(int cell){
 		//We're blowing up, so no need for a fuse anymore.
 		this.fuse = null;
 
@@ -166,10 +165,9 @@ public class Bomb extends Item {
 			}
 
 			for (int i : affectedCells){
-				if (hero.fieldOfView[i]) {
-					CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
-				}
-
+					if (Dungeon.visibleforAnyHero(i)) {
+						CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
+					}
 				if (Dungeon.level.flamable[i]) {
 					Dungeon.level.destroy(i);
 					GameScene.updateMap(i);
@@ -214,9 +212,6 @@ public class Bomb extends Item {
 				Dungeon.observe();
 			}
 		}
-	}
-	public void explode(int cell){
-		explode(cell, null);
 	}
 
 	@Override
@@ -314,15 +309,10 @@ public class Bomb extends Item {
 			Actor.remove( this );
 			return true;
 		}
-
 		protected void trigger(Heap heap){
-			trigger(heap, null);
-
-		}
-		protected void trigger(Heap heap, Hero hero){
 			heap.remove(bomb);
 			Catalog.countUse(bomb.getClass());
-			bomb.explode(heap.pos, hero);
+			bomb.explode(heap.pos);
 			Actor.remove(this);
 		}
 

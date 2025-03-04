@@ -34,7 +34,7 @@ public class ExplosiveTrap extends Trap {
 
 	@Override
 	public void activate() {
-		new Bomb().explode(pos, null);
+		new Bomb().explode(pos);
         //FIXME
 		if (reclaimed && !Dungeon.heroes[0].isAlive()) {
 			Badges.validateDeathFromFriendlyMagic();

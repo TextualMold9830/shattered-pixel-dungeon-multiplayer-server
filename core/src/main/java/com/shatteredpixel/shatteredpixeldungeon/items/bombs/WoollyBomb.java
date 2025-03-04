@@ -47,8 +47,8 @@ public class WoollyBomb extends Bomb {
 	}
 
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange()+2 );
 		ArrayList<Integer> spawnPoints = new ArrayList<>();

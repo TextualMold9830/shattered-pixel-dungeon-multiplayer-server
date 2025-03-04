@@ -69,15 +69,15 @@ public class ArcaneBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 		
 		ArrayList<Char> affected = new ArrayList<>();
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange() );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				if (hero.fieldOfView[i]) {
+				if (Dungeon.visibleforAnyHero(i)) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
 				Char ch = Actor.findChar(i);
@@ -90,7 +90,7 @@ public class ArcaneBomb extends Bomb {
 		for (Char ch : affected){
 			//pierces armor, and damage in 5x5 instead of 3x3
 			int damage = Math.round(Random.NormalIntRange( 4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth() ));
-			ch.damage(damage, hero);
+			ch.damage(damage, new Char.DamageCause(this, null));
 			if (ch instanceof Hero && !ch.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);

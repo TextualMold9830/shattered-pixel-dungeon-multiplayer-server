@@ -51,8 +51,8 @@ public class ShrapnelBomb extends Bomb {
 	}
 
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 		
 		boolean[] FOV = new boolean[Dungeon.level.length()];
 		Point c = Dungeon.level.cellToPoint(cell);

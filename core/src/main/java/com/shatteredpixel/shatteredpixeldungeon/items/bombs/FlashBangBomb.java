@@ -56,8 +56,8 @@ public class FlashBangBomb extends Bomb {
 		return 2;
 	}
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 
 		ArrayList<Char> affected = new ArrayList<>();
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange() );
@@ -87,7 +87,8 @@ public class FlashBangBomb extends Bomb {
 		}
 
 		CellEmitter.center(cell).burst(SparkParticle.FACTORY, 20);
-		hero.getSprite().parent.addToFront(new Lightning(arcs, null));
+		//TODO: check this
+		//hero.getSprite().parent.addToFront(new Lightning(arcs, null));
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 	}
 	

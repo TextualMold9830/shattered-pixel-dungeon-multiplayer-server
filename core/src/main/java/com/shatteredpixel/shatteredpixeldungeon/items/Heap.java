@@ -251,7 +251,7 @@ public class Heap implements Bundlable {
 				burnt = true;
 			} else if (item instanceof Bomb) {
 				items.remove( item );
-				((Bomb) item).explode( pos , null);
+				((Bomb) item).explode(pos);
 				if (((Bomb) item).explodesDestructively()) {
 					//stop processing the burning, it will be replaced by the explosion.
 					return;
@@ -314,7 +314,7 @@ public class Heap implements Bundlable {
 
 				} else if (item instanceof Bomb) {
 					items.remove( item );
-					((Bomb) item).explode(pos, null);
+					((Bomb) item).explode(pos);
 					if (((Bomb) item).explodesDestructively()) {
 						//stop processing current explosion, it will be replaced by the new one.
 						return;

@@ -49,8 +49,8 @@ public class HolyBomb extends Bomb {
 	}
 
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 
 		for (Hero h: Dungeon.heroes) {
 			if (h == null) continue;

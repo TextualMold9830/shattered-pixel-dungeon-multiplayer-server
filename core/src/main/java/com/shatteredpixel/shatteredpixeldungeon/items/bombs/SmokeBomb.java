@@ -51,8 +51,8 @@ public class SmokeBomb extends Bomb {
 
 
 	@Override
-	public void explode(int cell, Hero hero) {
-		super.explode(cell, hero);
+	public void explode(int cell) {
+		super.explode(cell);
 
 		int centerVolume = 1000; //40*25
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), explosionRange() );
