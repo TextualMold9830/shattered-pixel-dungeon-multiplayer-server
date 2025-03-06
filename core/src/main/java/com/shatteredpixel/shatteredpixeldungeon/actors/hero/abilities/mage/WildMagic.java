@@ -142,7 +142,7 @@ public class WildMagic extends ArmorAbility {
 				cur.fx(aim, new Callback() {
 					@Override
 					public void call() {
-						cur.onZap(aim);
+						cur.onZap(aim, hero);
 						boolean alsoCursedZap = Random.Float() < WondrousResin.extraCurseEffectChance(hero);
 						if (Game.timeTotal - startTime < 0.33f) {
 							hero.getSprite().parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {

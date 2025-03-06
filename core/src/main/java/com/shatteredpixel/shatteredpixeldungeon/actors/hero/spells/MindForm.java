@@ -140,7 +140,7 @@ public class MindForm extends ClericSpell {
 
 					wand.fx(shot, new Callback() {
 						public void call() {
-							wand.onZap(shot);
+							wand.onZap(shot, getOwner());
 							if (Random.Float() < WondrousResin.extraCurseEffectChance(getOwner())){
 								WondrousResin.forcePositive = true;
 								CursedWand.cursedZap(wand,

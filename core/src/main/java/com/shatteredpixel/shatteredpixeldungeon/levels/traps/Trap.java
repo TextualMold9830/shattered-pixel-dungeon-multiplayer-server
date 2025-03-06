@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.TrapCache;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -99,6 +100,7 @@ public abstract class Trap implements Bundlable {
 			Bestiary.setSeen(getClass());
 			Bestiary.countEncounter(getClass());
 			activate();
+			SendData.sendTraps(Dungeon.level);
 		}
 	}
 

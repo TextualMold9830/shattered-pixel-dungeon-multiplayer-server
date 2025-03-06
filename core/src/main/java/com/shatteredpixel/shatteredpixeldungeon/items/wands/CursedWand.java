@@ -392,7 +392,7 @@ public class CursedWand {
 				wand.upgrade(Dungeon.scalingDepth()/5);
 			}
 			wand.levelKnown = false;
-			wand.onZap(bolt);
+			wand.onZap(bolt, (user instanceof Hero) ? (Hero) user : null);
 			wand = null;
 			return true;
 		}
