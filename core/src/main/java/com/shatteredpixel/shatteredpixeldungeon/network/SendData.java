@@ -677,4 +677,11 @@ public class SendData {
         clients[ID].packet.packAndAddLevelParams(level);
         clients[ID].flush();
     }
+
+    public static void sendTraps(Level level) {
+        for (int i = 0; i < clients.length; i++){
+            clients[i].packet.packAndAddTraps(level);
+            clients[i].flush();
+        }
+    }
 }
