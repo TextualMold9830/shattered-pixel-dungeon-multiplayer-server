@@ -17,10 +17,12 @@
  */
 package com.watabou.pixeldungeon.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.FormatFlagsConversionMismatchException;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +33,13 @@ public class Utils {
 	}
 
 	public static String format( String format, Object...args ) {
-		return String.format( Locale.ENGLISH, format, args );
+		try {
+			return String.format(Locale.ENGLISH, format, args);
+		} catch (Throwable e) {
+			Gdx.app.error("Utils", "format failed with string: " + format);
+			Gdx.app.error("Utils", e.toString());
+			return format;
+		}
 	}
 
 	public static String VOWELS	= "aoeiu";
