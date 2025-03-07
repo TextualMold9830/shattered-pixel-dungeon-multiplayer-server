@@ -199,6 +199,20 @@ class ClientThread implements Callable<String> {
                         boolean info = clericSpellObject.getBoolean("info");
                         Window.onClericSpellButtonPressed(clientHero, clericSpellObject.getInt("spell_id"), info);
                         break;
+                    case "chat": {
+                        if (clientHero == null) {
+                            break;
+                        }
+                        String text = data.getJSONObject(token).optString("message", null);
+                        if (text == null) {
+                            text = data.getJSONObject(token).optString("text", "");
+                        }
+                        if (text.isBlank()) {
+                            break;
+                        }
+                        GLog.i("%s: %s", clientHero.name,  text.trim());
+                        break;
+                    }
                     case "toolbar_action": {
                         JSONObject actionObj = data.getJSONObject(token);
                         switch (actionObj.getString("action_name").toUpperCase(Locale.ENGLISH)) {
