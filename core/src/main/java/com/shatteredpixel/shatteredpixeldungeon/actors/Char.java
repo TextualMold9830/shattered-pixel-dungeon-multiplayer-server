@@ -478,11 +478,12 @@ public abstract class Char extends Actor {
 			dmg += dmgBonus;
 
 			if (enemy.buff(GuidingLight.Illuminated.class) != null){
+				Hero source = enemy.buff(GuidingLight.Illuminated.class).source;
 				enemy.buff(GuidingLight.Illuminated.class).detach();
 				if (this instanceof Hero && ((Hero) this).hasTalent(Talent.SEARING_LIGHT)){
 					dmg += 2 + 2* ((Hero) this).pointsInTalent(Talent.SEARING_LIGHT);
 				}
-				if (!(this instanceof Hero) && enemy.buff(GuidingLight.Illuminated.class).source.subClass == HeroSubClass.PRIEST){
+				if (!(this instanceof Hero) && source.subClass == HeroSubClass.PRIEST){
 					Hero cause = enemy.buff(GuidingLight.Illuminated.class).source;
 					enemy.damage(cause.lvl, new DamageCause(GuidingLight.INSTANCE, cause));
 				}
