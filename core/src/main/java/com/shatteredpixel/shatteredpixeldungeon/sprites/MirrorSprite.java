@@ -25,21 +25,22 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.PointF;
 
-public class MirrorSprite extends MobSprite {
-	
+public class MirrorSprite extends MobSprite implements ClassSprite, TieredSprite {
+	HeroClass heroClass;
+	int tier;
 	private static final int FRAME_WIDTH	= 12;
 	private static final int FRAME_HEIGHT	= 15;
 	
 	public MirrorSprite() {
 		super();
-		texture( ((MirrorImage) ch).getHero().heroClass );
-		updateArmor( 0 );
+		//There is no Hero yet
 		idle();
 	}
-	
+
 	@Override
 	public void link( Char ch ) {
 		super.link( ch );
@@ -56,6 +57,9 @@ public class MirrorSprite extends MobSprite {
 	}
 	
 	public void updateArmor( int tier ) {
+		this.tier = tier;
+		heroClass = ((MirrorImage) ch).getHero().heroClass;
+		texture(heroClass.spritesheet());
 		TextureFilm film = new TextureFilm( HeroSprite.tiers(), tier, FRAME_WIDTH, FRAME_HEIGHT );
 		
 		idle = new Animation( 1, true );
@@ -71,5 +75,15 @@ public class MirrorSprite extends MobSprite {
 		attack.frames( film, 13, 14, 15, 0 );
 		
 		idle();
+		ch.sendSelf();
 	}
+
+	@Override
+	public HeroClass heroClass() {
+		return heroClass;
+	}
+	public int tier() {
+		return tier;
+	}
+
 }

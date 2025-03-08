@@ -196,6 +196,7 @@ public class MirrorImage extends NPC {
 		} else {
 			armTier = 1;
 		}
+		s.link(this);
 		((MirrorSprite)s).updateArmor( armTier );
 		return s;
 	}

@@ -18,6 +18,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TieredSprite;
 import com.watabou.noosa.Image;
 import com.watabou.utils.SparseArray;
 import org.jetbrains.annotations.NotNull;
@@ -209,8 +211,8 @@ public class NetworkPacket {
                     } else {
                         object.put("type", "character");
                     }
-                    object.put("class", hero.heroClass);
-                    object.put("tier", hero.tier());
+                    //object.put("class", hero.heroClass);
+                    //object.put("tier", hero.tier());
                 }else {
                     object.put("type", "character");
                 }
@@ -221,6 +223,13 @@ public class NetworkPacket {
                         } else {
                             object.put("sprite_name", ((Char) actor).getSprite().spriteName());
                         }
+                        if (character.getSprite() instanceof TieredSprite) {
+                            object.put("tier", ((TieredSprite) character.getSprite()).tier());
+                        }
+                        if (character.getSprite() instanceof ClassSprite) {
+                            object.put("class", ((ClassSprite) character.getSprite()).heroClass());
+                        }
+
                     }
                 String name = character.name();
                 int hp = character.getHP();

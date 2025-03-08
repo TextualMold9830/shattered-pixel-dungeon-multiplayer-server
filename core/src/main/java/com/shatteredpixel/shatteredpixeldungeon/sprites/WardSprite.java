@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.tweeners.AlphaTweener;
 
-public class WardSprite extends MobSprite {
+public class WardSprite extends MobSprite implements TieredSprite{
 
 	private Animation tierIdles[] = new Animation[7];
 
@@ -161,5 +161,10 @@ public class WardSprite extends MobSprite {
 	@Override
 	public int blood() {
 		return 0xFFCC33FF;
+	}
+
+	@Override
+	public int tier() {
+		return ((WandOfWarding.Ward)ch).tier;
 	}
 }

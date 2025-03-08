@@ -144,7 +144,8 @@ public class WandOfWarding extends Wand {
 			Dungeon.level.pressCell(target);
 
 		} else {
-			Ward ward = new Ward(hero);
+			Ward ward = new Ward();
+			ward.owner = hero;
 			ward.pos = target;
 			ward.wandLevel = buffedLvl();
 			GameScene.add(ward, 1f);
@@ -219,11 +220,7 @@ public class WandOfWarding extends Wand {
 	}
 
 	public static class Ward extends NPC {
-		private Hero owner;
-
-		public Ward(Hero owner) {
-			this.owner = owner;
-		}
+		public Hero owner;
 
 		public int tier = 1;
 		private int wandLevel = 1;
@@ -290,10 +287,6 @@ public class WandOfWarding extends Wand {
 
 		//this class is used so that wards and sentries can have two entries in the Bestiary
 		public static class WardSentry extends Ward{
-			public WardSentry() {
-				//TODO: check this
-				super(null);
-			}
 		};
 
 		public void wandHeal( int wandLevel ){
@@ -368,7 +361,10 @@ public class WandOfWarding extends Wand {
 			Char enemy = this.enemy;
 			enemy.damage( dmg, this );
 			if (enemy.isAlive()){
-				Wand.wandProc(enemy, wandLevel, 1, owner);
+				if (owner != null) {
+					//TODO: check this
+					Wand.wandProc(enemy, wandLevel, 1, owner);
+				}
 			}
 
 			if (!enemy.isAlive() && enemy instanceof Hero) {
@@ -482,13 +478,16 @@ public class WandOfWarding extends Wand {
 		private static final String TIER = "tier";
 		private static final String WAND_LEVEL = "wand_level";
 		private static final String TOTAL_ZAPS = "total_zaps";
-
+		private static final String OWNER_UUID = "owner_uuid";
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(TIER, tier);
 			bundle.put(WAND_LEVEL, wandLevel);
 			bundle.put(TOTAL_ZAPS, totalZaps);
+			if (owner != null) {
+				bundle.put(OWNER_UUID, owner.uuid);
+			}
 		}
 
 		@Override
@@ -498,6 +497,14 @@ public class WandOfWarding extends Wand {
 			viewDistance = 3 + tier;
 			wandLevel = bundle.getInt(WAND_LEVEL);
 			totalZaps = bundle.getInt(TOTAL_ZAPS);
+			if (bundle.contains(OWNER_UUID)) {
+				String uuid = bundle.getString(OWNER_UUID);
+				for (Hero hero: Dungeon.heroes) {
+				if (hero != null && hero.uuid.equals(uuid)){
+					owner = hero;
+				}
+				}
+			}
 		}
 	}
 }

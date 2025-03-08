@@ -58,8 +58,9 @@ public class ScrollOfUpgrade extends InventoryScroll {
 
 	@Override
 	protected void onItemSelected( Item item, Hero hero ) {
-
-		GameScene.show(new WndUpgrade(this, item, identifiedByUse, hero));
+		//TODO: this is temporary fix until WndUpgrade is finished
+		upgradeItem(item);
+		//GameScene.show(new WndUpgrade(this, item, identifiedByUse, hero));
 
 	}
 

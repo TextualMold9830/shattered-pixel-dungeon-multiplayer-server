@@ -37,7 +37,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.RectF;
 
-public class HeroSprite extends CharSprite {
+public class HeroSprite extends CharSprite implements TieredSprite, ClassSprite{
 	
 	private static final int FRAME_WIDTH	= 12;
 	private static final int FRAME_HEIGHT	= 15;
@@ -190,5 +190,15 @@ public class HeroSprite extends CharSprite {
 		avatar.frame( frame );
 		
 		return avatar;
+	}
+
+	@Override
+	public HeroClass heroClass() {
+		return ((Hero) ch).heroClass;
+	}
+
+	@Override
+	public int tier() {
+		return ((Hero) ch).tier();
 	}
 }
