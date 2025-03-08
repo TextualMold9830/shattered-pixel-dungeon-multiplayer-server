@@ -680,8 +680,10 @@ public class SendData {
 
     public static void sendTraps(Level level) {
         for (int i = 0; i < clients.length; i++){
-            clients[i].packet.packAndAddTraps(level);
-            clients[i].flush();
+            if(clients[i] != null) {
+                clients[i].packet.packAndAddTraps(level);
+                clients[i].flush();
+            }
         }
     }
 }
