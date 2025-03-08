@@ -369,6 +369,7 @@ public abstract class Actor implements Bundlable {
 				add(buff);
 			}
 		}
+		SendData.sendActor(actor);
 	}
 	
 	public static synchronized void remove( Actor actor ) {
