@@ -201,6 +201,7 @@ public class AlchemyScene extends Window {
 				outputObj.put("enabled", combines[i].enabled);
 				outputObj.put("item", output.toJsonObject(getOwnerHero()));
 			}
+			params.put("output", outputsArr);
 		}
 
 		params.put("energyAddBlinking", energyAddBlinking);
