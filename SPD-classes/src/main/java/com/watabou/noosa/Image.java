@@ -61,9 +61,6 @@ public class Image extends Visual {
 	//Blame me if this fails
 	public Image( Object tx ) {
 		this();
-		if (tx instanceof String) {
-			asset = (String) tx;
-		}
 		texture( tx );
 	}
 	
@@ -73,6 +70,9 @@ public class Image extends Visual {
 	}
 	
 	public void texture( Object tx ) {
+		if (tx instanceof String) {
+			asset = (String) tx;
+		}
 		texture = tx instanceof SmartTexture ? (SmartTexture)tx : TextureCache.get( tx );
 		frame( new RectF( 0, 0, 1, 1 ) );
 	}

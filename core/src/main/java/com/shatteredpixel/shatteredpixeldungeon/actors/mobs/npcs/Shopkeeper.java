@@ -264,7 +264,8 @@ public class Shopkeeper extends NPC {
 						} else if (index > 1){
 							GLog.i(Messages.get(Shopkeeper.this, "buyback"));
 							Item returned = buybackItems.remove(index-2);
-							Dungeon.gold -= returned.value();
+
+							getOwnerHero().setGold(getOwnerHero().getGold() - returned.value());
 							Statistics.goldCollected -= returned.value();
 							if (!returned.doPickUp(getOwnerHero())){
 								Dungeon.level.drop(returned, getOwnerHero().pos);

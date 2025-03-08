@@ -34,12 +34,17 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+import java.lang.reflect.Method;
 
 public class WndTradeItem extends WndInfoItem {
 
@@ -49,73 +54,33 @@ public class WndTradeItem extends WndInfoItem {
 	private WndBag owner;
 
 	private boolean selling = false;
+	Item item;
+	Shopkeeper shop;
 
 	//selling
 	public WndTradeItem( final Item item, @NotNull WndBag owner ) {
 
 		super(item, owner.getOwnerHero());
-
 		selling = true;
 
 		this.owner = owner;
-
-		float pos = height;
+		this.item = item;
 
 		//find the shopkeeper in the current level
-		Shopkeeper shop = null;
 		for (Char ch : Actor.chars()){
 			if (ch instanceof Shopkeeper){
-				shop = (Shopkeeper) ch;
+				this.shop = (Shopkeeper) ch;
 				break;
 			}
 		}
-		final Shopkeeper finalShop = shop;
-
-		if (item.quantity() == 1) {
-
-			RedButton btnSell = new RedButton( Messages.get(this, "sell", item.value()) ) {
-				@Override
-				protected void onClick() {
-					sell( item, finalShop, owner.getOwnerHero());
-					hide();
-				}
-			};
-			btnSell.setRect( 0, pos + GAP, width, BTN_HEIGHT );
-			btnSell.icon(new ItemSprite(ItemSpriteSheet.GOLD));
-			add( btnSell );
-
-			pos = btnSell.bottom();
-
-		} else {
-
-			int priceAll= item.value();
-			RedButton btnSell1 = new RedButton( Messages.get(this, "sell_1", priceAll / item.quantity()) ) {
-				@Override
-				protected void onClick() {
-					sellOne( item, finalShop, owner.getOwnerHero() );
-					hide();
-				}
-			};
-			btnSell1.setRect( 0, pos + GAP, width, BTN_HEIGHT );
-			btnSell1.icon(new ItemSprite(ItemSpriteSheet.GOLD));
-			add( btnSell1 );
-			RedButton btnSellAll = new RedButton( Messages.get(this, "sell_all", priceAll ) ) {
-				@Override
-				protected void onClick() {
-					sell( item, finalShop, owner.getOwnerHero() );
-					hide();
-				}
-			};
-			btnSellAll.setRect( 0, btnSell1.bottom() + 1, width, BTN_HEIGHT );
-			btnSellAll.icon(new ItemSprite(ItemSpriteSheet.GOLD));
-			add( btnSellAll );
-
-			pos = btnSellAll.bottom();
-
-		}
-
-		resize( width, (int)pos );
+		JSONObject object = new JSONObject();
+		object.put("item", item.toJsonObject(getOwnerHero()));
+		object.put("selling", true);
+		object.put("price", item.value());
+		SendData.sendWindow(getOwnerHero().networkID, "trade_item", getId(), object);
 	}
+	RedButton btnSteal = null;
+	Heap heap;
 
 	//buying
 	public WndTradeItem( final Heap heap, Hero hero ) {
@@ -124,12 +89,15 @@ public class WndTradeItem extends WndInfoItem {
 
 		selling = false;
 
-		Item item = heap.peek();
+		item = heap.peek();
 
 		float pos = height;
 
 		final int price = Shopkeeper.sellPrice( item );
-
+		JSONObject object = new JSONObject();
+		object.put("selling", false);
+		object.put("price", price);
+		object.put("item", item.toJsonObject(hero));
 		RedButton btnBuy = new RedButton( Messages.get(this, "buy", price) ) {
 			@Override
 			protected void onClick() {
@@ -148,61 +116,87 @@ public class WndTradeItem extends WndInfoItem {
 		if (thievery != null && !thievery.isCursed() && thievery.chargesToUse(item) > 0) {
 			final float chance = thievery.stealChance(item);
 			final int chargesToUse = thievery.chargesToUse(item);
-			RedButton btnSteal = new RedButton(Messages.get(this, "steal", Math.min(100, (int) (chance * 100)), chargesToUse), 6) {
-				@Override
-				protected void onClick() {
-					if (chance >= 1){
-						thievery.steal(item);
-						Hero hero = getOwnerHero();
-						Item item = heap.pickUp();
-						hide();
+			object.put("steal", true);
+			object.put("chance", Math.min(100, (int) (chance * 100)));
+			object.put("charges", chargesToUse);
+            btnSteal = new RedButton(Messages.get(WndTradeItem.this, "steal", Math.min(100, (int) (chance * 100)), chargesToUse), 6) {
+                @Override
+                protected void onClick() {
+                    if (chance >= 1){
+                        thievery.steal(item);
+                        Hero hero1 = getOwnerHero();
+                        Item item1 = heap.pickUp();
+                        hide();
 
-						if (!item.doPickUp(hero)) {
-							Dungeon.level.drop(item, heap.pos).sprite.drop();
-						}
-					} else {
-						GameScene.show(new WndOptions(hero, new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
-								Messages.titleCase(Messages.get(MasterThievesArmband.class, "name")),
-								Messages.get(WndTradeItem.class, "steal_warn"),
-								Messages.get(WndTradeItem.class, "steal_warn_yes"),
-								Messages.get(WndTradeItem.class, "steal_warn_no")){
-							@Override
-							protected void onSelect(int index) {
-								super.onSelect(index);
-								if (index == 0){
-									if (thievery.steal(item)) {
-										Hero hero = getOwnerHero();
-										Item item = heap.pickUp();
-										WndTradeItem.this.hide();
+                        if (!item1.doPickUp(hero1)) {
+                            Dungeon.level.drop(item1, heap.pos).sprite.drop();
+                        }
+                    } else {
+                        GameScene.show(new WndOptions(hero, new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
+                                Messages.titleCase(Messages.get(MasterThievesArmband.class, "name")),
+                                Messages.get(WndTradeItem.class, "steal_warn"),
+                                Messages.get(WndTradeItem.class, "steal_warn_yes"),
+                                Messages.get(WndTradeItem.class, "steal_warn_no")){
+                            @Override
+                            protected void onSelect(int index) {
+                                super.onSelect(index);
+                                if (index == 0){
+                                    if (thievery.steal(item)) {
+                                        Hero hero1 = getOwnerHero();
+                                        Item item1 = heap.pickUp();
+                                        WndTradeItem.this.hide();
 
-										if (!item.doPickUp(hero)) {
-											Dungeon.level.drop(item, heap.pos).sprite.drop();
-										}
-									} else {
-										for (Mob mob : Dungeon.level.mobs) {
-											if (mob instanceof Shopkeeper) {
-												mob.yell(Messages.get(mob, "thief"));
-												((Shopkeeper) mob).flee();
-												break;
-											}
-										}
-										WndTradeItem.this.hide();
-									}
-								}
-							}
-						});
-					}
-				}
-			};
-			btnSteal.setRect(0, pos + 1, width, BTN_HEIGHT);
-			btnSteal.icon(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND));
-			add(btnSteal);
-
-			pos = btnSteal.bottom();
-
+                                        if (!item1.doPickUp(hero1)) {
+                                            Dungeon.level.drop(item1, heap.pos).sprite.drop();
+                                        }
+                                    } else {
+                                        for (Mob mob : Dungeon.level.mobs) {
+                                            if (mob instanceof Shopkeeper) {
+                                                mob.yell(Messages.get(mob, "thief"));
+                                                ((Shopkeeper) mob).flee();
+                                                break;
+                                            }
+                                        }
+                                        WndTradeItem.this.hide();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            };
 		}
+		SendData.sendWindow(hero.networkID, "trade_item", getId(), object);
+	}
 
-		resize(width, (int) pos);
+	@Override
+	public void onSelect(int button) {
+		if (selling) {
+			if (button == 0) {
+				sellOne(item, shop, owner.getOwnerHero());
+			} if (button == 1){
+				sell(item, shop, owner.getOwnerHero());
+			}
+			//Selling logic
+		} else {
+			if (button == 0) {
+				buy(heap);
+			}
+			if (button == 1 && btnSteal != null) {
+				//HACK
+				//don't think I should change onClick
+                try {
+                    Method onClickMethod = Button.class.getMethod("onClick");
+					onClickMethod.setAccessible(true);
+					onClickMethod.invoke(btnSteal);
+                } catch (Exception e) {
+
+                    throw new RuntimeException(e);
+                }
+			}
+			//buying logic
+		}
+		hide();
 	}
 
 	@Override
@@ -269,16 +263,19 @@ public class WndTradeItem extends WndInfoItem {
 	}
 	
 	private void buy( Heap heap ) {
-		
+		if (getOwnerHero().getGold() >= Shopkeeper.sellPrice(item)) {
 		Item item = heap.pickUp();
 		if (item == null) return;
-		
+
 		int price = Shopkeeper.sellPrice( item );
 		Dungeon.gold -= price;
 		Catalog.countUses(Gold.class, price);
-		
+
 		if (!item.doPickUp( getOwnerHero())) {
 			Dungeon.level.drop( item, heap.pos ).sprite.drop();
 		}
+		}
+		GLog.n("Come back when you're a little... mmmmmm ...richer!");
+
 	}
 }
