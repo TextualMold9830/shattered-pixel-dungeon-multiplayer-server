@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.plugins;
+package com.shatteredpixel.shatteredpixeldungeon.plugins.events;
 
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 

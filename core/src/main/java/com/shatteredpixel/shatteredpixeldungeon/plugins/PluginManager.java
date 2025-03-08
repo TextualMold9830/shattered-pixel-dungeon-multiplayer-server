@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.plugins;
 
+import com.shatteredpixel.shatteredpixeldungeon.plugins.events.Event;
+
 import java.util.List;
 
 public class PluginManager {

@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.plugins;
 
+import com.shatteredpixel.shatteredpixeldungeon.plugins.events.Event;
 import com.watabou.plugins.PluginManifest;
 
 public abstract class Plugin {

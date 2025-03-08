@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
@@ -210,6 +211,7 @@ class ClientThread implements Callable<String> {
                         if (text.isBlank()) {
                             break;
                         }
+                        Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
                         GLog.i("%s: %s", clientHero.name,  text.trim());
                         break;
                     }
