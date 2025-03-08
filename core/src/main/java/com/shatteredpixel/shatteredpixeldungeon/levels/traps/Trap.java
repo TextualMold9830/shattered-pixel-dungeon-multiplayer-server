@@ -77,6 +77,9 @@ public abstract class Trap implements Bundlable {
 	public Trap reveal() {
 		visible = true;
 		GameScene.updateMap(pos);
+		if (Dungeon.level != null) {
+			SendData.sendTraps(Dungeon.level);
+		}
 		return this;
 	}
 
@@ -100,7 +103,6 @@ public abstract class Trap implements Bundlable {
 			Bestiary.setSeen(getClass());
 			Bestiary.countEncounter(getClass());
 			activate();
-			SendData.sendTraps(Dungeon.level);
 		}
 	}
 
