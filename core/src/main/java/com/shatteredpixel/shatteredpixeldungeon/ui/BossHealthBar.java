@@ -21,17 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BloodParticle;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoMob;
-import com.watabou.noosa.BitmapText;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.ui.Component;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import org.json.JSONObject;
 
 public class BossHealthBar {
 	private static Mob boss;
@@ -59,10 +52,20 @@ public class BossHealthBar {
 
 	public static void bleed(boolean value){
 		bleeding = value;
+		sendSelf();
 	}
 
 	public static boolean isBleeding(){
 		return isAssigned() && bleeding;
+	}
+	public static void sendSelf(){
+		if (isAssigned()) {
+			JSONObject object = new JSONObject();
+			object.put("bleeding", bleeding);
+			object.put("id", boss.id());
+			object.put("action_type", "boss_health_bar");
+			SendData.sendCustomActionForAll(object);
+		}
 	}
 
 }
