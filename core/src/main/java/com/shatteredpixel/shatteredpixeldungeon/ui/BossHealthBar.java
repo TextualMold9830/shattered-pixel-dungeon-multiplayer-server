@@ -59,13 +59,11 @@ public class BossHealthBar {
 		return isAssigned() && bleeding;
 	}
 	public static void sendSelf(){
-		if (isAssigned()) {
-			JSONObject object = new JSONObject();
-			object.put("bleeding", bleeding);
-			object.put("id", boss.id());
-			object.put("action_type", "boss_health_bar");
-			SendData.sendCustomActionForAll(object);
-		}
+		JSONObject object = new JSONObject();
+		object.put("bleeding", bleeding);
+		object.put("id", boss.id());
+		object.put("action_type", "boss_health_bar");
+		SendData.sendCustomActionForAll(object);
 	}
 
 }
