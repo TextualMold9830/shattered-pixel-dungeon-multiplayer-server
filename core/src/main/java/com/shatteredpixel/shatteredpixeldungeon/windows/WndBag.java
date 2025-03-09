@@ -187,6 +187,7 @@ public class WndBag extends WndTabbed {
 		}
 	}
 	public void onSelect(int button, @Nullable JSONObject args) {
+		selector.owner = getOwnerHero();
 		if (button == -1) {
 			selector.onSelect(null);
 			hide();
