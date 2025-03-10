@@ -53,6 +53,10 @@ import java.util.List;
 
 public class Belongings implements Iterable<Item> {
 	public Item getItemInSlot(List<Integer> slot) {
+		//fixes crash
+		if (slot.isEmpty()) {
+			return null;
+		}
 		if (slot.get(0) < 0) {
 			SpecialSlot spec_slot = getSpecialSlots().get(-slot.get(0) - 1);
 			slot.remove(0);
