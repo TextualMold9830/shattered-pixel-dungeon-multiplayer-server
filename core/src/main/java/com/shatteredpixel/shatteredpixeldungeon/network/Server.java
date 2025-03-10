@@ -132,20 +132,8 @@ public class Server extends Thread {
                     new DataOutputStream(client.getOutputStream()).writeInt(Codes.SERVER_FULL);
                     client.close();
                 } else if (clients[i] == null) {
-                    synchronized (heroes) {
                         Hero emptyHero = null;
-                        for (Hero hero : heroes) {
-                            if (hero == null) {
-                                continue;
-                            }
-                            if (hero.networkID != -1) {
-                                continue;
-                            }
-                            emptyHero = hero;
-                            break;
-                        }
                         clients[i] = new ClientThread(i, client, emptyHero); //found
-                    }
                     break;
                 }
             }

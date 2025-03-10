@@ -131,8 +131,13 @@ public class ShatteredPixelDungeon extends Game {
 		SPDAction.loadBindings();
 
 		Server.startServer();
-		InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
-		InterLevelSceneServer.create(null);
+
+        if (GamesInProgress.gameExists()) {
+            InterLevelSceneServer.mode = InterLevelSceneServer.Mode.CONTINUE;
+        } else {
+            InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
+        }
+        InterLevelSceneServer.create(null);
 		Dungeon.init();
 
 		Gdx.app.log("Scene", Game.sceneClass.getName());

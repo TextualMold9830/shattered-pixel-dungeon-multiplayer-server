@@ -65,6 +65,7 @@ import com.shatteredpixel.shatteredpixeldungeon.plugins.events.DungeonGenerateLe
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
 import com.watabou.utils.*;
@@ -647,12 +648,6 @@ public class Dungeon {
 			bundle.put( LAST_PLAYED, lastPlayed = Game.realTime);
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
-			//todo fixme
-			//Hero bundling
-			//.put( HERO, Arrays.asList(heroes));
-			for (int i = 0; i < heroes.length; i++) {
-				bundle.put(HERO+i, heroes[i]);
-			}
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 
@@ -815,11 +810,8 @@ public class Dungeon {
 
 		//todo
 		//fixme
-		heroes = null;
+		heroes = new Hero[SPDSettings.maxPlayers()];
 		//Settings heroes back
-		for (int i = 0; i < heroes.length; i++) {
-			heroes[i] = (Hero) bundle.get( HERO + i );
-		}
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
 
@@ -899,7 +891,7 @@ public class Dungeon {
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
 		info.lastPlayed = bundle.getLong( LAST_PLAYED );
 
-		Hero.preview( info, bundle.getBundle( HERO ) );
+		//Hero.preview( info, bundle.getBundle( HERO ) );
 		Statistics.preview( info, bundle );
 	}
 	
@@ -1147,21 +1139,46 @@ public class Dungeon {
 		return step;
 
 	}
-	public static void removeHero(Hero hero){
+	public static void removeHero(Hero hero) {
 		if (SPDSettings.killOnDisconnect) {
+			int ID = Arrays.asList(heroes).indexOf(hero);
 			if (hero == null) {
 				return;
 			}
-			int ID = Arrays.asList(heroes).indexOf(hero);
 			hero.die(new Char.DamageCause(null));
 			if (ID == -1) {
 				return;
 			}
 			heroes[ID] = null;
 		} else {
+			saveHero(hero);
+			Dungeon.heroes[hero.networkID] = null;
 			hero.next();
+			Actor.remove(hero);
 		}
 	}
+	public static void saveHero(Hero hero){
+		if (hero.uuid != null) {
+			Bundle bundle = new Bundle();
+			hero.storeInBundle(bundle);
+            try {
+                FileUtils.bundleToFile("heroes/" + hero.uuid, bundle);
+            } catch (IOException e) {
+				GLog.n("Failed to save hero");
+            }
+        }
+	}
+	public static Hero loadHero(String uuid) {
+        try {
+            Bundle bundle = FileUtils.bundleFromFile("heroes/"+ uuid);
+			Hero hero = new Hero();
+			hero.restoreFromBundle(bundle);
+			return hero;
+        } catch (IOException e) {
+			//Maybe there is no file?
+			return null;
+        }
+    }
 
 	//to allow multiple levels delete this
 	public static void switchLevel( final Level level, int pos){

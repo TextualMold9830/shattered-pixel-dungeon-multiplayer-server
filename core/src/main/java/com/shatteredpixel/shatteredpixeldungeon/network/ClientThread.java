@@ -126,8 +126,12 @@ class ClientThread implements Callable<String> {
                     //Level block
                     case ("hero_class"): {
                         if (clientHero == null) {
-                            InitPlayerHero(data.getString(token));
+                            InitPlayerHero(data.getString(token), data.getString("uuid"));
                         }
+                        break;
+                    }
+                    case "uuid": {
+                        //already parsed
                         break;
                     }
                     case ("talent_upgrade"): {
@@ -306,7 +310,7 @@ class ClientThread implements Callable<String> {
         packet.addServerType(SERVER_TYPE);
         flush();
     }
-    protected void InitPlayerHero(String className) {
+    protected void InitPlayerHero(String className, String uuid) {
         HeroClass curClass;
         try {
             curClass = HeroClass.valueOf(className.toUpperCase());
@@ -316,18 +320,27 @@ class ClientThread implements Callable<String> {
             }
             curClass = Random.element(HeroClass.values());
         }
+        boolean heroFound = false;
         Hero newHero = new Hero();
+        if (uuid != null && !uuid.isEmpty()) {
+            Hero hero = Dungeon.loadHero(uuid);
+            if (hero != null) {
+                newHero = hero;
+                heroFound = true;
+            }
+        }
         newHero.setSprite(new HeroSprite(newHero));
         clientHero = newHero;
         level.linkHero(newHero);
         newHero.live();
-
+        if (!heroFound) {
         curClass.initHero(newHero);
         for (int i : NEIGHBOURS8) {
             if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
                 newHero.pos = level.entrance() + i;
                 break;
             }
+        }
         }
         //newHero.pos = Dungeon.getPosNear(level.entrance);
 
@@ -336,9 +349,9 @@ class ClientThread implements Callable<String> {
             newHero.pos = level.entrance(); //todo  FIXME
         }
         Actor.add(newHero);
+        newHero.spendAndNext(1f);
         Dungeon.level.occupyCell(newHero);
         newHero.getSprite().place(newHero.pos);
-
         synchronized (heroes) { //todo fix it. It is not work
             for (int i = 0; i < heroes.length; i++) {
                 if (heroes[i] == null) {
@@ -354,7 +367,7 @@ class ClientThread implements Callable<String> {
             }
         }
         GameScene.addHeroSprite(newHero);
-
+        newHero.resendReady();
         sendInitData();
     }
 
@@ -456,21 +469,26 @@ class ClientThread implements Callable<String> {
         }
     }
 
+    //hack
+    boolean disconnected = false;
     public void disconnect() {
-        try {
-            clientSocket.close(); //it creates exception when we will wait client data
-        } catch (Exception ignore) {
+        if (!disconnected) {
+            disconnected = true;
+            try {
+                clientSocket.close(); //it creates exception when we will wait client data
+            } catch (Exception ignore) {
+            }
+            if (clientHero != null) {
+                clientHero.next();
+                Dungeon.removeHero(clientHero);
+                clientHero = null;
+            }
+            Server.clients[threadID] = null;
+            readStream = null;
+            writeStream = null;
+            jsonCall.cancel(true);
+            GLog.n("player " + threadID + " disconnected");
         }
-        if (clientHero != null) {
-            clientHero.networkID = -1;
-            clientHero.next();
-            Dungeon.removeHero(clientHero);
-        }
-        Server.clients[threadID] = null;
-        readStream = null;
-        writeStream = null;
-        jsonCall.cancel(true);
-        GLog.n("player " + threadID + " disconnected");
     }
 
     private void sendInitData() {

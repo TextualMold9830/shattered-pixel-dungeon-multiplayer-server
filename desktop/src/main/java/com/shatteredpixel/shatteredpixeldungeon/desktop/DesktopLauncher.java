@@ -141,30 +141,9 @@ public class DesktopLauncher {
 		if (vendor == null) {
 			vendor = System.getProperty("Implementation-Title");
 		}
-		vendor = vendor.split("\\.")[1];
 
-		String basePath = "";
-		Files.FileType baseFileType = null;
-		if (SharedLibraryLoader.isWindows) {
-			if (System.getProperties().getProperty("os.name").equals("Windows XP")) {
-				basePath = "Application Data/." + vendor + "/" + title + "/";
-			} else {
-				basePath = "AppData/Roaming/." + vendor + "/" + title + "/";
-			}
-			baseFileType = Files.FileType.External;
-		} else if (SharedLibraryLoader.isMac) {
-			basePath = "Library/Application Support/" + title + "/";
-			baseFileType = Files.FileType.External;
-		} else if (SharedLibraryLoader.isLinux) {
-			String XDGHome = System.getenv("XDG_DATA_HOME");
-			if (XDGHome == null) XDGHome = System.getProperty("user.home") + "/.local/share";
-
-			String titleLinux = title.toLowerCase(Locale.ROOT).replace(" ", "-");
-			basePath = XDGHome + "/." + vendor + "/" + titleLinux + "/";
-
-			baseFileType = Files.FileType.Absolute;
-		}
-
+		String basePath = "save/";
+		Files.FileType baseFileType = Files.FileType.Local;
 		config.setPreferencesConfig( basePath, baseFileType );
 		SPDSettings.set( new Lwjgl3Preferences( new Lwjgl3FileHandle(basePath + SPDSettings.DEFAULT_PREFS_FILE, baseFileType) ));
 		FileUtils.setDefaultFileProperties( baseFileType, basePath );

@@ -685,7 +685,7 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		quantity(bundle.getInt( QUANTITY ));
+		quantity(bundle.getInt( QUANTITY ), false);
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		
@@ -930,9 +930,11 @@ public class Item implements Bundlable {
 	}
 	//Only use when owner can't be found in any other way
 	public final Hero findOwner() {
+		if (Dungeon.heroes != null) {
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null && hero.belongings.contains(this)) {
 				return hero;
+			}
 		}
 	}
 		return null;
