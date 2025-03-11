@@ -142,7 +142,7 @@ public abstract class KindofMisc extends EquipableItem {
 				GLog.p(Messages.get(this, "curse_detected"));
 				return false;
 			}
-
+			detach(hero.belongings.backpack);
 			if (this instanceof Artifact){
 				if (hero.belongings.getRealArtifact() == null)   hero.belongings.setArtifact((Artifact) this);
 				else                                    hero.belongings.setMisc((Artifact) this);
@@ -151,7 +151,6 @@ public abstract class KindofMisc extends EquipableItem {
 				else                                hero.belongings.setMisc((Ring) this);
 			}
 
-			detach( hero.belongings.backpack );
 
 			Talent.onItemEquipped(hero, this);
 			activate( hero );
