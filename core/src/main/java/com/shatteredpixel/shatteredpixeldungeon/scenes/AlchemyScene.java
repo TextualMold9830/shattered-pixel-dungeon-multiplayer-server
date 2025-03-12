@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.AlchemistsToolki
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
@@ -49,7 +50,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -107,6 +107,7 @@ public class AlchemyScene extends Window {
 			lastIngredients = new ArrayList<>();
 		}
 		this.create();
+		sendSelf();
 	}
 
 	@Override
@@ -172,6 +173,7 @@ public class AlchemyScene extends Window {
 		lastIngredientsCommon.put(HeroHelp.getHeroID(getOwnerHero()), lastIngredients);
 		clearSlots();
 		disableAlchemyScene(getOwnerHero());
+		destroy();
 	}
 
 	private JSONObject getParamsObject() {
@@ -277,9 +279,11 @@ public class AlchemyScene extends Window {
 	private <T extends Item> ArrayList<T> filterInput(Class<? extends T> itemClass) {
 		ArrayList<T> filtered = new ArrayList<>();
 		for (int i = 0; i < inputs.length; i++) {
-			Item item = inputs[i].item();
-			if (item != null && itemClass.isInstance(item)) {
-				filtered.add((T) item);
+			if (inputs[i] != null) {
+				Item item = inputs[i].item();
+				if (item != null && itemClass.isInstance(item)) {
+					filtered.add((T) item);
+				}
 			}
 		}
 		return filtered;
@@ -299,7 +303,7 @@ public class AlchemyScene extends Window {
 			outputs[i] = null;
 		}
 
-		if (recipes.isEmpty()) {
+		if (recipes.isEmpty() && inputs[0] == null || inputs[0].item() == null) {
 			energyAddBlinking = false;
 			return;
 		}
@@ -329,7 +333,7 @@ public class AlchemyScene extends Window {
 		}
 
 		energyAddBlinking = promptToAddEnergy;
-
+		sendSelf();
 	}
 
 	private void combine(int slot) {
@@ -491,10 +495,12 @@ public class AlchemyScene extends Window {
 				if (!item.collect(getOwnerHero())) {
 					Dungeon.level.drop(item, getOwnerHero().pos);
 				}
+				//maybe I replace Item item
 				InputButton.this.item(null);
 				updateState();
+			} else {
+				AlchemyScene.this.addToFront(WndBag.getBag(itemSelector, getOwnerHero()));
 			}
-			AlchemyScene.this.addToFront(WndBag.getBag(itemSelector, getOwnerHero()));
 		}
 
 		protected boolean onLongClick() {
@@ -541,5 +547,8 @@ public class AlchemyScene extends Window {
 			this.cost = cost;
 		}
 
+	}
+	public void sendSelf() {
+		SendData.sendWindow(getOwnerHero().networkID, "alchemy", getId(), getParamsObject());
 	}
 }
