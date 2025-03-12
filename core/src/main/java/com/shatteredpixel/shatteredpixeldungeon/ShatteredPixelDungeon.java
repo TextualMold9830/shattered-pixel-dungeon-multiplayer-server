@@ -138,7 +138,6 @@ public class ShatteredPixelDungeon extends Game {
             InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
         }
         InterLevelSceneServer.create(null);
-		Dungeon.init();
 
 		Gdx.app.log("Scene", Game.sceneClass.getName());
 		Game.switchScene(GameScene.class);
