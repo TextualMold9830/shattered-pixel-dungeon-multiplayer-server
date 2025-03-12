@@ -363,7 +363,7 @@ public class InterLevelSceneServer {
 
 		GameLog.wipe();
 
-		Dungeon.loadGame( GamesInProgress.curSlot );
+		Dungeon.loadGame( GamesInProgress.curSlot, true );
 		if (Dungeon.depth == -1) {
 			Dungeon.depth = Statistics.deepestFloor;
 			Dungeon.switchLevel( Dungeon.loadLevel(), -1 );
