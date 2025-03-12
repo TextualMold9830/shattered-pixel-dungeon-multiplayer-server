@@ -230,7 +230,7 @@ public class Dungeon {
 		initialVersion = version = Game.versionCode;
 		challenges = SPDSettings.challenges();
 		mobsToChampion = -1;
-		if (!DeviceCompat.isDebug()) {
+		if (!DeviceCompat.isDebug() && Dungeon.seed == 0) {
 			initSeed();
 		}
 		Actor.clear();
@@ -702,7 +702,11 @@ public class Dungeon {
 			bundle.put( BADGES, badges );
 			
 			FileUtils.bundleToFile( GamesInProgress.gameFile(), bundle);
-			
+			for (Hero hero: Dungeon.heroes) {
+				if (hero != null) {
+					saveHero(hero);
+				}
+			}
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
 			ShatteredPixelDungeon.reportException(e);
