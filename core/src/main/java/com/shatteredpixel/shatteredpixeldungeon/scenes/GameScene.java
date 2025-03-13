@@ -133,9 +133,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
-//FIXME
-//FIXME
-//FIXME
 public class GameScene extends PixelScene {
 
 	static GameScene scene;
