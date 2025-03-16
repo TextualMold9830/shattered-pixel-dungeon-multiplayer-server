@@ -202,6 +202,7 @@ public class AlchemyScene extends Window {
 				outputObj.put("cost", combines[i].cost);
 				outputObj.put("enabled", combines[i].enabled);
 				outputObj.put("item", output.toJsonObject(getOwnerHero()));
+				outputsArr.put(outputObj);
 			}
 			params.put("output", outputsArr);
 		}
@@ -270,9 +271,9 @@ public class AlchemyScene extends Window {
 							break;
 						}
 					}
-					updateState();
 				}
 			}
+			updateState();
 		}
 	};
 
@@ -296,7 +297,9 @@ public class AlchemyScene extends Window {
 
 		ArrayList<Item> ingredients = filterInput(Item.class);
 		ArrayList<Recipe> recipes = Recipe.findRecipes(ingredients);
-
+		for (int i = 0; i < recipes.size(); i++) {
+			outputs[i] = recipes.get(i).sampleOutput(ingredients, hero);
+		}
 		//disables / hides unneeded buttons
 		for (int i = recipes.size(); i < combines.length; i++) {
 			combines[i].enable(false);
