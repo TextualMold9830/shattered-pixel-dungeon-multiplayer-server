@@ -833,6 +833,7 @@ public class Item implements Bundlable {
 			itemObj.put("identified", isIdentified());
 			itemObj.put("level_known", levelKnown);
 			itemObj.put("level", visiblyUpgraded());
+			itemObj.put("energy_value", energyVal());
 			ItemSprite.Glowing glowing = glowing();
 			if (glowing != null) {
 				itemObj.put("glowing", glowing.toJsonObject());

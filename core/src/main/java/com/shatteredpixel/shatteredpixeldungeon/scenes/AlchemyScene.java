@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 
+import com.watabou.pixeldungeon.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -52,6 +53,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class AlchemyScene extends Window {
@@ -132,8 +134,16 @@ public class AlchemyScene extends Window {
 				break;
 			}
 			case 3: {
-				//energyAdd button
-				WndEnergizeItem.openItemSelector(getOwnerHero());
+				//energize
+				boolean all = args.getBoolean("all");
+				List<Integer> slot = Utils.JsonArrayToListInteger(args.getJSONArray("path"));
+				Item item = getOwnerHero().belongings.getItemInSlot(slot);
+				if (all) {
+					WndEnergizeItem.energizeAll(item, getOwnerHero());
+				} else {
+					WndEnergizeItem.energizeOne(item, getOwnerHero());
+				}
+				updateState();
 				break;
 			}
 			case 100:
@@ -171,7 +181,7 @@ public class AlchemyScene extends Window {
 	public void hide() {
 		super.hide();
 		lastIngredientsCommon.put(HeroHelp.getHeroID(getOwnerHero()), lastIngredients);
-		clearSlots();
+		clearSlots(false);
 		disableAlchemyScene(getOwnerHero());
 		destroy();
 	}
@@ -209,6 +219,14 @@ public class AlchemyScene extends Window {
 
 		params.put("energyAddBlinking", energyAddBlinking);
 		params.put("repeat_enabled",  repeat_enabled);
+		if (createEnergy) {
+			params.put("createEnergy", true);
+			createEnergy = false;
+		}
+		if (craftedItem) {
+			params.put("craftedItem", true);
+			craftedItem = false;
+		}
 		return params;
 	}
 
@@ -308,7 +326,6 @@ public class AlchemyScene extends Window {
 
 		if (recipes.isEmpty() && inputs[0] == null || inputs[0].item() == null) {
 			energyAddBlinking = false;
-			return;
 		}
 		
 
@@ -384,9 +401,10 @@ public class AlchemyScene extends Window {
 		repeat_enabled = (foundItems);
 	}
 
+	boolean craftedItem = false;
 	public void craftItem(ArrayList<Item> ingredients, Item result) {
 		Hero hero = getOwnerHero();
-
+		craftedItem = true;
 		//todo sendVisual
 		//bubbleEmitter.start(Speck.factory(Speck.BUBBLE), 0.01f, 100);
 		//smokeEmitter.burst(Speck.factory(Speck.WOOL), 10);
@@ -451,7 +469,7 @@ public class AlchemyScene extends Window {
 	@Override
 	public void destroy() {
 		synchronized (inputs) {
-			clearSlots();
+			clearSlots(false);
 			for (int i = 0; i < inputs.length; i++) {
 				inputs[i] = null;
 			}
@@ -467,7 +485,7 @@ public class AlchemyScene extends Window {
 		super.destroy();
 	}
 
-	public void clearSlots() {
+	public void clearSlots(boolean send) {
 		synchronized (inputs) {
 			for (int i = 0; i < inputs.length; i++) {
 				if (inputs[i] != null && inputs[i].item() != null) {
@@ -480,11 +498,16 @@ public class AlchemyScene extends Window {
 			}
 		}
 		repeat_enabled = (lastRecipe != null);
-		updateState();
+		if(send) {
+			updateState();
+		}
 	}
-
+	public void clearSlots(){
+		clearSlots(true);
+	}
+	boolean createEnergy = false;
 	public void createEnergy() {
-		//todo send this visual as action
+		createEnergy = true;
 		updateState();
 	}
 
