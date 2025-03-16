@@ -120,7 +120,7 @@ public class GamesInProgress {
 					info = null;
 				} else {
 
-					if (bundle.getInt("version") < ShatteredPixelDungeon.v1_4_3) {
+					if (bundle.getInt("version") < ShatteredPixelDungeon.v2_3_2) {
 						info = null;
 					} else {
 						info = new Info();

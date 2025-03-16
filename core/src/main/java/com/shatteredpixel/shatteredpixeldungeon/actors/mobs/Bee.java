@@ -34,8 +34,6 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-
 //FIXME the AI for these things is becoming a complete mess, should refactor
 public class Bee extends Mob {
 	
@@ -173,20 +171,22 @@ public class Bee extends Mob {
 					|| (alignment == Alignment.ALLY && enemy.alignment == Alignment.ALLY)
 					|| (buff( Amok.class ) == null && enemy.isInvulnerable(getClass()))){
 				
-				//find all mobs near the pot
-				HashSet<Char> enemies = new HashSet<>();
+				//target closest potential enemy near the pot
+				Char closest = null;
 				for (Mob mob : Dungeon.level.mobs) {
 					if (!(mob == this)
 							&& Dungeon.level.distance(mob.pos, potPos) <= 3
 							&& mob.alignment != Alignment.NEUTRAL
 							&& !mob.isInvulnerable(getClass())
 							&& !(alignment == Alignment.ALLY && mob.alignment == Alignment.ALLY)) {
-						enemies.add(mob);
+						if (closest == null || Dungeon.level.distance(closest.pos, pos) > Dungeon.level.distance(mob.pos, pos)){
+							closest = mob;
+						}
 					}
 				}
 				
-				if (!enemies.isEmpty()){
-					return Random.element(enemies);
+				if (closest != null){
+					return closest;
 				} else {
 					int dist = Integer.MAX_VALUE;
 					HashSet<Hero> targets = new HashSet<>();

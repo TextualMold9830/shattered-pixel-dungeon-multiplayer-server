@@ -12,7 +12,7 @@ buildscript {
 }
 
 allprojects {
-    // load verson grom file
+    // load version from file
     def versionFile = new File(rootProject.rootDir, "version")
     def versionName = "Local-build"
 
@@ -25,12 +25,12 @@ allprojects {
     } else {
         println("Version file not found, using default: 'Local-build'")
     }
-    def baseVersionName = "2.5.4"
+    def baseVersionName = "3.0.1"
     ext {
         appName = 'Shattered Pixel Dungeon Server'
         appPackageName = 'com.shatteredpixel.shatteredpixeldungeon.multiplayer.server'
 
-        appVersionCode = 802
+        appVersionCode = 832
         appVersionName = "Server_" +versionName + "_on_v"+baseVersionName
         appShortVersionName = ((appVersionName) =~ /\d+\.\d+\.\d+/) ? ((appVersionName) =~ /\d+\.\d+\.\d+/)[0] : "0.0.0"
 

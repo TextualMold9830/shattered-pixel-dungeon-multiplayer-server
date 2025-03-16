@@ -100,9 +100,9 @@ public class RockfallTrap extends Trap {
 				damage -= ch.drRoll();
 				ch.damage( Math.max(damage, 0) , this);
 
-				Buff.prolong( ch, Paralysis.class, Paralysis.DURATION );
-
-				if (!ch.isAlive() && ch instanceof Hero){
+				if (ch.isActive()) {
+					Buff.prolong(ch, Paralysis.class, Paralysis.DURATION);
+				} else if (!ch.isAlive() && ch instanceof Hero){
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 					if (reclaimed) Badges.validateDeathFromFriendlyMagic();

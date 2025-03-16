@@ -29,41 +29,23 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Spinner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Swarm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite.Glowing;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
-import com.watabou.utils.PathFinder;
 
 import java.util.ArrayList;
 
-//various code in here supports old blacksmith quest logic from before v2.2.0
 public class Pickaxe extends MeleeWeapon {
-	
-	public static final String AC_MINE	= "MINE";
-	
-	public static final float TIME_TO_MINE = 2;
-	
-	private static final Glowing BLOODY = new Glowing( 0x550000 );
-	
+
 	{
 		image = ItemSpriteSheet.PICKAXE;
 
@@ -74,8 +56,6 @@ public class Pickaxe extends MeleeWeapon {
 
 		tier = 2;
 	}
-	
-	public boolean bloodStained = false;
 
 	@Override
 	public int STRReq(int lvl) {
@@ -85,16 +65,13 @@ public class Pickaxe extends MeleeWeapon {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (Blacksmith.Quest.oldMiningQuest()) {
-			actions.add(AC_MINE);
-		}
 		if (Dungeon.level instanceof MiningLevel){
 			actions.remove(AC_DROP);
 			actions.remove(AC_THROW);
 		}
 		return actions;
 	}
-	
+
 	@Override
 	public void execute( final Hero hero, String action ) {
 
@@ -116,16 +93,16 @@ public class Pickaxe extends MeleeWeapon {
 					hero.busy();
 					
 					hero.getSprite().attack( pos, new Callback() {
-						
+
 						@Override
 						public void call() {
 
 							CellEmitter.center( pos ).burst( Speck.factory( Speck.STAR ), 7 );
 							Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-							
+
 							Level.set( pos, Terrain.WALL );
 							GameScene.updateMap( pos );
-							
+
 							DarkGold gold = new DarkGold();
 							if (gold.doPickUp(hero)) {
 								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", gold.name())) );
@@ -251,31 +228,6 @@ public class Pickaxe extends MeleeWeapon {
 	public String upgradeAbilityStat(int level){
 		int dmgBoost = 8 + 2*level;
 		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
-	}
-
-	private static final String BLOODSTAINED = "bloodStained";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		
-		bundle.put( BLOODSTAINED, bloodStained );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-		
-		bloodStained = bundle.getBoolean( BLOODSTAINED );
-	}
-	
-	@Override
-	public Glowing glowing() {
-		if (super.glowing() == null) {
-			return bloodStained ? BLOODY : null;
-		} else {
-			return super.glowing();
-		}
 	}
 
 }

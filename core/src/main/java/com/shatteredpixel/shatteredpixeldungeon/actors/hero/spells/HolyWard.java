@@ -105,6 +105,14 @@ public class HolyWard extends ClericSpell {
 			((Hero)target).belongings.armor().sendSelfUpdate((Hero) target);
 			Item.updateQuickslot();
 		}
+
+		public void extend(float extension){
+			if (cooldown()+extension <= 2*DURATION){
+				spend(extension);
+			} else {
+				postpone(2*DURATION);
+			}
+		}
 	}
 
 }

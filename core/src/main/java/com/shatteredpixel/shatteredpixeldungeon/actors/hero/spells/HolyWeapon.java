@@ -110,6 +110,14 @@ public class HolyWeapon extends ClericSpell {
 			((Hero)target).belongings.weapon().sendSelfUpdate((Hero) target);
 			Item.updateQuickslot();
 		}
+
+		public void extend(float extension){
+			if (cooldown()+extension <= 2*DURATION){
+				spend(extension);
+			} else {
+				postpone(2*DURATION);
+			}
+		}
 	}
 
 }
