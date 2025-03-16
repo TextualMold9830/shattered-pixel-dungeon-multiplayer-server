@@ -1346,4 +1346,7 @@ public class Badges {
 
 		return null;
 	}
+	static {
+		loadGlobal();
+	}
 }
