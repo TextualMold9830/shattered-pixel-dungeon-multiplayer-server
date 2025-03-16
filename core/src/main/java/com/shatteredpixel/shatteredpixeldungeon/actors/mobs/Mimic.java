@@ -222,7 +222,9 @@ public class Mimic extends Mob {
 		if (getSprite() != null) getSprite().idle();
 		if (Actor.chars().contains(this) && Dungeon.visibleforAnyHero(pos)) {
 			enemy = chooseEnemy();
-			target = enemy.pos;
+			if (enemy != null) {
+				target = enemy.pos;
+			}
 			GLog.w(Messages.get(this, "reveal") );
 			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC);
