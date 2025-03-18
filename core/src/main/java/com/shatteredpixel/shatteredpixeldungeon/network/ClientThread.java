@@ -199,11 +199,6 @@ class ClientThread implements Callable<String> {
                         );
                         break;
                     }
-                    case "cleric_spell":
-                        JSONObject clericSpellObject = data.getJSONObject(token);
-                        boolean info = clericSpellObject.getBoolean("info");
-                        Window.onClericSpellButtonPressed(clientHero, clericSpellObject.getInt("spell_id"), info);
-                        break;
                     case "chat": {
                         if (clientHero == null) {
                             break;

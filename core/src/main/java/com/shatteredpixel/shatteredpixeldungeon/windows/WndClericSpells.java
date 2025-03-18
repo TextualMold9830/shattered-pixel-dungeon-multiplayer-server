@@ -46,6 +46,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PointF;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -84,6 +85,23 @@ public class WndClericSpells extends Window {
 		}
 		object.put("buttons", buttons);
 		return object;
+	}
+
+	@Override
+	public void onSelect(int button, @Nullable JSONObject args) {
+
+		for (SpellButton spellButton: spellBtns) {
+			if (spellButton.spellID == button) {
+				if (args != null) {
+					spellButton.info = args.optBoolean("info", false);
+				} else {
+					spellButton.info = false;
+				}
+				spellButton.onClick();
+				hide();
+				break;
+			}
+		}
 	}
 
 	public class SpellButton extends IconButton {

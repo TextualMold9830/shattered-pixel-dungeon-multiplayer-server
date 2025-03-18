@@ -286,38 +286,6 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 			window.onSelect(button, res);
 		}
 	}
-	public static void onClericSpellButtonPressed(Hero hero, int spellID, boolean info){
-		final int heroId = HeroHelp.getHeroID(hero);
-		WndClericSpells window = null;
-		int key = -1;
-		try {
-			//Find WndClericSpells
-			for (Map.Entry<Integer, Window> wndEntry : windows.get(heroId).entrySet()) {
-				if (wndEntry.getValue() instanceof WndClericSpells){
-					window = (WndClericSpells) wndEntry.getValue();
-					key = wndEntry.getKey();
-					break;
-				}
-			}
-		} catch (NullPointerException e) {
-			Log.i("Window", "No such window.");
-			return;
-		}
-		if (window != null) {
-			if (spellID == -1) {
-				window.onBackPressed();
-			} else {
-				for (WndClericSpells.SpellButton button : window.spellBtns) {
-					if (button.spellID == spellID) {
-						button.info = info;
-						button.onClick();
-						//Need to dispose of Window
-						windows.get(heroId).remove(key);
-					}
-				}
-			}
-		}
-	}
 	public void onSelect(int button, @Nullable JSONObject args) {
 		onSelect(button);
 	}
