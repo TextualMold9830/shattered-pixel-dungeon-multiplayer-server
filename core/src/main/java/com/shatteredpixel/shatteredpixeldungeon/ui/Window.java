@@ -91,6 +91,20 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 		Map<Integer, Window> heroWindows = windows.getOrDefault(HeroHelp.getHeroID(hero), null);
 		return (heroWindows != null) && !heroWindows.isEmpty();
 	}
+	public static Window getWindow(Class<? extends Window> wndClass, Hero hero) {
+		Map<Integer, Window> heroWindows = windows.getOrDefault(HeroHelp.getHeroID(hero), null);
+		if (heroWindows != null) {
+			for (Window window : heroWindows.values()) {
+				if (window.getClass().equals(wndClass)) {
+					return window;
+				}
+			}
+		}
+		return null;
+	}
+	public static boolean hasWindow(Class<? extends Window> wndClass, Hero hero){
+		return getWindow(wndClass, hero) != null;
+	}
 	protected synchronized final void attachToHero(Hero hero) {
 		if (getId() > 0) {
 			if (hero != getOwnerHero()) {

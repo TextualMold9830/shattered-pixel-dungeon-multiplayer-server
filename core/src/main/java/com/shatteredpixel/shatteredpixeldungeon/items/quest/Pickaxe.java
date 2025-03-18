@@ -50,7 +50,7 @@ public class Pickaxe extends MeleeWeapon {
 		image = ItemSpriteSheet.PICKAXE;
 
 		levelKnown = true;
-		
+
 		unique = true;
 		bones = false;
 
@@ -73,97 +73,10 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
-	public void execute( final Hero hero, String action ) {
-
-		super.execute( hero, action );
-		
-		if (action.equals(AC_MINE)) {
-			
-			if (Dungeon.depth < 11 || Dungeon.depth > 15) {
-				GLog.w( Messages.get(this, "no_vein") );
-				return;
-			}
-			
-			for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
-				
-				final int pos = hero.pos + PathFinder.NEIGHBOURS8[i];
-				if (Dungeon.level.map[pos] == Terrain.WALL_DECO) {
-				
-					hero.spend( TIME_TO_MINE );
-					hero.busy();
-					
-					hero.getSprite().attack( pos, new Callback() {
-
-						@Override
-						public void call() {
-
-							CellEmitter.center( pos ).burst( Speck.factory( Speck.STAR ), 7 );
-							Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-
-							Level.set( pos, Terrain.WALL );
-							GameScene.updateMap( pos );
-
-							DarkGold gold = new DarkGold();
-							if (gold.doPickUp(hero)) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", gold.name())) );
-							} else {
-								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
-							}
-							
-							hero.onOperateComplete();
-						}
-					} );
-					
-					return;
-				}
-			}
-			
-			GLog.w( Messages.get(this, "no_vein") );
-			
-		}
-	}
-	
-	@Override
-	public int proc( Char attacker, Char defender, int damage ) {
-		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
-			Actor.add(new Actor() {
-
-				{
-					actPriority = VFX_PRIO;
-				}
-
-				@Override
-				protected boolean act() {
-					if (!defender.isAlive()){
-						bloodStained = true;
-						updateQuickslot();
-					}
-
-					Actor.remove(this);
-					return true;
-				}
-			});
-		}
-		return super.proc( attacker, defender, damage );
-	}
-
-	@Override
 	public boolean keptThroughLostInventory() {
 		//pickaxe is always kept when it's needed for the mining level
 		return super.keptThroughLostInventory() || Dungeon.level instanceof MiningLevel;
 	}
-
-	@Override
-	public String defaultAction(Hero hero) {
-		if (hero.heroClass == HeroClass.DUELIST && isEquipped(hero)){
-			return AC_ABILITY;
-		} else if (Blacksmith.Quest.oldMiningQuest()) {
-			return AC_MINE;
-		} else {
-			return super.defaultAction();
-		}
-	}
-
 	@Override
 	public String targetingPrompt() {
 		return Messages.get(this, "prompt");
@@ -212,7 +125,7 @@ public class Pickaxe extends MeleeWeapon {
 					}
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
-				Invisibility.dispel(hero);
+				Invisibility.dispel();
 				hero.spendAndNext(hero.attackDelay());
 				afterAbilityUsed(hero);
 			}

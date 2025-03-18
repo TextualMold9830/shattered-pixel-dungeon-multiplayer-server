@@ -433,13 +433,7 @@ public class PrisonBossLevel extends Level {
 				tengu.notice();
 				
 				state = State.FIGHT_START;
-
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						Music.INSTANCE.play(Assets.Music.PRISON_BOSS, true);
-					}
-				});
+				Music.INSTANCE.play(Assets.Music.PRISON_BOSS, true);
 				break;
 				
 			case FIGHT_START:

@@ -822,7 +822,7 @@ public enum Talent {
 					removed = true;
 				}
 			}
-			if (removed && Dungeon.hero.sprite != null) {
+			if (removed && hero.getSprite() != null) {
 				new Flare( 6, 32 ).color(0xFF4CD2, true).show( hero.getSprite(), 2f );
 			}
 		}

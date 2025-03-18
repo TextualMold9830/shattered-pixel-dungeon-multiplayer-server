@@ -222,7 +222,7 @@ public class ChaoticCenser extends Trinket {
 			if (targetCell != null) {
 				Buff.affect(target, GasSpewer.class, target.cooldown()).set(targetCell, gasToSpawn, (int)gasQuantity);
 				GLog.w(Messages.get(ChaoticCenser.class, "spew", Messages.titleCase(Messages.get(gasToSpawn, "name")) ));
-				if (target.sprite != null && target.sprite.parent != null) {
+				if (target.getSprite() != null && target.getSprite().parent != null) {
 					target.getSprite().parent.addToBack(new TargetedCell(targetCell, 0xFF0000));
 				}
 				return true;

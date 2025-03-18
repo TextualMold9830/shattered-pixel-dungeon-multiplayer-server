@@ -34,6 +34,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+
 //FIXME the AI for these things is becoming a complete mess, should refactor
 public class Bee extends Mob {
 	
