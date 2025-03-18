@@ -240,7 +240,7 @@ public class NetworkPacket {
                 object.put("max_hp", ht);
                 object.put("position", pos);
                 object.put("name", name);
-                if (shield > 0 && !character.needsShieldUpdate()) {
+                if (shield > 0 || character.needsShieldUpdate()) {
                     object.put("shield", shield);
                 }
                 object.put("emo", character.getEmoJsonObject());

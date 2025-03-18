@@ -198,7 +198,7 @@ public abstract class Char extends Actor {
 	public void setNeedsShieldUpdate(boolean needsShieldUpdate) {
 		this.needsShieldUpdate = needsShieldUpdate;
 		if (needsShieldUpdate) {
-			SendData.sendCharShield(id(), shielding());
+			sendSelf();
 		}
 	}
 
