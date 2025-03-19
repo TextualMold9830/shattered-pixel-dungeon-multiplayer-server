@@ -127,6 +127,7 @@ public class Belongings implements Iterable<Item> {
 		this.armor = armor;
 		if (armor != null) {
 			armor.sendSelfUpdate(owner);
+			owner.sendSelf();
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-2);
