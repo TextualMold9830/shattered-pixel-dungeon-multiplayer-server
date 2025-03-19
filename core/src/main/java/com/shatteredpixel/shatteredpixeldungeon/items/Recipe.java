@@ -218,6 +218,7 @@ public abstract class Recipe {
 		new StewedMeat.threeMeat(),
 		new MeatPie.Recipe()
 	};
+	public static ArrayList<Recipe> customRecipes = new ArrayList<>();
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){
 
@@ -228,7 +229,11 @@ public abstract class Recipe {
 				result.add(recipe);
 			}
 		}
-
+		for (Recipe recipe: customRecipes){
+			if (recipe.testIngredients(ingredients)){
+				result.add(recipe);
+			}
+		}
 		if (ingredients.size() == 1){
 			for (Recipe recipe : oneIngredientRecipes){
 				if (recipe.testIngredients(ingredients)){
