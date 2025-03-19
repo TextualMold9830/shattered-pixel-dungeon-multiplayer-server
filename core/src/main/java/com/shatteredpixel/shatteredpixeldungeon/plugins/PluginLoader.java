@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.plugins;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.watabou.plugins.PluginManifest;
+import com.watabou.utils.Reflection;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -13,7 +14,6 @@ import java.util.List;
 
 public class PluginLoader {
     public List<PluginManifest> pluginManifests = new ArrayList<>();
-
     public PluginLoader(List<PluginManifest> pluginManifests) {
         this.pluginManifests.addAll(pluginManifests);
     }
@@ -29,6 +29,7 @@ public class PluginLoader {
                             Plugin plugin = (Plugin) pluginClass.newInstance();
                             plugin.manifest = manifest;
                             plugins.add(plugin);
+                            Reflection.pluginLoaders.add(loader);
                             Gdx.app.log("PluginLoader", "Successfully loaded plugin class: " + pluginClass.getName());
                         } else {
                             Gdx.app.error("PluginLoader", "Not a plugin: " + manifest.mainClass());

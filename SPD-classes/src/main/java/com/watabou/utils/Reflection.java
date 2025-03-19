@@ -24,9 +24,11 @@ package com.watabou.utils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.watabou.noosa.Game;
 
+import java.util.ArrayList;
+
 //wrapper for libGDX reflection
 public class Reflection {
-	
+	public static ArrayList<ClassLoader> pluginLoaders = new ArrayList<>();
 	public static boolean isMemberClass( Class cls ){
 		return ClassReflection.isMemberClass(cls);
 	}
@@ -51,10 +53,16 @@ public class Reflection {
 	public static Class forName( String name ){
 		try {
 			return ClassReflection.forName( name );
-		} catch (Exception e) {
-			Game.reportException(e);
-			return null;
+		} catch (Exception ignored) {
+			for (ClassLoader loader: pluginLoaders){
+                try {
+                    return Class.forName(name, true, loader);
+                } catch (ClassNotFoundException ignored1) {
+
+                }
+            }
 		}
+		return null;
 	}
 	
 	public static Class forNameUnhandled( String name ) throws Exception {
