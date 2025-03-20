@@ -1347,6 +1347,12 @@ public class Badges {
 		return null;
 	}
 	static {
-		loadGlobal();
+		if (global == null) {
+			loadGlobal();
+			if (global == null) {
+				//I hate this
+				global = new HashSet<>();
+			}
+		}
 	}
 }
