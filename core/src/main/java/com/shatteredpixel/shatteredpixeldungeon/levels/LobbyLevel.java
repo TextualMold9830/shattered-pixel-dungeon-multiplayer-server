@@ -2,7 +2,9 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.watabou.utils.DeviceCompat;
 
@@ -61,8 +63,11 @@ public class LobbyLevel extends DeadEndLevel {
             this.drop(potion, exit() - this.width());
             StoneOfDeepSleep sods = new StoneOfDeepSleep();
             sods.quantity(10, false);
-            this.drop(new PotionOfLevitation(), exit() - this.width() + 1);
-            this.drop(sods, exit() - this.width() + 2);
+            this.drop(new ScrollOfRemoveCurse(), exit() - this.width() + 1);
+            WandOfWarding wandOfWarding = new WandOfWarding();
+            wandOfWarding.cursed = true;
+            this.drop(wandOfWarding, exit() - this.width() + 2);
+            this.drop(sods, exit() - this.width() + 3);
         }
     }
 }

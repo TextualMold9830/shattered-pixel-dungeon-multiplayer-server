@@ -483,6 +483,17 @@ class ClientThread implements Callable<String> {
             writeStream = null;
             jsonCall.cancel(true);
             GLog.n("player " + threadID + " disconnected");
+            boolean notNullHero = false;
+            for (Hero hero: Dungeon.heroes) {
+                if (hero != null) {
+                    GameScene.shouldProcess = true;
+                    notNullHero = true;
+                    break;
+                }
+            }
+            if (!notNullHero) {
+                GameScene.shouldProcess = false;
+            }
         }
     }
 

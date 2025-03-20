@@ -22,9 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Visual;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -76,7 +77,7 @@ public class Splash {
 		emitter.burst( fact, n );
 	}
 
-	public static void around(Visual v, final int color, int n ) {
+	public static void around(CharSprite v, final int color, int n ) {
 		if (n <= 0) {
 			return;
 		}

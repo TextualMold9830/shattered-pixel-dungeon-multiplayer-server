@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -519,20 +519,28 @@ public class Speck extends Image {
 		Emitter.Factory factory = factories.get( type );
 
 		if (factory == null) {
-			factory = new Emitter.Factory() {
-				@Override
-				public void emit ( Emitter emitter, int index, float x, float y ) {
-					Speck p = (Speck)emitter.recycle( Speck.class );
-					p.reset( index, x, y, type );
-				}
-				@Override
-				public boolean lightMode() {
-					return lightMode;
-				}
-			};
+			factory = new SpeckFactory(type, lightMode);
 			factories.put( type, factory );
 		}
 
 		return factory;
+	}
+	public static class SpeckFactory extends Emitter.Factory {
+		public final int type;
+		public final boolean lightMode;
+		@Override
+		public void emit ( Emitter emitter, int index, float x, float y ) {
+			Speck p = (Speck)emitter.recycle( Speck.class );
+			p.reset( index, x, y, type );
+		}
+		@Override
+		public boolean lightMode() {
+			return lightMode;
+		}
+
+		public SpeckFactory(int type, boolean lightMode) {
+			this.type = type;
+			this.lightMode = lightMode;
+		}
 	}
 }

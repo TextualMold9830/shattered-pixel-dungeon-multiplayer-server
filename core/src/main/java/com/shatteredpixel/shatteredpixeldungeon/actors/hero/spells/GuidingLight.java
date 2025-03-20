@@ -87,7 +87,7 @@ public class GuidingLight extends TargetedClericSpell {
 					ch.getSprite().burst(0xFFFFFF44, 3);
 					if (ch.isAlive()){
 						if (ch.buff(Illuminated.class) == null) {
-							new Illuminated(hero).attachTo(ch);
+							Buff.affect(ch, Illuminated.class).source = hero;
 						}
 						Buff.affect(ch, WasIlluminatedTracker.class);
 					}
@@ -142,7 +142,7 @@ public class GuidingLight extends TargetedClericSpell {
 	}
 
 	public static class Illuminated extends Buff {
-		public final Hero source;
+		public Hero source;
 
 		{
 			type = buffType.NEGATIVE;
@@ -172,9 +172,6 @@ public class GuidingLight extends TargetedClericSpell {
 			return desc;
 		}
 
-		public Illuminated(Hero source) {
-			this.source = source;
-		}
 	}
 
 	public static class WasIlluminatedTracker extends Buff {}

@@ -42,7 +42,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.NoosaScript;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import org.json.JSONException;
@@ -122,10 +122,6 @@ public class ItemSprite extends MovieClip {
 		dropInterval = 0;
 		
 		heap = null;
-		if (emitter != null) {
-			emitter.killAndErase();
-			emitter = null;
-		}
 	}
 
 	@Override
@@ -140,10 +136,6 @@ public class ItemSprite extends MovieClip {
 
 	public void visible(boolean value){
 		this.visible = value;
-		if (emitter != null && !visible){
-			emitter.killAndErase();
-			emitter = null;
-		}
 	}
 	
 	public PointF worldToCamera( int cell ) {
@@ -203,11 +195,6 @@ public class ItemSprite extends MovieClip {
 	public ItemSprite view( Item item ){
 		view(item.image(), item.glowing());
 		Emitter emitter = item.emitter();
-		if (emitter != null && parent != null) {
-			emitter.pos( this );
-			parent.add( emitter );
-			this.emitter = emitter;
-		}
 		return this;
 	}
 	

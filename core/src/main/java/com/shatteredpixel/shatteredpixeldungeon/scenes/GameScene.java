@@ -117,7 +117,7 @@ import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
@@ -664,7 +664,7 @@ public class GameScene extends PixelScene {
 	public static boolean updateTags = false;
 	private static float waterOfs = 0;
 
-
+	public static boolean shouldProcess = true;
 	@Override
 	public synchronized void update() {
 		Server.parseActions();
@@ -705,7 +705,9 @@ public class GameScene extends PixelScene {
 				actorThread = new Thread() {
 					@Override
 					public void run() {
+						if (shouldProcess) {
 						Actor.process();
+						}
 					}
 				};
 

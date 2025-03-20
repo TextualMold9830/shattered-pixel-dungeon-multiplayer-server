@@ -24,11 +24,17 @@
 
 package com.nikita22007.multiplayer.noosa.particles;
 
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.watabou.noosa.Gizmo;
+import com.watabou.noosa.Group;
 import com.watabou.utils.PointF;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * Emitter emits visual particles from random place in its area.
@@ -37,7 +43,7 @@ import org.json.JSONObject;
  * <p>
  * Emitter emits {@link #quantity} count of particles with {@link #interval} delay.
  * If {@code quantity == 0} emitter should be stopped manually */
-public class Emitter {
+public class Emitter /*this is temporary ->*/extends Group {
 
 	protected boolean lightMode = false;
 	/**
@@ -80,7 +86,8 @@ public class Emitter {
 	protected Factory factory;
 	private Integer cell = null;
 	private PointF shift = new PointF(0, 0);
-
+	public boolean visible = true;
+	public static boolean freezeEmitters = false;
 
 	public void cellPos(int cell) {
 		cellPos(cell, 0, 0);
@@ -124,7 +131,10 @@ public class Emitter {
 		
 		target = null;
 	}
-
+	public void pos(CharSprite target, float x, float y, float width, float height){
+		pos(x, y, width, height);
+		this.target = target;
+	}
 	public void pos( CharSprite target ) {
 		this.target = target;
 	}
@@ -173,6 +183,26 @@ public class Emitter {
 		on = true;
 		sendSelf();
 	}
+	//TODO: remove all uses of this
+	public Group recycle(){
+		return new Group();
+	}
+	//TODO: also remove all uses of this
+
+	public Gizmo recycle(Class<? extends Gizmo> c ){
+		return new Group();
+	}
+	//TODO: remove all overrides of this
+	public void update(){}
+
+	//TODO: remove all uses of this
+	public void revive(){}
+	//TODO: remove all uses of this
+	public boolean autoKill = false;
+	//TODO: remove all uses of this
+	public void killAndErase(){}
+	//TODO: check this
+	protected boolean isFrozen(){return false;}
 
 	protected void sendSelf() {
 		JSONObject actionObj = new JSONObject();
@@ -197,21 +227,34 @@ public class Emitter {
 
 			actionObj.put("interval", interval);
 			actionObj.put("quantity", quantity);
+			JSONObject factoryObject = new JSONObject();
+			factoryObject.put("path", factory.getClass().getName());
+			if (factory instanceof Speck.SpeckFactory) {
+				Speck.SpeckFactory speckFactory = (Speck.SpeckFactory) factory;
+				factoryObject.put("type", speckFactory.type);
+				factoryObject.put("lightMode", speckFactory.lightMode);
+			}
+			actionObj.put("factory", factoryObject);
 
-			actionObj.put("factory", factory.toJsonObject());
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		SendData.sendCustomActionForAll(actionObj);
 	}
 
+	public void pos(float x, float y) {
+		pos(x, y, 0,0);
+	}
 	abstract public static class Factory {
 
 		public boolean lightMode() {
 			return false;
 		}
-
-		public abstract String factoryName();
+		//TODO: check this
+		public String factoryName(){
+			//return toPath(this);
+			return getClass().getName();
+		};
 
 		public JSONObject customParams() {
 			return new JSONObject();
@@ -226,5 +269,8 @@ public class Emitter {
 			} catch (JSONException ignored) {}
 			return result;
 		}
+		//TODO: remove all overrides of this
+		public void emit(Emitter emitter, int index, float x, float y ){};
 	}
+	protected void emit(int index){}
 }

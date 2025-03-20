@@ -36,7 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Visual;
-import com.watabou.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
@@ -276,7 +276,7 @@ public class MagicMissile extends Emitter {
 
 	//convenience method for the common case of a bolt going from a character to a tile or enemy
 	public static MagicMissile boltFromChar(Group group, int type, Visual sprite, int to, Callback callback){
-		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
+		MagicMissile missile = new MagicMissile();
 		if (Actor.findChar(to) != null){
 			missile.reset(type, sprite.center(), Actor.findChar(to).getSprite().destinationCenter(), callback);
 		} else {
