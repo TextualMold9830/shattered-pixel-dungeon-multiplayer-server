@@ -29,6 +29,7 @@ import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -132,6 +133,15 @@ public class Splash {
 			p.reset( x, y, color, 4, Random.Float( 0.5f, 1.0f ) );
 			p.speed.polar( Random.Float( dir - cone / 2, dir + cone / 2 ), Random.Float( 40, 80 ) );
 			p.acc.set( 0, +100 );
+		}
+
+		@Override
+		public JSONObject customParams() {
+			JSONObject object = new JSONObject();
+			object.put("color", color);
+			object.put("dir", dir);
+			object.put("cone", cone);
+			return object;
 		}
 	}
 }

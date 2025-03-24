@@ -227,14 +227,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 
 			actionObj.put("interval", interval);
 			actionObj.put("quantity", quantity);
-			JSONObject factoryObject = new JSONObject();
-			factoryObject.put("path", factory.getClass().getName());
-			if (factory instanceof Speck.SpeckFactory) {
-				Speck.SpeckFactory speckFactory = (Speck.SpeckFactory) factory;
-				factoryObject.put("type", speckFactory.type);
-				factoryObject.put("lightMode", speckFactory.lightMode);
-			}
-			actionObj.put("factory", factoryObject);
+			actionObj.put("factory", factory.toJsonObject());
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -264,8 +257,9 @@ public class Emitter /*this is temporary ->*/extends Group {
 			JSONObject result =  customParams();
 			try {
 			result = result == null? new JSONObject(): result;
+			result.put("path", getClass().getName());
 			result.put("factory_type", factoryName());
-				result.put("light_mode", lightMode());
+			result.put("light_mode", lightMode());
 			} catch (JSONException ignored) {}
 			return result;
 		}

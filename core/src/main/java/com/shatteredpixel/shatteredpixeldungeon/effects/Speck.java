@@ -31,6 +31,7 @@ import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
+import org.json.JSONObject;
 
 public class Speck extends Image {
 
@@ -541,6 +542,14 @@ public class Speck extends Image {
 		public SpeckFactory(int type, boolean lightMode) {
 			this.type = type;
 			this.lightMode = lightMode;
+		}
+
+		@Override
+		public JSONObject customParams() {
+			JSONObject object = new JSONObject();
+			object.put("type", type);
+			object.put("lightMode", lightMode);
+			return object;
 		}
 	}
 }
