@@ -328,7 +328,7 @@ public class NetworkPacket {
         }
         JSONObject object = new JSONObject();
         String class_name = hero.heroClass.name();
-        int subclass_id = 0;
+        int subclass_id = hero.subClass.ordinal();
         int strength = hero.STR();
         int lvl = hero.lvl;
         int exp = hero.exp;
@@ -340,24 +340,7 @@ public class NetworkPacket {
             object.put("lvl", lvl);
             object.put("exp", exp);
             object.put("uuid", hero.uuid);
-            JSONArray[] talentsArray = new JSONArray[4];
-            for (int i =  0; i < talentsArray.length; i++) {
-                JSONArray talents = new JSONArray();
-                LinkedHashMap<Talent, Integer> heroTalents = hero.talents.get(i);
-                for (Map.Entry<Talent, Integer> talentIntegerEntry : heroTalents.entrySet()) {
-                    JSONObject talentObject = new JSONObject();
-                    talentObject.put("icon", talentIntegerEntry.getKey().icon());
-                    talentObject.put("points", talentIntegerEntry.getValue());
-                    talents.put(talentObject);
-                }
-                talentsArray[i] = talents;
-            }
-            JSONArray talents = new JSONArray();
-            for (JSONArray talentArray : talentsArray) {
-                talents.put(talentArray);
-            }
-            object.put("talents", talents);
-            System.out.println(talents.toString(3));
+            object.put("talents", hero.getTalents());
         } catch (JSONException e) {
 
         }

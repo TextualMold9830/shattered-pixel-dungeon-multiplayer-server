@@ -183,11 +183,13 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Hero extends Char {
 	public int networkID = -1;
@@ -2594,5 +2596,24 @@ public class Hero extends Char {
 			return new JSONObject();
 		}
 		return getSprite().getEmoJsonObject();
+	}
+	public JSONArray getTalents(){
+		JSONArray[] talentsArray = new JSONArray[4];
+		for (int i =  0; i < talentsArray.length; i++) {
+			JSONArray talents = new JSONArray();
+			LinkedHashMap<Talent, Integer> heroTalents = this.talents.get(i);
+			for (Map.Entry<Talent, Integer> talentIntegerEntry : heroTalents.entrySet()) {
+				JSONObject talentObject = new JSONObject();
+				talentObject.put("icon", talentIntegerEntry.getKey().icon());
+				talentObject.put("points", talentIntegerEntry.getValue());
+				talents.put(talentObject);
+			}
+			talentsArray[i] = talents;
+		}
+		JSONArray talents = new JSONArray();
+		for (JSONArray talentArray : talentsArray) {
+			talents.put(talentArray);
+		}
+		return talents;
 	}
 }

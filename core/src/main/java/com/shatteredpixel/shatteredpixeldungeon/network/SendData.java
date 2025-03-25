@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -167,6 +168,45 @@ public class SendData {
                         data.put("hero", heroObj);
                     }
                     heroObj.put("gold", gold);
+                } catch (JSONException ignored) {
+                }
+            }
+            clients[ID].flush();
+        }
+    }
+    public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
+        if ((ID != -1) && (clients[ID] != null)) {
+            synchronized (clients[ID].packet.dataRef) {
+                JSONObject data = clients[ID].packet.dataRef.get();
+                JSONObject heroObj = null;
+                try {
+                    if (data.has("hero")) {
+                        heroObj = data.getJSONObject("hero");
+                    } else {
+                        heroObj = new JSONObject();
+                        data.put("hero", heroObj);
+                    }
+                    heroObj.put("subclass_id", subclass.ordinal());
+                } catch (JSONException ignored) {
+                }
+            }
+            clients[ID].flush();
+        }
+    }
+    public static void sendHeroTalents(Hero hero){
+        int ID = hero.networkID;
+        if ((ID != -1) && (clients[ID] != null)) {
+            synchronized (clients[ID].packet.dataRef) {
+                JSONObject data = clients[ID].packet.dataRef.get();
+                JSONObject heroObj = null;
+                try {
+                    if (data.has("hero")) {
+                        heroObj = data.getJSONObject("hero");
+                    } else {
+                        heroObj = new JSONObject();
+                        data.put("hero", heroObj);
+                    }
+                    heroObj.put("talents", hero.getTalents());
                 } catch (JSONException ignored) {
                 }
             }
