@@ -93,7 +93,7 @@ public abstract class ElementalSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (particles != null){
-			particles.on = false;
+			particles.on(false);
 		}
 	}
 	

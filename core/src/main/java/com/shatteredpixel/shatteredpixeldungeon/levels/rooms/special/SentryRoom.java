@@ -23,7 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -403,7 +402,7 @@ public class SentryRoom extends SpecialRoom {
 			chargeParticles = centerEmitter();
 			chargeParticles.autoKill = false;
 			chargeParticles.pour(MagicMissile.MagicParticle.ATTRACTING, 0.05f);
-			chargeParticles.on = false;
+			chargeParticles.on(false);
 
 			if (((Sentry)ch).curChargeDelay != ((Sentry) ch).initialChargeDelay){
 				play(charging);
@@ -414,7 +413,7 @@ public class SentryRoom extends SpecialRoom {
 		public void die() {
 			super.die();
 			if (chargeParticles != null){
-				chargeParticles.on = false;
+				chargeParticles.on(false);
 			}
 		}
 
@@ -433,7 +432,7 @@ public class SentryRoom extends SpecialRoom {
 
 		@Override
 		public void play(Animation anim) {
-			if (chargeParticles != null) chargeParticles.on = anim == charging;
+			if (chargeParticles != null) chargeParticles.on(anim == charging);
 			super.play(anim);
 		}
 

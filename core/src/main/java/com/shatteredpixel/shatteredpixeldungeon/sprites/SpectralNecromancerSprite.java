@@ -84,7 +84,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (summoningParticles != null){
-			summoningParticles.on = false;
+			summoningParticles.on(false);
 			summoningParticles = null;
 		}
 	}
@@ -93,14 +93,14 @@ public class SpectralNecromancerSprite extends MobSprite {
 	public void kill() {
 		super.kill();
 		if (summoningParticles != null){
-			summoningParticles.on = false;
+			summoningParticles.on(false);
 			summoningParticles = null;
 		}
 	}
 
 	public void cancelSummoning(){
 		if (summoningParticles != null){
-			summoningParticles.on = false;
+			summoningParticles.on(false);
 			summoningParticles = null;
 		}
 	}
@@ -110,7 +110,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
 			summoningParticles.burst(ShadowParticle.CURSE, 5);
 		} else {
-			summoningParticles.on = false;
+			summoningParticles.on(false);
 		}
 		summoningParticles = null;
 		idle();
@@ -125,7 +125,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 		super.zap(cell);
 		if (ch instanceof Necromancer && ((Necromancer) ch).summoning){
 			if (summoningParticles != null){
-				summoningParticles.on = false;
+				summoningParticles.on(false);
 			}
 			summoningParticles = CellEmitter.get(((Necromancer) ch).summoningPos);
 			summoningParticles.pour(ShadowParticle.MISSILE, 0.1f);

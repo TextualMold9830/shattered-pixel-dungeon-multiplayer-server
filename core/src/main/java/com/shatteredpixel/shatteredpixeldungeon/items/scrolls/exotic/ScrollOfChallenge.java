@@ -175,7 +175,7 @@ public class ScrollOfChallenge extends ExoticScroll {
 				}
 			} else {
 				for (Emitter e : arenaEmitters){
-					e.on = false;
+					e.on(false);
 				}
 				arenaEmitters.clear();
 			}

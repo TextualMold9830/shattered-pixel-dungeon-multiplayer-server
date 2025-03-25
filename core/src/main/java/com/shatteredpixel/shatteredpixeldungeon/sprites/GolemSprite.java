@@ -66,7 +66,7 @@ public class GolemSprite extends MobSprite {
 		teleParticles = emitter();
 		teleParticles.autoKill = false;
 		teleParticles.pour(ElmoParticle.FACTORY, 0.05f);
-		teleParticles.on = false;
+		teleParticles.on(false);
 	}
 
 	@Override
@@ -83,17 +83,17 @@ public class GolemSprite extends MobSprite {
 		super.kill();
 
 		if (teleParticles != null) {
-			teleParticles.on = false;
+			teleParticles.on(false);
 		}
 	}
 
 	public void teleParticles(boolean value){
-		if (teleParticles != null) teleParticles.on = value;
+		if (teleParticles != null) teleParticles.on(value);
 	}
 
 	@Override
 	public synchronized void play(Animation anim, boolean force) {
-		if (teleParticles != null) teleParticles.on = false;
+		if (teleParticles != null) teleParticles.on(false);
 		super.play(anim, force);
 	}
 

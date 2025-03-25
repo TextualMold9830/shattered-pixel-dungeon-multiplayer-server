@@ -410,7 +410,7 @@ public class ShadowClone extends ArmorAbility {
 			super.kill();
 
 			if (smoke != null) {
-				smoke.on = false;
+				smoke.on(false);
 			}
 		}
 	}

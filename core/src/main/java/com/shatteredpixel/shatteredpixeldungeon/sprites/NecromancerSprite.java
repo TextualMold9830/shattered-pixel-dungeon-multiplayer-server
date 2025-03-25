@@ -82,7 +82,7 @@ public class NecromancerSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (summoningBones != null){
-			summoningBones.on = false;
+			summoningBones.on(false);
 			summoningBones = null;
 		}
 	}
@@ -91,14 +91,14 @@ public class NecromancerSprite extends MobSprite {
 	public void kill() {
 		super.kill();
 		if (summoningBones != null){
-			summoningBones.on = false;
+			summoningBones.on(false);
 			summoningBones = null;
 		}
 	}
 
 	public void cancelSummoning(){
 		if (summoningBones != null){
-			summoningBones.on = false;
+			summoningBones.on(false);
 			summoningBones = null;
 		}
 	}
@@ -109,7 +109,7 @@ public class NecromancerSprite extends MobSprite {
 				Sample.INSTANCE.play(Assets.Sounds.BONES);
 				summoningBones.burst(Speck.factory(Speck.RATTLE), 5);
 			} else {
-				summoningBones.on = false;
+				summoningBones.on(false);
 			}
 			summoningBones = null;
 		}
@@ -125,7 +125,7 @@ public class NecromancerSprite extends MobSprite {
 		super.zap(cell);
 		if (ch instanceof Necromancer && ((Necromancer) ch).summoning){
 			if (summoningBones != null){
-				summoningBones.on = false;
+				summoningBones.on(false);
 			}
 			summoningBones = CellEmitter.get(((Necromancer) ch).summoningPos);
 			summoningBones.pour(Speck.factory(Speck.RATTLE), 0.2f);

@@ -239,7 +239,7 @@ public class WarpBeacon extends ArmorAbility {
 				e = CellEmitter.center(pos);
 				e.pour(MagicMissile.WardParticle.UP, 0.05f);
 			}
-			else if (e != null) e.on = false;
+			else if (e != null) e.on(false);
 		}
 
 		public static final String POS = "pos";

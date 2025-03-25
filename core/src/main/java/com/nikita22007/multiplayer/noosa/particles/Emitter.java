@@ -24,17 +24,14 @@
 
 package com.nikita22007.multiplayer.noosa.particles;
 
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.utils.PointF;
+import com.watabou.utils.SparseArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
 
 /**
  * Emitter emits visual particles from random place in its area.
@@ -44,6 +41,7 @@ import java.util.Arrays;
  * Emitter emits {@link #quantity} count of particles with {@link #interval} delay.
  * If {@code quantity == 0} emitter should be stopped manually */
 public class Emitter /*this is temporary ->*/extends Group {
+	int id = -1;
 
 	protected boolean lightMode = false;
 	/**
@@ -75,10 +73,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 	protected float interval;
 	protected int quantity;
 
-	/**
-	 * if {@code on == false}, Emitter stops emitting
-	 */
-	public boolean on = false;
+	private boolean on = false;
 
 	/**
 	 * Factory which producing particles
@@ -167,11 +162,17 @@ public class Emitter /*this is temporary ->*/extends Group {
 	 * @param factory factory of particles
 	 * @param interval interval between emitting
 	 */
+	static SparseArray<Emitter> infiniteEmitters = new SparseArray<>();
+	static int idCounter = 0;
+	static void putEmitter(Emitter emitter){
+		emitter.id = idCounter;
+		infiniteEmitters.put(emitter.id, emitter);
+		idCounter++;
+	}
 	public void start( Factory factory, float interval, int quantity ) {
 
 		if (quantity == 0) {
-			//todo
-			return;
+			putEmitter(this);
 		}
 
 		this.factory = factory;
@@ -180,7 +181,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 		this.interval = interval;
 		this.quantity = quantity;
 		
-		on = true;
+		on(true);
 		sendSelf();
 	}
 	//TODO: remove all uses of this
@@ -200,7 +201,20 @@ public class Emitter /*this is temporary ->*/extends Group {
 	//TODO: remove all uses of this
 	public boolean autoKill = false;
 	//TODO: remove all uses of this
-	public void killAndErase(){}
+	public void killAndErase(){
+		if (id != -1){
+			JSONObject object = new JSONObject();
+			object.put("action_type", "emitter_visual");
+			object.put("id", id);
+			object.put("kill", true);
+			SendData.sendCustomActionForAll(object);
+		}
+	}
+	@Override
+	public void kill(){
+		killAndErase();
+	}
+
 	//TODO: check this
 	protected boolean isFrozen(){return false;}
 
@@ -227,6 +241,9 @@ public class Emitter /*this is temporary ->*/extends Group {
 
 			actionObj.put("interval", interval);
 			actionObj.put("quantity", quantity);
+			if (id > -1){
+				actionObj.put("id", id);
+			}
 			actionObj.put("factory", factory.toJsonObject());
 
 		} catch (Exception e) {
@@ -238,6 +255,21 @@ public class Emitter /*this is temporary ->*/extends Group {
 	public void pos(float x, float y) {
 		pos(x, y, 0,0);
 	}
+
+	/**
+	 * if {@code on == false}, Emitter stops emitting
+	 */
+	public boolean on() {
+		return on;
+	}
+
+	public void 	on(boolean on) {
+		this.on = on;
+		if (!on){
+			killAndErase();
+		}
+	}
+
 	abstract public static class Factory {
 
 		public boolean lightMode() {

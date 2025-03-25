@@ -92,7 +92,7 @@ public class DelayedRockFall extends FlavourBuff {
 			}
 		} else {
 			for (Emitter e : rockEmitters){
-				e.on = false;
+				e.on(false);
 			}
 		}
 	}

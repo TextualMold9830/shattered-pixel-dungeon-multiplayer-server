@@ -132,13 +132,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
-					burning.on = false;
+					burning.on(false);
 					burning = null;
 				}
 				break;
 			case LEVITATING:
 				if (levitation != null) {
-					levitation.on = false;
+					levitation.on(false);
 					levitation = null;
 				}
 				break;
@@ -166,7 +166,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case CHILLED:
 				if (chilled != null) {
-					chilled.on = false;
+					chilled.on(false);
 					chilled = null;
 				}
 				break;
@@ -178,13 +178,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case MARKED:
 				if (marked != null) {
-					marked.on = false;
+					marked.on(false);
 					marked = null;
 				}
 				break;
 			case HEALING:
 				if (healing != null) {
-					healing.on = false;
+					healing.on(false);
 					healing = null;
 				}
 				break;
@@ -195,7 +195,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case HEARTS:
 				if (hearts != null) {
-					hearts.on = false;
+					hearts.on(false);
 					hearts = null;
 				}
 				break;
@@ -221,7 +221,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected synchronized void processStateAddition( State state ) {
 		switch (state) {
 			case BURNING:
-				if (burning != null) burning.on = false;
+				if (burning != null) burning.on(false);
 				burning = emitter();
 				burning.pour(FlameParticle.FACTORY, 0.06f);
 				if (visible) {
@@ -229,7 +229,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				break;
 			case LEVITATING:
-				if (levitation != null) levitation.on = false;
+				if (levitation != null) levitation.on(false);
 				levitation = emitter();
 				levitation.pour(Speck.factory(Speck.JET), 0.02f);
 				break;
@@ -253,7 +253,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				GameScene.effect(light = new TorchHalo(this));
 				break;
 			case CHILLED:
-				if (chilled != null) chilled.on = false;
+				if (chilled != null) chilled.on(false);
 				chilled = emitter();
 				chilled.pour(SnowParticle.FACTORY, 0.1f);
 				break;
@@ -262,12 +262,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				darkBlock = DarkBlock.darken(this);
 				break;
 			case MARKED:
-				if (marked != null) marked.on = false;
+				if (marked != null) marked.on(false);
 				marked = emitter();
 				marked.pour(ShadowParticle.UP, 0.1f);
 				break;
 			case HEALING:
-				if (healing != null) healing.on = false;
+				if (healing != null) healing.on(false);
 				healing = emitter();
 				healing.pour(Speck.factory(Speck.HEALING), 0.5f);
 				break;
@@ -276,7 +276,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				GameScene.effect(shield = new ShieldHalo(this));
 				break;
 			case HEARTS:
-				if (hearts != null) hearts.on = false;
+				if (hearts != null) hearts.on(false);
 				hearts = emitter();
 				hearts.pour(Speck.factory(Speck.HEART), 0.5f);
 				break;
@@ -597,7 +597,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		sendCharSpriteState(ch, state, false);
 		switch (state) {
 			case BURNING:
-				if (burning != null) burning.on = false;
+				if (burning != null) burning.on(false);
 				burning = emitter();
 				burning.pour(FlameParticle.FACTORY, 0.06f);
 				if (visible) {
@@ -605,7 +605,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				break;
 			case LEVITATING:
-				if (levitation != null) levitation.on = false;
+				if (levitation != null) levitation.on(false);
 				levitation = emitter();
 				levitation.pour(Speck.factory(Speck.JET), 0.02f);
 				break;
@@ -629,7 +629,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				GameScene.effect(light = new TorchHalo(this));
 				break;
 			case CHILLED:
-				if (chilled != null) chilled.on = false;
+				if (chilled != null) chilled.on(false);
 				chilled = emitter();
 				chilled.pour(SnowParticle.FACTORY, 0.1f);
 				break;
@@ -638,12 +638,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				darkBlock = DarkBlock.darken(this);
 				break;
 			case MARKED:
-				if (marked != null) marked.on = false;
+				if (marked != null) marked.on(false);
 				marked = emitter();
 				marked.pour(ShadowParticle.UP, 0.1f);
 				break;
 			case HEALING:
-				if (healing != null) healing.on = false;
+				if (healing != null) healing.on(false);
 				healing = emitter();
 				healing.pour(Speck.factory(Speck.HEALING), 0.5f);
 				break;
@@ -652,7 +652,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				GameScene.effect(shield = new ShieldHalo(this));
 				break;
 			case HEARTS:
-				if (hearts != null) hearts.on = false;
+				if (hearts != null) hearts.on(false);
 				hearts = emitter();
 				hearts.pour(Speck.factory(Speck.HEART), 0.5f);
 				break;
@@ -684,13 +684,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
-					burning.on = false;
+					burning.on(false);
 					burning = null;
 				}
 				break;
 			case LEVITATING:
 				if (levitation != null) {
-					levitation.on = false;
+					levitation.on(false);
 					levitation = null;
 				}
 				break;
@@ -718,7 +718,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case CHILLED:
 				if (chilled != null) {
-					chilled.on = false;
+					chilled.on(false);
 					chilled = null;
 				}
 				break;
@@ -730,13 +730,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case MARKED:
 				if (marked != null) {
-					marked.on = false;
+					marked.on(false);
 					marked = null;
 				}
 				break;
 			case HEALING:
 				if (healing != null) {
-					healing.on = false;
+					healing.on(false);
 					healing = null;
 				}
 				break;
@@ -747,7 +747,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case HEARTS:
 				if (hearts != null) {
-					hearts.on = false;
+					hearts.on(false);
 					hearts = null;
 				}
 				break;

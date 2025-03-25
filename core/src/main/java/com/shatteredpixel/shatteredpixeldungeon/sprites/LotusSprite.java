@@ -103,7 +103,7 @@ public class LotusSprite extends MobSprite {
 
 		if (grassVfx != null){
 			for (Emitter e : grassVfx){
-				e.on = false;
+				e.on(false);
 			}
 			grassVfx = null;
 		}
@@ -115,7 +115,7 @@ public class LotusSprite extends MobSprite {
 
 		if (grassVfx != null){
 			for (Emitter e : grassVfx){
-				e.on = false;
+				e.on(false);
 			}
 			grassVfx = null;
 		}

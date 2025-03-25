@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -99,7 +98,7 @@ public class AuraOfProtection extends ClericSpell {
 				particles.fillTarget = false;
 				particles.pour(Speck.factory(Speck.LIGHT), 0.02f);
 			} else if (!on && particles != null){
-				particles.on = false;
+				particles.on(false);
 			}
 		}
 

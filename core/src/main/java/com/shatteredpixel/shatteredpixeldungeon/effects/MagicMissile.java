@@ -293,12 +293,12 @@ public class MagicMissile extends Emitter {
 	@Override
 	public void update() {
 		super.update();
-		if (on) {
+		if (on()) {
 			float d = Game.elapsed;
 			x += sx * d;
 			y += sy * d;
 			if ((time -= d) <= 0) {
-				on = false;
+				on(false);
 				if (callback != null ) callback.call();
 			}
 		}

@@ -88,7 +88,7 @@ public class RotHeartSprite extends MobSprite {
 		super.die();
 
 		if (cloud != null) {
-			cloud.on = false;
+			cloud.on(false);
 		}
 	}
 

@@ -99,7 +99,7 @@ public abstract class FistSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (particles != null){
-			particles.on = false;
+			particles.on(false);
 		}
 	}
 

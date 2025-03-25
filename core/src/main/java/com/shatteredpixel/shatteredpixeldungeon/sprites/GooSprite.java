@@ -76,7 +76,7 @@ public class GooSprite extends MobSprite {
 		if (spray != null) {
 			spray.autoKill = false;
 			spray.pour(GooParticle.FACTORY, 0.04f);
-			spray.on = false;
+			spray.on(false);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class GooSprite extends MobSprite {
 
 	public void clearEmitters(){
 		for (Emitter e : pumpUpEmitters){
-			e.on = false;
+			e.on(false);
 		}
 		pumpUpEmitters.clear();
 	}
@@ -141,7 +141,7 @@ public class GooSprite extends MobSprite {
 	}
 
 	public void spray(boolean on){
-		spray.on = on;
+		spray.on(on);
 	}
 
 	@Override

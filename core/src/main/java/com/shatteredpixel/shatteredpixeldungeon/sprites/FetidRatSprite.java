@@ -78,7 +78,7 @@ public class FetidRatSprite extends MobSprite {
 		super.kill();
 		
 		if (cloud != null) {
-			cloud.on = false;
+			cloud.on(false);
 		}
 	}
 }

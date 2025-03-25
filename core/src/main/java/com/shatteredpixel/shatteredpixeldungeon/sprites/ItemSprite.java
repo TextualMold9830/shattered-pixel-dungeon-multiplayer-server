@@ -250,7 +250,7 @@ public class ItemSprite extends MovieClip {
 	public void kill() {
 		super.kill();
 		if (emitter != null) {
-			emitter.on = false;
+			emitter.on(false);
 			emitter.autoKill = true;
 		}
 		emitter = null;

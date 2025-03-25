@@ -62,12 +62,10 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.KingSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
@@ -735,7 +733,7 @@ public class DwarfKing extends Mob {
 				}
 
 			} else if (!on && particles != null) {
-				particles.on = false;
+				particles.on(false);
 			}
 		}
 

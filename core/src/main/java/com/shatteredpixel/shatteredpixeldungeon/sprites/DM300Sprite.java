@@ -50,7 +50,7 @@ public class DM300Sprite extends MobSprite {
 	}
 
 	public void updateChargeState( boolean enraged ){
-		if (superchargeSparks != null) superchargeSparks.on = enraged;
+		if (superchargeSparks != null) superchargeSparks.on(enraged);
 
 		int c = enraged ? 10 : 0;
 
@@ -144,7 +144,7 @@ public class DM300Sprite extends MobSprite {
 		superchargeSparks = emitter();
 		superchargeSparks.autoKill = false;
 		superchargeSparks.pour(SparkParticle.STATIC, 0.05f);
-		superchargeSparks.on = false;
+		superchargeSparks.on(false);
 
 		if (ch instanceof DM300 && ((DM300) ch).isSupercharged()){
 			updateChargeState(true);
@@ -164,7 +164,7 @@ public class DM300Sprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (superchargeSparks != null){
-			superchargeSparks.on = false;
+			superchargeSparks.on(false);
 		}
 	}
 

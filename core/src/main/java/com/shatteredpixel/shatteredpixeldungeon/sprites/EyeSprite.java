@@ -72,7 +72,7 @@ public class EyeSprite extends MobSprite {
 		chargeParticles = centerEmitter();
 		chargeParticles.autoKill = false;
 		chargeParticles.pour(MagicMissile.MagicParticle.ATTRACTING, 0.05f);
-		chargeParticles.on = false;
+		chargeParticles.on(false);
 		
 		if (((Eye)ch).beamCharged) play(charging);
 	}
@@ -90,7 +90,7 @@ public class EyeSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (chargeParticles != null){
-			chargeParticles.on = false;
+			chargeParticles.on(false);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class EyeSprite extends MobSprite {
 
 	@Override
 	public void play(Animation anim) {
-		if (chargeParticles != null) chargeParticles.on = anim == charging;
+		if (chargeParticles != null) chargeParticles.on(anim == charging);
 		super.play(anim);
 	}
 

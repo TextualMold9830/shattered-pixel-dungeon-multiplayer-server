@@ -85,7 +85,7 @@ public class PhantomPiranhaSprite extends MobSprite {
 		super.die();
 
 		if (sparkles != null) {
-			sparkles.on = false;
+			sparkles.on(false);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class PhantomPiranhaSprite extends MobSprite {
 		super.kill();
 
 		if (sparkles != null) {
-			sparkles.on = false;
+			sparkles.on(false);
 		}
 	}
 
