@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.addToSendLevelMappedState;
+
 public class ScrollOfMagicMapping extends Scroll {
 
 	{
@@ -72,7 +74,7 @@ public class ScrollOfMagicMapping extends Scroll {
 			}
 		}
 		GameScene.updateFog();
-		
+		addToSendLevelMappedState(Dungeon.level);
 		GLog.i( Messages.get(this, "layout") );
 		if (noticed) {
 			Sample.INSTANCE.play( Assets.Sounds.SECRET );
