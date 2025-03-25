@@ -189,7 +189,7 @@ public class MasterThievesArmband extends Artifact {
 								exp -= 10 + Math.round(3.33f * level());
 								Catalog.countUse(MasterThievesArmband.class);
 								GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
-								upgrade();
+								upgrade(curUser);
 							}
 							Item.updateQuickslot();
 							curUser.next();
@@ -238,9 +238,9 @@ public class MasterThievesArmband extends Artifact {
 	}
 
 	@Override
-	public Item upgrade() {
+	public Item upgrade(Hero hero) {
 		chargeCap = 5 + (level()+1)/2;
-		return super.upgrade();
+		return super.upgrade(hero);
 	}
 
 	@Override
@@ -310,7 +310,7 @@ public class MasterThievesArmband extends Artifact {
 					exp -= 10 + Math.round(3.33f * level());
 					Catalog.countUse(MasterThievesArmband.class);
 					GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
-					upgrade();
+					upgrade(targeter.getOwner());
 				}
 				updateQuickslot();
 				return true;

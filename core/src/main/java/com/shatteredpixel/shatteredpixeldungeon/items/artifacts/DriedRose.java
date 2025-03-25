@@ -348,7 +348,7 @@ public class DriedRose extends Artifact {
 			ghost.updateRose(hero);
 		}
 
-		return super.upgrade();
+		return super.upgrade(hero);
 	}
 	
 	public Weapon ghostWeapon(){
@@ -507,7 +507,7 @@ public class DriedRose extends Artifact {
 				return true;
 			} else {
 
-				rose.upgrade();
+				rose.upgrade(hero);
 				Catalog.countUse(rose.getClass());
 				if (rose.level() == rose.levelCap) {
 					GLog.p( Messages.get(this, "maxlevel") );

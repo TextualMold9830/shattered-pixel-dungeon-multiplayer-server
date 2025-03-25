@@ -196,4 +196,9 @@ public abstract class KindofMisc extends EquipableItem {
 				|| hero.belongings.ring() == this);
 	}
 
+	@Override
+	public Item upgrade(Hero hero) {
+		super.upgrade(hero);
+		return this;
+	}
 }

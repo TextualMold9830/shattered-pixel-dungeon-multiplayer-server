@@ -273,7 +273,7 @@ public class UnstableSpellbook extends Artifact {
 	}
 
 	@Override
-	public Item upgrade() {
+	public Item upgrade(Hero hero) {
 		chargeCap = (int)((level()+1)*0.6f)+2;
 
 		//for artifact transmutation.
@@ -281,7 +281,7 @@ public class UnstableSpellbook extends Artifact {
 			scrolls.remove(0);
 		}
 
-		return super.upgrade();
+		return super.upgrade(hero);
 	}
 
 	@Override

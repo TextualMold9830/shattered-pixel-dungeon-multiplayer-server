@@ -131,7 +131,7 @@ public class ChaliceOfBlood extends Artifact {
 			Dungeon.fail( this );
 			GLog.n( Messages.get(this, "ondeath") );
 		} else {
-			upgrade();
+			upgrade(hero);
 			Catalog.countUse(getClass());
 		}
 	}

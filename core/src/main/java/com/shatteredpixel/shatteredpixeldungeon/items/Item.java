@@ -472,7 +472,11 @@ public class Item implements Bundlable {
 		return this;
 	}
 	public Item upgrade(Hero hero){
-		return upgrade();
+		upgrade();
+		if (hero != null) {
+			sendSelfUpdate(hero);
+		}
+		return this;
 	}
 	@Deprecated
 	public Item upgrade(int n){

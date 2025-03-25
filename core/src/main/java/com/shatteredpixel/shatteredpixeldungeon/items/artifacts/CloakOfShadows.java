@@ -198,9 +198,9 @@ public class CloakOfShadows extends Artifact {
 	}
 	
 	@Override
-	public Item upgrade() {
+	public Item upgrade(Hero hero) {
 		chargeCap = Math.min(chargeCap + 1, 10);
-		return super.upgrade();
+		return super.upgrade(hero);
 	}
 
 	private static final String STEALTHED = "stealthed";
@@ -343,7 +343,7 @@ public class CloakOfShadows extends Artifact {
 					}
 					
 					if (exp >= (level() + 1) * 50 && level() < levelCap) {
-						upgrade();
+						upgrade(hero);
 						Catalog.countUse(CloakOfShadows.class);
 						exp -= level() * 50;
 						GLog.p(Messages.get(this, "levelup"));
