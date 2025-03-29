@@ -311,7 +311,8 @@ public class Hero extends Char {
 	private static final String EXPERIENCE	= "exp";
 	private static final String HTBOOST     = "htboost";
 	private static final String UUID = "uuid";
-	
+	private static final String LASTDEPTH = "lastdepth";
+	private static final String LASTBRANCH = "lastbranch";
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 
@@ -332,7 +333,8 @@ public class Hero extends Char {
 		
 		bundle.put( HTBOOST, HTBoost );
 		bundle.put( UUID, uuid );
-
+		bundle.put( LASTDEPTH, Dungeon.depth );
+		bundle.put( LASTBRANCH, Dungeon.branch );
 		belongings.storeInBundle( bundle );
 	}
 	
@@ -343,7 +345,9 @@ public class Hero extends Char {
 		exp = bundle.getInt( EXPERIENCE );
 
 		HTBoost = bundle.getInt(HTBOOST);
-
+		if (Dungeon.depth != bundle.getInt( LASTDEPTH ) || Dungeon.branch != bundle.getInt( LASTBRANCH )){
+			bundle.put( POS, Dungeon.level.entrance() );
+		}
 		super.restoreFromBundle( bundle );
 
 		heroClass = bundle.getEnum( CLASS, HeroClass.class );
@@ -1706,10 +1710,13 @@ public class Hero extends Char {
 				for (int i=b.area.top; i < b.area.bottom; i++) {
 					for (int j = b.area.left; j < b.area.right; j++) {
 						cell = j + i* Dungeon.level.width();
-						if (fieldOfView[cell] && b.cur[cell] > 0) {
-							Notes.add( b.landmark() );
-							found = true;
-							break;
+						//HACK
+						if(b.cur.length > cell) {
+							if (fieldOfView[cell] && b.cur[cell] > 0) {
+								Notes.add(b.landmark());
+								found = true;
+								break;
+							}
 						}
 					}
 					if (found) break;

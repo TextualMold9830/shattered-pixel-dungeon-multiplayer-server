@@ -1157,6 +1157,7 @@ public class Dungeon {
             Bundle bundle = FileUtils.bundleFromFile("heroes/"+ uuid);
 			Hero hero = new Hero();
 			hero.restoreFromBundle(bundle);
+			hero.timeToNow();
 			return hero;
         } catch (IOException e) {
 			//Maybe there is no file?
