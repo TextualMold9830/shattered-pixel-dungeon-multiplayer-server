@@ -968,8 +968,8 @@ public class GameScene extends PixelScene {
 
 	public static void add(Mob mob, float delay) {
 		Dungeon.level.mobs.add(mob);
-		scene.addMobSprite(mob);
 		Actor.addDelayed(mob, delay);
+		scene.addMobSprite(mob);
 	}
 
 	public static void add(EmoIcon icon) {

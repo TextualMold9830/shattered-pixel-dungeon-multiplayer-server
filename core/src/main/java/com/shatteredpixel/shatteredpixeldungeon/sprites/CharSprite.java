@@ -368,6 +368,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 
 		ch.updateSpriteState();
+		place(ch.pos);
 	}
 
 	@Override
