@@ -1124,7 +1124,7 @@ public class Dungeon {
 
 	}
 	public static void removeHero(Hero hero) {
-		if (SPDSettings.killOnDisconnect) {
+		if (SPDSettings.killOnDisconnect()) {
 			int ID = Arrays.asList(heroes).indexOf(hero);
 			if (hero == null) {
 				return;

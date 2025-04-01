@@ -37,31 +37,26 @@ import java.util.UUID;
 public class SPDSettings extends GameSettings {
 	// Multiplayer
 	public static final String KEY_KILL_ON_DISCONNECT = "kill_on_disconnect";
-	public static boolean killOnDisconnect = false;
-	public static void killOnDisconnect(boolean killOnDisconnect){
-		SPDSettings.killOnDisconnect = killOnDisconnect;
-		put(KEY_KILL_ON_DISCONNECT, killOnDisconnect);
-	}
 	public static boolean killOnDisconnect(){
+		if (!contains(KEY_KILL_ON_DISCONNECT)){
+			put(KEY_KILL_ON_DISCONNECT, false);
+		}
 		return getBoolean(KEY_KILL_ON_DISCONNECT, false);
 	}
 	public static String KEY_MAX_PLAYERS =	"max_players";
-	public static int maxPlayers = 4;
 	public static int maxPlayers(){
+		if (!contains(KEY_MAX_PLAYERS)){
+			put(KEY_MAX_PLAYERS, 8);
+		}
 		return getInt(KEY_MAX_PLAYERS, 8);
-	}
-	public void maxPlayers(int maxPlayers){
-		put(KEY_MAX_PLAYERS, maxPlayers);
-		SPDSettings.maxPlayers = maxPlayers;
 	}
 	public static String KEY_SERVER_NAME = "server_name";
 
-	public static String serverName = "SPD-server";
-	public static String serverName(){
+	public static String serverName() {
+		if (!contains(KEY_SERVER_NAME)){
+			put(KEY_SERVER_NAME, "SPD-server");
+		}
 		return getString(KEY_SERVER_NAME, "SPD-server");
-	}
-	public static void serverName(String serverName){
-		put(KEY_SERVER_NAME, serverName);
 	}
 	//Version info
 	public static int defaultRelayServerPort =25555;
@@ -516,6 +511,7 @@ public class SPDSettings extends GameSettings {
 		return getBoolean( KEY_WINDOW_MAXIMIZED, false );
 	}
 	//Todo add a way to clear this
+	//TODO: Do I need to add a way to clear this? It can be easily done by changing settings.xml
 	public static String serverUUID() {
 		String uuid = getString("server_uuid", null);
 		if (uuid == null) {
