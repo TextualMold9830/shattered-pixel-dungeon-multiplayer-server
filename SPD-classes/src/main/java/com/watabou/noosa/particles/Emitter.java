@@ -86,6 +86,11 @@ public class Emitter extends Group {
 	public void pour( Factory factory, float interval ) {
 		start( factory, interval, 0 );
 	}
+	public void pour(Object factory, float interval){
+		start(factory, interval, 0);
+	}
+	public void start(Object factory, float interval, int quantity){
+	}
 
 	public void start( Factory factory, float interval, int quantity ) {
 

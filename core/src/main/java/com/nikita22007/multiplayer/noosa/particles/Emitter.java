@@ -147,6 +147,8 @@ public class Emitter /*this is temporary ->*/extends Group {
 	public void burst( Factory factory, int quantity ) {
 		start( factory, 0, quantity );
 	}
+	//This is temporary
+	public void burst(Object factory, int quantity){}
 
 	/**
 	 * Emits particles each {@code interval} seconds. Should be stopped manually
@@ -155,6 +157,10 @@ public class Emitter /*this is temporary ->*/extends Group {
 	 */
 	public void pour( Factory factory, float interval ) {
 		start( factory, interval, 0 );
+	}
+	//This is temporary
+	public void pour(Object factory, float interval){
+
 	}
 
 	/**
@@ -185,15 +191,6 @@ public class Emitter /*this is temporary ->*/extends Group {
 		sendSelf();
 	}
 	//TODO: remove all uses of this
-	public Group recycle(){
-		return new Group();
-	}
-	//TODO: also remove all uses of this
-
-	public Gizmo recycle(Class<? extends Gizmo> c ){
-		return new Group();
-	}
-	//TODO: remove all overrides of this
 	public void update(){}
 
 	//TODO: remove all uses of this

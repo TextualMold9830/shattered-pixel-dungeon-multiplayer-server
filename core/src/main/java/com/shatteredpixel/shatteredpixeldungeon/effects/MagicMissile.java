@@ -32,16 +32,19 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Visual;
-import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MagicMissile extends Emitter {
 
@@ -92,10 +95,8 @@ public class MagicMissile extends Emitter {
 	public static final int SPECK           = 1000;
 
 	public void reset( int type, int from, int to, Callback callback ) {
-		reset( type,
-				DungeonTilemap.raisedTileCenterToWorld( from ),
-				DungeonTilemap.raisedTileCenterToWorld( to ),
-				callback );
+		Send(type, from, to);
+		callback.call();
 	}
 
 	public void reset( int type, Visual from, Visual to, Callback callback ) {
@@ -275,16 +276,19 @@ public class MagicMissile extends Emitter {
 	}
 
 	//convenience method for the common case of a bolt going from a character to a tile or enemy
-	public static MagicMissile boltFromChar(Group group, int type, Visual sprite, int to, Callback callback){
+	public static MagicMissile boltFromChar(Group group, int type, CharSprite sprite, int to, Callback callback) {
+		MagicMissile missile = ((MagicMissile) group.recycle(MagicMissile.class));
+        missile.reset(type, sprite.ch.pos, to, callback);
+        return missile;
+	}
+	public static MagicMissile boltFromChar(int type, int from, int to, Callback callback){
 		MagicMissile missile = new MagicMissile();
-		if (Actor.findChar(to) != null){
-			missile.reset(type, sprite.center(), Actor.findChar(to).getSprite().destinationCenter(), callback);
-		} else {
-			missile.reset(type, sprite, to, callback);
+		missile.reset(type, from, to, callback);
+		if (callback != null) {
+			callback.call();
 		}
 		return missile;
 	}
-
 	@Override
 	protected boolean isFrozen() {
 		return false; //cannot be frozen
@@ -292,15 +296,8 @@ public class MagicMissile extends Emitter {
 
 	@Override
 	public void update() {
-		super.update();
-		if (on()) {
-			float d = Game.elapsed;
-			x += sx * d;
-			y += sy * d;
-			if ((time -= d) <= 0) {
-				on(false);
-				if (callback != null ) callback.call();
-			}
+		if(callback != null){
+			callback.call();
 		}
 	}
 	
@@ -687,5 +684,15 @@ public class MagicMissile extends Emitter {
 			
 			am = 1 - left / lifespan;
 		}
+	}
+	protected static void Send(int type, int from, int to){
+		JSONObject actionObj = new JSONObject();
+		try {
+			actionObj.put("action_type", "magic_missile_visual");
+			actionObj.put("type", type);
+			actionObj.put("from", from);
+			actionObj.put("to", to);
+		} catch (JSONException ignored) {}
+		SendData.sendCustomActionForAll(actionObj);
 	}
 }
