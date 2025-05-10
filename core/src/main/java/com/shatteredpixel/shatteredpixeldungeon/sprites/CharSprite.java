@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.texturepack.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
 import com.watabou.glwrap.Matrix;
@@ -329,8 +330,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	// needs to return spritename.json
 	// any non-null return needs a texture to be loaded for that sprite
 	public String getSpriteAsset() {
-		return null;
-	}
+		return TexturePackManager.getMobAnimation(getClass());	}
 	public String spriteName() {
 		return Utils.toSnakeCase(this.getClass().getSimpleName());
 	}
