@@ -47,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
@@ -66,6 +67,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -756,7 +759,7 @@ public class PrisonBossLevel extends Level {
 			
 			this.area = area;
 		}
-		
+		JSONArray trapData = new JSONArray();
 		@Override
 		public Tilemap create() {
 			Tilemap v = super.create();
@@ -773,6 +776,11 @@ public class PrisonBossLevel extends Level {
 					} else {
 						data[i] = -1;
 					}
+					JSONObject object = new JSONObject();
+					//TODO: optimize this
+					object.put("pos", i);
+					object.put("data", data[i]);
+					trapData.put(object);
 					cell++;
 					i++;
 				}
@@ -780,6 +788,7 @@ public class PrisonBossLevel extends Level {
 			
 			v.map( data, tileW );
 			setFade();
+			sendSelf();
 			return v;
 		}
 		
@@ -833,14 +842,33 @@ public class PrisonBossLevel extends Level {
 				}
 			}, fadeDelay);
 		}
-
+		public void killAndErase(){
+			remove();
+		}
 		private void remove(){
 			if (vis != null){
 				vis.killAndErase();
 			}
 			Dungeon.level.customTiles.remove(this);
+			JSONObject object = new JSONObject();
+			object.put("action_type", "fading_traps");
+			object.put("kill", true);
+			SendData.sendCustomActionForAll(object);
 		}
-		
+		boolean newInstance = true;
+		public void sendSelf(){
+			JSONObject object = new JSONObject();
+			object.put("action_type", "fading_traps");
+			object.put("tileX", tileX);
+			object.put("tileY", tileY);
+			object.put("tileH", tileH);
+			object.put("tileW", tileW);
+			object.put("data", trapData);
+			object.put("alpha", vis.alpha());
+			object.put("new", newInstance);
+			newInstance = false;
+			SendData.sendCustomActionForAll(object);
+		}
 	}
 	
 	public static class ExitVisual extends CustomTilemap {
