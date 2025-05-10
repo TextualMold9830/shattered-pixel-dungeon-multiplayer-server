@@ -73,7 +73,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 			News.service = NewsImpl.getNewsService();
 		}
 
-		FileUtils.setDefaultFileProperties(Files.FileType.Local, "");
+		FileUtils.setDefaultFileProperties(Files.FileType.External, "");
 
 		//sets up preferences early so they can be read.
 		//this is mostly a copy-paste from IOSApplication.getPreferences

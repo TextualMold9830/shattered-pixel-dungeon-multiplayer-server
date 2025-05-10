@@ -92,7 +92,7 @@ public class AndroidLauncher extends AndroidApplication {
 				News.service = NewsImpl.getNewsService();
 			}
 
-			FileUtils.setDefaultFileProperties(Files.FileType.Local, "");
+			FileUtils.setDefaultFileProperties(Files.FileType.External, "");
 
 			// grab preferences directly using our instance first
 			// so that we don't need to rely on Gdx.app, which isn't initialized yet.
