@@ -407,7 +407,7 @@ class ClientThread implements Callable<String> {
 
     //hack
     boolean disconnected = false;
-    public void disconnect() {
+    public synchronized void disconnect() {
         if (!disconnected) {
             disconnected = true;
             try {
@@ -438,7 +438,7 @@ class ClientThread implements Callable<String> {
         }
     }
 
-    private void sendInitData() {
+    private synchronized void sendInitData() {
         for (String texture : Server.textures) {
             sendTexture(texture);
         }
