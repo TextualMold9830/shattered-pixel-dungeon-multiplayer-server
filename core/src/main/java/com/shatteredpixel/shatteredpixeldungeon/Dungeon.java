@@ -507,7 +507,7 @@ public class Dungeon {
 				hero.curAction = hero.lastAction = null;
 
 				observe(hero);
-
+				sendDepth(Dungeon.depth);
 				sendLevel(level, hero.networkID);
 				sendAllChars(hero.networkID);
 				sendHeroNewID(hero, hero.networkID);
