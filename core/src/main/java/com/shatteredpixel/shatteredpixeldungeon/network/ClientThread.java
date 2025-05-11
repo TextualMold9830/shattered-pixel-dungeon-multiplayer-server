@@ -393,66 +393,7 @@ class ClientThread implements Callable<String> {
     }
 
     @Deprecated
-    public void send(int code, boolean Data) {
-
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
-    public void send(int code, byte Data) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
     public void send(int code, int Data) {
-    }
-
-    //send arrays
-    @Deprecated
-    public void send(int code, boolean[] DataArray) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
-    public void send(int code, byte[] DataArray) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
-    public void send(int code, int[] DataArray) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
-    public void send(int code, int var1, String message) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    @Deprecated
-    public void send(int code, String message) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    //send_serelliased_data
-    @Deprecated
-    public void sendData(int code, byte[] data) {
-        assert false : "removed_code";
-        GLog.n("removed code");
-    }
-
-    //send to all
-    @Deprecated
-    public static <T> void sendAll(int code) {
-        for (int i = 0; i < Server.clients.length; i++) {
-            Server.clients[i].sendCode(code);
-        }
     }
 
     @Deprecated
