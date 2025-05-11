@@ -185,7 +185,7 @@ public class NetworkPacket {
                 object.put("id", id);
                 object.put("type", "removed");
             } else {
-                Log.w("NetworkPacket:", "pack actor. Actor class: " + actor.getClass().toString());
+                Log.w("NetworkPacket:", "pack actor removing. Actor class: " + actor.getClass().toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -271,7 +271,7 @@ public class NetworkPacket {
             } else if (actor instanceof Buff) {
                 //no warning
             } else {
-                Log.w("NetworkPacket", "remove actor. Actor class: " + actor.getClass().toString());
+                Log.w("NetworkPacket", "pack actor. Actor class: " + actor.getClass().toString());
             }
         } catch (JSONException e) {
 
