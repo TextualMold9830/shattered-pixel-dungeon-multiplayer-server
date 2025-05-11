@@ -103,12 +103,16 @@ public class Spinner extends Mob {
 		//We only want to update target position once per turn, so if switched from wandering, wait for a moment
 		//Also want to avoid updating when we visually shot a web this turn (don't want to change the position)
 		if (!(lastState == WANDERING && state == HUNTING)) {
-			if (!shotWebVisually){
-                if (enemy == null || !enemySeen) {
-                    enemy = chooseEnemy();
-                }
-                lastEnemyPos = enemy.pos;
-            }
+			if (!shotWebVisually) {
+				if (enemy == null || !enemySeen) {
+					enemy = chooseClosestHero();
+				}
+				if (enemy == null) {
+					lastEnemyPos = -1;
+				} else {
+					lastEnemyPos = enemy.pos;
+				}
+			}
 			shotWebVisually = false;
 		}
 		

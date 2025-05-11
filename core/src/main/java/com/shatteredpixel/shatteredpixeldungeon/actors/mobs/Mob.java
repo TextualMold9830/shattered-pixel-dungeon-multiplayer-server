@@ -1107,6 +1107,10 @@ public abstract class Mob extends Char {
 		target = cell;
 	}
 
+	public Hero chooseClosestHero() {
+		return (Hero) selectClosestChar(Dungeon.heroes, true);
+	}
+
 	public Char selectClosestChar(Char[] chars, boolean skipInvisible){
 		List<Char> targets = new LinkedList<>();
 		for (Char target : chars) {
@@ -1114,9 +1118,12 @@ public abstract class Mob extends Char {
 			if (!skipInvisible && target.invisible > 0) {
 				continue;
 			}
+			if (!target.isActive()) {
+				continue;
+			}
 			targets.add(target);
 		}
-		if (targets.size() == 0) {
+		if (targets.isEmpty()) {
 			return null;
 		}
 
