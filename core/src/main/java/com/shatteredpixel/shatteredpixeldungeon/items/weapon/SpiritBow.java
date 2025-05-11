@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -75,7 +76,9 @@ public class SpiritBow extends Weapon {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
 		actions.remove(AC_EQUIP);
-		actions.add(AC_SHOOT);
+		if(hero.heroClass == HeroClass.HUNTRESS) {
+			actions.add(AC_SHOOT);
+		}
 		return actions;
 	}
 	
@@ -361,6 +364,19 @@ public class SpiritBow extends Weapon {
 
 		@Override
 		protected void onThrow( int cell ) {
+			Char enemy = Actor.findChar( cell );
+			if (enemy == null || enemy == curUser) {
+				parent = null;
+				Splash.at( cell, 0xCC99FFFF, 1 );
+			} else {
+				if (!curUser.shoot( enemy, this )) {
+					Splash.at(cell, 0xCC99FFFF, 1);
+				}
+				if (sniperSpecial && SpiritBow.this.augment != Augment.SPEED) sniperSpecial = false;
+			}
+		}
+		@Override
+		protected void onThrow( int cell, Hero hero ) {
 			Char enemy = Actor.findChar( cell );
 			if (enemy == null || enemy == curUser) {
 				parent = null;
