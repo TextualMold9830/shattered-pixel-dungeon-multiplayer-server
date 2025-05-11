@@ -348,6 +348,7 @@ public class Hero extends Char {
 		if (Dungeon.depth != bundle.getInt( LASTDEPTH ) || Dungeon.branch != bundle.getInt( LASTBRANCH )){
 			bundle.put( POS, Dungeon.level.entrance() );
 		}
+		bundle.put("time", Actor.now()+1);
 		super.restoreFromBundle( bundle );
 
 		heroClass = bundle.getEnum( CLASS, HeroClass.class );
@@ -1864,7 +1865,7 @@ public class Hero extends Char {
 	
 	public boolean handle( int cell ) {
 		
-		if (cell == -1) {
+		if (cell == -1 || Dungeon.level.length() < cell) {
 			return false;
 		}
 
