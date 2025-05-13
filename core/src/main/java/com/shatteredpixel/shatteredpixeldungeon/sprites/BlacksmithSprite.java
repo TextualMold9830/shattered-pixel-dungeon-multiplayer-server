@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
 
@@ -83,6 +84,7 @@ public class BlacksmithSprite extends MobSprite {
 					float volume = 0.2f / (Dungeon.level.distance(ch.pos, hero.pos));
 					Sample.INSTANCE.play(Assets.Sounds.EVOKE, volume, volume, 0.8f, 1, hero);
 				}
+			}
 			}
 		}
 	}
