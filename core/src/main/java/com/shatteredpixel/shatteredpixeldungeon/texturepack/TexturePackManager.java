@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.texturepack.texturepack;
+package com.shatteredpixel.shatteredpixeldungeon.texturepack;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;

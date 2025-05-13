@@ -2,15 +2,13 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 // based on https://developer.android.com/training/connect-devices-wirelessly/nsd.html#java
 
 
-import com.badlogic.gdx.Gdx;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.texturepack.texturepack.TexturePackManager;
+import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 
@@ -19,8 +17,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 
 
 public class Server extends Thread {

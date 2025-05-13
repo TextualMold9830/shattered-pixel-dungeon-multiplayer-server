@@ -46,7 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.texturepack.texturepack.TexturePackManager;
+import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
 import com.watabou.glwrap.Matrix;
