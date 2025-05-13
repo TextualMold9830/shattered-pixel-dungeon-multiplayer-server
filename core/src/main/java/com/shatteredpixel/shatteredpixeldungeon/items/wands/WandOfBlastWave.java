@@ -192,7 +192,7 @@ public class WandOfBlastWave extends DamageWand {
 				if (ch instanceof Hero){
 					Dungeon.observe((Hero) ch);
 					GameScene.updateFog();
-				} else if (Dungeon.level.heroFOV[initialpos] != Dungeon.level.heroFOV[newPos]){
+				} else if (Dungeon.visibleforAnyHero(initialpos) != Dungeon.visibleforAnyHero(newPos)){
 					Dungeon.observe();
 				}
 			}

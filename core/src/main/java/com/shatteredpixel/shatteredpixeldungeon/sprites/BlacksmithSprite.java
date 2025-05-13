@@ -88,5 +88,3 @@ public class BlacksmithSprite extends MobSprite {
 			}
 		}
 	}
-
-}

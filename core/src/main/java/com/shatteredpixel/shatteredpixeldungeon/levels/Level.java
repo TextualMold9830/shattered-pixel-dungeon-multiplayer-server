@@ -601,7 +601,7 @@ public abstract class Level implements Bundlable {
 		ScrollOfChallenge.ChallengeArena arena = hero.buff(ScrollOfChallenge.ChallengeArena.class);
 		if (arena != null) arena.detach();
 		//awareness also doesn't, honestly it's weird that it's a buff
-		Awareness awareness = Dungeon.hero.buff(Awareness.class);
+		Awareness awareness = hero.buff(Awareness.class);
 		if (awareness != null) awareness.detach();
 
 		Char ally = Stasis.getStasisAlly(hero);
