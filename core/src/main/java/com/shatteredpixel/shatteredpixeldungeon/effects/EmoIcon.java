@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -54,7 +55,8 @@ public class EmoIcon extends Image {
 		}
 		// todo: part of future, for ShatteredPD
 		// Now it's time
-		return new JSONObject();
+		Gdx.app.error("EmoIcon", "Emoicon is not yet implemented");
+		return json;
 	}
 	@Override
 	public void update() {
