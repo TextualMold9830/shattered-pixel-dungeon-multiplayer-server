@@ -54,7 +54,6 @@ public class EmoIcon extends Image {
 		}
 		// todo: part of future, for ShatteredPD
 		// Now it's time
-		assert false;
 		return new JSONObject();
 	}
 	@Override
