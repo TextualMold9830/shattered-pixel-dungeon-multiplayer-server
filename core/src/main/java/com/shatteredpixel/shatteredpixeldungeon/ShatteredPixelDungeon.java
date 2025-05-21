@@ -91,7 +91,7 @@ public class ShatteredPixelDungeon extends Game {
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.exit.ExitRoom.class,
 				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.ExitRoom" );
 	}
-	
+
 	@Override
 	public void create() {
 		super.create();
@@ -110,7 +110,6 @@ public class ShatteredPixelDungeon extends Game {
         }
         InterLevelSceneServer.create(null);
 
-		Gdx.app.log("Scene", Game.sceneClass.getName());
 		Game.switchScene(GameScene.class);
 	}
 

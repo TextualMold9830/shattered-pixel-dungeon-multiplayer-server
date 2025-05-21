@@ -528,4 +528,15 @@ public class SPDSettings extends GameSettings {
 	public static int fulLScreenMonitor(){
 		return getInt( KEY_FULLSCREEN_MONITOR, 0 );
 	}
+
+	static final String KEY_ONLINE_MODE = "online_mode";
+	public static boolean onlineMode() {
+		if (contains(KEY_ONLINE_MODE)){
+			return getBoolean(KEY_ONLINE_MODE, true);
+		} else {
+			put(KEY_ONLINE_MODE, true);
+			return true;
+		}
+
+	}
 }

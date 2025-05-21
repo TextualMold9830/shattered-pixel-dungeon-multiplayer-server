@@ -34,15 +34,20 @@ import com.watabou.plugins.PluginManifest;
 import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Point;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -69,7 +74,9 @@ public class DesktopPlatformSupport extends PlatformSupport {
 			SPDSettings.windowResolution(previousSizes[0]);
 		}
 	}
-private static boolean first = true;
+
+	private static boolean first = true;
+
 	@Override
 	public void updateSystemUI() {
 		Gdx.app.postRunnable(new Runnable() {
@@ -77,11 +84,11 @@ private static boolean first = true;
 			public void run() {
 				if (SPDSettings.fullscreen()) {
 					int monitorNum = 0;
-					if (!first){
+					if (!first) {
 						Graphics.Monitor[] monitors = Gdx.graphics.getMonitors();
-						for (int i = 0; i < monitors.length; i++){
-							if (((Lwjgl3Graphics.Lwjgl3Monitor)Gdx.graphics.getMonitor()).getMonitorHandle()
-									== ((Lwjgl3Graphics.Lwjgl3Monitor)monitors[i]).getMonitorHandle()) {
+						for (int i = 0; i < monitors.length; i++) {
+							if (((Lwjgl3Graphics.Lwjgl3Monitor) Gdx.graphics.getMonitor()).getMonitorHandle()
+									== ((Lwjgl3Graphics.Lwjgl3Monitor) monitors[i]).getMonitorHandle()) {
 								monitorNum = i;
 							}
 						}
@@ -92,7 +99,8 @@ private static boolean first = true;
 					Graphics.Monitor[] monitors = Gdx.graphics.getMonitors();
 					if (monitors.length <= monitorNum) {
 						monitorNum = 0;
-					}Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode(monitors[monitorNum]));
+					}
+					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode(monitors[monitorNum]));
 					SPDSettings.fulLScreenMonitor(monitorNum);
 				} else {
 					Point p = SPDSettings.windowResolution();
@@ -191,7 +199,7 @@ private static boolean first = true;
 			File[] files;
 			try {
 				files = new File("plugins/").listFiles();
-				if (files == null){
+				if (files == null) {
 					return manifests;
 				}
 				for (File file : files) {
@@ -219,13 +227,57 @@ private static boolean first = true;
 				Gdx.app.error("PluginLoader", e.toString());
 			}
 		} else {
+			try {
+				Files.createDirectories(Paths.get("plugins"));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return manifests;
+
+	}
+
+	JmDNS dns;
+	@Override
+	public void registerService(int port) {
+		if(dns ==null)
+		{
             try {
-                Files.createDirectories(Paths.get("plugins"));
-            } catch (IOException e) {
+				InetAddress bindAddress = null;
+				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+				while (interfaces.hasMoreElements()) {
+					NetworkInterface iface = interfaces.nextElement();
+					if (!iface.isLoopback() && iface.isUp()) {
+						Enumeration<InetAddress> addresses = iface.getInetAddresses();
+						while (addresses.hasMoreElements()) {
+							InetAddress addr = addresses.nextElement();
+							if (addr.getAddress().length == 4) { // Check if it's an IPv4 address
+								bindAddress = addr;
+								break; // Found the first non-loopback, up IPv4 address
+							}
+						}
+						if (bindAddress != null) {
+							break; // Exit the outer loop once an IPv4 address is found
+						}
+					}
+				}
+				dns = JmDNS.create(bindAddress);
+				ServiceInfo serviceInfo = ServiceInfo.create("._mppd._tcp.local.", SPDSettings.serverName(), port, "");
+				dns.registerService(serviceInfo);
+			} catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-		return manifests;
 
+	}
+	@Override
+	public void unregisterService() {
+		dns.unregisterAllServices();
+        try {
+            dns.close();
+        } catch (IOException e) {
+			e.printStackTrace();
+        }
+        dns = null;
 	}
 }

@@ -26,6 +26,10 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.view.View;
@@ -41,10 +45,13 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
 import com.watabou.utils.PlatformSupport;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressLint("NewApi")
 public class AndroidPlatformSupport extends PlatformSupport {
 	
 	public void updateDisplaySize(){
@@ -320,5 +327,60 @@ public class AndroidPlatformSupport extends PlatformSupport {
 			return regularsplitter.split(text);
 		}
 	}
-	
+	NsdManager manager = (NsdManager) AndroidLauncher.instance.getSystemService(Context.NSD_SERVICE);
+	NsdServiceInfo service;
+	NsdManager.RegistrationListener listener =  new NsdManager.RegistrationListener() {
+		@Override
+		public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+
+		}
+
+		@Override
+		public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+
+		}
+
+		@Override
+		public void onServiceRegistered(NsdServiceInfo serviceInfo) {
+
+		}
+
+		@Override
+		public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
+
+		}
+	};
+	@Override
+	public void registerService(int port) {
+		service = new NsdServiceInfo();
+		service.setServiceName(SPDSettings.serverName());
+		service.setServiceType("_mppd._tcp.");
+		service.setPort(port);
+		WifiManager wm = (WifiManager) AndroidLauncher.instance.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		service.setHost(getDeviceIpAddress(wm));
+		manager.registerService(service, NsdManager.PROTOCOL_DNS_SD, listener);
+	}
+
+	@Override
+	public void unregisterService() {
+		manager.unregisterService(listener);
+	}
+	private InetAddress getDeviceIpAddress(WifiManager wifi) {
+		InetAddress result = null;
+		try {
+			// default to Android localhost
+			result = InetAddress.getByName("10.0.0.2");
+
+			// figure out our wifi address, otherwise bail
+			WifiInfo wifiinfo = wifi.getConnectionInfo();
+			int intaddr = wifiinfo.getIpAddress();
+			byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff),
+					(byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
+			result = InetAddress.getByAddress(byteaddr);
+		} catch (UnknownHostException ex) {
+			Gdx.app.debug("NSD", String.format("getDeviceIpAddress Error: %s", ex.getMessage()));
+		}
+
+		return result;
+	}
 }

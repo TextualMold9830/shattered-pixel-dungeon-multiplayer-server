@@ -139,10 +139,9 @@ public class Server extends Thread {
 
     //Server thread
     public void run() {
-        // default online for now
-       // if (ShatteredPixelDungeon.onlineMode()) {
+        if (SPDSettings.onlineMode()) {
             relay = new RelayThread();
-         //   }
+            }
             relay.start();
 
         while (started) { //clients  listener
@@ -157,16 +156,13 @@ public class Server extends Thread {
             }
         }
     }
-    //TODO: check this, May use PlatformSupport ShatteredPixelDungeon.platform
-    //NSD
+    //DNS-SD
     protected static void registerService(int port) {
-        // Create the NsdServiceInfo object, and populate it.
-
-        // The name is subject to change based on conflicts
-        // with other services advertised on the same network.
+        ShatteredPixelDungeon.platform.registerService(port);
     }
 
     public static void unregisterService() {
+        ShatteredPixelDungeon.platform.unregisterService();
     }
 
     protected static boolean initializeServerSocket() {

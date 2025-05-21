@@ -169,4 +169,12 @@ public abstract class PlatformSupport {
 	public boolean supportsPlugins(){
 		return true;
 	}
+	//NO-OP by default
+    public void registerService(int port) {
+
+    }
+
+	public void unregisterService() {
+
+	}
 }
