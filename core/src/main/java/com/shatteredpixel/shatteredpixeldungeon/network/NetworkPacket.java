@@ -509,7 +509,11 @@ public class NetworkPacket {
                     data.put(MAP, new JSONObject());
                 }
                 JSONObject map = data.getJSONObject(MAP);
-                map.put(CELLS_MAP, cells);
+                JSONArray cellArray = new JSONArray();
+                for (int i = 0; i < cells.length; i++) {
+                    cellArray.put(cells[i]);
+                }
+                map.put(CELLS_MAP, cellArray);
             }
         } catch (JSONException ignored) {
         }
