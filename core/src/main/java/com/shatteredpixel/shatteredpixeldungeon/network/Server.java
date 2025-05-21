@@ -141,9 +141,8 @@ public class Server extends Thread {
     public void run() {
         if (SPDSettings.onlineMode()) {
             relay = new RelayThread();
-            }
             relay.start();
-
+        }
         while (started) { //clients  listener
             Socket client;
             try {
