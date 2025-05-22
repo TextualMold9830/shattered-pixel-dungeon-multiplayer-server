@@ -207,7 +207,7 @@ class ClientThread implements Callable<String> {
                         if (text == null) {
                             text = data.getJSONObject(token).optString("text", "");
                         }
-                        if (text.isBlank()) {
+                        if (text.trim().isEmpty()) {
                             break;
                         }
                         Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
@@ -343,8 +343,8 @@ class ClientThread implements Callable<String> {
         if (newHero.pos == -1) {
             newHero.pos = level.entrance(); //todo  FIXME
         }
-        Actor.add(newHero);
-        newHero.spendAndNext(1f);
+        newHero.timeToNow();
+        Actor.addDelayed(newHero, 1f);
         Dungeon.level.occupyCell(newHero);
         newHero.getSprite().place(newHero.pos);
         synchronized (heroes) { //todo fix it. It is not work
@@ -362,6 +362,8 @@ class ClientThread implements Callable<String> {
             }
         }
         GameScene.addHeroSprite(newHero);
+        newHero.timeToNow();
+        newHero.spendAndNext(1f);
         newHero.resendReady();
         sendInitData();
     }
