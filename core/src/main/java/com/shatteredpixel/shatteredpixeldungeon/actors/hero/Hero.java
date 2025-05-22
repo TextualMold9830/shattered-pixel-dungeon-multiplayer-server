@@ -236,7 +236,7 @@ public class Hero extends Char {
 	
 	public Belongings belongings;
 	
-	public int STR;
+	private int STR;
 	
 	public float awareness;
 	
@@ -348,7 +348,6 @@ public class Hero extends Char {
 		if (Dungeon.depth != bundle.getInt( LASTDEPTH ) || Dungeon.branch != bundle.getInt( LASTBRANCH )){
 			bundle.put( POS, Dungeon.level.entrance() );
 		}
-		bundle.put("time", Actor.now()+1);
 		super.restoreFromBundle( bundle );
 
 		heroClass = bundle.getEnum( CLASS, HeroClass.class );
@@ -2599,6 +2598,15 @@ public class Hero extends Char {
 	public void setGold(int gold) {
 		this.gold = gold;
 		SendData.sendHeroGold(networkID, gold);
+	}
+
+	public int getSTR() {
+		return STR;
+	}
+
+	public void setSTR(int STR) {
+		this.STR = STR;
+		SendData.SendHeroStrength(networkID, STR);
 	}
 
 	public static interface Doom {
