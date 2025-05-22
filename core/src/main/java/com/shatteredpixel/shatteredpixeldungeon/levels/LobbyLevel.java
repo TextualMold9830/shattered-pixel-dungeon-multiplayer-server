@@ -56,18 +56,5 @@ public class LobbyLevel extends DeadEndLevel {
     }
 
     @Override protected void createItems(){
-        if(DeviceCompat.isDebug()) {
-            super.createItems();
-            Potion potion = new PotionOfExperience();
-            potion.quantity(10);
-            this.drop(potion, exit() - this.width());
-            StoneOfDeepSleep sods = new StoneOfDeepSleep();
-            sods.quantity(10, false);
-            this.drop(new ScrollOfRemoveCurse(), exit() - this.width() + 1);
-            WandOfWarding wandOfWarding = new WandOfWarding();
-            wandOfWarding.cursed = true;
-            this.drop(wandOfWarding, exit() - this.width() + 2);
-            this.drop(sods, exit() - this.width() + 3);
-        }
     }
 }
