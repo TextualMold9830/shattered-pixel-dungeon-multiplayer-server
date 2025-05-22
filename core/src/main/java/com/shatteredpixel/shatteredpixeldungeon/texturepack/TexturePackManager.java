@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.texturepack;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.utils.FileUtils;
@@ -35,7 +36,8 @@ public class TexturePackManager {
                 }
             }
             zip.close();
-            Server.textures.add(Base64.getEncoder().encodeToString(path.readBytes()));
+
+            Server.textures.add(new String(Base64Coder.encode(path.readBytes())));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
