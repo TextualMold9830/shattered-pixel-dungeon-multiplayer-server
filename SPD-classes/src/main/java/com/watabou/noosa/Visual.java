@@ -273,6 +273,9 @@ public class Visual extends Gizmo {
 	
 	// true if its bounding box intersects its camera's bounds
 	public boolean isVisible() {
+		if (true) {
+			return true;
+		}
 		Camera c = camera();
 
 		if (c == null || !visible) return false;
