@@ -969,8 +969,15 @@ public abstract class Mob extends Char {
 
 		}
 
-			GLog.i( Messages.get(this, "died") );
-
+		String message = Messages.get(this, "died");
+		for (Hero hero : Dungeon.heroes) {
+			if (hero == null) {
+				continue;
+			}
+			if (!hero.fieldOfView[pos]) {
+				GLog.iWithTarget(hero.networkID, message);
+			}
+		}
 		boolean soulMarked = buff(SoulMark.class) != null;
 
 		super.die( damageCause );
