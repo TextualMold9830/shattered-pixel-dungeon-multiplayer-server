@@ -198,6 +198,7 @@ public class Dungeon {
 	public static String customSeedText = "";
 	public static long seed;
 	public static long lastPlayed;
+	public static boolean useFragments = false;
 
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
@@ -270,6 +271,7 @@ public class Dungeon {
 		Badges.reset();
 		//TODO: Check this
 		//GamesInProgress.selectedClass.initHero(heroes);
+		useFragments = SPDSettings.useFragments();
 	}
 
 	public static boolean isChallenged( int mask ) {
@@ -626,7 +628,7 @@ public class Dungeon {
 	private static final String CHAPTERS	= "chapters";
 	private static final String QUESTS		= "quests";
 	private static final String BADGES		= "badges";
-	
+	private static final String USE_FRAGMENTS	= "use_fragments";
 	public static void saveGame( int save ) {
 		try {
 			Bundle bundle = new Bundle();
@@ -699,6 +701,7 @@ public class Dungeon {
 					saveHero(hero);
 				}
 			}
+			bundle.put(USE_FRAGMENTS, useFragments);
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
 			ShatteredPixelDungeon.reportException(e);
@@ -831,6 +834,7 @@ public class Dungeon {
 		Statistics.restoreFromBundle( bundle );
 		Generator.restoreFromBundle( bundle );
 
+		useFragments = bundle.getBoolean(USE_FRAGMENTS);
 	}
 	
 	public static Level loadLevel() throws IOException {

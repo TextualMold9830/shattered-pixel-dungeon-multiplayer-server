@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -30,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -168,4 +170,16 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		hero.getSprite().emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
 	}
 
+	@Override
+	public void doRead(Hero hero) {
+		if (Dungeon.useFragments){
+			for (Hero h: Dungeon.heroes){
+                if (h != null) {
+                    new FragmentOfUpgrade(hero).collect(h);
+                }
+            }
+		} else {
+			super.doRead(hero);
+		}
+	}
 }

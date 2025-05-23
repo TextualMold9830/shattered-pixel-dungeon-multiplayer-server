@@ -539,4 +539,11 @@ public class SPDSettings extends GameSettings {
 		}
 
 	}
+
+    public static boolean useFragments() {
+		if (!contains("use_fragments")){
+			put("use_fragments", false);
+		}
+		return getBoolean("use_fragments", false);
+    }
 }
