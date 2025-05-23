@@ -546,4 +546,11 @@ public class SPDSettings extends GameSettings {
 		}
 		return getBoolean(KEY_SHOW_EXCEPTION_HANDLER, true);
 	}
+
+    public static boolean useFragments() {
+		if (!contains("use_fragments")){
+			put("use_fragments", false);
+		}
+		return getBoolean("use_fragments", false);
+    }
 }
