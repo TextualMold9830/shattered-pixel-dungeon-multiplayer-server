@@ -1044,7 +1044,7 @@ public class Dungeon {
 		BArray.xor(oldLevelVisitedChache, level.visited, oldLevelVisitedChache);
 		BArray.xor(oldLevelMappedChache, level.mapped, oldLevelMappedChache);
 		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache);
-		addToSendLevelVisitedState(level, hero.networkID, oldLevelMappedChache);
+		addToSendLevelVisitedState(level, oldLevelMappedChache);
 		if (send) {
 			int networkID = getHeroID(hero);
 			addToSendHeroVisibleCells(hero.fieldOfView, networkID);
