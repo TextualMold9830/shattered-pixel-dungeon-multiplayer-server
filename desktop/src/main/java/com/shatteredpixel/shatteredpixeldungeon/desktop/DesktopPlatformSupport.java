@@ -207,20 +207,19 @@ public class DesktopPlatformSupport extends PlatformSupport {
 						JarFile jar = new JarFile(file.toPath().toAbsolutePath().toFile());
 						ZipEntry manifest = jar.getEntry("plugin_manifest.txt");
 						if (manifest != null) {
-							URLClassLoader loader = new URLClassLoader(new URL[]{file.toPath().toAbsolutePath().toUri().toURL()});
-							InputStream input = loader.getResourceAsStream("plugin_manifest.txt");
+							InputStream input = jar.getInputStream(manifest);
 							ByteArrayOutputStream result = new ByteArrayOutputStream();
 							//might change buffer, 2kb should be fine. Can a manifest even be that big?
 							byte[] buffer = new byte[2048];
 							for (int length; (length = input.read(buffer)) != -1; ) {
 								result.write(buffer, 0, length);
 							}
-							loader.close();
 							Gdx.app.log("PluginLoader", "Found manifest in: " + file.toPath());
 							manifests.add(new PluginManifest(result.toString(), file.toPath().toAbsolutePath().toUri().toString()));
 						} else {
 							Gdx.app.error("PluginLoader", "Failed to find manifest in: " + file.getName());
 						}
+						jar.close();
 					}
 				}
 			} catch (IOException e) {
@@ -264,6 +263,9 @@ public class DesktopPlatformSupport extends PlatformSupport {
 				dns = JmDNS.create(bindAddress);
 				ServiceInfo serviceInfo = ServiceInfo.create("._mppd._tcp.local.", SPDSettings.serverName(), port, "");
 				dns.registerService(serviceInfo);
+				System.out.println(serviceInfo.getHostAddresses()[0]);
+				System.out.println("Service registered: " + serviceInfo.getName() + " on port " + serviceInfo.getPort());
+				System.out.println("Service type: " + serviceInfo.getType());
 			} catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -273,6 +275,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 	@Override
 	public void unregisterService() {
 		dns.unregisterAllServices();
+		System.out.println("Service unregistered");
         try {
             dns.close();
         } catch (IOException e) {
