@@ -21,9 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
+import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -123,6 +125,14 @@ public abstract class ExoticScroll extends Scroll {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
+			if (Dungeon.useFragments){
+				if (ingredients.get(0) instanceof ScrollOfUpgrade){
+						return false;
+				}
+				if (ingredients.get(0) instanceof FragmentOfUpgrade && ingredients.size() == 1){
+					return true;
+				}
+			}
 			if (ingredients.size() == 1 && regToExo.containsKey(ingredients.get(0).getClass())){
 				return true;
 			}
@@ -140,7 +150,9 @@ public abstract class ExoticScroll extends Scroll {
 			for (Item i : ingredients){
 				i.quantity(i.quantity()-1);
 			}
-
+			if (ingredients.get(0) instanceof FragmentOfUpgrade){
+				return new ScrollOfEnchantment();
+			}
 			return Reflection.newInstance(regToExo.get(ingredients.get(0).getClass()));
 		}
 		

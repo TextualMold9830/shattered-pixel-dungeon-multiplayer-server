@@ -545,4 +545,11 @@ public class SPDSettings extends GameSettings {
 		}
 		return getString("motd", null);
 	}
+
+    public static boolean useFragments() {
+		if (!contains("use_fragments")){
+			put("use_fragments", false);
+		}
+		return getBoolean("use_fragments", false);
+    }
 }
