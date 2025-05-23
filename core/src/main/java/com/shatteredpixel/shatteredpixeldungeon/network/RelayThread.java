@@ -82,13 +82,13 @@ public class RelayThread extends Thread {
                 String json = reader.readLine();
                 if (json == null){
                     // we silence relay related messages for the first three times. We do not want confused users.
-                    if (restartCount < 3) {
+                    if (restartCount > 3) {
                         GLog.h("relay thread stopped");
                     }
                     socket.close();
                     this.callback.onDisconnect();
                     if (restartCount < 10) {
-                        if (restartCount < 3) {
+                        if (restartCount > 3) {
                             System.out.println("Restarting relay");
                         }
                         new RelayThread().start();
