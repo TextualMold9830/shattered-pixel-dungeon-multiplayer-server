@@ -37,19 +37,28 @@ import android.view.WindowManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidGraphics;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
+import com.watabou.plugins.PluginManifest;
 import com.watabou.utils.PlatformSupport;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
 
 @SuppressLint("NewApi")
 public class AndroidPlatformSupport extends PlatformSupport {
@@ -327,6 +336,43 @@ public class AndroidPlatformSupport extends PlatformSupport {
 			return regularsplitter.split(text);
 		}
 	}
+
+	@Override
+	public List<PluginManifest> loadPlugins() {
+		List<PluginManifest> manifests = new ArrayList<>();
+		FileHandle pluginsDir = Gdx.files.external("plugins/");
+		if(!pluginsDir.exists()){
+			pluginsDir.mkdirs();
+		}
+		for (FileHandle handle : pluginsDir.list()) {
+			if (handle.extension().equals(".jar")){
+				//Plugin found, we load manifest;
+                try {
+                    JarFile jar = new JarFile(handle.file());
+					ZipEntry manifestEntry = jar.getEntry("plugin_manifest.txt");
+					InputStream input = jar.getInputStream(manifestEntry);
+					ByteArrayOutputStream result = new ByteArrayOutputStream();
+					//might change buffer, 2kb should be fine. Can a manifest even be that big?
+					byte[] buffer = new byte[2048];
+					for (int length; (length = input.read(buffer)) != -1; ) {
+						result.write(buffer, 0, length);
+					}
+					PluginManifest manifest = new PluginManifest(result.toString(), handle.file().getAbsoluteFile().toURI().toString());
+					manifests.add(manifest);
+					jar.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+                }
+            }
+		}
+		return manifests;
+	}
+
+	@Override
+	public boolean supportsPlugins() {
+		return true;
+	}
+
 	NsdManager manager = (NsdManager) AndroidLauncher.instance.getSystemService(Context.NSD_SERVICE);
 	NsdServiceInfo service;
 	NsdManager.RegistrationListener listener =  new NsdManager.RegistrationListener() {
