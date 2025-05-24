@@ -1025,7 +1025,7 @@ public class Badges {
 	}
 
 	public static void validateNoKilling() {
-		if (!local.contains( Badge.NO_MONSTERS_SLAIN ) && Statistics.completedWithNoKilling) {
+		if (!local.contains( Badge.NO_MONSTERS_SLAIN ) && Statistics.completedWithNoKilling && Dungeon.depth > 0) {
 			Badge badge = Badge.NO_MONSTERS_SLAIN;
 			local.add( badge );
 			displayBadge( badge );
