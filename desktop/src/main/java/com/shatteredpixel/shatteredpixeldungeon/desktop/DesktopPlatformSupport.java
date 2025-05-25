@@ -40,10 +40,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -250,7 +249,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 						Enumeration<InetAddress> addresses = iface.getInetAddresses();
 						while (addresses.hasMoreElements()) {
 							InetAddress addr = addresses.nextElement();
-							if (addr.getAddress().length == 4) { // Check if it's an IPv4 address
+							if (addr instanceof Inet4Address) { // Check if it's an IPv4 address
 								bindAddress = addr;
 								break; // Found the first non-loopback, up IPv4 address
 							}
@@ -260,7 +259,11 @@ public class DesktopPlatformSupport extends PlatformSupport {
 						}
 					}
 				}
-				dns = JmDNS.create(bindAddress);
+				if (bindAddress != null) {
+					dns = JmDNS.create(bindAddress);
+				} else {
+					dns = JmDNS.create();
+				}
 				ServiceInfo serviceInfo = ServiceInfo.create("._mppd._tcp.local.", SPDSettings.serverName(), port, "");
 				dns.registerService(serviceInfo);
 				System.out.println(serviceInfo.getHostAddresses()[0]);
