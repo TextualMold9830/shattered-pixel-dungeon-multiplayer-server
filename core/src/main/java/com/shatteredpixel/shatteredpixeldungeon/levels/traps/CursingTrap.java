@@ -120,5 +120,6 @@ public class CursingTrap extends Trap {
 				a.inscribe(Armor.Glyph.randomCurse());
 			}
 		}
+		item.sendSelfUpdate();
 	}
 }

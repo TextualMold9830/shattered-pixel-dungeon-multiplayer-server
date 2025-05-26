@@ -862,7 +862,7 @@ public class Item implements Bundlable {
 		JSONObject topLeft = new JSONObject();
 		JSONObject topRight = new JSONObject();
 		JSONObject bottomRight = new JSONObject();
-
+		JSONObject background = new JSONObject();
 		topLeft.put("visible", true);
 		topRight.put("visible", true);
 		bottomRight.put("visible", true);
@@ -917,9 +917,23 @@ public class Item implements Bundlable {
 		} else {
 			bottomRight.put("text", JSONObject.NULL);
 		}
+
+		if (item.cursed && item.cursedKnown) {
+			background.put("ra", 0.3f);
+			background.put("ga", -0.15f);
+		} else if (!item.isIdentified()) {
+
+			if ((item instanceof EquipableItem || item instanceof Wand) && item.cursedKnown){
+				background.put("ba", 0.3f);
+			} else {
+				background.put("ra", 0.3f);
+				background.put("ba", 0.3f);
+			}
+		}
 		ui.put("top_left", topLeft);
 		ui.put("top_right", topRight);
 		ui.put("bottom_right", bottomRight);
+		ui.put("background", background);
 		return ui;
 	}
 	public String spriteSheet() {

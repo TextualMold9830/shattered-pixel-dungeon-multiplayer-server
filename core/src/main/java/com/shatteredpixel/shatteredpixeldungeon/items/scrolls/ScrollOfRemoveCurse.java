@@ -149,11 +149,14 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 				hero.getSprite().emitter().start(ShadowParticle.UP, 0.05f, 10);
 				hero.updateHT(false); //for ring of might
 				updateQuickslot();
+				for (Item item : items) {
+					item.sendSelfUpdate(hero);
+				}
 			}
 
 			Badges.validateClericUnlock();
+
 		}
-		
 		return procced;
 	}
 	
