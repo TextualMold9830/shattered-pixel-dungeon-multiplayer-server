@@ -805,6 +805,7 @@ public abstract class Wand extends Item {
 
 					}
 					curWand.cursedKnown = true;
+					curWand.sendSelfUpdate(getOwner());
 					
 				}
 				

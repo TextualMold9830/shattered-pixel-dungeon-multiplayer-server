@@ -125,17 +125,16 @@ public abstract class InventoryScroll extends Scroll {
 					((InventoryScroll) curItem).readAnimation();
 					Sample.INSTANCE.play(Assets.Sounds.READ);
 				}
-				else if (identifiedByUse && !((Scroll) curItem).anonymous) {
-					((InventoryScroll) curItem).confirmCancelation(getOwner());
+			} else if (identifiedByUse && !((Scroll) curItem).anonymous) {
+				((InventoryScroll) curItem).confirmCancelation(getOwner());
 
-				} else if (((Scroll) curItem).anonymous) {
+			} else if (((Scroll) curItem).anonymous) {
 
-					curUser.spendAndNext(TIME_TO_READ);
+				curUser.spendAndNext(TIME_TO_READ);
 
-				}
 			}
 		}
 
-		;
+
 	};
 }

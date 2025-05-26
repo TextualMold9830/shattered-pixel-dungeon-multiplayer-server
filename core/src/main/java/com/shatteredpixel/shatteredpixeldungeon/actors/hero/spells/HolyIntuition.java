@@ -78,6 +78,7 @@ public class HolyIntuition extends InventoryClericSpell {
 		hero.getSprite().parent.add( new Identification( hero.getSprite().center().offset( 0, -16 ) ) );
 
 		Sample.INSTANCE.play( Assets.Sounds.READ );
+		item.sendSelfUpdate(hero);
 		onSpellCast(tome, hero);
 
 	}

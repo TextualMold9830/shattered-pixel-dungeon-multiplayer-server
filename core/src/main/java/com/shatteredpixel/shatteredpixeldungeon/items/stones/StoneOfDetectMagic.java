@@ -91,7 +91,7 @@ public class StoneOfDetectMagic extends InventoryStone {
 			Catalog.countUse(getClass());
 			Talent.onRunestoneUsed(curUser, curUser.pos, getClass());
 		}
-
+		item.sendSelfUpdate(hero);
 	}
 
 }
