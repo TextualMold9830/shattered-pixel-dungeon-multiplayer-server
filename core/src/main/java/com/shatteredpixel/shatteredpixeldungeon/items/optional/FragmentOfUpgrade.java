@@ -19,6 +19,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 
 public class FragmentOfUpgrade extends Fragment {
+    public static int image = new ScrollOfUpgrade().image();
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
         public String textPrompt() {
@@ -133,5 +134,15 @@ public class FragmentOfUpgrade extends Fragment {
     @Override
     public int energyVal() {
         return 10 * quantity;
+    }
+
+    @Override
+    public String name() {
+        return "Fragment of Upgrade";
+    }
+
+    @Override
+    public int image() {
+        return image;
     }
 }
