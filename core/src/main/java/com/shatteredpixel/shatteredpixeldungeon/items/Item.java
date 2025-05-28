@@ -733,7 +733,7 @@ public class Item implements Bundlable {
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String FRAGMENT_UPGRADES = "fragment_upgrades";
 	private static final String BOUND_UUID = "bound_uuid";
-	
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( QUANTITY, quantity());
