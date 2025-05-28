@@ -179,7 +179,7 @@ public abstract class KindofMisc extends EquipableItem {
 			} else if (hero.belongings.getRealRing() == this){
 				hero.belongings.setRing(null);
 			}
-
+			sendSelfUpdate(hero);
 			return true;
 
 		} else {
