@@ -330,7 +330,7 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 
 	public int STRReq(){
-		return STRReq(level());
+		return STRReq(level(findOwner()));
 	}
 
 	public abstract int STRReq(int lvl);

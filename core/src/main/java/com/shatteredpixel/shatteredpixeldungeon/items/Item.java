@@ -22,10 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.nikita22007.multiplayer.utils.Log;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -36,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -67,11 +65,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendNewInventoryItem;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
@@ -114,6 +108,7 @@ public class Item implements Bundlable {
 	// These items are preserved even if the hero's inventory is lost via unblessed ankh
 	// this is largely set by the resurrection window, items can override this to always be kept
 	public boolean keptThoughLostInvent = false;
+	public ArrayList<FragmentOfUpgrade.Upgrade> fragmentUpgrades = new ArrayList<>();
 
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
@@ -438,7 +433,15 @@ public class Item implements Bundlable {
 		return level;
 	}
 	public int level(Hero hero){
-		return level();
+		int level =  level();
+		if (SPDSettings.useFragments()){
+			for (FragmentOfUpgrade.Upgrade upgrade : fragmentUpgrades) {
+				if (upgrade.uuid.equals(hero.uuid)) {
+					level++;
+				}
+			}
+		}
+		return level;
 	}
 
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
@@ -476,6 +479,12 @@ public class Item implements Bundlable {
 		if (hero != null) {
 			sendSelfUpdate(hero);
 		}
+		return this;
+	}
+	public Item upgradeFragmented(Hero hero) {
+		fragmentUpgrades.add(new FragmentOfUpgrade.Upgrade(hero.uuid));
+		sendSelfUpdate(hero);
+
 		return this;
 	}
 	@Deprecated
@@ -673,6 +682,7 @@ public class Item implements Bundlable {
 	private static final String CURSED_KNOWN	= "cursedKnown";
 	private static final String QUICKSLOT		= "quickslotpos";
 	private static final String KEPT_LOST       = "kept_lost";
+	private static final String FRAGMENT_UPGRADES = "fragment_upgrades";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -685,6 +695,7 @@ public class Item implements Bundlable {
 			bundle.put( QUICKSLOT, Dungeon.quickslot.getSlot(this) );
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
+		bundle.put(FRAGMENT_UPGRADES, fragmentUpgrades);
 	}
 	
 	@Override
@@ -710,6 +721,7 @@ public class Item implements Bundlable {
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
+		fragmentUpgrades = new ArrayList<>((Collection<? extends FragmentOfUpgrade.Upgrade>) bundle.getCollection(FRAGMENT_UPGRADES));
 	}
 
 	public int targetingPos( Hero user, int dst ){

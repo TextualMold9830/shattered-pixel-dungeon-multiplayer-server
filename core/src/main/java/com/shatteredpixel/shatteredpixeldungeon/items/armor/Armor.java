@@ -192,7 +192,7 @@ public class Armor extends EquipableItem {
 			BrokenSeal detaching = seal;
 			seal = null;
 
-			if (detaching.level() > 0){
+			if (detaching.level(hero) > 0){
 				degrade();
 			}
 			if (detaching.canTransferGlyph(hero)){
@@ -284,7 +284,7 @@ public class Armor extends EquipableItem {
 
 	public void affixSeal(BrokenSeal seal, Hero hero){
 		this.seal = seal;
-		if (seal.level() > 0){
+		if (seal.level(hero) > 0){
 			//doesn't trigger upgrading logic such as affecting curses/glyphs
 			int newLevel = trueLevel()+1;
 			level(newLevel);

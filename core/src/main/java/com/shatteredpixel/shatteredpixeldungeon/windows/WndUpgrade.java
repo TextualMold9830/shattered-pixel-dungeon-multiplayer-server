@@ -98,7 +98,7 @@ public class WndUpgrade extends Window {
 
 		// *** Computing current and next level to display ***
 
-		int levelFrom = toUpgrade.isIdentified() ? toUpgrade.level() : 0;
+		int levelFrom = toUpgrade.isIdentified() ? toUpgrade.level(owner) : 0;
 		int levelTo = levelFrom + 1;
 
 		if (toUpgrade instanceof Wand && ((Wand) toUpgrade).resinBonus > 0){

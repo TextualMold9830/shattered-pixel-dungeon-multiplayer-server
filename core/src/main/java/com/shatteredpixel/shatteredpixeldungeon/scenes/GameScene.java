@@ -664,7 +664,7 @@ public class GameScene extends PixelScene {
 	public static boolean updateTags = false;
 	private static float waterOfs = 0;
 
-	public static boolean shouldProcess = true;
+	public static boolean shouldProcess = false;
 	@Override
 	public synchronized void update() {
 		Server.parseActions();
