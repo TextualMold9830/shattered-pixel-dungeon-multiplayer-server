@@ -932,34 +932,36 @@ public class NetworkPacket {
         }
     }
     public void packAndAddBuff(Buff buff, boolean remove) {
-        JSONObject buffObj = new JSONObject();
-        int id = buff.id();
-        try {
-            buffObj.put("id", id);
-            buffObj.put("icon", buff.icon());
-            Actor target = buff.target;
-            buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
+        if (buff.announced) {
+            JSONObject buffObj = new JSONObject();
+            int id = buff.id();
+            try {
+                buffObj.put("id", id);
+                buffObj.put("icon", buff.icon());
+                Actor target = buff.target;
+                buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
             buffObj.put("desc", Text.of(buff, "desc").toJSON());
             buffObj.put("name", Text.of(buff, "name").toJSON());
-            Image temp = new Image();
-            buff.tintIcon(temp);
-            JSONObject hardlight = new JSONObject();
-            hardlight.put("rm", temp.rm);
-            hardlight.put("gm", temp.gm);
-            hardlight.put("bm", temp.bm);
-            buffObj.put("hardlight", hardlight);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        try {
-            synchronized (dataRef) {
-                addToArray(dataRef.get(), BUFFS, buffObj);
+                Image temp = new Image();
+                buff.tintIcon(temp);
+                JSONObject hardlight = new JSONObject();
+                hardlight.put("rm", temp.rm);
+                hardlight.put("gm", temp.gm);
+                hardlight.put("bm", temp.bm);
+                buffObj.put("hardlight", hardlight);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
+
+            try {
+                synchronized (dataRef) {
+                    addToArray(dataRef.get(), BUFFS, buffObj);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
         }
 
     }

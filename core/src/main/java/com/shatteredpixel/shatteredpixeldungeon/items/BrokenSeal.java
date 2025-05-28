@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -133,6 +134,11 @@ public class BrokenSeal extends Item {
 	@Override
 	//scroll of upgrade can be used directly once, same as upgrading armor the seal is affixed to then removing it.
 	public boolean isUpgradable() {
+		if (SPDSettings.useFragments()){
+			if (!fragmentUpgrades.isEmpty()){
+				return false;
+			}
+		}
 		return level() == 0;
 	}
 

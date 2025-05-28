@@ -87,7 +87,7 @@ public class WandOfWarding extends Wand {
 		for (Buff buff : curUser.buffs()){
 			if (buff instanceof Wand.Charger){
 				if (((Charger) buff).wand() instanceof WandOfWarding){
-					maxWardEnergy += 2 + ((Charger) buff).wand().level();
+					maxWardEnergy += 2 + ((Charger) buff).wand().level(owner);
 				}
 			}
 		}
@@ -202,9 +202,9 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public String statsDesc() {
+	public String statsDesc(Hero hero) {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", level()+2);
+			return Messages.get(this, "stats_desc", level(hero)+2);
 		else
 			return Messages.get(this, "stats_desc", 2);
 	}

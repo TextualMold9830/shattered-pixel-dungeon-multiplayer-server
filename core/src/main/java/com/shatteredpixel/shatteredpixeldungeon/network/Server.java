@@ -130,6 +130,7 @@ public class Server extends Thread {
                     client.close();
                 } else if (clients[i] == null) {
                         Hero emptyHero = null;
+                        GameScene.shouldProcess = true;
                         clients[i] = new ClientThread(i, client, emptyHero); //found
                     break;
                 }
