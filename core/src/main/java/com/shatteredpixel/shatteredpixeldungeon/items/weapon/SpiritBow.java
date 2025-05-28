@@ -295,7 +295,7 @@ public class SpiritBow extends Weapon {
 	@Override
 	public int buffedLvl() {
 		//level isn't affected by buffs/debuffs
-		return level();
+		return level(findOwner());
 	}
 	
 	@Override

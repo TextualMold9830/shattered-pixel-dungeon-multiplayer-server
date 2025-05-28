@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -17,6 +18,10 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
+import com.watabou.utils.Bundlable;
+import com.watabou.utils.Bundle;
+
+import java.util.Objects;
 
 public class FragmentOfUpgrade extends Fragment {
     public static int image = new ScrollOfUpgrade().image();
@@ -33,7 +38,7 @@ public class FragmentOfUpgrade extends Fragment {
 
         @Override
         public void onSelect(Item item) {
-            upgradeItem(item);
+            upgradeItem(item, getOwner());
         }
     };
     public FragmentOfUpgrade(String boundUUID) {
@@ -51,8 +56,8 @@ public class FragmentOfUpgrade extends Fragment {
     public void onUse(Hero hero) {
         GameScene.selectItem(selector, hero);
     }
-    public Item upgradeItem( Item item ){
-        upgrade( curUser );
+    public Item upgradeItem( Item item, Hero hero ){
+        upgradeAnimation( curUser );
 
         Degrade.detach( curUser, Degrade.class );
 
@@ -65,7 +70,7 @@ public class FragmentOfUpgrade extends Fragment {
             boolean hadCursedEnchant = w.hasCurseEnchant();
             boolean hadGoodEnchant = w.hasGoodEnchant();
 
-            item = w.upgrade();
+            item = w.upgradeFragmented(hero);
 
             if (w.cursedKnown && hadCursedEnchant && !w.hasCurseEnchant()){
                 removeCurse(curUser);
@@ -85,7 +90,7 @@ public class FragmentOfUpgrade extends Fragment {
             boolean hadCursedGlyph = a.hasCurseGlyph();
             boolean hadGoodGlyph = a.hasGoodGlyph();
 
-            item = a.upgrade();
+            item = a.upgradeFragmented(hero);
 
             if (a.cursedKnown && hadCursedGlyph && !a.hasCurseGlyph()){
                 removeCurse( curUser );
@@ -101,14 +106,14 @@ public class FragmentOfUpgrade extends Fragment {
         } else if (item instanceof Wand || item instanceof Ring) {
             boolean wasCursed = item.cursed;
 
-            item = item.upgrade();
+            item = item.upgradeFragmented(hero);
 
             if (item.cursedKnown && wasCursed && !item.cursed){
                 removeCurse( curUser );
             }
 
         } else {
-            item = item.upgrade();
+            item = item.upgradeFragmented(hero);
         }
 
         Badges.validateItemLevelAquired( item );
@@ -145,4 +150,41 @@ public class FragmentOfUpgrade extends Fragment {
     public int image() {
         return image;
     }
+    public static void upgradeAnimation(Hero hero){
+        hero.getSprite().emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
+    }
+    public static class Upgrade implements Bundlable {
+        public String uuid;
+
+        @Override
+        public void restoreFromBundle(Bundle bundle) {
+            uuid = bundle.getString("uuid");
+        }
+
+        @Override
+        public void storeInBundle(Bundle bundle) {
+            bundle.put("uuid", uuid);
+        }
+
+        @Override
+        public final boolean equals(Object o) {
+            if (!(o instanceof Upgrade)) return false;
+
+            Upgrade upgrade = (Upgrade) o;
+            return Objects.equals(uuid, upgrade.uuid);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(uuid);
+        }
+
+        public Upgrade(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public Upgrade() {
+        }
+    }
+
 }

@@ -80,7 +80,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	}
 
 	public Item upgradeItem( Item item ){
-		upgrade( curUser );
+		ScrollOfUpgrade.upgradeAnimation( curUser );
 
 		Degrade.detach( curUser, Degrade.class );
 
