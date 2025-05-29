@@ -332,7 +332,7 @@ public abstract class Scroll extends Item {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if (Dungeon.useFragments && ingredients.size() == 1
+			if (Dungeon.balance.useFragments && ingredients.size() == 1
 					&& ingredients.get(0) instanceof FragmentOfUpgrade){
 				return true;
 			}

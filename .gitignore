@@ -18,7 +18,11 @@ local.properties
 #intellij project files
 *.iml
 *.idea
+# files from debugging desktop
 /desktop/plugins/
+/desktop/settings.xml
+desktop/.lwjgl
+/desktop/balance/
 
 #game saves
 */settings.xml

@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -47,16 +48,29 @@ public class ElixirOfMight extends Elixir {
 	@Override
 	public void apply( Hero hero ) {
 		identify(hero);
-		
-		hero.setSTR(hero.getSTR() + 1);
-		hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
-		
-		Buff.affect(hero, HTBoost.class).reset();
-		HTBoost boost = Buff.affect(hero, HTBoost.class);
-		boost.reset();
-		
-		hero.updateHT( true );
-		GLog.p( Messages.get(this, "msg", hero.STR()) );
+		if (Dungeon.balance.globalStrength) {
+			for (Hero h: Dungeon.heroes) {
+				if (h != null) {
+					h.setSTR(h.getSTR() + 1);
+					h.getSprite().showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
+					Buff.affect(h, HTBoost.class).reset();
+					HTBoost boost = Buff.affect(h, HTBoost.class);
+					boost.reset();
+
+					h.updateHT(true);
+				}
+			}
+		} else {
+			hero.setSTR(hero.getSTR() + 1);
+			hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
+
+			Buff.affect(hero, HTBoost.class).reset();
+			HTBoost boost = Buff.affect(hero, HTBoost.class);
+			boost.reset();
+
+			hero.updateHT(true);
+		}
+		GLog.p(Messages.get(this, "msg", hero.STR()));
 
 		Badges.validateStrengthAttained(hero);
 		Badges.validateDuelistUnlock();

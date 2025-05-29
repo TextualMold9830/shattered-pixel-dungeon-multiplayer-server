@@ -125,7 +125,7 @@ public abstract class ExoticScroll extends Scroll {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if (Dungeon.useFragments){
+			if (Dungeon.balance.useFragments){
 				if (ingredients.get(0) instanceof ScrollOfUpgrade){
 						return false;
 				}
