@@ -63,7 +63,7 @@ public enum Rankings {
 
 	public static final int TABLE_SIZE	= 11;
 
-	public static final String RANKINGS_FILE = "rankings.dat";
+	public static final String RANKINGS_FILE = "save/rankings.dat";
 
 	public ArrayList<Record> records;
 	public int lastRecord;

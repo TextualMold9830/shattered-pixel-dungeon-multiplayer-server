@@ -248,7 +248,7 @@ public class Badges {
 		loadGlobal();
 	}
 	
-	public static final String BADGES_FILE	= "badges.dat";
+	public static final String BADGES_FILE	= "save/badges.dat";
 	private static final String BADGES		= "badges";
 	
 	private static final HashSet<String> removedBadges = new HashSet<>();

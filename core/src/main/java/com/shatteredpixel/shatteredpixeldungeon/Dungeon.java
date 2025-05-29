@@ -1150,7 +1150,7 @@ public class Dungeon {
 			Bundle bundle = new Bundle();
 			hero.storeInBundle(bundle);
             try {
-                FileUtils.bundleToFile("heroes/" + hero.uuid, bundle);
+                FileUtils.bundleToFile("save/heroes/" + hero.uuid, bundle);
             } catch (IOException e) {
 				GLog.n("Failed to save hero");
             }

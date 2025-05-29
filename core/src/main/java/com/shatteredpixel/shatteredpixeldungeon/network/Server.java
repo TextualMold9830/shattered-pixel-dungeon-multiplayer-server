@@ -90,7 +90,7 @@ public class Server extends Thread {
 
         started = true;
         serverThread = new Server();
-        TexturePackManager.loadTextures("../textures/");
+        TexturePackManager.loadTextures("textures/");
         serverThread.start();
         pluginManager.initialize();
         return started;

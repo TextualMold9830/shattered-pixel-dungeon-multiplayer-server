@@ -144,7 +144,7 @@ public class DesktopLauncher {
 			vendor = System.getProperty("Implementation-Title");
 		}
 
-		String basePath = "save/";
+		String basePath = "";
 		Files.FileType baseFileType = Files.FileType.Local;
 		config.setPreferencesConfig( basePath, baseFileType );
 		SPDSettings.set( new Lwjgl3Preferences( new Lwjgl3FileHandle(basePath + SPDSettings.DEFAULT_PREFS_FILE, baseFileType) ));
