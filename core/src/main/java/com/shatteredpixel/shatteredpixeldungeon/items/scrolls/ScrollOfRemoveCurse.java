@@ -140,7 +140,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 				}
 			}
 			if (item instanceof Wand){
-				((Wand) item).updateLevel();
+				((Wand) item).updateLevel(hero);
 			}
 		}
 		

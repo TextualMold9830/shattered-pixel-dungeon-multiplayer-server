@@ -172,7 +172,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 
 	@Override
 	public void doRead(Hero hero) {
-		if (Dungeon.useFragments){
+		if (Dungeon.balance.useFragments){
 			for (Hero h: Dungeon.heroes){
                 if (h != null) {
                     new FragmentOfUpgrade(hero).collect(h);

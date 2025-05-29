@@ -437,7 +437,7 @@ public class Item implements Bundlable {
 	}
 	public int level(Hero hero){
 		int level =  level();
-		if (SPDSettings.useFragments()){
+		if (Dungeon.balance.useFragments){
 			for (FragmentOfUpgrade.Upgrade upgrade : fragmentUpgrades) {
 				if (upgrade.uuid.equals(hero.uuid)) {
 					level++;
@@ -764,7 +764,7 @@ public class Item implements Bundlable {
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
-		fragmentUpgrades = new ArrayList<>((Collection<? extends FragmentOfUpgrade.Upgrade>) bundle.getCollection(FRAGMENT_UPGRADES));
+		fragmentUpgrades = new ArrayList(bundle.getCollection(FRAGMENT_UPGRADES));
 	}
 
 	public int targetingPos( Hero user, int dst ){
