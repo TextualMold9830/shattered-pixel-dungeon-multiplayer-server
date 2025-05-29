@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.shatteredpixel.shatteredpixeldungeon.balance.BalanceData;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -198,7 +199,7 @@ public class Dungeon {
 	public static String customSeedText = "";
 	public static long seed;
 	public static long lastPlayed;
-	public static boolean useFragments = false;
+	public static BalanceData balance;
 
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
@@ -271,7 +272,7 @@ public class Dungeon {
 		Badges.reset();
 		//TODO: Check this
 		//GamesInProgress.selectedClass.initHero(heroes);
-		useFragments = SPDSettings.useFragments();
+		balance = BalanceData.load();
 	}
 
 	public static boolean isChallenged( int mask ) {
@@ -629,6 +630,7 @@ public class Dungeon {
 	private static final String QUESTS		= "quests";
 	private static final String BADGES		= "badges";
 	private static final String USE_FRAGMENTS	= "use_fragments";
+	private static final String BALANCE_DATA = "balance_data";
 	public static void saveGame( int save ) {
 		try {
 			Bundle bundle = new Bundle();
@@ -701,7 +703,7 @@ public class Dungeon {
 					saveHero(hero);
 				}
 			}
-			bundle.put(USE_FRAGMENTS, useFragments);
+			bundle.put(BALANCE_DATA, balance);
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
 			ShatteredPixelDungeon.reportException(e);
@@ -833,8 +835,11 @@ public class Dungeon {
 
 		Statistics.restoreFromBundle( bundle );
 		Generator.restoreFromBundle( bundle );
-
-		useFragments = bundle.getBoolean(USE_FRAGMENTS);
+		if (bundle.contains(BALANCE_DATA)) {
+			balance = (BalanceData) bundle.get(BALANCE_DATA);
+		} else {
+			balance = BalanceData.load();
+		}
 	}
 	
 	public static Level loadLevel() throws IOException {

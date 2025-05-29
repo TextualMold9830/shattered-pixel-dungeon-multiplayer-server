@@ -43,10 +43,14 @@ public class PotionOfStrength extends Potion {
 	@Override
 	public void apply( Hero hero ) {
 		identify(hero);
-		for(Hero h: Dungeon.heroes) {
-			if (h != null) {
-				h.setSTR(h.getSTR() + 1);
+		if (Dungeon.balance.globalStrength) {
+			for (Hero h : Dungeon.heroes) {
+				if (h != null) {
+					h.setSTR(h.getSTR() + 1);
+				}
 			}
+		} else {
+			hero.setSTR(hero.getSTR() + 1);
 		}
 		hero.getSprite().showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
 

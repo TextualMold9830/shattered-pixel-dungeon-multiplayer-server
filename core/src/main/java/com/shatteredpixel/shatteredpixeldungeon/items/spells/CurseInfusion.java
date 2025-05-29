@@ -93,7 +93,7 @@ public class CurseInfusion extends InventorySpell {
 			a.curseInfusionBonus = true;
 		} else if (item instanceof Wand){
 			((Wand) item).curseInfusionBonus = true;
-			((Wand) item).updateLevel();
+			((Wand) item).updateLevel(hero);
 		} else if (item instanceof RingOfMight){
 			curUser.updateHT(false);
 		}
