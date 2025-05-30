@@ -30,14 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.FetidRatSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GnollTricksterSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GreatCrabSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.json.JSONObject;
@@ -62,7 +55,9 @@ public class WndSadGhost extends Window {
 	}
 	
 	private void selectReward( Item reward ) {
-		
+		if (Dungeon.balance.multipleGhostReward && Ghost.claimedUUIDs.contains(getOwnerHero().uuid)){
+			return;
+		}
 		hide();
 		
 		if (reward == null) return;
@@ -79,11 +74,13 @@ public class WndSadGhost extends Window {
 		} else {
 			Dungeon.level.drop( reward, ghost.pos ).sprite.drop();
 		}
-		
-		ghost.yell( Messages.get(this, "farewell") );
-		ghost.die( new Char.DamageCause(null) );
-		
-		Ghost.Quest.complete();
+		if (Dungeon.balance.multipleGhostReward) {
+			Ghost.claimedUUIDs.add(getOwnerHero().uuid);
+		} else {
+			ghost.yell(Messages.get(this, "farewell"));
+			ghost.die(new Char.DamageCause(null));
+			Ghost.Quest.complete();
+		}
 	}
 
 	@Override
