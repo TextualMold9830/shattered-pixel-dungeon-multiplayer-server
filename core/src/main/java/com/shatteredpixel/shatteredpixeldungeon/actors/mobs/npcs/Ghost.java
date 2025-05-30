@@ -58,12 +58,14 @@ import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
 
-import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_CHANCES;
-import static com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel.PRISON_TRACK_LIST;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel.SEWER_TRACK_CHANCES;
 import static com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel.SEWER_TRACK_LIST;
 
 public class Ghost extends NPC {
+	public static ArrayList<String> claimedUUIDs = new ArrayList<>();
 
 	{
 		spriteClass = GhostSprite.class;
@@ -150,7 +152,7 @@ public class Ghost extends NPC {
 		final Hero hero = (Hero) c;
 
 		if (Quest.given) {
-			if (Quest.weapon != null) {
+			if (!claimedUUIDs.contains(hero.uuid)) {
 				if (Quest.processed) {
 					Game.runOnRenderThread(new Callback() {
 						@Override
@@ -208,7 +210,7 @@ public class Ghost extends NPC {
 	}
 
 	public static class Quest {
-		
+
 		private static boolean spawned;
 
 		private static int type;
@@ -233,7 +235,7 @@ public class Ghost extends NPC {
 		}
 		
 		private static final String NODE		= "sadGhost";
-		
+
 		private static final String SPAWNED		= "spawned";
 		private static final String TYPE        = "type";
 		private static final String GIVEN		= "given";
@@ -243,7 +245,7 @@ public class Ghost extends NPC {
 		private static final String ARMOR		= "armor";
 		private static final String ENCHANT		= "enchant";
 		private static final String GLYPH		= "glyph";
-		
+		private static final String CLAIMED_UUIDS = "claimed_uuids";
 		public static void storeInBundle( Bundle bundle ) {
 			
 			Bundle node = new Bundle();
@@ -266,7 +268,9 @@ public class Ghost extends NPC {
 					node.put(GLYPH, glyph);
 				}
 			}
-			
+			if (Dungeon.balance.multipleGhostReward) {
+				node.put(CLAIMED_UUIDS, claimedUUIDs.toArray(new String[0]));
+			}
 			bundle.put( NODE, node );
 		}
 		
@@ -288,6 +292,10 @@ public class Ghost extends NPC {
 				if (node.contains(ENCHANT)) {
 					enchant = (Weapon.Enchantment) node.get(ENCHANT);
 					glyph   = (Armor.Glyph) node.get(GLYPH);
+				}
+				if (Dungeon.balance.multipleGhostReward){
+
+					claimedUUIDs = new ArrayList(Collections.singleton(bundle.getStringArray(CLAIMED_UUIDS)));
 				}
 			} else {
 				reset();
@@ -384,10 +392,12 @@ public class Ghost extends NPC {
 		}
 		
 		public static void complete() {
-			weapon = null;
-			armor = null;
-			
-			Notes.remove( Notes.Landmark.GHOST );
+			if (!Dungeon.balance.multipleGhostReward) {
+				weapon = null;
+				armor = null;
+
+				Notes.remove(Notes.Landmark.GHOST);
+			}
 		}
 
 		public static boolean processed(){

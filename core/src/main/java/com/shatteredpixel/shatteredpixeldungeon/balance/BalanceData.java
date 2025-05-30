@@ -15,6 +15,8 @@ public class BalanceData implements Bundlable {
     public static final String KEY_FOOD_SATISFIES_EVERY_HERO = "food_satisfies_every_hero";
     public boolean useFragments = true;
     public static final String KEY_USE_FRAGMENTS = "use_fragments_of_upgrade";
+    public boolean multipleGhostReward = true;
+    public static final String MULTIPLE_GHOST_REWARD = "multiple_ghost_reward";
 
     public static BalanceData load() {
         BalanceData data = new BalanceData();
@@ -36,6 +38,7 @@ public class BalanceData implements Bundlable {
                 case KEY_GLOBAL_STRENGTH: globalStrength = bundle.getBoolean(key);
                 case KEY_FOOD_SATISFIES_EVERY_HERO: foodSatisfiesEveryHero = bundle.getBoolean(KEY_FOOD_SATISFIES_EVERY_HERO);
                 case KEY_USE_FRAGMENTS: useFragments = bundle.getBoolean(KEY_USE_FRAGMENTS);
+                case MULTIPLE_GHOST_REWARD: multipleGhostReward = bundle.getBoolean(MULTIPLE_GHOST_REWARD);
             }
         }
     }
@@ -45,5 +48,6 @@ public class BalanceData implements Bundlable {
         bundle.put(KEY_GLOBAL_STRENGTH, globalStrength);
         bundle.put(KEY_FOOD_SATISFIES_EVERY_HERO, foodSatisfiesEveryHero);
         bundle.put(KEY_USE_FRAGMENTS, useFragments);
+        bundle.put(MULTIPLE_GHOST_REWARD, multipleGhostReward);
     }
 }
