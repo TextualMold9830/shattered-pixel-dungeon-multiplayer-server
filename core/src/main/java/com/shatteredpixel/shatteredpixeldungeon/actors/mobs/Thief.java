@@ -153,7 +153,7 @@ public class Thief extends Mob {
 			if (!toSteal.stackable) {
 				Dungeon.quickslot.convertToPlaceholder(toSteal);
 			}
-			Item.updateQuickslot();
+			Item.updateQuickslot(hero, null);
 
 			item = toSteal.detach( hero.belongings.backpack );
 			if (item instanceof Honeypot){

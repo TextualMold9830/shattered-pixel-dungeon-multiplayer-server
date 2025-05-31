@@ -133,7 +133,7 @@ public class ArcaneResin extends Item {
 					w.resinBonus++;
 					w.curCharges++;
 					w.updateLevel(getOwner());
-					Item.updateQuickslot();
+					ArcaneResin.this.updateQuickslot();
 
 					curUser.getSprite().operate(curUser.pos);
 					Sample.INSTANCE.play(Assets.Sounds.TELEPORT);

@@ -447,7 +447,7 @@ public class MeleeWeapon extends Weapon {
                     if (partialCharge >= 1) {
                         charges++;
                         partialCharge--;
-                        updateQuickslot();
+                        Item.updateQuickslot(hero, null);
                     }
                 } else {
                     partialCharge = 0;
@@ -499,7 +499,7 @@ public class MeleeWeapon extends Weapon {
                     partialCharge = 0;
                     charges = chargeCap(hero);
                 }
-                updateQuickslot();
+                Item.updateQuickslot(target, null);
             }
         }
 
@@ -580,7 +580,7 @@ public class MeleeWeapon extends Weapon {
             Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 
             hero.actionIndicator.setAction(this);
-            Item.updateQuickslot();
+            Item.updateQuickslot(hero, null);
             hero.attackIndicator.updateState();
         }
     }

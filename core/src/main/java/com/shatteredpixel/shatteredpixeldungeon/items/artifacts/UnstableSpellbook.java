@@ -232,7 +232,7 @@ public class UnstableSpellbook extends Artifact {
 				@Override
 				public void call() {
 					scroll.doRead((Hero) target);
-					Item.updateQuickslot();
+					Item.updateQuickslot(target, null);
 				}
 			});
 			detach();

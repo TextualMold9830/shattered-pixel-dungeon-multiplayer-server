@@ -241,7 +241,7 @@ public class WildMagic extends ArmorAbility {
 			if (hero.buff(WildMagicTracker.class) != null) {
 				hero.buff(WildMagicTracker.class).detach();
 			}
-			Item.updateQuickslot();
+			cur.updateQuickslot(hero);
 			Invisibility.dispel(hero);
 			if (Random.Int(4) >= hero.pointsInTalent(Talent.CONSERVED_MAGIC)) {
 				hero.spendAndNext(Actor.TICK);

@@ -538,7 +538,7 @@ public class Belongings implements Iterable<Item> {
 				item.sendSelfUpdate(owner);
 			}
 		}
-		Item.updateQuickslot();
+		Item.updateQuickslot(owner, null);
 	}
 	
 	public void uncurseEquipped() {

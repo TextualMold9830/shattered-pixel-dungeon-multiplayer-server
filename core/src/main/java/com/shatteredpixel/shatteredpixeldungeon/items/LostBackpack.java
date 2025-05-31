@@ -74,7 +74,7 @@ public class LostBackpack extends Item {
 
 		hero.updateHT(false);
 
-		Item.updateQuickslot();
+		this.updateQuickslot();
 		Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 		hero.spendAndNext(TIME_TO_PICK_UP);
 		GameScene.pickUp( this, pos );

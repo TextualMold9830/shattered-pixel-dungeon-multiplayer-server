@@ -551,7 +551,7 @@ public enum Talent {
 
 		if (talent == TWIN_UPGRADES || talent == DESPERATE_POWER
 				|| talent == STRONGMAN || talent == DURABLE_PROJECTILES){
-			Item.updateQuickslot();
+			Item.updateQuickslot(hero, null);
 		}
 
 		if (talent == UNENCUMBERED_SPIRIT && hero.pointsInTalent(talent) == 3){

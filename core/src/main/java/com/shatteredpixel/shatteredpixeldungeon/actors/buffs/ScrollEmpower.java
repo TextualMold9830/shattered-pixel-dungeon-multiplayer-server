@@ -37,7 +37,7 @@ public class ScrollEmpower extends Buff {
 
 	public void reset(int left){
 		this.left = left;
-		Item.updateQuickslot();
+		Item.updateQuickslot(target, null);
 	}
 
 	public void use(){
@@ -50,7 +50,7 @@ public class ScrollEmpower extends Buff {
 	@Override
 	public void detach() {
 		super.detach();
-		Item.updateQuickslot();
+		Item.updateQuickslot(target, null);
 	}
 
 	@Override

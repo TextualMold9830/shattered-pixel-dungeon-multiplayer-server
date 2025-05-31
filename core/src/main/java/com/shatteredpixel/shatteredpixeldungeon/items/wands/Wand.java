@@ -723,7 +723,7 @@ public abstract class Wand extends Item {
 						curUser.getSprite().operate(curUser.pos);
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
-						updateQuickslot();
+						curWand.updateQuickslot(curUser);
 						curUser.spendAndNext(Actor.TICK);
 						return;
 					}
