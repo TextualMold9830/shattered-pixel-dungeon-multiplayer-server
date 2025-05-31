@@ -275,10 +275,11 @@ public class WndBag extends WndTabbed {
 			return true; //defaults to hiding the window when an item is picked
 		}
 		public abstract boolean itemSelectable( Item item );
-		public void onSelect(Item item){};
+		public void onSelect(Item item){
+			onSelect(item, owner);
+		};
 		@Deprecated
 		public void onSelect( Item item, Hero hero ){
-			onSelect(item);
 		};
 
 		public ItemSelector() {
