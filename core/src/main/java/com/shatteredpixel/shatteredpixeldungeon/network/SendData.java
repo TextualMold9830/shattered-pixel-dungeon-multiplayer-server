@@ -91,7 +91,8 @@ public class SendData {
     }
 
     //---------------------------Hero
-    public static void addToSendHeroVisibleCells(boolean[] visible, int ID) {
+    public static void addToSendHeroVisibleCells(boolean[] visible, Hero hero) {
+        final int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.packAndAddVisiblePositions(visible);
         }
