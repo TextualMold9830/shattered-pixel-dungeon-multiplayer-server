@@ -41,7 +41,7 @@ public class Fragment extends Item {
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
-        if (boundUUID.equals(hero.uuid)) {
+        if (hero.uuid.equals(boundUUID)) {
             actions.add(AC_USE);
         }
         return actions;
