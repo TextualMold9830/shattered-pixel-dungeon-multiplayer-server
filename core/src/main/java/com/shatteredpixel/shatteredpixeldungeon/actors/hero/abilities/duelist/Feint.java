@@ -149,7 +149,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		armor.charge -= chargeUse(hero);
-		Item.updateQuickslot();
+		armor.updateQuickslot(hero);
 	}
 
 	@Override

@@ -150,7 +150,7 @@ public class ElementalStrike extends ArmorAbility {
 		}
 
 		armor.charge -= chargeUse(hero);
-		Item.updateQuickslot();
+		armor.updateQuickslot();
 
 		Ballistica aim = new Ballistica(hero.pos, target, Ballistica.WONT_STOP);
 

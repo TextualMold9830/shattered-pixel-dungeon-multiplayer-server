@@ -488,10 +488,17 @@ public class SendData {
         }
     }
 
+    public static void sendUpdateItemFull(Char owner, Item item) {
+        if ((owner == null) || !(owner instanceof Hero)) {
+            return;
+        }
+        sendUpdateItemFull(owner, item, ((Hero) owner).belongings.pathOfItem(item));
+    }
     public static void sendUpdateItemFull(Char owner, Item item, List<Integer> path) {
         if ((owner == null) || !(owner instanceof Hero)) {
             return;
         }
+
         JSONObject itemObj = (item == null) ? null : packItem(item, (Hero) owner);
         sendInventoryItemAction(owner, itemObj, path, "update");
     }

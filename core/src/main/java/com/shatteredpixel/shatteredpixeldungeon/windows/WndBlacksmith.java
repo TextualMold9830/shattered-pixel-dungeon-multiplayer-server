@@ -291,7 +291,7 @@ public class WndBlacksmith extends Window {
 						first.upgrade();
 					}
 					Badges.validateItemLevelAquired( first );
-					Item.updateQuickslot();
+					Item.updateQuickslot(getOwnerHero(), null);
 
 					Blacksmith.Quest.favor -= 500 + 1000*Blacksmith.Quest.reforges;
 					Blacksmith.Quest.reforges++;

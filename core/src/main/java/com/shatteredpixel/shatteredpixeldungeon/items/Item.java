@@ -129,6 +129,9 @@ public class Item implements Bundlable {
 	protected static final String TXT_TYPICAL_STR = "%d?";
 	protected static final String TXT_LEVEL = "%+d";
 	protected static final String TXT_CURSED = "";//"-";
+	
+	private boolean needUpdateVisual = false;
+	
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
@@ -545,7 +548,7 @@ public class Item implements Bundlable {
 
 		levelKnown = true;
 		cursedKnown = true;
-		Item.updateQuickslot();
+		this.updateQuickslot();
 		
 		return this;
 	}
@@ -662,10 +665,50 @@ public class Item implements Bundlable {
 		return status();
 	};
 
-	public static void updateQuickslot() {
-		GameScene.updateItemDisplays = true;
+	public final void updateQuickslot() {
+		Item.updateQuickslot(null, this);
 	}
-	
+
+	public final void updateQuickslot(Hero hero) {
+		Item.updateQuickslot(hero, this);
+	}
+
+	public static final void updateQuickslot(Char hero, Item item) {
+		if (hero != null) {
+			if (! (hero instanceof  Hero)) {
+				return;
+			}
+		}
+
+		if (item == null && hero == null) {
+			updateQuickslotForAllHeroes();
+			return;
+		}
+		if (hero == null) {
+			hero = item.findOwner();
+		}
+		if (item == null) {
+			updateQuickslotForAllItems((Hero) hero);
+			return;
+		}
+		item.setNeedUpdateVisual(true);
+		GameScene.setUpdateItemDisplays((Hero) hero);
+	}
+
+	public static final void updateQuickslotForAllHeroes() {
+		for (Hero hero: Dungeon.heroes) {
+            if (hero == null) continue;
+            updateQuickslotForAllItems(hero);
+		}
+	}
+
+	public static final void updateQuickslotForAllItems(Hero hero) {
+		for (Item item: hero.belongings) {
+			item.setNeedUpdateVisual(true);
+		}
+		GameScene.setUpdateItemDisplays((Hero) hero);
+	}
+
 	private static final String QUANTITY		= "quantity";
 	private static final String LEVEL			= "level";
 	private static final String LEVEL_KNOWN		= "levelKnown";
@@ -968,4 +1011,12 @@ public class Item implements Bundlable {
 			SendData.flush(heroToFlush);
 		}
 	}
+
+    public boolean isNeedUpdateVisual() {
+        return needUpdateVisual;
+    }
+
+    public void setNeedUpdateVisual(boolean needUpdateVisual) {
+        this.needUpdateVisual = needUpdateVisual;
+    }
 }

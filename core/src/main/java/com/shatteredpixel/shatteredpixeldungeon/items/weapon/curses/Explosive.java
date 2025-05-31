@@ -55,12 +55,12 @@ public class Explosive extends Weapon.Enchantment {
 			attacker.getSprite().showStatus(CharSprite.WARNING, Messages.get(this, "warm"));
 			GLog.w(Messages.get(this, "desc_warm"));
 			attacker.getSprite().emitter().burst(SmokeParticle.FACTORY, 4);
-			Item.updateQuickslot();
+			Item.updateQuickslot(attacker, weapon);
 		} else if (currentDurability > 10 && durability <= 10){
 			attacker.getSprite().showStatus(CharSprite.WARNING, Messages.get(this, "hot"));
 			GLog.n(Messages.get(this, "desc_hot"));
 			attacker.getSprite().emitter().burst(BlastParticle.FACTORY, 5);
-			Item.updateQuickslot();
+			Item.updateQuickslot(attacker, weapon);
 		} else if (durability <= 0) {
 			//explosion position is the closest adjacent cell to the defender
 			// this will be the attacker's position if they are adjacent
@@ -79,7 +79,7 @@ public class Explosive extends Weapon.Enchantment {
 			new Bomb.ConjuredBomb().explode(explosionPos);
 
 			durability = 100;
-			Item.updateQuickslot();
+			Item.updateQuickslot(attacker, weapon);
 		}
 
 		return damage;

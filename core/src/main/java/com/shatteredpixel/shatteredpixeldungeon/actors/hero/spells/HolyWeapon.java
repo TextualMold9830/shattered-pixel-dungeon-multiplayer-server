@@ -53,7 +53,7 @@ public class HolyWeapon extends ClericSpell {
 	public void onCast(HolyTome tome, Hero hero) {
 
 		Buff.affect(hero, HolyWepBuff.class, 50f);
-		Item.updateQuickslot();
+		Item.updateQuickslot(hero, null);
 
 		Sample.INSTANCE.play(Assets.Sounds.READ);
 
@@ -108,7 +108,7 @@ public class HolyWeapon extends ClericSpell {
 		public void detach() {
 			super.detach();
 			((Hero)target).belongings.weapon().sendSelfUpdate((Hero) target);
-			Item.updateQuickslot();
+			Item.updateQuickslot(target, null);
 		}
 
 		public void extend(float extension){

@@ -56,7 +56,7 @@ public class WndUseItem extends WndInfoItem {
 						if (getOwnerHero().isAlive() && getOwnerHero().belongings.contains(item)){
 							item.execute( getOwnerHero(), action );
 						}
-						Item.updateQuickslot();
+						item.updateQuickslot(ownerHero);
 						if (action.equals(item.defaultAction()) && item.usesTargeting && ownerWnd == null){
 							InventoryPane.useTargeting();
 						}

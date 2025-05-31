@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -166,7 +167,7 @@ public class Rapier extends MeleeWeapon {
 						charger.charges--;
 						charger.partialCharge++;
 					}
-					updateQuickslot();
+					Item.updateQuickslot(hero,null);
 					GLog.w(Messages.get(Rapier.class, "ability_no_target"));
 					hero.spendAndNext(1/hero.speed());
 				}

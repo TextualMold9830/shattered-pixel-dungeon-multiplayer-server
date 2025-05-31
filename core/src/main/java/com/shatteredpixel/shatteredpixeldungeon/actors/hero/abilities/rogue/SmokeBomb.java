@@ -103,7 +103,7 @@ public class SmokeBomb extends ArmorAbility {
 			}
 
 			armor.charge -= chargeUse(hero);
-			Item.updateQuickslot();
+			armor.updateQuickslot(hero);
 
 			boolean shadowStepping = hero.invisible > 0 && hero.hasTalent(Talent.SHADOW_STEP);
 

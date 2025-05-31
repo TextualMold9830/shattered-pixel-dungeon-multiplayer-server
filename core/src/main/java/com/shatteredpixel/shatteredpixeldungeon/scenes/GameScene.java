@@ -50,9 +50,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
@@ -100,10 +97,10 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoMob;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoPlant;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoTrap;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
+import com.sun.tools.javac.tree.DCTree;
 import com.watabou.glwrap.Blending;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.KeyBindings;
@@ -118,8 +115,6 @@ import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
-import com.watabou.noosa.tweeners.Tweener;
-import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
@@ -130,9 +125,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Locale;
+import java.util.*;
+
 //FIXME
 //FIXME
 //FIXME
@@ -178,6 +172,14 @@ public class GameScene extends PixelScene {
 
 	{
 		inGameScene = true;
+	}
+
+	public static void setUpdateItemDisplays(Hero hero) {
+		if (hero != null) {
+			GameScene.updateItemDisplays.add(HeroHelp.getHeroID(hero));
+		} else {
+
+		}
 	}
 
 	@Override
@@ -657,30 +659,43 @@ public class GameScene extends PixelScene {
 	//this caps the speed of resting for higher refresh rate displays
 	private float notifyDelay = 1 / 60f;
 
-	//todo send it
-	public static boolean updateItemDisplays = false;
+	private static final Set<Integer> updateItemDisplays = new HashSet<>();
+	private static final Set<Integer> fullUpdate = new HashSet<>();
 
 	public static boolean tagDisappeared = false;
 	public static boolean updateTags = false;
 	private static float waterOfs = 0;
 
 	public static boolean shouldProcess = true;
+
+	private void updateItemDisplays() {
+		for (int id = 0; id < Dungeon.heroes.length; id++){
+			final Hero hero = Dungeon.heroes[id];
+			if (hero == null) {
+				continue;
+			}
+			if (updateItemDisplays.contains(id)) {
+				updateItemDisplays.remove(id);
+				updateItemDisplays(hero);
+			}
+		}
+	}
+
+	private void updateItemDisplays(@NotNull Hero hero) {
+		for (Item item: hero.belongings) {
+			if (item.isNeedUpdateVisual()) {
+				SendData.sendUpdateItemFull(hero, item);
+				item.setNeedUpdateVisual(false);
+			}
+		}
+	}
+
 	@Override
 	public synchronized void update() {
 		Server.parseActions();
 		lastOffset = null;
 
-		if (updateItemDisplays) {
-			updateItemDisplays = false;
-			//QuickSlotButton.refresh();
-			//todo send this
-			/*
-			if (hero.actionIndicator.action instanceof MeleeWeapon.Charger) {
-				//Champion weapon swap uses items, needs refreshing whenever item displays are updated
-				hero.actionIndicator.refresh();
-			}
-			*/
-		}
+		updateItemDisplays();
 
 		if (Dungeon.heroes == null || scene == null) {
 			return;

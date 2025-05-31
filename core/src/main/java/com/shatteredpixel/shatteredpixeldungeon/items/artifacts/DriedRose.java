@@ -675,7 +675,9 @@ public class DriedRose extends Artifact {
 			super.damage( dmg, source );
 			
 			//for the rose status indicator
-			Item.updateQuickslot();
+			if (rose != null) {
+				rose.updateQuickslot();
+			}
 		}
 		
 		@Override
