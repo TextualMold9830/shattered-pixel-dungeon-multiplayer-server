@@ -115,11 +115,14 @@ public class SendData {
         }
     }
 
-    public static void sendIronKeysCount(int ID, int count) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddIronKeysCount(count);
-            clients[ID].flush();
+    public static void sendIronKeysCount() {
+        for (ClientThread client: clients) {
+            if (client != null) {
+                client.packet.packAndAddIronKeysCount();
+                client.flush();
+            }
         }
+
     }
 
     public static void sendDepth(int depth) {
