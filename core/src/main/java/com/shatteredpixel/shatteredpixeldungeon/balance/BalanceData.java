@@ -35,10 +35,10 @@ public class BalanceData implements Bundlable {
     public void restoreFromBundle(Bundle bundle) {
         for (String key : bundle.getKeys()) {
             switch (key) {
-                case KEY_GLOBAL_STRENGTH: globalStrength = bundle.getBoolean(key);
-                case KEY_FOOD_SATISFIES_EVERY_HERO: foodSatisfiesEveryHero = bundle.getBoolean(KEY_FOOD_SATISFIES_EVERY_HERO);
-                case KEY_USE_FRAGMENTS: useFragments = bundle.getBoolean(KEY_USE_FRAGMENTS);
-                case MULTIPLE_GHOST_REWARD: multipleGhostReward = bundle.getBoolean(MULTIPLE_GHOST_REWARD);
+                case KEY_GLOBAL_STRENGTH: globalStrength = bundle.getBoolean(key); break;
+                case KEY_FOOD_SATISFIES_EVERY_HERO: foodSatisfiesEveryHero = bundle.getBoolean(KEY_FOOD_SATISFIES_EVERY_HERO); break;
+                case KEY_USE_FRAGMENTS: useFragments = bundle.getBoolean(KEY_USE_FRAGMENTS); break;
+                case MULTIPLE_GHOST_REWARD: multipleGhostReward = bundle.getBoolean(MULTIPLE_GHOST_REWARD); break;
             }
         }
     }
