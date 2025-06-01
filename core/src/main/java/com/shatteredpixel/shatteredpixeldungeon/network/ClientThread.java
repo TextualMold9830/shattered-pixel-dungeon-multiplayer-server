@@ -446,7 +446,7 @@ class ClientThread implements Callable<String> {
         }
 
         packet.packAndAddLevel(level, clientHero);
-        packet.packAndAddHero(clientHero);
+        //packet.packAndAddHero(clientHero);
         packet.packAndAddDepth(Dungeon.depth);
         packet.packAndAddIronKeysCount(Dungeon.depth);
         packet.addInventoryFull(clientHero);
