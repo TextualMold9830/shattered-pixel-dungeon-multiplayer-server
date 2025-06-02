@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -20,6 +21,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.TieredSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.KeyDisplay;
 import com.watabou.noosa.Image;
 import com.watabou.utils.SparseArray;
 import org.jetbrains.annotations.NotNull;
@@ -824,12 +826,16 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddIronKeysCount(int count) {
+    public void packAndAddIronKeysCount() {
         try {
             synchronized (dataRef) {
                 JSONObject uiObj = dataRef.get().optJSONObject("ui");
                 uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("iron_keys_count", count);
+                JSONArray keyArray = new JSONArray();
+                for (int key: KeyDisplay.keys) {
+                    keyArray.put(key);
+                }
+                uiObj.put("iron_keys_count", keyArray);
                 dataRef.get().put("ui", uiObj);
             }
         } catch (JSONException e) {

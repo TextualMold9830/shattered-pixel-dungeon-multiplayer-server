@@ -97,6 +97,13 @@ public class EmoIcon extends Image {
 			x = owner.x + owner.width - width / 2;
 			y = owner.y - height;
 		}
+
+		@Override
+		public JSONObject toJsonObject() {JSONObject jsonObject = new JSONObject();
+			jsonObject.put("type", "default");
+			jsonObject.put("emotion", "sleep");
+			return jsonObject;
+		}
 	}
 	
 	public static class Alert extends EmoIcon {
@@ -116,6 +123,13 @@ public class EmoIcon extends Image {
 			x = owner.x + owner.width - width / 2;
 			y = owner.y - height;
 		}
+
+		@Override
+		public JSONObject toJsonObject() {JSONObject jsonObject = new JSONObject();
+			jsonObject.put("type", "default");
+			jsonObject.put("emotion", "alert");
+			return jsonObject;
+		}
 	}
 	
 	public static class Lost extends EmoIcon {
@@ -134,7 +148,15 @@ public class EmoIcon extends Image {
 			x = owner.x + owner.width - width / 2;
 			y = owner.y - height;
 		}
-		
+
+		@Override
+		public JSONObject toJsonObject() {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("type", "default");
+			jsonObject.put("emotion", "lost");
+			return jsonObject;
+		}
+
 	}
 
 }

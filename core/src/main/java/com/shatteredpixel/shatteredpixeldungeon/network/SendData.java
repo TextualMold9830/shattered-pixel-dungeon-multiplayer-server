@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -115,11 +116,14 @@ public class SendData {
         }
     }
 
-    public static void sendIronKeysCount(int ID, int count) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddIronKeysCount(count);
-            clients[ID].flush();
+    public static void sendIronKeysCount() {
+        for (ClientThread client: clients) {
+            if (client != null) {
+                client.packet.packAndAddIronKeysCount();
+                client.flush();
+            }
         }
+
     }
 
     public static void sendDepth(int depth) {
@@ -691,6 +695,8 @@ public class SendData {
         sendHeroAttackIndicator(target == null? -1: target, networkID);
     }
 
+
+    private static final HashMap<Integer, Integer> attackIndicatorCache = new HashMap<>();
     public static void sendHeroAttackIndicator(int target, int networkID) {
         if (networkID <0)
         {
@@ -699,6 +705,12 @@ public class SendData {
         if (clients[networkID] == null) {
             return;
         }
+        if (attackIndicatorCache.containsKey(networkID)) {
+            if (attackIndicatorCache.get(networkID) == target) {
+                return;
+            }
+        }
+        attackIndicatorCache.put(networkID, target);
         try {
             AtomicReference<JSONObject> dataRef = clients[networkID].packet.dataRef;
             synchronized (clients[networkID].packet.dataRef) {

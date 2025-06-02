@@ -64,7 +64,7 @@ public class AttackIndicator {
 		
 		if (lastTarget == null || !candidates.contains( lastTarget )) {
 			if (candidates.isEmpty()) {
-				setLastTarget(lastTarget);
+				setLastTarget(null);
 			} else {
 				setLastTarget(Random.element( candidates ));
 			}

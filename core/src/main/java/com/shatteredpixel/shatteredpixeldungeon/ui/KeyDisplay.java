@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Quad;
@@ -36,6 +37,7 @@ import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.RectF;
+import org.json.JSONArray;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -50,7 +52,8 @@ public class KeyDisplay extends Visual {
 	private SmartTexture tx = TextureCache.get(Assets.Interfaces.MENU_BTN);
 	
 	private boolean dirty = true;
-	private int[] keys;
+	//Hope this can remain static
+	public static int[] keys;
 	
 	//mapping of key types to slots in the array, 0 is reserved for black (missed) keys
 	//this also determines the order these keys will appear (lower first)
@@ -85,6 +88,7 @@ public class KeyDisplay extends Visual {
 		for (int k : keys){
 			totalKeys += k;
 		}
+        SendData.sendIronKeysCount();
 		dirty = true;
 	}
 	

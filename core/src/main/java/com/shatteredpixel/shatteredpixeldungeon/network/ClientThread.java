@@ -14,6 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.KeyDisplay;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -448,7 +449,7 @@ class ClientThread implements Callable<String> {
         packet.packAndAddLevel(level, clientHero);
         packet.packAndAddHero(clientHero);
         packet.packAndAddDepth(Dungeon.depth);
-        packet.packAndAddIronKeysCount(Dungeon.depth);
+        packet.packAndAddIronKeysCount();
         packet.addInventoryFull(clientHero);
         addAllCharsToSend();
 
