@@ -262,8 +262,8 @@ public class MasterThievesArmband extends Artifact {
 
 		@Override
 		public boolean act() {
-			if (cursed && Dungeon.gold > 0 && Random.Int(5) == 0){
-				Dungeon.gold--;
+			if (target instanceof Hero && cursed && ((Hero) target).getGold() > 0 && Random.Int(5) == 0){
+				((Hero) target).setGold(((Hero) target).getGold()-1);
 				updateQuickslot();
 			}
 

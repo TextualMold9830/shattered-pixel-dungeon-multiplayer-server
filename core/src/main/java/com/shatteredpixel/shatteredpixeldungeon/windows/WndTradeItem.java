@@ -268,7 +268,7 @@ public class WndTradeItem extends WndInfoItem {
 		if (item == null) return;
 
 		int price = Shopkeeper.sellPrice( item );
-		Dungeon.gold -= price;
+		getOwnerHero().setGold(getOwnerHero().getGold() - price);
 		Catalog.countUses(Gold.class, price);
 
 		if (!item.doPickUp( getOwnerHero())) {

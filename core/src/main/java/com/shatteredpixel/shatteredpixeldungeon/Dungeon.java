@@ -183,7 +183,6 @@ public class Dungeon {
 	//keeps track of what levels the game should try to load instead of creating fresh
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
 
-	public static int gold;
 	public static int energy;
 	
 	public static HashSet<Integer> chapters;
@@ -254,7 +253,6 @@ public class Dungeon {
 		branch = 0;
 		generatedLevels.clear();
 
-		gold = 0;
 		energy = 0;
 
 		droppedItems = new SparseArray<>();
@@ -620,7 +618,6 @@ public class Dungeon {
 	private static final String DEPTH		= "depth";
 	private static final String BRANCH		= "branch";
 	private static final String GENERATED_LEVELS    = "generated_levels";
-	private static final String GOLD		= "gold";
 	private static final String ENERGY		= "energy";
 	private static final String DROPPED     = "dropped%d";
 	private static final String PORTED      = "ported%d";
@@ -647,7 +644,6 @@ public class Dungeon {
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 
-			bundle.put( GOLD, gold );
 			bundle.put( ENERGY, energy );
 
 			for (int d : droppedItems.keyArray()) {
@@ -834,7 +830,6 @@ public class Dungeon {
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
 
-		gold = bundle.getInt( GOLD );
 		energy = bundle.getInt( ENERGY );
 
 		Statistics.restoreFromBundle( bundle );
