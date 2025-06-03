@@ -191,7 +191,7 @@ public class AlchemyScene extends Window {
 		params.put("energy", Dungeon.energy);
 		params.put("has_toolkit", toolkit != null);
 		if (toolkit != null) {
-			params.put("toolkit_energy", toolkit.energyVal());
+			params.put("toolkit_energy", toolkit.availableEnergy());
 		}
 
 		{

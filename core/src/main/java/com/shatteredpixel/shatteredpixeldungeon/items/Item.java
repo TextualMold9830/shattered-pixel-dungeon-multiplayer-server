@@ -130,6 +130,7 @@ public class Item implements Bundlable {
 
 	public int customNoteID = -1;
 
+	private String boundUUID;
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
@@ -421,7 +422,11 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
-		return getClass() == item.getClass();
+		boolean sameOwner = true;
+		if (isBound()){
+			sameOwner = boundUUID.equals(item.boundUUID);
+		}
+		return getClass() == item.getClass() && sameOwner;
 	}
 
 	protected void onDetach(){}
@@ -736,6 +741,7 @@ public class Item implements Bundlable {
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String CUSTOM_NOTE_ID = "custom_note_id";
 	private static final String FRAGMENT_UPGRADES = "fragment_upgrades";
+	private static final String BOUND_UUID = "bound_uuid";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -750,6 +756,9 @@ public class Item implements Bundlable {
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		if (customNoteID != -1)     bundle.put(CUSTOM_NOTE_ID, customNoteID);
 		bundle.put(FRAGMENT_UPGRADES, fragmentUpgrades);
+		if (boundUUID != null) {
+			bundle.put(BOUND_UUID, boundUUID);
+		}
 	}
 	
 	@Override
@@ -777,6 +786,9 @@ public class Item implements Bundlable {
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
 		if (bundle.contains(CUSTOM_NOTE_ID))    customNoteID = bundle.getInt(CUSTOM_NOTE_ID);
 		fragmentUpgrades = new ArrayList(bundle.getCollection(FRAGMENT_UPGRADES));
+		if (bundle.contains(BOUND_UUID)){
+			boundUUID = bundle.getString(BOUND_UUID);
+		}
 	}
 
 	public int targetingPos( Hero user, int dst ){
@@ -1047,4 +1059,16 @@ public class Item implements Bundlable {
     public void setNeedUpdateVisual(boolean needUpdateVisual) {
         this.needUpdateVisual = needUpdateVisual;
     }
+	public boolean isBound(){
+		return boundUUID != null;
+	}
+	public boolean canUse(Hero hero){
+		return boundUUID == null || hero.uuid.equals(boundUUID);
+	}
+	public void bind(Hero hero){
+		boundUUID = hero.uuid;
+	}
+	public void unbind(){
+		boundUUID = null;
+	}
 }
