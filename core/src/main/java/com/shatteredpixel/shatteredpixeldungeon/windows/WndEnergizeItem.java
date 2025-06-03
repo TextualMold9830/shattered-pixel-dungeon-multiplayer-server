@@ -164,15 +164,13 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 	private static void energize(Item item, Hero hero){
-
-
-			Dungeon.energy += item.energyVal();
+		if (!item.isBound()) {
 			//energizing items doesn't spend time
 			hero.spend(-hero.cooldown());
 			new EnergyCrystal(item.energyVal()).doPickUp(hero);
 			item.identify(hero);
 			GLog.h("You energized: " + item.name());
-
+		}
 	}
 
 	public static WndBag openItemSelector(Hero hero){
