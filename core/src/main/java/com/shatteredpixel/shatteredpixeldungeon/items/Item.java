@@ -441,10 +441,12 @@ public class Item implements Bundlable {
 	}
 	public int level(Hero hero){
 		int level =  level();
-		if (Dungeon.balance.useFragments){
-			for (FragmentOfUpgrade.Upgrade upgrade : fragmentUpgrades) {
-				if (upgrade.uuid.equals(hero.uuid)) {
-					level++;
+		if(hero != null) {
+			if (Dungeon.balance.useFragments) {
+				for (FragmentOfUpgrade.Upgrade upgrade : fragmentUpgrades) {
+					if (upgrade.uuid.equals(hero.uuid)) {
+						level++;
+					}
 				}
 			}
 		}
