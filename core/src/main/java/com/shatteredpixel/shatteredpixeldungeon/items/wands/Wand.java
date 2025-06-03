@@ -105,7 +105,7 @@ public abstract class Wand extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (getCurCharges() > 0 || !curChargeKnown) {
+        if ((getCurCharges() > 0 || !curChargeKnown) && canUse(hero)) {
 			actions.add( AC_ZAP );
 		}
 

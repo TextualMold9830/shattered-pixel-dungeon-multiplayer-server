@@ -87,9 +87,9 @@ public class WndSadGhost extends Window {
 	protected void onSelect(int button) {
 		if (Ghost.Quest.processed() && !Ghost.Quest.completed()) {
 			if (button == 0) {
-				WndSadGhost.this.selectReward( Ghost.Quest.weapon );
+				WndSadGhost.this.selectReward( Ghost.Quest.weapon.duplicate() );
 			} else if(button == 1){
-				WndSadGhost.this.selectReward( Ghost.Quest.armor );
+				WndSadGhost.this.selectReward( Ghost.Quest.armor.duplicate() );
 			}
 			Ghost.Quest.complete();
 		}
