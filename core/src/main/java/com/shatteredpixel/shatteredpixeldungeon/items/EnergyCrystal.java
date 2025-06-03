@@ -59,7 +59,7 @@ public class EnergyCrystal extends Item {
 		Catalog.setSeen(getClass());
 		Statistics.itemTypesDiscovered.add(getClass());
 
-		Dungeon.energy += quantity;
+		hero.energy += quantity;
 		//TODO track energy collected maybe? We do already track recipes crafted though..
 
 		GameScene.pickUp( this, pos );
