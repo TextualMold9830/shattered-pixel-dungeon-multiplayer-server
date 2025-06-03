@@ -66,6 +66,7 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class CavesBossLevel extends Level {
@@ -264,6 +265,7 @@ public class CavesBossLevel extends Level {
 		if (ch instanceof Hero && !locked && solid[gatePos]){
 			for (int pos : pylonPositions){
 				if (Dungeon.level.distance(ch.pos, pos) <= 3){
+					sealer = ch;
 					seal();
 					break;
 				}
@@ -272,7 +274,7 @@ public class CavesBossLevel extends Level {
 
 		super.occupyCell(ch);
 	}
-
+	Char sealer;
 	@Override
 	public void seal() {
 		super.seal();
@@ -309,7 +311,14 @@ public class CavesBossLevel extends Level {
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );
 
 		DM300 boss = new DM300();
-		boss.state = boss.WANDERING;
+        try {
+			Field field = Mob.class.getDeclaredField("enemy");
+			field.setAccessible(true);
+			field.set(boss, sealer);
+        } catch (NoSuchFieldException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+        boss.state = boss.WANDERING;
 		do {
 			boss.pos = pointToCell(Random.element(mainArena.getPoints()));
 		} while (!openSpace[boss.pos] || map[boss.pos] == Terrain.EMPTY_SP || Actor.findChar(boss.pos) != null);
