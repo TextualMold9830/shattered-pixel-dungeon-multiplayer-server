@@ -21,11 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -178,6 +174,7 @@ public class DM300 extends Mob {
 			//determine if DM can reach its enemy
 			boolean canReach;
 			if (enemy == null || !enemy.isAlive()){
+				enemy = HeroHelp.GetRandomHero();
 				if (Dungeon.level.adjacent(pos, enemy.pos)){
 					canReach = true;
 				} else {
