@@ -43,7 +43,7 @@ public class GamesInProgress {
 	
 	public static HeroClass selectedClass;
 	
-	private static final String GAME_FOLDER = "save/game%d";
+	private static final String GAME_FOLDER = "save/game%d/";
 	private static final String GAME_FILE	= "game.dat";
 	private static final String DEPTH_FILE	= "depth%d.dat";
 	private static final String DEPTH_BRANCH_FILE	= "depth%d-branch%d.dat";
