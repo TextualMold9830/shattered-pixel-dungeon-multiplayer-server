@@ -185,6 +185,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
                     new FragmentOfUpgrade(hero).collect(h);
                 }
             }
+			curItem.detach(hero.belongings.backpack);
 		} else {
 			super.doRead(hero);
 		}
