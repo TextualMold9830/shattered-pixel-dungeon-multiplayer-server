@@ -772,7 +772,11 @@ public class Item implements Bundlable {
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
-		fragmentUpgrades = new ArrayList(bundle.getCollection(FRAGMENT_UPGRADES));
+		if (bundle.contains(FRAGMENT_UPGRADES)) {
+			fragmentUpgrades = new ArrayList(bundle.getCollection(FRAGMENT_UPGRADES));
+		} else {
+			fragmentUpgrades = new ArrayList<>();
+		}
 		if (bundle.contains(BOUND_UUID)){
 			boundUUID = bundle.getString(BOUND_UUID);
 		}
@@ -1048,8 +1052,9 @@ public class Item implements Bundlable {
 	public boolean canUse(Hero hero){
 		return boundUUID == null || hero.uuid.equals(boundUUID);
 	}
-	public void bind(Hero hero){
+	public Item bind(Hero hero){
 		boundUUID = hero.uuid;
+		return this;
 	}
 	public void unbind(){
 		boundUUID = null;

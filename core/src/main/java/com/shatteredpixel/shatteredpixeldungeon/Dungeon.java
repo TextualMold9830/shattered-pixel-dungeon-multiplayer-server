@@ -1144,7 +1144,9 @@ public class Dungeon {
 			heroes[ID] = null;
 		} else {
 			saveHero(hero);
-			Dungeon.heroes[hero.networkID] = null;
+			if (hero.networkID > -1) {
+				Dungeon.heroes[hero.networkID] = null;
+			}
 			hero.next();
 			Actor.remove(hero);
 		}
