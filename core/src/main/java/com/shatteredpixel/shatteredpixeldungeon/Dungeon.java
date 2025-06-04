@@ -707,7 +707,6 @@ public class Dungeon {
 					saveHero(hero);
 				}
 			}
-			bundle.put(BALANCE_DATA, balance);
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
 			ShatteredPixelDungeon.reportException(e);
@@ -842,11 +841,6 @@ public class Dungeon {
 
 		Statistics.restoreFromBundle( bundle );
 		Generator.restoreFromBundle( bundle );
-		if (bundle.contains(BALANCE_DATA)) {
-			balance = (BalanceData) bundle.get(BALANCE_DATA);
-		} else {
-			balance = BalanceData.load();
-		}
 	}
 	
 	public static Level loadLevel() throws IOException {
