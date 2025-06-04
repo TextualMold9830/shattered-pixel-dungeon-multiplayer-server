@@ -105,7 +105,7 @@ public class MagesStaff extends MeleeWeapon {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add(AC_IMBUE);
-		if (wand!= null && wand.curCharges > 0) {
+		if (wand!= null && wand.curCharges > 0 && canUse(hero)) {
 			actions.add( AC_ZAP );
 		}
 		return actions;

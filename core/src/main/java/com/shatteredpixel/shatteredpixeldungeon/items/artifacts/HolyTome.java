@@ -66,7 +66,7 @@ public class HolyTome extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if ((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_READING))
+		if (((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_READING)) && canUse(hero))
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_CAST);

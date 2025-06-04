@@ -696,14 +696,14 @@ public class Dungeon {
 			Bundle badges = new Bundle();
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
-			
+			bundle.put(BALANCE_DATA, balance);
+
 			FileUtils.bundleToFile( GamesInProgress.gameFile(), bundle);
 			for (Hero hero: Dungeon.heroes) {
 				if (hero != null) {
 					saveHero(hero);
 				}
 			}
-			bundle.put(BALANCE_DATA, balance);
 		} catch (IOException e) {
 			GamesInProgress.setUnknown( save );
 			ShatteredPixelDungeon.reportException(e);
@@ -776,7 +776,11 @@ public class Dungeon {
 					chapters.add( id );
 				}
 			}
-			
+			if (bundle.contains(BALANCE_DATA)) {
+				balance = (BalanceData) bundle.get(BALANCE_DATA);
+			} else {
+				balance = BalanceData.load();
+			}
 			Bundle quests = bundle.getBundle( QUESTS );
 			if (!quests.isNull()) {
 				Ghost.Quest.restoreFromBundle( quests );
@@ -835,11 +839,6 @@ public class Dungeon {
 
 		Statistics.restoreFromBundle( bundle );
 		Generator.restoreFromBundle( bundle );
-		if (bundle.contains(BALANCE_DATA)) {
-			balance = (BalanceData) bundle.get(BALANCE_DATA);
-		} else {
-			balance = BalanceData.load();
-		}
 	}
 	
 	public static Level loadLevel() throws IOException {

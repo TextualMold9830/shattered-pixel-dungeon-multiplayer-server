@@ -181,7 +181,9 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, stones);
 
 		if (hero.belongings.getRealArmor() != null){
-			hero.belongings.getRealArmor().affixSeal(new BrokenSeal(), hero);
+			BrokenSeal seal = new BrokenSeal();
+			seal.bind(hero);
+			hero.belongings.getRealArmor().affixSeal(seal, hero);
 			Catalog.setSeen(BrokenSeal.class); //as it's not added to the inventory
 		}
 
@@ -193,7 +195,7 @@ public enum HeroClass {
 		MagesStaff staff;
 
 		staff = new MagesStaff(new WandOfMagicMissile());
-
+		staff.bind(hero);
 		(hero.belongings.setWeapon(staff)).identify(hero);
 		hero.belongings.getRealWeapon().activate(hero);
 
@@ -207,6 +209,7 @@ public enum HeroClass {
 		(hero.belongings.setWeapon(new Dagger())).identify(hero);
 
 		CloakOfShadows cloak = new CloakOfShadows();
+		cloak.bind(hero);
 		(hero.belongings.setArtifact(cloak)).identify(hero);
 		hero.belongings.getRealArtifact().activate( hero );
 
@@ -224,6 +227,7 @@ public enum HeroClass {
 
 		(hero.belongings.setWeapon(new Gloves())).identify(hero);
 		SpiritBow bow = new SpiritBow();
+		bow.bind(hero);
 		bow.identify(hero).collect(hero);
 
 		Dungeon.quickslot.setSlot(0, bow);
@@ -254,6 +258,7 @@ public enum HeroClass {
 		hero.belongings.weapon().activate(hero);
 
 		HolyTome tome = new HolyTome();
+		tome.bind(hero);
 		tome.identify(null);
 		(hero.belongings.setArtifact(tome)).identify(hero);
 		hero.belongings.getRealArtifact().activate( hero );
