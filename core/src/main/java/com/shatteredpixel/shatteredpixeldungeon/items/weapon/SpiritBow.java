@@ -76,7 +76,7 @@ public class SpiritBow extends Weapon {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
 		actions.remove(AC_EQUIP);
-		if(hero.heroClass == HeroClass.HUNTRESS) {
+		if(hero.heroClass == HeroClass.HUNTRESS && canUse(hero)) {
 			actions.add(AC_SHOOT);
 		}
 		return actions;

@@ -293,7 +293,7 @@ public class Ghost extends NPC {
 					enchant = (Weapon.Enchantment) node.get(ENCHANT);
 					glyph   = (Armor.Glyph) node.get(GLYPH);
 				}
-				if (Dungeon.balance.multipleGhostReward){
+				if (Dungeon.balance.multipleGhostReward && bundle.contains(CLAIMED_UUIDS)){
 
 					claimedUUIDs = new ArrayList(Collections.singleton(bundle.getStringArray(CLAIMED_UUIDS)));
 				}

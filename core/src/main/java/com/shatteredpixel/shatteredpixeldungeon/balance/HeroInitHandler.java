@@ -42,7 +42,7 @@ public class HeroInitHandler {
     public void load(JSONObject object){
 
     }
-    public void onHeroInit(Hero hero){
+    public final void onHeroInit(Hero hero){
         //check if class matches
         if (targetClass == null || hero.heroClass == targetClass){
         //Check if depth matches
@@ -54,5 +54,8 @@ public class HeroInitHandler {
     protected void onMatchedHero(Hero hero){
         //add items, set strength, do stuff based on loaded json
 
+    }
+
+    public HeroInitHandler() {
     }
 }
