@@ -117,7 +117,6 @@ public class FragmentOfUpgrade extends Fragment {
         }
 
         Badges.validateItemLevelAquired( item );
-        Statistics.upgradesUsed++;
         Badges.validateMageUnlock();
 
         Catalog.countUse(item.getClass());
