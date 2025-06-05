@@ -1148,7 +1148,7 @@ public class Dungeon {
 	}
 	public static Hero loadHero(String uuid) {
         try {
-            Bundle bundle = FileUtils.bundleFromFile("heroes/"+ uuid);
+            Bundle bundle = FileUtils.bundleFromFile("save/heroes/"+ uuid);
 			Hero hero = new Hero();
 			hero.restoreFromBundle(bundle);
 			hero.timeToNow();
