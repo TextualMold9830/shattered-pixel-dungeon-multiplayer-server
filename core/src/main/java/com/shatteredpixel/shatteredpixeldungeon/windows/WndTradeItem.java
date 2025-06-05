@@ -86,7 +86,7 @@ public class WndTradeItem extends WndInfoItem {
 	public WndTradeItem( final Heap heap, Hero hero ) {
 
 		super(heap, hero);
-
+		this.heap = heap;
 		selling = false;
 
 		item = heap.peek();
