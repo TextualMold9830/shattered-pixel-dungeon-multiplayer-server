@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -46,6 +47,9 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Reflection;
+import com.watabou.utils.SparseArray;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -70,8 +74,9 @@ public class StoneOfIntuition extends InventoryStone {
 	@Override
 	protected void onItemSelected(Item item, Hero hero) {
 
-		GameScene.show( new WndGuess(item));
-		
+		//GameScene.show( new WndGuess(item));
+		WndGuess wndGuess = new WndGuess(item, hero);
+		SendData.sendWindow(hero.networkID, "guess", wndGuess.getId(), wndGuess.toJson() );
 	}
 
 	@Override
@@ -95,9 +100,12 @@ public class StoneOfIntuition extends InventoryStone {
 		
 		private static final int WIDTH = 120;
 		private static final int BTN_SIZE = 20;
-		
-		public WndGuess(final Item item){
-			
+		ArrayList<Integer> icons = new ArrayList<>();
+		ArrayList<Class<? extends Item>> guessOptions = new ArrayList<>();
+		Item item;
+		public WndGuess(final Item item, Hero hero){
+			super(hero);
+			this.item = item;
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon( new ItemSprite(ItemSpriteSheet.STONE_INTUITION, null) );
 			titlebar.label( Messages.titleCase(Messages.get(StoneOfIntuition.class, "name")) );
@@ -112,33 +120,8 @@ public class StoneOfIntuition extends InventoryStone {
 			
 			final RedButton guess = new RedButton(""){
 				@Override
-				protected void onClick() {
+				public void onClick() {
 					super.onClick();
-					useAnimation();
-					Catalog.countUse(StoneOfIntuition.class);
-					if (item.getClass() == curGuess){
-						if (item instanceof Ring){
-							((Ring) item).setKnown();
-						} else {
-							item.identify(null);
-						}
-						GLog.p( Messages.get(WndGuess.class, "correct") );
-						curUser.getSprite().parent.add( new Identification( curUser.getSprite().center().offset( 0, -16 ) ) );
-					} else {
-						GLog.w( Messages.get(WndGuess.class, "incorrect") );
-					}
-					if (!anonymous) {
-						Catalog.countUse(StoneOfIntuition.class);
-						if (curUser.buff(IntuitionUseTracker.class) == null) {
-							Buff.affect(curUser, IntuitionUseTracker.class);
-						} else {
-							curItem.detach(curUser.belongings.backpack);
-							curUser.buff(IntuitionUseTracker.class).detach();
-						}
-						Talent.onRunestoneUsed(curUser, curUser.pos, StoneOfIntuition.class);
-					}
-					curGuess = null;
-					hide();
 				}
 			};
 			guess.visible = false;
@@ -201,7 +184,10 @@ public class StoneOfIntuition extends InventoryStone {
 					}
 				};
 				Image im = new Image(Assets.Sprites.ITEM_ICONS);
-				im.frame(ItemSpriteSheet.Icons.film.get(Reflection.newInstance(i).icon));
+				int icon = Reflection.newInstance(i).icon;
+				icons.add(icon);
+				guessOptions.add(i);
+				im.frame(ItemSpriteSheet.Icons.film.get(icon));
 				im.scale.set(2f);
 				btn.icon(im);
 				btn.setRect(left + placed*BTN_SIZE, top, BTN_SIZE, BTN_SIZE);
@@ -221,5 +207,55 @@ public class StoneOfIntuition extends InventoryStone {
 			
 		}
 
+		@Override
+		protected void onSelect(int button) {
+			super.onSelect(button);
+			if (button < 100 && button > 0 && button < guessOptions.size()){
+				curGuess = guessOptions.get(button);
+			}
+			if (button == 100) {
+				useAnimation();
+				Catalog.countUse(StoneOfIntuition.class);
+				if (item.getClass() == curGuess){
+					if (item instanceof Ring){
+						((Ring) item).setKnown();
+					} else {
+						item.identify(null);
+					}
+					GLog.p( Messages.get(WndGuess.class, "correct") );
+					curUser.getSprite().parent.add( new Identification( curUser.getSprite().center().offset( 0, -16 ) ) );
+				} else {
+					GLog.w( Messages.get(WndGuess.class, "incorrect") );
+				}
+				if (!anonymous) {
+					Catalog.countUse(StoneOfIntuition.class);
+					if (curUser.buff(IntuitionUseTracker.class) == null) {
+						Buff.affect(curUser, IntuitionUseTracker.class);
+					} else {
+						curItem.detach(curUser.belongings.backpack);
+						curUser.buff(IntuitionUseTracker.class).detach();
+					}
+					Talent.onRunestoneUsed(curUser, curUser.pos, StoneOfIntuition.class);
+				}
+				curGuess = null;
+				hide();
+			}
+		}
+
+		public JSONObject toJson() {
+			JSONObject object = new JSONObject();
+			object.put("item", item.toJsonObject(getOwnerHero()));
+			JSONArray icons = new JSONArray();
+			JSONArray keys = new JSONArray();
+			for (int i : this.icons){
+				icons.put(i);
+			}
+			for(Class c: guessOptions){
+				keys.put(c.getName());
+			}
+			object.put("icons", icons);
+			object.put("keys", keys);
+			return object;
+		}
 	}
 }
