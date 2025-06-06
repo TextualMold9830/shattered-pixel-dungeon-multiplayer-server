@@ -106,14 +106,16 @@ public class RelayThread extends Thread {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             try {
-                Thread.sleep((long) (1000 * Math.random()));
+                Thread.sleep((1000 * new java.util.Random().nextInt(10)));
             } catch (InterruptedException ex) {
+                ex.printStackTrace();
                 throw new RuntimeException(ex);
             }
             GLog.h("relay thread stopped");
             this.callback.onDisconnect();
             restartCount = 0;
             new RelayThread().start();
+            GLog.h("Relay thread restarted");
         }
     }
 
