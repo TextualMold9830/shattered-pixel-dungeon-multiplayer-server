@@ -332,7 +332,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public String getSpriteAsset() {
 		return TexturePackManager.getMobAnimation(getClass());	}
 	public String spriteName() {
-		return Utils.toSnakeCase(this.getClass().getSimpleName());
+		return this.getClass().getName();
 	}
 	public CharSprite() {
 		super();
