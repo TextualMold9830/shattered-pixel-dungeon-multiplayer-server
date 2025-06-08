@@ -44,8 +44,8 @@ public class WndWandmaker extends Window {
 		this.questItem = item;
 		JSONObject object = new JSONObject();
 		//object;
-		object.put("wand1", Wandmaker.Quest.wand1);
-		object.put("wand2", Wandmaker.Quest.wand2);
+		object.put("wand1", Wandmaker.Quest.wand1.toJsonObject(hero));
+		object.put("wand2", Wandmaker.Quest.wand2.toJsonObject(hero));
 		object.put("quest_item", Item.packItem(questItem, hero));
 		object.put("quest_item_class", questItem.getClass().getName());
 		SendData.sendWindow(hero.networkID, "wandmaker", getId(), object);
