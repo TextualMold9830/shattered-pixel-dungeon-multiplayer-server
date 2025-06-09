@@ -27,6 +27,9 @@ import java.util.Objects;
 public class FragmentOfUpgrade extends Item {
     private static String AC_USE = "use";
     public static int image = new ScrollOfUpgrade().image();
+    {
+        identify(null);
+    }
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
         public String textPrompt() {
