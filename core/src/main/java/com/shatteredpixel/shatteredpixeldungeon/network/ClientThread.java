@@ -211,8 +211,11 @@ class ClientThread implements Callable<String> {
                         if (text.trim().isEmpty()) {
                             break;
                         }
-                        Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
-                        GLog.i("%s: %s", clientHero.name,  text.trim());
+                        ChatEvent chatEvent = new ChatEvent(text, clientHero);
+                        Server.pluginManager.fireEvent(chatEvent);
+                        if (!chatEvent.canceled) {
+                            GLog.i("%s: %s", clientHero.name, text.trim());
+                        }
                         break;
                     }
                     case "toolbar_action": {
