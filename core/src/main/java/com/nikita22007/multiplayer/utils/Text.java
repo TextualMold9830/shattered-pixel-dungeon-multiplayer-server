@@ -9,8 +9,7 @@ public class Text {
     Object[] args;
     public static Text of(Object o, String key){
         Text text = new Text();
-        Messages.getFirstValidKey(o, key);
-        text.key = key;
+        text.key = Messages.getFirstValidKey(o, key);;
         return text;
     }
     public JSONObject toJSON(){
