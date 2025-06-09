@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -95,7 +94,7 @@ public class MindForm extends ClericSpell {
 		private Wand wand(Hero hero){
 			if (effect instanceof Wand){
 				((Wand) effect).level(effectLevel(hero));
-				((Wand) effect).curCharges = ((Wand) effect).maxCharges;
+				((Wand) effect).setCurCharges(((Wand) effect).maxCharges);
 				((Wand) effect).identify(false, hero);
 				return (Wand)effect;
 			}

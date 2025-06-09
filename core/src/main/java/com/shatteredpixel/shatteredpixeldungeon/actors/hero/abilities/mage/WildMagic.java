@@ -29,7 +29,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
@@ -73,7 +72,7 @@ public class WildMagic extends ArmorAbility {
 		float chargeUsePerShot = 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 
 		for (Wand w : wands.toArray(new Wand[0])){
-			if (w.curCharges < 1 && w.partialCharge < chargeUsePerShot){
+			if (w.getCurCharges() < 1 && w.partialCharge < chargeUsePerShot){
 				wands.remove(w);
 			}
 		}
@@ -86,7 +85,7 @@ public class WildMagic extends ArmorAbility {
 			ArrayList<Wand> thirds = new ArrayList<>(wands);
 
 			for (Wand w : wands){
-				float totalCharge = w.curCharges + w.partialCharge;
+				float totalCharge = w.getCurCharges() + w.partialCharge;
 				if (totalCharge < 2*chargeUsePerShot){
 					seconds.remove(w);
 				}
@@ -214,7 +213,7 @@ public class WildMagic extends ArmorAbility {
 		cur.partialCharge -= 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 		if (cur.partialCharge < 0) {
 			cur.partialCharge++;
-			cur.curCharges--;
+			cur.setCurCharges(cur.getCurCharges() - 1);
 		}
 		if (wildMagicActor != null){
 			wildMagicActor.next();

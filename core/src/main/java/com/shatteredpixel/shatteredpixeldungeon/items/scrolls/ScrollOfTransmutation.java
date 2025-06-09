@@ -339,7 +339,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.curseInfusionBonus = w.curseInfusionBonus;
 		n.resinBonus = w.resinBonus;
 
-		n.curCharges =  w.curCharges;
+		n.setCurCharges(w.getCurCharges());
 		n.updateLevel();
 		
 		return n;

@@ -98,14 +98,14 @@ public class MagesStaff extends MeleeWeapon {
 		wand.cursed = false;
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = wand.maxCharges;
+		wand.setCurCharges(wand.maxCharges);
 	}
 
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add(AC_IMBUE);
-		if (wand!= null && wand.curCharges > 0) {
+		if (wand!= null && wand.getCurCharges() > 0) {
 			actions.add( AC_ZAP );
 		}
 		return actions;
@@ -180,7 +180,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		if (wand != null &&
 				attacker instanceof Hero && ((Hero)attacker).subClass == HeroSubClass.BATTLEMAGE) {
-			if (wand.curCharges < wand.maxCharges) wand.partialCharge += 0.5f;
+			if (wand.getCurCharges() < wand.maxCharges) wand.partialCharge += 0.5f;
 			ScrollOfRecharging.charge((Hero)attacker);
 			wand.onHit(this, attacker, defender, damage);
 		}
@@ -224,7 +224,7 @@ public class MagesStaff extends MeleeWeapon {
 
 	public Item imbueWand(Wand wand, Char owner){
 
-		int oldStaffcharges = this.wand != null ? this.wand.curCharges : 0;
+		int oldStaffcharges = this.wand != null ? this.wand.getCurCharges() : 0;
 
 		if (owner instanceof Hero && ((Hero) owner).hasTalent(Talent.WAND_PRESERVATION)){
 			Talent.WandPreservationCounter counter = Buff.affect(owner, Talent.WandPreservationCounter.class);
@@ -253,7 +253,7 @@ public class MagesStaff extends MeleeWeapon {
 		level(targetLevel);
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = Math.min(wand.maxCharges, wand.curCharges+oldStaffcharges);
+		wand.setCurCharges(Math.min(wand.maxCharges, wand.getCurCharges() +oldStaffcharges));
 		if (owner != null){
 			applyWandChargeBuff(owner);
 		}
@@ -318,11 +318,11 @@ public class MagesStaff extends MeleeWeapon {
 	
 	public void updateWand(boolean levelled){
 		if (wand != null) {
-			int curCharges = wand.curCharges;
+			int curCharges = wand.getCurCharges();
 			wand.level(level());
 			//gives the wand one additional max charge
 			wand.maxCharges = Math.min(wand.maxCharges + 1, 10);
-			wand.curCharges = Math.min(curCharges + (levelled ? 1 : 0), wand.maxCharges);
+			wand.setCurCharges(Math.min(curCharges + (levelled ? 1 : 0), wand.maxCharges));
 			updateQuickslot();
 		}
 	}
