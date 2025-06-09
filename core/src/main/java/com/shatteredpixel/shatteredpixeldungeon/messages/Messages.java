@@ -140,6 +140,23 @@ public class Messages {
 			}
 		}
 	}
+	public static String getFirstValidKey(Class c, String k){
+		String key;
+		if (c != null){
+			key = c.getName().replace("com.shatteredpixel.shatteredpixeldungeon.", "");
+			key += "." + k;
+		} else
+			key = k;
+
+		String value = getFromBundle(key.toLowerCase(Locale.ENGLISH));
+		if (value != null){
+			return key;
+		}
+		return "null";
+	}
+	public static String getFirstValidKey(Object o, String key){
+		return getFirstValidKey(o.getClass(), key);
+	}
 
 	private static String getFromBundle(String key){
 		String result;
