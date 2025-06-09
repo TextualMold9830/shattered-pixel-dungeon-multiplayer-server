@@ -19,3 +19,9 @@ local.properties
 *.iml
 *.idea
 /desktop/plugins/
+
+#game saves
+*/settings.xml
+*/save/*
+*/balance/balance.json
+
