@@ -21,9 +21,11 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class FragmentOfUpgrade extends Fragment {
+public class FragmentOfUpgrade extends Item {
+    private static String AC_USE = "use";
     public static int image = new ScrollOfUpgrade().image();
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
@@ -38,21 +40,36 @@ public class FragmentOfUpgrade extends Fragment {
 
         @Override
         public void onSelect(Item item) {
-            upgradeItem(item, getOwner());
+            if(item != null) {
+                upgradeItem(item, getOwner());
+            }
         }
     };
-    public FragmentOfUpgrade(String boundUUID) {
-        super(boundUUID);
-    }
 
     public FragmentOfUpgrade(Hero hero) {
-        super(hero);
+        bind(hero);
     }
 
     public FragmentOfUpgrade() {
     }
 
     @Override
+    public ArrayList<String> actions(Hero hero) {
+        ArrayList<String> actions = super.actions(hero);
+        if (canUse(hero)){
+            actions.add(AC_USE);
+        }
+        return actions;
+    }
+
+    @Override
+    public void execute(Hero hero, String action) {
+        super.execute(hero, action);
+        if (action.equals(AC_USE)){
+            onUse(hero);
+        }
+    }
+
     public void onUse(Hero hero) {
         GameScene.selectItem(selector, hero);
     }
