@@ -746,4 +746,12 @@ public class SendData {
             }
         }
     }
+
+    public static void sendCounter(Hero hero, float portion) {
+        ClientThread client = clients[hero.networkID];
+        if (client != null) {
+            client.packet.packAndAddCounter(portion);
+            client.flush();
+        }
+    }
 }

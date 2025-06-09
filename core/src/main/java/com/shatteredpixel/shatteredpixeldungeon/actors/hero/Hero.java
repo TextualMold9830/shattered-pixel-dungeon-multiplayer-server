@@ -815,12 +815,14 @@ public class Hero extends Char {
 	@Override
 	public void spend( float time ) {
 		super.spend(time);
+		updateCounter();
 	}
 
 	@Override
 	public void spendConstant(float time) {
 		justMoved = false;
 		super.spendConstant(time);
+		updateCounter();
 	}
 
 	public void spendAndNextConstant(float time ) {
@@ -834,7 +836,15 @@ public class Hero extends Char {
 		spend( time );
 		next();
 	}
-	
+
+	float lastCounter = 0;
+	public void updateCounter(){
+		float portion = ((1f - time%1f)%1f);
+		if (portion != lastCounter){
+			lastCounter = portion;
+			SendData.sendCounter(this, portion);
+		}
+	}
 	@Override
 	public boolean act() {
 

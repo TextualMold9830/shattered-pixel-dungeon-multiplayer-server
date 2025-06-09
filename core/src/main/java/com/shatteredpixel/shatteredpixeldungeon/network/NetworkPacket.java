@@ -50,6 +50,8 @@ public class NetworkPacket {
     public static final String BUFFS = "buffs";
 
 
+
+
     enum CellState {
         VISITED,
         UNVISITED,
@@ -977,6 +979,18 @@ public class NetworkPacket {
     }
     public void packAndAddRawTextures(String data) {
         dataRef.get().put("texturepack",data);
+    }
+    public void packAndAddCounter(float portion) {
+        try {
+            synchronized (dataRef) {
+                JSONObject uiObj = dataRef.get().optJSONObject("ui");
+                uiObj = uiObj != null ? uiObj : new JSONObject();
+                uiObj.put("counter", portion);
+                dataRef.get().put("ui", uiObj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
