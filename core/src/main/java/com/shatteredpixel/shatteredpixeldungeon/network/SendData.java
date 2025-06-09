@@ -290,6 +290,9 @@ public class SendData {
 
     //----------
     public static void sendActor(Actor actor) {
+        if (actor == null) {
+            return;
+        }
         for (ClientThread client : clients) {
             if (client == null) {
                 continue;
@@ -331,6 +334,9 @@ public class SendData {
     }
 
     public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to, boolean send) {
+        if (actorID == Actor.NO_ID) {
+            return;
+        }
         JSONObject actionObj = new JSONObject();
         try {
             actionObj.put("action_type", "sprite_action");
@@ -354,12 +360,16 @@ public class SendData {
     }
 
     public static void sendCharSpriteState(Actor actor, CharSprite.State state, boolean remove) {
+        int id = actor.id();
+        if (id == Actor.NO_ID) {
+            return;
+        }
         String stateName = state.name().toLowerCase();
         JSONObject stateObj = new JSONObject();
         try {
             stateObj.put("state", stateName);
             stateObj.put("is_removing", remove);
-            stateObj.put("actor_id", actor.id());
+            stateObj.put("actor_id", id);
         } catch (JSONException ignored) {
 
         }

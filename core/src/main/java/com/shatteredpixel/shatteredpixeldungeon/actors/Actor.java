@@ -38,10 +38,11 @@ import java.util.HashSet;
 public abstract class Actor implements Bundlable {
 	
 	public static final float TICK	= 1f;
+	public static final int NO_ID = 0;
 
 	protected float time;
 
-	private int id = 0;
+	private int id = NO_ID;
 
 	//default priority values for general actor categories
 	//note that some specific actors pick more specific values
@@ -139,8 +140,14 @@ public abstract class Actor implements Bundlable {
 		if (id > 0) {
 			return id;
 		} else {
-			return (id = nextID++);
+			return (id = getNextId(this));
 		}
+	}
+
+	private static synchronized int getNextId(Actor actor){
+		if (all.contains(actor)) {
+			return nextID++;
+		} return NO_ID;
 	}
 
 	// **********************
