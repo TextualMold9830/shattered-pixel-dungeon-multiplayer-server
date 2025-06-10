@@ -45,15 +45,6 @@ public class ItemButton extends Component {
 		return false;
 	}
 
-	@Override
-	protected void layout() {
-		super.layout();
-
-		bg.x = x;
-		bg.y = y;
-		bg.size( width, height );
-	}
-
 	public Item item(){
 		return item;
 	}
