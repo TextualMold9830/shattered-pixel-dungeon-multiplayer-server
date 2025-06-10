@@ -147,8 +147,11 @@ public class Heap implements Bundlable {
 		Item item = items.removeFirst();
 		if (items.isEmpty()) {
 			destroy();
-		} else if (sprite != null) {
-			sprite.view(this).place( pos );
+		} else {
+			if (sprite != null) {
+				sprite.view(this).place( pos );
+			}
+			SendData.sendHeap(this);
 		}
 		
 		return item;
