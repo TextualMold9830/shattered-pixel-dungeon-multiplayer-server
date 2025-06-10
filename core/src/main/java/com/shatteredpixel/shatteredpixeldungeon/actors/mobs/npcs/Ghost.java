@@ -224,7 +224,8 @@ public class Ghost extends NPC {
 		public static Armor armor;
 		public static Weapon.Enchantment enchant;
 		public static Armor.Glyph glyph;
-		
+		private static boolean completed = false;
+
 		public static void reset() {
 			spawned = false;
 			
@@ -246,6 +247,7 @@ public class Ghost extends NPC {
 		private static final String ENCHANT		= "enchant";
 		private static final String GLYPH		= "glyph";
 		private static final String CLAIMED_UUIDS = "claimed_uuids";
+		private static final String COMPLETED = "completed";
 		public static void storeInBundle( Bundle bundle ) {
 			
 			Bundle node = new Bundle();
@@ -259,7 +261,8 @@ public class Ghost extends NPC {
 				node.put( GIVEN, given );
 				node.put( DEPTH, depth );
 				node.put( PROCESSED, processed );
-				
+				node.put( COMPLETED, completed);
+
 				node.put( WEAPON, weapon );
 				node.put( ARMOR, armor );
 
@@ -288,6 +291,7 @@ public class Ghost extends NPC {
 				
 				weapon	= (Weapon)node.get( WEAPON );
 				armor	= (Armor)node.get( ARMOR );
+				completed = node.getBoolean(COMPLETED);
 
 				if (node.contains(ENCHANT)) {
 					enchant = (Weapon.Enchantment) node.get(ENCHANT);
@@ -393,11 +397,12 @@ public class Ghost extends NPC {
 		
 		public static void complete() {
 			if (!Dungeon.balance.multipleGhostReward) {
-				weapon = null;
-				armor = null;
+			weapon = null;
+			armor = null;
 
 				Notes.remove(Notes.Landmark.GHOST);
 			}
+			completed = true;
 		}
 
 		public static boolean processed(){
@@ -405,7 +410,7 @@ public class Ghost extends NPC {
 		}
 		
 		public static boolean completed(){
-			return processed() && weapon == null && armor == null;
+			return (processed() && weapon == null && armor == null) || completed;
 		}
 	}
 }
