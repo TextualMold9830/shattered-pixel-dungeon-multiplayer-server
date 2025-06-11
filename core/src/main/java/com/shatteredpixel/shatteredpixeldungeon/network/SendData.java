@@ -14,6 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -276,6 +277,16 @@ public class SendData {
     }
 
     //-----------------------------Windows
+    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type) {
+        sendWindow(wnd, type, null);
+    }
+
+    //-----------------------------Windows
+    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type, @Nullable final JSONObject args) {
+        final int ID = wnd.getOwnerHero().networkID;
+        final int windowID = wnd.getId();
+        sendWindow(ID, type, windowID, args);
+    }
     public static void sendWindow(int ID, String type, int windowID, @Nullable JSONObject args) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.packAndAddWindow(type, windowID, args);

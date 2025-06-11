@@ -40,6 +40,7 @@ public class ItemButton extends Component {
 	}
 
 	protected void onClick() {}
+	public final void onClickPublicVersion() {onClick();}
 
 	protected boolean onLongClick(){
 		return false;
