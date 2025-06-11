@@ -399,6 +399,7 @@ public class NetworkPacket {
         params.put("height", level.height());
         params.put("tiles_texture", level.tilesTex());
         params.put("water_texture", level.waterTex());
+        params.put("feeling", level.feeling.name());
         synchronized (dataRef) {
             dataRef.get().put("level_params", params);
         }
