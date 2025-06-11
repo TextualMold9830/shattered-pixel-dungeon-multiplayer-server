@@ -283,11 +283,6 @@ public class SendData {
         }
     }
 
-    public static void sendWindowStory(int storyID) {
-        //ClientThread.sendAll(Codes.SHOW_WINDOW, WndStory.ID());
-        //todo
-    }
-
     //----------
     public static void sendActor(Actor actor) {
         if (actor == null) {
