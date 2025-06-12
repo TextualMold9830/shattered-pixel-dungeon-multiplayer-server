@@ -61,6 +61,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -215,18 +217,29 @@ public abstract class Scroll extends Item {
 		return anonymous || (handler != null && handler.isKnown( this ));
 	}
 	
-	public void setKnown(Hero hero) {
+	public void setKnown(@Nullable Hero hero) {
 		if (!anonymous) {
 			if (!isKnown()) {
 				handler.know(this);
 				updateQuickslot();
 			}
 			
-			if (hero.isAlive()) {
+			if (hero != null && hero.isAlive()) {
 				Catalog.setSeen(getClass());
 				Statistics.itemTypesDiscovered.add(getClass());
 			}
 		}
+	}
+
+	@Override
+	@Contract("true,null->fail")
+	public Item identify( boolean byHero, @Nullable Hero hero ) {
+		super.identify(byHero, hero);
+
+		if (!isKnown()) {
+			setKnown(hero);
+		}
+		return this;
 	}
 
 

@@ -41,6 +41,7 @@ import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.PointerArea;
 import com.watabou.utils.Point;
 import com.watabou.utils.Signal;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -51,7 +52,9 @@ import java.util.Objects;
 
 public class Window extends Group implements Signal.Listener<KeyEvent> {
 
-	protected int width;
+    protected static final String HIDE_WINDOW_TYPE = "hide";
+
+    protected int width;
 	protected int height;
 
 	protected int xOffset;
@@ -245,7 +248,8 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	public void hide() {
 		destroy();
 	}
-//TODO: might want to add super.destroy();
+
+	@MustBeInvokedByOverriders
 	public void destroy() {
 		if (getOwnerHero() != null) {
 			Window removed = windows.get(HeroHelp.getHeroID(getOwnerHero())).remove(getId());
@@ -253,6 +257,7 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 				throw new AssertionError("Removed window is not current Window");
 			}
 		}
+		super.destroy();
 	}
 
 	@Override

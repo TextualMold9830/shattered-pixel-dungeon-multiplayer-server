@@ -539,4 +539,11 @@ public class SPDSettings extends GameSettings {
 		}
 
 	}
+	static final String KEY_SHOW_EXCEPTION_HANDLER = "show_exception_handler";
+	public static boolean showExceptionHandler() {
+		if (!contains(KEY_SHOW_EXCEPTION_HANDLER)){
+			put(KEY_SHOW_EXCEPTION_HANDLER, true);
+		}
+		return getBoolean(KEY_SHOW_EXCEPTION_HANDLER, true);
+	}
 }

@@ -68,52 +68,52 @@ public class DesktopLauncher {
 		} else {
 			title = DesktopLauncher.class.getPackage().getSpecificationTitle();
 		}
-		
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread thread, Throwable throwable) {
-				Game.reportException(throwable);
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				throwable.printStackTrace(pw);
-				pw.flush();
-				String exceptionMsg = sw.toString();
+			Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(Thread thread, Throwable throwable) {
+					if(SPDSettings.showExceptionHandler()) {
+						Game.reportException(throwable);
+						StringWriter sw = new StringWriter();
+						PrintWriter pw = new PrintWriter(sw);
+						throwable.printStackTrace(pw);
+						pw.flush();
+						String exceptionMsg = sw.toString();
 
-				//shorten/simplify exception message to make it easier to fit into a message box
-				exceptionMsg = exceptionMsg.replaceAll("\\(.*:([0-9]*)\\)", "($1)");
-				exceptionMsg = exceptionMsg.replace("com.shatteredpixel.shatteredpixeldungeon.", "");
-				exceptionMsg = exceptionMsg.replace("com.watabou.", "");
-				exceptionMsg = exceptionMsg.replace("com.badlogic.gdx.", "");
-				exceptionMsg = exceptionMsg.replace("\t", "  "); //shortens length of tabs
+						//shorten/simplify exception message to make it easier to fit into a message box
+						exceptionMsg = exceptionMsg.replaceAll("\\(.*:([0-9]*)\\)", "($1)");
+						exceptionMsg = exceptionMsg.replace("com.shatteredpixel.shatteredpixeldungeon.", "");
+						exceptionMsg = exceptionMsg.replace("com.watabou.", "");
+						exceptionMsg = exceptionMsg.replace("com.badlogic.gdx.", "");
+						exceptionMsg = exceptionMsg.replace("\t", "  "); //shortens length of tabs
 
-				//replace ' and " with similar equivalents as tinyfd hates them for some reason
-				exceptionMsg = exceptionMsg.replace('\'', '’');
-				exceptionMsg = exceptionMsg.replace('"', '”');
+						//replace ' and " with similar equivalents as tinyfd hates them for some reason
+						exceptionMsg = exceptionMsg.replace('\'', '’');
+						exceptionMsg = exceptionMsg.replace('"', '”');
 
-				if (exceptionMsg.length() > 1000){
-					exceptionMsg = exceptionMsg.substring(0, 1000) + "...";
+						if (exceptionMsg.length() > 1000) {
+							exceptionMsg = exceptionMsg.substring(0, 1000) + "...";
+						}
+
+						if (exceptionMsg.contains("Couldn’t create window")) {
+							TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
+									title + " was not able to initialize its graphics display, sorry about that!\n\n" +
+											"This usually happens when your graphics card has misconfigured drivers or does not support openGL 2.0+.\n\n" +
+											"If you are certain the game should work on your computer, please message the developer (Evan@ShatteredPixel.com)\n\n" +
+											"version: " + Game.version + "\n" +
+											exceptionMsg,
+									"ok", "error", false);
+						} else {
+							TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
+									title + " has run into an error it cannot recover from and has crashed, sorry about that!\n\n" +
+											"If you could, please email this error message to the developer (Evan@ShatteredPixel.com):\n\n" +
+											"version: " + Game.version + "\n" +
+											exceptionMsg,
+									"ok", "error", false);
+						}
+					}
+					System.exit(1);
 				}
-
-				if (exceptionMsg.contains("Couldn’t create window")){
-					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
-							title + " was not able to initialize its graphics display, sorry about that!\n\n" +
-									"This usually happens when your graphics card has misconfigured drivers or does not support openGL 2.0+.\n\n" +
-									"If you are certain the game should work on your computer, please message the developer (Evan@ShatteredPixel.com)\n\n" +
-									"version: " + Game.version + "\n" +
-									exceptionMsg,
-							"ok", "error", false);
-				} else {
-					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
-							title + " has run into an error it cannot recover from and has crashed, sorry about that!\n\n" +
-									"If you could, please email this error message to the developer (Evan@ShatteredPixel.com):\n\n" +
-									"version: " + Game.version + "\n" +
-									exceptionMsg,
-							"ok", "error", false);
-				}
-				System.exit(1);
-			}
-		});
-		
+			});
 		Game.version = DesktopLauncher.class.getPackage().getSpecificationVersion();
 		if (Game.version == null) {
 			Game.version = System.getProperty("Specification-Version");

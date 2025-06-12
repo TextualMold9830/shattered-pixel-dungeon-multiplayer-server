@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -80,6 +81,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -560,6 +563,10 @@ public class DriedRose extends Artifact {
 			setHP(getHT());
 		}
 
+		public GhostHero() {
+			super();
+		}
+
 		@Override
 		public void defendPos(int cell) {
 			yell(Messages.get(this, "directed_position_" + Random.IntRange(1, 5)));
@@ -579,12 +586,14 @@ public class DriedRose extends Artifact {
 		}
 
 		private void updateRose(Hero hero){
-			if (rose == null) {
+			if (rose == null && hero != null) {
 				rose = hero.belongings.getItem(DriedRose.class);
 			}
 			
 			//same dodge as the hero
-			defenseSkill = (hero.lvl+4);
+			if (hero != null) {
+				defenseSkill = (hero.lvl + 4);
+			}
 			if (rose == null) return;
 			setHT(20 + 8*rose.level());
 		}
@@ -592,10 +601,11 @@ public class DriedRose extends Artifact {
 		@Override
 		protected boolean act() {
 			updateRose(getOwner());
-			if (rose == null
+			if (owner == null
+					|| rose == null
 					|| !rose.isEquipped(getOwner())
 					|| getOwner().buff(MagicImmune.class) != null){
-				damage(1, 				new DamageCause(new NoRoseDamage(), getOwner()));
+				damage(1, new DamageCause(new NoRoseDamage(), getOwner()));
 			}
 			
 			if (!isAlive()) {
@@ -608,15 +618,20 @@ public class DriedRose extends Artifact {
 
 		@Override
 		public int attackSkill(Char target) {
-			
+			int acc;
 			//same accuracy as the hero.
-			int acc = getOwner().lvl + 9;
-			
-			if (rose != null && rose.weapon != null){
-				acc *= rose.weapon.accuracyFactor( this, target );
+			if (getOwner() != null) {
+				acc = getOwner().lvl + 9;
+
+				if (rose != null && rose.weapon != null) {
+					acc *= rose.weapon.accuracyFactor(this, target);
+				}
+
+				return acc;
 			}
-			
-			return acc;
+			//Worst possible accuracy, 1 + 9
+
+			return 10;
 		}
 		
 		@Override
@@ -851,28 +866,26 @@ public class DriedRose extends Artifact {
 	}
 	
 	private static class WndGhostHero extends Window{
-		
+
+		private static final String TYPE = "ghost_hero";
+
 		private static final int BTN_SIZE	= 32;
 		private static final float GAP		= 2;
 		private static final float BTN_GAP	= 12;
 		private static final int WIDTH		= 116;
 		
-		private ItemButton btnWeapon;
-		private ItemButton btnArmor;
+		private final ItemButton btnWeapon;
+		private final ItemButton btnArmor;
+		private final DriedRose rose;
+		private boolean hidden = false;
+		private final String title;
+		private final String message;
 		
 		WndGhostHero(final DriedRose rose, Hero hero){
 			super(hero);
-			IconTitle titlebar = new IconTitle();
-			titlebar.icon( new ItemSprite(rose) );
-			titlebar.label( Messages.get(this, "title") );
-			titlebar.setRect( 0, 0, WIDTH, 0 );
-			add( titlebar );
-			
-			RenderedTextBlock message =
-					PixelScene.renderTextBlock(Messages.get(this, "desc", rose.ghostStrength()), 6);
-			message.maxWidth( WIDTH );
-			message.setPos(0, titlebar.bottom() + GAP);
-			add( message );
+			this.rose = rose;
+			title = Messages.get(this, "title");
+			message = Messages.get(this, "desc", rose.ghostStrength());
 			
 			btnWeapon = new ItemButton(){
 				@Override
@@ -905,6 +918,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof MeleeWeapon)) {
 									//do nothing, should only happen when window is cancelled
+									SendData.sendWindow(WndGhostHero.this, TYPE, args());
 								} else if (item.unique) {
 									GLog.w(Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -925,6 +939,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.weapon = (MeleeWeapon) item;
 									item(rose.weapon);
+									SendData.sendWindow(WndGhostHero.this, TYPE, args());
 								}
 
 							}
@@ -941,7 +956,6 @@ public class DriedRose extends Artifact {
 					return false;
 				}
 			};
-			btnWeapon.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + GAP, BTN_SIZE, BTN_SIZE );
 			if (rose.weapon != null) {
 				btnWeapon.item(rose.weapon);
 			} else {
@@ -980,6 +994,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof Armor)) {
 									//do nothing, should only happen when window is cancelled
+									SendData.sendWindow(WndGhostHero.this, TYPE, args());
 								} else if (item.unique || ((Armor) item).checkSeal() != null) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -1000,6 +1015,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.armor = (Armor) item;
 									item(rose.armor);
+									SendData.sendWindow(WndGhostHero.this, TYPE, args());
 								}
 								
 							}
@@ -1025,7 +1041,35 @@ public class DriedRose extends Artifact {
 			add( btnArmor );
 			
 			resize(WIDTH, (int)(btnArmor.bottom() + GAP));
+			SendData.sendWindow(this, TYPE, args());
 		}
-	
+		private JSONObject args() {
+			final Hero hero = getOwnerHero();
+			JSONObject json = new JSONObject();
+			json.put("weapon", btnWeapon.item().toJsonObject(hero));
+			json.put("armor", btnArmor.item().toJsonObject(hero));
+			json.put("rose", rose.toJsonObject(hero));
+			json.put("title", title);
+			json.put("message", message);
+			return json;
+		}
+
+		@Override
+		public void hide() {
+			hidden = true;
+			super.hide();
+			//SendData.sendWindow(this, Window.HIDE_WINDOW_TYPE);
+		}
+
+		@Override
+		public void onSelect(int button) {
+			if (button == 0) {
+				btnWeapon.onClickPublicVersion();
+			} else if (button == 1) {
+				btnArmor.onClickPublicVersion();
+			} else {
+				return;
+			}
+		}
 	}
 }

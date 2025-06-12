@@ -40,18 +40,10 @@ public class ItemButton extends Component {
 	}
 
 	protected void onClick() {}
+	public final void onClickPublicVersion() {onClick();}
 
 	protected boolean onLongClick(){
 		return false;
-	}
-
-	@Override
-	protected void layout() {
-		super.layout();
-
-		bg.x = x;
-		bg.y = y;
-		bg.size( width, height );
 	}
 
 	public Item item(){

@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.Text;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -399,6 +400,7 @@ public class NetworkPacket {
         params.put("height", level.height());
         params.put("tiles_texture", level.tilesTex());
         params.put("water_texture", level.waterTex());
+        params.put("feeling", level.feeling.name());
         synchronized (dataRef) {
             dataRef.get().put("level_params", params);
         }
@@ -938,9 +940,8 @@ public class NetworkPacket {
                 buffObj.put("icon", buff.icon());
                 Actor target = buff.target;
                 buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
-                buffObj.put("name", buff.name());
-                buffObj.put("desc", buff.desc());
-                buffObj.put("fade_percent", buff.iconFadePercent());
+            buffObj.put("desc", Text.of(buff, "desc").toJSON());
+            buffObj.put("name", Text.of(buff, "name").toJSON());
                 Image temp = new Image();
                 buff.tintIcon(temp);
                 JSONObject hardlight = new JSONObject();
