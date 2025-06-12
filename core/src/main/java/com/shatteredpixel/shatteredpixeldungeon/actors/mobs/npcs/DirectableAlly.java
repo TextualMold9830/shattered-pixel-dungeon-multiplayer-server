@@ -30,6 +30,7 @@ import com.watabou.utils.Bundle;
 
 public class DirectableAlly extends NPC {
 	public Hero owner;
+	private String ownerUUID;
 
 	public Hero getOwner() {
 		return owner;
@@ -52,19 +53,19 @@ public class DirectableAlly extends NPC {
 	protected int defendingPos = -1;
 	protected boolean movingToDefendPos = false;
 
-	public void defendPos( int cell ){
+	public void defendPos(int cell) {
 		defendingPos = cell;
 		movingToDefendPos = true;
 		aggro(null);
 		state = WANDERING;
 	}
 
-	public void clearDefensingPos(){
+	public void clearDefensingPos() {
 		defendingPos = -1;
 		movingToDefendPos = false;
 	}
 
-	public void followHero(){
+	public void followHero() {
 		defendingPos = -1;
 		movingToDefendPos = false;
 		aggro(null);
@@ -106,11 +107,19 @@ public class DirectableAlly extends NPC {
 	private static final String DEFEND_POS = "defend_pos";
 	private static final String MOVING_TO_DEFEND = "moving_to_defend";
 
+	private static final String OWNER = "owner";
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put(DEFEND_POS, defendingPos);
 		bundle.put(MOVING_TO_DEFEND, movingToDefendPos);
+		if (owner != null) {
+			bundle.put(OWNER, owner.uuid);
+		} else {
+			if (ownerUUID != null) {
+				bundle.put(OWNER, ownerUUID);
+			}
+		}
 	}
 
 	@Override
@@ -118,6 +127,27 @@ public class DirectableAlly extends NPC {
 		super.restoreFromBundle(bundle);
 		if (bundle.contains(DEFEND_POS)) defendingPos = bundle.getInt(DEFEND_POS);
 		movingToDefendPos = bundle.getBoolean(MOVING_TO_DEFEND);
+		if (bundle.contains(OWNER)){
+			ownerUUID = bundle.getString(OWNER);
+			owner = findOwner();
+		}
+	}
+
+	@Override
+	protected boolean act() {
+		//we try to find owner every turn
+		if (ownerUUID != null && owner == null){
+			owner = findOwner();
+		}
+		return super.act();
+	}
+	private Hero findOwner(){
+		for (Hero hero: Dungeon.heroes) {
+			if (hero != null && hero.uuid.equals(ownerUUID)) {
+				return hero;
+			}
+		}
+		return null;
 	}
 
 	private class Wandering extends Mob.Wandering {
@@ -178,5 +208,8 @@ public class DirectableAlly extends NPC {
 
 	public DirectableAlly(Hero owner) {
 		this.owner = owner;
+	}
+
+	public DirectableAlly() {
 	}
 }

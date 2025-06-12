@@ -563,6 +563,10 @@ public class DriedRose extends Artifact {
 			setHP(getHT());
 		}
 
+		public GhostHero() {
+			super();
+		}
+
 		@Override
 		public void defendPos(int cell) {
 			yell(Messages.get(this, "directed_position_" + Random.IntRange(1, 5)));
