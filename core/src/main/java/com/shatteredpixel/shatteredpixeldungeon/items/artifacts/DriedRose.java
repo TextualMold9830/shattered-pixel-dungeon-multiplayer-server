@@ -586,12 +586,14 @@ public class DriedRose extends Artifact {
 		}
 
 		private void updateRose(Hero hero){
-			if (rose == null) {
+			if (rose == null && hero != null) {
 				rose = hero.belongings.getItem(DriedRose.class);
 			}
 			
 			//same dodge as the hero
-			defenseSkill = (hero.lvl+4);
+			if (hero != null) {
+				defenseSkill = (hero.lvl + 4);
+			}
 			if (rose == null) return;
 			setHT(20 + 8*rose.level());
 		}
@@ -599,10 +601,11 @@ public class DriedRose extends Artifact {
 		@Override
 		protected boolean act() {
 			updateRose(getOwner());
-			if (rose == null
+			if (owner == null
+					|| rose == null
 					|| !rose.isEquipped(getOwner())
 					|| getOwner().buff(MagicImmune.class) != null){
-				damage(1, 				new DamageCause(new NoRoseDamage(), getOwner()));
+				damage(1, new DamageCause(new NoRoseDamage(), getOwner()));
 			}
 			
 			if (!isAlive()) {
@@ -615,15 +618,20 @@ public class DriedRose extends Artifact {
 
 		@Override
 		public int attackSkill(Char target) {
-			
+			int acc;
 			//same accuracy as the hero.
-			int acc = getOwner().lvl + 9;
-			
-			if (rose != null && rose.weapon != null){
-				acc *= rose.weapon.accuracyFactor( this, target );
+			if (getOwner() != null) {
+				acc = getOwner().lvl + 9;
+
+				if (rose != null && rose.weapon != null) {
+					acc *= rose.weapon.accuracyFactor(this, target);
+				}
+
+				return acc;
 			}
-			
-			return acc;
+			//Worst possible accuracy, 1 + 9
+
+			return 10;
 		}
 		
 		@Override
