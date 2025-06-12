@@ -2617,6 +2617,11 @@ public class Hero extends Char {
 	public void setSTR(int STR) {
 		this.STR = STR;
 		SendData.SendHeroStrength(networkID, STR);
+		for (Item item: belongings.getAllItems(EquipableItem.class)){
+			if (item instanceof Weapon || item instanceof Armor || item instanceof MissileWeapon){
+				item.sendSelfUpdate(this);
+			}
+		}
 	}
 
 	public static interface Doom {
