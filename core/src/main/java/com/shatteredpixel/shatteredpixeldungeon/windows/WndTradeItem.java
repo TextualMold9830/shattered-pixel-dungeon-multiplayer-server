@@ -274,8 +274,8 @@ public class WndTradeItem extends WndInfoItem {
 		if (!item.doPickUp( getOwnerHero())) {
 			Dungeon.level.drop( item, heap.pos ).sprite.drop();
 		}
+		} else {
+			GLog.n("Come back when you're a little... mmmmmm ...richer!");
 		}
-		GLog.n("Come back when you're a little... mmmmmm ...richer!");
-
 	}
 }
