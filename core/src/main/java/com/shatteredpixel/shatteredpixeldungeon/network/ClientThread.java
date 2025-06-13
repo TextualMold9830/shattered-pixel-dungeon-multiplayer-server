@@ -494,6 +494,37 @@ class ClientThread implements Callable<String> {
             }
         }
     }
+    public synchronized void disconnect(String message) {
+        if (!disconnected) {
+            disconnected = true;
+            try {
+                //TODO: send message
+                clientSocket.close(); //it creates exception when we will wait client data
+            } catch (Exception ignore) {
+            }
+            if (clientHero != null) {
+                clientHero.next();
+                Dungeon.removeHero(clientHero);
+                clientHero = null;
+            }
+            Server.clients[threadID] = null;
+            readStream = null;
+            writeStream = null;
+            jsonCall.cancel(true);
+            GLog.n("player " + threadID + " disconnected");
+            boolean notNullHero = false;
+            for (Hero hero: Dungeon.heroes) {
+                if (hero != null) {
+                    GameScene.shouldProcess = true;
+                    notNullHero = true;
+                    break;
+                }
+            }
+            if (!notNullHero) {
+                GameScene.shouldProcess = false;
+            }
+        }
+    }
 
     private synchronized void sendInitData() {
         for (String texture : Server.textures) {
