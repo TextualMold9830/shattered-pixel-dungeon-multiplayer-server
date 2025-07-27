@@ -168,7 +168,7 @@ public class Server extends Thread {
     protected static boolean initializeServerSocket() {
         // Initialize a server socket on the next available port.
         try {
-            serverSocket = new ServerSocket(0);
+            serverSocket = new ServerSocket(SPDSettings.serverPort());
         } catch (Exception e) {
             return false;
         }
