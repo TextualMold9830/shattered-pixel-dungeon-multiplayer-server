@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -769,5 +770,10 @@ public class SendData {
             client.packet.packAndAddCounter(portion);
             client.flush();
         }
+    }
+    public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
+    {
+        clients[hero.networkID].packet.packAndAddRedirect(redirectPacket);
+        clients[hero.networkID].flush();
     }
 }
