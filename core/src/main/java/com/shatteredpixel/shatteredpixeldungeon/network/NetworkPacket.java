@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -997,5 +998,7 @@ public class NetworkPacket {
             e.printStackTrace();
         }
     }
-
+    public void packAndAddRedirect(RedirectPacket redirectPacket) {
+        dataRef.get().put("redirect", redirectPacket.toJSON());
+    }
 }
