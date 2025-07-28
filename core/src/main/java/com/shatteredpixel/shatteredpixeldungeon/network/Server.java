@@ -86,8 +86,8 @@ public class Server extends Thread {
         if (!initializeServerSocket()) {
             return false;
         }
+        ServerInfoService.start();
         registerService(localPort);
-
         started = true;
         serverThread = new Server();
         TexturePackManager.loadTextures("textures/");
@@ -106,6 +106,7 @@ public class Server extends Thread {
             relay = null;
         }
         serverStepThread.interrupt();
+        ServerInfoService.stop();
         //ClientThread.sendAll(Codes.SERVER_CLOSED); //todo
         unregisterService();
 
@@ -168,13 +169,22 @@ public class Server extends Thread {
     protected static boolean initializeServerSocket() {
         // Initialize a server socket on the next available port.
         try {
-            serverSocket = new ServerSocket(SPDSettings.serverPort());
+            serverSocket = new ServerSocket(0);
         } catch (Exception e) {
             return false;
         }
         // Store the chosen port.
         localPort = serverSocket.getLocalPort();
         return true;
+    }
+    public static int onlinePlayers(){
+        int onlineCount = 0;
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] != null){
+                onlineCount++;
+            }
+        }
+        return onlineCount;
     }
     public static enum RegListenerState {NONE, UNREGISTERED, REGISTERED, REGISTRATION_FAILED, UNREGISTRATION_FAILED}
 }
