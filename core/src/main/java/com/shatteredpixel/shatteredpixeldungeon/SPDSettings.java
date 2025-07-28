@@ -553,4 +553,15 @@ public class SPDSettings extends GameSettings {
 		}
 		return getInt("server_port", 0);
 	}
+
+	public static String motd() {
+		if (!contains("motd")){
+			put("motd", "");
+		}
+		return getString("motd", null);
+	}
+
+	public static boolean useServerInfoService() {
+		return true;
+	}
 }
