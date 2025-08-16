@@ -102,7 +102,11 @@ public class CrystalSpire extends Mob {
 		enemy = chooseEnemy();
 
 		//crystal can still track an invisible hero
-		enemySeen = enemy.isAlive() && fieldOfView[enemy.pos];
+		if (enemy != null) {
+			enemySeen = enemy.isAlive() && fieldOfView[enemy.pos];
+		} else {
+			enemySeen = false;
+		}
 		//end of char/mob logic
 
 		if (!targetedCells.isEmpty()){
