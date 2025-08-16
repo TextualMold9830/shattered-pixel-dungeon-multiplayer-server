@@ -175,6 +175,9 @@ public class DM300 extends Mob {
 			boolean canReach;
 			if (enemy == null || !enemy.isAlive()){
 				enemy = HeroHelp.GetRandomHero();
+				if(enemy == null){
+					return true;
+				}
 				if (Dungeon.level.adjacent(pos, enemy.pos)){
 					canReach = true;
 				} else {
