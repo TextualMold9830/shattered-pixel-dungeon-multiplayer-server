@@ -52,7 +52,9 @@ public class BossHealthBar {
 
 	public static void bleed(boolean value){
 		bleeding = value;
-		sendSelf();
+		if (boss != null) {
+			sendSelf();
+		}
 	}
 
 	public static boolean isBleeding(){
