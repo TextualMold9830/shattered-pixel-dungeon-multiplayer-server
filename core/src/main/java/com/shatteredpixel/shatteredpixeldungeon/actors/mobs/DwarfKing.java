@@ -520,7 +520,9 @@ public class DwarfKing extends Mob {
 			getSprite().centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 			for (Hero hero: Dungeon.heroes) {
-				yell(Messages.get(this, "enraged", hero.name()), hero);
+				if(hero != null) {
+					yell(Messages.get(this, "enraged", hero.name()), hero);
+				}
 			}
 			BossHealthBar.bleed(true);
 			Music.INSTANCE.fadeOut(0.5f, new Music.PlayAction(Assets.Music.CITY_BOSS_FINALE, true));
