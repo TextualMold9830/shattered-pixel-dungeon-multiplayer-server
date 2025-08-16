@@ -62,6 +62,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.DungeonGenerateLevelEvent;
+import com.shatteredpixel.shatteredpixeldungeon.plugins.events.SwitchLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
@@ -511,7 +512,7 @@ public class Dungeon {
 				sendHeroNewID(hero, hero.networkID);
 			}
 		}
-
+		Server.pluginManager.fireEvent(new SwitchLevelEvent());
 		try {
 			saveAll();
 		} catch (IOException e) {
@@ -1178,7 +1179,7 @@ public class Dungeon {
 		}
 		//need to create random circle
 		else for (int i:NEIGHBOURS8) {
-			if ((Actor.findChar( startPos+i ) == null)&&(passable[startPos+i])){
+			if ((Actor.findChar( startPos+i ) == null)&&(level.passable[startPos+i])){
 				return startPos+i;
 			}
 		}
