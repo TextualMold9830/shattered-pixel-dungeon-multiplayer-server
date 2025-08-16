@@ -429,6 +429,7 @@ public class Tengu extends Mob {
 						//if nothing else can be targeted, target hero
 						enemy = chooseEnemy();
 					}
+					if(enemy == null){return true;}
 					target = enemy.pos;
 				}
 				
