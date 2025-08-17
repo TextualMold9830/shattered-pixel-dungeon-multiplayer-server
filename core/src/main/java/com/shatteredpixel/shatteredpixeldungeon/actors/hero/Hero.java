@@ -309,10 +309,12 @@ public class Hero extends Char {
 	private static final String STRENGTH	= "STR";
 	private static final String LEVEL		= "lvl";
 	private static final String EXPERIENCE	= "exp";
+	private static final String GOLD        = "gold";
+	private static final String ENERGY      = "energy";
 	private static final String HTBOOST     = "htboost";
-	private static final String UUID = "uuid";
-	private static final String LASTDEPTH = "lastdepth";
-	private static final String LASTBRANCH = "lastbranch";
+	private static final String UUID        = "uuid";
+	private static final String LASTDEPTH   = "lastdepth";
+	private static final String LASTBRANCH  = "lastbranch";
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 
@@ -330,7 +332,9 @@ public class Hero extends Char {
 		
 		bundle.put( LEVEL, lvl );
 		bundle.put( EXPERIENCE, exp );
-		
+		bundle.put(GOLD, gold);
+		bundle.put(ENERGY, energy);
+
 		bundle.put( HTBOOST, HTBoost );
 		bundle.put( UUID, uuid );
 		bundle.put( LASTDEPTH, Dungeon.depth );
@@ -357,7 +361,8 @@ public class Hero extends Char {
 		
 		attackSkill = bundle.getInt( ATTACK );
 		defenseSkill = bundle.getInt( DEFENSE );
-		
+		gold = bundle.getInt( GOLD );
+		energy = bundle.getInt( ENERGY );
 		STR = bundle.getInt( STRENGTH );
 		uuid = bundle.getString( UUID );
 		belongings.restoreFromBundle( bundle );
