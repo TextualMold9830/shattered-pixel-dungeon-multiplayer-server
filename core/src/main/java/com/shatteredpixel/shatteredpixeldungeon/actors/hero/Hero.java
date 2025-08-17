@@ -361,8 +361,8 @@ public class Hero extends Char {
 		
 		attackSkill = bundle.getInt( ATTACK );
 		defenseSkill = bundle.getInt( DEFENSE );
-		gold = bundle.getInt(GOLD);
-		energy = bundle.getInt(energy);
+		gold = bundle.getInt( GOLD );
+		energy = bundle.getInt( ENERGY );
 		STR = bundle.getInt( STRENGTH );
 		uuid = bundle.getString( UUID );
 		belongings.restoreFromBundle( bundle );
