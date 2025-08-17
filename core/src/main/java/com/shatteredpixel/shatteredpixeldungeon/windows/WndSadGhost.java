@@ -85,7 +85,7 @@ public class WndSadGhost extends Window {
 
 	@Override
 	protected void onSelect(int button) {
-		if (Ghost.Quest.processed() && !Ghost.Quest.completed()) {
+		if (Ghost.Quest.processed() && (!Ghost.Quest.completed() || Dungeon.balance.multipleWandmakerReward)) {
 			if (button == 0) {
 				WndSadGhost.this.selectReward( Ghost.Quest.weapon.duplicate() );
 			} else if(button == 1){

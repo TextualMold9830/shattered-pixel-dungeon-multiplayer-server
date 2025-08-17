@@ -152,7 +152,7 @@ public class Ghost extends NPC {
 		final Hero hero = (Hero) c;
 
 		if (Quest.given) {
-			if (!claimedUUIDs.contains(hero.uuid)) {
+			if (Quest.weapon != null) {
 				if (Quest.processed) {
 					Game.runOnRenderThread(new Callback() {
 						@Override
