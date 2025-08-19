@@ -560,8 +560,4 @@ public class SPDSettings extends GameSettings {
 		}
 		return getString("motd", null);
 	}
-
-	public static boolean useServerInfoService() {
-		return true;
-	}
 }

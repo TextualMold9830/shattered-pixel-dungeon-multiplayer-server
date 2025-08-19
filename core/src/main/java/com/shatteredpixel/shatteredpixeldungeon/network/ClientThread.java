@@ -86,6 +86,7 @@ class ClientThread implements Callable<String> {
             disconnect();
             return;
         }
+        sendServerInfo();
         sendServerType();
         sendServerUUID();
         if (clientHero != null){
@@ -307,6 +308,16 @@ class ClientThread implements Callable<String> {
         packet.addServerType(SERVER_TYPE);
         flush();
     }
+    protected void sendServerInfo() {
+        try {
+            writeStream.write(new JSONObject().put("server_info", Server.serverInfo().toString()).toString() );
+            writeStream.write("\n");
+            writeStream.flush();
+            flush();
+        } catch (IOException e) {
+            //Maybe the client disconnected
+        }
+    }
     protected void InitPlayerHero(String className, String uuid) {
         HeroClass curClass;
         try {
@@ -418,26 +429,28 @@ class ClientThread implements Callable<String> {
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }
+            Server.clients[threadID] = null;
+            readStream = null;
+            writeStream = null;
+            if (jsonCall != null) {
+                jsonCall.cancel(true);
+            }
             if (clientHero != null) {
                 clientHero.next();
                 Dungeon.removeHero(clientHero);
                 clientHero = null;
-            }
-            Server.clients[threadID] = null;
-            readStream = null;
-            writeStream = null;
-            jsonCall.cancel(true);
-            GLog.n("player " + threadID + " disconnected");
-            boolean notNullHero = false;
-            for (Hero hero: Dungeon.heroes) {
-                if (hero != null) {
-                    GameScene.shouldProcess = true;
-                    notNullHero = true;
-                    break;
+                GLog.n("player " + threadID + " disconnected");
+                boolean notNullHero = false;
+                for (Hero hero: Dungeon.heroes) {
+                    if (hero != null) {
+                        GameScene.shouldProcess = true;
+                        notNullHero = true;
+                        break;
+                    }
                 }
-            }
-            if (!notNullHero) {
-                GameScene.shouldProcess = false;
+                if (!notNullHero) {
+                    GameScene.shouldProcess = false;
+                }
             }
         }
     }
