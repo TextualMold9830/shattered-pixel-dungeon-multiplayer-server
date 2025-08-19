@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -328,15 +329,15 @@ class ClientThread implements Callable<String> {
         newHero.setSprite(new HeroSprite(newHero));
         clientHero = newHero;
         level.linkHero(newHero);
-        newHero.live();
         if (!heroFound) {
-        curClass.initHero(newHero);
-        for (int i : NEIGHBOURS8) {
-            if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
-                newHero.pos = level.entrance() + i;
-                break;
+            newHero.live();
+            curClass.initHero(newHero);
+            for (int i : NEIGHBOURS8) {
+                if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
+                    newHero.pos = level.entrance() + i;
+                    break;
+                }
             }
-        }
         }
         //newHero.pos = Dungeon.getPosNear(level.entrance);
 
@@ -456,7 +457,10 @@ class ClientThread implements Callable<String> {
         Dungeon.observe(clientHero, false);
         packet.packAndAddVisiblePositions(clientHero.fieldOfView);
         //TODO send all  information
-
+        for (Actor actor: Actor.all()) {
+            if (actor instanceof Buff)
+            packet.packAndAddBuff((Buff) actor, false);
+        }
         flush();
 
         packet.packAndAddInterlevelSceneState("fade_out", null);
