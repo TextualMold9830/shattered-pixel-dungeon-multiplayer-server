@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 // based on https://developer.android.com/training/connect-devices-wirelessly/nsd.html#java
 
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -11,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
+import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -86,7 +88,6 @@ public class Server extends Thread {
         if (!initializeServerSocket()) {
             return false;
         }
-        ServerInfoService.start();
         registerService(localPort);
         started = true;
         serverThread = new Server();
@@ -106,7 +107,6 @@ public class Server extends Thread {
             relay = null;
         }
         serverStepThread.interrupt();
-        ServerInfoService.stop();
         //ClientThread.sendAll(Codes.SERVER_CLOSED); //todo
         unregisterService();
 
@@ -169,7 +169,7 @@ public class Server extends Thread {
     protected static boolean initializeServerSocket() {
         // Initialize a server socket on the next available port.
         try {
-            serverSocket = new ServerSocket(0);
+            serverSocket = new ServerSocket(SPDSettings.serverPort());
         } catch (Exception e) {
             return false;
         }
@@ -185,6 +185,16 @@ public class Server extends Thread {
             }
         }
         return onlineCount;
+    }
+    public static JSONObject serverInfo(){
+            JSONObject serverInfo = new JSONObject();
+            serverInfo.put("name", SPDSettings.serverName());
+            serverInfo.put("players", Server.onlinePlayers());
+            serverInfo.put("max_players", Server.clients.length);
+            serverInfo.put("challenges", SPDSettings.challenges());
+            serverInfo.put("current_floor", Dungeon.depth);
+            serverInfo.put("motd", SPDSettings.motd());
+            return serverInfo;
     }
     public static enum RegListenerState {NONE, UNREGISTERED, REGISTERED, REGISTRATION_FAILED, UNREGISTRATION_FAILED}
 }

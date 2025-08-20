@@ -171,6 +171,10 @@ public class DirectableAlly extends NPC {
 				enemySeen = false;
 
 				int oldPos = pos;
+				if (owner == null) {
+					spend( TICK );
+					return true;
+				}
 				target = defendingPos != -1 ? defendingPos : owner.pos;
 				//always move towards the hero when wandering
 				if (getCloser( target )) {

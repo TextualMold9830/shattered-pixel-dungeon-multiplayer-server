@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -85,6 +86,7 @@ class ClientThread implements Callable<String> {
             disconnect();
             return;
         }
+        sendServerInfo();
         sendServerType();
         sendServerUUID();
         if (clientHero != null){
@@ -309,6 +311,16 @@ class ClientThread implements Callable<String> {
         packet.addServerType(SERVER_TYPE);
         flush();
     }
+    protected void sendServerInfo() {
+        try {
+            writeStream.write(new JSONObject().put("server_info", Server.serverInfo().toString()).toString() );
+            writeStream.write("\n");
+            writeStream.flush();
+            flush();
+        } catch (IOException e) {
+            //Maybe the client disconnected
+        }
+    }
     protected void InitPlayerHero(String className, String uuid) {
         HeroClass curClass;
         try {
@@ -336,15 +348,15 @@ class ClientThread implements Callable<String> {
         newHero.setSprite(new HeroSprite(newHero));
         clientHero = newHero;
         level.linkHero(newHero);
-        newHero.live();
         if (!heroFound) {
-        curClass.initHero(newHero);
-        for (int i : NEIGHBOURS8) {
-            if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
-                newHero.pos = level.entrance() + i;
-                break;
+            newHero.live();
+            curClass.initHero(newHero);
+            for (int i : NEIGHBOURS8) {
+                if (Actor.findChar(level.entrance() + i) == null && level.passable[level.entrance() + i]) {
+                    newHero.pos = level.entrance() + i;
+                    break;
+                }
             }
-        }
         }
         //newHero.pos = Dungeon.getPosNear(level.entrance);
 
@@ -425,26 +437,28 @@ class ClientThread implements Callable<String> {
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }
+            Server.clients[threadID] = null;
+            readStream = null;
+            writeStream = null;
+            if (jsonCall != null) {
+                jsonCall.cancel(true);
+            }
             if (clientHero != null) {
                 clientHero.next();
                 Dungeon.removeHero(clientHero);
                 clientHero = null;
-            }
-            Server.clients[threadID] = null;
-            readStream = null;
-            writeStream = null;
-            jsonCall.cancel(true);
-            GLog.n("player " + threadID + " disconnected");
-            boolean notNullHero = false;
-            for (Hero hero: Dungeon.heroes) {
-                if (hero != null) {
-                    GameScene.shouldProcess = true;
-                    notNullHero = true;
-                    break;
+                GLog.n("player " + threadID + " disconnected");
+                boolean notNullHero = false;
+                for (Hero hero: Dungeon.heroes) {
+                    if (hero != null) {
+                        GameScene.shouldProcess = true;
+                        notNullHero = true;
+                        break;
+                    }
                 }
-            }
-            if (!notNullHero) {
-                GameScene.shouldProcess = false;
+                if (!notNullHero) {
+                    GameScene.shouldProcess = false;
+                }
             }
         }
     }
@@ -495,7 +509,10 @@ class ClientThread implements Callable<String> {
         Dungeon.observe(clientHero, false);
         packet.packAndAddVisiblePositions(clientHero.fieldOfView);
         //TODO send all  information
-
+        for (Actor actor: Actor.all()) {
+            if (actor instanceof Buff)
+            packet.packAndAddBuff((Buff) actor, false);
+        }
         flush();
 
         packet.packAndAddInterlevelSceneState("fade_out", null);
