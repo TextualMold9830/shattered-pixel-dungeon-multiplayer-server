@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 public class HeroInitHandler {
     public static ArrayList<HeroInitHandler> all = new ArrayList<>();
+    static {
+        //noinspection StaticInitializerReferencesSubClass
+        all.add(new DefaultHeroInitHandler());
+    }
     //null for all hero classes
     private HeroClass targetClass;
     //null for any depth
