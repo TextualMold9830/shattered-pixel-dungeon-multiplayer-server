@@ -17,7 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.watabou.utils.Random;
 
-public class DefaultHeroInitHandler extends HeroInitHandler{
+public class DefaultHeroInitHandler extends HeroInitHandler {
 
     @Override
     protected void onMatchedHero(Hero hero) {
