@@ -17,9 +17,11 @@ public class BalanceData implements Bundlable {
     public static final String KEY_USE_FRAGMENTS = "use_fragments_of_upgrade";
     public boolean multipleGhostReward = true;
     public static final String MULTIPLE_GHOST_REWARD = "multiple_ghost_reward";
-
     public boolean multipleWandmakerReward = true;
     public static final String MULTIPLE_WANDMAKER_REWARD = "multiple_wandmaker_reward";
+    public static boolean disallowAscending = false;
+    public static final String DISALLOW_ASCENDING = "disallow_ascending";
+
     public static BalanceData load() {
         BalanceData data = new BalanceData();
         try {
@@ -41,7 +43,8 @@ public class BalanceData implements Bundlable {
                 case KEY_FOOD_SATISFIES_EVERY_HERO: foodSatisfiesEveryHero = bundle.getBoolean(KEY_FOOD_SATISFIES_EVERY_HERO); break;
                 case KEY_USE_FRAGMENTS: useFragments = bundle.getBoolean(KEY_USE_FRAGMENTS); break;
                 case MULTIPLE_GHOST_REWARD: multipleGhostReward = bundle.getBoolean(MULTIPLE_GHOST_REWARD); break;
-                case MULTIPLE_WANDMAKER_REWARD: multipleWandmakerReward =  bundle.getBoolean(MULTIPLE_WANDMAKER_REWARD);
+                case MULTIPLE_WANDMAKER_REWARD: multipleWandmakerReward =  bundle.getBoolean(MULTIPLE_WANDMAKER_REWARD); break;
+                case DISALLOW_ASCENDING: disallowAscending = bundle.getBoolean(DISALLOW_ASCENDING); break;
             }
         }
     }
@@ -53,5 +56,6 @@ public class BalanceData implements Bundlable {
         bundle.put(KEY_USE_FRAGMENTS, useFragments);
         bundle.put(MULTIPLE_GHOST_REWARD, multipleGhostReward);
         bundle.put(MULTIPLE_WANDMAKER_REWARD, multipleWandmakerReward);
+        bundle.put(DISALLOW_ASCENDING, disallowAscending);
     }
 }

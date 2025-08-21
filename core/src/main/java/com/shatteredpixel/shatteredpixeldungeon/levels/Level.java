@@ -573,14 +573,17 @@ public abstract class Level implements Bundlable {
 			return false;
 		}
 
-		beforeTransition();
 		InterLevelSceneServer.curTransition = transition;
 		if (transition.type == LevelTransition.Type.REGULAR_EXIT
 				|| transition.type == LevelTransition.Type.BRANCH_EXIT) {
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.DESCEND;
 		} else {
+			if(Dungeon.balance.disallowAscending){
+				return false;
+			}
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.ASCEND;
 		}
+		beforeTransition();
 		InterLevelSceneServer.create(hero);
 		return true;
 	}
