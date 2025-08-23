@@ -67,16 +67,16 @@ public class WndWandmaker extends Window {
 			reward.bind(getOwnerHero());
 		}
 		if (reward.doPickUp( getOwnerHero())) {
-			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
+			GLog.i( Messages.capitalize(Messages.get(getOwnerHero(), "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}
-		
-		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
-		wandmaker.destroy();
-		
-		wandmaker.getSprite().die();
-		
+		if (!Dungeon.balance.multipleWandmakerReward) {
+			wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
+			wandmaker.destroy();
+
+			wandmaker.getSprite().die();
+		}
 		Wandmaker.Quest.complete();
 	}
 
