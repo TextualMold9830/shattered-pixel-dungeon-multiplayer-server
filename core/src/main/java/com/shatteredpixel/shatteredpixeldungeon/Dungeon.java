@@ -286,7 +286,13 @@ public class Dungeon {
 		
 		Dungeon.level = null;
 		Actor.clear();
-		
+
+		for (Hero hero : Dungeon.heroes){
+			if (hero != null && !hero.isAlive()){
+				hero.setHP(hero.getHT());
+				hero.live();
+			}
+		}
 		Level level;
 		if (branch == 0) {
 			switch (depth) {
