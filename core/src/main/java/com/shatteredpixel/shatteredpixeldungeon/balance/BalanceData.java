@@ -21,6 +21,8 @@ public class BalanceData implements Bundlable {
     public static final String MULTIPLE_WANDMAKER_REWARD = "multiple_wandmaker_reward";
     public static boolean disallowAscending = false;
     public static final String DISALLOW_ASCENDING = "disallow_ascending";
+    public boolean reviveHeroesOnNewLevel = true;
+    public static final String REVIVE_HEROES_ON_NEW_LEVEL ="revive_heroes_on_new_level";
 
     public static BalanceData load() {
         BalanceData data = new BalanceData();
@@ -45,6 +47,7 @@ public class BalanceData implements Bundlable {
                 case MULTIPLE_GHOST_REWARD: multipleGhostReward = bundle.getBoolean(MULTIPLE_GHOST_REWARD); break;
                 case MULTIPLE_WANDMAKER_REWARD: multipleWandmakerReward =  bundle.getBoolean(MULTIPLE_WANDMAKER_REWARD); break;
                 case DISALLOW_ASCENDING: disallowAscending = bundle.getBoolean(DISALLOW_ASCENDING); break;
+                case REVIVE_HEROES_ON_NEW_LEVEL: reviveHeroesOnNewLevel = bundle.getBoolean(REVIVE_HEROES_ON_NEW_LEVEL);
             }
         }
     }
@@ -57,5 +60,6 @@ public class BalanceData implements Bundlable {
         bundle.put(MULTIPLE_GHOST_REWARD, multipleGhostReward);
         bundle.put(MULTIPLE_WANDMAKER_REWARD, multipleWandmakerReward);
         bundle.put(DISALLOW_ASCENDING, disallowAscending);
+        bundle.put(REVIVE_HEROES_ON_NEW_LEVEL, reviveHeroesOnNewLevel);
     }
 }
