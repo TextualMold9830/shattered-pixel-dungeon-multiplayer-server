@@ -2212,28 +2212,27 @@ public class Hero extends Char {
 		Dungeon.observe(hero);
 		GameScene.updateFog();
 				
-		hero.belongings.identify();
 
 		int pos = hero.pos;
-
-		ArrayList<Integer> passable = new ArrayList<>();
-		for (Integer ofs : PathFinder.NEIGHBOURS8) {
-			int cell = pos + ofs;
-			if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Dungeon.level.heaps.get( cell ) == null) {
-				passable.add( cell );
+		if(!Dungeon.balance.reviveHeroesOnNewLevel) {
+			ArrayList<Integer> passable = new ArrayList<>();
+			for (Integer ofs : PathFinder.NEIGHBOURS8) {
+				int cell = pos + ofs;
+				if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Dungeon.level.heaps.get( cell ) == null) {
+					passable.add( cell );
+				}
 			}
-		}
-		Collections.shuffle( passable );
+			Collections.shuffle( passable );
+			ArrayList<Item> items = new ArrayList<>(hero.belongings.backpack.items);
+			for (Integer cell : passable) {
+				if (items.isEmpty()) {
+					break;
+				}
 
-		ArrayList<Item> items = new ArrayList<>(hero.belongings.backpack.items);
-		for (Integer cell : passable) {
-			if (items.isEmpty()) {
-				break;
+				Item item = Random.element(items);
+				Dungeon.level.drop(item, cell).sprite.drop(pos);
+				items.remove(item);
 			}
-
-			Item item = Random.element( items );
-			Dungeon.level.drop( item, cell ).sprite.drop( pos );
-			items.remove( item );
 		}
 
 		for (Char c : Actor.chars()){
