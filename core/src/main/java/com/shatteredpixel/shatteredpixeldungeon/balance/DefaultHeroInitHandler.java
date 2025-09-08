@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.balance;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -8,6 +9,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
+import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
@@ -99,6 +102,15 @@ public class DefaultHeroInitHandler extends HeroInitHandler {
             } else {
                 hero.belongings.armor().inscribe();
             }
+        }
+        if(Badges.isUnlocked(Badges.Badge.BOSS_SLAIN_2)){
+            TengusMask mask = new TengusMask();
+            mask.cloned = true;
+            mask.bind(hero);
+            mask.collect(hero);
+        }
+        if (Badges.isUnlocked(Badges.Badge.BOSS_SLAIN_4)){
+            new KingsCrown().bind(hero).collect(hero);
         }
     }
 }
