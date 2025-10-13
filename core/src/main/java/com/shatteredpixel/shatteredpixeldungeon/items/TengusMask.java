@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class TengusMask extends Item {
 	
 	private static final String AC_WEAR	= "WEAR";
-	boolean cloned = false;
+	public boolean cloned = false;
 	String boundUUID;
 	
 	{
