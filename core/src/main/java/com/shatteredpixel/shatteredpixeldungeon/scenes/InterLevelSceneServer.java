@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
+import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.*;
 import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndError;
@@ -55,7 +56,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterLevelSceneServer {
+public class InterLevelSceneServer extends Scene {
 
 	private enum FADE_TIME {
 		SLOW_FADE, NORM_FADE, FAST_FADE
@@ -81,16 +82,17 @@ public class InterLevelSceneServer {
 	private Thread thread = null;
 	private static Exception error = null;
 	public static int lastRegion = -1;
+	public static Hero hero;
 
-	public static InterLevelSceneServer create(Hero hero){
-		return new InterLevelSceneServer(hero);
+	public static void create(Hero hero){
+		InterLevelSceneServer.hero = hero;
+		Game.switchScene(InterLevelSceneServer.class);
 	}
-
-	public InterLevelSceneServer(Hero hero) {
-		
-		String loadingAsset;
+	@Override
+	public void create() {
+        String loadingAsset;
 		int loadingDepth;
-
+		QuickSlotButton.lastTarget = null;
 		@SuppressWarnings("unused")
 		final float scrollSpeed;
 
@@ -431,7 +433,13 @@ public class InterLevelSceneServer {
 		Level level = Dungeon.newLevel();
 		Dungeon.switchLevel( level, level.entrance() );
 	}
-	
+
+	@Override
+	public void destroy() {
+		hero = null;
+		super.destroy();
+	}
+
 	private static class InterLevelSceneParams {
 		@NotNull
 		final Mode mode;

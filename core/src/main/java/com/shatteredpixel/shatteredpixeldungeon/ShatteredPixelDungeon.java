@@ -110,7 +110,6 @@ public class ShatteredPixelDungeon extends Game {
         }
         InterLevelSceneServer.create(null);
 
-		Game.switchScene(GameScene.class);
 	}
 
 	@Override
