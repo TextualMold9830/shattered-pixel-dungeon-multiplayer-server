@@ -213,16 +213,12 @@ public class Tengu extends Mob {
 	
 	@Override
 	public boolean isAlive() {
-		return super.isAlive() || Dungeon.level.mobs.contains(this); //Tengu has special death rules, see prisonbosslevel.progress()
+		return super.isAlive() || (Dungeon.level != null && Dungeon.level.mobs.contains(this)); //Tengu has special death rules, see prisonbosslevel.progress()
 	}
 
 	@Override
 	public void die(@NotNull DamageCause cause ) {
-		if (cause.getDamageOwner() instanceof Hero) {
-			if (((Hero) cause.getDamageOwner()).subClass == HeroSubClass.NONE) {
-				Dungeon.level.drop(new TengusMask(), pos).sprite.drop();
-			}
-	}
+		Dungeon.level.drop(new TengusMask(), pos).sprite.drop();
 		GameScene.bossSlain();
 		super.die( cause );
 
