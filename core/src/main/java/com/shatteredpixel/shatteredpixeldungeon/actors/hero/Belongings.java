@@ -229,6 +229,19 @@ public class Belongings implements Iterable<Item> {
 			}
 			return cap;
 		}
+		public int capacity(){
+			int cap = super.capacity();
+			for (Item item : items){
+				if (item instanceof Bag){
+					cap++;
+				}
+			}
+			if (owner != null && owner.belongings.secondWep != null){
+				//secondary weapons still occupy an inv. slot
+				cap--;
+			}
+			return cap;
+		}
 	}
 
 	public Backpack backpack;

@@ -645,7 +645,9 @@ public class PrisonBossLevel extends Level {
 			int i = 0;
 			for (Point heroPoint : heroesPoints) {
 				int heroPos = heroPoint.x - (tenguCell.left + 1) + (heroPoint.y - (tenguCell.top + 1)) * 7;
-				heroesPos[i++] = heroPos;
+				if(heroPos > -1) {
+					heroesPos[i++] = heroPos;
+				}
 			}
 		}
 		boolean[] trapsPatch;

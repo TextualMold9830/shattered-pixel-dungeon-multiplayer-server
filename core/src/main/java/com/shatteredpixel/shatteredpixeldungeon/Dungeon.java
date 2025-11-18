@@ -1151,7 +1151,13 @@ public class Dungeon {
 			hero.next();
 			Actor.remove(hero);
 		}
-	}
+		//To prevent duping
+        try {
+            Dungeon.saveAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	public static void saveHero(Hero hero){
 		if (hero.uuid != null) {
 			Bundle bundle = new Bundle();

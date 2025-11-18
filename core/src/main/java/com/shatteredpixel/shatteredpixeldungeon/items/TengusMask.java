@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class TengusMask extends Item {
 	
 	private static final String AC_WEAR	= "WEAR";
-	boolean cloned = false;
+	public boolean cloned = false;
 
 	{
 		stackable = false;
@@ -73,12 +73,13 @@ public class TengusMask extends Item {
 		if (action.equals(AC_WEAR)) {
 			curUser = hero;
 			GameScene.show(new WndChooseSubclass(this, hero));
-		}
-	}
+        }
+
+    }
 	
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
-		if (!cloned ||canUse(hero)) {
+		if (!cloned || canUse(hero)) {
 			Badges.validateMastery(hero);
 			return super.doPickUp(hero, pos);
 		}

@@ -156,6 +156,9 @@ public abstract class Bag extends Item implements Iterable<Item> {
 	}
 
 	public void grabItems( Bag container ){
+		if (owner == null){
+			owner = container.owner;
+		}
 		for (Item item : container.items.toArray( new Item[0] )) {
 			if (canHold( item )) {
 				int slot = Dungeon.quickslot.getSlot(item);
