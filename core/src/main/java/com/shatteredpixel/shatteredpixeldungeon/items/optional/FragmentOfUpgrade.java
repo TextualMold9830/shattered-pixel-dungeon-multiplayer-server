@@ -25,10 +25,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FragmentOfUpgrade extends Item {
-    private static String AC_USE = "use";
+    private static final String AC_USE = "use";
     public static int image = new ScrollOfUpgrade().image();
     {
         identify(null);
+        defaultAction = AC_USE;
     }
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
@@ -78,7 +79,7 @@ public class FragmentOfUpgrade extends Item {
     }
     public Item upgradeItem( Item item, Hero hero ){
         upgradeAnimation( curUser );
-
+        detach(hero.belongings.backpack);
         Degrade.detach( curUser, Degrade.class );
 
         //logic for telling the user when item properties change from upgrades
