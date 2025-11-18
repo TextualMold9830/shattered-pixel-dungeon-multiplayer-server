@@ -28,6 +28,7 @@ public class FragmentOfUpgrade extends Item {
     private static final String AC_USE = "use";
     public static int image = new ScrollOfUpgrade().image();
     {
+        stackable = true;
         identify(null);
         defaultAction = AC_USE;
     }
