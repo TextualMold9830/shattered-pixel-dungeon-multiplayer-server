@@ -972,7 +972,7 @@ public class Item implements Bundlable {
 			topRight.put("text", JSONObject.NULL);
 		}
 
-		int level = item.visiblyUpgraded();
+		int level = item.visiblyUpgraded(owner);
 		if (level != 0 || (item.cursed && item.cursedKnown)) {
 			bottomRight.put("text", item.levelKnown ? Utils.format(TXT_LEVEL, level) : TXT_CURSED);
 			boolean curseInfusionBonus = false;
