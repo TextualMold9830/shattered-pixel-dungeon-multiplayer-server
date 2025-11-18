@@ -69,16 +69,16 @@ public class TengusMask extends Item {
 	
 	@Override
 	public void execute( Hero hero, String action ) {
-		super.execute( hero, action );
-		if (action.equals(AC_WEAR)) {
-			curUser = hero;
-			GameScene.show(new WndChooseSubclass(this, hero));
+        super.execute(hero, action);
+        if (action.equals(AC_WEAR)) {
+            curUser = hero;
+            GameScene.show(new WndChooseSubclass(this, hero));
         }
 
     }
-	
-	@Override
-	public boolean doPickUp(Hero hero, int pos) {
+
+    @Override
+    public boolean doPickUp(Hero hero, int pos) {
 		if (!cloned || canUse(hero)) {
 			Badges.validateMastery(hero);
 			return super.doPickUp(hero, pos);

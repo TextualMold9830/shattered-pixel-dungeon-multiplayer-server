@@ -521,7 +521,9 @@ public class Item implements Bundlable {
 		
 		return this;
 	}
-	
+	public int visiblyUpgraded(Hero hero){
+        return levelKnown ? level(hero) : 0;
+    }
 	public int visiblyUpgraded() {
 		return levelKnown ? level() : 0;
 	}
@@ -908,7 +910,11 @@ public class Item implements Bundlable {
 			itemObj.put("cursed", visiblyCursed());
 			itemObj.put("identified", isIdentified());
 			itemObj.put("level_known", levelKnown);
-			itemObj.put("level", visiblyUpgraded());
+            if (hero != null) {
+                itemObj.put("level", visiblyUpgraded(hero));
+            } else {
+                itemObj.put("level", visiblyUpgraded());
+            }
 			itemObj.put("energy_value", energyVal());
 			ItemSprite.Glowing glowing = glowing();
 			if (glowing != null) {
