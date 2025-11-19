@@ -199,6 +199,12 @@ public class HolyTome extends Artifact {
 		chargeCap = Math.min(chargeCap + 1, 10);
 		return super.upgrade(hero);
 	}
+    @Override
+	public Item upgrade() {
+		chargeCap = Math.min(chargeCap + 1, 10);
+		return super.upgrade();
+	}
+
 
 	@Override
 	protected ArtifactBuff passiveBuff() {
