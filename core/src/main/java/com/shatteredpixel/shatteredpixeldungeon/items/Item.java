@@ -435,6 +435,9 @@ public class Item implements Bundlable {
 	public final int trueLevel(){
 		return level;
 	}
+    public int trueLevel(Hero hero){
+        return trueLevel();
+    }
 
 	//returns the persistant level of the item, only affected by modifiers which are persistent (e.g. curse infusion)
 	public int level(){
@@ -598,7 +601,7 @@ public class Item implements Bundlable {
 	}
 	public String info(){
 
-		if (true) {
+		if (false) {
 			Notes.CustomRecord note;
 			if (this instanceof EquipableItem) {
 				note = Notes.findCustomRecord(((EquipableItem) this).customNoteID);
@@ -735,7 +738,7 @@ public class Item implements Bundlable {
 		quantity(bundle.getInt( QUANTITY ), false);
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
-		
+
 		int level = bundle.getInt( LEVEL );
 		if (level > 0) {
 			upgrade( level );
