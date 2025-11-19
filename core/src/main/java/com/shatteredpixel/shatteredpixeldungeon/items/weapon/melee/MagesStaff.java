@@ -148,8 +148,8 @@ public class MagesStaff extends MeleeWeapon {
 				return;
 			}
 
-			if (cursed || hasCurseEnchant()) wand.cursed = true;
-			else                             wand.cursed = false;
+            wand.cursed = cursed || hasCurseEnchant();
+            wand.staffToUpdate = this;
 			wand.execute(hero, AC_ZAP);
 			sendSelfUpdate(hero);
 		}
@@ -291,6 +291,7 @@ public class MagesStaff extends MeleeWeapon {
 	public void applyWandChargeBuff(Char owner){
 		if (wand != null){
 			wand.charge(owner, STAFF_SCALE_FACTOR);
+
 		}
 	}
 
