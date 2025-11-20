@@ -25,12 +25,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FragmentOfUpgrade extends Item {
-    private static final String AC_USE = "use";
+    private static final String AC_USE = "USE";
     public static int image = new ScrollOfUpgrade().image();
     {
         stackable = true;
         identify(null);
         defaultAction = AC_USE;
+        unique = true;
     }
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
@@ -162,9 +163,22 @@ public class FragmentOfUpgrade extends Item {
         return 10 * quantity;
     }
 
+/*
     @Override
     public String name() {
         return "Fragment of Upgrade";
+    }
+*/
+
+    @Override
+    public String desc(Hero hero) {
+        String desc = super.desc();
+
+        if (!canUse(hero)) {
+            desc += "\n\n" + Messages.get(this, "nouse");
+        }
+
+        return desc;
     }
 
     @Override

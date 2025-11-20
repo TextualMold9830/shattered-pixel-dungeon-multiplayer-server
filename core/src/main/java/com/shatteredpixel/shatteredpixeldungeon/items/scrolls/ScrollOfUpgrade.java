@@ -155,6 +155,12 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		hero.getSprite().emitter().start( ShadowParticle.UP, 0.05f, 10 );
 		Badges.validateClericUnlock();
 	}
+
+
+	@Override
+	public String desc() {
+		return Dungeon.balance.useFragments && isKnown() ? Messages.get(this, "fragment") : super.desc();
+	}
 	
 	@Override
 	public int value() {

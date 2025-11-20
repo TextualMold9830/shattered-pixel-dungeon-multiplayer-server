@@ -97,6 +97,13 @@ public class Food extends Item {
 		}
 	}
 
+
+	@Override
+	public String desc() {
+		return super.desc() + (Dungeon.balance.foodSatisfiesEveryHero ? "\n\n"+Messages.get(Food.class, "share") : "");
+	}
+
+
 	protected void eatSFX(){
 		Sample.INSTANCE.play( Assets.Sounds.EAT );
 	}
