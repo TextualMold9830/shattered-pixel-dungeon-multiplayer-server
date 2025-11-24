@@ -133,7 +133,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 					}
 				}
 				if (slot != -1
-						&& result.defaultAction() != null
+						&& result.defaultAction(hero) != null
 						&& !Dungeon.quickslot.isNonePlaceholder(slot)
 						&& hero.belongings.contains(result)){
 					Dungeon.quickslot.setSlot(slot, result);

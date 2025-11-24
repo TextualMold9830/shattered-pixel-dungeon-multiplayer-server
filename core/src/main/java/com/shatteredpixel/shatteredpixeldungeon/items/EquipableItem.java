@@ -84,7 +84,7 @@ public abstract class EquipableItem extends Item {
 				updateQuickslot();
 			//if this item wasn't quickslotted, but the item it is replacing as equipped was
 			//then also have the item occupy the unequipped item's quickslot
-			} else if (slotOfUnequipped != -1 && defaultAction() != null) {
+			} else if (slotOfUnequipped != -1 && defaultAction(hero) != null) {
 				Dungeon.quickslot.setSlot( slotOfUnequipped, this );
 				updateQuickslot();
 			}

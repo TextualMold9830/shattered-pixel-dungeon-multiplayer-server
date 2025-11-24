@@ -208,7 +208,7 @@ public class Item implements Bundlable {
 	}
 
 	//can be overridden if default action is variable
-	//TODO: might want to change this
+    @Deprecated
 	public String defaultAction(){
 		return defaultAction;
 	}
@@ -217,9 +217,9 @@ public class Item implements Bundlable {
 	}
 
 	public void execute( Hero hero ) {
-		String action = defaultAction();
+		String action = defaultAction(hero);
 		if (action != null) {
-			execute(hero, defaultAction());
+			execute(hero, defaultAction(hero));
 		}
 	}
 	
@@ -484,7 +484,6 @@ public class Item implements Bundlable {
 		}
 		return this;
 	}
-	@Deprecated
 	public Item upgrade(int n){
 		for (int i=0; i < n; i++) {
 			upgrade();

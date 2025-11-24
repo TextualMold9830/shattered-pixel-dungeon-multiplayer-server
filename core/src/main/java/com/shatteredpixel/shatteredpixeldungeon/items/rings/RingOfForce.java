@@ -175,7 +175,7 @@ public class RingOfForce extends Ring {
 		if (hero != null && hero.heroClass == HeroClass.DUELIST){
 			return AC_ABILITY;
 		} else {
-			return super.defaultAction();
+			return super.defaultAction(hero);
 		}
 	}
 

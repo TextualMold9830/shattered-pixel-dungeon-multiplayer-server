@@ -83,13 +83,13 @@ public class Blandfruit extends Food {
 	}
 
 	@Override
-	public String defaultAction() {
+	public String defaultAction(Hero hero) {
 		if (potionAttrib == null){
 			return null;
-		} else if (potionAttrib.defaultAction().equals(Potion.AC_DRINK)) {
+		} else if (potionAttrib.defaultAction(hero).equals(Potion.AC_DRINK)) {
 			return AC_EAT;
 		} else {
-			return potionAttrib.defaultAction();
+			return potionAttrib.defaultAction(hero);
 		}
 	}
 

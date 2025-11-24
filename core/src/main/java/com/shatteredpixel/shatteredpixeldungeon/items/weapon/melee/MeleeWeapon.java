@@ -75,7 +75,7 @@ public class MeleeWeapon extends Weapon {
                 || hero.hasTalent(Talent.SWIFT_EQUIP))) {
             return AC_ABILITY;
         } else {
-            return super.defaultAction();
+            return super.defaultAction(hero);
         }
     }
 
