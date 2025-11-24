@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemStatusHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
-import com.shatteredpixel.shatteredpixeldungeon.items.optional.Fragment;
 import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfAntiMagic;
@@ -354,7 +353,7 @@ public abstract class Scroll extends Item {
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
 			if (ingredients.get(0) instanceof FragmentOfUpgrade){
-				if (!((Fragment) ingredients.get(0)).isOwner(hero))
+				if (!ingredients.get(0).canUse(hero))
 				{
 					return null;
 				}
@@ -370,14 +369,18 @@ public abstract class Scroll extends Item {
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			if (!testIngredients(ingredients)) return null;
-			
-			Scroll s = (Scroll) ingredients.get(0);
+			if (ingredients.get(0) instanceof Scroll) {
+                Scroll s = (Scroll) ingredients.get(0);
 
-			if (!s.isKnown()){
-				return new Runestone.PlaceHolder().quantity(2);
-			} else {
-				return Reflection.newInstance(stones.get(s.getClass())).quantity(2);
-			}
+                if (!s.isKnown()) {
+                    return new Runestone.PlaceHolder().quantity(2);
+                } else {
+                    return Reflection.newInstance(stones.get(s.getClass())).quantity(2);
+                }
+            } else if (ingredients.get(0) instanceof FragmentOfUpgrade && ingredients.get(0).canUse(hero)){
+                return new StoneOfEnchantment().quantity(2);
+            }
+            return null;
 		}
 	}
 }
