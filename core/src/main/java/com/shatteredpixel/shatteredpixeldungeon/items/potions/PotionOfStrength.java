@@ -61,6 +61,11 @@ public class PotionOfStrength extends Potion {
 	}
 
 	@Override
+	public String desc() {
+		return super.desc() + (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(this, "global_strength") : "");
+	}
+
+	@Override
 	public int value() {
 		return isKnown() ? 50 * quantity() : super.value();
 	}
