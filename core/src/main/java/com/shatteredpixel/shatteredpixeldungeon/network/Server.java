@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 // based on https://developer.android.com/training/connect-devices-wirelessly/nsd.html#java
 
 
+import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -158,11 +159,19 @@ public class Server extends Thread {
     }
     //DNS-SD
     protected static void registerService(int port) {
-        ShatteredPixelDungeon.platform.registerService(port);
+        try {
+            ShatteredPixelDungeon.platform.registerService(port);
+        } catch (Exception e) {
+            Gdx.app.error("DNS", "Failed to start dns-sd service", e);
+        }
     }
 
     public static void unregisterService() {
-        ShatteredPixelDungeon.platform.unregisterService();
+        try {
+            ShatteredPixelDungeon.platform.unregisterService();
+        } catch (Exception e) {
+            Gdx.app.error("DNS", "Failed to stop dns-sd service", e);
+        }
     }
 
     protected static boolean initializeServerSocket() {
