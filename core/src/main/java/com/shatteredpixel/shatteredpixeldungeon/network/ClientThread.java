@@ -379,6 +379,7 @@ class ClientThread implements Callable<String> {
         newHero.spendAndNext(1f);
         newHero.resendReady();
         sendInitData();
+        GameScene.shouldProcess = true;
     }
 
     protected void addCharToSend(@NotNull Char ch) {
@@ -472,7 +473,7 @@ class ClientThread implements Callable<String> {
         //TODO send all  information
         for (Actor actor: Actor.all()) {
             if (actor instanceof Buff)
-            packet.packAndAddBuff((Buff) actor, false);
+                packet.packAndAddBuff((Buff) actor, false);
         }
         flush();
 
