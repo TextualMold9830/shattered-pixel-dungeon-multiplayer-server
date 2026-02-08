@@ -596,7 +596,7 @@ public class Item implements Bundlable {
 	public Emitter emitter() { return null; }
 	
 	public String info(Hero hero) {
-		return desc(hero);
+		return info();
 	}
 	public String info(){
 
