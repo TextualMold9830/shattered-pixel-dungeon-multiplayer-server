@@ -293,7 +293,7 @@ public abstract class Wand extends Item {
 
 	@Override
 	public String info(Hero hero) {
-		String desc = super.info();
+		String desc = super.info(hero);
 
 		desc += "\n\n" + statsDesc(hero);
 
