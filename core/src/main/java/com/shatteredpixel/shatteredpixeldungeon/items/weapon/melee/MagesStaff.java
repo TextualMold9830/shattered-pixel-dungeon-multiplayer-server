@@ -325,8 +325,15 @@ public class MagesStaff extends MeleeWeapon {
 
 		return this;
 	}
-	
-	public void updateWand(boolean levelled){
+
+    @Override
+    public Item upgradeFragmented(Hero hero) {
+        super.upgradeFragmented(hero);
+        updateWand(true);
+        return this;
+    }
+
+    public void updateWand(boolean levelled){
 		if (wand != null) {
 			int curCharges = wand.getCurCharges();
 			wand.level(level(findOwner()));
@@ -334,6 +341,7 @@ public class MagesStaff extends MeleeWeapon {
 			wand.maxCharges = Math.min(wand.maxCharges + 1, 10);
 			wand.setCurCharges(Math.min(curCharges + (levelled ? 1 : 0), wand.maxCharges));
 			updateQuickslot();
+            sendSelfUpdate();
 		}
 	}
 
