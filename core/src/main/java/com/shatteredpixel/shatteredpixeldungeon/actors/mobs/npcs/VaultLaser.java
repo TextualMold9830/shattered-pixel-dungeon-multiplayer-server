@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -34,15 +34,22 @@ public class VaultLaser extends NPC {
 			Ballistica beam = new Ballistica(pos, laserDirs[laserDirIdx], Ballistica.STOP_SOLID);
 			boolean visible = false;
 			for (int cell : beam.subPath(1, beam.dist)){
-				if (Dungeon.level.heroFOV[cell]){
-					visible = true;
-				}
-				if (Actor.findChar(cell) == Dungeon.hero){
-					Dungeon.hero.sprite.showStatus(CharSprite.NEGATIVE, "!!!");
+				for (Hero hero: Dungeon.heroes) {
+			    if (hero != null) {
+
+        				if (hero.fieldOfView[cell]){
+        					visible = true;
+							break;
+        				}
+			    }
+			}
+				Char aChar = Actor.findChar(cell);
+				if (aChar instanceof Hero){
+					aChar.getSprite().showStatus(CharSprite.NEGATIVE, "!!!");
 				}
 			}
 			if (visible){
-				sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(beam.collisionPos)));
+				getSprite().parent.add(new Beam.DeathRay(getSprite().center(), DungeonTilemap.raisedTileCenterToWorld(beam.collisionPos)));
 			}
 
 			laserDirIdx++;
@@ -57,8 +64,8 @@ public class VaultLaser extends NPC {
 
 			Ballistica nextBeam = new Ballistica(pos, laserDirs[laserDirIdx], Ballistica.STOP_SOLID);
 			for (int cell : nextBeam.subPath(1, nextBeam.dist)){
-				if (Dungeon.level.heroFOV[cell]) {
-					sprite.parent.add(new TargetedCell(cell, 0xFF0000));
+				if (Dungeon.visibleforAnyHero(cell)) {
+					getSprite().parent.add(new TargetedCell(cell, 0xFF0000));
 				}
 			}
 

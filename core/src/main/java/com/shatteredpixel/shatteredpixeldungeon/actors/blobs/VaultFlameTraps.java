@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -57,9 +58,9 @@ public class VaultFlameTraps extends Blob {
 
 					//similar to fire.burn(), but Tengu is immune, and hero loses score
 					Char ch = Actor.findChar( cell );
-					if (ch == Dungeon.hero){
+					if (ch instanceof Hero){
 						Sample.INSTANCE.play(Assets.Sounds.BURNING);
-						ch.sprite.showStatus(CharSprite.NEGATIVE, "!!!");
+						ch.getSprite().showStatus(CharSprite.NEGATIVE, "!!!");
 					}
 					/*if (ch != null && !ch.isImmune(Fire.class)) {
 						Buff.affect( ch, Burning.class ).reignite( ch );
@@ -81,7 +82,7 @@ public class VaultFlameTraps extends Blob {
 						GameScene.updateMap( cell );
 					}*/
 
-					if (Dungeon.level.heroFOV[cell]){
+					if (Dungeon.visibleforAnyHero(cell)){
 						CellEmitter.get(cell).start(ElmoParticle.FACTORY, 0.02f, 10);
 					}
 

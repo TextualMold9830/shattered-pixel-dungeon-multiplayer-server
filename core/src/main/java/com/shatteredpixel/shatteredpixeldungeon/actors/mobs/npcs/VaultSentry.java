@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ConeAOE;
@@ -41,10 +42,11 @@ public class VaultSentry extends NPC {
 					Ballistica.STOP_SOLID | Ballistica.STOP_TARGET);
 
 			for (int cell : scan.cells) {
-				if (Actor.findChar(cell) == Dungeon.hero){
-					Dungeon.hero.sprite.showStatus(CharSprite.NEGATIVE, "!!!");
+				Char c = Actor.findChar(cell);
+				if (c instanceof Hero){
+					c.getSprite().showStatus(CharSprite.NEGATIVE, "!!!");
 				}
-				if (Dungeon.level.heroFOV[cell]) {
+				if (c.fieldOfView[cell]) {
 					GameScene.effect(new CheckedCell(cell, pos));
 				}
 			}
