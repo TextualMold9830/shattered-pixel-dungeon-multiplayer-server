@@ -22,12 +22,12 @@ allprojects {
     } else {
         println("Version file not found, using default: 'Local-build'")
     }
-    def baseVersionName = "3.3.5"
+    def baseVersionName = "3.3.6"
     ext {
         appName = 'Shattered Pixel Dungeon Server'
         appPackageName = 'com.shatteredpixel.shatteredpixeldungeon.multiplayer.server'
 
-        appVersionCode = 890
+        appVersionCode = 891
         appVersionName = "Server_" +versionName + "_on_v"+baseVersionName
         appShortVersionName = ((appVersionName) =~ /\d+\.\d+\.\d+/) ? ((appVersionName) =~ /\d+\.\d+\.\d+/)[0] : "0.0.0"
 
