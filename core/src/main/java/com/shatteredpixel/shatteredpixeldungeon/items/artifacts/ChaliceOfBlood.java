@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,9 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -74,36 +77,63 @@ public class ChaliceOfBlood extends Artifact {
 
 		if (action.equals(AC_PRICK)){
 
-			int damage = 5 + 3*(level()*level());
+			int minDmg = minPrickDmg();
+			int maxDmg = maxPrickDmg();
 
-			if (damage > hero.getHP() *0.75) {
+			int totalHeroHP = hero.HP + hero.shielding();
 
-				GameScene.show(
+			float deathChance = 0;
+
+			if (totalHeroHP < maxDmg) {
+				deathChance = (maxDmg - totalHeroHP) / (float) (maxDmg - minDmg);
+				if (deathChance < 0.5f) {
+					deathChance = (float) Math.pow(2 * deathChance, 2) / 2f;
+				} else if (deathChance < 1f) {
+					deathChance = 1f - deathChance;
+					deathChance = (float) Math.pow(2 * deathChance, 2) / 2f;
+					deathChance = 1f - deathChance;
+				} else {
+					deathChance = 1;
+				}
+			}
+
+			GameScene.show(
 					new WndOptions(hero, new ItemSprite(this),
-							Messages.titleCase(name()),
-							Messages.get(this, "prick_warn"),
-							Messages.get(this, "yes"),
-							Messages.get(this, "no")) {
-						@Override
-						protected void onSelect(int index) {
-							if (index == 0)
-								prick(getOwnerHero());
+						Messages.titleCase(name()),
+						Messages.get(this, "prick_warn", minDmg, maxDmg, Messages.decimalFormat("#.##", 100*deathChance)),
+						Messages.get(this, "yes"),
+						Messages.get(this, "no")) {
+					@Override
+					protected void onSelect(int index) {
+						if (index == 0) {
+							prick(getOwnerHero());
 						}
 					}
-				);
+				}
+			);
 
-			} else {
-				prick(hero);
-			}
 		}
 	}
 
-	private void prick(Hero hero){
-		int damage = 5 + 3*(level()*level());
+	private int minPrickDmg(){
+		return (int)Math.ceil(3 + 2.5f*(level()*level()));
+	}
 
+	private int maxPrickDmg(){
+		return (int)Math.floor(7 + 3.5f*(level()*level()));
+	}
+
+	private void prick(Hero hero){
+		int damage = Random.NormalIntRange(minPrickDmg(), maxPrickDmg());
+
+		//need to process on-hit effects manually
 		Earthroot.Armor armor = hero.buff(Earthroot.Armor.class);
 		if (armor != null) {
 			damage = armor.absorb(damage);
+		}
+
+		if (hero.buff(MagicImmune.class) != null && hero.buff(HolyWard.HolyArmBuff.class) != null){
+			damage -= hero.subClass == HeroSubClass.PALADIN ? 3 : 1;
 		}
 
 		WandOfLivingEarth.RockArmor rockArmor = hero.buff(WandOfLivingEarth.RockArmor.class);
@@ -115,7 +145,7 @@ public class ChaliceOfBlood extends Artifact {
 
 		hero.getSprite().operate( hero.pos );
 		hero.busy();
-		hero.spend(3f);
+		hero.spend(Actor.TICK);
 		GLog.w( Messages.get(this, "onprick") );
 		if (damage <= 0){
 			damage = 1;

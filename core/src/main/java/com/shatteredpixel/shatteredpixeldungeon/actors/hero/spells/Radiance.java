@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,9 +67,17 @@ public class Radiance extends ClericSpell {
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob.alignment != Char.Alignment.ALLY && hero.fieldOfView[mob.pos]) {
-				Buff.affect(mob, GuidingLight.Illuminated.class);
-				Buff.affect(mob, GuidingLight.WasIlluminatedTracker.class);
-				Buff.affect(mob, Paralysis.class, 3f);
+
+				if (mob.buff(GuidingLight.Illuminated.class) != null){
+					new Char.DamageCause(GuidingLight.class, hero);
+					mob.damage(hero.lvl + 5, new Char.DamageCause(GuidingLight.class, hero));
+				} else {
+					Buff.affect(mob, GuidingLight.Illuminated.class);
+					Buff.affect(mob, GuidingLight.WasIlluminatedTracker.class);
+				}
+				if (mob.isActive()) {
+					Buff.affect(mob, Paralysis.class, 3f);
+				}
 			}
 		}
 

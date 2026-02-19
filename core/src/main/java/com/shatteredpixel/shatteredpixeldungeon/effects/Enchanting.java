@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class Enchanting extends ItemSprite {
 
 	public Enchanting( Item item ) {
 		super( item.image(), null );
-		originToCenter();
+		//originToCenter();
 
 		if (item.glowing() != null) {
 			color = item.glowing().color;
@@ -67,10 +67,8 @@ public class Enchanting extends ItemSprite {
 	public void update() {
 		super.update();
 
-		if (passed == 0) {
-			x = target.getSprite().center().x - width() / 2;
-			y = target.getSprite().y - height();
-		}
+		x = target.getSprite().center().x - width() / 2;
+		y = target.getSprite().y - 8 - height()/2;
 
 		switch (phase) {
 			case FADE_IN:

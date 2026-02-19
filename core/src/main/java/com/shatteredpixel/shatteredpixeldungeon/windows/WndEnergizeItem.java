@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -34,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.Game;
 
 public class WndEnergizeItem extends WndInfoItem {
 
@@ -54,8 +56,29 @@ public class WndEnergizeItem extends WndInfoItem {
 			RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 				@Override
 				protected void onClick() {
-					energizeAll(item, getOwnerHero());
-					hide();
+					if (item instanceof Trinket){
+						Game.scene().addToFront(new WndOptions(new ItemSprite(item), Messages.titleCase(item.name()),
+								Messages.get(WndEnergizeItem.class, "trinket_warn"),
+								Messages.get(WndEnergizeItem.class, "trinket_yes"),
+								Messages.get(WndEnergizeItem.class, "trinket_no")){
+
+							@Override
+							protected void onSelect(int index) {
+								if (index == 0) {
+									energizeAll(item, getOwnerHero());
+								}
+								openItemSelector(getOwnerHero());
+							}
+
+							@Override
+							public void hide() {
+								super.hide();
+								WndEnergizeItem.this.hide();
+							}
+						});
+					} else {energizeAll(item, getOwnerHero());
+						hide();
+					}
 				}
 			};
 			btnEnergize.setRect(0, pos + GAP, width, BTN_HEIGHT);

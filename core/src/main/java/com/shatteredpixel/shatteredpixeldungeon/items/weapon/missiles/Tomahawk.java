@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,16 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
+import org.jetbrains.annotations.Nullable;
 
 public class Tomahawk extends MissileWeapon {
 
@@ -41,18 +47,70 @@ public class Tomahawk extends MissileWeapon {
 	@Override
 	public int min(int lvl) {
 		return  Math.round(1.5f * tier) +   //6 base, down from 8
-				2 * lvl;                    //scaling unchanged
+				lvl;                        //scaling unchanged
 	}
 	
 	@Override
 	public int max(int lvl) {
-		return  Math.round(3.75f * tier) +  //15 base, down from 20
-				(tier)*lvl;                 //scaling unchanged
+		return  Math.round(4f * tier) +     //16 base, down from 20
+				(tier-1)*lvl;               //3 scaling, down from 4
+	}
+
+	public float minBleed(@Nullable Hero hero){
+		int ringBonus = 0;
+		if (hero != null) {
+			ringBonus = RingOfSharpshooting.levelDamageBonus(hero);
+		}
+		return minBleed(buffedLvl() + ringBonus);
+	}
+	public float minBleed(){
+		return minBleed(null);
+	}
+	public float minBleed(int lvl){
+		return 3 + lvl/2f;
+	}
+
+	public float maxBleed(@Nullable Hero hero){
+		int ringBonus = 0;
+		if (hero != null) {
+			ringBonus = RingOfSharpshooting.levelDamageBonus(hero);
+		}
+		return maxBleed(buffedLvl() + ringBonus);
+	}
+
+	public float maxBleed(int lvl){
+		return 6 + lvl;
+	}
+	public float maxBleed(){
+		return maxBleed(null);
 	}
 	
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
-		Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.6f) );
+		//33% damage roll as bleed, but ignores armor and str bonus
+		//currently 2-5.3, plus 0.33-1 per level
+		//increasing to 40% results in: 2.4-6.4, plus 0.4-1.2 per level
+		//maybe standardize that to 3-6 plus 0.5-1 per level
+		if (attacker instanceof Hero) {
+			Hero hero = (Hero) attacker;
+			Buff.affect(defender, Bleeding.class).set(augment.damageFactor(Random.NormalFloat(minBleed(hero), maxBleed(hero))));
+		} else {
+			Buff.affect(defender, Bleeding.class).set(augment.damageFactor(Random.NormalFloat(minBleed(), maxBleed())));
+
+		}
 		return super.proc( attacker, defender, damage );
 	}
+
+	public String statsInfo(){
+		if (isIdentified()){
+			return Messages.get(this, "stats_desc",
+					Math.round(augment.damageFactor(minBleed())),
+					Math.round(augment.damageFactor(maxBleed())));
+		} else {
+			return Messages.get(this, "typical_stats_desc",
+					Math.round(augment.damageFactor(minBleed(0))),
+					Math.round(augment.damageFactor(maxBleed(0))));
+		}
+	}
+
 }

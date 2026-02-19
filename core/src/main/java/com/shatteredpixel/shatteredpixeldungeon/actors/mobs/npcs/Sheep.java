@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,26 +44,23 @@ public class Sheep extends NPC {
 		spriteClass = SheepSprite.class;
 	}
 
-	public float lifespan;
-
-	private boolean initialized = false;
+	private float lifespan;
 
 	@Override
 	protected boolean act() {
 		if (Dungeon.visibleforAnyHero(pos)){
 			Bestiary.setSeen(getClass());
 		}
-		if (initialized) {
-			setHP(0);
+        setHP(0);
 
-			destroy();
-			getSprite().die();
-
-		} else {
-			initialized = true;
-			spend( lifespan + Random.Float(-2, 2) );
-		}
+		destroy();
+		getSprite().die();
 		return true;
+	}
+
+	public void initialize(float lifespan){
+		this.lifespan = lifespan;
+		spend( lifespan + Random.Float(-2, 2) );
 	}
 
 	@Override
@@ -83,9 +80,10 @@ public class Sheep extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
+		Bestiary.setSeen(getClass());
 		getSprite().showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
 		if (c instanceof Hero) {
-			((Hero) c).spendAndNext(1f);
+			((Hero)c).spendAndNext(1f);
 			Sample.INSTANCE.play(Assets.Sounds.SHEEP, 1, Random.Float(0.91f, 1.1f));
 			//sheep summoned by woolly bomb can be dispelled by interacting
 			if (lifespan >= 20){

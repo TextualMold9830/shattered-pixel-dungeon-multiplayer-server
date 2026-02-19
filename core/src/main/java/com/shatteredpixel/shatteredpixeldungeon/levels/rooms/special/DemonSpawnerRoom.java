@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,10 +45,12 @@ public class DemonSpawnerRoom extends SpecialRoom {
 		int cy = c.y;
 
 		Door door = entrance();
-		door.set(Door.Type.UNLOCKED);
+		door.set(Door.Type.UNLOCKED); //cannot be hidden randomly under any circumstance
 
 		DemonSpawner spawner = new DemonSpawner();
 		spawner.pos = cx + cy * level.width();
+		Statistics.spawnersAlive++;
+		spawner.spawnRecorded = true;
 		level.mobs.add( spawner );
 
 		CustomFloor vis = new CustomFloor();

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ public class WndBag extends WndTabbed {
 	
 	//only one bag window can appear at a time
 	private static final Map<Integer,WndBag> INSTANCE = new HashMap<>();
-	
+
 	private final ItemSelector selector;
 
 	private static Bag lastBag;
@@ -77,6 +77,9 @@ public class WndBag extends WndTabbed {
 				BagTab tab = new BagTab( b, i++ );
 				add( tab );
 				tab.select( b == bag );
+				if  (b == bag){
+					selected = tab;
+				}
 			}
 		}
 
@@ -102,11 +105,15 @@ public class WndBag extends WndTabbed {
 	private static void setInstance(@NotNull Hero hero, @Nullable WndBag instance){
 		INSTANCE.put(HeroHelp.getHeroID(hero), instance);
 	}
+	public ItemSelector getSelector() {
+		return selector;
+	}
+
 
 	public static WndBag lastBag( ItemSelector selector, Hero hero ) {
-		
+
 		if (lastBag != null && hero.belongings.backpack.contains( lastBag )) {
-			
+
 			return new WndBag( lastBag, selector, hero );
 			
 		} else {

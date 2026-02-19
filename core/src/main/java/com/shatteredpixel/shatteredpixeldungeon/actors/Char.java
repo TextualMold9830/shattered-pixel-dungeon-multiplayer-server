@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.curses.Bulk;
@@ -120,6 +121,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportat
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFireblast;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFrost;
@@ -141,6 +143,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GnollRockfallTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
@@ -171,8 +174,8 @@ public abstract class Char extends Actor {
 	
 	private CharSprite sprite;
 	
-	private int HT;
-	private int HP;
+	protected int HT;
+	public int HP;
 	
 	protected float baseSpeed	= 1;
 	protected PathFinder.Path path;
@@ -182,14 +185,7 @@ public abstract class Char extends Actor {
 	public boolean flying		= false;
 	public int invisible		= 0;
 
-	public CharSprite getSprite() {
-		return sprite;
-	}
 
-	public void setSprite(CharSprite sprite) {
-		this.sprite = sprite;
-		sendSelf();
-	}
 
 	public boolean needsShieldUpdate() {
 		return needsShieldUpdate;
@@ -201,6 +197,8 @@ public abstract class Char extends Actor {
 			sendSelf();
 		}
 	}
+
+
 
 	public int getHT() {
 		return HT;
@@ -224,6 +222,14 @@ public abstract class Char extends Actor {
 			sendSelf();
 		}
 		return HP;
+	}
+
+	public CharSprite getSprite() {
+		return sprite;
+	}
+
+	public void setSprite(CharSprite sprite) {
+		this.sprite = sprite;
 	}
 
 
@@ -480,12 +486,11 @@ public abstract class Char extends Actor {
 			if (enemy.buff(GuidingLight.Illuminated.class) != null){
 				Hero source = enemy.buff(GuidingLight.Illuminated.class).source;
 				enemy.buff(GuidingLight.Illuminated.class).detach();
-				if (this instanceof Hero && ((Hero) this).hasTalent(Talent.SEARING_LIGHT)){
-					dmg += 2 + 2* ((Hero) this).pointsInTalent(Talent.SEARING_LIGHT);
+				if (this == source && source.hasTalent(Talent.SEARING_LIGHT)){
+					dmg += 1 + 2* source.pointsInTalent(Talent.SEARING_LIGHT);
 				}
-				if (!(this instanceof Hero) && source.subClass == HeroSubClass.PRIEST){
-					Hero cause = enemy.buff(GuidingLight.Illuminated.class).source;
-					enemy.damage(cause.lvl, new DamageCause(GuidingLight.INSTANCE, cause));
+				if (this == source && source.subClass == HeroSubClass.PRIEST){
+					enemy.damage(5 + ((Hero)this).lvl, new Char.DamageCause(this));
 				}
 			}
 
@@ -529,7 +534,7 @@ public abstract class Char extends Actor {
 					if (hero.alignment == enemy.alignment
 							&& hero.buff(AuraOfProtection.AuraBuff.class) != null
 							&& (Dungeon.level.distance(enemy.pos, hero.pos) <= 2 || enemy.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-						dmg *= 0.925f - 0.075f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+						dmg *= 0.9f - 0.1f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
 					}
 				}
 			}
@@ -653,7 +658,20 @@ public abstract class Char extends Actor {
 
 		} else {
 
-			enemy.getSprite().showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+			if (enemy.sprite != null){
+				if (hitMissIcon != -1){
+					//dooking is a playful sound Ferrets can make, like low pitched chirping
+					// I doubt this will translate, so it's only in English
+					if (hitMissIcon == FloatingText.MISS_TUFT && Messages.lang() == Languages.ENGLISH && Random.Int(10) == 0) {
+						enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, "dooked", hitMissIcon);
+					} else {
+						enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, enemy.defenseVerb(), hitMissIcon);
+					}
+					hitMissIcon = -1;
+				} else {
+					enemy.getSprite().showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+				}
+			}
 			if (visibleFight) {
 				//TODO enemy.defenseSound? currently miss plays for monks/crab even when they parry
 				Sample.INSTANCE.play(Assets.Sounds.MISS);
@@ -662,6 +680,7 @@ public abstract class Char extends Actor {
 			return false;
 
 		}
+
 	}
 
 	public static int INFINITE_ACCURACY = 1_000_000;
@@ -691,8 +710,10 @@ public abstract class Char extends Actor {
 		//if accuracy or evasion are large enough, treat them as infinite.
 		//note that infinite evasion beats infinite accuracy
 		if (defStat >= INFINITE_EVASION) {
+			hitMissIcon = FloatingText.getMissReasonIcon(attacker, acuStat, defender, INFINITE_EVASION);
 			return false;
 		} else if (acuStat >= INFINITE_ACCURACY) {
+			hitMissIcon = FloatingText.getHitReasonIcon(attacker, INFINITE_ACCURACY, defender, defStat);
 			return true;
 		}
 
@@ -714,6 +735,7 @@ public abstract class Char extends Actor {
 				}
 			}
 		}
+		acuRoll *= accMulti;
 
 		float defRoll = Random.Float(defStat);
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
@@ -733,9 +755,18 @@ public abstract class Char extends Actor {
 			}
 		}
 	}
+		defRoll *= FerretTuft.evasionMultiplier();
 
-		return (acuRoll * accMulti) >= defRoll;
+		if (acuRoll >= defRoll){
+			hitMissIcon = FloatingText.getHitReasonIcon(attacker, acuRoll, defender, defRoll);
+			return true;
+		} else {
+			hitMissIcon = FloatingText.getMissReasonIcon(attacker, acuRoll, defender, defRoll);
+			return false;
+		}
 	}
+
+	private static int hitMissIcon = -1;
 
 	public int attackSkill( Char target ) {
 		return 0;
@@ -896,6 +927,11 @@ public abstract class Char extends Actor {
 					ch.damage(dmg, new DamageCause(link, source.getDamageOwner()));
 					if (!ch.isAlive()) {
 						link.detach();
+						if (ch instanceof Hero){
+							Badges.validateDeathFromFriendlyMagic();
+							Dungeon.fail(src);
+							GLog.n( Messages.get(LifeLink.class, "ondeath") );
+						}
 					}
 				}
 			}
@@ -904,14 +940,14 @@ public abstract class Char extends Actor {
 		//temporarily assign to a float to avoid rounding a bunch
 		float damage = dmg;
 
-		//if dmg is from a character we already reduced it in defenseProc
+		//if dmg is from a character we already reduced it in Char.attack
 		if (!(src instanceof Char)) {
 			for (Hero hero: Dungeon.heroes) {
 				if (hero != null) {
 					if (hero.alignment == alignment
 							&& hero.buff(AuraOfProtection.AuraBuff.class) != null
 							&& (Dungeon.level.distance(pos, hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-						damage *= 0.925f - 0.075f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
+						damage *= 0.9f - 0.1f * hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
 					}
 				}
 			}
@@ -996,24 +1032,23 @@ public abstract class Char extends Actor {
 			buff( Paralysis.class ).processDamage(dmg);
 		}
 
-		int shielded = dmg;
-		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
-		if (!(src instanceof Hunger)){
-			for (ShieldBuff s : buffs(ShieldBuff.class)){
-				dmg = s.absorbDamage(dmg);
-				if (dmg == 0) break;
-			}
+		BrokenSeal.WarriorShield shield = buff(BrokenSeal.WarriorShield.class);
+		if (!(src instanceof Hunger)
+				&& dmg > 0
+				//either HP is already half or below (ignoring shield)
+				// or the hit will reduce it to half or below
+				&& (HP <= HT/2 || HP + shielding() - dmg <= HT/2)
+				&& shield != null && !shield.coolingDown()){
+			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(buff(BrokenSeal.WarriorShield.class).maxShield((Hero) this)), FloatingText.SHIELDING);
+			shield.activate((Hero) this);
 		}
+
+		int shielded = dmg;
+		dmg = ShieldBuff.processDamage(this, dmg, src);
 		shielded -= dmg;
 		setHP(getHP() - dmg);
 
-		if (getHP() > 0 && shielded > 0 && shielding() == 0){
-			if (this instanceof Hero && ((Hero) this).hasTalent(Talent.PROVOKED_ANGER)){
-				Buff.affect(this, Talent.ProvokedAngerTracker.class, 5f);
-			}
-		}
-
-		if (getHP() > 0 && buff(Grim.GrimTracker.class) != null){
+		if (HP > 0 && buff(Grim.GrimTracker.class) != null){
 
 			float finalChance = buff(Grim.GrimTracker.class).maxChance;
 			finalChance *= (float)Math.pow( ((getHT() - getHP()) / (float) getHT()), 2);
@@ -1078,7 +1113,13 @@ public abstract class Char extends Actor {
 			if (src instanceof Corruption)                              icon = FloatingText.CORRUPTION;
 			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
 
-			getSprite().showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
+			if ((icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK) && hitMissIcon != -1){
+				if (icon == FloatingText.PHYS_DMG_NO_BLOCK) hitMissIcon += 18; //extra row
+				icon = hitMissIcon;
+			}
+			hitMissIcon = -1;
+
+			sprite.showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
 		}
 
 		if (getHP() < 0) setHP(0);

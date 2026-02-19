@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -297,6 +297,9 @@ public class Ghoul extends Mob {
 				Dungeon.level.occupyCell( ghoul );
 				ghoul.getSprite().idle();
 				ghoul.getSprite().showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.getHT() /10f)), FloatingText.HEALING);
+				if (ghoul.enemy != null && ghoul.enemy.alignment == ghoul.alignment){
+					ghoul.enemy = null; //reset enemy
+				}
 				super.detach();
 				return true;
 			}

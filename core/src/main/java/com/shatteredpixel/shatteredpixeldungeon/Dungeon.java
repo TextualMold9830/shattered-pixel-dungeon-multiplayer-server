@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -167,7 +167,7 @@ public class Dungeon {
 	}
 
 	public static int challenges;
-	public static int mobsToChampion;
+	public static float mobsToChampion;
 	@Nullable
 	public static Hero[] heroes = null;
 	public static Level level;
@@ -221,7 +221,7 @@ public class Dungeon {
 
 		initialVersion = version = Game.versionCode;
 		challenges = SPDSettings.challenges();
-		mobsToChampion = -1;
+		mobsToChampion = 1;
 		if (!DeviceCompat.isDebug() && Dungeon.seed == 0) {
 			initSeed();
 		}
@@ -349,6 +349,12 @@ public class Dungeon {
 				case 14:
 					level = new MiningLevel();
 					break;
+				case 16:
+				case 17:
+				case 18:
+				case 19:
+					level = new VaultLevel();
+					break;
 				default:
 					level = new DeadEndLevel();
 			}
@@ -358,8 +364,8 @@ public class Dungeon {
         Server.pluginManager.fireEvent(new DungeonGenerateLevelEvent(depth, level));
 
 
-		//dead end levels get cleared, don't count as generated
-		if (!(level instanceof DeadEndLevel)){
+		//dead end levels (and vault levels for now!) get cleared, don't count as generated
+		if (!(level instanceof DeadEndLevel || level instanceof VaultLevel)){
 			//this assumes that we will never have a depth value outside the range 0 to 999
 			// or -500 to 499, etc.
 			if (!generatedLevels.contains(depth + 1000*branch)) {
@@ -746,7 +752,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 
 		Dungeon.challenges = bundle.getInt( CHALLENGES );
-		Dungeon.mobsToChampion = bundle.getInt( MOBS_TO_CHAMPION );
+		Dungeon.mobsToChampion = bundle.getFloat( MOBS_TO_CHAMPION );
 		
 		Dungeon.level = null;
 		Dungeon.depth = -1;
@@ -897,7 +903,7 @@ public class Dungeon {
 
 	public static void updateLevelExplored(){
 		if (branch == 0 && level instanceof RegularLevel && !Dungeon.bossLevel()){
-			Statistics.floorsExplored.put( depth, level.isLevelExplored(depth));
+			Statistics.floorsExplored.put( depth, level.levelExplorePercent(depth));
 		}
 	}
 
@@ -1165,6 +1171,15 @@ public class Dungeon {
 			return null;
         }
     }
+	public static Hero getHeroByUUID(String uuid) {
+		for (Hero hero : heroes) {
+			if (hero != null && hero.uuid.equals(uuid)) {
+				return hero;
+			}
+		}
+		return null;
+	}
+
 
 	//to allow multiple levels delete this
 	public static void switchLevel( final Level level, int pos){

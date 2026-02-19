@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.EarthGuardianSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WardSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
+import com.shatteredpixel.shatteredpixeldungeon.ui.TitleBackground;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -60,6 +60,7 @@ import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import com.watabou.utils.RectF;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -100,14 +101,17 @@ public class SurfaceScene extends PixelScene {
 		
 		int w = Camera.main.width;
 		int h = Camera.main.height;
-		
-		Archs archs = new Archs();
-		archs.reversed = true;
-		archs.setSize( w, h );
-		add( archs );
 
-		float vx = align((w - SKY_WIDTH) / 2f);
-		float vy = align((h - SKY_HEIGHT - BUTTON_HEIGHT) / 2f);
+		RectF insets = getCommonInsets();
+
+		TitleBackground BG = new TitleBackground(w, h);
+		add( BG );
+
+		w -= insets.left + insets.right;
+		h -= insets.top + insets.bottom;
+
+		float vx = align(insets.left + (w - SKY_WIDTH) / 2f);
+		float vy = align(insets.top + (h - SKY_HEIGHT - BUTTON_HEIGHT) / 2f);
 
 		Point s = Camera.main.cameraToScreen( vx, vy );
 		viewport = new Camera( s.x, s.y, SKY_WIDTH, SKY_HEIGHT, defaultZoom );

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,10 @@ import com.watabou.input.GameAction;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.nikita22007.multiplayer.noosa.audio.Sample;
+import com.watabou.noosa.NinePatch;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Component;
+import com.watabou.utils.DeviceCompat;
 
 public class MenuPane extends Component {
 
@@ -61,17 +63,25 @@ public class MenuPane extends Component {
 	private MenuButton btnMenu;
 
 	private BitmapText version;
+	private NinePatch versionOverflowBG;
 
 	private DangerIndicator danger;
 
-	public static final int WIDTH = 32;
+	public static final int WIDTH = 31;
 
 	@Override
 	protected void createChildren() {
 		super.createChildren();
 
-		bg = new Image(Assets.Interfaces.MENU);
+		bg = new Image(Assets.Interfaces.MENU, 1, 0, 31, 21);
 		add(bg);
+
+		versionOverflowBG = new NinePatch(bg.texture, 1, 22, 6, 8, 3, 0, 2, 0);
+		add(versionOverflowBG);
+
+		version = new BitmapText( "v" + Game.version , PixelScene.pixelFont);
+		version.hardlight( 0xCACFC2 );
+		add(version);
 
 		depthIcon = Icons.get(Dungeon.level.feeling);
 		add(depthIcon);
@@ -135,10 +145,6 @@ public class MenuPane extends Component {
 		btnMenu = new MenuButton();
 		add( btnMenu );
 
-		version = new BitmapText( "v" + Game.version, PixelScene.pixelFont);
-		version.alpha( 0.5f );
-		add(version);
-
 		danger = new DangerIndicator();
 		add( danger );
 	}
@@ -150,13 +156,31 @@ public class MenuPane extends Component {
 		bg.x = x;
 		bg.y = y;
 
+		version.scale.set(PixelScene.align(0.5f));
+		version.measure();
+
+		float rightMargin = DeviceCompat.isDesktop() ? 1 : 8;
+		if (DeviceCompat.isDebug()) rightMargin = 1; //don't care about hiding 'indev'
+		float overFlow = version.width()-(bg.width()-4-rightMargin);
+		if (overFlow >= 1){
+			version.x = x + 2 - overFlow;
+			versionOverflowBG.size(overFlow+3, 8);
+			versionOverflowBG.x = version.x-3;
+			versionOverflowBG.y = y;
+		} else {
+			version.x = x + 3;
+			versionOverflowBG.visible = false;
+		}
+		version.y = y + 3 - (version.baseLine()*version.scale.y)/2f;
+		version.y -= .001f;
+		PixelScene.align(version);
+
 		btnMenu.setPos( x + WIDTH - btnMenu.width(), y );
 
 		btnJournal.setPos( btnMenu.left() - btnJournal.width() + 2, y );
 
 		depthIcon.x = btnJournal.left() - 7 + (7 - depthIcon.width())/2f - 0.1f;
-		depthIcon.y = y + 1;
-		if (SPDSettings.interfaceSize() == 0) depthIcon.y++;
+		depthIcon.y = y+8;
 		PixelScene.align(depthIcon);
 
 		depthText.scale.set(PixelScene.align(0.67f));
@@ -168,8 +192,7 @@ public class MenuPane extends Component {
 
 		if (challengeIcon != null){
 			challengeIcon.x = btnJournal.left() - 14 + (7 - challengeIcon.width())/2f - 0.1f;
-			challengeIcon.y = y + 1;
-			if (SPDSettings.interfaceSize() == 0) challengeIcon.y++;
+			challengeIcon.y = depthIcon.y;
 			PixelScene.align(challengeIcon);
 
 			challengeText.scale.set(PixelScene.align(0.67f));
@@ -180,13 +203,8 @@ public class MenuPane extends Component {
 			challengeButton.setRect(challengeIcon.x, challengeIcon.y, challengeIcon.width(), challengeIcon.height() + challengeText.height());
 		}
 
-		version.scale.set(PixelScene.align(0.5f));
-		version.measure();
-		version.x = x + WIDTH - version.width();
-		version.y = y + bg.height() + (3 - version.baseLine());
-		PixelScene.align(version);
-
-		danger.setPos( x + WIDTH - danger.width(), y + bg.height + 3 );
+		danger.setPos( x + WIDTH - danger.width(), y + bg.height + 1 );
+		danger.setSize( camera.width - danger.width(), danger.height());
 	}
 
 	public void flashForPage( Document doc, String page ){
@@ -211,7 +229,7 @@ public class MenuPane extends Component {
 			super();
 
 			width = bg.width + 4;
-			height = bg.height + 4;
+			height = bg.height + 10;
 		}
 
 		@Override
@@ -239,7 +257,7 @@ public class MenuPane extends Component {
 			super.layout();
 
 			bg.x = x + 2;
-			bg.y = y + 2;
+			bg.y = y + 8;
 
 			journalIcon.x = bg.x + (bg.width() - journalIcon.width())/2f;
 			journalIcon.y = bg.y + (bg.height() - journalIcon.height())/2f;
@@ -344,7 +362,7 @@ public class MenuPane extends Component {
 			super();
 
 			width = image.width + 4;
-			height = image.height + 4;
+			height = image.height + 10;
 		}
 
 		@Override
@@ -360,7 +378,7 @@ public class MenuPane extends Component {
 			super.layout();
 
 			image.x = x + 2;
-			image.y = y + 2;
+			image.y = y + 8;
 		}
 
 		@Override

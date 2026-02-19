@@ -65,7 +65,7 @@ public class LifeLinkSpell extends ClericSpell {
 	@Override
 	public void onCast(HolyTome tome, Hero hero) {
 
-		int duration = 4 + 2*hero.pointsInTalent(Talent.LIFE_LINK);
+		int duration = Math.round(6.67f + 3.33f* hero.pointsInTalent(Talent.LIFE_LINK));
 
 		Char ally = PowerOfMany.getPoweredAlly();
 
@@ -112,7 +112,7 @@ public class LifeLinkSpell extends ClericSpell {
 
 		@Override
 		public float iconFadePercent() {
-			int duration = 4 + 2*source.pointsInTalent(Talent.LIFE_LINK);
+			int duration = Math.round(6.67f + 3.33f*source.pointsInTalent(Talent.LIFE_LINK));
 			return Math.max(0, (duration - visualcooldown()) / duration);
 		}
 	}

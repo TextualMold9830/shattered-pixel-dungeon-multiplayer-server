@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,9 +95,9 @@ public abstract class Scroll extends Item {
 	protected String rune;
 
 	//affects how strongly on-scroll talents trigger from this scroll
-	protected float talentFactor = 1;
+	public float talentFactor = 1;
 	//the chance (0-1) of whether on-scroll talents trigger from this potion
-	protected float talentChance = 1;
+	public float talentChance = 1;
 	
 	{
 		stackable = true;
@@ -204,9 +204,9 @@ public abstract class Scroll extends Item {
 
 		if (!anonymous) {
 			Catalog.countUse(getClass());
-			if (Random.Float() < talentChance) {
-				Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
-			}
+		}
+		if (Random.Float() < talentChance) {
+			Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
 		}
 
 	}

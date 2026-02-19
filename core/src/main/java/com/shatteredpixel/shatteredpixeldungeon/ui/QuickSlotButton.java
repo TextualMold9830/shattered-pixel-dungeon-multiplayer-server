@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ public class QuickSlotButton {
 
 	public static void reset() {
 		lastTarget = null;
+		//targetingSlot = -1;
 	}
 	public static int autoAim(Char target, Hero targetSource){
 		//will use generic projectile logic if no item is specified
@@ -56,7 +57,6 @@ public class QuickSlotButton {
 
 	//FIXME: this is currently very expensive, should either optimize ballistica or this, or both
 	public static int autoAim(Char target, Item item, Hero targetSource) {
-
 		//first try to directly target
 		if (item.targetingPos(targetSource, target.pos) == target.pos) {
 			return target.pos;

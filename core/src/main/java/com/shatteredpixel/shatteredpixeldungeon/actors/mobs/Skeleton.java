@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -33,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletonSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
@@ -92,6 +99,29 @@ public class Skeleton extends Mob {
 					int preDmg = damage;
 					damage = armor.absorb( damage );
 					damage -= (preDmg - damage); //apply the flat reduction twice
+				}
+
+				if (ch.buff(MagicImmune.class) == null) {
+					ShieldOfLight.ShieldOfLightTracker shield = ch.buff(ShieldOfLight.ShieldOfLightTracker.class);
+					if (shield != null && shield.object == id()) {
+						int min = 1 + ((Hero) ch).pointsInTalent(Talent.SHIELD_OF_LIGHT);
+						damage -= Random.NormalIntRange(min, 2 * min);
+						damage -= Random.NormalIntRange(min, 2 * min); //apply twice
+						damage = Math.max(damage, 0);
+					} else if (ch instanceof Hero
+							&& ((Hero) ch).heroClass != HeroClass.CLERIC
+							&& ((Hero) ch).hasTalent(Talent.SHIELD_OF_LIGHT)
+							&& TargetHealthIndicator.instance.target() == this) {
+						//33/50%
+						if (Random.Int(6) < 1 + ((Hero) ch).pointsInTalent(Talent.SHIELD_OF_LIGHT)) {
+							damage -= 2; //doubled
+						}
+					}
+
+					if (ch.buff(HolyWard.HolyArmBuff.class) != null){
+						//doubled
+						damage -= ((Hero) ch).subClass == HeroSubClass.PALADIN ? 6 : 2;
+					}
 				}
 
 				//apply DR twice (with 2 rolls for more consistency)

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,16 +23,21 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.ColorBlock;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -164,6 +169,7 @@ public class TalentsPane extends ScrollPane {
 		ArrayList<TalentButton> buttons;
 
 		ArrayList<Image> stars = new ArrayList<>();
+		IconButton random;
 
 		public TalentTierPane(LinkedHashMap<Talent, Integer> talents, int tier, TalentButton.Mode mode, Hero hero){
 			super();
@@ -173,7 +179,7 @@ public class TalentsPane extends ScrollPane {
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(TalentsPane.class, "tier", tier)), 9);
 			title.hardlight(Window.TITLE_COLOR);
 			add(title);
-
+			//TODO: check this
 			if (mode == TalentButton.Mode.UPGRADE) setupStars(hero);
 
 			buttons = new ArrayList<>();
@@ -215,6 +221,12 @@ public class TalentsPane extends ScrollPane {
 					im.tint(0f, 0f, 0f, 0.9f);
 				}
 			}
+
+			if (random != null && openStars == 0){
+				random.killAndErase();
+				random.destroy();
+				random = null;
+			}
 		}
 
 		@Override
@@ -242,6 +254,10 @@ public class TalentsPane extends ScrollPane {
 					starTop += 6;
 					left = title.right() + 2;
 				}
+			}
+
+			if (random != null){
+				random.setRect(width - 16, y-2, 16, 14);
 			}
 
 			float gap = (width - buttons.size()*TalentButton.WIDTH)/(buttons.size()+1);

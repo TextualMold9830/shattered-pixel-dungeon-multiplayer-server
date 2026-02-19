@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,12 +51,19 @@ public abstract class InventoryScroll extends Scroll {
 	}
 
 	private void confirmCancelation(Hero hero) {
-		GameScene.show(new WndOptions(hero, new ItemSprite(this),
-				Messages.titleCase(name()),
-				Messages.get(this, "warning"),
-				Messages.get(this, "yes"),
-				Messages.get(this, "no")) {
-			@Override
+		GameScene.show(new WndConfirmCancel(hero) );
+	}
+
+	public class WndConfirmCancel extends WndOptions{
+
+		public WndConfirmCancel(Hero hero){
+			super(hero, new ItemSprite(InventoryScroll.this),
+					Messages.titleCase(name()),
+					Messages.get(InventoryScroll.this, "warning"),
+					Messages.get(InventoryScroll.this, "yes"),
+					Messages.get(InventoryScroll.this, "no"));
+		}
+		@Override
 			protected void onSelect(int index) {
 				switch (index) {
 					case 0:
@@ -64,14 +71,16 @@ public abstract class InventoryScroll extends Scroll {
 						identifiedByUse = false;
 						break;
 					case 1:
-						GameScene.selectItem(itemSelector, hero);
+						GameScene.selectItem(itemSelector, getOwnerHero());
 						break;
 				}
 			}
+		public void onBackPressed() {}
 
-			public void onBackPressed() {
-			}
-		});
+		public WndBag.ItemSelector getItemSelector(){
+			return itemSelector;
+		}
+
 	}
 
 	private String inventoryTitle() {

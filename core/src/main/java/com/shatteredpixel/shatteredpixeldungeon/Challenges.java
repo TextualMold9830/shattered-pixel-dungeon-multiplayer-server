@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ public class Challenges {
 	public static final int STRONGER_BOSSES 	= 256;
 
 	public static final int MAX_VALUE           = 511;
+	public static final int MAX_CHALS           = 9;
 
 	public static final String[] NAME_IDS = {
 			"champion_enemies",
@@ -56,9 +57,13 @@ public class Challenges {
 	};
 
 	public static int activeChallenges(){
+		return activeChallenges(Dungeon.challenges);
+	}
+
+	public static int activeChallenges(int mask){
 		int chCount = 0;
 		for (int ch : Challenges.MASKS){
-			if ((Dungeon.challenges & ch) != 0) chCount++;
+			if ((mask & ch) != 0) chCount++;
 		}
 		return chCount;
 	}

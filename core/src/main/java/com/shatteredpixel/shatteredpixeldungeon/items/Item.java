@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -129,9 +130,11 @@ public class Item implements Bundlable {
 	protected static final String TXT_TYPICAL_STR = "%d?";
 	protected static final String TXT_LEVEL = "%+d";
 	protected static final String TXT_CURSED = "";//"-";
-	
+
 	private boolean needUpdateVisual = false;
-	
+
+	public int customNoteID = -1;
+
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
@@ -159,7 +162,7 @@ public class Item implements Bundlable {
 			
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
-			hero.spendAndNext( TIME_TO_PICK_UP );
+			hero.spendAndNext( pickupDelay() );
 			return true;
 			
 		} else {
@@ -539,6 +542,9 @@ public class Item implements Bundlable {
 		}
 		return identify(false, null);
 	}
+	public final Item identify(){
+		return identify(null);
+	}
 
 	@Contract("true,null->fail")
 	public Item identify( boolean byHero, @Nullable Hero hero ) {
@@ -601,15 +607,16 @@ public class Item implements Bundlable {
 	public String info(){
 
 		if (false) {
-			Notes.CustomRecord note;
-			if (this instanceof EquipableItem) {
-				note = Notes.findCustomRecord(((EquipableItem) this).customNoteID);
-			} else {
-				note = Notes.findCustomRecord(getClass());
-			}
-			if (note != null){
+			Notes.CustomRecord note = Notes.findCustomRecord(customNoteID);
+			if (note != null) {
 				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
 				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+			} else {
+				note = Notes.findCustomRecord(getClass());
+				if (note != null) {
+					//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
+					return Messages.get(this, "custom_note_type", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+				}
 			}
 		}
 		return desc();
@@ -718,7 +725,8 @@ public class Item implements Bundlable {
 	private static final String CURSED_KNOWN	= "cursedKnown";
 	private static final String QUICKSLOT		= "quickslotpos";
 	private static final String KEPT_LOST       = "kept_lost";
-	
+	private static final String CUSTOM_NOTE_ID = "custom_note_id";
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( QUANTITY, quantity());
@@ -730,6 +738,7 @@ public class Item implements Bundlable {
 			bundle.put( QUICKSLOT, Dungeon.quickslot.getSlot(this) );
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
+		if (customNoteID != -1)     bundle.put(CUSTOM_NOTE_ID, customNoteID);
 	}
 	
 	@Override
@@ -747,14 +756,15 @@ public class Item implements Bundlable {
 		
 		cursed	= bundle.getBoolean( CURSED );
 
-		//only want to populate slot on first load.
-		if (Dungeon.heroes == null) {
+		//only want to populate slots when restoring belongings
+		if (Belongings.bundleRestoring) {
 			if (bundle.contains(QUICKSLOT)) {
 				Dungeon.quickslot.setSlot(bundle.getInt(QUICKSLOT), this);
 			}
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
+		if (bundle.contains(CUSTOM_NOTE_ID))    customNoteID = bundle.getInt(CUSTOM_NOTE_ID);
 	}
 
 	public int targetingPos( Hero user, int dst ){
@@ -783,7 +793,7 @@ public class Item implements Bundlable {
 		Char enemy = Actor.findChar( cell );
 		QuickSlotButton.target(enemy);
 		
-		final float delay = castDelay(user, dst);
+		final float delay = castDelay(user, cell);
 
 		if (enemy != null) {
 			((MissileSprite) user.getSprite().parent.recycle(MissileSprite.class)).
@@ -831,10 +841,14 @@ public class Item implements Bundlable {
 		}
 	}
 	
-	public float castDelay( Char user, int dst ){
+	public float castDelay( Char user, int cell ){
 		return TIME_TO_THROW;
 	}
-	
+
+	public float pickupDelay(){
+		return TIME_TO_PICK_UP;
+	}
+
 	protected static Hero curUser = null;
 	protected static Item curItem = null;
 	public void setCurrent( Hero hero ){

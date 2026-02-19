@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -174,7 +174,8 @@ public enum HeroClass {
 	private static void initWarrior( Hero hero ) {
 		(hero.belongings.setWeapon(new WornShortsword())).identify(hero);
 		ThrowingStone stones = new ThrowingStone();
-		stones.quantity(3, false).collect(hero);
+		stones.identify(hero).collect(hero);
+
 		Dungeon.quickslot.setSlot(0, stones);
 
 		if (hero.belongings.getRealArmor() != null){
@@ -208,7 +209,7 @@ public enum HeroClass {
 		hero.belongings.getRealArtifact().activate( hero );
 
 		ThrowingKnife knives = new ThrowingKnife();
-		knives.quantity(3).collect(hero);
+		knives.identify(hero).collect(hero);
 
 		Dungeon.quickslot.setSlot(0, cloak);
 		Dungeon.quickslot.setSlot(1, knives);
@@ -235,7 +236,7 @@ public enum HeroClass {
 		hero.belongings.getRealWeapon().activate(hero);
 
 		ThrowingSpike spikes = new ThrowingSpike();
-		spikes.quantity(2).collect(hero);
+		spikes.quantity(2).identify(hero).collect(hero); //set quantity is 3, but Duelist starts with 2
 
 		Dungeon.quickslot.setSlot(0, hero.belongings.getRealWeapon());
 		Dungeon.quickslot.setSlot(1, spikes);

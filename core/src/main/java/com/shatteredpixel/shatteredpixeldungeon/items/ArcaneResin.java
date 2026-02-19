@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ public class ArcaneResin extends Item {
 		public boolean testIngredients(ArrayList<Item> ingredients) {
 			return ingredients.size() == 1
 					&& ingredients.get(0) instanceof Wand
-					&& ingredients.get(0).isIdentified()
+					&& ingredients.get(0).cursedKnown
 					&& !ingredients.get(0).cursed;
 		}
 
@@ -164,8 +164,12 @@ public class ArcaneResin extends Item {
 		@Override
 		public Item brew(ArrayList<Item> ingredients, Hero hero) {
 			Item result = sampleOutput(ingredients, hero);
+			Wand w = (Wand)ingredients.get(0);
 
-			ingredients.get(0).quantity(0);
+			if (!w.levelKnown){
+				result.quantity(resinQuantity(w, hero));
+			}
+			w.quantity(0);
 
 			return result;
 		}
@@ -173,14 +177,22 @@ public class ArcaneResin extends Item {
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients, Hero hero) {
 			Wand w = (Wand)ingredients.get(0);
-			int level = w.level() - w.resinBonus;
 
-			Item output = new ArcaneResin().quantity(2*(level+1));
-			if (hero.heroClass != HeroClass.MAGE && hero.hasTalent(Talent.WAND_PRESERVATION)){
-				output.quantity(output.quantity() + hero.pointsInTalent(Talent.WAND_PRESERVATION));
+			if (w.levelKnown){
+				return new ArcaneResin().quantity(resinQuantity(w, hero));
+			} else {
+				return new ArcaneResin();
 			}
+		}
 
-			return output;
+		private int resinQuantity(Wand w, Hero hero){
+			int level = w.level() - w.resinBonus;
+			int quantity = 2*(level+1);
+
+			if (hero.heroClass != HeroClass.MAGE && hero.hasTalent(Talent.WAND_PRESERVATION)){
+				quantity += hero.pointsInTalent(Talent.WAND_PRESERVATION);
+			}
+			return quantity;
 		}
 	}
 

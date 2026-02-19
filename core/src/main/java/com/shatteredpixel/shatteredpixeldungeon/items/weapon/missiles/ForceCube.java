@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,15 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -36,6 +44,8 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ForceCube extends MissileWeapon {
 	
@@ -54,23 +64,50 @@ public class ForceCube extends MissileWeapon {
 	}
 
 	@Override
+	public float castDelay(Char user, int cell) {
+		//special rules as throwing this onto empty space or yourself does trigger it
+		if (!Dungeon.level.pit[cell] && Actor.findChar(cell) == null){
+			return delayFactor( user );
+		} else {
+			return super.castDelay(user, cell);
+		}
+	}
+
+	@Override
 	protected void onThrow(int cell) {
-		if (Dungeon.level.pit[cell]){
+		if ((Dungeon.level.pit[cell] && Actor.findChar(cell) == null)){
 			super.onThrow(cell);
 			return;
 		}
 
+		//keep the parent reference for things like IDing
+		MissileWeapon parentTemp = parent;
 		rangedHit( null, cell, curUser );
+		parent = parentTemp;
 		Dungeon.level.pressCell(cell);
 		
 		ArrayList<Char> targets = new ArrayList<>();
-		if (Actor.findChar(cell) != null) targets.add(Actor.findChar(cell));
-		
+		Char primaryTarget;
+		if (Actor.findChar(cell) != null) {
+			primaryTarget = Actor.findChar(cell);
+			targets.add(primaryTarget);
+		} else {
+			primaryTarget = null;
+		}
+
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!(Dungeon.level.traps.get(cell+i) instanceof TenguDartTrap)) Dungeon.level.pressCell(cell+i);
 			if (Actor.findChar(cell + i) != null) targets.add(Actor.findChar(cell + i));
 		}
-		
+
+		//furthest to closest, mainly for elastic
+		Collections.sort(targets, new Comparator<Char>() {
+			@Override
+			public int compare(Char a, Char b) {
+				return Float.compare(Dungeon.level.trueDistance(b.pos, curUser.pos), Dungeon.level.trueDistance(a.pos, curUser.pos));
+			}
+		});
+
 		for (Char target : targets){
 			curUser.shoot(target, this);
 			if (target instanceof Hero && !target.isAlive()){
@@ -79,7 +116,28 @@ public class ForceCube extends MissileWeapon {
 				GLog.n(Messages.get(this, "ondeath"));
 			}
 		}
-		
+
+		//if we're applying sniper's mark, prioritize giving it to the primary target of the attack
+		if (curUser.subClass == HeroSubClass.SNIPER && primaryTarget != null && primaryTarget.isActive()){
+			final Hero thrower = curUser;
+			Actor.add(new Actor() {
+
+				{
+					actPriority = VFX_PRIO-1;
+				}
+
+				@Override
+				protected boolean act() {
+					SnipersMark mark = thrower.buff(SnipersMark.class);
+					if (mark != null && primaryTarget.isActive()){
+						mark.object = primaryTarget.id();
+					}
+					Actor.remove(this);
+					return true;
+				}
+			});
+		}
+
 		WandOfBlastWave.BlastWave.blast(cell, curUser);
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 	}

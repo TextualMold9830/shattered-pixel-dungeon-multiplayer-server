@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public class ArmoredBrute extends Brute {
 	@Override
 	protected void triggerEnrage () {
 		Buff.affect(this, ArmoredRage.class).setShield(getHT() /2 + 1);
-		getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(getHT() /2 + 1), FloatingText.SHIELDING );
+		getSprite().showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(getHT() /2), FloatingText.SHIELDING );
 		if (Dungeon.visibleforAnyHero(pos)) {
 			getSprite().showStatus( CharSprite.WARNING, Messages.get(this, "enraged") );
 		}

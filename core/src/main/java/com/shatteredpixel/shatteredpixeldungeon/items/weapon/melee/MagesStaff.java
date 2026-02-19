@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -252,6 +252,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		level(targetLevel);
 		this.wand = wand;
+		wand.levelKnown = wand.curChargeKnown = true;
 		updateWand(false);
 		wand.setCurCharges(Math.min(wand.maxCharges, wand.getCurCharges() +oldStaffcharges));
 		if (owner != null){
@@ -261,6 +262,12 @@ public class MagesStaff extends MeleeWeapon {
 		/*else if (owner instanceof Hero && ((Hero)owner).belongings.contains(this)){
 			applyWandChargeBuff(owner);
 		}*/
+
+		if (wand.cursed && (!this.cursed || !this.hasCurseEnchant())){
+			equipCursed((Hero) owner);
+			this.cursed = this.cursedKnown = true;
+			enchant(Enchantment.randomCurse());
+		}
 
 		//This is necessary to reset any particles.
 		//FIXME this is gross, should implement a better way to fully reset quickslot visuals
@@ -423,14 +430,6 @@ public class MagesStaff extends MeleeWeapon {
 		public void onSelect( final Item item, Hero hero ) {
 			if (item != null) {
 
-				if (!item.isIdentified()) {
-					GLog.w(Messages.get(MagesStaff.class, "id_first"));
-					return;
-				} else if (item.cursed){
-					GLog.w(Messages.get(MagesStaff.class, "cursed"));
-					return;
-				}
-
 				if (wand == null){
 					applyWand((Wand)item);
 				} else {
@@ -443,7 +442,17 @@ public class MagesStaff extends MeleeWeapon {
 						newLevel = trueLevel();
 					}
 
-					String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
+					String bodyText = Messages.get(MagesStaff.class, "imbue_desc");
+					if (item.isIdentified()){
+						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_level", newLevel);
+					} else {
+						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_unknown", trueLevel());
+					}
+
+					if (!item.cursedKnown || item.cursed){
+						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_cursed");
+					}
+
 					if (owner.hasTalent(Talent.WAND_PRESERVATION)
 						&& owner.buff(Talent.WandPreservationCounter.class) == null){
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent");

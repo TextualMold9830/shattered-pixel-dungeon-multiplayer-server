@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.GooSprite;
 public class GooWarn extends Blob {
 
 	//cosmetic blob, previously used for Goo's pump up attack (that's now handled by Goo's sprite)
-	// but is still used as a visual indicator for Arcane bombs
+	// as of v3.3.4 it's not longer used by arcane bomb either
 
 	{
 		//this one needs to act just before the Goo

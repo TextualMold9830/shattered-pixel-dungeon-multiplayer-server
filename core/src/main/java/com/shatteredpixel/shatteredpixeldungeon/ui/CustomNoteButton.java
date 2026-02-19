@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,17 +28,17 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.windows.*;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournalItem;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Callback;
+import com.watabou.noosa.Game;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 //this is contained in its own class as custom notes have a lot of messy window UI logic
+//TODO: check this
 public class CustomNoteButton extends IconButton {
 
 	public CustomNoteButton () {
@@ -159,8 +160,8 @@ public class CustomNoteButton extends IconButton {
 				if (item instanceof Ring && Notes.findCustomRecord(item.getClass()) != null){
 					return false;
 				}
-				return ((EquipableItem) item).customNoteID == -1
-						|| Notes.findCustomRecord(((EquipableItem) item).customNoteID) == null;
+				return item.customNoteID == -1
+						|| Notes.findCustomRecord(item.customNoteID) == null;
 			} else {
 				return Notes.findCustomRecord(item.getClass()) == null;
 			}
@@ -169,10 +170,14 @@ public class CustomNoteButton extends IconButton {
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null){
-				Notes.CustomRecord custom = new Notes.CustomRecord(item, "", "");
-				custom.assignID();
-				if (item instanceof EquipableItem){
-					((EquipableItem) item).customNoteID = custom.ID();
+				Notes.CustomRecord custom;
+				if (item instanceof EquipableItem || item instanceof Wand || item instanceof Trinket) {
+					custom = new Notes.CustomRecord(item, "", "");
+					custom.assignID();
+					item.customNoteID = custom.ID();
+				} else {
+					custom = new Notes.CustomRecord(item.getClass(), "", "");
+					custom.assignID();
 				}
 
 				addNote(custom,
@@ -207,7 +212,7 @@ public class CustomNoteButton extends IconButton {
 				ItemButton itemButton = new ItemButton(){
 					@Override
 					protected void onClick() {
-						addNote(new Notes.CustomRecord(item, "", ""),
+						addNote(new Notes.CustomRecord(item.getClass(), "", ""),
 								Messages.get(CustomNoteButton.class, "new_type"),
 								Messages.get(CustomNoteButton.class, "new_item_title", Messages.titleCase(item.name())));
 					}
@@ -255,7 +260,7 @@ public class CustomNoteButton extends IconButton {
 
 	public static class CustomNoteWindow extends WndJournalItem {
 
-		public CustomNoteWindow(Notes.CustomRecord rec) {
+		public CustomNoteWindow(Notes.CustomRecord rec, Window parentWindow) {
 			super(rec.icon(), rec.title(), rec.desc());
 
 			RedButton title = new RedButton( Messages.get(CustomNoteWindow.class, "edit_title") ){
@@ -272,7 +277,14 @@ public class CustomNoteButton extends IconButton {
 						public void onSelect(boolean positive, String text) {
 							if (positive && !text.isEmpty()){
 								rec.editText(text, rec.desc());
-								refreshScene(rec);
+								CustomNoteWindow.this.hide();
+								if (parentWindow instanceof WndUseItem){
+									WndUseItem newParent = new WndUseItem(((WndUseItem) parentWindow).owner, ((WndUseItem) parentWindow).item, getOwnerHero());
+									GameScene.show(newParent);
+									GameScene.show(new CustomNoteWindow(rec, newParent));
+								} else {
+									GameScene.show(new CustomNoteWindow(rec, parentWindow));
+								}
 							}
 						}
 					});
@@ -296,7 +308,8 @@ public class CustomNoteButton extends IconButton {
 						public void onSelect(boolean positive, String text) {
 							if (positive){
 								rec.editText(rec.title(), text);
-								refreshScene(rec);
+								CustomNoteWindow.this.hide();
+								GameScene.show(new CustomNoteWindow(rec, parentWindow));
 							}
 						}
 					});
@@ -317,7 +330,12 @@ public class CustomNoteButton extends IconButton {
 						protected void onSelect(int index) {
 							if (index == 0){
 								Notes.remove(rec);
-								refreshScene(null);
+								CustomNoteWindow.this.hide();
+								if (parentWindow instanceof WndJournal || parentWindow == null){
+									ShatteredPixelDungeon.scene().addToFront(new WndJournal());
+								} else if (parentWindow instanceof WndUseItem){
+									GameScene.show(new WndUseItem(((WndUseItem) parentWindow).owner, ((WndUseItem) parentWindow).item, getOwnerHero()));
+								}
 							}
 						}
 					});
@@ -361,19 +379,18 @@ public class CustomNoteButton extends IconButton {
 			ShatteredPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
 				@Override
 				public void beforeCreate() {
+                    //WndJournal wnd = new WndJournal();
+                    //ShatteredPixelDungeon.scene().addToFront(wnd);
+                    //ShatteredPixelDungeon.scene().addToFront(new CustomNoteWindow(note, wnd));
 
-				}
+                }
+                @Override
+                public void afterCreate() {
 
-				@Override
-				public void afterCreate() {
-					Game.runOnRenderThread(new Callback() {
-						@Override
-						public void call() {
-							ShatteredPixelDungeon.scene().addToFront(new CustomNoteWindow(recToShow));
-						}
-					});
+                }}
+					);
 				}
-			});
+			};
 		}
-	}
-}
+
+

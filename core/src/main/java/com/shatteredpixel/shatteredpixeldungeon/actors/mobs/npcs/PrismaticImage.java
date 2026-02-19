@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
@@ -66,7 +66,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	private Hero hero;
-	private int heroID;
+	private String heroUUID;
 	public int armTier;
 	
 	private int deathTimer = -1;
@@ -94,7 +94,7 @@ public class PrismaticImage extends NPC {
 		}
 		
 		if ( hero == null ){
-			hero = (Hero) Actor.findById(heroID);
+			findHero();
 			if ( hero == null ){
 				destroy();
 				getSprite().die();
@@ -127,26 +127,26 @@ public class PrismaticImage extends NPC {
 		return isAlive() || deathTimer > 0;
 	}
 
-	private static final String HEROID	= "hero_id";
+	private static final String HEROUUID	= "hero_id";
 	private static final String TIMER	= "timer";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
-		bundle.put( HEROID, heroID );
+		bundle.put(HEROUUID , heroUUID );
 		bundle.put( TIMER, deathTimer );
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		heroID = bundle.getInt( HEROID );
+		heroUUID = bundle.getString( HEROUUID );
 		deathTimer = bundle.getInt( TIMER );
 	}
 	
 	public void duplicate( Hero hero, int HP ) {
 		this.hero = hero;
-		heroID = this.hero.id();
+		heroUUID = this.hero.uuid;
 		this.setHP(HP);
 		setHT(PrismaticGuard.maxHP( hero ));
 	}
@@ -249,7 +249,7 @@ public class PrismaticImage extends NPC {
 	public CharSprite sprite() {
 		CharSprite s = super.sprite();
 		
-		hero = (Hero)Actor.findById(heroID);
+		findHero();
 		if (hero != null) {
 			armTier = hero.tier();
 		} else {
@@ -283,5 +283,14 @@ public class PrismaticImage extends NPC {
 		}
 		
 	}
-	
+	private void findHero(){
+		if (hero == null){
+			hero = Dungeon.getHeroByUUID(heroUUID);
+		}
+
+	}
+	public Hero getHero() {
+		findHero();
+    	return hero;
+	}
 }

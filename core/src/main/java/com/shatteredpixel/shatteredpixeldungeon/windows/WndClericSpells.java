@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
@@ -120,17 +121,12 @@ public class WndClericSpells extends Window {
 			this.info = info;
 			if (!tome.canCast(getOwnerHero(), spell)){
 				icon.alpha( 0.3f );
+			} else if (spell == GuidingLight.INSTANCE && spell.chargeUse(getOwnerHero()) == 0){
+				icon.brightness(3);
 			}
 
 		}
 
-		@Override
-		protected void onPointerUp() {
-			super.onPointerUp();
-			if (!tome.canCast(getOwnerHero(), spell)){
-				icon.alpha( 0.3f );
-			}
-		}
 
 		@Override
 		protected void layout() {

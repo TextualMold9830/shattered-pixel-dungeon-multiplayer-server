@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ public class Statistics {
 	public static int foodEaten;
 	public static int itemsCrafted;
 	public static int piranhasKilled;
+	public static int hazardAssistedKills;
 	public static int ankhsUsed;
 	//tracks every item type 'seen' this run (i.e. would be added to catalogs)
 	public static HashSet<Class> itemTypesDiscovered = new HashSet<>();
@@ -45,7 +46,7 @@ public class Statistics {
 	public static int progressScore;
 	public static int heldItemValue;
 	public static int treasureScore;
-	public static SparseArray<Boolean> floorsExplored = new SparseArray<>();
+	public static SparseArray<Float> floorsExplored = new SparseArray<>();
 	public static int exploreScore;
 	public static int[] bossScores = new int[5];
 	public static int totalBossScore;
@@ -68,6 +69,7 @@ public class Statistics {
 	public static boolean completedWithNoKilling = false;
 	public static boolean qualifiedForBossRemainsBadge = false;
 	public static boolean qualifiedForBossChallengeBadge = false;
+	public static boolean qualifiedForRandomVictoryBadge = false;
 	
 	public static boolean amuletObtained = false;
 	public static boolean gameWon = false;
@@ -82,6 +84,7 @@ public class Statistics {
 		foodEaten		= 0;
 		itemsCrafted    = 0;
 		piranhasKilled	= 0;
+		hazardAssistedKills = 0;
 		ankhsUsed		= 0;
 		itemTypesDiscovered.clear();
 
@@ -109,6 +112,7 @@ public class Statistics {
 		qualifiedForNoKilling = false;
 		qualifiedForBossRemainsBadge = false;
 		qualifiedForBossChallengeBadge = false;
+		qualifiedForRandomVictoryBadge = GamesInProgress.randomizedClass;
 		
 		amuletObtained = false;
 		gameWon = false;
@@ -123,12 +127,13 @@ public class Statistics {
 	private static final String FOOD		= "foodEaten";
 	private static final String ALCHEMY		= "potionsCooked";
 	private static final String PIRANHAS	= "priranhas";
+	private static final String HAZARD_ASSISTS	= "hazard_assists";
 	private static final String ANKHS		= "ankhsUsed";
 
 	private static final String PROG_SCORE	    = "prog_score";
 	private static final String ITEM_VAL	    = "item_val";
 	private static final String TRES_SCORE      = "tres_score";
-	private static final String FLR_EXPL        = "flr_expl";
+	private static final String FLR_EXPL        = "flr_expl_";
 	private static final String EXPL_SCORE      = "expl_score";
 	private static final String BOSS_SCORES		= "boss_scores";
 	private static final String TOT_BOSS		= "tot_boss";
@@ -151,6 +156,7 @@ public class Statistics {
 	private static final String NO_KILLING_QUALIFIED	= "qualifiedForNoKilling";
 	private static final String BOSS_REMAINS_QUALIFIED	= "qualifiedForBossRemainsBadge";
 	private static final String BOSS_CHALLENGE_QUALIFIED= "qualifiedForBossChallengeBadge";
+	private static final String RANDOM_VICTORY_QUALIFIED= "qualifiedForRandomVictory";
 	
 	private static final String AMULET          = "amuletObtained";
 	private static final String WON		        = "won";
@@ -164,6 +170,7 @@ public class Statistics {
 		bundle.put( FOOD,		foodEaten );
 		bundle.put( ALCHEMY,    itemsCrafted );
 		bundle.put( PIRANHAS,	piranhasKilled );
+		bundle.put(HAZARD_ASSISTS, hazardAssistedKills);
 		bundle.put( ANKHS,		ankhsUsed );
 		bundle.put( ITEM_TYPES_DISCOVERED, itemTypesDiscovered.toArray(new Class<?>[0]) );
 
@@ -195,6 +202,7 @@ public class Statistics {
 		bundle.put(NO_KILLING_QUALIFIED, qualifiedForNoKilling);
 		bundle.put(BOSS_REMAINS_QUALIFIED, qualifiedForBossRemainsBadge);
 		bundle.put(BOSS_CHALLENGE_QUALIFIED, qualifiedForBossChallengeBadge);
+		bundle.put(RANDOM_VICTORY_QUALIFIED, qualifiedForRandomVictoryBadge);
 		
 		bundle.put( AMULET,		amuletObtained );
 		bundle.put( WON,        gameWon );
@@ -209,6 +217,7 @@ public class Statistics {
 		foodEaten		= bundle.getInt( FOOD );
 		itemsCrafted    = bundle.getInt( ALCHEMY );
 		piranhasKilled	= bundle.getInt( PIRANHAS );
+		hazardAssistedKills = bundle.getInt( HAZARD_ASSISTS );
 		ankhsUsed		= bundle.getInt( ANKHS );
 
 		if (bundle.contains( ITEM_TYPES_DISCOVERED )) {
@@ -223,7 +232,13 @@ public class Statistics {
 		floorsExplored.clear();
 		for (int i = 1; i < 26; i++){
 			if (bundle.contains( FLR_EXPL+i )){
-				floorsExplored.put(i, bundle.getBoolean( FLR_EXPL+i ));
+				//we have this check to reduce an error with bad conversion specifically in v3.1-BETA-1.0
+				if (!Dungeon.bossLevel(i) && i <= deepestFloor){
+					floorsExplored.put(i, bundle.getFloat( FLR_EXPL+i ));
+				}
+			//pre-3.1 saves. The bundle key does have an underscore and is a boolean
+			} else if (bundle.contains( "flr_expl"+i )){
+				floorsExplored.put(i, bundle.getBoolean( "flr_expl"+i ) ? 1f : 0f);
 			}
 		}
 		exploreScore    = bundle.getInt( EXPL_SCORE );
@@ -248,6 +263,7 @@ public class Statistics {
 		qualifiedForNoKilling = bundle.getBoolean( NO_KILLING_QUALIFIED );
 		qualifiedForBossRemainsBadge = bundle.getBoolean( BOSS_REMAINS_QUALIFIED );
 		qualifiedForBossChallengeBadge = bundle.getBoolean( BOSS_CHALLENGE_QUALIFIED );
+		qualifiedForRandomVictoryBadge = bundle.getBoolean( RANDOM_VICTORY_QUALIFIED );
 		
 		amuletObtained	= bundle.getBoolean( AMULET );
 		gameWon         = bundle.getBoolean( WON );

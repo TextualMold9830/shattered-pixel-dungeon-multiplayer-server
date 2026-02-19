@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import org.json.JSONObject;
 
@@ -34,7 +36,7 @@ public class EmoIcon extends Image {
 
 	protected float maxSize = 2;
 	protected float timeScale = 1;
-	
+
 	protected boolean growing	= true;
 	
 	protected CharSprite owner;
@@ -61,7 +63,7 @@ public class EmoIcon extends Image {
 	@Override
 	public void update() {
 		super.update();
-		
+
 		if (visible) {
 			if (growing) {
 				scale.set( Math.min(scale.x + Game.elapsed * timeScale, maxSize ));
@@ -74,12 +76,19 @@ public class EmoIcon extends Image {
 					growing = true;
 				}
 			}
-			
-			x = owner.x + owner.width() - width / 2;
-			y = owner.y - height;
+
+			if (camera != null) {
+				PointF center = centerPoint();
+				x = PixelScene.align(camera, owner.x + owner.width() - center.x);
+				y = PixelScene.align(camera, owner.y - center.y);
+			}
 		}
 	}
-	
+
+	protected PointF centerPoint(){
+		return new PointF(width()/2f, height()/2f);
+	};
+
 	public static class Sleep extends EmoIcon {
 		
 		public Sleep( CharSprite owner ) {
@@ -90,12 +99,17 @@ public class EmoIcon extends Image {
 			
 			maxSize = 1.2f;
 			timeScale = 0.5f;
-			
-			origin.set( width / 2, height / 2 );
+
 			scale.set( Random.Float( 1, maxSize ) );
 
 			x = owner.x + owner.width - width / 2;
 			y = owner.y - height;
+		}
+
+		@Override
+		protected PointF centerPoint(){
+			//centered and significantly up
+			return new PointF(width()/2f, 4f+ height()/2f);
 		}
 
 		@Override
@@ -117,7 +131,30 @@ public class EmoIcon extends Image {
 			maxSize = 1.3f;
 			timeScale = 2;
 			
-			origin.set( 2.5f, height - 2.5f );
+			scale.set( Random.Float( 1, maxSize ) );
+
+			x = owner.x + owner.width - width / 2;
+			y = owner.y - height;
+		}
+
+		@Override
+		protected PointF centerPoint(){
+			//up and left, and centers at the bottom-left
+			return new PointF(2.5f + 0.25f*width(), 2.5f + 0.75f*height());
+		}
+	}
+
+	public static class Investigate extends EmoIcon {
+
+		public Investigate( CharSprite owner ) {
+
+			super( owner );
+
+			copy( Icons.get( Icons.INVESTIGATE ) );
+
+			maxSize = 1.3f;
+			timeScale = 1.5f;
+
 			scale.set( Random.Float( 1, maxSize ) );
 
 			x = owner.x + owner.width - width / 2;
@@ -130,6 +167,12 @@ public class EmoIcon extends Image {
 			jsonObject.put("emotion", "alert");
 			return jsonObject;
 		}
+
+		@Override
+		protected PointF centerPoint(){
+			//up and left, and centers at the bottom-left
+			return new PointF(2.5f + 0.25f*width(), 2.5f + 0.75f*height());
+		}
 	}
 	
 	public static class Lost extends EmoIcon {
@@ -141,8 +184,7 @@ public class EmoIcon extends Image {
 			
 			maxSize = 1.25f;
 			timeScale = 1;
-			
-			origin.set( 2.5f, height - 2.5f );
+
 			scale.set( Random.Float( 1, maxSize ) );
 			
 			x = owner.x + owner.width - width / 2;
@@ -157,6 +199,11 @@ public class EmoIcon extends Image {
 			return jsonObject;
 		}
 
+		@Override
+		protected PointF centerPoint(){
+			//up and left, and centers at the bottom-left
+			return new PointF(2.5f + 0.25f*width(), 2.5f + 0.75f*height());
+		}
 	}
 
 }

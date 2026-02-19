@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,21 +206,23 @@ public class Necromancer extends Mob {
 				}
 			}
 
-			//no push if char is immovable
-			if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
-				pushPos = pos;
-			}
-
 			//push enemy, or wait a turn if there is no valid pushing position
 			if (pushPos != pos) {
-				Char ch = Actor.findChar(summoningPos);
-				Actor.add( new Pushing( ch, ch.pos, pushPos ) );
 
-				ch.pos = pushPos;
-				Dungeon.level.occupyCell(ch );
+				//no push if char is immovable, move our skeleton instead
+				if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
+					summoningPos = pushPos;
+				} else {
+					Char ch = Actor.findChar(summoningPos);
+					Actor.add(new Pushing(ch, ch.pos, pushPos));
+
+					ch.pos = pushPos;
+					Dungeon.level.occupyCell(ch);
+				}
 
 			} else {
 
+				//attempt to damage the blocker in addition to waiting
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.damage( Random.NormalIntRange(2, 10), new DamageCause( new SummoningBlockDamage() , this));

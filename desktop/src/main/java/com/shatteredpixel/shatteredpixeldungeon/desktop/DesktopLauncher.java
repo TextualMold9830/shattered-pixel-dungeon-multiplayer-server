@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Preferences;
+import com.badlogic.gdx.utils.Architecture;
+import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -56,10 +58,11 @@ public class DesktopLauncher {
 		//detection for FreeBSD (which is equivalent to linux for us)
 		//TODO might want to merge request this to libGDX
 		if (System.getProperty("os.name").contains("FreeBSD")) {
-			SharedLibraryLoader.isLinux = true;
+			SharedLibraryLoader.os = Os.Linux;
 			//this overrides incorrect values set in SharedLibraryLoader's static initializer
-			SharedLibraryLoader.isIos = false;
-			SharedLibraryLoader.is64Bit = System.getProperty("os.arch").contains("64") || System.getProperty("os.arch").startsWith("armv8");
+			if (System.getProperty("os.arch").contains("64") || System.getProperty("os.arch").startsWith("armv8")){
+				SharedLibraryLoader.bitness = Architecture.Bitness._64;
+			}
 		}
 		
 		final String title;

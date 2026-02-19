@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -123,182 +123,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected ShieldHalo shield;
 	protected AlphaTweener invisible;
 	protected Flare aura;
-	private int auraColor = 0;
 
-	public void clearAura(){
-		remove(State.AURA);
-	}
-	protected synchronized void processStateRemoval( State state ) {
-		switch (state) {
-			case BURNING:
-				if (burning != null) {
-					burning.on(false);
-					burning = null;
-				}
-				break;
-			case LEVITATING:
-				if (levitation != null) {
-					levitation.on(false);
-					levitation = null;
-				}
-				break;
-			case INVISIBLE:
-				if (invisible != null) {
-					invisible.killAndErase();
-					invisible = null;
-				}
-				alpha(1f);
-				break;
-			case PARALYSED:
-				paused = false;
-				break;
-			case FROZEN:
-				if (iceBlock != null) {
-					iceBlock.melt();
-					iceBlock = null;
-				}
-				break;
-			case ILLUMINATED:
-				if (light != null) {
-					light.putOut();
-					light = null;
-				}
-				break;
-			case CHILLED:
-				if (chilled != null) {
-					chilled.on(false);
-					chilled = null;
-				}
-				break;
-			case DARKENED:
-				if (darkBlock != null) {
-					darkBlock.lighten();
-					darkBlock = null;
-				}
-				break;
-			case MARKED:
-				if (marked != null) {
-					marked.on(false);
-					marked = null;
-				}
-				break;
-			case HEALING:
-				if (healing != null) {
-					healing.on(false);
-					healing = null;
-				}
-				break;
-			case SHIELDED:
-				if (shield != null) {
-					shield.putOut();
-				}
-				break;
-			case HEARTS:
-				if (hearts != null) {
-					hearts.on(false);
-					hearts = null;
-				}
-				break;
-			case GLOWING:
-				if (glowBlock != null){
-					glowBlock.darken();
-					glowBlock = null;
-				}
-				break;
-			case AURA:
-				if (aura != null){
-					aura.killAndErase();
-					aura = null;
-				}
-				break;
-		}
-	}
 	public void aura( int color ){
 		add(State.AURA);
 		auraColor = color;
 	}
 
-	protected synchronized void processStateAddition( State state ) {
-		switch (state) {
-			case BURNING:
-				if (burning != null) burning.on(false);
-				burning = emitter();
-				burning.pour(FlameParticle.FACTORY, 0.06f);
-				if (visible) {
-					Sample.INSTANCE.play(Assets.Sounds.BURNING);
-				}
-				break;
-			case LEVITATING:
-				if (levitation != null) levitation.on(false);
-				levitation = emitter();
-				levitation.pour(Speck.factory(Speck.JET), 0.02f);
-				break;
-			case INVISIBLE:
-				if (invisible != null) invisible.killAndErase();
-				invisible = new AlphaTweener(this, 0.4f, 0.4f);
-				if (parent != null) {
-					parent.add(invisible);
-				} else
-					alpha(0.4f);
-				break;
-			case PARALYSED:
-				paused = true;
-				break;
-			case FROZEN:
-				if (iceBlock != null) iceBlock.killAndErase();
-				iceBlock = IceBlock.freeze(this);
-				break;
-			case ILLUMINATED:
-				if (light != null) light.putOut();
-				GameScene.effect(light = new TorchHalo(this));
-				break;
-			case CHILLED:
-				if (chilled != null) chilled.on(false);
-				chilled = emitter();
-				chilled.pour(SnowParticle.FACTORY, 0.1f);
-				break;
-			case DARKENED:
-				if (darkBlock != null) darkBlock.killAndErase();
-				darkBlock = DarkBlock.darken(this);
-				break;
-			case MARKED:
-				if (marked != null) marked.on(false);
-				marked = emitter();
-				marked.pour(ShadowParticle.UP, 0.1f);
-				break;
-			case HEALING:
-				if (healing != null) healing.on(false);
-				healing = emitter();
-				healing.pour(Speck.factory(Speck.HEALING), 0.5f);
-				break;
-			case SHIELDED:
-				if (shield != null) shield.killAndErase();
-				GameScene.effect(shield = new ShieldHalo(this));
-				break;
-			case HEARTS:
-				if (hearts != null) hearts.on(false);
-				hearts = emitter();
-				hearts.pour(Speck.factory(Speck.HEART), 0.5f);
-				break;
-			case GLOWING:
-				if (glowBlock != null) glowBlock.killAndErase();
-				glowBlock = GlowBlock.lighten(this);
-				break;
-			case AURA:
-				if (aura != null)   aura.killAndErase();
-				float size = Math.max(width(), height());
-				size = Math.max(size+4, 16);
-				aura = new Flare(5, size);
-				aura.angularSpeed = 90;
-				aura.color(auraColor, true);
-				aura.visible = visible;
-
-				if (parent != null) {
-					aura.show(this, 0);
-				}
-				break;
-		}
-	}
 
 	private EmoIcon emo;
 	protected CharHealthIndicator health;
@@ -419,8 +249,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			}
 			float x = destinationCenter().x;
 			float y = destinationCenter().y - height()/2f;
+			int pos = DungeonTilemap.worldToTile(x, y + height(), Dungeon.level.width());
 			if (ch != null) {
-				FloatingText.show( x, y, ch.pos, text, color, icon, true );
+				FloatingText.show( x, y, pos, text, color, icon, true );
 			} else {
 				FloatingText.show( x, y, -1, text, color, icon, true );
 			}
@@ -603,8 +434,28 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private final HashSet<State> stateAdditions = new HashSet<>();
 
 	public void add( State state ) {
-		states.add(state);
-		sendCharSpriteState(ch, state, false);
+		//instant as it just changes an animation property that will get read later
+		if (state == State.PARALYSED){
+			paused = true;
+		} else {
+			synchronized (State.class) {
+				stateRemovals.remove(state);
+				stateAdditions.add(state);
+			}
+		}
+	}
+
+	private int auraColor = 0;
+	private int auraRays = 0;
+
+	//Aura needs color and ray count data too
+	public void aura( int color, int nRays ){
+		add(State.AURA);
+		auraColor = color;
+		auraRays = nRays;
+	}
+
+	protected synchronized void processStateAddition( State state ) {
 		switch (state) {
 			case BURNING:
 				if (burning != null) burning.on(false);
@@ -674,7 +525,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				if (aura != null)   aura.killAndErase();
 				float size = Math.max(width(), height());
 				size = Math.max(size+4, 16);
-				aura = new Flare(5, size);
+				aura = new Flare(auraRays, size);
 				aura.angularSpeed = 90;
 				aura.color(auraColor, true);
 				aura.visible = visible;
@@ -689,8 +540,22 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private final HashSet<State> stateRemovals = new HashSet<>();
 
 	public void remove( State state ) {
-		states.remove(state);
-		sendCharSpriteState(ch, state, true);
+		//instant as it just changes an animation property that will get read later
+		if (state == State.PARALYSED){
+			paused = false;
+		} else {
+			synchronized (State.class) {
+				stateAdditions.remove(state);
+				stateRemovals.add(state);
+			}
+		}
+	}
+
+	public void clearAura(){
+		remove(State.AURA);
+	}
+
+	protected synchronized void processStateRemoval( State state ) {
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
@@ -903,7 +768,28 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			}
 		}
 	}
-	
+
+	public void showInvestigate() {
+		synchronized (EmoIcon.class) {
+			if (!(emo instanceof EmoIcon.Investigate)) {
+				if (emo != null) {
+					emo.killAndErase();
+				}
+				emo = new EmoIcon.Investigate(this);
+				emo.visible = visible;
+			}
+		}
+	}
+
+	public void hideInvestigate() {
+		synchronized (EmoIcon.class) {
+			if (emo instanceof EmoIcon.Investigate) {
+				emo.killAndErase();
+				emo = null;
+			}
+		}
+	}
+
 	public void showLost() {
 		synchronized (EmoIcon.class) {
 			if (!(getEmo() instanceof EmoIcon.Lost)) {

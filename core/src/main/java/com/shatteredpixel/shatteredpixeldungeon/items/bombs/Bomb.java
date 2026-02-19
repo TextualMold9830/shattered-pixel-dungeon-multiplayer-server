@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,13 +130,17 @@ public class Bomb extends Item {
 	public boolean doPickUp(Hero hero, int pos) {
 		if (fuse != null) {
 			GLog.w( Messages.get(this, "snuff_fuse") );
+			fuse.snuff();
 			fuse = null;
 		}
 		return super.doPickUp(hero, pos);
 	}
 	public void explode(int cell){
 		//We're blowing up, so no need for a fuse anymore.
-		this.fuse = null;
+		if (fuse != null) {
+			fuse.snuff();
+			this.fuse = null;
+		}
 
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 
@@ -291,7 +295,7 @@ public class Bomb extends Item {
 
 			//something caused our bomb to explode early, or be defused. Do nothing.
 			if (bomb.fuse != this){
-				Actor.remove( this );
+				snuff();
 				return true;
 			}
 
@@ -306,20 +310,24 @@ public class Bomb extends Item {
 
 			//can't find our bomb, something must have removed it, do nothing.
 			bomb.fuse = null;
-			Actor.remove( this );
+			snuff();
 			return true;
 		}
 		protected void trigger(Heap heap){
 			heap.remove(bomb);
 			Catalog.countUse(bomb.getClass());
 			bomb.explode(heap.pos);
-			Actor.remove(this);
+			snuff();
 		}
 
 		public boolean freeze(){
 			bomb.fuse = null;
-			Actor.remove(this);
+			snuff();
 			return true;
+		}
+
+		public void snuff(){
+			Actor.remove( this );
 		}
 	}
 

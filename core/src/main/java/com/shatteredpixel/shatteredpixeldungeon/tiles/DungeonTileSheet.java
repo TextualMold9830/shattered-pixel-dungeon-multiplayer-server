@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,6 +92,7 @@ public class DungeonTileSheet {
 		chasmStitcheable.put( Terrain.EMPTY_WELL,   CHASM_FLOOR );
 		chasmStitcheable.put( Terrain.WELL,         CHASM_FLOOR );
 		chasmStitcheable.put( Terrain.STATUE,       CHASM_FLOOR );
+		chasmStitcheable.put( Terrain.REGION_DECO,  CHASM_FLOOR );
 		chasmStitcheable.put( Terrain.SECRET_TRAP,  CHASM_FLOOR );
 		chasmStitcheable.put( Terrain.INACTIVE_TRAP,CHASM_FLOOR );
 		chasmStitcheable.put( Terrain.TRAP,         CHASM_FLOOR );
@@ -111,6 +112,7 @@ public class DungeonTileSheet {
 		chasmStitcheable.put( Terrain.DOOR,         CHASM_WALL );
 		chasmStitcheable.put( Terrain.OPEN_DOOR,    CHASM_WALL );
 		chasmStitcheable.put( Terrain.LOCKED_DOOR,  CHASM_WALL );
+		chasmStitcheable.put( Terrain.HERO_LKD_DR,  CHASM_WALL );
 		chasmStitcheable.put( Terrain.SECRET_DOOR,  CHASM_WALL );
 		chasmStitcheable.put( Terrain.WALL_DECO,    CHASM_WALL );
 
@@ -119,6 +121,13 @@ public class DungeonTileSheet {
 	}
 
 	public static int stitchChasmTile(int above){
+		//alt region deco has different visuals per region, but most commonly FLOOR_SP
+		if (above == Terrain.REGION_DECO_ALT){
+			if (Dungeon.depth <= 5)     return CHASM_FLOOR_SP;
+			if (Dungeon.depth <= 10)    return CHASM;
+			if (Dungeon.depth <= 20)    return CHASM_FLOOR_SP;
+			else                        return CHASM_FLOOR;
+		}
 		return chasmStitcheable.get(above, CHASM);
 	}
 
@@ -136,18 +145,27 @@ public class DungeonTileSheet {
 			Terrain.ENTRANCE, Terrain.EXIT, Terrain.EMBERS,
 			Terrain.BARRICADE, Terrain.HIGH_GRASS, Terrain.FURROWED_GRASS, Terrain.SECRET_TRAP,
 			Terrain.TRAP, Terrain.INACTIVE_TRAP, Terrain.EMPTY_DECO,
-			Terrain.CUSTOM_DECO, Terrain.WELL, Terrain.STATUE, Terrain.ALCHEMY,
+			Terrain.CUSTOM_DECO, Terrain.WELL, Terrain.STATUE, Terrain.REGION_DECO, Terrain.ALCHEMY,
 			Terrain.CUSTOM_DECO_EMPTY, Terrain.MINE_CRYSTAL, Terrain.MINE_BOULDER,
-			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR
+			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.HERO_LKD_DR, Terrain.CRYSTAL_DOOR
 	));
+
+	public static boolean waterStitcheable(int tile){
+		//alt region deco has different visuals per region, is stitcheable in demon halls
+		if (tile == Terrain.REGION_DECO_ALT){
+			if (Dungeon.depth <= 20)    return false;
+			else                        return true;
+		}
+		return waterStitcheable.contains(tile);
+	}
 
 	//+1 for ground above, +2 for ground right, +4 for ground below, +8 for ground left.
 	public static int stitchWaterTile(int top, int right, int bottom, int left){
 		int result = WATER;
-		if (waterStitcheable.contains(top))     result += 1;
-		if (waterStitcheable.contains(right))   result += 2;
-		if (waterStitcheable.contains(bottom))  result += 4;
-		if (waterStitcheable.contains(left))    result += 8;
+		if (waterStitcheable(top))      result += 1;
+		if (waterStitcheable(right))    result += 2;
+		if (waterStitcheable(bottom))   result += 4;
+		if (waterStitcheable(left))     result += 8;
 		return result;
 	}
 
@@ -187,6 +205,8 @@ public class DungeonTileSheet {
 
 	public static final int FLAT_STATUE         = FLAT_OTHER+8;
 	public static final int FLAT_STATUE_SP      = FLAT_OTHER+9;
+	public static final int FLAT_REGION_DECO    = FLAT_OTHER+10;
+	public static final int FLAT_REGION_DECO_ALT= FLAT_OTHER+11;
 
 	public static final int FLAT_MINE_CRYSTAL         = FLAT_OTHER+12;
 	public static final int FLAT_MINE_CRYSTAL_ALT     = FLAT_OTHER+13;
@@ -258,12 +278,13 @@ public class DungeonTileSheet {
 		else if (tile == Terrain.DOOR)          return DungeonTileSheet.RAISED_DOOR;
 		else if (tile == Terrain.OPEN_DOOR)     return DungeonTileSheet.RAISED_DOOR_OPEN;
 		else if (tile == Terrain.LOCKED_DOOR)   return DungeonTileSheet.RAISED_DOOR_LOCKED;
-		else if (tile == Terrain.CRYSTAL_DOOR)   return DungeonTileSheet.RAISED_DOOR_CRYSTAL;
+		else if (tile == Terrain.HERO_LKD_DR)   return DungeonTileSheet.RAISED_DOOR_LOCKED;
+		else if (tile == Terrain.CRYSTAL_DOOR)  return DungeonTileSheet.RAISED_DOOR_CRYSTAL;
 		else return -1;
 	}
 
 	private static int[] doorTiles = new int[]{
-			Terrain.DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR, Terrain.OPEN_DOOR
+			Terrain.DOOR, Terrain.LOCKED_DOOR, Terrain.HERO_LKD_DR, Terrain.CRYSTAL_DOOR, Terrain.OPEN_DOOR
 	};
 
 	public static boolean doorTile(int tile){
@@ -284,6 +305,8 @@ public class DungeonTileSheet {
 
 	public static final int RAISED_STATUE           = RAISED_OTHER+8;
 	public static final int RAISED_STATUE_SP        = RAISED_OTHER+9;
+	public static final int RAISED_REGION_DECO      = RAISED_OTHER+10;
+	public static final int RAISED_REGION_DECO_ALT  = RAISED_OTHER+11;
 
 	public static final int RAISED_MINE_CRYSTAL     = RAISED_OTHER+12;
 	public static final int RAISED_MINE_CRYSTAL_ALT = RAISED_OTHER+13;
@@ -334,6 +357,7 @@ public class DungeonTileSheet {
 		if (tile == Terrain.OPEN_DOOR)                              visual = DOOR_SIDEWAYS_OVERHANG;
 		else if (tile == Terrain.DOOR)                              visual = DOOR_SIDEWAYS_OVERHANG_CLOSED;
 		else if (tile == Terrain.LOCKED_DOOR)                       visual = DOOR_SIDEWAYS_OVERHANG_LOCKED;
+		else if (tile == Terrain.HERO_LKD_DR)                       visual = DOOR_SIDEWAYS_OVERHANG_LOCKED;
 		else if (tile == Terrain.CRYSTAL_DOOR)                      visual = DOOR_SIDEWAYS_OVERHANG_CRYSTAL;
 		//TODO currently this line on triggers on mining floors, do we want to make it universal?
 		else if (Dungeon.branch == 1 && below == Terrain.WALL_DECO) visual = WALL_OVERHANG_DECO;
@@ -367,6 +391,8 @@ public class DungeonTileSheet {
 
 	public static final int STATUE_OVERHANG             = OTHER_OVERHANG+8;
 	public static final int STATUE_SP_OVERHANG          = OTHER_OVERHANG+9;
+	public static final int REGION_DECO_OVERHANG        = OTHER_OVERHANG+10;
+	public static final int REGION_DECO_ALT_OVERHANG    = OTHER_OVERHANG+11;
 
 	public static final int MINE_CRYSTAL_OVERHANG       = OTHER_OVERHANG+12;
 	public static final int MINE_CRYSTAL_OVERHANG_ALT   = OTHER_OVERHANG+13;
@@ -418,6 +444,7 @@ public class DungeonTileSheet {
 		directFlatVisuals.put(Terrain.DOOR,             FLAT_DOOR);
 		directFlatVisuals.put(Terrain.OPEN_DOOR,        FLAT_DOOR_OPEN);
 		directFlatVisuals.put(Terrain.LOCKED_DOOR,      FLAT_DOOR_LOCKED);
+		directFlatVisuals.put(Terrain.HERO_LKD_DR,      FLAT_DOOR_LOCKED);
 		directFlatVisuals.put(Terrain.CRYSTAL_DOOR,     FLAT_DOOR_CRYSTAL);
 		directFlatVisuals.put(Terrain.WALL_DECO,        FLAT_WALL_DECO);
 		directFlatVisuals.put(Terrain.BOOKSHELF,        FLAT_BOOKSHELF);
@@ -428,6 +455,8 @@ public class DungeonTileSheet {
 
 		directFlatVisuals.put(Terrain.STATUE,           FLAT_STATUE);
 		directFlatVisuals.put(Terrain.STATUE_SP,        FLAT_STATUE_SP);
+		directFlatVisuals.put(Terrain.REGION_DECO,      FLAT_REGION_DECO);
+		directFlatVisuals.put(Terrain.REGION_DECO_ALT,  FLAT_REGION_DECO_ALT);
 
 		directFlatVisuals.put(Terrain.MINE_CRYSTAL,     FLAT_MINE_CRYSTAL);
 		directFlatVisuals.put(Terrain.MINE_BOULDER,     FLAT_MINE_BOULDER);

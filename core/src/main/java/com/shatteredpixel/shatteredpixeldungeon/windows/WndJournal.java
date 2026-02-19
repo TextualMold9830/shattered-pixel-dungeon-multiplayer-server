@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -507,7 +509,7 @@ public class WndJournal extends WndTabbed {
 						@Override
 						public boolean onClick(float x, float y) {
 							if (inside(x, y)) {
-								GameScene.show(new CustomNoteButton.CustomNoteWindow(rec));
+								GameScene.show(new CustomNoteButton.CustomNoteWindow(rec, WndJournal.INSTANCE));
 								return true;
 							} else {
 								return false;
@@ -770,9 +772,13 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 
 				sprite = new ItemSprite(item.image, seen ? item.glowing() : null);
 				if (!seen)  {
+					if (item instanceof ExoticPotion){
+						sprite.frame(ItemSpriteSheet.POTION_CRIMSON);
+					}
 					sprite.lightness(0);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_item");
+					desc += "\n\n" + Messages.get(item, "discover_hint");
 				} else {
 					title = Messages.titleCase( item.name() );
 					//some items don't include direct stats, generally when they're not applicable
@@ -822,6 +828,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					sprite.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_enchantment");
+					desc += "\n\n" + Messages.get(ench, "discover_hint");
 				}
 
 			} else if (Armor.Glyph.class.isAssignableFrom(itemClass)){
@@ -837,6 +844,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					sprite.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_glyph");
+					desc += "\n\n" + Messages.get(glyph, "discover_hint");
 				}
 
 			}
@@ -910,7 +918,14 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 				} else {
 					icon.lightness(0f);
 					title = "???";
-					desc = mob.alignment == Char.Alignment.ENEMY ? Messages.get(CatalogTab.class, "not_seen_enemy") : Messages.get(CatalogTab.class, "not_seen_ally");
+					if (mob instanceof WandOfRegrowth.Lotus){
+						desc = Messages.get(CatalogTab.class, "not_seen_plant");
+					} else if (mob.alignment == Char.Alignment.ENEMY){
+						desc = Messages.get(CatalogTab.class, "not_seen_enemy");
+					} else {
+						desc = Messages.get(CatalogTab.class, "not_seen_ally");
+					}
+					desc += "\n\n" + Messages.get(mob, "discover_hint");
 				}
 
 				//we have to clip the bounds of the sprite if it's too large
@@ -944,6 +959,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					icon.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_trap");
+					desc += "\n\n" + Messages.get(trap, "discover_hint");
 				}
 
 		} else if (Plant.class.isAssignableFrom(entityCls)){
@@ -961,6 +977,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					icon.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_plant");
+					desc += "\n\n" + Messages.get(plant, "discover_hint");
 				}
 
 			}
@@ -1026,9 +1043,11 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 							hardLightBG(1, 1, 1);
 						} else {
 							if (ShatteredPixelDungeon.scene() instanceof GameScene){
-								GameScene.show(new WndJournalItem(sprite, "???", Messages.get(CatalogTab.class, "not_seen_lore")));
+								GameScene.show(new WndJournalItem(sprite, "???",
+										Messages.get(CatalogTab.class, "not_seen_lore") + "\n\n" + doc.discoverHint()));
 							} else {
-								ShatteredPixelDungeon.scene().addToFront(new WndJournalItem(sprite, "???", Messages.get(CatalogTab.class, "not_seen_lore")));
+								ShatteredPixelDungeon.scene().addToFront(new WndJournalItem(sprite, "???",
+										Messages.get(CatalogTab.class, "not_seen_lore") + "\n\n" + doc.discoverHint()));
 							}
 
 						}
@@ -1044,10 +1063,10 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 				text.measure();
 				gridItem.addSecondIcon( text );
 				if (!read) {
-					gridItem.hardLightBG(1f, 1f, 2f);
+					gridItem.hardLightBG(0.6f, 1f, 2f);
 				}
 			} else {
-				gridItem.hardLightBG(2f, 1f, 2f);
+				gridItem.hardLightBG(2.2f, 1f, 2.2f);
 			}
 			grid.addItem(gridItem);
 		}

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,9 @@ public class DungeonWallsTilemap extends DungeonTilemap {
 
 				if (map[pos + mapWidth] == Terrain.DOOR){
 					return DungeonTileSheet.DOOR_SIDEWAYS;
-				} else if (map[pos + mapWidth] == Terrain.LOCKED_DOOR){
+				} else if (map[pos + mapWidth] == Terrain.LOCKED_DOOR) {
+					return DungeonTileSheet.DOOR_SIDEWAYS_LOCKED;
+				} else if (map[pos + mapWidth] == Terrain.HERO_LKD_DR){
 					return DungeonTileSheet.DOOR_SIDEWAYS_LOCKED;
 				} else if (map[pos + mapWidth] == Terrain.CRYSTAL_DOOR){
 					return DungeonTileSheet.DOOR_SIDEWAYS_CRYSTAL;
@@ -82,7 +84,11 @@ public class DungeonWallsTilemap extends DungeonTilemap {
 					pos % mapWidth != 0 ?       map[pos - 1 + mapWidth] : -1
 			);
 
-		} else if (Dungeon.level.insideMap(pos) && (map[pos+mapWidth] == Terrain.DOOR || map[pos+mapWidth] == Terrain.LOCKED_DOOR) ) {
+		} else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.DOOR ) {
+			return DungeonTileSheet.DOOR_OVERHANG;
+		} else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.LOCKED_DOOR ) {
+			return DungeonTileSheet.DOOR_OVERHANG;
+		} else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.HERO_LKD_DR ) {
 			return DungeonTileSheet.DOOR_OVERHANG;
 		} else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.OPEN_DOOR ) {
 			return DungeonTileSheet.DOOR_OVERHANG_OPEN;
@@ -92,6 +98,10 @@ public class DungeonWallsTilemap extends DungeonTilemap {
 			return DungeonTileSheet.STATUE_OVERHANG;
 		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.STATUE_SP){
 			return DungeonTileSheet.STATUE_SP_OVERHANG;
+		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.REGION_DECO){
+			return DungeonTileSheet.REGION_DECO_OVERHANG;
+		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.REGION_DECO_ALT){
+			return DungeonTileSheet.REGION_DECO_ALT_OVERHANG;
 		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.MINE_CRYSTAL){
 			return DungeonTileSheet.getVisualWithAlts(DungeonTileSheet.MINE_CRYSTAL_OVERHANG, pos + mapWidth);
 		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.MINE_BOULDER){

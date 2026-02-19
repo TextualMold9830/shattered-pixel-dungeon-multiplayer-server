@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -300,7 +300,7 @@ public class Ghost extends NPC {
 				Ghost ghost = new Ghost();
 				do {
 					ghost.pos = level.pointToCell(room.random());
-				} while (ghost.pos == -1 || level.solid[ghost.pos] || ghost.pos == level.exit());
+				} while (ghost.pos == -1 || level.solid[ghost.pos] || !level.openSpace[ghost.pos] || ghost.pos == level.exit());
 				level.mobs.add( ghost );
 				
 				spawned = true;
@@ -363,7 +363,7 @@ public class Ghost extends NPC {
 				GLog.n( Messages.get(Ghost.class, "find_me") );
 				Sample.INSTANCE.play( Assets.Sounds.GHOST );
 				processed = true;
-				Statistics.questScores[0] = 1000;
+				Statistics.questScores[0] += 1000;
 				Music.MusicAction callback;
 				if (Ghost.Quest.active() || Statistics.amuletObtained){
 					if (Statistics.amuletObtained && Dungeon.depth == 1){

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,6 +152,7 @@ public class UnstableSpellbook extends Artifact {
 				|| (scroll instanceof ScrollOfTransmutation));
 
 		scroll.anonymize();
+		scroll.talentChance = 0;  //spellbook does not trigger on-scroll talents
 		curItem = scroll;
 		curUser = hero;
 
@@ -175,6 +176,7 @@ public class UnstableSpellbook extends Artifact {
 						curItem = scroll;
 						setCharge(getCharge() - 1, hero);
 						scroll.anonymize();
+						scroll.talentChance = 0;
 						checkForArtifactProc(curUser, scroll);
 						scroll.doRead(getOwnerHero());
 						Talent.onArtifactUsed(getOwnerHero());
@@ -228,6 +230,7 @@ public class UnstableSpellbook extends Artifact {
 			curUser = (Hero) target;
 			curItem = scroll;
 			scroll.anonymize();
+			scroll.talentChance = 0;
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {

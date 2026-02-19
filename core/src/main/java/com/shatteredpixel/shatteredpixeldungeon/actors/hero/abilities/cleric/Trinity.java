@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
@@ -360,18 +361,32 @@ public class Trinity extends ArmorAbility {
 			ArrayList<Item> options = new ArrayList<>();
 			for (Class<?> cls : discoveredClasses){
 				if (Weapon.Enchantment.class.isAssignableFrom(cls)){
-					MeleeWeapon w = new WornShortsword();
+					MeleeWeapon w = new WornShortsword(){
+						@Override
+						public String name() {
+							//for button tooltips
+							return enchantment.name();
+						}
+					};
 					if (hero.belongings.weapon() != null){
 						w.image = hero.belongings.weapon().image;
 					}
 					w.enchant((Weapon.Enchantment) Reflection.newInstance(cls));
+					w.cursedKnown = true;
 					options.add(w);
 				} else if (Armor.Glyph.class.isAssignableFrom(cls)) {
-					Armor a = new ClothArmor();
+					Armor a = new ClothArmor(){
+						@Override
+						public String name() {
+							//for button tooltips
+							return glyph.name();
+						}
+					};
 					if (hero.belongings.armor() != null){
 						a.image = hero.belongings.armor().image;
 					}
 					a.inscribe((Armor.Glyph) Reflection.newInstance(cls));
+					a.cursedKnown = true;
 					options.add(a);
 				} else {
 					options.add((Item) Reflection.newInstance(cls));
@@ -527,7 +542,7 @@ public class Trinity extends ArmorAbility {
 			return 2*chargeUse;
 		}
 		if (Artifact.class.isAssignableFrom(cls)){
-			if (cls.equals(DriedRose.class) || cls.equals(UnstableSpellbook.class)){
+			if (cls.equals(DriedRose.class) || cls.equals(UnstableSpellbook.class) || cls.equals(SkeletonKey.class)){
 				return 2*chargeUse; //50 charge
 			}
 			if (cls.equals(EtherealChains.class) || cls.equals(TalismanOfForesight.class) || cls.equals(TimekeepersHourglass.class)){

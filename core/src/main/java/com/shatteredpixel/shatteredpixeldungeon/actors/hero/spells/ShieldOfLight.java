@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -79,9 +80,13 @@ public class ShieldOfLight extends TargetedClericSpell {
 		hero.getSprite().operate(hero.pos);
 
 		//1 turn less as the casting is instant
-		ShieldOfLightTracker shieldOfLightTracker = Buff.prolong(hero, ShieldOfLightTracker.class, 3f);
+		ShieldOfLightTracker shieldOfLightTracker = Buff.prolong(hero, ShieldOfLightTracker.class, 4f);
 		shieldOfLightTracker.source = hero;
 		shieldOfLightTracker.object = ch.id();
+
+		if (hero.subClass == HeroSubClass.PRIEST) {
+			Buff.affect(ch, GuidingLight.Illuminated.class);
+		}
 
 		hero.busy();
 		hero.getSprite().operate(hero.pos);
@@ -110,7 +115,7 @@ public class ShieldOfLight extends TargetedClericSpell {
 		public Hero source;
 		public int object = 0;
 
-		private static final float DURATION = 4;
+		private static final float DURATION = 5;
 
 		{
 			type = buffType.POSITIVE;

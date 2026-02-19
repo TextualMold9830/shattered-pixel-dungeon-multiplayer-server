@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -394,11 +394,8 @@ public class Tengu extends Mob {
 		BossHealthBar.assignBoss(this);
 		if (getHP() <= getHT() /2) BossHealthBar.bleed(true);
 	}
-	
-	//don't bother bundling this, as its purely cosmetic
-	private boolean yelledCoward = false;
-	
-	//tengu is always hunting
+
+	//tengu is always hunting, and can use simpler rules because he never moves
 	private class Hunting extends Mob.Hunting{
 		
 		@Override
@@ -416,28 +413,32 @@ public class Tengu extends Mob {
 				return doAttack( enemy );
 				
 			} else {
-				
-				if (enemyInFOV) {
-					target = enemy.pos;
-				} else {
-					chooseEnemy();
-					if (enemy == null){
-						//if nothing else can be targeted, target hero
-						enemy = chooseEnemy();
-					}
-					if(enemy == null){return true;}
-					target = enemy.pos;
-				}
-				
-				//if not charmed, attempt to use an ability, even if the enemy can't be seen
-				if (canUseAbility()){
-					return useAbility();
-				}
-				
-				spend( TICK );
-				return true;
-				
+
+				return handleUnreachableTarget(enemyInFOV, justAlerted);
 			}
+		}
+
+		@Override
+		protected boolean handleUnreachableTarget(boolean enemyInFOV, boolean justAlerted) {
+			Char oldEnemy = enemy;
+			enemy = null;
+			enemy = chooseEnemy();
+			if (enemy != null && enemy != oldEnemy) {
+				recursing = true;
+				boolean result = act(enemyInFOV, justAlerted);
+				recursing = false;
+				return result;
+			}
+
+			//attempt to use an ability, even if enemy can't be decided
+			//Tengu is always hunting, so we don't lose enemy in this case
+			if (canUseAbility()){
+				return useAbility();
+			}
+
+			spend( TICK );
+			return true;
+
 		}
 	}
 	
@@ -517,7 +518,9 @@ public class Tengu extends Mob {
 			} else {
 				abilityToUse = Random.Int(3);
 			}
-			
+
+			//all abilities always target the hero, even if something else is taking Tengu's normal attacks
+
 			//If we roll the same ability as last time, 9/10 chance to reroll
 			if (abilityToUse != lastAbility || Random.Int(10) == 0){
 				switch (abilityToUse){
@@ -1014,7 +1017,7 @@ public class Tengu extends Mob {
 					}
 				}
 
-				
+
 				shockingOrdinals = false;
 				spreadblob();
 			} else {

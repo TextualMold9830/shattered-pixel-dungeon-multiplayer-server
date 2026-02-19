@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -219,6 +219,7 @@ public class Blacksmith extends NPC {
 		//reward tracking. Stores remaining favor, the pickaxe, and how many of each reward has been chosen
 		public static int favor;
 		public static Item pickaxe;
+		public static boolean freePickaxe;
 		public static int reforges;
 		public static int hardens;
 		public static int upgrades;
@@ -239,7 +240,8 @@ public class Blacksmith extends NPC {
 			completed	= false;
 
 			favor       = 0;
-			pickaxe     = new Pickaxe().identify( null);
+			pickaxe     = new Pickaxe().identify(null);
+			freePickaxe = false;
 			reforges    = 0;
 			hardens     = 0;
 			upgrades    = 0;
@@ -263,6 +265,7 @@ public class Blacksmith extends NPC {
 
 		private static final String FAVOR	    = "favor";
 		private static final String PICKAXE	    = "pickaxe";
+		private static final String FREE_PICKAXE= "free_pickaxe";
 		private static final String REFORGES	= "reforges";
 		private static final String HARDENS	    = "hardens";
 		private static final String UPGRADES	= "upgrades";
@@ -287,6 +290,7 @@ public class Blacksmith extends NPC {
 
 				node.put( FAVOR, favor );
 				if (pickaxe != null) node.put( PICKAXE, pickaxe );
+				node.put( FREE_PICKAXE, freePickaxe );
 				node.put( REFORGES, reforges );
 				node.put( HARDENS, hardens );
 				node.put( UPGRADES, upgrades );
@@ -322,6 +326,16 @@ public class Blacksmith extends NPC {
 				} else {
 					pickaxe = null;
 				}
+				if (node.contains(FREE_PICKAXE)){
+					freePickaxe = node.getBoolean(FREE_PICKAXE);
+				} else {
+					//some for pre-3.1 saves, some from incorrect values from v3.1-BETA-1.0
+					if (favor >= 2500){
+						freePickaxe = true;
+					} else {
+						freePickaxe = false;
+					}
+				}
 				reforges = node.getInt( REFORGES );
 				hardens = node.getInt( HARDENS );
 				upgrades = node.getInt( UPGRADES );
@@ -333,6 +347,8 @@ public class Blacksmith extends NPC {
 						smithEnchant = (Weapon.Enchantment) node.get(ENCHANT);
 						smithGlyph   = (Armor.Glyph) node.get(GLYPH);
 					}
+				} else {
+					smithRewards = null;
 				}
 
 			} else {
@@ -369,6 +385,7 @@ public class Blacksmith extends NPC {
 			for (Item i : toUndo){
 				Generator.undoDrop(i);
 			}
+			smithRewards.add(Generator.randomMissile(3, useDecks));
 			smithRewards.add(Generator.randomArmor(3));
 
 			//30%:+0, 45%:+1, 20%:+2, 5%:+3
@@ -457,13 +474,17 @@ public class Blacksmith extends NPC {
 
 			if (bossBeaten) favor += 1000;
 
-			Statistics.questScores[2] = favor;
+			Statistics.questScores[2] += favor;
+
+			if (favor >= 2500){
+				freePickaxe = true;
+			}
 		}
 
 		public static boolean rewardsAvailable(){
 			return favor > 0
 					|| (Quest.smithRewards != null && Quest.smiths > 0)
-					|| (pickaxe != null && Statistics.questScores[2] >= 2500);
+					|| (pickaxe != null && freePickaxe);
 		}
 
 	}

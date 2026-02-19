@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ public class RotGardenRoom extends SpecialRoom {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		boolean[] passable = new boolean[level.length()];
 		int entryPos = level.pointToCell(entrance());
+		int openCells;
 		do {
 			Painter.fill(level, this, 1, Terrain.HIGH_GRASS);
 			for (int i = 0; i < 12; i++) {
@@ -78,9 +79,11 @@ public class RotGardenRoom extends SpecialRoom {
 			//place the heart in a slightly random location sufficiently far from the entrance
 			PathFinder.buildDistanceMap(entryPos, passable);
 			candidates.clear();
+			openCells = 0;
 			for (Point p : getPoints()) {
 				int i = level.pointToCell(p);
 				if (PathFinder.distance[i] != Integer.MAX_VALUE) {
+					openCells++;
 					if (PathFinder.distance[i] >= 7) {
 						candidates.add(i);
 					}
@@ -102,7 +105,8 @@ public class RotGardenRoom extends SpecialRoom {
 				closestPos++;
 			}
 
-		} while (candidates.isEmpty());
+		//retry if there are no distanc candidates, or more than ~half the room is closed off
+		} while (candidates.isEmpty() || openCells < 35);
 		int heartPos = Random.element(candidates);
 		placePlant(level, heartPos, new RotHeart());
 

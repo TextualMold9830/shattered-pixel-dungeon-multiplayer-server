@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -460,6 +462,9 @@ public class DwarfKing extends Mob {
 		//Lightning has custom logic so that chaining it doesn't DQ for the badge
 		} else if (src instanceof Wand && !(src instanceof WandOfLightning)){
 			Statistics.qualifiedForBossChallengeBadge = false;
+		//Only damage-dealing spells from the Cleric
+		} else if (src instanceof ClericSpell){
+			Statistics.qualifiedForBossChallengeBadge = false;
 		}
 
 		if (isInvulnerable(src.getClass())){
@@ -579,6 +584,16 @@ public class DwarfKing extends Mob {
 //		if (beacon != null) {
 //			beacon.upgrade();
 //		}
+
+		//cleanses degrade that may have been applied by a DK warlock, mainly for convenience
+		for (Hero hero: Dungeon.heroes){
+			if (hero != null) {
+				if (hero.buff(Degrade.class) != null){
+					hero.buff(Degrade.class).detach();
+				}
+			}
+		}
+
 
 		yell( Messages.get(this, "defeated") );
 	}

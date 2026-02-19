@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,13 +59,6 @@ public class DistortionTrap extends Trap{
 		shape = LARGE_DOT;
 	}
 
-	private static final ArrayList<Class<?extends Mob>> RARE = new ArrayList<>(Arrays.asList(
-			Albino.class, CausticSlime.class,
-			Bandit.class,
-			ArmoredBrute.class, DM201.class,
-			Elemental.ChaosElemental.class, Senior.class,
-			Acidic.class));
-
 	@Override
 	public void activate() {
 
@@ -115,7 +108,7 @@ public class DistortionTrap extends Trap{
 					mob = Reflection.newInstance(MobSpawner.getMobRotation(floor).get(0));
 					break;
 				case 2:
-					switch (2){
+					switch (Random.Int(4)){
 						case 0: default:
 							Wraith.spawnAt(point);
 							continue; //wraiths spawn themselves, no need to do more
@@ -134,7 +127,7 @@ public class DistortionTrap extends Trap{
 					}
 					break;
 				case 4:
-					mob = Reflection.newInstance(Random.element(RARE));
+					mob = Reflection.newInstance(Random.element(MobSpawner.RARE_ALTS.values()));
 					break;
 			}
 
@@ -143,7 +136,9 @@ public class DistortionTrap extends Trap{
 			}
 
 			mob.maxLvl = Hero.MAX_LEVEL-1;
-			mob.state = mob.WANDERING;
+			if (mob.state != mob.PASSIVE) {
+				mob.state = mob.WANDERING;
+			}
 			mob.pos = point;
 			GameScene.add(mob, DELAY);
 			mobs.add(mob);

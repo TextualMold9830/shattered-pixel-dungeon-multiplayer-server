@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,14 +107,14 @@ public class StoneOfIntuition extends InventoryStone {
 			super(hero);
 			this.item = item;
 			IconTitle titlebar = new IconTitle();
-			titlebar.icon( new ItemSprite(ItemSpriteSheet.STONE_INTUITION, null) );
-			titlebar.label( Messages.titleCase(Messages.get(StoneOfIntuition.class, "name")) );
+			titlebar.icon( new ItemSprite(item) );
+			titlebar.label( Messages.titleCase(item.name()) );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
 			add( titlebar );
 			
 			RenderedTextBlock text = PixelScene.renderTextBlock(6);
 			text.text( Messages.get(this, "text") );
-			text.setPos(0, titlebar.bottom());
+			text.setPos(0, titlebar.bottom()+2);
 			text.maxWidth( WIDTH );
 			add(text);
 			

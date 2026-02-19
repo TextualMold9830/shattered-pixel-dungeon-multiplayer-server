@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -553,13 +554,21 @@ public class GnollGeomancer extends Mob {
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			if (!enemyInFOV){
-				spend(TICK);
-				return true;
+				//if we can't see our current target, try to find a new one
+				enemy = null;
+				enemy = chooseEnemy();
+				if (enemy != null){
+					return act(true, justAlerted);
+				} else {
+					//wait if we can't
+					spend(TICK);
+					return true;
+				}
 			} else {
 				enemySeen = true;
 
-				//use abilities more frequently on the hero's initial approach or if sapper is alive
-				// but only if hero isn't stunned, to prevent stunlocking
+				//use abilities more frequently on the enemy's initial approach or if sapper is alive
+				// but only if enemy isn't stunned, to prevent stunlocking
 				if ((Dungeon.level.distance(pos, enemy.pos) > 2 || hasSapper())
 						&& buff(RockArmor.class) != null
 						&& enemy.buff(Paralysis.class) == null){
@@ -708,6 +717,10 @@ public class GnollGeomancer extends Mob {
 						if (ch != null && !(ch instanceof GnollGeomancer)){
 							ch.damage(Random.NormalIntRange(6, 12), new DamageCause (new GnollGeomancer.Boulder(), ch));
 
+							if (ch instanceof Hero){
+								Statistics.questScores[2] -= 100;
+							}
+
 							if (ch.isAlive()){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
 							} else if (!ch.isAlive() && ch instanceof Hero) {
@@ -810,6 +823,9 @@ public class GnollGeomancer extends Mob {
 		@Override
 		public void affectChar(Char ch) {
 			ch.damage(Random.NormalIntRange(6, 12), this);
+			if (ch instanceof Hero){
+				Statistics.questScores[2] -= 100;
+			}
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
 			} else if (ch instanceof Hero){

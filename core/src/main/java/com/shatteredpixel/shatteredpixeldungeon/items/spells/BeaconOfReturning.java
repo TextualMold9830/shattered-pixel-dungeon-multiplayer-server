@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -32,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPassage;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -54,15 +56,20 @@ public class BeaconOfReturning extends Spell {
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
-	
+
+	//This class has a variety of code for compat with pre-v3.3.0 saves
+	//Previously the destination was an item property, but in 3.3.0 this was changed to use a buff
+
 	public int returnDepth	= -1;
 	public int returnBranch	= 0;
 	public int returnPos;
 	
 	@Override
 	protected void onCast(final Hero hero) {
-		
-		if (returnDepth == -1){
+
+		BeaconTracker tracker = hero.buff(BeaconTracker.class);
+
+		if (tracker == null && returnDepth == -1){
 			setBeacon(hero);
 		} else {
 			GameScene.show(new WndOptions(hero, new ItemSprite(this),
@@ -88,20 +95,40 @@ public class BeaconOfReturning extends Spell {
 	
 	@Override
 	protected void onThrow(int cell) {
-		returnDepth = -1;
+		if (returnDepth != -1) {
+			//TODO: fix this when adding notes
+//			if (hero.belongings.getItem(getClass()) == null) {
+//				Notes.remove(Notes.Landmark.BEACON_LOCATION, returnDepth);
+//			}
+			returnDepth = -1;
+		}
 		super.onThrow(cell);
 	}
 	
 	@Override
 	public void doDrop(Hero hero) {
-		returnDepth = -1;
+		if (returnDepth != -1) {
+			Notes.remove(Notes.Landmark.BEACON_LOCATION, returnDepth);
+			returnDepth = -1;
+		}
 		super.doDrop(hero);
 	}
 	
 	private void setBeacon(Hero hero ){
-		returnDepth = Dungeon.depth;
-		returnBranch = Dungeon.branch;
-		returnPos = hero.pos;
+		if (returnDepth != -1){
+			Notes.remove(Notes.Landmark.BEACON_LOCATION, returnDepth);
+		}
+		if (hero.buff(BeaconTracker.class) != null){
+			Notes.remove(Notes.Landmark.BEACON_LOCATION,
+					hero.buff(BeaconTracker.class).returnDepth);
+		}
+
+		BeaconTracker tracker = Buff.affect(hero, BeaconTracker.class);
+		tracker.returnDepth = Dungeon.depth;
+		tracker.returnBranch = Dungeon.branch;
+		tracker.returnPos = hero.pos;
+
+		Notes.add(Notes.Landmark.BEACON_LOCATION, tracker.returnDepth);
 		
 		hero.spend( 1f );
 		hero.busy();
@@ -114,16 +141,28 @@ public class BeaconOfReturning extends Spell {
 	}
 	
 	private void returnBeacon( Hero hero ){
-		
-		if (returnDepth == Dungeon.depth && returnBranch == Dungeon.branch) {
 
-			Char existing = Actor.findChar(returnPos);
+		BeaconTracker tracker = hero.buff(BeaconTracker.class);
+
+		if (tracker == null){
+			if (returnDepth == -1){
+				return;
+			}
+			tracker = new BeaconTracker();
+			tracker.returnDepth = returnDepth;
+			tracker.returnBranch = returnBranch;
+			tracker.returnPos = returnPos;
+		}
+
+		if (tracker.returnDepth == Dungeon.depth && tracker.returnBranch == Dungeon.branch) {
+
+			Char existing = Actor.findChar(tracker.returnPos);
 			if (existing != null && existing != hero){
-				Char toPush = !Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
+				Char toPush = Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
 
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.NEIGHBOURS8) {
-					int cell = returnPos + n;
+					int cell = tracker.returnPos + n;
 					if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
 							&& (!Char.hasProp(toPush, Char.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 						candidates.add( cell );
@@ -133,7 +172,7 @@ public class BeaconOfReturning extends Spell {
 
 				if (!candidates.isEmpty()){
 					if (toPush == hero){
-						returnPos = candidates.get(0);
+						tracker.returnPos = candidates.get(0);
 					} else {
 						Actor.add( new Pushing( toPush, toPush.pos, candidates.get(0) ) );
 						toPush.pos = candidates.get(0);
@@ -145,7 +184,7 @@ public class BeaconOfReturning extends Spell {
 				}
 			}
 
-			if (ScrollOfTeleportation.teleportToLocation(hero, returnPos)){
+			if (ScrollOfTeleportation.teleportToLocation(hero, tracker.returnPos)){
 				hero.spendAndNext( 1f );
 			} else {
 				return;
@@ -159,7 +198,7 @@ public class BeaconOfReturning extends Spell {
 			}
 
 			//cannot return to mining level
-			if (returnDepth >= 11 && returnDepth <= 14 && returnBranch == 1){
+			if (tracker.returnDepth >= 11 && tracker.returnDepth <= 14 && tracker.returnBranch == 1){
 				GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 				return;
 			}
@@ -167,10 +206,14 @@ public class BeaconOfReturning extends Spell {
 			Level.beforeTransition();
 			Invisibility.dispel(hero);
 			InterLevelSceneServer.mode = InterLevelSceneServer.Mode.RETURN;
-			InterLevelSceneServer.returnDepth = returnDepth;
-			InterLevelSceneServer.returnBranch = returnBranch;
-			InterLevelSceneServer.returnPos = returnPos;
+			InterLevelSceneServer.returnDepth = tracker.returnDepth;
+			InterLevelSceneServer.returnBranch = tracker.returnBranch;
+			InterLevelSceneServer.returnPos = tracker.returnPos;
 			InterLevelSceneServer.create(hero);
+		}
+		if (quantity == 1){
+			Notes.remove(Notes.Landmark.BEACON_LOCATION, tracker.returnDepth);
+			if (tracker.target != null) tracker.detach();
 		}
 		detach(hero.belongings.backpack);
 		Catalog.countUse(getClass());
@@ -180,10 +223,15 @@ public class BeaconOfReturning extends Spell {
 	}
 	
 	@Override
-	public String desc() {
+	public String desc(Hero hero) {
 		String desc = super.desc();
-		if (returnDepth != -1){
-			desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);
+		if (hero != null) {
+			BeaconTracker tracker = hero.buff(BeaconTracker.class);
+			if (tracker != null){
+				desc += "\n\n" + Messages.get(this, "desc_set", tracker.returnDepth);
+			} else if (returnDepth != -1) {
+				desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);
+			}
 		}
 		return desc;
 	}
@@ -241,5 +289,38 @@ public class BeaconOfReturning extends Spell {
 			outQuantity = OUT_QUANTITY;
 		}
 		
+	}
+
+	public static class BeaconTracker extends Buff {
+
+		{
+			revivePersists = true;
+		}
+
+		public int returnDepth	= -1;
+		public int returnBranch	= 0;
+		public int returnPos;
+
+		private static final String DEPTH	= "depth";
+		private static final String BRANCH	= "branch";
+		private static final String POS		= "pos";
+
+		@Override
+		public void storeInBundle( Bundle bundle ) {
+			super.storeInBundle( bundle );
+			bundle.put( DEPTH, returnDepth );
+			bundle.put( BRANCH, returnBranch );
+			if (returnDepth != -1) {
+				bundle.put( POS, returnPos );
+			}
+		}
+
+		@Override
+		public void restoreFromBundle( Bundle bundle ) {
+			super.restoreFromBundle(bundle);
+			returnDepth	= bundle.getInt( DEPTH );
+			returnBranch = bundle.getInt( BRANCH );
+			returnPos	= bundle.getInt( POS );
+		}
 	}
 }

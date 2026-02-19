@@ -2,12 +2,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://storage.googleapis.com/r8-releases/raw")
-        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.1'
+        classpath 'com.android.tools.build:gradle:8.13.2'
     }
 }
 
@@ -25,31 +22,31 @@ allprojects {
     } else {
         println("Version file not found, using default: 'Local-build'")
     }
-    def baseVersionName = "3.0.2"
+    def baseVersionName = "3.3.5"
     ext {
         appName = 'Shattered Pixel Dungeon Server'
         appPackageName = 'com.shatteredpixel.shatteredpixeldungeon.multiplayer.server'
 
-        appVersionCode = 833
+        appVersionCode = 890
         appVersionName = "Server_" +versionName + "_on_v"+baseVersionName
         appShortVersionName = ((appVersionName) =~ /\d+\.\d+\.\d+/) ? ((appVersionName) =~ /\d+\.\d+\.\d+/)[0] : "0.0.0"
 
-        appJavaCompatibility = JavaVersion.VERSION_1_8
+        appJavaCompatibility = JavaVersion.VERSION_11
 
-        appAndroidCompileSDK = 34
-        appAndroidMinSDK = 14
-        appAndroidTargetSDK = 34
+        appAndroidCompileSDK = 35   //Android 15
+        appAndroidMinSDK = 21       //Android 5.0
+        appAndroidTargetSDK = 35    //Android 15
 
-        gdxVersion = '1.12.1'
+        gdxVersion = '1.14.0'
         gdxControllersVersion = '2.2.4'
-        robovmVersion = '2.3.21'
+        robovmVersion = '2.3.24'
     }
     version = appVersionName
 
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://central.sonatype.org/repositories/maven-snapshots' }
+        maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
