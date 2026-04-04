@@ -552,21 +552,6 @@ public class SPDSettings extends GameSettings {
 		}
 		return getBoolean("use_fragments", false);
 	}
-
-	public static int serverPort() {
-		if (!contains("server_port")){
-			put("server_port", 0);
-		}
-		return getInt("server_port", 0);
-	}
-
-	public static String motd() {
-		if (!contains("motd")){
-			put("motd", "");
-		}
-		return getString("motd", null);
-	}
-
 	public static boolean useServerInfoService() {
 		return true;
 	}
