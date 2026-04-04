@@ -503,6 +503,7 @@ public class Item implements Bundlable {
 
 		return this;
 	}
+	@Deprecated
 	public Item upgrade(int n){
 		for (int i=0; i < n; i++) {
 			upgrade();

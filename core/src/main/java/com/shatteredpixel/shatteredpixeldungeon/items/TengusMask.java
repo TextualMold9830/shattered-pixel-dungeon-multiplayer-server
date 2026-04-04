@@ -78,7 +78,7 @@ public class TengusMask extends Item {
 	
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
-		if (!cloned ||canUse(hero)) {
+		if (!cloned || canUse(hero)) {
 			Badges.validateMastery(hero);
 			return super.doPickUp(hero, pos);
 		}
