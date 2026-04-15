@@ -39,14 +39,21 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.PointerArea;
+import com.watabou.noosa.Gizmo;
+import com.watabou.noosa.ui.Component;
+import com.watabou.noosa.ui.OrientationContext;
 import com.watabou.utils.Point;
 import com.watabou.utils.Signal;
+import com.watabou.utils.RectF;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -246,6 +253,9 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	}
 	//TODO: check this
 	public void hide() {
+		if (getOwnerHero() != null) {
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendWindow(getOwnerHero().networkID, HIDE_WINDOW_TYPE, getId(), null);
+		}
 		destroy();
 	}
 
@@ -292,9 +302,100 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 		}
 	}
 	public void onSelect(int button, @Nullable JSONObject args) {
+		onComponentClick(button);
 		onSelect(button);
 	}
 
 	protected void onSelect(int button) {
+	}
+
+	public void layout(OrientationContext ctx) { }
+
+	public void onComponentClick(int componentId) {
+		Component c = findComponentById(this, componentId);
+		if (c instanceof Button) {
+			((Button) c).onClick();
+		}
+	}
+
+	private Component findComponentById(Group group, int id) {
+		if (group.members() == null) return null;
+		for (Gizmo g : group.members()) {
+			if (g instanceof Component && ((Component) g).compId == id) return (Component) g;
+			if (g instanceof Group) {
+				Component found = findComponentById((Group) g, id);
+				if (found != null) return found;
+			}
+		}
+		return null;
+	}
+
+	private List<Component> getAllComponents(Group group) {
+		List<Component> result = new ArrayList<>();
+		if (group.members() == null) return result;
+		for (Gizmo g : group.members()) {
+			if (g instanceof Component) {
+				result.add((Component) g);
+				// Skip recursion for components that handle their own internal rendering
+				if (g instanceof RedButton || g instanceof ItemSlot || g instanceof RenderedTextBlock) {
+					continue;
+				}
+			}
+			if (g instanceof Group) {
+				result.addAll(getAllComponents((Group) g));
+			}
+		}
+		return result;
+	}
+
+	private Map<Integer, RectF> captureBounds(Group group) {
+		Map<Integer, RectF> bounds = new HashMap<>();
+		for (Component c : getAllComponents(group)) {
+			bounds.put(c.compId, new RectF(c.left(), c.top(), c.right(), c.bottom()));
+		}
+		return bounds;
+	}
+
+	public JSONObject toGenericJSON() {
+		JSONObject root = new JSONObject();
+		root.put("type", "wnd_generic");
+		root.put("id", this.getId());
+		
+		int idCounter = 1;
+		for (Component c : getAllComponents(this)) {
+			if (c.compId == -1) c.compId = idCounter++;
+		}
+
+		this.layout(new OrientationContext(false));
+		Map<Integer, RectF> portBounds = captureBounds(this);
+		int portW = this.width;
+		int portH = this.height;
+
+		this.layout(new OrientationContext(true));
+		Map<Integer, RectF> landBounds = captureBounds(this);
+		int landW = this.width;
+		int landH = this.height;
+
+		root.put("w", new JSONObject().put("portrait", portW).put("landscape", landW));
+		root.put("h", new JSONObject().put("portrait", portH).put("landscape", landH));
+
+		JSONArray components = new JSONArray();
+		for (Component c : getAllComponents(this)) {
+			JSONObject compJson = c.serialize();
+			compJson.put("id", c.compId);
+			
+			RectF p = portBounds.get(c.compId);
+			RectF l = landBounds.get(c.compId);
+			
+			compJson.put("x", new JSONObject().put("portrait", p.left).put("landscape", l.left));
+			compJson.put("y", new JSONObject().put("portrait", p.top).put("landscape", l.top));
+			compJson.put("w", new JSONObject().put("portrait", p.width()).put("landscape", l.width()));
+			compJson.put("h", new JSONObject().put("portrait", p.height()).put("landscape", l.height()));
+			
+			components.put(compJson);
+		}
+		
+		root.put("components", components);
+		return root;
 	}
 }

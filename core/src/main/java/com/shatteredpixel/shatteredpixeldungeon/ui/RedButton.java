@@ -25,6 +25,14 @@ import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 
 public class RedButton extends StyledButton {
 			
+	@Override
+	protected String getComponentType() { return "red_button"; }
+
+	@Override
+	protected void writeProperties(org.json.JSONObject json) {
+		json.put("text", this.text.text());
+	}
+
 	public RedButton( String label ) {
 		this(label, 9);
 	}

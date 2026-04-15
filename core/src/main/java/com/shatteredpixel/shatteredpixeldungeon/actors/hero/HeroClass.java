@@ -114,6 +114,8 @@ public enum HeroClass {
 		Waterskin waterskin = new Waterskin();
 		waterskin.collect(hero);
 
+		new com.shatteredpixel.shatteredpixeldungeon.items.TestItem().collect(hero);
+
 		new ScrollOfIdentify().identify(hero);
 
 		switch (this) {

@@ -22,8 +22,21 @@
 package com.watabou.noosa.ui;
 
 import com.watabou.noosa.Group;
+import org.json.JSONObject;
 
 public class Component extends Group {
+	
+	public int compId = -1;
+
+	public JSONObject serialize() {
+		JSONObject json = new JSONObject();
+		json.put("type", getComponentType());
+		writeProperties(json);
+		return json;
+	}
+
+	protected String getComponentType() { return "component"; }
+	protected void writeProperties(JSONObject json) {}
 	
 	protected float x;
 	protected float y;

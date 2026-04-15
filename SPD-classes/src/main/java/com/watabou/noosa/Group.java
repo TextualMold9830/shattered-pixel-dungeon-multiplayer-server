@@ -32,6 +32,10 @@ public class Group extends Gizmo {
 
 	protected ArrayList<Gizmo> members;
 	
+	public synchronized ArrayList<Gizmo> members() {
+		return members;
+	}
+
 	// Accessing it is a little faster,
 	// than calling members.getSize()
 	public int length;

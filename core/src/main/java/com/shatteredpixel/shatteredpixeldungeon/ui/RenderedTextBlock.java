@@ -56,12 +56,24 @@ public class RenderedTextBlock extends Component {
 	public static final int RIGHT_ALIGN = 3;
 	private int alignment = LEFT_ALIGN;
 	
-	public RenderedTextBlock(int size){
-		this.size = size;
+	@Override
+	protected String getComponentType() { return "text"; }
+
+	@Override
+	protected void writeProperties(org.json.JSONObject json) {
+		json.put("text", text());
+		json.put("color", color);
+		json.put("size", size);
+	}
+
+	public RenderedTextBlock( int baseSize ) {
+		this.size = baseSize;
+		
 	}
 
 	public RenderedTextBlock(String text, int size){
 		this.size = size;
+		
 		text(text);
 	}
 
