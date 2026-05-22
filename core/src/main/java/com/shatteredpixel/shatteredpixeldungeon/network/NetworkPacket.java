@@ -86,6 +86,55 @@ public class NetworkPacket {
         }
     }
 
+    public void packWorldStateAsActions() {
+        synchronized (dataRef) {
+            JSONObject data = dataRef.get();
+            JSONArray actions = data.optJSONArray("actions");
+            if (actions == null) {
+                actions = new JSONArray();
+                data.put("actions", actions);
+            }
+
+            String[] orderedTokens = new String[]{
+                    "server_actions",
+                    "texturepack",
+                    "level_params",
+                    "map",
+                    "interlevel_scene",
+                    "actors",
+                    "buffs",
+                    "hero",
+                    "messages",
+                    "inventory",
+                    "heaps",
+                    "window",
+                    "ui",
+                    "plants",
+                    "traps",
+                    "redirect"
+            };
+
+            for (String token : orderedTokens) {
+                moveTokenToActions(data, actions, token);
+            }
+
+            if (actions.length() == 0) {
+                data.remove("actions");
+            }
+        }
+    }
+
+    private void moveTokenToActions(JSONObject data, JSONArray actions, String token) {
+        if (!data.has(token)) {
+            return;
+        }
+        JSONObject action = new JSONObject();
+        action.put("action_name", token);
+        action.put("payload", data.get(token));
+        actions.put(action);
+        data.remove(token);
+    }
+
     public void addServerType(@NotNull String serverType){
         synchronized (dataRef) {
             try {

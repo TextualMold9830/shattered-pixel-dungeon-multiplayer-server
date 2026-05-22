@@ -282,6 +282,7 @@ class ClientThread implements Callable<String> {
                 if (packet.dataRef.get().length() == 0) {
                     return;
                 }
+                packet.packWorldStateAsActions();
                 if (DeviceCompat.isDebug()) {
                     try {
                         Log.i("flush", "clientID: " + threadID + " data:" + packet.dataRef.get().toString(4));
