@@ -23,19 +23,6 @@ public class SerializationContext {
         return serializeAs(obj, obj.getClass(), profile);
     }
 
-    public Object serializeAsParent(Object obj) {
-        return serializeAsParent(obj, "default");
-    }
-
-    public Object serializeAsParent(Object obj, String profile) {
-        if (obj == null) return JSONObject.NULL;
-        Class<?> parent = obj.getClass().getSuperclass();
-        if (parent == null) {
-            throw new IllegalArgumentException("Cannot serialize as parent: " + obj.getClass() + " has no superclass.");
-        }
-        return serializeAs(obj, parent, profile);
-    }
-
     public Object serializeAs(Object obj, Class<?> asClass) {
         return serializeAs(obj, asClass, "default");
     }

@@ -13,7 +13,7 @@ public class BagSerializer implements Serializer<Bag> {
     @Override
     public Object serialize(Bag bag, SerializationContext ctx, String profile) {
         // 1. Serialize as base Item first
-        JSONObject bagObj = (JSONObject) ctx.serializeAsParent(bag, profile);
+        JSONObject bagObj = (JSONObject) ctx.serializeAs(bag,  Bag.class.getSuperclass(), profile);
 
         if (bagObj == null) {
             return JSONObject.NULL;
@@ -21,7 +21,7 @@ public class BagSerializer implements Serializer<Bag> {
 
         Hero hero = ctx.observer;
         if ((bag.owner != null) && (bag.owner != hero)) {
-            Log.w("Packet", "bag.owner != gotten_hero");
+            Log.w("Packet", "bag.owner != gotten_hero: owner=" + bag.owner.id() + ", hero=" + (hero != null ? hero.id() : "null"));
         }
 
         try {
@@ -33,9 +33,8 @@ public class BagSerializer implements Serializer<Bag> {
                 JSONObject serializedItem = (JSONObject) ctx.serialize(item, profile);
                 if (serializedItem == null || serializedItem.length() == 0) {
                     Log.w("Packet", "item hadn't serialized");
-                } else {
-                    bagItems.put(serializedItem);
                 }
+                bagItems.put(serializedItem != null ? serializedItem : JSONObject.NULL);
             }
 
             bagObj.put("bag_icon", bag.getBagIcon());

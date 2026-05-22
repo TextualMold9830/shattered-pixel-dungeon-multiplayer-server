@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.pixeldungeon.utils.Utils;
@@ -885,7 +886,7 @@ public class Item implements Bundlable {
 	}
 
 	@NotNull
-	protected JSONObject itemUI(@NotNull Hero owner) throws JSONException {
+    public JSONObject itemUI(@NotNull Hero owner) throws JSONException {
 		Objects.requireNonNull(owner);
 		@NotNull Item item = this;
 		JSONObject ui = new JSONObject();

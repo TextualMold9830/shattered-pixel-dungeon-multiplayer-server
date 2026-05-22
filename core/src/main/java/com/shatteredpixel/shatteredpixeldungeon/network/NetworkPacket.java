@@ -1003,31 +1003,3 @@ public class NetworkPacket {
         dataRef.get().put("redirect", redirectPacket.toJSON());
     }
 }
-ed (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("counter", portion);
-                dataRef.get().put("ui", uiObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        dataRef.get().put("redirect", redirectPacket.toJSON());
-    }
-}
-  e.printStackTrace();
-        }
-    }
-    public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        dataRef.get().put("redirect", redirectPacket.toJSON());
-    }
-}
-JSON());
-    }
-}
-ct(RedirectPacket redirectPacket) {
-        dataRef.get().put("redirect", redirectPacket.toJSON());
-    }
-}

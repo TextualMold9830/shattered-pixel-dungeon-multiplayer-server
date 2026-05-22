@@ -3,7 +3,6 @@ package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import org.json.JSONException;
@@ -21,7 +20,7 @@ public class ItemSerializer implements Serializer<Item> {
 
             // On the ground, we typically don't send actions or UI.
             // When in inventory/window, and if we know the observer, we send them.
-            if (!isGround && hero != null) {
+            if (hero != null) {
                 itemObj.put("actions", NetworkPacket.packActions(item, hero));
                 itemObj.put("default_action", item.defaultAction == null ? "null" : item.defaultAction);
                 itemObj.put("info", item.info(hero));
