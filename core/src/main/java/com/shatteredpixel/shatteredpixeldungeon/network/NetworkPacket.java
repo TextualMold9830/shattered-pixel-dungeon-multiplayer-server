@@ -106,7 +106,6 @@ public class NetworkPacket {
                     "level_params",
                     "map",
                     "interlevel_scene",
-                    "actors",
                     "buffs",
                     "hero",
                     "messages",
@@ -208,49 +207,26 @@ public class NetworkPacket {
         return CellState.UNVISITED;
     }
 
-    protected void addActor(JSONObject actor) {
-        if (actor.length() == 0) {
-            return;
-        }
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(ACTORS)) {
-                    data.put(ACTORS, new JSONArray());
-                }
-                data.accumulate(ACTORS, actor);
-            }
-        } catch (JSONException e) {
-        }
-    }
-
-    public void packAndAddShield(int id, int shielding) {
-        synchronized (dataRef) {
-            JSONObject data = dataRef.get();
-            JSONObject object = new JSONObject();
-            object.put("id", id);
-            object.put("shielding", shielding);
-            data.put("char_shield", object);
-        }
-    }
-    protected JSONObject packActorRemoving(@NotNull Actor actor) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, "removed");
-        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
-    }
-
-    protected JSONObject packActor(@NotNull Actor actor, boolean heroAsHero) {
+    public void packAndAddActor(Actor actor, boolean heroAsHero) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "character");
-        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
-    }
-
-    public void packAndAddActor(Actor actor, boolean heroAsHero) {
-        addActor(packActor(actor, heroAsHero));
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            JSONObject event = new JSONObject();
+            event.put("action_name", "actor_update");
+            event.put("payload", serialized);
+            addAction(event);
+        }
     }
 
     public void packAndAddActorRemoving(Actor actor) {
-        addActor(packActorRemoving(actor));
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        Object serialized = ctx.serialize(actor, "remove");
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            JSONObject event = new JSONObject();
+            event.put("action_name", "actor_delete");
+            event.put("payload", serialized);
+            addAction(event);
+        }
     }
 
     protected void addHero(JSONObject hero) {
@@ -293,8 +269,23 @@ public class NetworkPacket {
     }
 
     public void packAndAddHero(@NotNull Hero hero) {
-        addActor(packActor(hero, true));
+        packAndAddActor(hero, true);
         addHero(packHero(hero));
+    }
+
+    public void packAndAddShield(int id, int shielding) {
+        try {
+            JSONObject payload = new JSONObject();
+            payload.put("id", id);
+            payload.put("shield", shielding);
+            
+            JSONObject event = new JSONObject();
+            event.put("action_name", "actor_update");
+            event.put("payload", payload);
+            addAction(event);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {

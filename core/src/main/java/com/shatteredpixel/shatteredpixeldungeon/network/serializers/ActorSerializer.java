@@ -21,23 +21,6 @@ public class ActorSerializer implements Serializer<Actor> {
     @Override
     public Object serialize(Actor actor, SerializationContext ctx, String profile) {
         JSONObject object = new JSONObject();
-        
-        // Handling special "removed" profile
-        if ("removed".equals(profile)) {
-            try {
-                if ((actor instanceof Char) || (actor instanceof Blob)) {
-                    int id = actor.id();
-                    if (id <= 0) return new JSONObject();
-                    object.put("id", id);
-                    object.put("type", "removed");
-                } else {
-                    Log.w("ActorSerializer", "pack actor removing. Actor class: " + actor.getClass().toString());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return object;
-        }
 
         // Standard serialization
         try {
