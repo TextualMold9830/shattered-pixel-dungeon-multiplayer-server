@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemoval
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeroSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
@@ -60,6 +61,7 @@ public class Server extends Thread {
     static {
         SERIALIZERS.register(Item.class, "default", new ItemSerializer());
         SERIALIZERS.register(Heap.class, "default", new HeapSerializer());
+        SERIALIZERS.register(Heap.class, "remove", new HeapRemovalSerializer());
         SERIALIZERS.register(Bag.class, "default", new BagSerializer());
         SERIALIZERS.register(Belongings.class, "default", new BelongingsSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());

@@ -110,7 +110,6 @@ public class NetworkPacket {
                     "interlevel_scene",
                     "hero",
                     "messages",
-                    "heaps",
                     "window",
                     "plants",
                     "traps",
@@ -577,50 +576,24 @@ public class NetworkPacket {
         packAndAddItemAction("item_replace", path, item, hero);
     }
 
-    public JSONObject packHeapRemoving(int pos) {
-        JSONObject heapObj;
-        heapObj = new JSONObject();
-        try {
-            heapObj.put("pos", pos);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return heapObj;
-    }
-
-    public JSONObject packHeap(Heap heap, Hero observer) {
-        if (heap == null) {
-            return null;
-        }
-        return heap.toJsonObject(observer);
-    }
-
-    public void addHeapRemoving(Heap heap) {
-        addHeapRemoving(heap.pos);
-    }
-
     public void addHeapRemoving(int pos) {
-        addHeap(packHeapRemoving(pos));
-    }
-
-    private void addHeap(JSONObject heapObj) {
-        if (heapObj == null) {
-            return;
-        }
-        synchronized (dataRef) {
-            try {
-                addToArray(dataRef.get(), "heaps", heapObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        JSONObject event = new JSONObject();
+        event.put("action_name", "heap_remove");
+        event.put("pos", pos);
+        addAction(event);
     }
 
     public void addHeap(Heap heap, Hero observer) {
         if (heap.isEmpty()) {
             return;
         }
-        addHeap(packHeap(heap, observer));
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, observer);
+        Object serialized = ctx.serialize(heap);
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            JSONObject event = (JSONObject) serialized;
+            event.put("action_name", "heap_update");
+            addAction(event);
+        }
     }
 
     public void packAndAddResetLevel() {
