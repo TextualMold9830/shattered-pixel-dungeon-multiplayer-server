@@ -574,32 +574,6 @@ public class NetworkPacket {
     }
 
     @NotNull
-    public static JSONObject packBag(@NotNull Bag bag, @Nullable Hero hero, @NotNull JSONObject itemObj) {
-        // Obsolete: Now handled by BagSerializer, but kept for legacy external calls.
-        // We will delegate to the new serialization context.
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
-        Object serialized = ctx.serialize(bag, "inventory");
-        return serialized instanceof JSONObject ? (JSONObject) serialized : itemObj;
-    }
-
-    public JSONArray packBags(@NotNull Bag... bags) {
-        Objects.requireNonNull(bags);
-        JSONArray bagsObj = new JSONArray();
-        for (Bag bag : bags) {
-            if (bag == null) {
-                continue;
-            }
-            JSONObject bagObj = packBag(bag);
-            if (bagObj.length() == 0) {
-                Log.w("Packet", "bag hadn't serialized");
-            } else {
-                bagsObj.put(bagObj);
-            }
-        }
-        return bagsObj;
-    }
-
-    @NotNull
     public JSONObject packHeroBags(@NotNull Belongings belongings) {
         Bag backpack = belongings.backpack;
         return packBag(backpack);
