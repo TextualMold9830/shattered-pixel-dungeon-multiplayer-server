@@ -234,110 +234,15 @@ public class NetworkPacket {
         }
     }
     protected JSONObject packActorRemoving(@NotNull Actor actor) {
-
-        JSONObject object = new JSONObject();
-        try {
-            if ((actor instanceof Char) || (actor instanceof Blob)) {
-                int id = actor.id();
-                if (id <= 0) {
-                    return new JSONObject();
-                }
-                object.put("id", id);
-                object.put("type", "removed");
-            } else {
-                Log.w("NetworkPacket:", "pack actor removing. Actor class: " + actor.getClass().toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object;
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        Object serialized = ctx.serialize(actor, "removed");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
     }
 
     protected JSONObject packActor(@NotNull Actor actor, boolean heroAsHero) {
-
-        JSONObject object = new JSONObject();
-        try {
-            if (actor instanceof Char) {
-                Char character = (Char) actor;
-                int id = actor.id();
-                if (id <= 0) {
-                    return new JSONObject();
-                }
-                object.put("id", id);
-                if (actor instanceof Hero) {
-                    Hero hero = (Hero) actor;
-                    if (heroAsHero) {
-                        object.put("type", "hero");
-                    } else {
-                        object.put("type", "character");
-                    }
-                    //object.put("class", hero.heroClass);
-                    //object.put("tier", hero.tier());
-                }else {
-                    object.put("type", "character");
-                }
-                    if (character.getSprite() != null) {
-                        String spriteAsset = character.getSprite().getSpriteAsset();
-                        if (spriteAsset != null) {
-                            object.put("sprite_asset", spriteAsset);
-                        } else {
-                            object.put("sprite_name", ((Char) actor).getSprite().spriteName());
-                        }
-                        if (character.getSprite() instanceof TieredSprite) {
-                            object.put("tier", ((TieredSprite) character.getSprite()).tier());
-                        }
-                        if (character.getSprite() instanceof ClassSprite) {
-                            object.put("class", ((ClassSprite) character.getSprite()).heroClass());
-                        }
-
-                    }
-                String name = character.name();
-                int hp = character.getHP();
-                int ht = character.getHT();
-                int pos = character.pos;
-                int shield = character.shielding();
-                object.put("hp", hp);
-                object.put("max_hp", ht);
-                object.put("position", pos);
-                object.put("name", name);
-                if (shield > 0 || character.needsShieldUpdate()) {
-                    object.put("shield", shield);
-                }
-                object.put("emo", character.getEmoJsonObject());
-                CharSprite sprite = character.getSprite();
-                if (sprite != null) {
-                    JSONArray states = putToJSONArray(((Char) actor).getSprite().states().toArray());
-                    object.put("states", states);
-                }
-                if (actor instanceof Mob) {
-                    String desc = ((Mob) actor).description();
-                    object.put("description", desc);
-                }
-            } else if (actor instanceof Blob) {
-                if (((Blob) actor).cur == null) {
-                    return new JSONObject();
-                }
-                int id = actor.id();
-                object.put("id", id);
-                object.put("type", "blob");
-                object.put("blob_type", actor.getClass().getName());
-                JSONArray positions = new JSONArray();
-                for (int i = 0; i < ((Blob) actor).cur.length; i++) {
-                    if (((Blob) actor).cur[i] > 0) {
-                        positions.put(i);
-                    }
-                }
-                object.put("positions", positions);
-            } else if (actor instanceof Buff) {
-                //no warning
-            } else {
-                Log.w("NetworkPacket", "pack actor. Actor class: " + actor.getClass().toString());
-            }
-        } catch (JSONException e) {
-
-        }
-
-        return object;
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "character");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
     }
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {
@@ -831,16 +736,12 @@ public class NetworkPacket {
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("id", windowID);
-            obj.put("type", type);
-            obj.put("args", args);
-            synchronized (dataRef) {
-                dataRef.get().put("window", obj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        WindowDTO dto = new WindowDTO(type, windowID, args);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject obj = (JSONObject) ctx.serialize(dto);
+
+        synchronized (dataRef) {
+            dataRef.get().put("window", obj);
         }
     }
 
@@ -881,33 +782,23 @@ public class NetworkPacket {
     }
 
     public void packAndAddPlant(int pos, Plant plant) {
-        JSONObject plantObj = new JSONObject();
-        try {
-            plantObj.put("pos", pos);
-            plantObj.put("texture", "plants.png");
-            if (plant == null) {
-                plantObj.put("plant_info", JSONObject.NULL);
-            } else {
-                PlantCache.add(pos);
-                JSONObject plantInfoObj = new JSONObject();
-                plantInfoObj.put("sprite_id", plant.image);
-                plantInfoObj.put("name", plant.name());
-                plantInfoObj.put("desc", plant.desc());
-                plantObj.put("plant_info", plantInfoObj);
-            }
-            synchronized (dataRef) {
+        PlantDTO dto = new PlantDTO(pos, plant);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject plantObj = (JSONObject) ctx.serialize(dto);
+
+        if (plantObj == null) {
+            return;
+        }
+
+        synchronized (dataRef) {
+            try {
                 if (!dataRef.get().has(PLANTS)) {
                     dataRef.get().put(PLANTS, new JSONArray());
                 }
-                if (PlantCache.contains(pos)) {
-                    dataRef.get().getJSONArray(PLANTS).put(plantObj);
-                    if (plant == null) {
-                        PlantCache.remove(pos);
-                    }
-                }
+                dataRef.get().getJSONArray(PLANTS).put(plantObj);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
     public void packAndAddTraps(Level level) {
@@ -936,26 +827,8 @@ public class NetworkPacket {
         }
     }
     public void packAndAddBuff(Buff buff, boolean remove) {
-        JSONObject buffObj = new JSONObject();
-        int id = buff.id();
-        try {
-            buffObj.put("id", id);
-            buffObj.put("icon", buff.icon());
-            Actor target = buff.target;
-            buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
-            buffObj.put("desc", Text.of(buff, "desc").toJSON());
-            buffObj.put("name", Text.of(buff, "name").toJSON());
-            Image temp = new Image();
-            buff.tintIcon(temp);
-            JSONObject hardlight = new JSONObject();
-            hardlight.put("rm", temp.rm);
-            hardlight.put("gm", temp.gm);
-            hardlight.put("bm", temp.bm);
-            buffObj.put("hardlight", hardlight);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject buffObj = (JSONObject) ctx.serialize(buff, remove ? "removed" : "default");
 
         try {
             synchronized (dataRef) {
@@ -963,9 +836,7 @@ public class NetworkPacket {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
-
     }
 
     public void packAndAddTextures(String path) {
