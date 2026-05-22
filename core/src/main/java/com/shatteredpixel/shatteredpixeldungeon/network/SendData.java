@@ -1,6 +1,5 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
-import com.badlogic.gdx.Gdx;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;

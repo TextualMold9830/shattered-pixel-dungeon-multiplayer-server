@@ -62,6 +62,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import androidx.annotation.SuppressLint;
 
 @SuppressLint("NewApi")
 public class AndroidPlatformSupport extends PlatformSupport {
