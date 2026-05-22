@@ -378,30 +378,9 @@ public class NetworkPacket {
     }
 
     protected JSONObject packHero(@NotNull Hero hero) {
-        int id = hero.id();
-        if (id <= 0) {
-            return new JSONObject();
-        }
-        JSONObject object = new JSONObject();
-        String class_name = hero.heroClass.name();
-        int subclass_id = hero.subClass.ordinal();
-        int strength = hero.STR();
-        int lvl = hero.lvl;
-        int exp = hero.exp;
-        try {
-            object.put("actor_id", id);
-            object.put("class", class_name);
-            object.put("subclass_id", subclass_id);
-            object.put("strength", strength);
-            object.put("lvl", lvl);
-            object.put("exp", exp);
-            object.put("uuid", hero.uuid);
-            object.put("talents", hero.getTalents());
-        } catch (JSONException e) {
-
-        }
-
-        return object;
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
+        Object serialized = ctx.serialize(hero, "hero_block");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
     }
 
     public void packAndAddHero(@NotNull Hero hero) {
@@ -1039,6 +1018,13 @@ ed (dataRef) {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+    public void packAndAddRedirect(RedirectPacket redirectPacket) {
+        dataRef.get().put("redirect", redirectPacket.toJSON());
+    }
+}
+  e.printStackTrace();
         }
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {

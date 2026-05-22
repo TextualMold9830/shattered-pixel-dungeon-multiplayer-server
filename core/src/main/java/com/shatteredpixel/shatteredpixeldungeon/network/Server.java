@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeroSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
@@ -36,6 +40,8 @@ public class Server extends Thread {
         SERIALIZERS.register(Item.class, "default", new ItemSerializer());
         SERIALIZERS.register(Heap.class, "default", new HeapSerializer());
         SERIALIZERS.register(Bag.class, "default", new BagSerializer());
+        SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
+        SERIALIZERS.register(Hero.class, "hero_block", new HeroSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
