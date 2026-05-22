@@ -42,7 +42,7 @@ import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.level;
 import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 
-class ClientThread implements Callable<String> {
+public class ClientThread implements Callable<String> {
 
     public static final String CHARSET = "UTF-8";
     public static final String SERVER_TYPE = "SPD";

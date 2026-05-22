@@ -4,6 +4,7 @@ import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -77,7 +78,7 @@ public class SendData {
 
     public static void SendLevelReset(int ID) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddServerAction("reset_level");
+            clients[ID].packet.packAndAddResetLevel();
             clients[ID].flush();
         }
     }
@@ -108,6 +109,14 @@ public class SendData {
     public static void SendHeroStrength(int ID, int str) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.packAndAddHeroStrength(str);
+        }
+    }
+
+    public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
+        final int ID = hero.networkID;
+        if ((ID != -1) && (clients[ID] != null)) {
+            clients[ID].packet.packAndAddShowBanner(banner, color, fadeTime, showTime);
+            clients[ID].flush();
         }
     }
     //---------------------------UI  and mechanics

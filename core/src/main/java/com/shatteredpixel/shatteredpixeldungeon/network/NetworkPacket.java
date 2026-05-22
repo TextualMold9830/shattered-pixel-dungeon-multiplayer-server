@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
@@ -622,17 +623,20 @@ public class NetworkPacket {
         addHeap(packHeap(heap, observer));
     }
 
-    public void packAndAddServerAction(String action_type) {
-        try {
-            JSONObject res = new JSONObject();
-            res.put("type", action_type);
-            synchronized (dataRef) {
-                addToArray(dataRef.get(), "server_actions", res);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void packAndAddResetLevel() {
+        JSONObject event = new JSONObject();
+        event.put("action_name", "reset_level");
+        addAction(event);
+    }
 
+    public void packAndAddShowBanner(@NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
+        JSONObject event = new JSONObject();
+        event.put("action_name", "show_banner");
+        event.put("banner", banner.toString().toLowerCase(Locale.ROOT));
+        event.put("color", color);
+        event.put("fade_time", fadeTime);
+        event.put("show_time", showTime);
+        addAction(event);
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
@@ -769,6 +773,8 @@ public class NetworkPacket {
         }
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        dataRef.get().put("redirect", redirectPacket.toJSON());
+        JSONObject event = redirectPacket.toJSON();
+        event.put("action_name", "redirect_server");
+        addAction(event);
     }
 }
