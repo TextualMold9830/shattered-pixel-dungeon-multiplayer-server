@@ -109,7 +109,6 @@ public class NetworkPacket {
                     "buffs",
                     "hero",
                     "messages",
-                    "inventory",
                     "heaps",
                     "window",
                     "ui",
@@ -581,64 +580,60 @@ public class NetworkPacket {
 
     protected static final String INVENTORY = "inventory";
 
-    public void addHeroBags(@NotNull Hero hero) {
-
-        JSONObject bagsObj = packHeroBags(hero);
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                JSONObject inv;
-                if (data.has(INVENTORY)) {
-                    inv = data.getJSONObject(INVENTORY);
-                } else {
-                    inv = new JSONObject();
-                    data.put(INVENTORY, inv);
-                }
-                inv.put("backpack", bagsObj);
-            }
-        } catch (JSONException e) {
-            Log.e("Packet", "JSONException inside addInventory. " + e.toString());
-        }
-    }
-
-    public void addSpecialSlots(Hero hero) {
-
-        JSONArray slotsArr = new JSONArray();
-        for (SpecialSlot slot : hero.belongings.getSpecialSlots()) {
-            JSONObject slotObj = new JSONObject();
-            try {
-                slotObj.put("id", slot.id);
-                slotObj.put("sprite", slot.sprite);
-                slotObj.put("image_id", slot.image_id);
-                slotObj.put("item", (slot.item != null) ? Item.packItem(slot.item, hero) : JSONObject.NULL);
-            } catch (JSONException e) {
-                Log.wtf("NetworkPacket", "JsonException while adding special slot" + e.toString());
-            }
-            slotsArr.put(slotObj);
-        }
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                JSONObject inv;
-                if (data.has(INVENTORY)) {
-                    inv = data.getJSONObject(INVENTORY);
-                } else {
-                    inv = new JSONObject();
-                    data.put(INVENTORY, inv);
-                }
-                inv.put("special_slots", slotsArr);
-            }
-        } catch (JSONException e) {
-            Log.e("Packet", "JSONException inside addSpectialSlots. " + e.toString());
-        }
-    }
-
     public void addInventoryFull(@NotNull Hero hero) {
         if (hero == null) {
             throw new IllegalArgumentException("hero is null");
         }
-        addHeroBags(hero);
-        addSpecialSlots(hero);
+        packAndAddInventoryRebuild(hero);
+    }
+
+    public void packAndAddInventoryRebuild(@NotNull Hero hero) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
+        JSONObject payload = (JSONObject) ctx.serialize(hero.belongings, "rebuild");
+
+        payload.put("action_name", "inventory_rebuild");
+        addAction(payload);
+    }
+
+    public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
+        Object payload = ctx.serialize(hero.belongings, "special_slot_definitions");
+
+        JSONObject event = new JSONObject();
+        event.put("action_name", "inventory_define_special_slots");
+        event.put("slots", payload);
+        addAction(event);
+    }
+
+    private void packAndAddItemAction(String actionName, List<Integer> path, @Nullable Item item, @Nullable Hero hero) {
+        JSONObject event = new JSONObject();
+        event.put("action_name", actionName);
+
+        JSONArray pathArr = new JSONArray();
+        for (int p : path) pathArr.put(p);
+        event.put("path", pathArr);
+        
+        if (item != null) {
+            event.put("item", Item.packItem(item, hero));
+        }
+
+        addAction(event);
+    }
+
+    public void packAndAddItemAdd(List<Integer> path, @NotNull Item item, Hero hero) {
+        packAndAddItemAction("item_add", path, item, hero);
+    }
+
+    public void packAndAddItemRemove(List<Integer> path) {
+        packAndAddItemAction("item_remove", path, null, null);
+    }
+
+    public void packAndAddItemUpdate(List<Integer> path, @NotNull Item item, Hero hero) {
+        packAndAddItemAction("item_update", path, item, hero);
+    }
+
+    public void packAndAddItemReplace(List<Integer> path, @NotNull Item item, Hero hero) {
+        packAndAddItemAction("item_replace", path, item, hero);
     }
 
     public JSONObject packHeapRemoving(int pos) {
