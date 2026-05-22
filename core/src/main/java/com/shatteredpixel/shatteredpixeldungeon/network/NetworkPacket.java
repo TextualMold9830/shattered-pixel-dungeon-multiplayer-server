@@ -19,6 +19,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
@@ -321,165 +322,50 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddLevelParams(Level level)
-    {
-        JSONObject params = new JSONObject();
-        params.put("width", level.width());
-        params.put("height", level.height());
-        params.put("tiles_texture", level.tilesTex());
-        params.put("water_texture", level.waterTex());
-        params.put("feeling", level.feeling.name());
-        synchronized (dataRef) {
-            dataRef.get().put("level_params", params);
-        }
+    public void packAndAddLevelResize(Level level) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject payload = (JSONObject) ctx.serialize(level, "resize_level");
+        payload.put("action_name", "resize_level");
+        addAction(payload);
+    }
+
+    public void packAndAddLevelVisuals(Level level) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject payload = (JSONObject) ctx.serialize(level, "set_level_visuals");
+        payload.put("action_name", "set_level_visuals");
+        addAction(payload);
     }
 
     public void packAndAddLevelEntrance(int pos) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                data.getJSONObject(MAP).put("entrance", pos);
-            }
-        } catch (JSONException ignored) {
-        }
+        JSONObject event = new JSONObject();
+        event.put("action_name", "set_level_entrance");
+        event.put("pos", pos);
+        addAction(event);
     }
 
     public void packAndAddLevelExit(int pos) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                data.getJSONObject(MAP).put("exit", pos);
-            }
-        } catch (JSONException ignored) {
-        }
+        JSONObject event = new JSONObject();
+        event.put("action_name", "set_level_exit");
+        event.put("pos", pos);
+        addAction(event);
     }
 
-    protected void addCell(JSONObject cell) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                JSONObject map = data.getJSONObject(MAP);
-                if (!map.has(CELLS)) {
-                    map.put(CELLS, new JSONArray());
-                }
-                map.accumulate(CELLS, cell);
-            }
-        } catch (JSONException ignored) {
-        }
+    public void packAndAddLevelTiles(Level level) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONArray tilesArr = (JSONArray) ctx.serialize(level, "set_level_tiles");
+        JSONObject event = new JSONObject();
+        event.put("action_name", "set_level_tiles");
+        event.put("tiles", tilesArr);
+        addAction(event);
     }
 
-    protected JSONObject packCell(int pos, int id, CellState state) {
-        JSONObject cell = new JSONObject();
-        try {
-            cell.put("position", pos);
-            cell.put("id", id);
-            cell.put("state", state.toString());
-        } catch (JSONException ignored) {
-        }
-        return cell;
-    }
-
-    protected void packAndAddCell(int pos, int id, CellState state) {
-        addCell(packCell(pos, id, state));
-    }
-
-    public void packAndAddLevelCell(Level level, int cell) {
-        packAndAddCell(
-                cell,
-                level.map[cell],
-                getCellState(level.visited[cell], level.mapped[cell])
-        );
-    }
-
-    public void packAndAddLevelCells(Level level) {
-        for (int i = 0; i < level.length(); i++) {
-            packAndAddCell(
-                    i,
-                    level.map[i],
-                    getCellState(level.visited[i], level.mapped[i])
-            );
-        }
-    }
-    public void packAndAddLevelCellsSeparateState(Level level){
-        addCellsToMapArray(level.map);
-        for (int i = 0; i < level.length(); i++) {
-            addState(getCellState(level.visited[i], level.mapped[i]).toInt());
-        }
-    }
-    protected void addState(CellState state) {
-        addState(state.toInt());
-    }
-    protected void addState(int state) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                JSONObject map = data.getJSONObject(MAP);
-                if (!map.has(STATES)) {
-                    map.put(STATES, new JSONArray());
-                }
-                map.accumulate(STATES, state);
-            }
-        } catch (JSONException ignored) {
-        }
-
-    }
-    protected void addCellsToMapArray(int[] cells) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                JSONObject map = data.getJSONObject(MAP);
-                JSONArray cellArray = new JSONArray();
-                for (int i = 0; i < cells.length; i++) {
-                    cellArray.put(cells[i]);
-                }
-                map.put(CELLS_MAP, cellArray);
-            }
-        } catch (JSONException ignored) {
-        }
-    }
-
-    public void packAndAddLevelHeaps(SparseArray <Heap> heaps, Hero observer) {
-        for (Heap heap : heaps.values()) {
-            addHeap(heap, observer);
-        }
-    }
-
-    public void packAndAddLevel(Level level, Hero observer) {
-        packAndAddLevelParams(level);
-        packAndAddLevelEntrance(level.entrance());
-        packAndAddLevelExit(level.exit());
-        packAndAddLevelCellsSeparateState(level);
-        packAndAddLevelHeaps(level.heaps, observer);
-        packAndAddPlants(level);
-        packAndAddTraps(level);
-    }
-
-    protected void addVisiblePositions(@NotNull JSONArray visiblePositionsArray) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                if (!data.has(MAP)) {
-                    data.put(MAP, new JSONObject());
-                }
-                data.getJSONObject(MAP).put("visible_positions", visiblePositionsArray);
-            }
-        } catch (JSONException ignore) {
-        }
+    public void packAndAddLevelStates(Level level) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONArray statesArr = (JSONArray) ctx.serialize(level, "set_level_states");
+        JSONObject event = new JSONObject();
+        event.put("action_name", "set_level_states");
+        event.put("states", statesArr);
+        addAction(event);
     }
 
     public void packAndAddVisiblePositions(boolean[] visible) {
@@ -489,7 +375,63 @@ public class NetworkPacket {
                 arr.put(i);
             }
         }
-        addVisiblePositions(arr);
+        JSONObject event = new JSONObject();
+        event.put("action_name", "update_fov");
+        event.put("visible_pos", arr);
+        addAction(event);
+    }
+
+    public void packAndAddCellsUpdate(int[] positions, @Nullable int[] tiles, @Nullable int[] states) {
+        CellsUpdateDTO dto = new CellsUpdateDTO(positions, tiles, states);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject payload = (JSONObject) ctx.serialize(dto);
+        payload.put("action_name", "update_cells");
+        addAction(payload);
+    }
+
+    public void packAndAddLevel(Level level, Hero observer) {
+        packAndAddLevelResize(level);
+        packAndAddLevelVisuals(level);
+        packAndAddLevelEntrance(level.entrance());
+        packAndAddLevelExit(level.exit());
+        packAndAddLevelTiles(level);
+        packAndAddLevelStates(level);
+
+        packAndAddLevelHeaps(level.heaps, observer);
+        packAndAddPlants(level);
+        packAndAddTraps(level);
+    }
+
+    public void packAndAddLevelParams(Level level)
+    {
+        packAndAddLevelResize(level);
+        packAndAddLevelVisuals(level);
+    }
+
+    public void packAndAddLevelCell(Level level, int cell) {
+        int state = 0;
+        if (level.visited[cell]) state = 1;
+        else if (level.mapped[cell]) state = 2;
+        
+        packAndAddCellsUpdate(new int[]{cell}, new int[]{level.map[cell]}, new int[]{state});
+    }
+
+    public void packAndAddLevelCells(Level level) {
+        // Redundant, but kept for legacy proxying if needed. 
+        // We'll just call the full tiles/states updates.
+        packAndAddLevelTiles(level);
+        packAndAddLevelStates(level);
+    }
+
+    public void packAndAddLevelCellsSeparateState(Level level){
+        packAndAddLevelTiles(level);
+        packAndAddLevelStates(level);
+    }
+
+    public void packAndAddLevelHeaps(com.watabou.utils.SparseArray<Heap> heaps, Hero observer) {
+        for (Heap heap : heaps.values()) {
+            addHeap(heap, observer);
+        }
     }
 
     public void packAndAddBadge(String badgeName, int badgeLevel) {
