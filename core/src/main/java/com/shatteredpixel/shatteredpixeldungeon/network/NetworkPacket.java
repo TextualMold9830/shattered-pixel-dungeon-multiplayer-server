@@ -111,7 +111,6 @@ public class NetworkPacket {
                     "hero",
                     "messages",
                     "window",
-                    "traps",
                     "redirect"
             };
 
@@ -399,7 +398,9 @@ public class NetworkPacket {
         for (int pos = 0; pos < level.length(); pos++) {
             packAndAddPlant(pos, level.plants.get(pos, null));
         }
-        packAndAddTraps(level);
+        for (int pos = 0; pos < level.length(); pos++) {
+            packAndAddTrap(pos, level.traps.get(pos, null));
+        }
     }
 
     public void packAndAddLevelParams(Level level)
@@ -663,29 +664,14 @@ public class NetworkPacket {
             addAction(plantObj);
         }
     }
-    public void packAndAddTraps(Level level) {
-        for (int pos = 0; pos < level.length(); pos++) {
-            packAndAddTrap(pos, level.traps.get(pos, null));
-        }
-    }
     public void packAndAddTrap(int pos, Trap trap){
         TrapDTO dto = new TrapDTO(pos, trap);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject trapObj = (JSONObject) ctx.serialize(dto);
-        
-        if (trapObj == null) {
-            return; // Cache logic inside serializer returned null
-        }
-        
-        synchronized (dataRef) {
-            try {
-                if (!dataRef.get().has(TRAPS)) {
-                    dataRef.get().put(TRAPS, new JSONArray());
-                }
-                dataRef.get().getJSONArray(TRAPS).put(trapObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        JSONObject trapObj = (JSONObject) ctx.serialize(dto, trap == null ? "remove" : "default");
+
+        if (trapObj != null && trapObj.length() > 0) {
+            trapObj.put("action_name", trap == null ? "trap_remove" : "trap_update");
+            addAction(trapObj);
         }
     }
     public void packAndAddBuff(Buff buff, boolean remove) {
