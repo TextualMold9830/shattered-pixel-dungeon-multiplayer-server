@@ -19,6 +19,10 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -621,18 +625,17 @@ public class NetworkPacket {
     }
 
     public void packAndAddInterlevelSceneState(String state, String customMessage) {
-        try {
-            JSONObject stateObj = new JSONObject();
-            stateObj.put("state", state);
-            if (customMessage != null) {
-                stateObj.put("custom_message", customMessage);
-            }
-            synchronized (dataRef) {
+        InterlevelSceneDTO dto = new InterlevelSceneDTO(state, customMessage);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject stateObj = (JSONObject) ctx.serialize(dto);
+
+        synchronized (dataRef) {
+            try {
                 JSONObject data = dataRef.get();
                 data.put("interlevel_scene", stateObj);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException ignored) {
-
         }
     }
 
@@ -913,33 +916,23 @@ public class NetworkPacket {
         }
     }
     public void packAndAddTrap(int pos, Trap trap){
-        JSONObject trapObj = new JSONObject();
-        try {
-            trapObj.put("pos", pos);
-            if (trap == null || !trap.visible) {
-                trapObj.put("trap_info", JSONObject.NULL);
-            } else {
-                TrapCache.add(pos);
-                JSONObject trapInfoObj = new JSONObject();
-                trapInfoObj.put("shape", trap.shape);
-                trapInfoObj.put("color", trap.color);
-                trapInfoObj.put("active", trap.active);
-                trapInfoObj.put("name", trap.getClass().getSimpleName());
-                trapObj.put("trap_info", trapInfoObj);
-            }
-            synchronized (dataRef) {
+        TrapDTO dto = new TrapDTO(pos, trap);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject trapObj = (JSONObject) ctx.serialize(dto);
+        
+        if (trapObj == null) {
+            return; // Cache logic inside serializer returned null
+        }
+        
+        synchronized (dataRef) {
+            try {
                 if (!dataRef.get().has(TRAPS)) {
                     dataRef.get().put(TRAPS, new JSONArray());
                 }
-                if (TrapCache.contains(pos)) {
-                    dataRef.get().getJSONArray(TRAPS).put(trapObj);
-                    if (trap == null) {
-                        TrapCache.remove(pos);
-                    }
-                }
+                dataRef.get().getJSONArray(TRAPS).put(trapObj);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
     public void packAndAddBuff(Buff buff, boolean remove) {
@@ -1028,6 +1021,13 @@ ed (dataRef) {
         }
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
+        dataRef.get().put("redirect", redirectPacket.toJSON());
+    }
+}
+JSON());
+    }
+}
+ct(RedirectPacket redirectPacket) {
         dataRef.get().put("redirect", redirectPacket.toJSON());
     }
 }

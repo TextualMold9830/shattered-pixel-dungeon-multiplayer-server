@@ -32,6 +32,16 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerialize
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.InterlevelSceneSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 
 public class Server extends Thread {
     public static final SerializerRegistry SERIALIZERS = new SerializerRegistry();
@@ -42,6 +52,11 @@ public class Server extends Thread {
         SERIALIZERS.register(Bag.class, "default", new BagSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(Hero.class, "hero_block", new HeroSerializer());
+        SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
+        SERIALIZERS.register(InterlevelSceneDTO.class, "default", new InterlevelSceneSerializer());
+        SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
+        SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
+        SERIALIZERS.register(Buff.class, "default", new BuffSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
