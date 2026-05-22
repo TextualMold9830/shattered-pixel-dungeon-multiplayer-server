@@ -106,7 +106,6 @@ public class NetworkPacket {
                     "level_params",
                     "map",
                     "interlevel_scene",
-                    "buffs",
                     "hero",
                     "messages",
                     "heaps",
@@ -788,14 +787,18 @@ public class NetworkPacket {
     }
     public void packAndAddBuff(Buff buff, boolean remove) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject buffObj = (JSONObject) ctx.serialize(buff, remove ? "removed" : "default");
+        Object serialized = ctx.serialize(buff, remove ? "remove" : "default");
 
-        try {
-            synchronized (dataRef) {
-                addToArray(dataRef.get(), BUFFS, buffObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            JSONObject event = (JSONObject) serialized;
+            event.put("action_name", remove ? "buff_remove" : "buff_update");
+            addAction(event);
+        }
+    }
+
+    public void packAndAddBuffRebuild(@NotNull Hero hero) {
+        for (Buff buff : hero.buffs) {
+            packAndAddBuff(buff, false);
         }
     }
 
@@ -831,6 +834,10 @@ public class NetworkPacket {
         }
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
+        dataRef.get().put("redirect", redirectPacket.toJSON());
+    }
+}
+ {
         dataRef.get().put("redirect", redirectPacket.toJSON());
     }
 }

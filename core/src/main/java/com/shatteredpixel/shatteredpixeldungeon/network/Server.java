@@ -39,7 +39,8 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializ
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemovalSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
