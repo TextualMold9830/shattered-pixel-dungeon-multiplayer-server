@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRe
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.InterlevelSceneSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -78,6 +79,7 @@ public class Server extends Thread {
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
         SERIALIZERS.register(InterlevelSceneDTO.class, "default", new InterlevelSceneSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
+        SERIALIZERS.register(PlantDTO.class, "remove", new PlantRemovalSerializer());
         SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
         SERIALIZERS.register(Buff.class, "default", new BuffSerializer());
         SERIALIZERS.register(Buff.class, "remove", new BuffRemovalSerializer());

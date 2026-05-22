@@ -111,7 +111,6 @@ public class NetworkPacket {
                     "hero",
                     "messages",
                     "window",
-                    "plants",
                     "traps",
                     "redirect"
             };
@@ -396,8 +395,10 @@ public class NetworkPacket {
         packAndAddLevelTiles(level);
         packAndAddLevelStates(level);
 
-        packAndAddLevelHeaps(level.heaps, observer);
-        packAndAddPlants(level);
+        level.heaps.values().forEach(heap -> addHeap(heap, observer));
+        for (int pos = 0; pos < level.length(); pos++) {
+            packAndAddPlant(pos, level.plants.get(pos, null));
+        }
         packAndAddTraps(level);
     }
 
@@ -652,30 +653,14 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddPlants(Level level) {
-        for (int pos = 0; pos < level.length(); pos++) {
-            packAndAddPlant(pos, level.plants.get(pos, null));
-        }
-    }
-
     public void packAndAddPlant(int pos, Plant plant) {
         PlantDTO dto = new PlantDTO(pos, plant);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject plantObj = (JSONObject) ctx.serialize(dto);
+        JSONObject plantObj = (JSONObject) ctx.serialize(dto, plant == null ? "remove" : "default");
 
-        if (plantObj == null) {
-            return;
-        }
-
-        synchronized (dataRef) {
-            try {
-                if (!dataRef.get().has(PLANTS)) {
-                    dataRef.get().put(PLANTS, new JSONArray());
-                }
-                dataRef.get().getJSONArray(PLANTS).put(plantObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        if (plantObj != null && plantObj.length() > 0) {
+            plantObj.put("action_name", plant == null ? "plant_remove" : "plant_update");
+            addAction(plantObj);
         }
     }
     public void packAndAddTraps(Level level) {
