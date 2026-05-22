@@ -111,7 +111,6 @@ public class NetworkPacket {
                     "messages",
                     "heaps",
                     "window",
-                    "ui",
                     "plants",
                     "traps",
                     "redirect"

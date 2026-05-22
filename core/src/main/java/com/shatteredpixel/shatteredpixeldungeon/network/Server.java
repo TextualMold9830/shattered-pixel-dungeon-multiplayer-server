@@ -44,7 +44,9 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializ
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.LevelSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CellsUpdateSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
@@ -70,6 +72,7 @@ public class Server extends Thread {
         SERIALIZERS.register(Level.class, "set_level_tiles", new LevelSerializer());
         SERIALIZERS.register(Level.class, "set_level_states", new LevelSerializer());
         SERIALIZERS.register(CellsUpdateDTO.class, "default", new CellsUpdateSerializer());
+        SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
         SERIALIZERS.register(InterlevelSceneDTO.class, "default", new InterlevelSceneSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
