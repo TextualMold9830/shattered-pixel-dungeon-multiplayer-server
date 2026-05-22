@@ -21,8 +21,23 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
 
 public class Server extends Thread {
+    public static final SerializerRegistry SERIALIZERS = new SerializerRegistry();
+
+    static {
+        SERIALIZERS.register(Item.class, "default", new ItemSerializer());
+        SERIALIZERS.register(Heap.class, "default", new HeapSerializer());
+        SERIALIZERS.register(Bag.class, "default", new BagSerializer());
+    }
+
     public static ArrayList<String> textures = new ArrayList<>();
     // will return in the future
     public static PluginManager pluginManager = new PluginManager(new PluginLoader(ShatteredPixelDungeon.platform.loadPlugins()));

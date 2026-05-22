@@ -91,7 +91,7 @@ public class Item implements Bundlable {
 	public static final String AC_DROP		= "DROP";
 	public static final String AC_THROW		= "THROW";
 	
-	protected String defaultAction;
+	public String defaultAction;
 	public boolean usesTargeting;
 
 	//TODO should these be private and accessed through methods?
@@ -869,7 +869,9 @@ public class Item implements Bundlable {
 		}
 	};
 	public static JSONObject packItem(@NotNull Item item, @Nullable Hero hero) {
-		return item.toJsonObject(hero);
+		SerializationContext ctx = new SerializationContext(com.shatteredpixel.shatteredpixeldungeon.network.Server.SERIALIZERS, hero);
+        Object serialized = ctx.serialize(item, "inventory");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
 	}
 
 	public List<Integer> getSlot(Hero owner) {
@@ -877,40 +879,9 @@ public class Item implements Bundlable {
 	}
 
 	public final JSONObject toJsonObject(@Nullable Hero hero) {
-		JSONObject itemObj = new JSONObject();
-		try {
-			if (hero != null) {
-				itemObj.put("actions", NetworkPacket.packActions(this, hero));
-				itemObj.put("default_action", defaultAction == null ? "null" : defaultAction);
-				itemObj.put("info", info(hero));
-				itemObj.put("ui", itemUI(hero));
-			}
-			itemObj.put("sprite_sheet", spriteSheet());
-			itemObj.put("image", image());
-			itemObj.put("icon", icon);
-			itemObj.put("name", name());
-			itemObj.put("stackable", stackable);
-			itemObj.put("quantity", quantity());
-			itemObj.put("known", isIdentified());
-			itemObj.put("cursed", visiblyCursed());
-			itemObj.put("identified", isIdentified());
-			itemObj.put("level_known", levelKnown);
-			itemObj.put("level", visiblyUpgraded());
-			itemObj.put("energy_value", energyVal());
-			ItemSprite.Glowing glowing = glowing();
-			if (glowing != null) {
-				itemObj.put("glowing", glowing.toJsonObject());
-			}
-			else{
-				itemObj.put("glowing", JSONObject.NULL);
-			}
-			if (this instanceof Bag) {
-				itemObj = NetworkPacket.packBag((Bag) this, hero, itemObj);
-			}
-		} catch (JSONException e) {
-			Log.e("Packet", "JSONException inside packItem. " + e.toString());
-		}
-		return itemObj;
+		SerializationContext ctx = new SerializationContext(com.shatteredpixel.shatteredpixeldungeon.network.Server.SERIALIZERS, hero);
+        Object serialized = ctx.serialize(this, "inventory");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
 	}
 
 	@NotNull

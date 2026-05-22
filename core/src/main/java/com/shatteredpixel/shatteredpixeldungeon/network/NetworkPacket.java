@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -680,37 +681,18 @@ public class NetworkPacket {
 
     @NotNull
     public JSONObject packBag(@NotNull Bag bag, Hero hero) {
-        return Item.packItem(bag, hero);
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
+        Object serialized = ctx.serialize(bag, "inventory");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
     }
 
     @NotNull
     public static JSONObject packBag(@NotNull Bag bag, @Nullable Hero hero, @NotNull JSONObject itemObj) {
-        if ((bag.owner != null) && (bag.owner != hero)) {
-            Log.w("Packet", "bag.owner != gotten_hero");
-        }
-
-        JSONArray bagItems = new JSONArray();
-
-        for (Item item : bag.items) {
-            JSONObject serializedItem;
-            serializedItem = Item.packItem(item, hero);
-            if (serializedItem.length() == 0) {
-                Log.w("Packet", "item hadn't serialized");
-            }
-            bagItems.put(serializedItem);
-        }
-
-        JSONObject bagObj = itemObj;
-        try {
-            bagObj.put("bag_icon", bag.getBagIcon());
-            bagObj.put("size", bag.capacity());
-            bagObj.put("items", bagItems);
-            bagObj.put("owner", hero != null ? hero.id() : null);
-        } catch (JSONException e) {
-            Log.e("Packet", "JSONException inside packBag. " + e.toString());
-        }
-
-        return bagObj;
+        // Obsolete: Now handled by BagSerializer, but kept for legacy external calls.
+        // We will delegate to the new serialization context.
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
+        Object serialized = ctx.serialize(bag, "inventory");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : itemObj;
     }
 
     public JSONArray packBags(@NotNull Bag... bags) {
@@ -1036,6 +1018,20 @@ public class NetworkPacket {
     public void packAndAddCounter(float portion) {
         try {
             synchronized (dataRef) {
+                JSONObject uiObj = dataRef.get().optJSONObject("ui");
+                uiObj = uiObj != null ? uiObj : new JSONObject();
+                uiObj.put("counter", portion);
+                dataRef.get().put("ui", uiObj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void packAndAddRedirect(RedirectPacket redirectPacket) {
+        dataRef.get().put("redirect", redirectPacket.toJSON());
+    }
+}
+ed (dataRef) {
                 JSONObject uiObj = dataRef.get().optJSONObject("ui");
                 uiObj = uiObj != null ? uiObj : new JSONObject();
                 uiObj.put("counter", portion);

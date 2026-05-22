@@ -519,21 +519,9 @@ public class Heap implements Bundlable {
 
 
 	public JSONObject toJsonObject(Hero observer) {
-		Heap heap = this;
-		if (heap.isEmpty()) {
-			return null;
-		}
-		JSONObject heapObj;
-		heapObj = new JSONObject();
-		try {
-			heapObj.put("pos", heap.pos);
-			heapObj.put("visible_item", peekVisual().toJsonObject(observer));
-			heapObj.put("show_item", true);
-			heapObj.put("seen", heap.isSeen());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return heapObj;
+		SerializationContext ctx = new SerializationContext(com.shatteredpixel.shatteredpixeldungeon.network.Server.SERIALIZERS, observer);
+        Object serialized = ctx.serialize(this, "default");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : null;
 	}
 
 }
