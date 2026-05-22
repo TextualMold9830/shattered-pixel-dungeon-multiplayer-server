@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeroSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
@@ -65,6 +66,7 @@ public class Server extends Thread {
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
         SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
         SERIALIZERS.register(Buff.class, "default", new BuffSerializer());
+        SERIALIZERS.register(Buff.class, "remove", new BuffRemovalSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

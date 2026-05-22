@@ -796,12 +796,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddBuffRebuild(@NotNull Hero hero) {
-        for (Buff buff : hero.buffs) {
-            packAndAddBuff(buff, false);
-        }
-    }
-
     public void packAndAddTextures(String path) {
 
         // Read all bytes from a file and convert to Base64 String
@@ -834,10 +828,6 @@ public class NetworkPacket {
         }
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        dataRef.get().put("redirect", redirectPacket.toJSON());
-    }
-}
- {
         dataRef.get().put("redirect", redirectPacket.toJSON());
     }
 }
