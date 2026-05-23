@@ -149,10 +149,9 @@ public class Shopkeeper extends NPC {
 
 							}
 						}
-						Actor.remove(this);
-						return true;
 					}
-					return false;
+					Actor.remove(this);
+					return true;
 				}
 			});
 

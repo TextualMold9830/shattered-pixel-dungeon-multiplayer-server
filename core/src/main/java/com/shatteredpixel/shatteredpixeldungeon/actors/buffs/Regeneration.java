@@ -124,11 +124,11 @@ public class Regeneration extends Buff {
 				LockedFloor lock = hero.buff(LockedFloor.class);
 				if (lock != null && !lock.regenOn()){
 					return false;
+				}
+			}
 		}
 		if (Dungeon.level instanceof VaultLevel){
 			return false;
-				}
-			}
 		}
 		return true;
 	}

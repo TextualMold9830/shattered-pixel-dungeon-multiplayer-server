@@ -80,7 +80,7 @@ public class WallBlockingTilemap extends Tilemap {
 	}
 
 	private boolean wall(int cell) {
-		return false;
+		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);
 	}
 
 	private boolean shelf(int cell) {

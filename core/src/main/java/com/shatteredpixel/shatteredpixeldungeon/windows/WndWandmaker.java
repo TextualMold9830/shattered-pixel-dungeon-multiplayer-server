@@ -62,7 +62,7 @@ public class WndWandmaker extends Window {
 
 		reward.identify(false, getOwnerHero());
 		if (reward.doPickUp( getOwnerHero())) {
-			GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", reward.name())) );
+			GLog.i( Messages.capitalize(Messages.get(getOwnerHero(), "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}

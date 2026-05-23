@@ -332,7 +332,7 @@ public class BrokenSeal extends Item {
 
             spend(TICK);
 
-            return false;
+            return true;
         }
 
 
