@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -41,7 +42,7 @@ public class WndCombo extends Window {
 	private static final int MARGIN  = 2;
 
 	public WndCombo( Combo combo ){
-		super();
+		super((Hero) combo.target);
 
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
 
@@ -63,7 +64,7 @@ public class WndCombo extends Window {
 
 		for (Combo.ComboMove move : Combo.ComboMove.values()) {
 
-			String text = "_" + Messages.titleCase(move.title()) + " " + Messages.get(this, "combo_req", move.comboReq) + ":_ " + move.desc(combo.getComboCount());
+			String text = "_" + Messages.titleCase(move.title()) + " " + Messages.get(this, "combo_req", move.comboReq) + ":_ " + move.desc(combo.getComboCount(), getOwnerHero());
 			RedButton moveBtn = new RedButton(text, 6){
 				@Override
 				protected void onClick() {

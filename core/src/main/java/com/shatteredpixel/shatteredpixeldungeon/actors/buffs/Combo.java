@@ -211,15 +211,6 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		PARRY  (6, 0xFFFF00),
 		CRUSH  (8, 0xFFCC00),
 		FURY   (10, 0xFF0000);
-		private Hero hero;
-
-		ComboMove(Hero hero) {
-			this.hero = hero;
-		}
-
-		public Hero getHero() {
-			return hero;
-		}
 
 		public int comboReq, tintColor;
 
@@ -232,8 +223,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			return Messages.get(this, name() + ".name");
 		}
 
-		public String desc(int count){
-			Hero hero = getHero();
+		public String desc(int count, Hero hero){
 			switch (this){
 				case CLOBBER: default:
 					if (count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1){

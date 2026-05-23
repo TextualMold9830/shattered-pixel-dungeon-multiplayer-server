@@ -46,7 +46,7 @@ public class VaultSentry extends NPC {
 				if (c instanceof Hero){
 					c.getSprite().showStatus(CharSprite.NEGATIVE, "!!!");
 				}
-				if (c.fieldOfView[cell]) {
+				if (Dungeon.visibleforAnyHero(cell)) {
 					GameScene.effect(new CheckedCell(cell, pos));
 				}
 			}

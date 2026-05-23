@@ -481,7 +481,7 @@ public class GameScene extends PixelScene {
 					}
 					if (unspentTalents) {
 						GLog.newLine();
-						GLog.w(Messages.get(Dungeon.heroes, "unspent"));
+						GLog.w(Messages.get(hero, "unspent"));
 						StatusPane.talentBlink = 10f;
 						WndHero.lastIdx = 1;
 					}
@@ -1391,7 +1391,7 @@ public class GameScene extends PixelScene {
 		for (Hero hero : Dungeon.heroes) {
 			if (hero != null) {
 				if (cell == hero.pos) {
-					objects.add(Dungeon.heroes);
+					objects.add(hero);
 
 				} else if (Dungeon.visibleforAnyHero(cell)) {
 					Mob mob = (Mob) Actor.findChar(cell);

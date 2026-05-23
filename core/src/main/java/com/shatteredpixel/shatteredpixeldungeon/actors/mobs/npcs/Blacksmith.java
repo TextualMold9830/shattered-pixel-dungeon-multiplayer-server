@@ -125,7 +125,7 @@ public class Blacksmith extends NPC {
 							Quest.completed = false;
 							Item pick = Quest.pickaxe != null ? Quest.pickaxe : new Pickaxe();
 							if (pick.doPickUp(hero)) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.heroes, "you_now_have", pick.name()) ));
+								GLog.i( Messages.capitalize(Messages.get(hero, "you_now_have", pick.name()) ));
 							} else {
 								Dungeon.level.drop( pick, hero.pos ).sprite.drop();
 							}

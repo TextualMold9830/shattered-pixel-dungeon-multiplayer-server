@@ -3,7 +3,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -34,15 +35,9 @@ public class VaultLaser extends NPC {
 			Ballistica beam = new Ballistica(pos, laserDirs[laserDirIdx], Ballistica.STOP_SOLID);
 			boolean visible = false;
 			for (int cell : beam.subPath(1, beam.dist)){
-				for (Hero hero: Dungeon.heroes) {
-			    if (hero != null) {
-
-        				if (hero.fieldOfView[cell]){
-        					visible = true;
-							break;
-        				}
-			    }
-			}
+				if (Dungeon.visibleforAnyHero(cell)){
+					visible = true;
+				}
 				Char aChar = Actor.findChar(cell);
 				if (aChar instanceof Hero){
 					aChar.getSprite().showStatus(CharSprite.NEGATIVE, "!!!");
