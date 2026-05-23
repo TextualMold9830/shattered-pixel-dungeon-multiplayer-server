@@ -104,13 +104,10 @@ public class NetworkPacket {
 
             String[] orderedTokens = new String[]{
                     "texturepack",
-                    "level_params",
-                    "map",
                     "interlevel_scene",
                     "hero",
                     "messages",
-                    "window",
-                    "redirect"
+                    "window"
             };
 
             for (String token : orderedTokens) {
