@@ -104,10 +104,7 @@ public class NetworkPacket {
 
             String[] orderedTokens = new String[]{
                     "texturepack",
-                    "interlevel_scene",
-                    "hero",
-                    "messages",
-                    "window"
+                    "messages"
             };
 
             for (String token : orderedTokens) {
@@ -221,26 +218,15 @@ public class NetworkPacket {
         }
     }
 
-    protected void addHero(JSONObject hero) {
-        try {
-            synchronized (dataRef) {
-
-                JSONObject data = dataRef.get();
-                data.put("hero", hero);
-            }
-        } catch (JSONException e) {
-        }
+    public void addHero(JSONObject hero) {
+        JSONObject event = new JSONObject();
+        event.put("action_name", "hero");
+        event.put("payload", hero);
+        addAction(event);
     }
 
     public void addNewHeroID(int id) {
-        try {
-            synchronized (dataRef) {
-
-                JSONObject data = dataRef.get();
-                data.put("hero", packNewHeroID(id));
-            }
-        } catch (JSONException e) {
-        }
+        addHero(packNewHeroID(id));
     }
 
     protected JSONObject packNewHeroID(int id) {
@@ -281,37 +267,23 @@ public class NetworkPacket {
     }
 
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
-        synchronized (dataRef) {
-            JSONObject data = dataRef.get();
-            @NotNull
-            JSONObject heroObj = data.optJSONObject("hero");
-            if (heroObj == null) {
-                heroObj = new JSONObject();
-            }
-            try {
-                heroObj.put("lvl", lvl);
-                heroObj.put("exp", exp);
-                data.put("hero", heroObj);
-            } catch (JSONException e) {
-                ShatteredPixelDungeon.reportException(e);
-            }
+        try {
+            JSONObject heroObj = new JSONObject();
+            heroObj.put("lvl", lvl);
+            heroObj.put("exp", exp);
+            addHero(heroObj);
+        } catch (JSONException e) {
+            ShatteredPixelDungeon.reportException(e);
         }
     }
 
     public void packAndAddHeroStrength(@NotNull int str) {
-        synchronized (dataRef) {
-            JSONObject data = dataRef.get();
-            @NotNull
-            JSONObject heroObj = data.optJSONObject("hero");
-            if (heroObj == null) {
-                heroObj = new JSONObject();
-            }
-            try {
-                heroObj.put("strength", str);
-                data.put("hero", heroObj);
-            } catch (JSONException e) {
-                ShatteredPixelDungeon.reportException(e);
-            }
+        try {
+            JSONObject heroObj = new JSONObject();
+            heroObj.put("strength", str);
+            addHero(heroObj);
+        } catch (JSONException e) {
+            ShatteredPixelDungeon.reportException(e);
         }
     }
 
@@ -447,14 +419,8 @@ public class NetworkPacket {
         }
     }
     public void addInterlevelSceneObject(JSONObject interlevelSceneParams) {
-        try {
-            synchronized (dataRef) {
-                JSONObject data = dataRef.get();
-                data.put("interlevel_scene", interlevelSceneParams);
-            }
-        } catch (JSONException ignored) {
-
-        }
+        interlevelSceneParams.put("action_name", "interlevel_scene");
+        addAction(interlevelSceneParams);
     }
 
     public void packAndAddInterlevelSceneState(String state, String customMessage) {
@@ -462,14 +428,8 @@ public class NetworkPacket {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject stateObj = (JSONObject) ctx.serialize(dto);
 
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put("interlevel_scene", stateObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        stateObj.put("action_name", "interlevel_scene");
+        addAction(stateObj);
     }
 
     public void packAndAddInterlevelSceneState(String state) {
@@ -614,10 +574,8 @@ public class NetworkPacket {
         WindowDTO dto = new WindowDTO(type, windowID, args);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject obj = (JSONObject) ctx.serialize(dto);
-
-        synchronized (dataRef) {
-            dataRef.get().put("window", obj);
-        }
+        obj.put("action_name", "show_window");
+        addAction(obj);
     }
 
     public void packAndAddIronKeysCount() {

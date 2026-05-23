@@ -154,19 +154,11 @@ public class SendData {
     //--------------------------Control
     public static void sendHeroReady(int ID, boolean ready) {
         if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("ready", ready);
-                } catch (JSONException ignored) {
-                }
+            try {
+                JSONObject heroObj = new JSONObject();
+                heroObj.put("ready", ready);
+                clients[ID].packet.addHero(heroObj);
+            } catch (JSONException ignored) {
             }
             clients[ID].flush();
         }
@@ -174,38 +166,22 @@ public class SendData {
 
     public static void sendHeroGold(int ID, int gold) {
         if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("gold", gold);
-                } catch (JSONException ignored) {
-                }
+            try {
+                JSONObject heroObj = new JSONObject();
+                heroObj.put("gold", gold);
+                clients[ID].packet.addHero(heroObj);
+            } catch (JSONException ignored) {
             }
             clients[ID].flush();
         }
     }
     public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
         if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("subclass_id", subclass.ordinal());
-                } catch (JSONException ignored) {
-                }
+            try {
+                JSONObject heroObj = new JSONObject();
+                heroObj.put("subclass_id", subclass.ordinal());
+                clients[ID].packet.addHero(heroObj);
+            } catch (JSONException ignored) {
             }
             clients[ID].flush();
         }
@@ -213,19 +189,11 @@ public class SendData {
     public static void sendHeroTalents(Hero hero){
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("talents", hero.getTalents());
-                } catch (JSONException ignored) {
-                }
+            try {
+                JSONObject heroObj = new JSONObject();
+                heroObj.put("talents", hero.getTalents());
+                clients[ID].packet.addHero(heroObj);
+            } catch (JSONException ignored) {
             }
             clients[ID].flush();
         }
