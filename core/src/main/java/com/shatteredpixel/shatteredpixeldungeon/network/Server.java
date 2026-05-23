@@ -140,6 +140,7 @@ public class Server extends Thread {
                 }
             };
             serverStepThread.setDaemon(true);
+            serverStepThread.setName("SHPD Server Step Thread");
         }
         serverStepThread.start();
         return true;

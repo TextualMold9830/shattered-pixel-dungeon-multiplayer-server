@@ -265,7 +265,7 @@ public class Item implements Bundlable {
 		}
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				List<Integer> newPath = new ArrayList(path);
+				List<Integer> newPath = new ArrayList<>(path);
 				newPath.add(items.indexOf(item));
 				newPath = collect( (Bag)item, newPath );
 				if (newPath != null) {
