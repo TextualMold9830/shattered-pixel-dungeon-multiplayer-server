@@ -266,6 +266,9 @@ public class Server extends Thread {
             serverInfo.put("challenges", SPDSettings.challenges());
             serverInfo.put("current_floor", Dungeon.depth);
             serverInfo.put("motd", SPDSettings.motd());
+            serverInfo.put("server_version", Game.version);
+            serverInfo.put("server_version_code", Game.versionCode);
+            serverInfo.put("server_protocol_version", 2);
             return serverInfo;
     }
     public static enum RegListenerState {NONE, UNREGISTERED, REGISTERED, REGISTRATION_FAILED, UNREGISTRATION_FAILED}

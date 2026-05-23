@@ -435,7 +435,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	public void registerService(int port) {
 		service = new NsdServiceInfo();
 		service.setServiceName(SPDSettings.serverName());
-		service.setServiceType("_mppd._tcp.");
+		service.setServiceType("_spdmp._tcp.");
 		service.setPort(port);
 		WifiManager wm = (WifiManager) AndroidLauncher.instance.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		service.setHost(getDeviceIpAddress(wm));

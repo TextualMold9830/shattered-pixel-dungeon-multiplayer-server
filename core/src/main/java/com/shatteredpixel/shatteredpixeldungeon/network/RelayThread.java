@@ -8,12 +8,15 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.ClientThread.CHARSET;
 
 
 public class RelayThread extends Thread {
+    private static final int RELAY_PROTOCOL_VERSION = 2;
+    private static final int UPDATE_DELAY = 3000;
     protected OutputStreamWriter writeStream;
     protected BufferedWriter writer;
     protected InputStreamReader readStream;
@@ -53,6 +56,7 @@ public class RelayThread extends Thread {
         String relayServerAddress = getRelayAddress();
         try {
             socket = new Socket(relayServerAddress, getRelayPort());
+            socket.setSoTimeout(UPDATE_DELAY);
         } catch (IOException e) {
             e.printStackTrace();
             this.callback.onDisconnect();
@@ -72,14 +76,16 @@ public class RelayThread extends Thread {
             writer = new BufferedWriter(writeStream, 16384);
 
 
-            JSONObject name = new JSONObject();
-            name.put("action", "name");
-            name.put("name", SPDSettings.serverName());
-            writer.write(name.toString());
-            writer.write('\n');
-            writer.flush();
+            sendServerUpdate(null);
+            long serverId = 0;
             while (true) {
-                String json = reader.readLine();
+                String json;
+                try {
+                    json = reader.readLine();
+                } catch (SocketTimeoutException e) {
+                    sendServerUpdate(serverId == 0 ? null : serverId);
+                    continue;
+                }
                 if (json == null){
                     // we silence relay related messages for the first three times. We do not want confused users.
                     if (restartCount > 3) {
@@ -98,10 +104,27 @@ public class RelayThread extends Thread {
                     }
                     return;
                 }
-                JSONObject port_obj = new JSONObject(json);
-                int port = port_obj.getInt("port");
-                Socket client = new Socket(relayServerAddress, port);
-                Server.startClientThread(client);
+                JSONObject action = new JSONObject(json);
+                String actionName = action.optString("action", "");
+                if ("server_registered".equals(actionName)) {
+                    serverId = action.optLong("server_id", serverId);
+                } else if ("client_requested".equals(actionName)) {
+                    Socket client = new Socket(relayServerAddress, getRelayPort());
+                    JSONObject accept = new JSONObject();
+                    accept.put("action", "accept_client");
+                    accept.put("server_id", action.getLong("server_id"));
+                    accept.put("connect_id", action.getString("connect_id"));
+                    BufferedWriter acceptWriter = new BufferedWriter(new OutputStreamWriter(
+                            client.getOutputStream(),
+                            Charset.forName(CHARSET).newEncoder()
+                    ), 16384);
+                    acceptWriter.write(accept.toString());
+                    acceptWriter.write('\n');
+                    acceptWriter.flush();
+                    Server.startClientThread(client);
+                } else if ("error".equals(actionName)) {
+                    GLog.h("Relay error: {0}", action.optString("message", action.optString("code", "unknown")));
+                }
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -117,6 +140,22 @@ public class RelayThread extends Thread {
             new RelayThread().start();
             GLog.h("Relay thread restarted");
         }
+    }
+
+    private void sendServerUpdate(Long serverId) throws IOException, JSONException {
+        JSONObject update = new JSONObject();
+        update.put("action", "update_server");
+        if (serverId != null && serverId != 0) {
+            update.put("server_id", serverId);
+        }
+        update.put("name", SPDSettings.serverName());
+        update.put("server_info", Server.serverInfo());
+        update.put("server_version", com.watabou.noosa.Game.version);
+        update.put("server_version_code", com.watabou.noosa.Game.versionCode);
+        update.put("server_protocol_version", RELAY_PROTOCOL_VERSION);
+        writer.write(update.toString());
+        writer.write('\n');
+        writer.flush();
     }
 
     public interface Callback {

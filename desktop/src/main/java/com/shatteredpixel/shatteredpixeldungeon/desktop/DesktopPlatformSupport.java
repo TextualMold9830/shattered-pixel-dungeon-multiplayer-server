@@ -264,7 +264,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 				} else {
 					dns = JmDNS.create();
 				}
-				ServiceInfo serviceInfo = ServiceInfo.create("._mppd._tcp.local.", SPDSettings.serverName(), port, "");
+				ServiceInfo serviceInfo = ServiceInfo.create("_spdmp._tcp.local.", SPDSettings.serverName(), port, "");
 				dns.registerService(serviceInfo);
 				System.out.println(serviceInfo.getHostAddresses()[0]);
 				System.out.println("Service registered: " + serviceInfo.getName() + " on port " + serviceInfo.getPort());
