@@ -97,34 +97,10 @@ public class NetworkPacket {
         synchronized (dataRef) {
             JSONObject data = dataRef.get();
             JSONArray actions = data.optJSONArray("actions");
-            if (actions == null) {
-                actions = new JSONArray();
-                data.put("actions", actions);
-            }
-
-            String[] orderedTokens = new String[]{
-                    "texturepack"
-            };
-
-            for (String token : orderedTokens) {
-                moveTokenToActions(data, actions, token);
-            }
-
-            if (actions.length() == 0) {
+            if (actions != null && actions.length() == 0) {
                 data.remove("actions");
             }
         }
-    }
-
-    private void moveTokenToActions(JSONObject data, JSONArray actions, String token) {
-        if (!data.has(token)) {
-            return;
-        }
-        JSONObject action = new JSONObject();
-        action.put("action_name", token);
-        action.put("payload", data.get(token));
-        actions.put(action);
-        data.remove(token);
     }
 
     public void addServerType(@NotNull String serverType){
@@ -677,13 +653,13 @@ public class NetworkPacket {
         }
         String base64String = Base64.getEncoder().encodeToString(byteData);
 
-        synchronized (dataRef)
-        {
-            dataRef.get().put("texturepack", base64String);
-        }
+        packAndAddRawTextures(base64String);
     }
     public void packAndAddRawTextures(String data) {
-        dataRef.get().put("texturepack",data);
+        JSONObject event = new JSONObject();
+        event.put("action_name", "texturepack");
+        event.put("texturepack", data);
+        addAction(event);
     }
     public void packAndAddCounter(float portion) {
         try {
