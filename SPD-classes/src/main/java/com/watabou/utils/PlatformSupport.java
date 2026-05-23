@@ -34,6 +34,7 @@ import com.watabou.plugins.PluginManifest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class PlatformSupport {
 	
@@ -194,7 +195,7 @@ public abstract class PlatformSupport {
 		return true;
 	}
 	//NO-OP by default
-    public void registerService(int port) {
+    public void registerService(int port, Map<String, String> properties) {
 
     }
 

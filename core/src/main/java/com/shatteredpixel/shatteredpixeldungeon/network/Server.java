@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -224,7 +227,7 @@ public class Server extends Thread {
     //DNS-SD
     protected static void registerService(int port) {
         try {
-            ShatteredPixelDungeon.platform.registerService(port);
+            ShatteredPixelDungeon.platform.registerService(port, serverInfoProperties());
         } catch (Exception e) {
             Gdx.app.error("DNS", "Failed to start dns-sd service", e);
         }
@@ -270,6 +273,25 @@ public class Server extends Thread {
             serverInfo.put("server_version_code", Game.versionCode);
             serverInfo.put("server_protocol_version", 2);
             return serverInfo;
+    }
+    private static Map<String, String> serverInfoProperties() {
+        JSONObject info = serverInfo();
+        Map<String, String> properties = new HashMap<>();
+        Iterator<String> keys = info.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object value = info.opt(key);
+            if (value != null) {
+                properties.put(key, dnsPropertyValue(String.valueOf(value)));
+            }
+        }
+        return properties;
+    }
+    private static String dnsPropertyValue(String value) {
+        if (value.length() <= 200) {
+            return value;
+        }
+        return value.substring(0, 200);
     }
     public static enum RegListenerState {NONE, UNREGISTERED, REGISTERED, REGISTRATION_FAILED, UNREGISTRATION_FAILED}
 }

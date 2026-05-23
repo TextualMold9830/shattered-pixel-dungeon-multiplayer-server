@@ -108,6 +108,13 @@ public class RelayThread extends Thread {
                 String actionName = action.optString("action", "");
                 if ("server_registered".equals(actionName)) {
                     serverId = action.optLong("server_id", serverId);
+                } else if ("ping".equals(actionName)) {
+                    JSONObject pong = new JSONObject();
+                    pong.put("action", "pong");
+                    pong.put("server_id", serverId);
+                    writer.write(pong.toString());
+                    writer.write('\n');
+                    writer.flush();
                 } else if ("client_requested".equals(actionName)) {
                     Socket client = new Socket(relayServerAddress, getRelayPort());
                     JSONObject accept = new JSONObject();
