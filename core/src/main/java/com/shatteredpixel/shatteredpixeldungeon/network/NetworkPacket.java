@@ -103,7 +103,6 @@ public class NetworkPacket {
             }
 
             String[] orderedTokens = new String[]{
-                    "server_actions",
                     "texturepack",
                     "level_params",
                     "map",

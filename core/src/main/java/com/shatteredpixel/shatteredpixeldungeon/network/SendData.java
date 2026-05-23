@@ -569,7 +569,7 @@ public class SendData {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.addHeapRemoving(heap);
+            clients[i].packet.addHeapRemoving(heap.pos);
             clients[i].flush();
         }
     }
@@ -766,7 +766,9 @@ public class SendData {
     public static void sendTraps(Level level) {
         for (int i = 0; i < clients.length; i++){
             if(clients[i] != null) {
-                clients[i].packet.packAndAddTraps(level);
+                for (int pos = 0; pos < level.length(); pos++) {
+                    clients[i].packet.packAndAddTrap(pos, level.traps.get(pos, null));
+                }
                 clients[i].flush();
             }
         }
