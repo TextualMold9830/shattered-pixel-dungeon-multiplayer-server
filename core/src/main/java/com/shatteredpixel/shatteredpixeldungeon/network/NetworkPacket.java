@@ -103,8 +103,7 @@ public class NetworkPacket {
             }
 
             String[] orderedTokens = new String[]{
-                    "texturepack",
-                    "messages"
+                    "texturepack"
             };
 
             for (String token : orderedTokens) {
@@ -171,11 +170,30 @@ public class NetworkPacket {
     }
 
     public void addChatMessage(JSONObject message) {
-        final String token = "messages";
         synchronized (dataRef) {
             try {
-                JSONObject storage = dataRef.get();
-                addToArray(storage, token, message);
+                JSONObject data = dataRef.get();
+                JSONArray actions = data.optJSONArray("actions");
+                if (actions == null) {
+                    actions = new JSONArray();
+                    data.put("actions", actions);
+                }
+
+                JSONObject messagesAction = null;
+                for (int i = 0; i < actions.length(); i++) {
+                    JSONObject action = actions.optJSONObject(i);
+                    if (action != null && "messages".equals(action.optString("action_name"))) {
+                        messagesAction = action;
+                        break;
+                    }
+                }
+                if (messagesAction == null) {
+                    messagesAction = new JSONObject();
+                    messagesAction.put("action_name", "messages");
+                    messagesAction.put("payload", new JSONArray());
+                    actions.put(messagesAction);
+                }
+                messagesAction.getJSONArray("payload").put(message);
             } catch (JSONException e) {
                 Log.w("NetworkPacket", "Failed to add message. " + e.toString());
             }
