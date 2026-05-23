@@ -190,10 +190,10 @@ public class NetworkPacket {
                 if (messagesAction == null) {
                     messagesAction = new JSONObject();
                     messagesAction.put("action_name", "messages");
-                    messagesAction.put("payload", new JSONArray());
+                    messagesAction.put("messages", new JSONArray());
                     actions.put(messagesAction);
                 }
-                messagesAction.getJSONArray("payload").put(message);
+                messagesAction.getJSONArray("messages").put(message);
             } catch (JSONException e) {
                 Log.w("NetworkPacket", "Failed to add message. " + e.toString());
             }
