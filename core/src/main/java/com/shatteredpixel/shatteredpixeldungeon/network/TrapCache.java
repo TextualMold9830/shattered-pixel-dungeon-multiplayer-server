@@ -8,6 +8,9 @@ public class TrapCache {
         return traps.contains(pos);
     }
     public static boolean add(int pos){
+        if (traps.contains(pos)) {
+            return false;
+        }
         return traps.add(pos);
     }
     public static void remove(int pos){

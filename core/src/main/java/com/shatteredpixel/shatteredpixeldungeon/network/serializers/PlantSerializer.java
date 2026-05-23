@@ -13,7 +13,12 @@ public class PlantSerializer implements Serializer<PlantDTO> {
         try {
             plantObj.put("pos", dto.pos);
             plantObj.put("texture", "plants.png");
+            boolean wasCached = PlantCache.contains(dto.pos);
             if (dto.plant == null) {
+                if (!wasCached) {
+                    return null;
+                }
+                PlantCache.remove(dto.pos);
                 plantObj.put("plant_info", JSONObject.NULL);
             } else {
                 PlantCache.add(dto.pos);
@@ -23,21 +28,6 @@ public class PlantSerializer implements Serializer<PlantDTO> {
                 plantInfoObj.put("desc", dto.plant.desc());
                 plantObj.put("plant_info", plantInfoObj);
             }
-            
-            // Note: The caching/filtering logic from NetworkPacket 
-            // should probably be kept in the caller or here. We replicate
-            // the condition here: if not in PlantCache, we don't send it, 
-            // but the serializer contract typically returns the object. 
-            // We'll return it and let NetworkPacket handle the cache removal 
-            // or we do it here. 
-            // The original logic checks PlantCache.contains(pos) BEFORE adding.
-            if (!PlantCache.contains(dto.pos)) {
-                return null; // Return null if it shouldn't be added.
-            }
-            if (dto.plant == null) {
-                PlantCache.remove(dto.pos);
-            }
-            
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,8 @@ public class SendData {
 
     public static void sendLevel(Level level, int ID) {
         if ((ID != -1) && (clients[ID] != null)) {
+            PlantCache.clear();
+            TrapCache.clear();
             clients[ID].packet.packAndAddLevel(level, clients[ID].clientHero);
             clients[ID].flush();
         }

@@ -656,20 +656,29 @@ public class NetworkPacket {
     public void packAndAddPlant(int pos, Plant plant) {
         PlantDTO dto = new PlantDTO(pos, plant);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject plantObj = (JSONObject) ctx.serialize(dto, plant == null ? "remove" : "default");
+        JSONObject plantObj = (JSONObject) ctx.serialize(dto);
 
         if (plantObj != null && plantObj.length() > 0) {
-            plantObj.put("action_name", plant == null ? "plant_remove" : "plant_update");
+            boolean isRemoval = plantObj.has("plant_info") && plantObj.isNull("plant_info");
+            plantObj.put("action_name", isRemoval ? "plant_remove" : "plant_update");
+            if (isRemoval) {
+                plantObj.remove("plant_info");
+                plantObj.remove("texture");
+            }
             addAction(plantObj);
         }
     }
     public void packAndAddTrap(int pos, Trap trap){
         TrapDTO dto = new TrapDTO(pos, trap);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject trapObj = (JSONObject) ctx.serialize(dto, trap == null ? "remove" : "default");
+        JSONObject trapObj = (JSONObject) ctx.serialize(dto);
 
         if (trapObj != null && trapObj.length() > 0) {
-            trapObj.put("action_name", trap == null ? "trap_remove" : "trap_update");
+            boolean isRemoval = trapObj.has("trap_info") && trapObj.isNull("trap_info");
+            trapObj.put("action_name", isRemoval ? "trap_remove" : "trap_update");
+            if (isRemoval) {
+                trapObj.remove("trap_info");
+            }
             addAction(trapObj);
         }
     }

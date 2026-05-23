@@ -12,7 +12,12 @@ public class TrapSerializer implements Serializer<TrapDTO> {
         JSONObject trapObj = new JSONObject();
         try {
             trapObj.put("pos", dto.pos);
+            boolean wasCached = TrapCache.contains(dto.pos);
             if (dto.trap == null || !dto.trap.visible) {
+                if (!wasCached) {
+                    return null;
+                }
+                TrapCache.remove(dto.pos);
                 trapObj.put("trap_info", JSONObject.NULL);
             } else {
                 TrapCache.add(dto.pos);
@@ -22,13 +27,6 @@ public class TrapSerializer implements Serializer<TrapDTO> {
                 trapInfoObj.put("active", dto.trap.active);
                 trapInfoObj.put("name", dto.trap.getClass().getSimpleName());
                 trapObj.put("trap_info", trapInfoObj);
-            }
-            
-            if (!TrapCache.contains(dto.pos)) {
-                return null;
-            }
-            if (dto.trap == null) {
-                TrapCache.remove(dto.pos);
             }
         } catch (JSONException e) {
             e.printStackTrace();

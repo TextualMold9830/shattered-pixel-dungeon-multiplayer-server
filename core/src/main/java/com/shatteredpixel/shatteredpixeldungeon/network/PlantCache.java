@@ -8,6 +8,9 @@ public class PlantCache {
         return plants.contains(pos);
     }
     public static boolean add(int pos){
+        if (plants.contains(pos)) {
+            return false;
+        }
         return plants.add(pos);
     }
     public static void remove(int pos){
