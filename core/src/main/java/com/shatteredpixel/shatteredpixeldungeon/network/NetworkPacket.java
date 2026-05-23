@@ -49,17 +49,6 @@ import static com.nikita22007.multiplayer.utils.Utils.putToJSONArray;
 import static com.watabou.pixeldungeon.utils.Utils.toSnakeCase;
 
 public class NetworkPacket {
-    public static final String CELLS = "cells";
-    public static final String STATES = "states";
-    public static String CELLS_MAP = "cells_map";
-    public static final String MAP = "map";
-    public static final String ACTORS = "actors";
-    public static final String PLANTS = "plants";
-    public static final String TRAPS = "traps";
-    public static final String BUFFS = "buffs";
-
-
-
 
     enum CellState {
         VISITED,
@@ -174,20 +163,6 @@ public class NetworkPacket {
                 Log.w("NetworkPacket", "Failed to add message. " + e.toString());
             }
         }
-    }
-
-    public void synchronizedPut(String key, JSONObject data) throws JSONException {
-        synchronized (dataRef) {
-            dataRef.get().put(key, data);
-        }
-    }
-
-    protected CellState getCellState(boolean visited, boolean mapped) {
-        if (visited)
-            return CellState.VISITED;
-        if (mapped)
-            return CellState.MAPPED;
-        return CellState.UNVISITED;
     }
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {
