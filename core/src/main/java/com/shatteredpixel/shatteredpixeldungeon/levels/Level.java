@@ -1093,6 +1093,7 @@ public abstract class Level implements Bundlable {
 	
 	public void uproot( int pos ) {
 		plants.remove(pos);
+		SendData.sendPlant(pos, null);
 		GameScene.updateMap( pos );
 	}
 

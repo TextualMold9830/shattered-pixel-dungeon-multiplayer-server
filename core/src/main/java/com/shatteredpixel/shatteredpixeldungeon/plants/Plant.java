@@ -66,14 +66,13 @@ public abstract class Plant implements Bundlable {
 			((Hero) ch).interrupt();
 		}
 		for (Hero hero : Dungeon.heroes) {
-			if (hero != null){
+			if (hero != null) {
 			if (hero.fieldOfView[pos] && hero.hasTalent(Talent.NATURES_AID)) {
 				// 3/5 turns based on talent points spent
 				Barkskin.conditionallyAppend(hero, 2, 1 + 2 * (hero.pointsInTalent(Talent.NATURES_AID)));
+				}
 			}
-	}
-}
-		SendData.sendPlant(pos, null);
+		}
 		wither();
 		activate( ch );
 		Bestiary.setSeen(getClass());
