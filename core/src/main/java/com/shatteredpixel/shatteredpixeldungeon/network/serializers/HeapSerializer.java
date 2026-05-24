@@ -18,7 +18,7 @@ public class HeapSerializer implements Serializer<Heap> {
         try {
             heapObj.put("pos", heap.pos);
 
-            Object serializedItem = ctx.serialize(heap.peek(), "ground");
+            Object serializedItem = ctx.serialize(heap.peekVisual(), "ground");
             heapObj.put("visible_item", serializedItem);
             heapObj.put("visible_sprite", heap.showsFirstItem() ? heap.image() : -1);
             heapObj.put("show_item", heap.showsFirstItem());
