@@ -82,16 +82,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packWorldStateAsActions() {
-        synchronized (dataRef) {
-            JSONObject data = dataRef.get();
-            JSONArray actions = data.optJSONArray("actions");
-            if (actions != null && actions.length() == 0) {
-                data.remove("actions");
-            }
-        }
-    }
-
     public void addServerType(@NotNull String serverType){
         synchronized (dataRef) {
             try {
