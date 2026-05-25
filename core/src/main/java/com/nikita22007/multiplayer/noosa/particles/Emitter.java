@@ -204,9 +204,8 @@ public class Emitter /*this is temporary ->*/extends Group {
 	public void killAndErase(){
 		if (id != -1){
 			JSONObject object = new JSONObject();
-			object.put("action_type", "emitter_visual");
+			object.put("action_type", "emitter_visual_stop");
 			object.put("id", id);
-			object.put("kill", true);
 			SendData.sendCustomActionForAll(object);
 		}
 	}
@@ -221,7 +220,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 	protected void sendSelf() {
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "emitter_visual");
+			actionObj.put("action_type", "emitter_visual_start");
 
 			if ((target != null) && (target.ch != null) && (target.ch.id() != -1)) {
 				actionObj.put("target_char", target.ch.id());
