@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -258,7 +259,7 @@ public class Berserk extends ShieldBuff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action_name");
 	}
 
@@ -346,7 +347,7 @@ public class Berserk extends ShieldBuff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		switch (state){
 			case NORMAL: default:
 				return Messages.get(this, "angered");
@@ -358,7 +359,7 @@ public class Berserk extends ShieldBuff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		float dispDamage = ((int)damageFactor(10000) / 100f) - 100f;
 		switch (state){
 			case NORMAL: default:

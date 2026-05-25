@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -143,7 +144,7 @@ public class Sungrass extends Plant {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", level);
 		}
 

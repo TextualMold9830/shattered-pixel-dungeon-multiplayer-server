@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -135,7 +136,7 @@ public class Amulet extends Item {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		String desc = super.desc();
 
 		if (hero.buff(AscensionChallenge.class) == null){

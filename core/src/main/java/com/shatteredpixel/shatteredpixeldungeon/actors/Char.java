@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -290,7 +291,7 @@ public abstract class Char extends Actor {
 		}
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
@@ -776,7 +777,7 @@ public abstract class Char extends Actor {
 		return 0;
 	}
 
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		return Messages.get(this, "def_verb");
 	}
 

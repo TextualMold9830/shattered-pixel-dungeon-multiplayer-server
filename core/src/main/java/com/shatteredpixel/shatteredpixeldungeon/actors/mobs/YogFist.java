@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -212,8 +213,8 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public String description() {
-		return Messages.get(YogFist.class, "desc") + "\n\n" + Messages.get(this, "desc");
+	public LocalizedString description() {
+		return LocalizedString.concat(Messages.get(YogFist.class, "desc"), "\n\n", Messages.get(this, "desc"));
 	}
 
 	public static final String RANGED_COOLDOWN = "ranged_cooldown";

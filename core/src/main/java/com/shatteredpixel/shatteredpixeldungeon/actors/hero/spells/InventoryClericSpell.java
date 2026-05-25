@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
@@ -36,7 +37,7 @@ public abstract class InventoryClericSpell extends ClericSpell {
 		GameScene.selectItem(new WndBag.ItemSelector() {
 
 			@Override
-			public String textPrompt() {
+			public LocalizedString textPrompt() {
 				return inventoryPrompt();
 			}
 
@@ -57,7 +58,7 @@ public abstract class InventoryClericSpell extends ClericSpell {
 		}, hero);
 	}
 
-	protected String inventoryPrompt(){
+	protected LocalizedString inventoryPrompt(){
 		return Messages.get(this, "prompt");
 	}
 

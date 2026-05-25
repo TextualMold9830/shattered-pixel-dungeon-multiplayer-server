@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -74,7 +75,7 @@ public class ScrollEmpower extends Buff {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", 2, left);
 	}
 

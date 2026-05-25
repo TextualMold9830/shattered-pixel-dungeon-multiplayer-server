@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -441,7 +442,7 @@ public class ElementalBlast extends ArmorAbility {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		String desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
 			MagesStaff staff = hero.belongings.getItem(MagesStaff.class);

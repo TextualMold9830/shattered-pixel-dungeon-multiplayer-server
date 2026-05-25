@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -128,7 +129,7 @@ public class GnollExile extends Gnoll {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		String desc = super.description();
 		if (state == PASSIVE){
 			desc += "\n\n" + Messages.get(this, "desc_passive");

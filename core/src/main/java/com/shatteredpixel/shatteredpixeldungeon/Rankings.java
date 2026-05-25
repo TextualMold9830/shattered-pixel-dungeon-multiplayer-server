@@ -21,19 +21,17 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -495,7 +493,7 @@ public enum Rankings {
 		public String date;
 		public String version;
 
-		public String desc(){
+		public LocalizedString desc(){
 			if (win){
 				if (ascending){
 					return Messages.get(this, "ascended");
@@ -505,8 +503,8 @@ public enum Rankings {
 			} else if (cause == null) {
 				return Messages.get(this, "something");
 			} else {
-				String result = Messages.get(cause, "rankings_desc", (Messages.get(cause, "name")));
-				if (result.contains(Messages.NO_TEXT_FOUND)){
+				LocalizedString result = Messages.get(cause, "rankings_desc", (Messages.get(cause, "name")));
+				if (result.equals(Messages.NO_TEXT_FOUND)){
 					return Messages.get(this, "something");
 				} else {
 					return result;

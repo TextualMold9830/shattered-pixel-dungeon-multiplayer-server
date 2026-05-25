@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -500,7 +501,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (state == SLEEPING){
 			return Messages.get(this, "desc_sleeping");
 		} else {

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -62,7 +63,7 @@ public class CapeOfThorns extends Artifact {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		String desc = Messages.get(this, "desc");
 		if (isEquipped( hero)) {
 			desc += "\n\n";
@@ -123,7 +124,7 @@ public class CapeOfThorns extends Artifact {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", dispTurns(cooldown));
 		}
 

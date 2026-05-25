@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
@@ -32,12 +33,12 @@ public class VaultRat extends VaultMob {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		return Messages.get(Rat.class, "name");
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		return Messages.get(Rat.class, "desc") + "\n\n" + super.description();
 	}
 }

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -89,7 +89,7 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		SpiritBow bow = ((Hero) target).belongings.getItem(SpiritBow.class);
 
 		if (bow == null) return null;

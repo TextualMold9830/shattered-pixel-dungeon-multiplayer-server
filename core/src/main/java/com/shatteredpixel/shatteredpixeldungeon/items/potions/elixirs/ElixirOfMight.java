@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -62,7 +63,7 @@ public class ElixirOfMight extends Elixir {
 		Badges.validateDuelistUnlock();
 	}
 	@Override
-	public String desc(Hero hero){
+	public LocalizedString desc(Hero hero){
 		return Messages.get(this, "desc", HTBoost.boost(hero != null ? hero.getHT() : 20));
 	}
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
@@ -127,7 +128,7 @@ public class ElixirOfMight extends Elixir {
 		}
 		
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", boost(), left);
 		}
 		

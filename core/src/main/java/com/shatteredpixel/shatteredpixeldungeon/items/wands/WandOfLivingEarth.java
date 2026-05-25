@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -332,7 +333,7 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			String desc = Messages.get( this, "desc", armor, armorToGuardian());
 			if (isEmpowered()){
 				desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);
@@ -429,7 +430,7 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public String description() {
+		public LocalizedString description() {
 			String desc = Messages.get(this, "desc");
 
 			if (Actor.chars().contains(this)) {

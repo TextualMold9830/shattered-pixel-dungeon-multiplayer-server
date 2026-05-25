@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -34,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MimicSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -48,7 +48,7 @@ public class GoldenMimic extends Mimic {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "locked_chest");
 		} else {
@@ -57,7 +57,7 @@ public class GoldenMimic extends Mimic {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (alignment == Alignment.NEUTRAL){
 			if (MimicTooth.stealthyMimics()){
 				return Messages.get(Heap.class, "locked_chest_desc");

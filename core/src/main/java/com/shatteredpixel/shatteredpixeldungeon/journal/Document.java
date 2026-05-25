@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -219,27 +220,27 @@ public enum Document {
 		return loreDocument;
 	}
 	
-	public String title(){
+	public LocalizedString title(){
 		return Messages.get( this, name() + ".title");
 	}
 
-	public String discoverHint(){
+	public LocalizedString discoverHint(){
 		return Messages.get( this, name() + ".discover_hint");
 	}
 	
-	public String pageTitle( String page ){
+	public LocalizedString pageTitle(String page ){
 		return Messages.get( this, name() + "." + page + ".title");
 	}
 	
-	public String pageTitle( int pageIdx ){
+	public LocalizedString pageTitle(int pageIdx ){
 		return pageTitle( pagesStates.keySet().toArray(new String[0])[pageIdx] );
 	}
 	
-	public String pageBody( String page ){
+	public LocalizedString pageBody(String page ){
 		return Messages.get( this, name() + "." + page + ".body");
 	}
 	
-	public String pageBody( int pageIdx ){
+	public LocalizedString pageBody(int pageIdx ){
 		return pageBody( pagesStates.keySet().toArray(new String[0])[pageIdx] );
 	}
 

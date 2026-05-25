@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -90,7 +91,7 @@ public class WndMonkAbilities extends Window {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return abilityBeingUsed.targetingPrompt();
 		}
 	};

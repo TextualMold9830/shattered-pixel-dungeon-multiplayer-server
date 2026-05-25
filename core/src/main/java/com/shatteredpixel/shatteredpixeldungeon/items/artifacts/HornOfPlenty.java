@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -195,8 +196,8 @@ public class HornOfPlenty extends Artifact {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 
 		if ( isEquipped( hero ) ){
 			if (!cursed) {
@@ -313,7 +314,7 @@ public class HornOfPlenty extends Artifact {
 	protected static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(HornOfPlenty.class, "prompt");
 		}
 

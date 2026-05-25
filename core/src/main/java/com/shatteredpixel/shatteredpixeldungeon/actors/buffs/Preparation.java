@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -188,8 +189,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
 		
 		AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 		if (target instanceof Hero) {
@@ -232,7 +233,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action_name");
 	}
 	
@@ -331,7 +332,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Preparation.class, "prompt", AttackLevel.getLvl(turnsInvis).blinkDistance(target));
 		}
 	};

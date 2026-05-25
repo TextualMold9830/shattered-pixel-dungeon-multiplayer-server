@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
@@ -137,7 +138,7 @@ public class MeleeWeapon extends Weapon {
                         }
 
                         @Override
-                        public String prompt() {
+                        public LocalizedString prompt() {
                             return targetingPrompt();
                         }
                     });
@@ -147,7 +148,7 @@ public class MeleeWeapon extends Weapon {
     }
 
     //leave null for no targeting
-    public String targetingPrompt() {
+    public LocalizedString targetingPrompt() {
         return null;
     }
 
@@ -304,7 +305,7 @@ public class MeleeWeapon extends Weapon {
     }
 
     @Override
-    public String info(Hero hero) {
+    public LocalizedString info(Hero hero) {
 
         String info = super.info();
 
@@ -526,7 +527,7 @@ public class MeleeWeapon extends Weapon {
         }
 
         @Override
-        public String actionName() {
+        public LocalizedString actionName() {
             return Messages.get(MeleeWeapon.class, "swap");
         }
 

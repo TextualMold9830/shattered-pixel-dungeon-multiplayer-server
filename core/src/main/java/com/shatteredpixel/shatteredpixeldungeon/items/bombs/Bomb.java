@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -249,7 +250,7 @@ public class Bomb extends Item {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		int depth = Dungeon.scalingDepth();
 		String desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
 		if (fuse == null) {

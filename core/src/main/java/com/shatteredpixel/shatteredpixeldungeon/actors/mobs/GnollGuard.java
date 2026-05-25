@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -119,7 +120,7 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (hasSapper()){
 			return super.description() + "\n\n" + Messages.get(this, "desc_armor");
 		} else {

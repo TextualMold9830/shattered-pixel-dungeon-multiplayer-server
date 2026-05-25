@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -44,7 +45,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -939,7 +939,7 @@ public class Tengu extends Mob {
 			}
 			
 			@Override
-			public String tileDesc() {
+			public LocalizedString tileDesc() {
 				return Messages.get(this, "desc");
 			}
 		}
@@ -1122,7 +1122,7 @@ public class Tengu extends Mob {
 			}
 			
 			@Override
-			public String tileDesc() {
+			public LocalizedString tileDesc() {
 				return Messages.get(this, "desc");
 			}
 		}

@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteAction;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteState;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -238,15 +238,21 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		sendCharSpriteAction(ch.id(), "place", null, cell);
 	}
 	
-	public void showStatus( int color, String text, Object... args ) {
-		showStatusWithIcon(color, text, FloatingText.NO_ICON, args);
+	public void showStatus(int color, String text, Object... args ) {
+		showStatusWithIcon(color, LocalizedString.raw(text, args), FloatingText.NO_ICON);
+	}
+	public void showStatus(int color, LocalizedString text) {
+		showStatusWithIcon(color, text, FloatingText.NO_ICON);
 	}
 
+
 	public void showStatusWithIcon( int color, String text, int icon, Object... args ) {
+		LocalizedString localizedString = LocalizedString.raw(text, args);
+		showStatusWithIcon(color, localizedString, icon);
+	}
+
+	public void showStatusWithIcon( int color, LocalizedString text, int icon ) {
 		if (visible) {
-			if (args.length > 0) {
-				text = Messages.format( text, args );
-			}
 			float x = destinationCenter().x;
 			float y = destinationCenter().y - height()/2f;
 			int pos = DungeonTilemap.worldToTile(x, y + height(), Dungeon.level.width());

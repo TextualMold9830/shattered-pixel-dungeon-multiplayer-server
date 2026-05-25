@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -188,13 +189,13 @@ public class SandalsOfNature extends Artifact {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (level() == 0)   return super.name();
 		else                return Messages.get(this, "name_" + level());
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		String desc = Messages.get(this, "desc_" + (level()+1));
 
 		if ( isEquipped ( hero) ) {
@@ -289,7 +290,7 @@ public class SandalsOfNature extends Artifact {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(SandalsOfNature.class, "prompt");
 		}
 
@@ -365,7 +366,7 @@ public class SandalsOfNature extends Artifact {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(SandalsOfNature.class, "prompt_target");
 		}
 	};

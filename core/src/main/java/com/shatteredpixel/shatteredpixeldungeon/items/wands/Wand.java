@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -293,7 +294,7 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		String desc = super.info(hero);
 
 		desc += "\n\n" + statsDesc(hero);
@@ -686,7 +687,7 @@ public abstract class Wand extends Item {
 		public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {}
 
 		@Override
-		public String info() {
+		public LocalizedString info() {
 			return "";
 		}
 	}
@@ -828,7 +829,7 @@ public abstract class Wand extends Item {
 		}
 		
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Wand.class, "prompt");
 		}
 	};

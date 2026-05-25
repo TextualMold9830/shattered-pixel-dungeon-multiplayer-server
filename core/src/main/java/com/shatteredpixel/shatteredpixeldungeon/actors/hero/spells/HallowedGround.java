@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -159,7 +160,7 @@ public class HallowedGround extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(Hero hero){
+	public LocalizedString desc(Hero hero){
 		int area = 1 + 2*hero.pointsInTalent(Talent.HALLOWED_GROUND);
 		return Messages.get(this, "desc", area) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
@@ -266,7 +267,7 @@ public class HallowedGround extends TargetedClericSpell {
 		}
 
 		@Override
-		public String tileDesc() {
+		public LocalizedString tileDesc() {
 			return Messages.get(this, "desc");
 		}
 	}

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -94,7 +95,7 @@ public class WellFed extends Buff {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		int visualLeft = (int)(left / SaltCube.hungerGainMultiplier());
 		return Messages.get(this, "desc", visualLeft + 1);
 	}

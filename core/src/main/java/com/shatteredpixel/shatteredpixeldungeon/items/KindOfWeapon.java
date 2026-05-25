@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -50,8 +51,8 @@ abstract public class KindOfWeapon extends EquipableItem {
 	public void execute(Hero hero, String action) {
 		if (hero.subClass == HeroSubClass.CHAMPION && action.equals(AC_EQUIP)){
 			usesTargeting = false;
-			String primaryName = Messages.titleCase(hero.belongings.getRealWeapon() != null ? hero.belongings.getRealWeapon().trueName() : Messages.get(KindOfWeapon.class, "empty"));
-			String secondaryName = Messages.titleCase(hero.belongings.secondWep != null ? hero.belongings.secondWep.trueName() : Messages.get(KindOfWeapon.class, "empty"));
+			LocalizedString primaryName = Messages.titleCase(hero.belongings.getRealWeapon() != null ? hero.belongings.getRealWeapon().trueName() : Messages.get(KindOfWeapon.class, "empty"));
+			LocalizedString secondaryName = Messages.titleCase(hero.belongings.secondWep != null ? hero.belongings.secondWep.trueName() : Messages.get(KindOfWeapon.class, "empty"));
 			if (primaryName.length() > 18) primaryName = primaryName.substring(0, 15) + "...";
 			if (secondaryName.length() > 18) secondaryName = secondaryName.substring(0, 15) + "...";
 			GameScene.show(new WndOptions(hero,

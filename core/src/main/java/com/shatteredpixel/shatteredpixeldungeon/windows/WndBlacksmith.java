@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -319,7 +320,7 @@ public class WndBlacksmith extends Window {
 		protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 			@Override
-			public String textPrompt() {
+			public LocalizedString textPrompt() {
 				return Messages.get(WndReforge.class, "prompt");
 			}
 
@@ -365,7 +366,7 @@ public class WndBlacksmith extends Window {
 	private class HardenSelector extends WndBag.ItemSelector {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(this, "prompt");
 		}
 
@@ -409,7 +410,7 @@ public class WndBlacksmith extends Window {
 	private class UpgradeSelector extends WndBag.ItemSelector {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(this, "prompt");
 		}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -56,7 +57,7 @@ public class CrystalMimic extends Mimic {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "crystal_chest");
 		} else {
@@ -65,9 +66,9 @@ public class CrystalMimic extends Mimic {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (alignment == Alignment.NEUTRAL){
-			String desc = null;
+			LocalizedString desc = null;
 			for (Item i : items){
 				if (i instanceof Artifact){
 					desc = Messages.get(Heap.class, "crystal_chest_desc", Messages.get(Heap.class, "artifact"));

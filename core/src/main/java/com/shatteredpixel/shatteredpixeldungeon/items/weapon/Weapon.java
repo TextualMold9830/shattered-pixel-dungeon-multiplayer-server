@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Berserk;
@@ -403,7 +403,7 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 	
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		Hero hero = findOwner();
 		if (isEquipped(hero) && !hasCurseEnchant() && hero.buff(HolyWeapon.HolyWepBuff.class) != null
 			&& (hero.subClass != HeroSubClass.PALADIN || enchantment == null)){
@@ -574,18 +574,18 @@ abstract public class Weapon extends KindOfWeapon {
 			return multi;
 		}
 
-		public String name() {
+		public LocalizedString name() {
 			if (!curse())
 				return name( Messages.get(this, "enchant"));
 			else
 				return name( Messages.get(Item.class, "curse"));
 		}
 
-		public String name( String weaponName ) {
+		public LocalizedString name(LocalizedString weaponName ) {
 			return Messages.get(this, "name", weaponName);
 		}
 
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc");
 		}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -174,7 +175,7 @@ public class Artifact extends KindofMisc {
 	}
 
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		if (cursed && cursedKnown && !isEquipped(hero)) {
 			return super.info() + "\n\n" + Messages.get(Artifact.class, "curse_known");
 			

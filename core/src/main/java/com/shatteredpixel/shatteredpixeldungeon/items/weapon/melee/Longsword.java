@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -47,7 +48,7 @@ public class Longsword extends MeleeWeapon {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 

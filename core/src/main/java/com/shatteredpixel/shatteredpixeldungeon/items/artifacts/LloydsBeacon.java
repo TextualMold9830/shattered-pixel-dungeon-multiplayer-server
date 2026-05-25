@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -262,7 +263,7 @@ public class LloydsBeacon extends Artifact {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(LloydsBeacon.class, "prompt");
 		}
 	};
@@ -298,7 +299,7 @@ public class LloydsBeacon extends Artifact {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		String desc = super.desc();
 		if (returnDepth != -1){
 			desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);

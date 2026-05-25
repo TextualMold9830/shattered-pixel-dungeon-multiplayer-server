@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -34,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.Tri
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -223,7 +223,7 @@ abstract public class ClassArmor extends Armor {
 						//FIXME
 						GameScene.selectItem(new WndBag.ItemSelector() {
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(ClassArmor.class, "transfer_prompt");
 							}
 
@@ -300,7 +300,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		String desc = super.desc();
 
 		if (hero.belongings.contains(this)) {

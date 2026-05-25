@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -91,7 +92,7 @@ public class Ankh extends Item {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		if (blessed)
 			return Messages.get(this, "desc_blessed");
 		else

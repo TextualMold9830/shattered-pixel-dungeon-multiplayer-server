@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -145,7 +146,7 @@ public abstract class Shaman extends Mob {
 	}
 	
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		return super.description() + "\n\n" + Messages.get(this, "spell_desc");
 	}
 	

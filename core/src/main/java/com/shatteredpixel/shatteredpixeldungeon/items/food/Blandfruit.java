@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -120,7 +121,7 @@ public class Blandfruit extends Food {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (potionAttrib instanceof PotionOfHealing)        return Messages.get(this, "sunfruit");
 		if (potionAttrib instanceof PotionOfStrength)       return Messages.get(this, "rotfruit");
 		if (potionAttrib instanceof PotionOfParalyticGas)   return Messages.get(this, "earthfruit");
@@ -137,7 +138,7 @@ public class Blandfruit extends Food {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		if (potionAttrib== null) {
 			return super.desc();
 		} else {

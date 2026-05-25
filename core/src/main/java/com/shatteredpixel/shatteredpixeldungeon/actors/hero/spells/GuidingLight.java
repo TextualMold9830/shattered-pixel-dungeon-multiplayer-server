@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -36,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
@@ -119,7 +119,7 @@ public class GuidingLight extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(Hero hero){
+	public LocalizedString desc(Hero hero){
 		String desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.PRIEST){
 			desc += "\n\n" + Messages.get(this, "desc_priest");
@@ -167,7 +167,7 @@ public class GuidingLight extends TargetedClericSpell {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			String desc = super.desc();
 
 			if (source.subClass == HeroSubClass.PRIEST){

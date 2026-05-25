@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
@@ -98,7 +99,7 @@ public class WaterOfAwareness extends WellWater {
 	}
 	
 	@Override
-	public String tileDesc() {
+	public LocalizedString tileDesc() {
 		return Messages.get(this, "desc");
 	}
 }

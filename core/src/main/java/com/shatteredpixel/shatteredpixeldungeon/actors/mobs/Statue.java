@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -186,7 +187,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		String desc = Messages.get(this, "desc");
 		if (weapon != null){
 			desc += "\n\n" + Messages.get(this, "desc_weapon", weapon.name());

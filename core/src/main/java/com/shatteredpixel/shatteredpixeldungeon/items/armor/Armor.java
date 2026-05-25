@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -67,8 +68,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ParchmentScrap;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -554,7 +553,7 @@ public class Armor extends EquipableItem {
 			if (usesLeftToID <= 0) {
 				if (ShardOfOblivion.passiveIDDisabled()){
 					if (usesLeftToID > -1){
-						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 					}
 					setIDReady();
 				} else {
@@ -578,7 +577,7 @@ public class Armor extends EquipableItem {
 	}
 	
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		Hero hero = findOwner();
 		if (isEquipped(hero) && !hasCurseGlyph() && hero.buff(HolyWard.HolyArmBuff.class) != null
 			&& (hero.subClass != HeroSubClass.PALADIN || glyph == null)){
@@ -590,7 +589,7 @@ public class Armor extends EquipableItem {
 	}
 	
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		String info = super.info();
 		
 		if (levelKnown) {
@@ -845,18 +844,18 @@ public class Armor extends EquipableItem {
 			return multi;
 		}
 		
-		public String name() {
+		public LocalizedString name() {
 			if (!curse())
 				return name( Messages.get(this, "glyph") );
 			else
 				return name( Messages.get(Item.class, "curse"));
 		}
 		
-		public String name( String armorName ) {
+		public LocalizedString name(LocalizedString armorName ) {
 			return Messages.get(this, "name", armorName);
 		}
 
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc");
 		}
 

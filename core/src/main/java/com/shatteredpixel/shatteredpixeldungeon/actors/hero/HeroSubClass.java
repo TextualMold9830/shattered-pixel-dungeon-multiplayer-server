@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
@@ -56,18 +55,18 @@ public enum HeroSubClass {
 		this.icon = icon;
 	}
 	
-	public String title() {
+	public LocalizedString title() {
 		return Messages.get(this, name());
 	}
 
-	public String shortDesc() {
+	public LocalizedString shortDesc() {
 		return Messages.get(this, name()+"_short_desc");
 	}
 
-	public String desc() {
+	public LocalizedString desc() {
 		//Include the staff effect description in the battlemage's desc if possible
 		if (this == BATTLEMAGE){
-			String desc = Messages.get(this, name() + "_desc");
+			LocalizedString desc = Messages.get(this, name() + "_desc");
 			if (Game.scene() instanceof GameScene){
 				//FIXME
 				//MagesStaff staff = hero.getItem(MagesStaff.class);

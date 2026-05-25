@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -61,7 +62,7 @@ public abstract class Trinket extends Item {
 	}
 
 	@Override
-	public String info() {
+	public LocalizedString info() {
 		String info = super.info();
 		info += "\n\n" + statsDesc();
 		return info;
@@ -111,7 +112,7 @@ public abstract class Trinket extends Item {
 		}
 
 		@Override
-		public String info() {
+		public LocalizedString info() {
 				return "";
 			}
 

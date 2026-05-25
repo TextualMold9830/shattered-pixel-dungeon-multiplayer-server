@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -76,7 +77,7 @@ public class DivineSense extends ClericSpell {
 		onSpellCast(tome, hero);
 	}
 
-	public String desc(Hero hero){
+	public LocalizedString desc(Hero hero){
 		return Messages.get(this, "desc", 4+4*hero.pointsInTalent(Talent.DIVINE_SENSE)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -111,7 +112,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		String desc = Messages.get(this, "desc", (int)energy, energyCap());
 		if (cooldown > 0){
 			desc += "\n\n" + Messages.get(this, "desc_cooldown", cooldown);
@@ -245,7 +246,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action");
 	}
 

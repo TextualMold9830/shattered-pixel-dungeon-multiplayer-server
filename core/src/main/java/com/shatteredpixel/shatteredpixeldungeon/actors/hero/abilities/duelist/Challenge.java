@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -64,7 +65,7 @@ public class Challenge extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 
@@ -309,7 +310,7 @@ public class Challenge extends ArmorAbility {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", left);
 		}
 

@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -54,7 +54,7 @@ public class Sunray extends TargetedClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		int min = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
 		int max = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 12 : 8;
 		int dur = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;

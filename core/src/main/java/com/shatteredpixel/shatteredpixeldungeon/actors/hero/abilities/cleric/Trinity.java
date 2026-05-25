@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -64,7 +65,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -363,7 +363,7 @@ public class Trinity extends ArmorAbility {
 				if (Weapon.Enchantment.class.isAssignableFrom(cls)){
 					MeleeWeapon w = new WornShortsword(){
 						@Override
-						public String name() {
+						public LocalizedString name() {
 							//for button tooltips
 							return enchantment.name();
 						}
@@ -377,7 +377,7 @@ public class Trinity extends ArmorAbility {
 				} else if (Armor.Glyph.class.isAssignableFrom(cls)) {
 					Armor a = new ClothArmor(){
 						@Override
-						public String name() {
+						public LocalizedString name() {
 							//for button tooltips
 							return glyph.name();
 						}
@@ -469,7 +469,7 @@ public class Trinity extends ArmorAbility {
 
 		}
 
-		private static String getName(Item item){
+		private static LocalizedString getName(Item item){
 			if (item instanceof MeleeWeapon){
 				return ((MeleeWeapon) item).enchantment.name();
 			} else if (item instanceof Armor){
@@ -478,7 +478,7 @@ public class Trinity extends ArmorAbility {
 			return item.name();
 		}
 
-		private static String getText(Item item, Hero hero){
+		private static LocalizedString getText(Item item, Hero hero){
 			if (item instanceof MeleeWeapon){
 				return ((MeleeWeapon) item).enchantment.desc() + "\n\n" + trinityItemUseText(((MeleeWeapon) item).enchantment.getClass(), hero);
 			} else if (item instanceof Armor){
@@ -490,7 +490,7 @@ public class Trinity extends ArmorAbility {
 
 	}
 
-	public static String trinityItemUseText(Class<?> cls, Hero hero ){
+	public static LocalizedString trinityItemUseText(Class<?> cls, Hero hero ){
 		float chargeUse = trinityChargeUsePerEffect(cls, hero);
 		if (Weapon.Enchantment.class.isAssignableFrom(cls) || Armor.Glyph.class.isAssignableFrom(cls)) {
 			for (Class ench : Weapon.Enchantment.rare) {

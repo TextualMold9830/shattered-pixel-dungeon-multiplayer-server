@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -227,7 +228,7 @@ public class Dart extends MissileWeapon {
 	}
 	
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		updateCrossbow(hero);
 		if (bow != null && !bow.isIdentified()){
 			Crossbow realBow = bow;
@@ -264,7 +265,7 @@ public class Dart extends MissileWeapon {
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(Dart.class, "prompt");
 		}
 

@@ -21,10 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -185,13 +183,13 @@ public class BrokenSeal extends Item {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		return glyph != null ? glyph.name( super.name() ) : super.name();
 	}
 
 	@Override
-	public String info() {
-		String info = super.info();
+	public LocalizedString info() {
+		LocalizedString info = super.info();
 		if (glyph != null){
 			info += "\n\n" + Messages.get(this, "inscribed", glyph.name());
 			info += " " + glyph.desc();
@@ -208,7 +206,7 @@ public class BrokenSeal extends Item {
 	protected static WndBag.ItemSelector armorSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return  Messages.get(BrokenSeal.class, "prompt");
 		}
 
@@ -292,7 +290,7 @@ public class BrokenSeal extends Item {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			if (shielding() > 0) {
 				return Messages.get(this, "desc_active", shielding(), cooldown);
 			} else if (cooldown < 0) {

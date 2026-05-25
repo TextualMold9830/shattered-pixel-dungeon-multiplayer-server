@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -74,7 +75,7 @@ public class SpiritForm extends ClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		return Messages.get(this, "desc", ringLevel(hero), artifactLevel(hero)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
 	}
 
@@ -163,7 +164,7 @@ public class SpiritForm extends ClericSpell {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			if (ring() != null){
 				return Messages.get(this, "desc", Messages.titleCase(ring().name()), dispTurns());
 			} else if (artifact() != null){

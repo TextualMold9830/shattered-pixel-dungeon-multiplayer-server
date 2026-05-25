@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -135,7 +136,7 @@ public class Wandmaker extends NPC {
 					}
 				});
 			} else {
-				String msg;
+				LocalizedString msg;
 				switch(Quest.type){
 					case 1: default:
 						msg = Messages.get(this, "reminder_dust", Messages.titleCase(hero.name()));

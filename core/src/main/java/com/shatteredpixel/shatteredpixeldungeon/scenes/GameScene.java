@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.nikita22007.multiplayer.server.effects.Flare;
 import com.nikita22007.multiplayer.server.ui.Banner;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -1411,8 +1412,8 @@ public class GameScene extends PixelScene {
 		return objects;
 	}
 
-	private static ArrayList<String> getObjectNames(ArrayList<Object> objects) {
-		ArrayList<String> names = new ArrayList<>();
+	private static ArrayList<LocalizedString> getObjectNames(ArrayList<Object> objects) {
+		ArrayList<LocalizedString> names = new ArrayList<>();
 		for (Object obj : objects) {
 			if (obj instanceof Hero) names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
 			else if (obj instanceof Mob) names.add(Messages.titleCase(((Mob) obj).name()));
@@ -1462,7 +1463,7 @@ public class GameScene extends PixelScene {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return null;
 		}
 	}

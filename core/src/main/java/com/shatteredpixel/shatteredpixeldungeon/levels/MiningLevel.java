@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -33,8 +34,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
@@ -210,7 +209,7 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.MINE_CRYSTAL:
 				return Messages.get(MiningLevel.class, "crystal_name");
@@ -283,7 +282,7 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.WALL:
 				return Messages.get(MiningLevel.class, "wall_desc");

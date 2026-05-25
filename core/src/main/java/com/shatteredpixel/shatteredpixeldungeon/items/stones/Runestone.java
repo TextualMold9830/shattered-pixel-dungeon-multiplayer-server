@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -103,7 +104,7 @@ public abstract class Runestone extends Item {
 		}
 		
 		@Override
-		public String info() {
+		public LocalizedString info() {
 			return "";
 		}
 	}

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -261,15 +262,15 @@ public enum HeroClass {
 		new ScrollOfRemoveCurse().identify(hero);
 	}
 
-	public String title() {
+	public LocalizedString title() {
 		return Messages.get(HeroClass.class, name());
 	}
 
-	public String desc(){
+	public LocalizedString desc(){
 		return Messages.get(HeroClass.class, name()+"_desc");
 	}
 
-	public String shortDesc(){
+	public LocalizedString shortDesc(){
 		return Messages.get(HeroClass.class, name()+"_desc_short");
 	}
 

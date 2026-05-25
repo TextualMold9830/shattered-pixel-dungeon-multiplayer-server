@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -112,7 +113,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "chest");
 		} else {
@@ -121,7 +122,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (alignment == Alignment.NEUTRAL){
 			if (MimicTooth.stealthyMimics()){
 				return Messages.get(Heap.class, "chest_desc");

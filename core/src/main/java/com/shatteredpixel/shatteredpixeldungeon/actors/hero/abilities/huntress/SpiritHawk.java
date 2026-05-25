@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -56,7 +57,7 @@ import java.util.ArrayList;
 public class SpiritHawk extends ArmorAbility {
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		if (getHawk() == null) {
 			return super.targetingPrompt();
 		} else {
@@ -270,7 +271,7 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public String description() {
+		public LocalizedString description() {
 			String message = Messages.get(this, "desc", (int)timeRemaining);
 			if (Actor.chars().contains(this)){
 				message += "\n\n" + Messages.get(this, "desc_remaining", (int)timeRemaining);

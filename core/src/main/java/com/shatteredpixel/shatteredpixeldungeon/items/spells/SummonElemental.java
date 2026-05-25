@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -142,7 +143,7 @@ public class SummonElemental extends Spell {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		String desc = super.desc();
 
 		desc += "\n\n";
@@ -172,7 +173,7 @@ public class SummonElemental extends Spell {
 
 	public WndBag.ItemSelector selector = new WndBag.ItemSelector() {
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(SummonElemental.class, "imbue_prompt");
 		}
 

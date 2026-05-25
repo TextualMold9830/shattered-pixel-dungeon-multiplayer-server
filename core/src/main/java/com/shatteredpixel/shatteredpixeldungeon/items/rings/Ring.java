@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -168,21 +169,21 @@ public class Ring extends KindofMisc {
 		}
 	
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		return isKnown() ? super.name() : Messages.get(Ring.class, gem);
 	}
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
 	@Override
-	public String info(Hero hero){
+	public LocalizedString info(Hero hero){
 		String desc;
 		//skip custom notes if anonymized and un-Ided
 		//skip custom notes if anonymized and un-IdedString desc;

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -58,7 +59,7 @@ public class Snake extends Mob {
 	private static int dodges = 0;
 
 	@Override
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		if (Dungeon.visibleforAnyHero(pos)) {
 			dodges++;
 		}

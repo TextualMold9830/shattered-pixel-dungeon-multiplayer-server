@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -439,12 +440,12 @@ public class Hero extends Char {
 		}
 	}
 	
-	public String className() {
+	public LocalizedString className() {
 		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
 	}
 
 	@Override
-	public String name(){
+	public LocalizedString name(){
 		if (buff(HeroDisguise.class) != null) {
 			return buff(HeroDisguise.class).getDisguise().title();
 		} else {
@@ -635,7 +636,7 @@ public class Hero extends Char {
 	}
 
 	@Override
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		Combo.ParryTracker parry = buff(Combo.ParryTracker.class);
 		if (parry != null){
 			parry.parried = true;

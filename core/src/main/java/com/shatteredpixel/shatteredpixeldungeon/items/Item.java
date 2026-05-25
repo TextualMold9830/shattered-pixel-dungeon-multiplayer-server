@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
-import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -47,7 +47,6 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -151,7 +150,7 @@ public class Item implements Bundlable {
 	}
 
 	public String actionName(String action, Hero hero){
-		return Messages.get(this, "ac_" + action);
+		return Messages.get(this, "ac_" + action).toString();
 	}
 
 	public final boolean doPickUp( Hero hero ) {
@@ -570,9 +569,9 @@ public class Item implements Bundlable {
 		hero.getSprite().emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
 
-	public String title() {
+	public LocalizedString title() {
 
-		String name = name();
+		LocalizedString name = name();
 
 		if (visiblyUpgraded() != 0)
 			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
@@ -584,11 +583,11 @@ public class Item implements Bundlable {
 
 	}
 	
-	public String name() {
+	public LocalizedString name() {
 		return trueName();
 	}
 	
-	public final String trueName() {
+	public final LocalizedString trueName() {
 		return Messages.get(this, "name");
 	}
 	
@@ -602,31 +601,31 @@ public class Item implements Bundlable {
 
 	public Emitter emitter() { return null; }
 	
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		return info();
 	}
-	public String info(){
+	public LocalizedString info(){
 
 		if (false) {
 			Notes.CustomRecord note = Notes.findCustomRecord(customNoteID);
 			if (note != null) {
 				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
-				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+				return Messages.concat(Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')), "\n\n", desc());
 			} else {
 				note = Notes.findCustomRecord(getClass());
 				if (note != null) {
 					//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
-					return Messages.get(this, "custom_note_type", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+					return Messages.concat(Messages.get(this, "custom_note_type", note.title().replace('_', 'ˍ')), "\n\n", desc());
 				}
 			}
 		}
 		return desc();
 	}
 	
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		return desc();
 	}
-	protected String desc(){
+	protected LocalizedString desc(){
 		return Messages.get(this, "desc");
 	}
 	
@@ -865,7 +864,7 @@ public class Item implements Bundlable {
 			}
 		}
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Item.class, "prompt");
 		}
 	};

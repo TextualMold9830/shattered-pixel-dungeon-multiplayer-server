@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -172,7 +173,7 @@ public class Pasty extends Food {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		switch(Holiday.getCurrentHoliday()){
 			case NONE: default:
 				return super.name();
@@ -198,7 +199,7 @@ public class Pasty extends Food {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		switch(Holiday.getCurrentHoliday()){
 			case NONE: default:
 				return super.desc();

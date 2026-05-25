@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
@@ -129,7 +130,7 @@ public class Explosive extends Weapon.Enchantment {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		String desc = super.desc();
 		if (durability > 50){
 			desc += " " + Messages.get(this, "desc_cool");

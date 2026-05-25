@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -157,7 +158,7 @@ public class PrismaticGuard extends Buff {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		String desc = Messages.get(this, "desc", (int)HP, maxHP());
 		if (isEmpowered()){
 			desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);

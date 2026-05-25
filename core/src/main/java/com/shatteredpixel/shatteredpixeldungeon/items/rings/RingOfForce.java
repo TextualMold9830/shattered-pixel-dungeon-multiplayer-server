@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
@@ -233,7 +234,7 @@ public class RingOfForce extends Ring {
 	}
 
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		String info = super.info();
 
 		if (hero.heroClass == HeroClass.DUELIST

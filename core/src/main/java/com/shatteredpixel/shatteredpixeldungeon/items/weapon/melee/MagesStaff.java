@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -342,7 +343,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (wand == null) {
 			return super.name();
 		} else {
@@ -352,7 +353,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		String info = super.info();
 
 		if (wand != null){
@@ -412,7 +413,7 @@ public class MagesStaff extends MeleeWeapon {
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(MagesStaff.class, "prompt");
 		}
 
@@ -442,7 +443,7 @@ public class MagesStaff extends MeleeWeapon {
 						newLevel = trueLevel();
 					}
 
-					String bodyText = Messages.get(MagesStaff.class, "imbue_desc");
+					LocalizedString bodyText = Messages.get(MagesStaff.class, "imbue_desc");
 					if (item.isIdentified()){
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_level", newLevel);
 					} else {

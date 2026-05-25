@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -487,7 +488,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public String description() {
+		public LocalizedString description() {
 			String desc = Messages.get(this, "desc");
 			if (Actor.chars().contains(this)) {
 				int preservation = Math.round(seedPreservation()*100);

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -137,7 +138,7 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		String info = super.info();
 		
 		info += "\n\n" + Messages.get( SpiritBow.class, "stats",
@@ -513,7 +514,7 @@ public class SpiritBow extends Weapon {
 			}
 		}
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(SpiritBow.class, "prompt");
 		}
 	};

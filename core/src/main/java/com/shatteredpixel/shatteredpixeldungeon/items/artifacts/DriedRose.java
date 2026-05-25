@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -58,17 +59,13 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
@@ -81,7 +78,6 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -239,7 +235,7 @@ public class DriedRose extends Artifact {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		if (!Ghost.Quest.completed()
 				&& (ShatteredPixelDungeon.scene() instanceof GameScene)){
 			return Messages.get(this, "desc_no_quest");
@@ -485,7 +481,7 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return  "\"" + Messages.get(GhostHero.class, "direct_prompt") + "\"";
 		}
 	};
@@ -917,7 +913,7 @@ public class DriedRose extends Artifact {
 						GameScene.selectItem(new WndBag.ItemSelector() {
 
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(WndGhostHero.class, "weapon_prompt");
 							}
 
@@ -993,7 +989,7 @@ public class DriedRose extends Artifact {
 						GameScene.selectItem(new WndBag.ItemSelector() {
 
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(WndGhostHero.class, "armor_prompt");
 							}
 
