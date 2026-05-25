@@ -120,7 +120,7 @@ public class Splash {
 	//each color has its own factory, let's multiple splash effects occur at once
 	private static final HashMap<Integer, SplashFactory> FACTORIES = new HashMap<>();
 
-	private static class SplashFactory extends Emitter.Factory {
+	public static class SplashFactory extends Emitter.Factory {
 
 		public int color;
 		public float dir;
@@ -135,13 +135,5 @@ public class Splash {
 			p.acc.set( 0, +100 );
 		}
 
-		@Override
-		public JSONObject customParams() {
-			JSONObject object = new JSONObject();
-			object.put("color", color);
-			object.put("dir", dir);
-			object.put("cone", cone);
-			return object;
-		}
 	}
 }

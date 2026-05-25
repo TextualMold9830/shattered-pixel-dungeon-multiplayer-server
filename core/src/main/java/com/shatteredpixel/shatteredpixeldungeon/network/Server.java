@@ -41,13 +41,16 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerial
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.InterlevelSceneSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantRemovalSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.LevelSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CellsUpdateSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
@@ -59,6 +62,9 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.Interle
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
+import com.watabou.noosa.particles.SerializableParticleFactory;
 
 public class Server extends Thread {
     public static final SerializerRegistry SERIALIZERS = new SerializerRegistry();
@@ -88,6 +94,9 @@ public class Server extends Thread {
         SERIALIZERS.register(TrapDTO.class, "remove", new TrapRemovalSerializer());
         SERIALIZERS.register(Buff.class, "default", new BuffSerializer());
         SERIALIZERS.register(Buff.class, "remove", new BuffRemovalSerializer());
+        SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
+        SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
+        SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

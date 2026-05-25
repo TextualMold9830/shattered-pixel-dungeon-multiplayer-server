@@ -568,13 +568,5 @@ public class Speck extends Image {
 			this.type = type;
 			this.lightMode = lightMode;
 		}
-
-		@Override
-		public JSONObject customParams() {
-			JSONObject object = new JSONObject();
-			object.put("type", type);
-			object.put("lightMode", lightMode);
-			return object;
-		}
 	}
 }

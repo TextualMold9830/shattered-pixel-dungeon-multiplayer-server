@@ -167,7 +167,7 @@ public class Emitter extends Group {
 		}
 	}
 	
-	abstract public static class Factory {
+	abstract public static class Factory implements SerializableParticleFactory {
 		
 		abstract public void emit( Emitter emitter, int index, float x, float y );
 		

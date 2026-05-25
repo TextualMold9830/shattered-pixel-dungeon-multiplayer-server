@@ -25,9 +25,12 @@
 package com.nikita22007.multiplayer.noosa.particles;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
+import com.watabou.noosa.particles.SerializableParticleFactory;
 import com.watabou.utils.PointF;
 import com.watabou.utils.SparseArray;
 import org.json.JSONException;
@@ -241,7 +244,12 @@ public class Emitter /*this is temporary ->*/extends Group {
 			if (id > -1){
 				actionObj.put("id", id);
 			}
-			actionObj.put("factory", factory.toJsonObject());
+			SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+			Object serializedFactory = ctx.serialize(factory);
+			if (serializedFactory == null) {
+				return;
+			}
+			actionObj.put("factory", serializedFactory);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -267,31 +275,12 @@ public class Emitter /*this is temporary ->*/extends Group {
 		}
 	}
 
-	abstract public static class Factory {
+	abstract public static class Factory implements SerializableParticleFactory {
 
 		public boolean lightMode() {
 			return false;
 		}
-		//TODO: check this
-		public String factoryName(){
-			//return toPath(this);
-			return getClass().getName();
-		};
 
-		public JSONObject customParams() {
-			return new JSONObject();
-		}
-
-		public final JSONObject toJsonObject() {
-			JSONObject result =  customParams();
-			try {
-			result = result == null? new JSONObject(): result;
-			result.put("path", getClass().getName());
-			result.put("factory_type", factoryName());
-			result.put("light_mode", lightMode());
-			} catch (JSONException ignored) {}
-			return result;
-		}
 		//TODO: remove all overrides of this
 		public void emit(Emitter emitter, int index, float x, float y ){};
 	}
