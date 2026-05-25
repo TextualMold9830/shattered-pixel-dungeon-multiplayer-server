@@ -1,0 +1,75 @@
+package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
+
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TieredSprite;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.nikita22007.multiplayer.utils.Utils.putToJSONArray;
+
+public class CharSerializer implements Serializer<Char> {
+
+    @Override
+    public Object serialize(Char character, SerializationContext ctx, String profile) {
+        JSONObject object = new JSONObject();
+
+        try {
+            int id = character.id();
+            if (id <= 0) {
+                return object;
+            }
+            object.put("id", id);
+
+            boolean heroAsHero = "hero".equals(profile);
+            if (character instanceof Hero && heroAsHero) {
+                object.put("type", "hero");
+            } else {
+                object.put("type", "character");
+            }
+
+            if (character.getSprite() != null) {
+                String spriteAsset = character.getSprite().getSpriteAsset();
+                if (spriteAsset != null) {
+                    object.put("sprite_asset", spriteAsset);
+                } else {
+                    object.put("sprite_name", character.getSprite().spriteName());
+                }
+                if (character.getSprite() instanceof TieredSprite) {
+                    object.put("tier", ((TieredSprite) character.getSprite()).tier());
+                }
+                if (character.getSprite() instanceof ClassSprite) {
+                    object.put("class", ((ClassSprite) character.getSprite()).heroClass());
+                }
+            }
+
+            object.put("hp", character.getHP());
+            object.put("max_hp", character.getHT());
+            object.put("position", character.pos);
+            object.put("name", character.name());
+
+            int shield = character.shielding();
+            if (shield > 0 || character.needsShieldUpdate()) {
+                object.put("shield", shield);
+            }
+            object.put("emo", character.getEmoJsonObject());
+
+            CharSprite sprite = character.getSprite();
+            if (sprite != null) {
+                JSONArray states = putToJSONArray(sprite.states().toArray());
+                object.put("states", states);
+            }
+            if (character instanceof Mob) {
+                object.put("description", ((Mob) character).description());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return object;
+    }
+}

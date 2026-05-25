@@ -157,7 +157,7 @@ public class NetworkPacket {
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "character");
+        Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "default");
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
             JSONObject event = new JSONObject();
             event.put("action_name", "actor_update");
