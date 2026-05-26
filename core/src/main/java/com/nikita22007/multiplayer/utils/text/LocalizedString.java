@@ -150,6 +150,9 @@ public class LocalizedString {
         if (this == obj) {
             return true;
         }
+        if (obj instanceof String) {
+            return this.equals(LocalizedString.raw((String)obj));
+        }
         if (!(obj instanceof LocalizedString)) {
             return false;
         }

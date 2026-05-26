@@ -325,7 +325,7 @@ public class MeleeWeapon extends Weapon {
                 }
             }
 
-            String statsInfo = statsInfo();
+            LocalizedString statsInfo = statsInfo();
             if (!statsInfo.equals("")) info += "\n\n" + statsInfo;
 
             switch (augment) {
