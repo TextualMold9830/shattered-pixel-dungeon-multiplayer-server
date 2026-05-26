@@ -326,7 +326,9 @@ public class MeleeWeapon extends Weapon {
             }
 
             LocalizedString statsInfo = statsInfo();
-            if (!statsInfo.equals("")) info += "\n\n" + statsInfo;
+            if (!statsInfo.equals(LocalizedString.EMPTY)) {
+                info = LocalizedString.concat(info,  "\n\n", statsInfo);
+            }
 
             switch (augment) {
                 case SPEED:
