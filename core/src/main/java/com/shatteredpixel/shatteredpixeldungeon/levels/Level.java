@@ -1696,7 +1696,7 @@ public abstract class Level implements Bundlable {
 			case Terrain.EMPTY_WELL:
 				return Messages.get(Level.class, "empty_well_desc");
 			default:
-				return LocalizedString.raw("");
+				return LocalizedString.EMPTY;
 		}
 	}
 	//TODO: replace this

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -52,10 +53,10 @@ public class WndBadge extends Window {
 		add(title);
 
 		LocalizedString desc = badge.desc();
-		String unlock = Badges.showCompletionProgress(badge);
+		LocalizedString unlock = Badges.showCompletionProgress(badge);
 
 		if (unlock != null){
-			desc += unlock;
+			desc = LocalizedString.concat(desc, unlock);
 		}
 
 		RenderedTextBlock info = PixelScene.renderTextBlock( desc, 6 );

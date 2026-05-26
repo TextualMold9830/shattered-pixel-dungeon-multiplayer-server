@@ -482,7 +482,7 @@ public abstract class Wand extends Item {
 			if (usesLeftToID <= 0 || hero.pointsInTalent(Talent.SCHOLARS_INTUITION) == 2) {
 				if (ShardOfOblivion.passiveIDDisabled()){
 					if (usesLeftToID > -1){
-						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 					}
 					usesLeftToID = -1;
 				} else {
@@ -688,7 +688,7 @@ public abstract class Wand extends Item {
 
 		@Override
 		public LocalizedString info() {
-			return "";
+			return LocalizedString.EMPTY;
 		}
 	}
 	

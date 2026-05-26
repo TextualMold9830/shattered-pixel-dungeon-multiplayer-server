@@ -256,7 +256,7 @@ public abstract class Plant implements Bundlable {
 			
 			@Override
 			public LocalizedString info() {
-				return LocalizedString.raw("");
+				return LocalizedString.EMPTY;
 			}
 		}
 	}

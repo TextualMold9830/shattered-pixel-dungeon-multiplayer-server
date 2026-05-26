@@ -187,12 +187,12 @@ public class Feint extends ArmorAbility {
 
 		@Override
 		public LocalizedString name() {
-			return LocalizedString.raw(""); //shouldn't be examinable
+			return LocalizedString.EMPTY; //shouldn't be examinable
 		}
 
 		@Override
 		public LocalizedString description() {
-			return LocalizedString.raw(""); //shouldn't be examinable
+			return LocalizedString.EMPTY; //shouldn't be examinable
 		}
 
 		@Override

@@ -195,18 +195,18 @@ public class Ring extends KindofMisc {
 		}
 
 		if (cursed && isEquipped( hero)) {
-			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "cursed_worn"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "cursed_worn")));
 			
 		} else if (cursed && cursedKnown) {
-			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "curse_known"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "curse_known")));
 			
 		} else if (!isIdentified() && cursedKnown){
-			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "not_cursed"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "not_cursed")));
 			
 		}
 		
 		if (isKnown()) {
-			desc += "\n\n" + statsInfo();
+			desc = LocalizedString.concat(desc,"\n\n", statsInfo());
 		}
 		
 		return desc;

@@ -131,7 +131,7 @@ public class SupporterScene extends PixelScene {
 			if (Messages.lang() != Languages.ENGLISH) {
 				message = LocalizedString.concat(message, LocalizedString.concat("\n", Messages.get(SupporterScene.class, "patreon_english")));
 			}
-			message += "\n\n- Evan";
+			message = LocalizedString.concat(message,  "\n\n- Evan");
 
 			text = PixelScene.renderTextBlock(message, 6);
 			add(text);

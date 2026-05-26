@@ -102,7 +102,7 @@ public class CustomNoteButton extends IconButton {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return Messages.get(this, "title");
 	}
 
@@ -260,13 +260,13 @@ public class CustomNoteButton extends IconButton {
 	public static class CustomNoteWindow extends WndJournalItem {
 
 		public CustomNoteWindow(Notes.CustomRecord rec, Window parentWindow) {
-			super(rec.icon(), rec.title(), rec.desc());
+			super(rec.icon(), rec.title().toString(), rec.desc().toString());
 
 			RedButton title = new RedButton( Messages.get(CustomNoteWindow.class, "edit_title") ){
 				@Override
 				protected void onClick() {
 					GameScene.show(new WndTextInput(Messages.get(CustomNoteWindow.class, "edit_title"),
-							"",
+							LocalizedString.EMPTY,
 							rec.title(),
 							50,
 							false,
@@ -275,7 +275,7 @@ public class CustomNoteButton extends IconButton {
 						@Override
 						public void onSelect(boolean positive, String text) {
 							if (positive && !text.isEmpty()){
-								rec.editText(text, rec.desc());
+								rec.editText(text, rec.desc().toString());
 								CustomNoteWindow.this.hide();
 								if (parentWindow instanceof WndUseItem){
 									WndUseItem newParent = new WndUseItem(((WndUseItem) parentWindow).owner, ((WndUseItem) parentWindow).item, getOwnerHero());
@@ -297,7 +297,7 @@ public class CustomNoteButton extends IconButton {
 				@Override
 				protected void onClick() {
 					GameScene.show(new WndTextInput(editBodyText,
-							"",
+							LocalizedString.EMPTY,
 							rec.desc(),
 							500,
 							true,
@@ -355,7 +355,7 @@ public class CustomNoteButton extends IconButton {
 	private static void addNote(Notes.CustomRecord note, LocalizedString promptTitle, LocalizedString prompttext){
 		GameScene.show(new WndTextInput(promptTitle,
 				prompttext,
-				"",
+				LocalizedString.EMPTY,
 				50,
 				false,
 				Messages.get(CustomNoteWindow.class, "confirm"),

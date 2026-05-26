@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -190,7 +191,7 @@ public enum Bestiary {
 		return seen.keySet();
 	}
 
-	public String title(){
+	public LocalizedString title(){
 		return Messages.get(this, name() + ".title");
 	}
 

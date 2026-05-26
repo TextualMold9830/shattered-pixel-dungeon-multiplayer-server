@@ -355,9 +355,9 @@ public class ItemSlot extends Button {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		if (item != null && item.name() != null) {
-			return Messages.titleCase(item.name()).toString();
+			return Messages.titleCase(item.name());
 		} else {
 			return super.hoverText();
 		}

@@ -151,7 +151,7 @@ public class WndJournal extends WndTabbed {
 					}
 
 					@Override
-					protected String hoverText() {
+					protected LocalizedString hoverText() {
 						return Messages.get(notesTab, "title");
 					}
 				},
@@ -163,7 +163,7 @@ public class WndJournal extends WndTabbed {
 					}
 
 					@Override
-					protected String hoverText() {
+					protected LocalizedString hoverText() {
 						return Messages.get(guideTab, "title");
 					}
 				},
@@ -175,7 +175,7 @@ public class WndJournal extends WndTabbed {
 					}
 
 					@Override
-					protected String hoverText() {
+					protected LocalizedString hoverText() {
 						return Messages.get(alchemyTab, "title");
 					}
 				},
@@ -187,7 +187,7 @@ public class WndJournal extends WndTabbed {
 					}
 
 					@Override
-					protected String hoverText() {
+					protected LocalizedString hoverText() {
 						return Messages.get(catalogTab, "title");
 					}
 				},
@@ -199,7 +199,7 @@ public class WndJournal extends WndTabbed {
 					}
 
 					@Override
-					protected String hoverText() {
+					protected LocalizedString hoverText() {
 						return Messages.get(badgesTab, "title");
 					}
 				}

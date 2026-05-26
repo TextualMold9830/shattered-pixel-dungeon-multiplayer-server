@@ -255,7 +255,7 @@ public class DriedRose extends Artifact {
 		}
 
 		if (weapon != null || armor != null) {
-			desc += "\n";
+			desc = LocalizedString.concat( desc, "\n");
 
 			if (weapon != null) {
 				desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_weapon", Messages.titleCase(weapon.title()))));

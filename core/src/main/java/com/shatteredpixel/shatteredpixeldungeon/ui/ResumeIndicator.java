@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -74,7 +74,7 @@ public class ResumeIndicator extends Tag {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return Messages.titleCase(Messages.get(WndKeyBindings.class, "tag_resume"));
 	}
 

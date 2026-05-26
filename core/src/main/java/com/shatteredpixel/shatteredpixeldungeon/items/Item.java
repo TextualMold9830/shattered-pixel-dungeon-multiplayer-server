@@ -277,7 +277,7 @@ public class Item implements Bundlable {
 		if (!container.canHold(this)){
 			return null;
 		}
-		Hero hero = (container.owner instanceof Hero)? (Hero)container.owner : null;
+		Hero hero = container.owner;
 		if (stackable) {
 			for (Item item:items) {
 				if (isSimilar( item )) {

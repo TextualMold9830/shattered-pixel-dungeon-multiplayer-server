@@ -245,7 +245,7 @@ public class WndBag extends WndTabbed {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return Messages.titleCase(bag.name());
 		}
 	}

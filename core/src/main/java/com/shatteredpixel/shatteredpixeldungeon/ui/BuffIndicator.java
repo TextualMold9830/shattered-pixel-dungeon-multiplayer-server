@@ -21,12 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -399,7 +398,7 @@ public class BuffIndicator extends Component {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return Messages.titleCase(buff.name());
 		}
 	}

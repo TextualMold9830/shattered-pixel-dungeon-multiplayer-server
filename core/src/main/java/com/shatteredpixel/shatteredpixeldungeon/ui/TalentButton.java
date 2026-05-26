@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -238,7 +239,7 @@ public class TalentButton extends Button {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return Messages.titleCase(talent.title());
 	}
 

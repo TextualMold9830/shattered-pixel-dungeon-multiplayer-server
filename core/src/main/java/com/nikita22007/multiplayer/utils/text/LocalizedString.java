@@ -1,13 +1,18 @@
 package com.nikita22007.multiplayer.utils.text;
 
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import org.jetbrains.annotations.CheckReturnValue;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 
 public class LocalizedString {
-
+    
+    public static LocalizedString EMPTY = LocalizedString.raw("");
+    
     public enum Mode {
         KEY,
         RAW,
@@ -40,14 +45,17 @@ public class LocalizedString {
         this.parts = parts == null ? new Object[0] : parts;
     }
 
+    @CheckReturnValue
     public static LocalizedString key(LocalizedKey key, Object... args) {
         return new LocalizedString(Mode.KEY, key, null, args, null, null, null);
     }
 
+    @CheckReturnValue
     public static LocalizedString raw(String raw, Object... args) {
         return new LocalizedString(Mode.RAW, null, raw, args, null, null, null);
     }
 
+    @CheckReturnValue
     public static LocalizedString[] raw(String[] options) {
         LocalizedString[] localizedStrings = new LocalizedString[options.length];
         for (int i = 0; i < options.length; i++) {
@@ -56,10 +64,12 @@ public class LocalizedString {
         return localizedStrings;
     }
 
+    @CheckReturnValue
     public static LocalizedString transform(Transform transform, LocalizedString text) {
         return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null);
     }
 
+    @CheckReturnValue
     public static LocalizedString concat(Object... parts) {
         ArrayList<Object> flattened = new ArrayList<>();
         flattenConcatParts(flattened, parts);
@@ -79,34 +89,42 @@ public class LocalizedString {
         }
     }
 
+    @CheckReturnValue
     public Mode mode() {
         return mode;
     }
 
+    @CheckReturnValue
     public LocalizedKey key() {
         return key;
     }
 
+    @CheckReturnValue
     public String raw() {
         return raw;
     }
 
+    @CheckReturnValue
     public Object[] args() {
         return args;
     }
 
+    @CheckReturnValue
     public Transform transform() {
         return transform;
     }
 
+    @CheckReturnValue
     public LocalizedString text() {
         return text;
     }
 
+    @CheckReturnValue
     public Object[] parts() {
         return parts;
     }
 
+    @CheckReturnValue
     public static String[] resolveArray(LocalizedString[] localizedStrings) {
         String[] strings = new String[localizedStrings.length];
         for (int i= 0 ; i < localizedStrings.length; i++) {
@@ -115,6 +133,11 @@ public class LocalizedString {
             }
         }
         return strings;
+    }
+
+    @CheckReturnValue
+    public LocalizedString toUpperCase(Locale locale) {
+        return Messages.toUpperCase(this, locale);
     }
 
     @Override

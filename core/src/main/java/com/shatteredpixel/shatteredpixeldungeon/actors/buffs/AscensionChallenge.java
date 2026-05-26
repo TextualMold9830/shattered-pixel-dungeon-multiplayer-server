@@ -391,7 +391,7 @@ public static boolean qualifiedForPacifist(){
 	@Override
 	public LocalizedString desc() {
 		LocalizedString desc = Messages.get(this, "desc");
-		desc += "\n";
+		desc = LocalizedString.concat(desc, "\n");
 		if (stacks < 2){
 
 			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_clear")));

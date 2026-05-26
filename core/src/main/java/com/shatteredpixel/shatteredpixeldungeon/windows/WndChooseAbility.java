@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
@@ -87,7 +87,7 @@ public class WndChooseAbility extends Window {
 			}
 
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				return Messages.get(WndChooseAbility.class, "random_title");
 			}
 		};

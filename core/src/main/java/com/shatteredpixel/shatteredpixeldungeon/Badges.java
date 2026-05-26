@@ -1358,10 +1358,10 @@ public class Badges {
 	}
 
 	//used for badges with completion progress that would otherwise be hard to track
-	public static String showCompletionProgress( Badge badge ){
+	public static LocalizedString showCompletionProgress( Badge badge ){
 		if (isUnlocked(badge)) return null;
 
-		String result = "\n";
+		LocalizedString result = "\n";
 
 		if (badge == Badge.BOSS_SLAIN_1_ALL_CLASSES){
 			for (HeroClass cls : HeroClass.values()){

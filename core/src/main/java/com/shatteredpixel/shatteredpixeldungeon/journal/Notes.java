@@ -233,7 +233,7 @@ public class Notes {
 		@Override
 		public LocalizedString desc() {
 			switch (landmark) {
-				default:            return LocalizedString.raw("");
+				default:            return LocalizedString.EMPTY;
 
 				case CHASM_FLOOR:   return Messages.get(Level.Feeling.class, "chasm_desc");
 				case WATER_FLOOR:   return Messages.get(Level.Feeling.class, "water_desc");

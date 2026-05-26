@@ -303,7 +303,7 @@ public abstract class Scroll extends Item {
 		
 		@Override
 		public LocalizedString info() {
-			return LocalizedString.raw("");
+			return LocalizedString.EMPTY;
 		}
 	}
 	

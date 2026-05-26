@@ -177,7 +177,7 @@ public class WndHero extends WndTabbed {
 				}
 
 				@Override
-				protected String hoverText() {
+				protected LocalizedString hoverText() {
 					return Messages.titleCase(Messages.get(WndKeyBindings.class, "hero_info"));
 				}
 
@@ -214,6 +214,13 @@ public class WndHero extends WndTabbed {
 			pos += GAP;
 		}
 
+		private void statSlot( LocalizedString label, String value ) {
+			statSlot(label.toString(), value);
+		}
+
+		private void statSlot( String label, LocalizedString value ) {
+			statSlot(label, value.toString());
+		}
 		private void statSlot( String label, String value ) {
 
 			int size = 8;
@@ -237,7 +244,11 @@ public class WndHero extends WndTabbed {
 			
 			pos += GAP + txt.height();
 		}
-		
+
+		private void statSlot( LocalizedString label, int value ) {
+			statSlot( label.toString(), value );
+		}
+
 		private void statSlot( String label, int value ) {
 			statSlot( label, Integer.toString( value ) );
 		}

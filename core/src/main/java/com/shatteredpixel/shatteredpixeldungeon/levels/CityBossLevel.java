@@ -604,7 +604,7 @@ public class CityBossLevel extends Level {
 				} else if (Dungeon.level.map[cell] == Terrain.STATUE){
 					return Messages.get(HallsLevel.class, "statue_desc");
 				} else if (Dungeon.level.map[cell] == Terrain.EMPTY_DECO){
-					return "";
+					return LocalizedString.EMPTY;
 				}
 
 			//DK arena tiles

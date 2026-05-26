@@ -204,7 +204,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		if (lvl.blinkDistance(target) > 0){
-			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_blink", lvl.blinkDistance(target))));
+			 desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_blink", lvl.blinkDistance(target))));
 		}
 		
 		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_invis_time", turnsInvis)));

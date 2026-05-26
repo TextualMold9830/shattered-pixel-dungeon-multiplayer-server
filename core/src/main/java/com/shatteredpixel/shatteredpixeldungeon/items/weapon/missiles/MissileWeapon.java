@@ -780,7 +780,7 @@ abstract public class MissileWeapon extends Weapon {
 
 		@Override
 		public LocalizedString info() {
-			return LocalizedString.raw("");
+			return LocalizedString.EMPTY;
 		}
 	}
 

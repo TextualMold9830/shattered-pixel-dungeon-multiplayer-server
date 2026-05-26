@@ -105,7 +105,7 @@ public abstract class Runestone extends Item {
 		
 		@Override
 		public LocalizedString info() {
-			return LocalizedString.raw("");
+			return LocalizedString.EMPTY;
 		}
 	}
 }

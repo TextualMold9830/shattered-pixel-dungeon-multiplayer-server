@@ -49,9 +49,11 @@ public class ScrollingListPane extends ScrollPane {
 		}
 	}
 
+	/*
 	public void addItem( Image icon, String iconText, String text ){
 		addItem( new ListItem(icon, iconText, text) );
 	}
+	*/
 
 	public void addItem( ListItem item ){
 		content.add(item);

@@ -150,7 +150,7 @@ public class ChangesScene extends PixelScene {
 		final ArrayList<ChangeInfo> changeInfos = new ArrayList<>();
 
 		if (Messages.lang() != Languages.ENGLISH){
-			ChangeInfo langWarn = new ChangeInfo("", true, Messages.get(this, "lang_warn"));
+			ChangeInfo langWarn = new ChangeInfo("", true, Messages.get(this, "lang_warn").toString());
 			langWarn.hardlight(CharSprite.WARNING);
 			changeInfos.add(langWarn);
 		}

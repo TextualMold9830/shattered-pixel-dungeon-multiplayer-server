@@ -113,12 +113,12 @@ public abstract class Trinket extends Item {
 
 		@Override
 		public LocalizedString info() {
-				return LocalizedString.raw("");
+				return LocalizedString.EMPTY;
 			}
 
 		@Override
 		public LocalizedString statsDesc() {
-			return LocalizedString.raw("");
+			return LocalizedString.EMPTY;
 		}
 
 	}

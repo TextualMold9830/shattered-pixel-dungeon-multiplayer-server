@@ -21,10 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -153,7 +153,7 @@ public class JournalScene extends PixelScene {
 			}
 
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				return Messages.get(WndJournal.BadgesTab.class, "title");
 			}
 		};
@@ -173,7 +173,7 @@ public class JournalScene extends PixelScene {
 				super.onClick();
 			}
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				return Messages.get(WndJournal.CatalogTab.class, "title");
 			}
 		};
@@ -193,7 +193,7 @@ public class JournalScene extends PixelScene {
 				super.onClick();
 			}
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				return Messages.get(WndJournal.GuideTab.class, "title");
 			}
 		};
@@ -213,7 +213,7 @@ public class JournalScene extends PixelScene {
 				super.onClick();
 			}
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				return Messages.get(WndJournal.AlchemyTab.class, "title");
 			}
 		};

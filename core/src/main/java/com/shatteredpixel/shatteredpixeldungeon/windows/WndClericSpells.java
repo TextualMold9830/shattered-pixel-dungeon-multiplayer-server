@@ -21,9 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
@@ -32,21 +31,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.input.PointerEvent;
-import com.watabou.noosa.ColorBlock;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.NinePatch;
-import com.watabou.utils.DeviceCompat;
-import com.watabou.utils.PointF;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -174,7 +162,7 @@ public class WndClericSpells extends Window {
 
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return "_" + Messages.titleCase(spell.name()) + "_\n" + spell.shortDesc(getOwnerHero());
 		}
 	}
