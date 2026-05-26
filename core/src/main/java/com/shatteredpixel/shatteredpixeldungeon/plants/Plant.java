@@ -118,19 +118,19 @@ public abstract class Plant implements Bundlable {
 		bundle.put( POS, pos );
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
-	public String desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.WARDEN){
-			desc += "\n\n" + Messages.get(this, "warden_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "warden_desc")));
 		}
 		return desc;
 	}
-	public String desc() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
 		return desc;
 	}
 
@@ -233,7 +233,7 @@ public abstract class Plant implements Bundlable {
 		public LocalizedString desc(Hero hero) {
 			LocalizedString desc = Messages.get(plantClass, "desc");
 			if (hero.subClass == HeroSubClass.WARDEN){
-				desc += "\n\n" + Messages.get(plantClass, "warden_desc");
+				desc = LocalizedString.concat(desc, "\n\n", Messages.get(plantClass, "warden_desc"));
 			}
 			return desc;
 		}
@@ -256,7 +256,7 @@ public abstract class Plant implements Bundlable {
 			
 			@Override
 			public LocalizedString info() {
-				return "";
+				return LocalizedString.raw("");
 			}
 		}
 	}

@@ -241,16 +241,16 @@ public class DriedRose extends Artifact {
 			return Messages.get(this, "desc_no_quest");
 		}
 		
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if (isEquipped(hero)){
 			if (!cursed){
 
 				if (level() < levelCap)
-					desc+= "\n\n" + Messages.get(this, "desc_hint");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_hint")));
 
 			} else {
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 		}
 
@@ -258,14 +258,14 @@ public class DriedRose extends Artifact {
 			desc += "\n";
 
 			if (weapon != null) {
-				desc += "\n" + Messages.get(this, "desc_weapon", Messages.titleCase(weapon.title()));
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_weapon", Messages.titleCase(weapon.title()))));
 			}
 
 			if (armor != null) {
-				desc += "\n" + Messages.get(this, "desc_armor", Messages.titleCase(armor.title()));
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_armor", Messages.titleCase(armor.title()))));
 			}
 
-			desc += "\n" + Messages.get(this, "desc_strength", ghostStrength());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_strength", ghostStrength())));
 
 		}
 		
@@ -284,7 +284,7 @@ public class DriedRose extends Artifact {
 	}
 
 	@Override
-	public String status(Hero hero) {
+	public LocalizedString status(Hero hero) {
 		if (ghost == null && ghostID != 0){
 			try {
 				findGhost(hero);
@@ -296,7 +296,7 @@ public class DriedRose extends Artifact {
 		if (ghost == null){
 			return super.status();
 		} else {
-			return ((ghost.getHP() *100) / ghost.getHT()) + "%";
+			return LocalizedString.raw(((ghost.getHP() *100) / ghost.getHT()) + "%");
 		}
 	}
 	
@@ -482,7 +482,7 @@ public class DriedRose extends Artifact {
 		
 		@Override
 		public LocalizedString prompt() {
-			return  "\"" + Messages.get(GhostHero.class, "direct_prompt") + "\"";
+			return  LocalizedString.concat("\"" , Messages.get(GhostHero.class, "direct_prompt"), "\"");
 		}
 	};
 
@@ -891,8 +891,8 @@ public class DriedRose extends Artifact {
 		private final ItemButton btnArmor;
 		private final DriedRose rose;
 		private boolean hidden = false;
-		private final String title;
-		private final String message;
+		private final LocalizedString title;
+		private final LocalizedString message;
 
 		WndGhostHero(final DriedRose rose, Hero hero){
 			super(hero);

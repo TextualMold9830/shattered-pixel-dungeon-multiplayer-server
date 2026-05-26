@@ -64,7 +64,7 @@ public class Sickle extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo(Hero hero) {
+	public LocalizedString abilityInfo(Hero hero) {
 		int bleedAmt = levelKnown ? Math.round(15f + 2.5f*buffedLvl()) : 15;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));

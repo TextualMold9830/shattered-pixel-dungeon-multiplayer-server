@@ -590,61 +590,61 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public LocalizedString info(Hero hero) {
-		String info = super.info();
+		LocalizedString info = super.info();
 		
 		if (levelKnown) {
 
-			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(hero), DRMax(hero), STRReq());
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "curr_absorb", tier, DRMin(hero), DRMax(hero), STRReq())));
 			
 			if (hero != null && STRReq() > hero.STR()) {
-				info += " " + Messages.get(Armor.class, "too_heavy");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Armor.class, "too_heavy")));
 			}
 		} else {
-			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0));
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0))));
 
 			if (hero != null && STRReq(0) > hero.STR()) {
-				info += " " + Messages.get(Armor.class, "probably_too_heavy");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Armor.class, "probably_too_heavy")));
 			}
 		}
 
 		switch (augment) {
 			case EVASION:
-				info += " " + Messages.get(Armor.class, "evasion");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Armor.class, "evasion")));
 				break;
 			case DEFENSE:
-				info += " " + Messages.get(Armor.class, "defense");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Armor.class, "defense")));
 				break;
 			case NONE:
 		}
 
 		if (isEquipped(hero) && !hasCurseGlyph() && hero.buff(HolyWard.HolyArmBuff.class) != null
 				&& (hero.subClass != HeroSubClass.PALADIN || glyph == null)){
-			info += "\n\n" + Messages.capitalize(Messages.get(Armor.class, "inscribed", Messages.get(HolyWard.class, "glyph_name", Messages.get(Glyph.class, "glyph"))));
-			info += " " + Messages.get(HolyWard.class, "glyph_desc");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Armor.class, "inscribed", Messages.get(HolyWard.class, "glyph_name", Messages.get(Glyph.class, "glyph"))))));
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(HolyWard.class, "glyph_desc")));
 		} else if (glyph != null  && (cursedKnown || !glyph.curse())) {
-			info += "\n\n" +  Messages.capitalize(Messages.get(Armor.class, "inscribed", glyph.name()));
-			if (glyphHardened) info += " " + Messages.get(Armor.class, "glyph_hardened");
-			info += " " + glyph.desc();
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Armor.class, "inscribed", glyph.name()))));
+			if (glyphHardened) info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Armor.class, "glyph_hardened")));
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", glyph.desc()));
 		} else if (glyphHardened){
-			info += "\n\n" + Messages.get(Armor.class, "hardened_no_glyph");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "hardened_no_glyph")));
 		}
 		
 		if (cursed && isEquipped(hero)) {
-			info += "\n\n" + Messages.get(Armor.class, "cursed_worn");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "cursed_worn")));
 		} else if (cursedKnown && cursed) {
-			info += "\n\n" + Messages.get(Armor.class, "cursed");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "cursed")));
 		} else if (seal != null) {
-			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level(), hero));
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level(), hero))));
 		} else if (!isIdentified() && cursedKnown){
 			if (glyph != null && glyph.curse()) {
-				info += "\n\n" + Messages.get(Armor.class, "weak_cursed");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "weak_cursed")));
 			} else {
-				info += "\n\n" + Messages.get(Armor.class, "not_cursed");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "not_cursed")));
 			}
 		}
 
 		if (seal != null) {
-			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level(), hero));
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level(), hero))));
 		}
 
 		return info;

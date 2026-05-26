@@ -337,7 +337,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public String status() {
+	public LocalizedString status() {
 		if (wand == null) return super.status();
 		else return wand.status();
 	}
@@ -347,22 +347,22 @@ public class MagesStaff extends MeleeWeapon {
 		if (wand == null) {
 			return super.name();
 		} else {
-			String name = Messages.get(wand, "staff_name");
+			LocalizedString name = Messages.get(wand, "staff_name");
 			return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name( name ) : name;
 		}
 	}
 
 	@Override
 	public LocalizedString info(Hero hero) {
-		String info = super.info();
+		LocalizedString info = super.info();
 
 		if (wand != null){
-			info += "\n\n" + Messages.get(this, "has_wand", Messages.get(wand, "name"));
-			if ((!cursed && !hasCurseEnchant()) || !cursedKnown)    info += " " + wand.statsDesc(hero);
-			else                                                    info += " " + Messages.get(this, "cursed_wand");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "has_wand", Messages.get(wand, "name"))));
+			if ((!cursed && !hasCurseEnchant()) || !cursedKnown)    info = LocalizedString.concat(info, LocalizedString.concat( " ", wand.statsDesc(hero)));
+			else                                                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(this, "cursed_wand")));
 
 			if (hero.subClass == HeroSubClass.BATTLEMAGE){
-				info += "\n\n" + Messages.get(wand, "bmage_desc");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(wand, "bmage_desc")));
 			}
 		}
 
@@ -445,20 +445,20 @@ public class MagesStaff extends MeleeWeapon {
 
 					LocalizedString bodyText = Messages.get(MagesStaff.class, "imbue_desc");
 					if (item.isIdentified()){
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_level", newLevel);
+						bodyText = LocalizedString.concat(bodyText, LocalizedString.concat("\n\n", Messages.get(MagesStaff.class, "imbue_level", newLevel)));
 					} else {
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_unknown", trueLevel());
+						bodyText = LocalizedString.concat(bodyText, LocalizedString.concat("\n\n", Messages.get(MagesStaff.class, "imbue_unknown", trueLevel())));
 					}
 
 					if (!item.cursedKnown || item.cursed){
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_cursed");
+						bodyText = LocalizedString.concat(bodyText, LocalizedString.concat("\n\n", Messages.get(MagesStaff.class, "imbue_cursed")));
 					}
 
 					if (owner.hasTalent(Talent.WAND_PRESERVATION)
 						&& owner.buff(Talent.WandPreservationCounter.class) == null){
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent");
+						bodyText = LocalizedString.concat(bodyText, LocalizedString.concat("\n\n", Messages.get(MagesStaff.class, "imbue_talent")));
 					} else {
-						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_lost");
+						bodyText = LocalizedString.concat(bodyText, LocalizedString.concat("\n\n", Messages.get(MagesStaff.class, "imbue_lost")));
 					}
 
 					GameScene.show(

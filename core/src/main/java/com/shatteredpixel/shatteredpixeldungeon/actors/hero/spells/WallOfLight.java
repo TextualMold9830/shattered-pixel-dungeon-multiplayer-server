@@ -56,7 +56,7 @@ public class WallOfLight extends TargetedClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", 1 + 2*hero.pointsInTalent(Talent.WALL_OF_LIGHT)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 1 + 2*hero.pointsInTalent(Talent.WALL_OF_LIGHT)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

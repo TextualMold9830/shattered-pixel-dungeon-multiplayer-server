@@ -78,7 +78,7 @@ public class DivineSense extends ClericSpell {
 	}
 
 	public LocalizedString desc(Hero hero){
-		return Messages.get(this, "desc", 4+4*hero.pointsInTalent(Talent.DIVINE_SENSE)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 4+4*hero.pointsInTalent(Talent.DIVINE_SENSE)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class DivineSenseTracker extends FlavourBuff {

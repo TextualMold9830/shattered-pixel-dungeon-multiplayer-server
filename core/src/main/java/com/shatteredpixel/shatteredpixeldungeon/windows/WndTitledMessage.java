@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -35,6 +36,9 @@ public class WndTitledMessage extends Window {
 	protected static final int GAP	= 2;
 	//Todo: send this
 	public WndTitledMessage( Image icon, String title, String message, Hero hero ) {
+		this(icon, LocalizedString.raw(title), LocalizedString.raw(message), hero);
+	}
+	public WndTitledMessage(Image icon, LocalizedString title, LocalizedString message, Hero hero ) {
 		super(hero);
 		//this( new IconTitle( icon, title ), message, hero );
 
@@ -47,6 +51,10 @@ public class WndTitledMessage extends Window {
 	}
 	//Todo: send this
 	public WndTitledMessage( Component titlebar, String message, Hero hero ) {
+		super(hero);
+	}
+
+	public WndTitledMessage( Component titlebar, LocalizedString message, Hero hero ) {
 		super(hero);
 	}
 

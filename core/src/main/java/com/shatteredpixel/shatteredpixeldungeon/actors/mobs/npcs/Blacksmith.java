@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -103,7 +104,7 @@ public class Blacksmith extends NPC {
 				case CLERIC:    msg1 += Messages.get(Blacksmith.this, "intro_quest_cleric"); break;
 			}
 
-			msg1 += "\n\n" + Messages.get(Blacksmith.this, "intro_quest_start");
+			msg1 += LocalizedString.concat("\n\n", Messages.get(Blacksmith.this, "intro_quest_start"));
 
 			switch (Quest.type){
 				case Quest.CRYSTAL: msg2 += Messages.get(Blacksmith.this, "intro_quest_crystal"); break;
@@ -142,11 +143,11 @@ public class Blacksmith extends NPC {
 			
 		} else if (!Quest.completed) {
 
-			String msg = Messages.get(this, "reminder") + "\n\n";
+			LocalizedString msg = LocalizedString.concat(Messages.get(this, "reminder"), "\n\n");
 			switch (Quest.type){
-				case Quest.CRYSTAL: msg += Messages.get(Blacksmith.this, "reminder_crystal"); break;
-				case Quest.GNOLL:   msg += Messages.get(Blacksmith.this, "reminder_gnoll"); break;
-				case Quest.FUNGI:   msg += Messages.get(Blacksmith.this, "reminder_fungi"); break;
+				case Quest.CRYSTAL: msg = LocalizedString.concat(msg, Messages.get(Blacksmith.this, "reminder_crystal")); break;
+				case Quest.GNOLL:   msg = LocalizedString.concat(msg, Messages.get(Blacksmith.this, "reminder_gnoll")); break;
+				case Quest.FUNGI:   msg = LocalizedString.concat(msg, Messages.get(Blacksmith.this, "reminder_fungi")); break;
 			}
 				tell(msg, hero);
 
@@ -173,7 +174,7 @@ public class Blacksmith extends NPC {
 		return true;
 	}
 	
-	private void tell( String text, Hero hero ) {
+	private void tell( LocalizedString text, Hero hero ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {

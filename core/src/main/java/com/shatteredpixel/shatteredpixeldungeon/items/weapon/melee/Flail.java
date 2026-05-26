@@ -127,7 +127,7 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo(Hero hero) {
+	public LocalizedString abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 8 + 2*buffedLvl() : 8;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));

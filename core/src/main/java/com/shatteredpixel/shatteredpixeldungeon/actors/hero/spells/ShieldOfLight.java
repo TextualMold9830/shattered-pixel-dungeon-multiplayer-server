@@ -108,7 +108,7 @@ public class ShieldOfLight extends TargetedClericSpell {
 	public LocalizedString desc(Hero hero) {
 		int min = 1 + hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
 		int max = 2*min;
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", min, max), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class ShieldOfLightTracker extends FlavourBuff {

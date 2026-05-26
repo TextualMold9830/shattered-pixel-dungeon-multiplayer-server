@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+//should not be sent
 public class WndSettings extends WndTabbed {
 
 	private static final int WIDTH_P	    = 122;
@@ -235,7 +237,7 @@ public class WndSettings extends WndTabbed {
 			sep1 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep1);
 
-			String fullscreenText = Messages.get(this, "fullscreen");
+			LocalizedString fullscreenText = Messages.get(this, "fullscreen");
 			if (DeviceCompat.isAndroid()){
 				fullscreenText = Messages.get(this, "hide_navigation");
 			} else if (DeviceCompat.isiOS()){
@@ -1106,7 +1108,7 @@ public class WndSettings extends WndTabbed {
 			add(txtTranifex);
 
 			if (currLang != Languages.ENGLISH) {
-				String credText = Messages.titleCase(Messages.get(this, "credits"));
+				LocalizedString credText = Messages.titleCase(Messages.get(this, "credits"));
 				btnCredits = new RedButton(credText, credText.length() > 9 ? 6 : 9) {
 					@Override
 					protected void onClick() {

@@ -56,7 +56,7 @@ public class RecallInscription extends ClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", hero.pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", hero.pointsInTalent(Talent.RECALL_INSCRIPTION) == 2 ? 300 : 10), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

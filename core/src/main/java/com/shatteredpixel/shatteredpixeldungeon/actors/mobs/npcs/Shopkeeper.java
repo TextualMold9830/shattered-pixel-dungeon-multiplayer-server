@@ -244,7 +244,7 @@ public class Shopkeeper extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				String[] options = new String[2+ buybackItems.size()];
+				LocalizedString[] options = new LocalizedString[2+ buybackItems.size()];
 				int maxLen = PixelScene.landscape() ? 30 : 25;
 				int i = 0;
 				options[i++] = Messages.get(Shopkeeper.this, "sell");
@@ -309,13 +309,13 @@ public class Shopkeeper extends NPC {
 		return true;
 	}
 
-	public String chatText(Hero hero){
+	public LocalizedString chatText(Hero hero){
 		if (hero.buff(AscensionChallenge.class) != null){
 			return Messages.get(this, "talk_ascent");
 		}
 		switch (Dungeon.depth){
 			case 6: default:
-				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + hero.heroClass.name());
+				return LocalizedString.concat(Messages.get(this, "talk_prison_intro"), "\n\n", Messages.get(this, "talk_prison_" + hero.heroClass.name()));
 			case 11:
 				return Messages.get(this, "talk_caves");
 			case 16:

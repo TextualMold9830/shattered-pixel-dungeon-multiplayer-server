@@ -70,9 +70,9 @@ public class HolyWeapon extends ClericSpell {
 	public LocalizedString desc(Hero hero){
 		LocalizedString desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.PALADIN){
-			desc += "\n\n" + Messages.get(this, "desc_paladin");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_paladin")));
 		}
-		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(desc, "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class HolyWepBuff extends FlavourBuff {

@@ -202,9 +202,9 @@ public class HornOfPlenty extends Artifact {
 		if ( isEquipped( hero ) ){
 			if (!cursed) {
 				if (level() < levelCap)
-					desc += "\n\n" +Messages.get(this, "desc_hint");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_hint")));
 			} else {
-				desc += "\n\n" +Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 		}
 

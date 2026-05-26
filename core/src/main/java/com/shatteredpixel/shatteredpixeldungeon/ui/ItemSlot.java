@@ -231,7 +231,7 @@ public class ItemSlot extends Button {
 			status.visible = extra.visible = level.visible = true;
 		}
 
-		status.text( item.status() );
+		status.text(item.status().toString());
 
 		//thrown weapons on their last use show quantity in orange, unless they are single-use
 		//FIXME
@@ -254,7 +254,7 @@ public class ItemSlot extends Button {
 
 			if (item.levelKnown){
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
-				extra.text( Messages.format( TXT_STRENGTH, str ) );
+				extra.text(Messages.format( TXT_STRENGTH, str ).toString());
 				//FIXME
 				//if (Dungeon.hero != null && str > Dungeon.heroes.STR()) {
 				if (false) {
@@ -268,7 +268,7 @@ public class ItemSlot extends Button {
 				}
 			} else {
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq(0) : ((Armor)item).STRReq(0);
-				extra.text( Messages.format( TXT_TYPICAL_STR, str ) );
+				extra.text(Messages.format( TXT_TYPICAL_STR, str ).toString());
 				extra.hardlight( WARNING );
 			}
 			extra.measure();
@@ -284,7 +284,7 @@ public class ItemSlot extends Button {
 		int buffedLvl = trueLvl;
 
 		if (trueLvl != 0 || buffedLvl != 0) {
-			level.text( Messages.format( TXT_LEVEL, buffedLvl ) );
+			level.text(Messages.format( TXT_LEVEL, buffedLvl ).toString());
 			level.measure();
 			if (trueLvl == buffedLvl || buffedLvl <= 0) {
 				if (buffedLvl > 0){
@@ -357,7 +357,7 @@ public class ItemSlot extends Button {
 	@Override
 	protected String hoverText() {
 		if (item != null && item.name() != null) {
-			return Messages.titleCase(item.name());
+			return Messages.titleCase(item.name()).toString();
 		} else {
 			return super.hoverText();
 		}

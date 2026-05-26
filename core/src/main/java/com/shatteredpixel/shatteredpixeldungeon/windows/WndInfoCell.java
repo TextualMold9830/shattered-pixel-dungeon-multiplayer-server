@@ -21,17 +21,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
 import org.json.JSONObject;
@@ -80,7 +79,7 @@ public class WndInfoCell extends Window {
 		}
 	}
 
-	public static String cellName( int cell ){
+	public static LocalizedString cellName(int cell ){
 
 		CustomTilemap customTile = null;
 		int x = cell % Dungeon.level.width();
@@ -148,7 +147,7 @@ public class WndInfoCell extends Window {
 			for (Blob blob : Dungeon.level.blobs.values()) {
 				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
 					if (desc.length() > 0) {
-						desc += "\n\n";
+						desc = LocalizedString.concat(desc, "\n\n");
 					}
 					desc += blob.tileDesc();
 				}

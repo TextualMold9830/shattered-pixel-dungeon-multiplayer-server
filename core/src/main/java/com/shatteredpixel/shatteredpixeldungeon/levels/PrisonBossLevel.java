@@ -822,7 +822,7 @@ public class PrisonBossLevel extends Level {
 		}
 		
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int cell = (this.tileX+tileX) + Dungeon.level.width()*(this.tileY+tileY);
 			if (Dungeon.level.traps.get(cell) != null){
 				return Messages.titleCase(Dungeon.level.traps.get(cell).name());
@@ -831,7 +831,7 @@ public class PrisonBossLevel extends Level {
 		}
 		
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int cell = (this.tileX+tileX) + Dungeon.level.width()*(this.tileY+tileY);
 			if (Dungeon.level.traps.get(cell) != null){
 				return Dungeon.level.traps.get(cell).desc();

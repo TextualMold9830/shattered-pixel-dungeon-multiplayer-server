@@ -214,7 +214,7 @@ public abstract class YogFist extends Mob {
 
 	@Override
 	public LocalizedString description() {
-		return LocalizedString.concat(Messages.get(YogFist.class, "desc"), "\n\n", Messages.get(this, "desc"));
+		return LocalizedString.concat(Messages.get(YogFist.class, "desc"), "\n\n" , Messages.get(this, "desc"));
 	}
 
 	public static final String RANGED_COOLDOWN = "ranged_cooldown";

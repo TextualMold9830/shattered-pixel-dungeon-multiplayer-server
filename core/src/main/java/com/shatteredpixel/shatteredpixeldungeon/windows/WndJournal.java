@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -778,7 +779,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					sprite.lightness(0);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_item");
-					desc += "\n\n" + Messages.get(item, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(item, "discover_hint"));
 				} else {
 					title = Messages.titleCase( item.name() );
 					//some items don't include direct stats, generally when they're not applicable
@@ -790,15 +791,15 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 
 					if (Catalog.useCount(itemClass) > 1) {
 						if (item.isUpgradable() || item instanceof Artifact) {
-							desc += "\n\n" + Messages.get(CatalogTab.class, "upgrade_count", Catalog.useCount(itemClass));
+							desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "upgrade_count", Catalog.useCount(itemClass)));
 						} else if (item instanceof Trinket) {
-							desc += "\n\n" + Messages.get(CatalogTab.class, "trinket_count", Catalog.useCount(itemClass));
+							desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "trinket_count", Catalog.useCount(itemClass)));
 						} else if (item instanceof Gold) {
-							desc += "\n\n" + Messages.get(CatalogTab.class, "gold_count", Catalog.useCount(itemClass));
+							desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "gold_count", Catalog.useCount(itemClass)));
 						} else if (item instanceof EnergyCrystal) {
-							desc += "\n\n" + Messages.get(CatalogTab.class, "energy_count", Catalog.useCount(itemClass));
+							desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "energy_count", Catalog.useCount(itemClass)));
 						} else {
-							desc += "\n\n" + Messages.get(CatalogTab.class, "use_count", Catalog.useCount(itemClass));
+							desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "use_count", Catalog.useCount(itemClass)));
 						}
 					}
 
@@ -828,7 +829,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					sprite.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_enchantment");
-					desc += "\n\n" + Messages.get(ench, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(ench, "discover_hint"));
 				}
 
 			} else if (Armor.Glyph.class.isAssignableFrom(itemClass)){
@@ -844,7 +845,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					sprite.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_glyph");
-					desc += "\n\n" + Messages.get(glyph, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(glyph, "discover_hint"));
 				}
 
 			}
@@ -913,7 +914,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					title = Messages.titleCase(mob.name());
 					desc = mob.description();
 					if (Bestiary.encounterCount(entityCls) > 1){
-						desc += "\n\n" + Messages.get(CatalogTab.class, "enemy_count", Bestiary.encounterCount(entityCls));
+						desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "enemy_count", Bestiary.encounterCount(entityCls)));
 					}
 				} else {
 					icon.lightness(0f);
@@ -925,7 +926,7 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					} else {
 						desc = Messages.get(CatalogTab.class, "not_seen_ally");
 					}
-					desc += "\n\n" + Messages.get(mob, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(mob, "discover_hint"));
 				}
 
 				//we have to clip the bounds of the sprite if it's too large
@@ -953,13 +954,13 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					title = Messages.titleCase(trap.name());
 					desc = trap.desc();
 					if (Bestiary.encounterCount(entityCls) > 1){
-						desc += "\n\n" + Messages.get(CatalogTab.class, "trap_count", Bestiary.encounterCount(entityCls));
+						desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "trap_count", Bestiary.encounterCount(entityCls)));
 					}
 				} else {
 					icon.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_trap");
-					desc += "\n\n" + Messages.get(trap, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(trap, "discover_hint"));
 				}
 
 		} else if (Plant.class.isAssignableFrom(entityCls)){
@@ -971,13 +972,13 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 					title = Messages.titleCase(plant.name());
 					desc = plant.desc();
 					if (Bestiary.encounterCount(entityCls) > 1){
-						desc += "\n\n" + Messages.get(CatalogTab.class, "plant_count", Bestiary.encounterCount(entityCls));
+						desc += LocalizedString.concat("\n\n", Messages.get(CatalogTab.class, "plant_count", Bestiary.encounterCount(entityCls)));
 					}
 				} else {
 					icon.lightness(0f);
 					title = "???";
 					desc = Messages.get(CatalogTab.class, "not_seen_plant");
-					desc += "\n\n" + Messages.get(plant, "discover_hint");
+					desc += LocalizedString.concat("\n\n", Messages.get(plant, "discover_hint"));
 				}
 
 			}
@@ -1044,10 +1045,10 @@ private static float[] scrollPositions = new float[NUM_BUTTONS];
 						} else {
 							if (ShatteredPixelDungeon.scene() instanceof GameScene){
 								GameScene.show(new WndJournalItem(sprite, "???",
-										Messages.get(CatalogTab.class, "not_seen_lore") + "\n\n" + doc.discoverHint()));
+										LocalizedString.concat(Messages.get(CatalogTab.class, "not_seen_lore"), "\n\n", doc.discoverHint())));
 							} else {
 								ShatteredPixelDungeon.scene().addToFront(new WndJournalItem(sprite, "???",
-										Messages.get(CatalogTab.class, "not_seen_lore") + "\n\n" + doc.discoverHint()));
+										LocalizedString.concat(Messages.get(CatalogTab.class, "not_seen_lore"), "\n\n", doc.discoverHint())));
 							}
 
 						}

@@ -210,7 +210,7 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", level()+2);
 		else

@@ -177,10 +177,10 @@ public class Artifact extends KindofMisc {
 	@Override
 	public LocalizedString info(Hero hero) {
 		if (cursed && cursedKnown && !isEquipped(hero)) {
-			return super.info() + "\n\n" + Messages.get(Artifact.class, "curse_known");
+			return LocalizedString.concat(super.info(), "\n\n", Messages.get(Artifact.class, "curse_known"));
 			
 		} else if (!isIdentified() && cursedKnown && !isEquipped(hero)) {
-			return super.info() + "\n\n" + Messages.get(Artifact.class, "not_cursed");
+			return LocalizedString.concat(super.info(), "\n\n", Messages.get(Artifact.class, "not_cursed"));
 			
 		} else {
 			return super.info();
@@ -189,7 +189,7 @@ public class Artifact extends KindofMisc {
 	}
 
 	@Override
-	public String status() {
+	public LocalizedString status() {
 		
 		//if the artifact isn't IDed, or is cursed, don't display anything
 		if (!isIdentified() || cursed){

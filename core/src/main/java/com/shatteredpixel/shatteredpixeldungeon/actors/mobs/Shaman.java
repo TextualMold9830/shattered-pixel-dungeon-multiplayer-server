@@ -147,7 +147,7 @@ public abstract class Shaman extends Mob {
 	
 	@Override
 	public LocalizedString description() {
-		return super.description() + "\n\n" + Messages.get(this, "spell_desc");
+		return LocalizedString.concat(super.description(), "\n\n", Messages.get(this, "spell_desc"));
 	}
 	
 	public static class RedShaman extends Shaman {

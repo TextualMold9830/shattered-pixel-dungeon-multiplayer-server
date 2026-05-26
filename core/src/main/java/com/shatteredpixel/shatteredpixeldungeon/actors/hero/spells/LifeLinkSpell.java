@@ -48,7 +48,7 @@ public class LifeLinkSpell extends ClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", 4 + 2*hero.pointsInTalent(Talent.LIFE_LINK), 30 + 5*hero.pointsInTalent(Talent.LIFE_LINK)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 4 + 2*hero.pointsInTalent(Talent.LIFE_LINK), 30 + 5*hero.pointsInTalent(Talent.LIFE_LINK)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

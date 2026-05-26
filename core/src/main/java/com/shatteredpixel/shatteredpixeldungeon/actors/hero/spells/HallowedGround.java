@@ -162,7 +162,7 @@ public class HallowedGround extends TargetedClericSpell {
 
 	public LocalizedString desc(Hero hero){
 		int area = 1 + 2*hero.pointsInTalent(Talent.HALLOWED_GROUND);
-		return Messages.get(this, "desc", area) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", area), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class HallowedTerrain extends Blob {

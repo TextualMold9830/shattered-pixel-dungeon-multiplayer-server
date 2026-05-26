@@ -368,9 +368,9 @@ public class Berserk extends ShieldBuff implements ActionIndicator.Action {
 				return Messages.get(this, "berserk_desc", shielding());
 			case RECOVERING:
 				if (levelRecovery > 0){
-					return Messages.get(this, "recovering_desc") + "\n\n" + Messages.get(this, "recovering_desc_levels", levelRecovery);
+					return LocalizedString.concat(Messages.get(this, "recovering_desc"), "\n\n", Messages.get(this, "recovering_desc_levels", levelRecovery));
 				} else {
-					return Messages.get(this, "recovering_desc") + "\n\n" + Messages.get(this, "recovering_desc_turns", turnRecovery);
+					return LocalizedString.concat(Messages.get(this, "recovering_desc"), "\n\n", Messages.get(this, "recovering_desc_turns", turnRecovery));
 				}
 		}
 		

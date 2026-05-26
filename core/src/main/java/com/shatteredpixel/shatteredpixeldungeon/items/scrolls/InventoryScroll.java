@@ -84,7 +84,7 @@ public abstract class InventoryScroll extends Scroll {
 
 	}
 
-	private String inventoryTitle() {
+	private LocalizedString inventoryTitle() {
 		return Messages.get(this, "inv_title");
 	}
 

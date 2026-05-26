@@ -131,11 +131,11 @@ public class Explosive extends Weapon.Enchantment {
 
 	@Override
 	public LocalizedString desc() {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 		if (durability > 50){
-			desc += " " + Messages.get(this, "desc_cool");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_cool")));
 		} else if (durability > 10){
-			desc += " " + Messages.get(this, "desc_warm");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_warm")));
 		} else {
 			desc += " _" + Messages.get(this, "desc_hot") + "_";
 		}

@@ -471,7 +471,7 @@ public class Potion extends Item {
 		
 		@Override
 		public LocalizedString info() {
-			return "";
+			return LocalizedString.raw("");
 		}
 	}
 	
@@ -569,7 +569,7 @@ public class Potion extends Item {
 				
 				@Override
 				public LocalizedString info() {
-					return "";
+					return LocalizedString.raw("");
 				}
 			};
 		}

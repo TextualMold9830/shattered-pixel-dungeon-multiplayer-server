@@ -443,18 +443,18 @@ public class ElementalBlast extends ArmorAbility {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+		LocalizedString desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
 			MagesStaff staff = hero.belongings.getItem(MagesStaff.class);
 			if (staff != null && staff.wandClass() != null){
-				desc += "\n\n" + Messages.get(staff.wandClass(), "eleblast_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(staff.wandClass(), "eleblast_desc")));
 			} else {
-				desc += "\n\n" + Messages.get(this, "generic_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 			}
 		} else {
-			desc += "\n\n" + Messages.get(this, "generic_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 		}
-		desc += "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "cost", (int)baseChargeUse)));
 		return desc;
 	}
 

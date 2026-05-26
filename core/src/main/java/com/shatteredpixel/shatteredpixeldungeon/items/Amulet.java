@@ -137,12 +137,12 @@ public class Amulet extends Item {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if (hero.buff(AscensionChallenge.class) == null){
-			desc += "\n\n" + Messages.get(this, "desc_origins");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_origins")));
 		} else {
-			desc += "\n\n" + Messages.get(this, "desc_ascent");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_ascent")));
 		}
 
 		return desc;

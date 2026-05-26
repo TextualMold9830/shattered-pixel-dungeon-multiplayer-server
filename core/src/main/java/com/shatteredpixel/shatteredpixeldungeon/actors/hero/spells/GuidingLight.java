@@ -120,11 +120,11 @@ public class GuidingLight extends TargetedClericSpell {
 	}
 
 	public LocalizedString desc(Hero hero){
-		String desc = Messages.get(this, "desc");
+		LocalizedString desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.PRIEST){
-			desc += "\n\n" + Messages.get(this, "desc_priest");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_priest")));
 		}
-		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(desc, "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class GuidingLightPriestCooldown extends FlavourBuff {
@@ -168,12 +168,12 @@ public class GuidingLight extends TargetedClericSpell {
 
 		@Override
 		public LocalizedString desc() {
-			String desc = super.desc();
+			LocalizedString desc = super.desc();
 
 			if (source.subClass == HeroSubClass.PRIEST){
-				desc += "\n\n" + Messages.get(this, "desc_priest");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_priest")));
 			} else if (source.heroClass != HeroClass.CLERIC){
-				desc += "\n\n" + Messages.get(this, "desc_generic");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_generic")));
 			}
 
 			return desc;

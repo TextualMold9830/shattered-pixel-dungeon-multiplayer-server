@@ -58,7 +58,7 @@ public class Smite extends TargetedClericSpell {
 	public LocalizedString desc(Hero hero) {
 		int min = 5 + hero.lvl/2;
 		int max = 10 + hero.lvl;
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", min, max), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

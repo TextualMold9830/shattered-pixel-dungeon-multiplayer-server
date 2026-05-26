@@ -292,7 +292,7 @@ public class CustomNoteButton extends IconButton {
 			add(title);
 			title.setRect(0, Math.min(height+2, PixelScene.uiCamera.height-50), width/2-1, 16);
 
-			String editBodyText = rec.desc().isEmpty() ? Messages.get(CustomNoteWindow.class, "add_text") : Messages.get(CustomNoteWindow.class, "edit_text");
+			LocalizedString editBodyText = rec.desc().isEmpty() ? Messages.get(CustomNoteWindow.class, "add_text") : Messages.get(CustomNoteWindow.class, "edit_text");
 			RedButton body = new RedButton(editBodyText){
 				@Override
 				protected void onClick() {
@@ -352,7 +352,7 @@ public class CustomNoteButton extends IconButton {
 		}
 	}
 
-	private static void addNote(Notes.CustomRecord note, String promptTitle, String prompttext){
+	private static void addNote(Notes.CustomRecord note, LocalizedString promptTitle, LocalizedString prompttext){
 		GameScene.show(new WndTextInput(promptTitle,
 				prompttext,
 				"",

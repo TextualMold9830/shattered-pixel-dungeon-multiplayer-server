@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -133,9 +134,9 @@ public class Imp extends NPC {
 			}
 			
 		} else {
-			tell( Messages.get(this, "intro") + "\n\n" + (Quest.alternative ?
+			tell( LocalizedString.concat(Messages.get(this, "intro"), "\n\n", (Quest.alternative ?
 					Messages.get(this, "monks_1", Messages.titleCase(hero.name()))
-					: Messages.get(this, "golems_1", Messages.titleCase(hero.name()))), hero );
+					: Messages.get(this, "golems_1", Messages.titleCase(hero.name())))), hero );
 			Quest.given = true;
 			Quest.completed = false;
 		}
@@ -143,7 +144,7 @@ public class Imp extends NPC {
 		return true;
 	}
 	
-	private void tell( String text, Hero hero ) {
+	private void tell( LocalizedString text, Hero hero ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {

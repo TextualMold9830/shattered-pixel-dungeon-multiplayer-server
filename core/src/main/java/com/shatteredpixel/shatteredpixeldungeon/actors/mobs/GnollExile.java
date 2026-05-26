@@ -130,11 +130,11 @@ public class GnollExile extends Gnoll {
 
 	@Override
 	public LocalizedString description() {
-		String desc = super.description();
+		LocalizedString desc = super.description();
 		if (state == PASSIVE){
-			desc += "\n\n" + Messages.get(this, "desc_passive");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_passive")));
 		} else {
-			desc += "\n\n" + Messages.get(this, "desc_aggro");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_aggro")));
 		}
 		return desc;
 	}
@@ -158,7 +158,7 @@ public class GnollExile extends Gnoll {
 			for (Hero hero : Dungeon.heroes) {
 				if (fieldOfView[hero.pos] /*&& Dungeon.level.heroFOV[pos]*/) {
 					if (seenNotifyCooldown <= 0) {
-						GLog.p(Messages.get(GnollExile.class, "seen_passive"), hero);
+						GLog.p(Messages.get(GnollExile.class, "seen_passive", hero));
 					}
 					seenNotifyCooldown = 10;
 					didNotify = true;

@@ -207,7 +207,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			result = Messages.get(this, "desc_intro_starving");
 		}
 
-		result += Messages.get(this, "desc");
+		result = LocalizedString.concat(result, Messages.get(this, "desc"));
 
 		return result;
 	}

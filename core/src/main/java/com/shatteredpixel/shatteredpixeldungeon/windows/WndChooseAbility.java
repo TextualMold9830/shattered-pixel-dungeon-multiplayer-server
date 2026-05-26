@@ -60,7 +60,7 @@ public class WndChooseAbility extends Window {
 			@Override
 			protected void onClick() {
 				super.onClick();
-				GameScene.show(new WndOptions(Icons.SHUFFLE.get(),
+				GameScene.show(new WndOptions(hero, Icons.SHUFFLE.get(),
 						Messages.get(WndChooseAbility.class, "random_title"),
 						Messages.get(WndChooseAbility.class, "random_sure"),
 						Messages.get(WndChooseAbility.class, "yes"),

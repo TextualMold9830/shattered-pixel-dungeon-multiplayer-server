@@ -194,24 +194,24 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		
 		AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 		if (target instanceof Hero) {
-			desc += "\n\n" + Messages.get(this, "desc_dmg",
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_dmg",
 					(int) (lvl.baseDmgBonus * 100),
 					(int) (lvl.KOThreshold((Hero) target) * 100),
-					(int) (lvl.KOThreshold((Hero) target) * 20));
+					(int) (lvl.KOThreshold((Hero) target) * 20))));
 		}
 		if (lvl.damageRolls > 1){
-			desc += " " + Messages.get(this, "desc_dmg_likely");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_dmg_likely")));
 		}
 		
 		if (lvl.blinkDistance(target) > 0){
-			desc += "\n\n" + Messages.get(this, "desc_blink", lvl.blinkDistance(target));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_blink", lvl.blinkDistance(target))));
 		}
 		
-		desc += "\n\n" + Messages.get(this, "desc_invis_time", turnsInvis);
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_invis_time", turnsInvis)));
 		
 		if (lvl.ordinal() != AttackLevel.values().length-1){
 			AttackLevel next = AttackLevel.values()[lvl.ordinal()+1];
-			desc += "\n" + Messages.get(this, "desc_invis_next", next.turnsReq);
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_invis_next", next.turnsReq)));
 		}
 		
 		return desc;

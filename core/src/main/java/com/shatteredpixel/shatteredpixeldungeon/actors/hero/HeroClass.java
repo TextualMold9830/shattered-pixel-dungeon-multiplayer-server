@@ -349,8 +349,8 @@ public enum HeroClass {
 		}
 	}
 	
-	public String unlockMsg() {
-		return shortDesc() + "\n\n" + Messages.get(HeroClass.class, name()+"_unlock");
+	public LocalizedString unlockMsg() {
+		return LocalizedString.concat(shortDesc(), "\n\n", Messages.get(HeroClass.class, name()+"_unlock"));
 	}
 
 }

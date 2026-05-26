@@ -188,9 +188,9 @@ public class Statue extends Mob {
 
 	@Override
 	public LocalizedString description() {
-		String desc = Messages.get(this, "desc");
+		LocalizedString desc = Messages.get(this, "desc");
 		if (weapon != null){
-			desc += "\n\n" + Messages.get(this, "desc_weapon", weapon.name());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_weapon", weapon.name())));
 		}
 		return desc;
 	}

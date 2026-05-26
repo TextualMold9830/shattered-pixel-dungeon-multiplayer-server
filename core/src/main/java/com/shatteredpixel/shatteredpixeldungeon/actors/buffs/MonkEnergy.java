@@ -113,9 +113,9 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public LocalizedString desc() {
-		String desc = Messages.get(this, "desc", (int)energy, energyCap());
+		LocalizedString desc = Messages.get(this, "desc", (int)energy, energyCap());
 		if (cooldown > 0){
-			desc += "\n\n" + Messages.get(this, "desc_cooldown", cooldown);
+			desc = LocalizedString.concat(desc, "\n\n", Messages.get(this, "desc_cooldown", cooldown));
 		}
 		return desc;
 	}
@@ -293,7 +293,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		}
 
 
-		public String desc(Hero hero){
+		public LocalizedString desc(Hero hero){
 			if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
 				return Messages.get(this, "empower_desc");
 			} else {
@@ -307,7 +307,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			return buff.energy >= energyCost();
 		}
 
-		public String targetingPrompt(){
+		public LocalizedString targetingPrompt(){
 			return null; //return a string if uses targeting
 		}
 
@@ -333,7 +333,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 
 			@Override
-			public String desc(Hero hero) {
+			public LocalizedString desc(Hero hero) {
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
 					//1.5x hero unarmed damage (rounds the result)
 					return Messages.get(this, "empower_desc", 2, Math.round(1.5f*(hero.STR()-8)));
@@ -345,7 +345,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			}
 
 			@Override
-			public String targetingPrompt() {
+			public LocalizedString targetingPrompt() {
 				return Messages.get(MeleeWeapon.class, "prompt");
 			}
 
@@ -464,7 +464,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			}
 
 			@Override
-			public String targetingPrompt() {
+			public LocalizedString targetingPrompt() {
 				return Messages.get(this, "prompt");
 			}
 
@@ -530,7 +530,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			}
 
 			@Override
-			public String desc(Hero hero) {
+			public LocalizedString desc(Hero hero) {
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
 					//9x hero unarmed damage
 					return Messages.get(this, "empower_desc", 9, 9*(hero.STR()-8));
@@ -541,7 +541,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			}
 
 			@Override
-			public String targetingPrompt() {
+			public LocalizedString targetingPrompt() {
 				return Messages.get(MeleeWeapon.class, "prompt");
 			}
 

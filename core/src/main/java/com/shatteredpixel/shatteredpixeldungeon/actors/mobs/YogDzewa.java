@@ -582,10 +582,10 @@ public class YogDzewa extends Mob {
 
 	@Override
 	public LocalizedString description() {
-		String desc = super.description();
+		LocalizedString desc = super.description();
 
 		if (Statistics.spawnersAlive > 0){
-			desc += "\n\n" + Messages.get(this, "desc_spawners");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_spawners")));
 		}
 
 		return desc;

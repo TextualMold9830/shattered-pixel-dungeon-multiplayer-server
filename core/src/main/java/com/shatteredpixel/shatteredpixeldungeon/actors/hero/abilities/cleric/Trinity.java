@@ -118,9 +118,8 @@ public class Trinity extends ArmorAbility {
 				RedButton btnBody = null;
 				if (bodyForm instanceof Weapon.Enchantment){
 
-					btnBody = new RedButton(Messages.get(WndUseTrinity.class, "body",
-							Messages.titleCase(((Weapon.Enchantment)bodyForm).name()))
-							+ " " + trinityItemUseText(bodyForm.getClass(), hero), 6){
+					btnBody = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "body",
+							Messages.titleCase(((Weapon.Enchantment)bodyForm).name())), " ", trinityItemUseText(bodyForm.getClass(), hero)), 6){
 						@Override
 						protected void onClick() {
 							if (hero.belongings.weapon() != null &&
@@ -152,9 +151,8 @@ public class Trinity extends ArmorAbility {
 						btnBody.icon(new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, ((Weapon.Enchantment) bodyForm).glowing()));
 					}
 				} else if (bodyForm instanceof Armor.Glyph){
-					btnBody = new RedButton(Messages.get(WndUseTrinity.class, "body",
-							Messages.titleCase(((Armor.Glyph)bodyForm).name()))
-							+ " " + trinityItemUseText(bodyForm.getClass(), hero), 6){
+					btnBody = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "body",
+							Messages.titleCase(((Armor.Glyph)bodyForm).name())), " ", trinityItemUseText(bodyForm.getClass(), hero)), 6){
 						@Override
 						protected void onClick() {
 							if (hero.belongings.armor() != null &&
@@ -196,9 +194,8 @@ public class Trinity extends ArmorAbility {
 			}
 
 			if (mindForm != null){
-				RedButton btnMind = new RedButton(Messages.get(WndUseTrinity.class, "mind",
-						Messages.titleCase(((Item)mindForm).name()))
-						+ " " + trinityItemUseText(mindForm.getClass(), hero), 6){
+				RedButton btnMind = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "mind",
+						Messages.titleCase(((Item)mindForm).name())), " ", trinityItemUseText(mindForm.getClass(), hero)), 6){
 					@Override
 					protected void onClick() {
 						hide();
@@ -229,9 +226,8 @@ public class Trinity extends ArmorAbility {
 			}
 
 			if (spiritForm != null){
-				RedButton btnSpirit = new RedButton(Messages.get(WndUseTrinity.class, "spirit",
-						Messages.titleCase(((Item)spiritForm).name()))
-						+ " " + trinityItemUseText(spiritForm.getClass(), hero), 6){
+				RedButton btnSpirit = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "spirit",
+						Messages.titleCase(((Item)spiritForm).name())), " ", trinityItemUseText(spiritForm.getClass(), hero)), 6){
 					@Override
 					protected void onClick() {
 						if ((hero.belongings.ring() != null && hero.belongings.ring().getClass().equals(spiritForm.getClass()))
@@ -431,7 +427,7 @@ public class Trinity extends ArmorAbility {
 		public WndItemConfirm(Window parentWnd, Item item, HolyTome tome, ClericSpell spell, Hero hero){
 			super(new ItemSprite(item),  Messages.titleCase(getName(item)), getText(item, hero), hero);
 
-			String text;
+			LocalizedString text;
 			if (spell == BodyForm.INSTANCE){
 				text = Messages.get(this, "body");
 			} else if (spell == MindForm.INSTANCE){
@@ -480,11 +476,11 @@ public class Trinity extends ArmorAbility {
 
 		private static LocalizedString getText(Item item, Hero hero){
 			if (item instanceof MeleeWeapon){
-				return ((MeleeWeapon) item).enchantment.desc() + "\n\n" + trinityItemUseText(((MeleeWeapon) item).enchantment.getClass(), hero);
+				return LocalizedString.concat(((MeleeWeapon) item).enchantment.desc(), "\n\n", trinityItemUseText(((MeleeWeapon) item).enchantment.getClass(), hero));
 			} else if (item instanceof Armor){
-				return ((Armor) item).glyph.desc() + "\n\n" + trinityItemUseText(((Armor) item).glyph.getClass(), hero);
+				return LocalizedString.concat(((Armor) item).glyph.desc(), "\n\n", trinityItemUseText(((Armor) item).glyph.getClass(), hero));
 			} else {
-				return item.desc(hero) + "\n\n" + trinityItemUseText(item.getClass(), hero);
+				return LocalizedString.concat(item.desc(hero), "\n\n", trinityItemUseText(item.getClass(), hero));
 			}
 		}
 
@@ -520,7 +516,7 @@ public class Trinity extends ArmorAbility {
 		if (Artifact.class.isAssignableFrom(cls)){
 			return Messages.get(Trinity.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(hero), Messages.decimalFormat("#.##", chargeUse));
 		}
-		return "error!";
+		return LocalizedString.raw("error!");
 
 	}
 

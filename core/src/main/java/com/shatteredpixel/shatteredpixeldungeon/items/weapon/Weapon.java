@@ -194,7 +194,7 @@ abstract public class Weapon extends KindOfWeapon {
 			if (usesLeftToID <= 0) {
 				if (ShardOfOblivion.passiveIDDisabled()){
 					if (usesLeftToID > -1){
-						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 					}
                     setIDReady();
 				} else {

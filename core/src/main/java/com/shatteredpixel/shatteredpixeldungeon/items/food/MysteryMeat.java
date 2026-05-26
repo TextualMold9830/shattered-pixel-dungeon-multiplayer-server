@@ -87,7 +87,7 @@ public class MysteryMeat extends Food {
 		
 		@Override
 		public LocalizedString info() {
-			return "";
+			return LocalizedString.raw("");
 		}
 	}
 }

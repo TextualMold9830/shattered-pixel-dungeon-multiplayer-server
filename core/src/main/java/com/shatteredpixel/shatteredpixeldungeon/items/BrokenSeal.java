@@ -135,7 +135,7 @@ public class BrokenSeal extends Item {
 					&& canTransferGlyph(hero)
 					&& armor.glyph.getClass() != getGlyph().getClass()) {
 
-				GameScene.show(new WndOptions(new ItemSprite(ItemSpriteSheet.SEAL),
+				GameScene.show(new WndOptions(hero, new ItemSprite(ItemSpriteSheet.SEAL),
 						Messages.get(BrokenSeal.class, "choose_title"),
 						Messages.get(BrokenSeal.class, "choose_desc", armor.glyph.name(), getGlyph().name()),
 						armor.glyph.name(),
@@ -191,8 +191,8 @@ public class BrokenSeal extends Item {
 	public LocalizedString info() {
 		LocalizedString info = super.info();
 		if (glyph != null){
-			info += "\n\n" + Messages.get(this, "inscribed", glyph.name());
-			info += " " + glyph.desc();
+			info = LocalizedString.concat(info, "\n\n", Messages.get(this, "inscribed", glyph.name()));
+			info = LocalizedString.concat(info, " ", glyph.desc());
 		}
 		return info;
 	}

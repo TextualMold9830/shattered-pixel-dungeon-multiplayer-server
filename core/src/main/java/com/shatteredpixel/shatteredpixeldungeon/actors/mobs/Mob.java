@@ -985,7 +985,7 @@ public abstract class Mob extends Char {
 
 		}
 
-		String message = Messages.get(this, "died");
+		LocalizedString message = Messages.get(this, "died");
 		for (Hero hero : Dungeon.heroes) {
 			if (hero == null) {
 				continue;
@@ -1170,6 +1170,11 @@ public abstract class Mob extends Char {
 		return target;
 	}
 
+	public LocalizedString description(Hero hero) {
+		return description();
+	}
+
+
 	public LocalizedString description() {
 		return Messages.get(this, "desc");
 	}
@@ -1178,7 +1183,7 @@ public abstract class Mob extends Char {
 		LocalizedString desc = description();
 
 		for (Buff b : buffs(ChampionEnemy.class)){
-			desc += "\n\n_" + Messages.titleCase(b.name()) + "_\n" + b.desc();
+			desc = LocalizedString.concat(desc, "\n\n_", Messages.titleCase(b.name()) , "_\n" + b.desc());
 		}
 
 		return desc;

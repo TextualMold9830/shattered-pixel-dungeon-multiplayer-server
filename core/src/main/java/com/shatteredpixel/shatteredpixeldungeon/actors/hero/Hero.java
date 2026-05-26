@@ -2128,7 +2128,7 @@ public class Hero extends Char {
 		boolean added = super.add( buff );
 
 		if (getSprite() != null && added) {
-			String msg = buff.heroMessage();
+			LocalizedString msg = buff.heroMessage();
 			if (msg != null){
 				GLog.w(msg);
 			}

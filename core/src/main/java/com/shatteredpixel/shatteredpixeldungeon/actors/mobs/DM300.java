@@ -685,9 +685,9 @@ public class DM300 extends Mob {
 
 	@Override
 	public LocalizedString description() {
-		String desc = super.description();
+		LocalizedString desc = super.description();
 		if (supercharged) {
-			desc += "\n\n" + Messages.get(this, "desc_supercharged");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_supercharged")));
 		}
 		return desc;
 	}

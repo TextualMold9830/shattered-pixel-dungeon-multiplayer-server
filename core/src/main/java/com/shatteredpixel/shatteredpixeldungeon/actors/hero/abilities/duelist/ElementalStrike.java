@@ -554,18 +554,18 @@ public class ElementalStrike extends ArmorAbility {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+		LocalizedString desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
 			KindOfWeapon w = hero.belongings.weapon();
 			if (w instanceof MeleeWeapon && ((MeleeWeapon) w).enchantment != null){
-				desc += "\n\n" + Messages.get(((MeleeWeapon) w).enchantment, "elestrike_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(((MeleeWeapon) w).enchantment, "elestrike_desc")));
 			} else {
-				desc += "\n\n" + Messages.get(this, "generic_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 			}
 		} else {
-			desc += "\n\n" + Messages.get(this, "generic_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 		}
-		desc += "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "cost", (int)baseChargeUse)));
 		return desc;
 	}
 

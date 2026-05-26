@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -34,13 +35,13 @@ public class RingOfSharpshooting extends Ring {
 		buffClass = Aim.class;
 	}
 
-	public String statsInfo(Hero hero) {
+	public LocalizedString statsInfo(Hero hero) {
 		if (isIdentified()){
-			String info = Messages.get(this, "stats",
+			LocalizedString info = Messages.get(this, "stats",
 					soloBuffedBonus(), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, soloBonus()) - 1f)));
 			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
-				info += "\n\n" + Messages.get(this, "combined_stats",
-						combinedBuffedBonus(hero), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, combinedBonus(hero)) - 1f)));
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "combined_stats",
+						combinedBuffedBonus(hero), Messages.decimalFormat("#.##", 100f * (Math.pow(1.2, combinedBonus(hero)) - 1f)))));
 			}
 			return info;
 		} else {

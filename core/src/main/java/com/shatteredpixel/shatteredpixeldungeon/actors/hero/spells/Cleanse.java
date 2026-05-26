@@ -60,7 +60,7 @@ public class Cleanse extends ClericSpell {
 		int immunity = 2 * (hero.pointsInTalent(Talent.CLEANSE)-1);
 		if (immunity > 0) immunity++;
 		int shield = 10 * hero.pointsInTalent(Talent.CLEANSE);
-		return Messages.get(this, "desc", immunity, shield) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", immunity, shield), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

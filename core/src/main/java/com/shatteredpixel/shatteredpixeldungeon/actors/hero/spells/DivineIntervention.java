@@ -90,7 +90,7 @@ public class DivineIntervention extends ClericSpell {
 	public LocalizedString desc(Hero hero) {
 		int shield = 100 + 50 * hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
 		int leftBonus = 2 + hero.pointsInTalent(Talent.DIVINE_INTERVENTION);
-		return Messages.get(this, "desc", shield, leftBonus) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", shield, leftBonus), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class DivineShield extends ShieldBuff{

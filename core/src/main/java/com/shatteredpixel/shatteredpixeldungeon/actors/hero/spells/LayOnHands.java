@@ -50,7 +50,7 @@ public class LayOnHands extends TargetedClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", 10 + 5*hero.pointsInTalent(Talent.LAY_ON_HANDS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 10 + 5*hero.pointsInTalent(Talent.LAY_ON_HANDS)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

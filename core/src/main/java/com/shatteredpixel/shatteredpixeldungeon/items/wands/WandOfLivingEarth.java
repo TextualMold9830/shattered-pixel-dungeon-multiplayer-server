@@ -334,9 +334,9 @@ public class WandOfLivingEarth extends DamageWand {
 
 		@Override
 		public LocalizedString desc() {
-			String desc = Messages.get( this, "desc", armor, armorToGuardian());
+			LocalizedString desc = Messages.get( this, "desc", armor, armorToGuardian());
 			if (isEmpowered()){
-				desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_many", (int)powerOfManyTurns)));
 			}
 			return desc;
 		}
@@ -431,13 +431,13 @@ public class WandOfLivingEarth extends DamageWand {
 
 		@Override
 		public LocalizedString description() {
-			String desc = Messages.get(this, "desc");
+			LocalizedString desc = Messages.get(this, "desc");
 
 			if (Actor.chars().contains(this)) {
 				if (Dungeon.isChallenged(Challenges.NO_ARMOR)) {
-					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, 2 + wandLevel);
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "wand_info", wandLevel, 2 + wandLevel)));
 				} else {
-					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, 3 + 3 * wandLevel);
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "wand_info", wandLevel, 3 + 3 * wandLevel)));
 				}
 			}
 

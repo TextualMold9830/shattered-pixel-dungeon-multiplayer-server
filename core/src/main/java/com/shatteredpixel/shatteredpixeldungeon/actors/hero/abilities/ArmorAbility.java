@@ -109,7 +109,7 @@ public abstract class ArmorAbility implements Bundlable {
 	}
 
 	public LocalizedString desc(){
-		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+		return LocalizedString.concat(Messages.get(this, "desc"), "\n\n", Messages.get(this, "cost", (int)baseChargeUse));
 	}
 	public LocalizedString desc(Hero hero){
 		return desc();

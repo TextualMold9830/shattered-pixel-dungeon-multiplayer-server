@@ -191,7 +191,7 @@ public class MnemonicPrayer extends TargetedClericSpell {
 	}
 
 	public LocalizedString desc(Hero hero){
-		return Messages.get(this, "desc", 2 + hero.pointsInTalent(Talent.MNEMONIC_PRAYER)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 2 + hero.pointsInTalent(Talent.MNEMONIC_PRAYER)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 }

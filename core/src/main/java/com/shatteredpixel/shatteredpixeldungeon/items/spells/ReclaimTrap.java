@@ -118,11 +118,11 @@ public class ReclaimTrap extends TargetedSpell {
 	
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 		if (storedTrap != null){
-			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(storedTrap, "name"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_trap", Messages.get(storedTrap, "name"))));
 		} else if (hero != null && hero.belongings.contains(this) && hero.buff(ReclaimedTrap.class) != null){
-			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(hero.buff(ReclaimedTrap.class).trap, "name"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_trap", Messages.get(hero.buff(ReclaimedTrap.class).trap, "name"))));
 		}
 		return desc;
 	}

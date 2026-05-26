@@ -159,9 +159,9 @@ public class PrismaticGuard extends Buff {
 	
 	@Override
 	public LocalizedString desc() {
-		String desc = Messages.get(this, "desc", (int)HP, maxHP());
+		LocalizedString desc = Messages.get(this, "desc", (int)HP, maxHP());
 		if (isEmpowered()){
-			desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_many", (int)powerOfManyTurns)));
 		}
 		return desc;
 	}

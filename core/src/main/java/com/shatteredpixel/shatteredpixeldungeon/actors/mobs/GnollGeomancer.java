@@ -505,12 +505,12 @@ public class GnollGeomancer extends Mob {
 		if (state == SLEEPING){
 			return Messages.get(this, "desc_sleeping");
 		} else {
-			String desc = super.description();
+			LocalizedString desc = super.description();
 			if (buff(RockArmor.class) != null){
 				if (hasSapper()){
-					desc += "\n\n" + Messages.get(this, "desc_armor_sapper");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_armor_sapper")));
 				} else {
-					desc += "\n\n" + Messages.get(this, "desc_armor");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_armor")));
 				}
 			}
 			return desc;

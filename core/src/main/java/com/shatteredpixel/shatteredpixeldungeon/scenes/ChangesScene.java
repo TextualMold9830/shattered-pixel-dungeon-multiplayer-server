@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -131,7 +132,7 @@ public class ChangesScene extends PixelScene {
 			changeTitle.setSize(pw, 20);
 			rightScroll.content().add(changeTitle);
 
-			String body = Messages.get(this, "right_body");
+			LocalizedString body = Messages.get(this, "right_body");
 
 			changeBody = PixelScene.renderTextBlock(body, 6);
 			changeBody.maxWidth(pw - panel.marginHor());

@@ -63,12 +63,12 @@ public abstract class Trinket extends Item {
 
 	@Override
 	public LocalizedString info() {
-		String info = super.info();
-		info += "\n\n" + statsDesc();
+		LocalizedString info = super.info();
+		info = LocalizedString.concat(info, "\n\n", statsDesc());
 		return info;
 	}
 
-	public abstract String statsDesc();
+	public abstract LocalizedString statsDesc();
 
 	public int energyVal() {
 		return 5;
@@ -113,12 +113,12 @@ public abstract class Trinket extends Item {
 
 		@Override
 		public LocalizedString info() {
-				return "";
+				return LocalizedString.raw("");
 			}
 
 		@Override
-		public String statsDesc() {
-			return "";
+		public LocalizedString statsDesc() {
+			return LocalizedString.raw("");
 		}
 
 	}

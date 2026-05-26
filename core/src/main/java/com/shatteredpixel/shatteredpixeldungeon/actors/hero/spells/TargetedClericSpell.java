@@ -51,7 +51,7 @@ public abstract class TargetedClericSpell extends ClericSpell {
 		return Ballistica.MAGIC_BOLT;
 	}
 
-	protected String targetingPrompt(){
+	protected LocalizedString targetingPrompt(){
 		return Messages.get(this, "prompt");
 	}
 

@@ -136,11 +136,11 @@ public abstract class Level implements Bundlable {
 		TRAPS,
 		SECRETS;
 
-		public String title(){
+		public LocalizedString title(){
 			return Messages.get(this, name()+"_title");
 		}
 
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, name()+"_desc");
 		}
 	}
@@ -1696,7 +1696,7 @@ public abstract class Level implements Bundlable {
 			case Terrain.EMPTY_WELL:
 				return Messages.get(Level.class, "empty_well_desc");
 			default:
-				return "";
+				return LocalizedString.raw("");
 		}
 	}
 	//TODO: replace this

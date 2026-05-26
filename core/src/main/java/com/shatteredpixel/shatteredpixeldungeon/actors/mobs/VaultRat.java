@@ -39,6 +39,6 @@ public class VaultRat extends VaultMob {
 
 	@Override
 	public LocalizedString description() {
-		return Messages.get(Rat.class, "desc") + "\n\n" + super.description();
+		return LocalizedString.concat(Messages.get(Rat.class, "desc"), "\n\n", super.description());
 	}
 }

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
@@ -200,14 +201,14 @@ public class WelcomeScene extends PixelScene {
 		} else if (previousVersion <= ShatteredPixelDungeon.versionCode) {
 			if (previousVersion < LATEST_UPDATE){
 				message = Messages.get(this, "update_intro");
-				message += "\n\n" + Messages.get(this, "update_msg");
+				message += LocalizedString.concat("\n\n", Messages.get(this, "update_msg"));
 			} else {
 				//TODO: change the messages here in accordance with the type of patch.
 				message = Messages.get(this, "patch_intro");
 				message += "\n";
 				//message += "\n" + Messages.get(this, "patch_balance");
-				message += "\n" + Messages.get(this, "patch_bugfixes");
-				message += "\n" + Messages.get(this, "patch_translations");
+				message += LocalizedString.concat("\n", Messages.get(this, "patch_bugfixes"));
+				message += LocalizedString.concat("\n", Messages.get(this, "patch_translations"));
 
 			}
 		} else {

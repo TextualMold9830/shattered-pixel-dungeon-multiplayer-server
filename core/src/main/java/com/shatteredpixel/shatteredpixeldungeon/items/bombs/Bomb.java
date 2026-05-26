@@ -252,11 +252,11 @@ public class Bomb extends Item {
 	@Override
 	public LocalizedString desc() {
 		int depth = Dungeon.scalingDepth();
-		String desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
+		LocalizedString desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
 		if (fuse == null) {
-			return desc + "\n\n" + Messages.get(this, "desc_fuse");
+			return LocalizedString.concat(desc, LocalizedString.concat( "\n\n", Messages.get(this, "desc_fuse")));
 		} else {
-			return desc + "\n\n" + Messages.get(this, "desc_burning");
+			return LocalizedString.concat(desc, "\n\n", Messages.get(this, "desc_burning"));
 		}
 	}
 

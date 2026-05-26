@@ -299,23 +299,23 @@ public class UnstableSpellbook extends Artifact {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc(hero);
+		LocalizedString desc = super.desc(hero);
 
 		if (isEquipped(hero)) {
 			if (cursed) {
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 			
 			if (level() < levelCap && scrolls.size() > 0) {
-				desc += "\n\n" + Messages.get(this, "desc_index");
-				desc += "\n" + "_" + Messages.get(scrolls.get(0), "name") + "_";
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_index")));
+				desc = LocalizedString.concat(desc, "\n" , "_" , Messages.get(scrolls.get(0), "name") , "_");
 				if (scrolls.size() > 1)
-					desc += "\n" + "_" + Messages.get(scrolls.get(1), "name") + "_";
+					desc = LocalizedString.concat("\n" ,  "_", Messages.get(scrolls.get(1), "name") , "_");
 			}
 		}
 		
 		if (level() > 0) {
-			desc += "\n\n" + Messages.get(this, "desc_empowered");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_empowered")));
 		}
 
 		return desc;

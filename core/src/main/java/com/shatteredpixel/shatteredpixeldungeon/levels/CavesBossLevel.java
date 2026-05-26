@@ -426,7 +426,7 @@ public class CavesBossLevel extends Level {
 	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
-				return super.tileDesc( tile ) + "\n\n" + Messages.get(CavesBossLevel.class, "water_desc");
+				return LocalizedString.concat(super.tileDesc( tile ), "\n\n", Messages.get(CavesBossLevel.class, "water_desc"));
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:
 				return Messages.get(CavesLevel.class, "entrance_desc");
@@ -782,7 +782,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_name");
@@ -794,7 +794,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_desc");

@@ -59,7 +59,7 @@ public class ShardOfOblivion extends Trinket {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc", buffedLvl()+1);
 		} else {

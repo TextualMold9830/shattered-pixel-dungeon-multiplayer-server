@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -159,7 +160,7 @@ public class WndHero extends WndTabbed {
 			if (hero.name().equals(hero.className()))
 				title.label( Messages.get(this, "title", hero.lvl, hero.className() ).toUpperCase( Locale.ENGLISH ) );
 			else
-				title.label((hero.name() + "\n" + Messages.get(this, "title", hero.lvl, hero.className())).toUpperCase(Locale.ENGLISH));
+				title.label((LocalizedString.concat(hero.name(), "\n", Messages.get(this, "title", hero.lvl, hero.className()))).toUpperCase(Locale.ENGLISH));
 			title.color(Window.TITLE_COLOR);
 			title.setRect( 0, 0, WIDTH-16, 0 );
 			add(title);

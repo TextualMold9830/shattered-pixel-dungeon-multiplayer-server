@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
@@ -167,7 +168,7 @@ public class MineEntrance extends CaveRoom {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			if (tileX == 1 && tileY == 1){
 				return Messages.get(this, "name");
 			}
@@ -175,7 +176,7 @@ public class MineEntrance extends CaveRoom {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			if (tileX == 1 && tileY == 1){
 				return Messages.get(this, "desc");
 			}

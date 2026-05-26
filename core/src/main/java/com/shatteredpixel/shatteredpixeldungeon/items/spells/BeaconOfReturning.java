@@ -225,13 +225,13 @@ public class BeaconOfReturning extends Spell {
 	
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 		if (hero != null) {
 			BeaconTracker tracker = hero.buff(BeaconTracker.class);
 			if (tracker != null){
-				desc += "\n\n" + Messages.get(this, "desc_set", tracker.returnDepth);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_set", tracker.returnDepth)));
 			} else if (returnDepth != -1) {
-				desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_set", returnDepth)));
 			}
 		}
 		return desc;

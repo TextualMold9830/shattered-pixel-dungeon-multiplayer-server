@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -189,7 +190,7 @@ public class WandOfTransfusion extends DamageWand {
 	}
 
 	@Override
-	public String statsDesc(Hero hero) {
+	public LocalizedString statsDesc(Hero hero) {
 		int selfDMG = hero != null ? Math.round(hero.getHT() *0.05f): 1;
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max());

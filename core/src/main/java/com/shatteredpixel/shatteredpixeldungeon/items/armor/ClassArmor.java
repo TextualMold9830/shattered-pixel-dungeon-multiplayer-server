@@ -177,7 +177,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String actionName(String action, Hero hero) {
+	public LocalizedString actionName(String action, Hero hero) {
 		if (hero.armorAbility != null && action.equals(AC_ABILITY)){
 			return Messages.upperCase(hero.armorAbility.name());
 		} else {
@@ -186,7 +186,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String status() {
+	public LocalizedString status() {
 		return Messages.format( "%.0f%%", Math.floor(charge) );
 	}
 
@@ -301,19 +301,19 @@ abstract public class ClassArmor extends Armor {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if (hero.belongings.contains(this)) {
 			ArmorAbility ability = hero.armorAbility;
 			if (ability != null) {
-				desc += "\n\n" + ability.shortDesc();
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", ability.shortDesc()));
 				float chargeUse = ability.chargeUse(hero);
 				//trinity has variable charge cost
 				if (!(ability instanceof Trinity)) {
-					desc += " " + Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse));
+					desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse))));
 				}
 			} else {
-				desc += "\n\n" + "_" + Messages.get(this, "no_ability") + "_";
+				 desc = LocalizedString.concat(desc, "\n\n",  "_", Messages.get(this, "no_ability"), "_");
 			}
 		}
 

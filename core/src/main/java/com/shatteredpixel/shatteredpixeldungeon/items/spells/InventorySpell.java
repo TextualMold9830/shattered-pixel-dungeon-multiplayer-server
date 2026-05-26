@@ -42,7 +42,7 @@ public abstract class InventorySpell extends Spell {
 		GameScene.selectItem(itemSelector, hero);
 	}
 
-	private String inventoryTitle() {
+	private LocalizedString inventoryTitle() {
 		return Messages.get(this, "inv_title");
 	}
 

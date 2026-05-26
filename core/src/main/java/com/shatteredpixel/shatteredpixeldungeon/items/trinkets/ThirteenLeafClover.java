@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
@@ -40,7 +39,7 @@ public class ThirteenLeafClover extends Trinket {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc", Math.round(MAX_CHANCE * 100*alterHeroDamageChance(buffedLvl())), Math.round((1f-MAX_CHANCE) * 100*alterHeroDamageChance(buffedLvl())));
 		} else {

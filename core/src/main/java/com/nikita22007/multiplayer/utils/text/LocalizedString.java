@@ -48,6 +48,14 @@ public class LocalizedString {
         return new LocalizedString(Mode.RAW, null, raw, args, null, null, null);
     }
 
+    public static LocalizedString[] raw(String[] options) {
+        LocalizedString[] localizedStrings = new LocalizedString[options.length];
+        for (int i = 0; i < options.length; i++) {
+            localizedStrings[i] = LocalizedString.raw(options[i]);
+        }
+        return localizedStrings;
+    }
+
     public static LocalizedString transform(Transform transform, LocalizedString text) {
         return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null);
     }
@@ -97,6 +105,16 @@ public class LocalizedString {
 
     public Object[] parts() {
         return parts;
+    }
+
+    public static String[] resolveArray(LocalizedString[] localizedStrings) {
+        String[] strings = new String[localizedStrings.length];
+        for (int i= 0 ; i < localizedStrings.length; i++) {
+            if (localizedStrings[i] != null) {
+                strings[i] = localizedStrings[i].toString();
+            }
+        }
+        return strings;
     }
 
     @Override

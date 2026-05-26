@@ -440,12 +440,12 @@ public abstract class Elemental extends Mob {
 
 		@Override
 		public LocalizedString description() {
-			String desc = super.description();
+			LocalizedString desc = super.description();
 
 			if (summonedALly){
-				desc += " " + Messages.get(this, "desc_ally");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_ally")));
 			} else {
-				desc += " " + Messages.get(this, "desc_boss");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_boss")));
 			}
 
 			return desc;

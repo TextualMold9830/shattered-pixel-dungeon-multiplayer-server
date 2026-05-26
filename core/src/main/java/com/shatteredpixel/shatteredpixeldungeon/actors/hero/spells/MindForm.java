@@ -55,7 +55,9 @@ public class MindForm extends ClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", itemLevel(hero)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return Messages.get(this, "desc",
+				LocalizedString.concat(itemLevel(hero), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)))
+		);
 	}
 
 	@Override

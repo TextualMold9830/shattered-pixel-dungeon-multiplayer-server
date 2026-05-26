@@ -171,10 +171,10 @@ public class Thief extends Mob {
 
 	@Override
 	public LocalizedString description() {
-		String desc = super.description();
+		LocalizedString desc = super.description();
 
 		if (item != null) {
-			desc += Messages.get(this, "carries", item.name() );
+			desc = LocalizedString.concat(desc, Messages.get(this, "carries", item.name() ));
 		}
 
 		return desc;

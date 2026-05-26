@@ -184,7 +184,7 @@ public class Ring extends KindofMisc {
 
 	@Override
 	public LocalizedString info(Hero hero){
-		String desc;
+		LocalizedString desc;
 		//skip custom notes if anonymized and un-Ided
 		//skip custom notes if anonymized and un-IdedString desc;
 		if (anonymous && (handler == null || !handler.isKnown( this ))){
@@ -195,13 +195,13 @@ public class Ring extends KindofMisc {
 		}
 
 		if (cursed && isEquipped( hero)) {
-			desc += "\n\n" + Messages.get(Ring.class, "cursed_worn");
+			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "cursed_worn"));
 			
 		} else if (cursed && cursedKnown) {
-			desc += "\n\n" + Messages.get(Ring.class, "curse_known");
+			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "curse_known"));
 			
 		} else if (!isIdentified() && cursedKnown){
-			desc += "\n\n" + Messages.get(Ring.class, "not_cursed");
+			desc += LocalizedString.concat("\n\n", Messages.get(Ring.class, "not_cursed"));
 			
 		}
 		

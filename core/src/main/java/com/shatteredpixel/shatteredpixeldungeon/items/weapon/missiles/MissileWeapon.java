@@ -235,7 +235,7 @@ abstract public class MissileWeapon extends Weapon {
 		parent = null; //reset parent before throwing, just in case
 		if (((levelKnown && level() > 0) || hasGoodEnchant() || masteryPotionBonus || enchantHardened)
 				&& !extraThrownLeft && quantity() == 1 && durabilityLeft() <= durabilityPerUse(hero)){
-			GameScene.show(new WndOptions(new ItemSprite(this), Messages.titleCase(title()),
+			GameScene.show(new WndOptions(hero, new ItemSprite(this), Messages.titleCase(title()),
 					Messages.get(MissileWeapon.class, "break_upgraded_warn_desc"),
 					Messages.get(MissileWeapon.class, "break_upgraded_warn_yes"),
 					Messages.get(MissileWeapon.class, "break_upgraded_warn_no")){
@@ -389,7 +389,7 @@ abstract public class MissileWeapon extends Weapon {
 		return this;
 	}
 
-	public String status() {
+	public LocalizedString status() {
 		//show quantity even when it is 1
 		return Integer.toString(quantity());
 	}
@@ -627,73 +627,73 @@ abstract public class MissileWeapon extends Weapon {
 	@Override
 	public LocalizedString info(Hero hero) {
 
-		String info = super.info();
+		LocalizedString info = super.info();
 
 		if (levelKnown) {
-			info += "\n\n" + Messages.get(MissileWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq());
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(MissileWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq())));
 			if (hero != null) {
 				if (STRReq() > hero.STR()) {
-					info += " " + Messages.get(Weapon.class, "too_heavy");
+					info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "too_heavy")));
 			} else if (hero.STR() > STRReq()) {
-				info += " " + Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq());
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq())));
 				}
 			}
 		} else {
-			info += "\n\n" + Messages.get(MissileWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(MissileWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0))));
 			if (hero != null && STRReq(0) > hero.STR()) {
-				info += " " + Messages.get(MissileWeapon.class, "probably_too_heavy");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(MissileWeapon.class, "probably_too_heavy")));
 			}
 		}
 
 		if (enchantment != null && (cursedKnown || !enchantment.curse())){
-			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
-			if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
-			info += " " + enchantment.desc();
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()))));
+			if (enchantHardened) info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "enchant_hardened")));
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", enchantment.desc()));
 		} else if (enchantHardened){
-			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "hardened_no_enchant")));
 		}
 
 		if (cursedKnown && cursed) {
-			info += "\n\n" + Messages.get(Weapon.class, "cursed");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "cursed")));
 		} else if (!isIdentified() && cursedKnown){
-			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "not_cursed")));
 		}
 
 		info += "\n\n";
-		String statsInfo = statsInfo();
-		if (!statsInfo.equals("")) info += statsInfo + " ";
-		info += Messages.get(MissileWeapon.class, "distance");
+		LocalizedString statsInfo = statsInfo();
+		if (!statsInfo.equals("")) info = LocalizedString.concat(info, LocalizedString.concat(statsInfo, " "));
+		info = LocalizedString.concat(info, Messages.get(MissileWeapon.class, "distance"));
 
 		switch (augment) {
 			case SPEED:
-				info += " " + Messages.get(Weapon.class, "faster");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "faster")));
 				break;
 			case DAMAGE:
-				info += " " + Messages.get(Weapon.class, "stronger");
+				info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "stronger")));
 				break;
 			case NONE:
 		}
 
 		if (levelKnown) {
 			if (durabilityPerUse(hero) > 0) {
-				info += "\n\n" + Messages.get(this, "uses_left",
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "uses_left",
 						(int) Math.ceil(durability / durabilityPerUse(hero)),
-						(int) Math.ceil(MAX_DURABILITY / durabilityPerUse(hero)));
+						(int) Math.ceil(MAX_DURABILITY / durabilityPerUse(hero)))));
 			} else {
-				info += "\n\n" + Messages.get(this, "unlimited_uses");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "unlimited_uses")));
 			}
 		}  else {
 			if (durabilityPerUse(0, hero) > 0) {
-				info += "\n\n" + Messages.get(this, "unknown_uses", (int) Math.ceil(MAX_DURABILITY / durabilityPerUse(0, hero)));
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "unknown_uses", (int) Math.ceil(MAX_DURABILITY / durabilityPerUse(0, hero)))));
 			} else {
-				info += "\n\n" + Messages.get(this, "unlimited_uses");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "unlimited_uses")));
 			}
 		}
 		
 		return info;
 	}
 
-	public String statsInfo(){
+	public LocalizedString statsInfo(){
 		return Messages.get(this, "stats_desc");
 	}
 
@@ -774,13 +774,13 @@ abstract public class MissileWeapon extends Weapon {
 		}
 
 		@Override
-		public String status() {
+		public LocalizedString status() {
 			return null;
 		}
 
 		@Override
 		public LocalizedString info() {
-			return "";
+			return LocalizedString.raw("");
 		}
 	}
 

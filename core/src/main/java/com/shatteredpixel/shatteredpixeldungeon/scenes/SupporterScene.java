@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
@@ -125,10 +126,10 @@ public class SupporterScene extends PixelScene {
 			bg = Chrome.get(Chrome.Type.GREY_BUTTON_TR);
 			add(bg);
 
-			String message = Messages.get(SupporterScene.class, "intro");
-			message += "\n\n" + Messages.get(SupporterScene.class, "patreon_msg");
+			LocalizedString message = Messages.get(SupporterScene.class, "intro");
+			message = LocalizedString.concat(message, LocalizedString.concat("\n\n", Messages.get(SupporterScene.class, "patreon_msg")));
 			if (Messages.lang() != Languages.ENGLISH) {
-				message += "\n" + Messages.get(SupporterScene.class, "patreon_english");
+				message = LocalizedString.concat(message, LocalizedString.concat("\n", Messages.get(SupporterScene.class, "patreon_english")));
 			}
 			message += "\n\n- Evan";
 

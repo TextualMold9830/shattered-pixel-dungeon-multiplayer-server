@@ -85,7 +85,7 @@ public class CrystalMimic extends Mimic {
 				desc = Messages.get(Heap.class, "locked_chest_desc");
 			}
 			if (!MimicTooth.stealthyMimics()){
-				desc += "\n\n" + Messages.get(this, "hidden_hint");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "hidden_hint")));
 			}
 			return desc;
 		} else {

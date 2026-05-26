@@ -183,7 +183,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			hero.spend(-hero.cooldown());
 			new EnergyCrystal(item.energyVal()).doPickUp(hero);
 			item.identify(hero);
-			GLog.h("You energized: " + item.name());
+			GLog.h(LocalizedString.concat("You energized: ", item.name()));
 
 		}
 	}
@@ -195,7 +195,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			hero.spend(-hero.cooldown());
 			new EnergyCrystal(item.energyVal()).doPickUp(hero);
 			item.identify(hero);
-			GLog.h("You energized: " + item.name());
+			GLog.h(LocalizedString.concat("You energized: ", item.name()));
 
 	}
 

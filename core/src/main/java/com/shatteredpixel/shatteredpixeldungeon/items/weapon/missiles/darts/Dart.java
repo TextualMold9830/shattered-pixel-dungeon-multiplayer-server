@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedKey;
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -234,7 +235,7 @@ public class Dart extends MissileWeapon {
 			Crossbow realBow = bow;
 			//create a temporary bow for IDing purposes
 			bow = new Crossbow();
-			String info = super.info();
+			LocalizedString info = super.info();
 			bow = realBow;
 			return info;
 		} else {
@@ -289,21 +290,21 @@ public class Dart extends MissileWeapon {
 			
 			final int singleSeedDarts;
 			
-			final String[] options;
+			final LocalizedString[] options;
 			
 			if (curItem.quantity() == 1){
 				singleSeedDarts = 1;
-				options = new String[]{
+				options = new LocalizedString[]{
 						Messages.get(Dart.class, "tip_one"),
 						Messages.get(Dart.class, "tip_cancel")};
 			} else {
 				singleSeedDarts = 2;
 				if (maxToTip <= 2){
-					options = new String[]{
+					options = new LocalizedString[]{
 							Messages.get(Dart.class, "tip_two"),
 							Messages.get(Dart.class, "tip_cancel")};
 				} else {
-					options = new String[]{
+					options = new LocalizedString[]{
 							Messages.get(Dart.class, "tip_all", maxToTip, maxSeedsToUse),
 							Messages.get(Dart.class, "tip_two"),
 							Messages.get(Dart.class, "tip_cancel")};
@@ -314,7 +315,7 @@ public class Dart extends MissileWeapon {
 			
 			GameScene.show(new WndOptions(getOwner(), new ItemSprite(item),
 					Messages.titleCase(item.name()),
-					Messages.get(Dart.class, "tip_desc", tipResult.name()) + "\n\n" + tipResult.desc(),
+					LocalizedString.concat(Messages.get(Dart.class, "tip_desc", tipResult.name()), "\n\n", tipResult.desc()),
 					options){
 				
 				@Override

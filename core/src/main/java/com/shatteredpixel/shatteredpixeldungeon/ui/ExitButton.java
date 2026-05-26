@@ -55,6 +55,6 @@ public class ExitButton extends IconButton {
 
 	@Override
 	protected String hoverText() {
-		return Messages.titleCase(Messages.get(WndKeyBindings.class, "back"));
+		return Messages.titleCase(Messages.get(WndKeyBindings.class, "back")).toString();
 	}
 }

@@ -272,11 +272,11 @@ public class SpiritHawk extends ArmorAbility {
 
 		@Override
 		public LocalizedString description() {
-			String message = Messages.get(this, "desc", (int)timeRemaining);
+			LocalizedString message = Messages.get(this, "desc", (int)timeRemaining);
 			if (Actor.chars().contains(this)){
-				message += "\n\n" + Messages.get(this, "desc_remaining", (int)timeRemaining);
+				message = LocalizedString.concat(message, LocalizedString.concat("\n\n", Messages.get(this, "desc_remaining", (int)timeRemaining)));
 				if (dodgesUsed < 2*owner.pointsInTalent(Talent.SWIFT_SPIRIT)){
-					message += "\n" + Messages.get(this, "desc_dodges", (2*owner.pointsInTalent(Talent.SWIFT_SPIRIT) - dodgesUsed));
+					message = LocalizedString.concat(message, LocalizedString.concat("\n", Messages.get(this, "desc_dodges", (2*owner.pointsInTalent(Talent.SWIFT_SPIRIT) - dodgesUsed))));
 				}
 			}
 			return message;

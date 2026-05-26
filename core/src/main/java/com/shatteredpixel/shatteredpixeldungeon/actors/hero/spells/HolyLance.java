@@ -63,7 +63,7 @@ public class HolyLance extends TargetedClericSpell {
 	public LocalizedString desc(Hero hero) {
 		int min = 15 + 15*hero.pointsInTalent(Talent.HOLY_LANCE);
 		int max = Math.round(27.5f + 27.5f*hero.pointsInTalent(Talent.HOLY_LANCE));
-		return Messages.get(this, "desc", min, max) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", min, max), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

@@ -64,13 +64,13 @@ public class CapeOfThorns extends Artifact {
 	
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+		LocalizedString desc = Messages.get(this, "desc");
 		if (isEquipped( hero)) {
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 			if (cooldown == 0)
-				desc += Messages.get(this, "desc_inactive");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_inactive"));
 			else
-				desc += Messages.get(this, "desc_active");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_active"));
 		}
 
 		return desc;

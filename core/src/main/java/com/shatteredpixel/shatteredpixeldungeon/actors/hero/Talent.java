@@ -498,7 +498,7 @@ public enum Talent {
 		if (metamorphed){
 			LocalizedString metaDesc = Messages.get(this, name() + ".meta_desc");
 			if (!metaDesc.equals(Messages.NO_TEXT_FOUND)){
-				return Messages.get(this, name() + ".desc") + "\n\n" + metaDesc;
+				return LocalizedString.concat(Messages.get(this, name() + ".desc"), "\n\n" , metaDesc);
 			}
 		}
 		return Messages.get(this, name() + ".desc");

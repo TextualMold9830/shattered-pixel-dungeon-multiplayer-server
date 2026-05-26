@@ -572,7 +572,7 @@ public class CityBossLevel extends Level {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int cell = (this.tileX + tileX) + (this.tileY + tileY)*tileW;
 
 			//demon halls tiles
@@ -594,7 +594,7 @@ public class CityBossLevel extends Level {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int cell = (this.tileX + tileX) + (this.tileY + tileY)*tileW;
 
 			//demon halls tiles

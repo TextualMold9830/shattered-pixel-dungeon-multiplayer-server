@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.TextInput;
 
+//todo send this?
 public class WndTextInput extends Window {
 
 	private static final int WIDTH = 135;

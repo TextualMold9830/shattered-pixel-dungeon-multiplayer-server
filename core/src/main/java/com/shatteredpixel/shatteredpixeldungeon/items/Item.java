@@ -149,8 +149,8 @@ public class Item implements Bundlable {
 		return actions;
 	}
 
-	public String actionName(String action, Hero hero){
-		return Messages.get(this, "ac_" + action).toString();
+	public LocalizedString actionName(String action, Hero hero){
+		return Messages.get(this, "ac_" + action);
 	}
 
 	public final boolean doPickUp( Hero hero ) {
@@ -667,10 +667,10 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public String status() {
-		return quantity() != 1 ? Integer.toString(quantity()) : null;
+	public LocalizedString status() {
+		return quantity() != 1 ? LocalizedString.raw(Integer.toString(quantity())) : null;
 	}
-	public String status(Hero hero){
+	public LocalizedString status(Hero hero){
 		return status();
 	};
 

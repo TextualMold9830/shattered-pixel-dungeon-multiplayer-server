@@ -301,14 +301,14 @@ public class EtherealChains extends Artifact {
 	
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if (isEquipped(hero)){
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 			if (cursed)
-				desc += Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_cursed"));
 			else
-				desc += Messages.get(this, "desc_equipped");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_equipped"));
 		}
 		return desc;
 	}

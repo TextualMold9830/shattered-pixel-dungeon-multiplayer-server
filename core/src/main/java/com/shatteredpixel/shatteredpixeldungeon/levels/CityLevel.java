@@ -155,7 +155,7 @@ public class CityLevel extends RegularLevel {
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					GameScene.show( new WndOptions( Icons.SHPX.get(),
+					GameScene.show( new WndOptions(hero, Icons.SHPX.get(),
 							Messages.titleCase(Messages.get(CityLevel.class, "upcoming_quest_intro_title")),
 							Messages.get(CityLevel.class, "upcoming_quest_intro_body"),
 							Messages.get(CityLevel.class, "upcoming_quest_intro_yes"),

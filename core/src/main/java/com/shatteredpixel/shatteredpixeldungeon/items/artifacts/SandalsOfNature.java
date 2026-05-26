@@ -196,27 +196,27 @@ public class SandalsOfNature extends Artifact {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = Messages.get(this, "desc_" + (level()+1));
+		LocalizedString desc = Messages.get(this, "desc_" + (level()+1));
 
 		if ( isEquipped ( hero) ) {
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 
 			if (!cursed) {
-				desc += Messages.get(this, "desc_hint");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_hint"));
 			} else {
-				desc += Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_cursed"));
 			}
 
 		}
 
 		if (curSeedEffect != null){
-				desc += "\n\n" + Messages.get(this, "desc_ability",
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_ability",
 					Messages.titleCase(Messages.get(curSeedEffect, "name")),
-					seedChargeReqs.get(curSeedEffect));
+					seedChargeReqs.get(curSeedEffect))));
 		}
 
 		if (!seeds.isEmpty()){
-			desc += "\n\n" + Messages.get(this, "desc_seeds", seeds.size());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_seeds", seeds.size())));
 		}
 
 		return desc;

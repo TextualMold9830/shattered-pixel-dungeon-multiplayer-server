@@ -300,9 +300,9 @@ public class LloydsBeacon extends Artifact {
 
 	@Override
 	public LocalizedString desc() {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 		if (returnDepth != -1){
-			desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_set", returnDepth)));
 		}
 		return desc;
 	}

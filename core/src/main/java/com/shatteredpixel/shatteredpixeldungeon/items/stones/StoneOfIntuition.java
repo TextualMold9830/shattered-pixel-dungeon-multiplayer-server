@@ -80,12 +80,12 @@ public class StoneOfIntuition extends InventoryStone {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String text = super.desc(hero);
+		LocalizedString text = super.desc(hero);
 		if (hero != null){
 			if (hero.buff(IntuitionUseTracker.class) == null){
-				text += "\n\n" + Messages.get(this, "break_info");
+				text = LocalizedString.concat(text, LocalizedString.concat("\n\n", Messages.get(this, "break_info")));
 			} else {
-				text += "\n\n" + Messages.get(this, "break_warn");
+				text = LocalizedString.concat(text, LocalizedString.concat("\n\n", Messages.get(this, "break_warn")));
 			}
 		}
 		return text;

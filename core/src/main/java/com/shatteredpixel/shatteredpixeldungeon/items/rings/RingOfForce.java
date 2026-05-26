@@ -126,14 +126,14 @@ public class RingOfForce extends Ring {
 	}
 
 	//@Override
-	public String statsInfo(Hero hero) {
+	public LocalizedString statsInfo(Hero hero) {
 		float tier = tier(hero != null ? hero.STR() : 10);
 		if (isIdentified()) {
 			int level = soloBuffedBonus();
-			String info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);
+			LocalizedString info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);
 			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
 				level = combinedBuffedBonus(hero);
-				info += "\n\n" + Messages.get(this, "combined_stats", min(level, tier), max(level, tier), level);
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "combined_stats", min(level, tier), max(level, tier), level)));
 			}
 			return info;
 		} else {
@@ -200,7 +200,7 @@ public class RingOfForce extends Ring {
 	}
 
 	@Override
-	public String actionName(String action, Hero hero) {
+	public LocalizedString actionName(String action, Hero hero) {
 		if (action.equals(AC_ABILITY)){
 			return Messages.upperCase(Messages.get(this, "ability_name"));
 		} else {
@@ -235,7 +235,7 @@ public class RingOfForce extends Ring {
 
 	@Override
 	public LocalizedString info(Hero hero) {
-		String info = super.info();
+		LocalizedString info = super.info();
 
 		if (hero.heroClass == HeroClass.DUELIST
 			&& (anonymous || isIdentified() || isEquipped(hero))){
@@ -244,9 +244,9 @@ public class RingOfForce extends Ring {
 			float tier = tier(hero.STR());
 			int dmgBoost = Math.round(3+tier+(level*((4+2*tier)/8f)));
 			if (isIdentified()) {
-				info += "\n\n" + Messages.get(this, "ability_desc", min(level, tier)+dmgBoost, max(level, tier)+dmgBoost);
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "ability_desc", min(level, tier)+dmgBoost, max(level, tier)+dmgBoost)));
 			} else {
-				info += "\n\n" + Messages.get(this, "typical_ability_desc",  min(level, tier)+dmgBoost, max(level, tier)+dmgBoost);
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "typical_ability_desc",  min(level, tier)+dmgBoost, max(level, tier)+dmgBoost)));
 			}
 		}
 

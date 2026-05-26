@@ -144,15 +144,15 @@ public class SummonElemental extends Spell {
 
 	@Override
 	public LocalizedString desc() {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
-		desc += "\n\n";
+		desc = LocalizedString.concat(desc, "\n\n");
 
-		if (summonClass == Elemental.AllyNewBornElemental.class)    desc += Messages.get(this, "desc_newborn");
-		if (summonClass == Elemental.FireElemental.class)           desc += Messages.get(this, "desc_fire");
-		if (summonClass == Elemental.FrostElemental.class)          desc += Messages.get(this, "desc_frost");
-		if (summonClass == Elemental.ShockElemental.class)          desc += Messages.get(this, "desc_shock");
-		if (summonClass == Elemental.ChaosElemental.class)          desc += Messages.get(this, "desc_chaos");
+		if (summonClass == Elemental.AllyNewBornElemental.class)    desc = LocalizedString.concat(desc, Messages.get(this, "desc_newborn"));
+		if (summonClass == Elemental.FireElemental.class)           desc = LocalizedString.concat(desc, Messages.get(this, "desc_fire"));
+		if (summonClass == Elemental.FrostElemental.class)          desc = LocalizedString.concat(desc, Messages.get(this, "desc_frost"));
+		if (summonClass == Elemental.ShockElemental.class)          desc = LocalizedString.concat(desc, Messages.get(this, "desc_shock"));
+		if (summonClass == Elemental.ChaosElemental.class)          desc = LocalizedString.concat(desc, Messages.get(this, "desc_chaos"));
 
 		return desc;
 	}

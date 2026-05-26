@@ -119,14 +119,14 @@ public class TalismanOfForesight extends Artifact {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if ( isEquipped( hero) ){
 			if (!cursed) {
-				desc += "\n\n" + Messages.get(this, "desc_worn");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_worn")));
 
 			} else {
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 		}
 

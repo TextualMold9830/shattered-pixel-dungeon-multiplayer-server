@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -192,7 +193,7 @@ public class NewsScene extends PixelScene {
 			if (!News.articlesAvailable()){
 				if (SPDSettings.news()) {
 					if (SPDSettings.WiFi() && !Game.platform.connectedToUnmeteredNetwork()) {
-						message += "\n\n" + Messages.get(this, "metered_network");
+						message += LocalizedString.concat("\n\n", Messages.get(this, "metered_network"));
 
 						button = new RedButton(Messages.get(this, "enable_data")) {
 							@Override
@@ -205,10 +206,10 @@ public class NewsScene extends PixelScene {
 						};
 						add(button);
 					} else {
-						message += "\n\n" + Messages.get(this, "no_internet");
+						message += LocalizedString.concat("\n\n", Messages.get(this, "no_internet"));
 					}
 				} else {
-					message += "\n\n" + Messages.get(this, "news_disabled");
+					message += LocalizedString.concat("\n\n", Messages.get(this, "news_disabled"));
 
 					button = new RedButton(Messages.get(this, "enable_news")) {
 						@Override

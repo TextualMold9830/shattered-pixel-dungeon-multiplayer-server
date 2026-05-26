@@ -51,7 +51,7 @@ public class WndBadge extends Window {
 		if (!unlocked) title.hardlight( 0x888822 );
 		add(title);
 
-		String desc = badge.desc();
+		LocalizedString desc = badge.desc();
 		String unlock = Badges.showCompletionProgress(badge);
 
 		if (unlock != null){

@@ -58,7 +58,7 @@ public class BeamingRay extends TargetedClericSpell {
 
 	@Override
 	public LocalizedString desc(Hero hero) {
-		return Messages.get(this, "desc", 4*hero.pointsInTalent(Talent.BEAMING_RAY), 30 + 5*hero.pointsInTalent(Talent.BEAMING_RAY)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", 4*hero.pointsInTalent(Talent.BEAMING_RAY), 30 + 5*hero.pointsInTalent(Talent.BEAMING_RAY)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

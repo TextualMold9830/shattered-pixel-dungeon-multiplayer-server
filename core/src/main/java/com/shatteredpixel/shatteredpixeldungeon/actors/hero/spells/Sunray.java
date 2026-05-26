@@ -58,7 +58,7 @@ public class Sunray extends TargetedClericSpell {
 		int min = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
 		int max = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 12 : 8;
 		int dur = hero.pointsInTalent(Talent.SUNRAY) == 2 ? 6 : 4;
-		return Messages.get(this, "desc", min, max, dur) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", min, max, dur), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override

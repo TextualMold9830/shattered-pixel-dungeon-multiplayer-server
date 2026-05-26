@@ -54,11 +54,11 @@ public abstract class ClericSpell {
 	}
 
 	public LocalizedString shortDesc(Hero hero){
-		return Messages.get(this, "short_desc") + " " + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "short_desc"), " ", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public LocalizedString desc(Hero hero){
-		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc"), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public boolean usesTargeting(){

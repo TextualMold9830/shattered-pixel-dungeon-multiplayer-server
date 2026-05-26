@@ -152,9 +152,9 @@ public class GravityChaosTracker extends Buff {
 	public LocalizedString desc() {
 		LocalizedString desc = Messages.get(this, "desc_intro");
 		if (positiveOnly){
-			desc += " " + Messages.get(this, "desc_positive");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_positive")));
 		}
-		desc += "\n\n" + Messages.get(this, "desc_duration");
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_duration")));
 		return desc;
 	}
 
