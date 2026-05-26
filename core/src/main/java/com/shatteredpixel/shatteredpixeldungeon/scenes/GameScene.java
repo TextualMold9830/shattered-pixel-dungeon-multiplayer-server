@@ -422,7 +422,7 @@ public class GameScene extends PixelScene {
 		if (InterLevelSceneServer.mode != InterLevelSceneServer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
 					&& (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.DESCEND || InterLevelSceneServer.mode == InterLevelSceneServer.Mode.FALL)) {
-				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
+				GLog.h(Messages.get(this, "descend", Dungeon.depth));
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 
 				for (Char ch : Actor.chars()) {
@@ -451,9 +451,9 @@ public class GameScene extends PixelScene {
 			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESET) {
 				GLog.h(Messages.get(this, "warp"));
 			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESURRECT) {
-				GLog.h(Messages.get(this, "resurrect"), Dungeon.depth);
+				GLog.h(Messages.get(this, "resurrect", Dungeon.depth));
 			} else {
-				GLog.h(Messages.get(this, "return"), Dungeon.depth);
+				GLog.h(Messages.get(this, "return", Dungeon.depth));
 			}
 			for (Hero hero : Dungeon.heroes) {
 				if (hero != null) {
@@ -911,7 +911,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	private synchronized void prompt(String text) {
+	private synchronized void prompt(LocalizedString text) {
 
 		if (prompt != null) {
 			prompt.killAndErase();
