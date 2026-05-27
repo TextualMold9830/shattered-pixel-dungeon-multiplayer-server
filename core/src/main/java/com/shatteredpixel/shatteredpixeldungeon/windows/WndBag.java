@@ -86,7 +86,7 @@ public class WndBag extends WndTabbed {
 		layoutTabs();
 
 
-		String title = selector != null ? selector.textPrompt() : null;
+		LocalizedString title = selector != null ? selector.textPrompt() : null;
 		//title =	title != null ? Messages.titleCase(title) : Messages.titleCase( bag.name() );
 
 		JSONObject wnd_obj = new JSONObject();

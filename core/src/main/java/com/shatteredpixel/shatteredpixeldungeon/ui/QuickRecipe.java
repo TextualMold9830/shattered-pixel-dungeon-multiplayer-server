@@ -269,7 +269,7 @@ public class QuickRecipe extends Component {
 
 					@Override
 					public LocalizedString info() {
-						return "";
+						return LocalizedString.EMPTY;
 					}
 				}));
 				return result;
@@ -279,7 +279,7 @@ public class QuickRecipe extends Component {
 					Scroll scroll = (Scroll) Reflection.newInstance(cls);
 					if (!scroll.isKnown()) scroll.anonymize();
 					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(scroll));
-//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero)));
+//					result.add(new QuickRecipe( r, in, r.sampleOutput(in, hero))); //todo
 				}
 				return result;
 			case 2:
@@ -301,7 +301,7 @@ public class QuickRecipe extends Component {
 							
 							@Override
 							public LocalizedString info() {
-								return "";
+								return LocalizedString.EMPTY;
 							}
 						}));
 				return result;

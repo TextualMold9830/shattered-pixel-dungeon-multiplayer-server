@@ -137,7 +137,7 @@ public class Explosive extends Weapon.Enchantment {
 		} else if (durability > 10){
 			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_warm")));
 		} else {
-			desc += " _" + Messages.get(this, "desc_hot") + "_";
+			desc = LocalizedString.concat(desc, " _", Messages.get(this, "desc_hot"), "_");
 		}
 		return desc;
 	}

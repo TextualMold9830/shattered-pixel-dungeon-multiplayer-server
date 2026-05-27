@@ -288,7 +288,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				new Meditate()
 		};
 
-		public String name(){
+		public LocalizedString name(){
 			return Messages.get(this, "name");
 		}
 

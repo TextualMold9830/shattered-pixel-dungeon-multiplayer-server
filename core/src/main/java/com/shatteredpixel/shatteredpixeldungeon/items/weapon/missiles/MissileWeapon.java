@@ -391,7 +391,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	public LocalizedString status() {
 		//show quantity even when it is 1
-		return Integer.toString(quantity());
+		return LocalizedString.raw(Integer.toString(quantity()));
 	}
 	
 	@Override
@@ -659,9 +659,9 @@ abstract public class MissileWeapon extends Weapon {
 			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "not_cursed")));
 		}
 
-		info += "\n\n";
+		info = LocalizedString.concat(info, "\n\n");
 		LocalizedString statsInfo = statsInfo();
-		if (!statsInfo.equals("")) info = LocalizedString.concat(info, LocalizedString.concat(statsInfo, " "));
+		if (!statsInfo.equals(LocalizedString.EMPTY)) info = LocalizedString.concat(info, LocalizedString.concat(statsInfo, " "));
 		info = LocalizedString.concat(info, Messages.get(MissileWeapon.class, "distance"));
 
 		switch (augment) {
