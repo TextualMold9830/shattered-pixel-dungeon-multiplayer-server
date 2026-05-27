@@ -2,7 +2,6 @@ package com.nikita22007.multiplayer.utils.text;
 
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import org.jetbrains.annotations.CheckReturnValue;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,14 +9,15 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class LocalizedString {
-    
+
     public static LocalizedString EMPTY = LocalizedString.raw("");
-    
+
     public enum Mode {
         KEY,
         RAW,
         TRANSFORM,
-        CONCAT
+        CONCAT,
+        TRUNCATE
     }
 
     public enum Transform {
@@ -35,7 +35,10 @@ public class LocalizedString {
     private final LocalizedString text;
     private final Object[] parts;
 
-    private LocalizedString(Mode mode, LocalizedKey key, String raw, Object[] args, Transform transform, LocalizedString text, Object[] parts) {
+    private final int maxLength;
+    private final String ellipsis;
+
+    private LocalizedString(Mode mode, LocalizedKey key, String raw, Object[] args, Transform transform, LocalizedString text, Object[] parts, int maxLength, String ellipsis) {
         this.mode = mode;
         this.key = key;
         this.raw = raw;
@@ -43,16 +46,18 @@ public class LocalizedString {
         this.transform = transform;
         this.text = text;
         this.parts = parts == null ? new Object[0] : parts;
+        this.maxLength = maxLength;
+        this.ellipsis = ellipsis;
     }
 
     @CheckReturnValue
     public static LocalizedString key(LocalizedKey key, Object... args) {
-        return new LocalizedString(Mode.KEY, key, null, args, null, null, null);
+        return new LocalizedString(Mode.KEY, key, null, args, null, null, null, 0, null);
     }
 
     @CheckReturnValue
     public static LocalizedString raw(String raw, Object... args) {
-        return new LocalizedString(Mode.RAW, null, raw, args, null, null, null);
+        return new LocalizedString(Mode.RAW, null, raw, args, null, null, null, 0, null);
     }
 
     @CheckReturnValue
@@ -66,14 +71,19 @@ public class LocalizedString {
 
     @CheckReturnValue
     public static LocalizedString transform(Transform transform, LocalizedString text) {
-        return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null);
+        return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null, 0, null);
+    }
+
+    @CheckReturnValue
+    public static LocalizedString truncate(LocalizedString text, int maxLength, String ellipsis) {
+        return new LocalizedString(Mode.TRUNCATE, null, null, null, null, text, null, maxLength, ellipsis);
     }
 
     @CheckReturnValue
     public static LocalizedString concat(Object... parts) {
         ArrayList<Object> flattened = new ArrayList<>();
         flattenConcatParts(flattened, parts);
-        return new LocalizedString(Mode.CONCAT, null, null, null, null, null, flattened.toArray(new Object[0]));
+        return new LocalizedString(Mode.CONCAT, null, null, null, null, null, flattened.toArray(new Object[0]), 0, null);
     }
 
     private static void flattenConcatParts(ArrayList<Object> flattened, Object[] parts) {
@@ -125,6 +135,16 @@ public class LocalizedString {
     }
 
     @CheckReturnValue
+    public int maxLength() {
+        return maxLength;
+    }
+
+    @CheckReturnValue
+    public String ellipsis() {
+        return ellipsis;
+    }
+
+    @CheckReturnValue
     public static String[] resolveArray(LocalizedString[] localizedStrings) {
         String[] strings = new String[localizedStrings.length];
         for (int i= 0 ; i < localizedStrings.length; i++) {
@@ -163,12 +183,14 @@ public class LocalizedString {
                 && Arrays.equals(args, other.args)
                 && transform == other.transform
                 && Objects.equals(text, other.text)
-                && Arrays.equals(parts, other.parts);
+                && Arrays.equals(parts, other.parts)
+                && maxLength == other.maxLength
+                && Objects.equals(ellipsis, other.ellipsis);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(mode, key, raw, transform, text);
+        int result = Objects.hash(mode, key, raw, transform, text, maxLength, ellipsis);
         result = 31 * result + Arrays.hashCode(args);
         result = 31 * result + Arrays.hashCode(parts);
         return result;
