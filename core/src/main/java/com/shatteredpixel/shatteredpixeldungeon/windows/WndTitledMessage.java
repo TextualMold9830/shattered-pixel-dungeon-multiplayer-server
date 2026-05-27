@@ -43,6 +43,10 @@ public class WndTitledMessage extends Window {
 		//this( new IconTitle( icon, title ), message, hero );
 
 	}
+	public WndTitledMessage( Image icon, LocalizedString title, LocalizedString message ) {
+		this(icon, title.toString(), message.toString());
+	}
+
 	public WndTitledMessage( Image icon, String title, String message ) {
 		this(icon, title, message, null);
 	}
