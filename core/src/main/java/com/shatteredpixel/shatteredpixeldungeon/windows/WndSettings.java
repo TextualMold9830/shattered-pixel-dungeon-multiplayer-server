@@ -1108,7 +1108,7 @@ public class WndSettings extends WndTabbed {
 			add(txtTranifex);
 
 			if (currLang != Languages.ENGLISH) {
-				LocalizedString credText = Messages.titleCase(Messages.get(this, "credits"));
+				String credText = Messages.titleCase(Messages.get(this, "credits")).toString();
 				btnCredits = new RedButton(credText, credText.length() > 9 ? 6 : 9) {
 					@Override
 					protected void onClick() {
@@ -1127,7 +1127,7 @@ public class WndSettings extends WndTabbed {
 						int index = 0;
 						if (reviewers.length > 0){
 							entries[0] = "_";
-							entries[1] = Messages.titleCase(Messages.get(LangsTab.this, "reviewers"));
+							entries[1] = Messages.titleCase(Messages.get(LangsTab.this, "reviewers")).toString();
 							entries[2] = "_";
 							entries[3] = "\n";
 							index = 4;
@@ -1143,7 +1143,7 @@ public class WndSettings extends WndTabbed {
 						}
 
 						entries[index] = "_";
-						entries[index+1] = Messages.titleCase(Messages.get(LangsTab.this, "translators"));
+						entries[index+1] = Messages.titleCase(Messages.get(LangsTab.this, "translators")).toString();
 						entries[index+2] = "_";
 						entries[index+3] = "\n";
 						index += 4;
