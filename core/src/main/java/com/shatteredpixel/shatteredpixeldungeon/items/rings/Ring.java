@@ -340,7 +340,7 @@ public class Ring extends KindofMisc {
 		if (levelsToID <= 0){
 			if (ShardOfOblivion.passiveIDDisabled()){
 				if (levelsToID > -1){
-					GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+					GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 				}
 				levelsToID = -1;
 			} else {

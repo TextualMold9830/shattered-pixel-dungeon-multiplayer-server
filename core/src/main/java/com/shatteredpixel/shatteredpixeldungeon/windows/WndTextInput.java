@@ -104,7 +104,7 @@ public class WndTextInput extends Window {
 				btnPaste.enable(Gdx.app.getClipboard().hasContents());
 			}
 		};
-		if (initialValue != null) textBox.setText(initialValue);
+		if (initialValue != null) textBox.setText(initialValue.toString());
 		textBox.setMaxLength(maxLength);
 
 		//sets different height depending on whether this is a single or multi line input.
