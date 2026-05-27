@@ -124,10 +124,10 @@ public class StartScene extends PixelScene {
 		String sortText = "";
 		switch (SPDSettings.gamesInProgressSort()){
 			case "level":
-				sortText = Messages.get(this, "sort_level");
+				sortText = Messages.get(this, "sort_level").toString();
 				break;
 			case "last_played":
-				sortText = Messages.get(this, "sort_recent");
+				sortText = Messages.get(this, "sort_recent").toString();
 				break;
 		}
 

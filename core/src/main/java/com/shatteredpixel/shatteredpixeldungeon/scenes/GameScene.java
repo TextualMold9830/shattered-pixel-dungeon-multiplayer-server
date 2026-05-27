@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.nikita22007.multiplayer.server.effects.Flare;
 import com.nikita22007.multiplayer.server.ui.Banner;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -421,7 +422,7 @@ public class GameScene extends PixelScene {
 		if (InterLevelSceneServer.mode != InterLevelSceneServer.Mode.NONE) {
 			if (Dungeon.depth == Statistics.deepestFloor
 					&& (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.DESCEND || InterLevelSceneServer.mode == InterLevelSceneServer.Mode.FALL)) {
-				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
+				GLog.h(Messages.get(this, "descend", Dungeon.depth));
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 
 				for (Char ch : Actor.chars()) {
@@ -450,9 +451,9 @@ public class GameScene extends PixelScene {
 			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESET) {
 				GLog.h(Messages.get(this, "warp"));
 			} else if (InterLevelSceneServer.mode == InterLevelSceneServer.Mode.RESURRECT) {
-				GLog.h(Messages.get(this, "resurrect"), Dungeon.depth);
+				GLog.h(Messages.get(this, "resurrect", Dungeon.depth));
 			} else {
-				GLog.h(Messages.get(this, "return"), Dungeon.depth);
+				GLog.h(Messages.get(this, "return", Dungeon.depth));
 			}
 			for (Hero hero : Dungeon.heroes) {
 				if (hero != null) {
@@ -910,7 +911,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	private synchronized void prompt(String text) {
+	private synchronized void prompt(LocalizedString text) {
 
 		if (prompt != null) {
 			prompt.killAndErase();
@@ -1371,7 +1372,7 @@ public class GameScene extends PixelScene {
 		} else if (objects.size() == 1) {
 			examineObject(objects.get(0), hero);
 		} else {
-			String[] names = getObjectNames(objects).toArray(new String[0]);
+			LocalizedString[] names = getObjectNames(objects).toArray(new LocalizedString[0]);
 
 			GameScene.show(new WndOptions(hero, Icons.get(Icons.INFO),
 					Messages.get(GameScene.class, "choose_examine"),
@@ -1411,8 +1412,8 @@ public class GameScene extends PixelScene {
 		return objects;
 	}
 
-	private static ArrayList<String> getObjectNames(ArrayList<Object> objects) {
-		ArrayList<String> names = new ArrayList<>();
+	private static ArrayList<LocalizedString> getObjectNames(ArrayList<Object> objects) {
+		ArrayList<LocalizedString> names = new ArrayList<>();
 		for (Object obj : objects) {
 			if (obj instanceof Hero) names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
 			else if (obj instanceof Mob) names.add(Messages.titleCase(((Mob) obj).name()));
@@ -1462,7 +1463,7 @@ public class GameScene extends PixelScene {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return null;
 		}
 	}

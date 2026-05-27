@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -293,34 +294,34 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public String info(Hero hero) {
-		String desc = super.info(hero);
+	public LocalizedString info(Hero hero) {
+		LocalizedString desc = super.info(hero);
 
-		desc += "\n\n" + statsDesc(hero);
+		LocalizedString.concat(desc, "\n\n", statsDesc(hero));
 
 		if (resinBonus == 1){
-			desc += "\n\n" + Messages.get(Wand.class, "resin_one");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Wand.class, "resin_one")));
 		} else if (resinBonus > 1){
-			desc += "\n\n" + Messages.get(Wand.class, "resin_many", resinBonus);
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Wand.class, "resin_many", resinBonus)));
 		}
 
 		if (cursed && cursedKnown) {
-			desc += "\n\n" + Messages.get(Wand.class, "cursed");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Wand.class, "cursed")));
 		} else if (!isIdentified() && cursedKnown){
-			desc += "\n\n" + Messages.get(Wand.class, "not_cursed");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Wand.class, "not_cursed")));
 		}
 
 		if (hero != null && hero.subClass == HeroSubClass.BATTLEMAGE){
-			desc += "\n\n" + Messages.get(this, "bmage_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "bmage_desc")));
 		}
 
 		return desc;
 	}
 
-	public String statsDesc(Hero hero){
+	public LocalizedString statsDesc(Hero hero){
 		return statsDesc();
 	}
-	protected String statsDesc(){
+	protected LocalizedString statsDesc(){
 		return Messages.get(this, "stats_desc");
 	}
 	@Deprecated
@@ -353,9 +354,9 @@ public abstract class Wand extends Item {
 	}
 	
 	@Override
-	public String status() {
+	public LocalizedString status() {
 		if (levelKnown) {
-			return (curChargeKnown ? getCurCharges() : "?") + "/" + maxCharges;
+			return LocalizedString.raw((curChargeKnown ? getCurCharges() : "?") + "/" + maxCharges);
 		} else {
 			return null;
 		}
@@ -481,7 +482,7 @@ public abstract class Wand extends Item {
 			if (usesLeftToID <= 0 || hero.pointsInTalent(Talent.SCHOLARS_INTUITION) == 2) {
 				if (ShardOfOblivion.passiveIDDisabled()){
 					if (usesLeftToID > -1){
-						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 					}
 					usesLeftToID = -1;
 				} else {
@@ -686,8 +687,8 @@ public abstract class Wand extends Item {
 		public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {}
 
 		@Override
-		public String info() {
-			return "";
+		public LocalizedString info() {
+			return LocalizedString.EMPTY;
 		}
 	}
 	
@@ -828,7 +829,7 @@ public abstract class Wand extends Item {
 		}
 		
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Wand.class, "prompt");
 		}
 	};

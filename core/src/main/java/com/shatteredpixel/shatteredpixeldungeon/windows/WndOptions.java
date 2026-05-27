@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
@@ -50,6 +51,9 @@ public class WndOptions extends Window {
 	protected static final int MARGIN 		= 2;
 	protected static final int BUTTON_HEIGHT	= 18;
 
+	public WndOptions(Image icon, LocalizedString title, LocalizedString message, LocalizedString... options) {
+		this(icon, title.toString(), message.toString(), LocalizedString.resolveArray(options));
+	}
 	public WndOptions(Image icon, String title, String message, String... options) {
 		super();
 
@@ -66,7 +70,11 @@ public class WndOptions extends Window {
 
 		layoutBody(pos, message, options);
 	}
+
 	public WndOptions(Hero hero, Image icon, String title, String message, String... options) {
+		this(hero, icon, LocalizedString.raw(title), LocalizedString.raw(message), LocalizedString.raw(options));
+	}
+	public WndOptions(Hero hero, Image icon, LocalizedString title, LocalizedString message, LocalizedString... options) {
 		super(hero);
 		WndOptionsParams params = new WndOptionsParams();
 		params.title = title;
@@ -82,7 +90,7 @@ public class WndOptions extends Window {
 		//}
 		sendWnd(params);
 	}
-	public WndOptions(Hero owner, String title, String message, String... options) {
+	public WndOptions(Hero owner, LocalizedString title, LocalizedString message, LocalizedString... options) {
 		super(owner);
 		WndOptionsParams params = new WndOptionsParams();
 		params.title = title;
@@ -93,6 +101,10 @@ public class WndOptions extends Window {
 
 
 	protected void sendWnd(Image icon, @NotNull String title, @Nullable Integer titleColor, @NotNull String message, String... options) {
+		this.sendWnd(icon, LocalizedString.raw(title), titleColor, LocalizedString.raw(message), LocalizedString.raw(options));
+	}
+
+	protected void sendWnd(Image icon, @NotNull LocalizedString title, @Nullable Integer titleColor, @NotNull LocalizedString message, LocalizedString... options) {
 		WndOptionsParams params = new WndOptionsParams();
 		params.title = title;
 		params.titleColor = titleColor;
@@ -172,10 +184,10 @@ public class WndOptions extends Window {
 	protected static final class WndOptionsParams {
 		public @Nullable Item item;
 		public @Nullable CharSprite charSprite;
-		public @NotNull String title = "Untitled";
+		public @NotNull LocalizedString title = LocalizedString.raw("Untitled");
 		public @Nullable Integer titleColor = null;
-		public @NotNull String message = "MissingNo";
-		public List<String> options = new ArrayList<String>(3);
+		public @NotNull LocalizedString message = LocalizedString.raw("MissingNo");
+		public List<LocalizedString> options = new ArrayList<LocalizedString>(3);
 		public @Nullable Image icon;
 
 		public JSONObject toJSONObject(Hero owner) {

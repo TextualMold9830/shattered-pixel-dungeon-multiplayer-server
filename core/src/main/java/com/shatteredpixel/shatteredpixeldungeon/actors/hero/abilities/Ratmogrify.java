@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -65,7 +66,7 @@ public class Ratmogrify extends ArmorAbility {
 	public static boolean useRatroicEnergy = false;
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 
@@ -306,7 +307,7 @@ public class Ratmogrify extends ArmorAbility {
 
 
 		@Override
-		public String name() {
+		public LocalizedString name() {
 			return Messages.get(this, "name", original.name());
 		}
 

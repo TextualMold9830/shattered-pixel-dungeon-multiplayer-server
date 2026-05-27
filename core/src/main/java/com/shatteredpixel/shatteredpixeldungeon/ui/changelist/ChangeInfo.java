@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui.changelist;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.watabou.noosa.ColorBlock;
@@ -38,7 +39,11 @@ public class ChangeInfo extends Component {
 	private RenderedTextBlock text;
 	
 	private ArrayList<ChangeButton> buttons = new ArrayList<>();
-	
+
+	public ChangeInfo(LocalizedString title, boolean majorTitle, LocalizedString text){
+		this(title.toString(), majorTitle, text.toString());
+	}
+
 	public ChangeInfo( String title, boolean majorTitle, String text){
 		super();
 		

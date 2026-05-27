@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -55,7 +56,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.Serializatio
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -395,7 +395,7 @@ public class Heap implements Bundlable {
 		sendHeapRemoving(this);
 	}
 
-	public String title(){
+	public LocalizedString title(){
 		switch(type){
 			case FOR_SALE:
 				Item i = peek();
@@ -421,7 +421,7 @@ public class Heap implements Bundlable {
 		}
 	}
 
-	public String info(){
+	public LocalizedString info(){
 		switch(type){
 			case CHEST:
 				return Messages.get(this, "chest_desc");

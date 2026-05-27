@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -547,7 +548,7 @@ public class CellSelector extends ScrollArea {
 
 		public void onRightClick( Integer cell ){} //do nothing by default
 
-		public abstract String prompt();
+		public abstract LocalizedString prompt();
 	}
 	public CellSelector(Hero owner ) {
         super(GameScene.tiles);

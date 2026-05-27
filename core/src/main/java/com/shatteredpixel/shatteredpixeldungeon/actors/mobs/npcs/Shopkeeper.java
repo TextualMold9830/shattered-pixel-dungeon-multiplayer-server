@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -217,7 +218,7 @@ public class Shopkeeper extends NPC {
 
 	private static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(Shopkeeper.class, "sell");
 		}
 
@@ -243,14 +244,14 @@ public class Shopkeeper extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				String[] options = new String[2+ buybackItems.size()];
+				LocalizedString[] options = new LocalizedString[2+ buybackItems.size()];
 				int maxLen = PixelScene.landscape() ? 30 : 25;
 				int i = 0;
 				options[i++] = Messages.get(Shopkeeper.this, "sell");
 				options[i++] = Messages.get(Shopkeeper.this, "talk");
 				for (Item item : buybackItems){
 					options[i] = Messages.get(Heap.class, "for_sale", item.value(), Messages.titleCase(item.title()));
-					if (options[i].length() > maxLen) options[i] = options[i].substring(0, maxLen-3) + "...";
+					options[i] = LocalizedString.truncate(options[i], maxLen, "..."); //todo check this
 					i++;
 				}
 				GameScene.show(new WndOptions((Hero) c,sprite(), Messages.titleCase(name()), description(), options){
@@ -308,13 +309,13 @@ public class Shopkeeper extends NPC {
 		return true;
 	}
 
-	public String chatText(Hero hero){
+	public LocalizedString chatText(Hero hero){
 		if (hero.buff(AscensionChallenge.class) != null){
 			return Messages.get(this, "talk_ascent");
 		}
 		switch (Dungeon.depth){
 			case 6: default:
-				return Messages.get(this, "talk_prison_intro") + "\n\n" + Messages.get(this, "talk_prison_" + hero.heroClass.name());
+				return LocalizedString.concat(Messages.get(this, "talk_prison_intro"), "\n\n", Messages.get(this, "talk_prison_" + hero.heroClass.name()));
 			case 11:
 				return Messages.get(this, "talk_caves");
 			case 16:

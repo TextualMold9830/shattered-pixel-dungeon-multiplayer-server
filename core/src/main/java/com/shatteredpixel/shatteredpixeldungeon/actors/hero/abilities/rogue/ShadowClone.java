@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -58,7 +59,7 @@ import java.util.ArrayList;
 public class ShadowClone extends ArmorAbility {
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		if (getShadowAlly() == null) {
 			return super.targetingPrompt();
 		} else {

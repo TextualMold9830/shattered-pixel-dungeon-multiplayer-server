@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -64,7 +65,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -118,9 +118,8 @@ public class Trinity extends ArmorAbility {
 				RedButton btnBody = null;
 				if (bodyForm instanceof Weapon.Enchantment){
 
-					btnBody = new RedButton(Messages.get(WndUseTrinity.class, "body",
-							Messages.titleCase(((Weapon.Enchantment)bodyForm).name()))
-							+ " " + trinityItemUseText(bodyForm.getClass(), hero), 6){
+					btnBody = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "body",
+							Messages.titleCase(((Weapon.Enchantment)bodyForm).name())), " ", trinityItemUseText(bodyForm.getClass(), hero)), 6){
 						@Override
 						protected void onClick() {
 							if (hero.belongings.weapon() != null &&
@@ -152,9 +151,8 @@ public class Trinity extends ArmorAbility {
 						btnBody.icon(new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, ((Weapon.Enchantment) bodyForm).glowing()));
 					}
 				} else if (bodyForm instanceof Armor.Glyph){
-					btnBody = new RedButton(Messages.get(WndUseTrinity.class, "body",
-							Messages.titleCase(((Armor.Glyph)bodyForm).name()))
-							+ " " + trinityItemUseText(bodyForm.getClass(), hero), 6){
+					btnBody = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "body",
+							Messages.titleCase(((Armor.Glyph)bodyForm).name())), " ", trinityItemUseText(bodyForm.getClass(), hero)), 6){
 						@Override
 						protected void onClick() {
 							if (hero.belongings.armor() != null &&
@@ -196,9 +194,8 @@ public class Trinity extends ArmorAbility {
 			}
 
 			if (mindForm != null){
-				RedButton btnMind = new RedButton(Messages.get(WndUseTrinity.class, "mind",
-						Messages.titleCase(((Item)mindForm).name()))
-						+ " " + trinityItemUseText(mindForm.getClass(), hero), 6){
+				RedButton btnMind = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "mind",
+						Messages.titleCase(((Item)mindForm).name())), " ", trinityItemUseText(mindForm.getClass(), hero)), 6){
 					@Override
 					protected void onClick() {
 						hide();
@@ -229,9 +226,8 @@ public class Trinity extends ArmorAbility {
 			}
 
 			if (spiritForm != null){
-				RedButton btnSpirit = new RedButton(Messages.get(WndUseTrinity.class, "spirit",
-						Messages.titleCase(((Item)spiritForm).name()))
-						+ " " + trinityItemUseText(spiritForm.getClass(), hero), 6){
+				RedButton btnSpirit = new RedButton(LocalizedString.concat(Messages.get(WndUseTrinity.class, "spirit",
+						Messages.titleCase(((Item)spiritForm).name())), " ", trinityItemUseText(spiritForm.getClass(), hero)), 6){
 					@Override
 					protected void onClick() {
 						if ((hero.belongings.ring() != null && hero.belongings.ring().getClass().equals(spiritForm.getClass()))
@@ -363,7 +359,7 @@ public class Trinity extends ArmorAbility {
 				if (Weapon.Enchantment.class.isAssignableFrom(cls)){
 					MeleeWeapon w = new WornShortsword(){
 						@Override
-						public String name() {
+						public LocalizedString name() {
 							//for button tooltips
 							return enchantment.name();
 						}
@@ -377,7 +373,7 @@ public class Trinity extends ArmorAbility {
 				} else if (Armor.Glyph.class.isAssignableFrom(cls)) {
 					Armor a = new ClothArmor(){
 						@Override
-						public String name() {
+						public LocalizedString name() {
 							//for button tooltips
 							return glyph.name();
 						}
@@ -431,7 +427,7 @@ public class Trinity extends ArmorAbility {
 		public WndItemConfirm(Window parentWnd, Item item, HolyTome tome, ClericSpell spell, Hero hero){
 			super(new ItemSprite(item),  Messages.titleCase(getName(item)), getText(item, hero), hero);
 
-			String text;
+			LocalizedString text;
 			if (spell == BodyForm.INSTANCE){
 				text = Messages.get(this, "body");
 			} else if (spell == MindForm.INSTANCE){
@@ -469,7 +465,7 @@ public class Trinity extends ArmorAbility {
 
 		}
 
-		private static String getName(Item item){
+		private static LocalizedString getName(Item item){
 			if (item instanceof MeleeWeapon){
 				return ((MeleeWeapon) item).enchantment.name();
 			} else if (item instanceof Armor){
@@ -478,19 +474,19 @@ public class Trinity extends ArmorAbility {
 			return item.name();
 		}
 
-		private static String getText(Item item, Hero hero){
+		private static LocalizedString getText(Item item, Hero hero){
 			if (item instanceof MeleeWeapon){
-				return ((MeleeWeapon) item).enchantment.desc() + "\n\n" + trinityItemUseText(((MeleeWeapon) item).enchantment.getClass(), hero);
+				return LocalizedString.concat(((MeleeWeapon) item).enchantment.desc(), "\n\n", trinityItemUseText(((MeleeWeapon) item).enchantment.getClass(), hero));
 			} else if (item instanceof Armor){
-				return ((Armor) item).glyph.desc() + "\n\n" + trinityItemUseText(((Armor) item).glyph.getClass(), hero);
+				return LocalizedString.concat(((Armor) item).glyph.desc(), "\n\n", trinityItemUseText(((Armor) item).glyph.getClass(), hero));
 			} else {
-				return item.desc(hero) + "\n\n" + trinityItemUseText(item.getClass(), hero);
+				return LocalizedString.concat(item.desc(hero), "\n\n", trinityItemUseText(item.getClass(), hero));
 			}
 		}
 
 	}
 
-	public static String trinityItemUseText(Class<?> cls, Hero hero ){
+	public static LocalizedString trinityItemUseText(Class<?> cls, Hero hero ){
 		float chargeUse = trinityChargeUsePerEffect(cls, hero);
 		if (Weapon.Enchantment.class.isAssignableFrom(cls) || Armor.Glyph.class.isAssignableFrom(cls)) {
 			for (Class ench : Weapon.Enchantment.rare) {
@@ -520,7 +516,7 @@ public class Trinity extends ArmorAbility {
 		if (Artifact.class.isAssignableFrom(cls)){
 			return Messages.get(Trinity.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(hero), Messages.decimalFormat("#.##", chargeUse));
 		}
-		return "error!";
+		return LocalizedString.raw("error!");
 
 	}
 

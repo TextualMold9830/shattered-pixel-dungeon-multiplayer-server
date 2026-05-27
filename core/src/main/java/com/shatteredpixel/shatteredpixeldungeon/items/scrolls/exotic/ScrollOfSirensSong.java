@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -117,7 +118,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(ScrollOfSirensSong.class, "prompt");
 		}
 

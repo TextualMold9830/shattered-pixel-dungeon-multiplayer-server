@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -55,7 +56,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -439,13 +439,13 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public String description() {
-			String desc = super.description();
+		public LocalizedString description() {
+			LocalizedString desc = super.description();
 
 			if (summonedALly){
-				desc += " " + Messages.get(this, "desc_ally");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_ally")));
 			} else {
-				desc += " " + Messages.get(this, "desc_boss");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_boss")));
 			}
 
 			return desc;

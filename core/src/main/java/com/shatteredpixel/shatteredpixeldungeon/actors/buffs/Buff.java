@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -118,8 +119,8 @@ public class Buff extends Actor {
 		//do nothing by default
 	}
 
-	public String heroMessage(){
-		String msg = Messages.get(this, "heromsg");
+	public LocalizedString heroMessage(){
+		LocalizedString msg = Messages.get(this, "heromsg");
 		if (msg.isEmpty()) {
 			return null;
 		} else {
@@ -127,11 +128,11 @@ public class Buff extends Actor {
 		}
 	}
 
-	public String name() {
+	public LocalizedString name() {
 		return Messages.get(this, "name");
 	}
 
-	public String desc(){
+	public LocalizedString desc(){
 		return Messages.get(this, "desc");
 	}
 

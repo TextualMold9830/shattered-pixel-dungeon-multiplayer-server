@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -212,19 +213,19 @@ public class ChaliceOfBlood extends Artifact {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 
 		if (isEquipped (hero)){
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 			if (cursed)
-				desc += Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_cursed"));
 			else if (level() == 0)
-				desc += Messages.get(this, "desc_1");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_1"));
 			else if (level() < levelCap)
-				desc += Messages.get(this, "desc_2");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_2"));
 			else
-				desc += Messages.get(this, "desc_3");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_3"));
 		}
 
 		return desc;

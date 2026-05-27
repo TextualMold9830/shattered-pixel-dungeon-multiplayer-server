@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -204,16 +205,16 @@ public class TimekeepersHourglass extends Artifact {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 
 		if (isEquipped( hero)){
 			if (!cursed) {
 				if (level() < levelCap )
-					desc += "\n\n" + Messages.get(this, "desc_hint");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_hint")));
 
 			} else
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 		}
 		return desc;
 	}
@@ -465,7 +466,7 @@ public class TimekeepersHourglass extends Artifact {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", Messages.decimalFormat("#.##", Math.max(0, turnsToCost)));
 		}
 

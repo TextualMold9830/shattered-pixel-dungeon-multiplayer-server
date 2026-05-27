@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -39,7 +40,7 @@ public abstract class TargetedClericSpell extends ClericSpell {
 			}
 
 			@Override
-			public String prompt() {
+			public LocalizedString prompt() {
 				return targetingPrompt();
 			}
 		});
@@ -50,7 +51,7 @@ public abstract class TargetedClericSpell extends ClericSpell {
 		return Ballistica.MAGIC_BOLT;
 	}
 
-	protected String targetingPrompt(){
+	protected LocalizedString targetingPrompt(){
 		return Messages.get(this, "prompt");
 	}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -146,7 +147,7 @@ public class EtherealChains extends Artifact {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(EtherealChains.class, "prompt");
 		}
 	};
@@ -299,15 +300,15 @@ public class EtherealChains extends Artifact {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 
 		if (isEquipped(hero)){
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 			if (cursed)
-				desc += Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_cursed"));
 			else
-				desc += Messages.get(this, "desc_equipped");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_equipped"));
 		}
 		return desc;
 	}

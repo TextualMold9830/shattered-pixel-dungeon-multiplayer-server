@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -131,7 +132,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", count, dispTurns(comboTime));
 	}
 
@@ -168,7 +169,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action_name");
 	}
 
@@ -219,11 +220,11 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			this.tintColor = tintColor;
 		}
 
-		public String title(){
+		public LocalizedString title(){
 			return Messages.get(this, name() + ".name");
 		}
 
-		public String desc(int count, Hero hero){
+		public LocalizedString desc(int count, Hero hero){
 			switch (this){
 				case CLOBBER: default:
 					if (count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1){
@@ -536,7 +537,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Combo.class, "prompt");
 		}
 	};

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -182,7 +183,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			hero.spend(-hero.cooldown());
 			new EnergyCrystal(item.energyVal()).doPickUp(hero);
 			item.identify(hero);
-			GLog.h("You energized: " + item.name());
+			GLog.h(LocalizedString.concat("You energized: ", item.name()));
 
 		}
 	}
@@ -194,7 +195,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			hero.spend(-hero.cooldown());
 			new EnergyCrystal(item.energyVal()).doPickUp(hero);
 			item.identify(hero);
-			GLog.h("You energized: " + item.name());
+			GLog.h(LocalizedString.concat("You energized: ", item.name()));
 
 	}
 
@@ -210,7 +211,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 	public static WndBag.ItemSelector selector = new WndBag.ItemSelector() {
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(WndEnergizeItem.class, "prompt");
 		}
 

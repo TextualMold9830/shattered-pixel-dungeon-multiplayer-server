@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -101,7 +101,7 @@ public class Tomahawk extends MissileWeapon {
 		return super.proc( attacker, defender, damage );
 	}
 
-	public String statsInfo(){
+	public LocalizedString statsInfo(){
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc",
 					Math.round(augment.damageFactor(minBleed())),

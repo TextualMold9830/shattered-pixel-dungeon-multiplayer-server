@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -402,7 +403,7 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.GRASS:
 				return Messages.get(CavesLevel.class, "grass_name");
@@ -422,10 +423,10 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
-				return super.tileDesc( tile ) + "\n\n" + Messages.get(CavesBossLevel.class, "water_desc");
+				return LocalizedString.concat(super.tileDesc( tile ), "\n\n", Messages.get(CavesBossLevel.class, "water_desc"));
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:
 				return Messages.get(CavesLevel.class, "entrance_desc");
@@ -781,7 +782,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_name");
@@ -793,7 +794,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_desc");
@@ -908,7 +909,7 @@ public class CavesBossLevel extends Level {
 		};
 
 		@Override
-		public String tileDesc() {
+		public LocalizedString tileDesc() {
 			return Messages.get(CavesBossLevel.class, "energy_desc");
 		}
 

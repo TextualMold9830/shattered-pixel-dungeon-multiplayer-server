@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui.changelist;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.ChangesScene;
@@ -42,12 +43,17 @@ public class ChangeButton extends Component {
 		this.icon = icon;
 		add(this.icon);
 		
-		this.title = Messages.titleCase(title);
+		this.title = Messages.titleCase(title).toString();
 		this.messages = messages;
 		
 		layout();
 	}
-	
+
+	public ChangeButton( Image icon, LocalizedString title, String... messages){
+		this(icon, title.toString(), messages);
+	}
+
+
 	public ChangeButton(Item item, String message ){
 		this( new ItemSprite(item), item.name(), message);
 	}

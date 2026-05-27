@@ -21,16 +21,23 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 
 public class RedButton extends StyledButton {
-			
 	public RedButton( String label ) {
+		this(LocalizedString.raw(label));
+	}
+
+	public RedButton( LocalizedString label ) {
 		this(label, 9);
 	}
 
 	public RedButton( String label, int size ){
-		super( Chrome.Type.RED_BUTTON, label, size);
+		this(LocalizedString.raw(label), size);
+	}
+	public RedButton( LocalizedString label, int size ){
+		super( Chrome.Type.RED_BUTTON, label.toString(), size); //todo check this
 	}
 	
 }

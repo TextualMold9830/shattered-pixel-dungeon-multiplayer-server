@@ -21,10 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -52,7 +50,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfShock;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -242,18 +239,18 @@ public abstract class Scroll extends Item {
 
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		return isKnown() ? super.name() : Messages.get(this, rune);
 	}
 
 	@Override
-	public String info() {
+	public LocalizedString info() {
 		//skip custom notes if anonymized and un-Ided
 		return (anonymous && (handler == null || !handler.isKnown( this ))) ? desc() : super.info();
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 	
@@ -305,8 +302,8 @@ public abstract class Scroll extends Item {
 		public void doRead(Hero hero) {}
 		
 		@Override
-		public String info() {
-			return "";
+		public LocalizedString info() {
+			return LocalizedString.EMPTY;
 		}
 	}
 	

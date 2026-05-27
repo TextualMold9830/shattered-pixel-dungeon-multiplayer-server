@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -64,13 +65,13 @@ public class RingOfWealth extends Ring {
 	private float triesToDrop = Float.MIN_VALUE;
 	private int dropsToRare = Integer.MIN_VALUE;
 	
-	public String statsInfo(Hero hero) {
+	public LocalizedString statsInfo(Hero hero) {
 		if (isIdentified()){
-			String info = Messages.get(this, "stats",
+			LocalizedString info = Messages.get(this, "stats",
 					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
 			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
-				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(hero)) - 1f)));
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "combined_stats",
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(hero)) - 1f)))));
 			}
 			return info;
 		} else {

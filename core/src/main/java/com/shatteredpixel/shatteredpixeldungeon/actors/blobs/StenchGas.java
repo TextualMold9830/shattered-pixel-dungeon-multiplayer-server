@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -74,7 +75,7 @@ public class StenchGas extends Blob {
 	}
 
 	@Override
-	public String tileDesc() {
+	public LocalizedString tileDesc() {
 		return Messages.get(this, "desc");
 	}
 }

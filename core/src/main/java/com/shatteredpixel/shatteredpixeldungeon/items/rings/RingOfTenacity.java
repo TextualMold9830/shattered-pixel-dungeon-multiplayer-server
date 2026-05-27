@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -33,13 +34,13 @@ public class RingOfTenacity extends Ring {
 		buffClass = Tenacity.class;
 	}
 
-	public String statsInfo(Hero hero) {
+	public LocalizedString statsInfo(Hero hero) {
 		if (isIdentified()){
-			String info = Messages.get(this, "stats",
+			LocalizedString info = Messages.get(this, "stats",
 					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, soloBuffedBonus()))));
 			if (isEquipped(hero) && soloBuffedBonus() != combinedBuffedBonus(hero)){
-				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, combinedBuffedBonus(hero)))));
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(this, "combined_stats",
+						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.85f, combinedBuffedBonus(hero)))))));
 			}
 			return info;
 		} else {

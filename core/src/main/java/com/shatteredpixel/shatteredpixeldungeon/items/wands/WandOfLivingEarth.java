@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -332,10 +333,10 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public String desc() {
-			String desc = Messages.get( this, "desc", armor, armorToGuardian());
+		public LocalizedString desc() {
+			LocalizedString desc = Messages.get( this, "desc", armor, armorToGuardian());
 			if (isEmpowered()){
-				desc += "\n\n" + Messages.get(this, "desc_many", (int)powerOfManyTurns);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_many", (int)powerOfManyTurns)));
 			}
 			return desc;
 		}
@@ -429,14 +430,14 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public String description() {
-			String desc = Messages.get(this, "desc");
+		public LocalizedString description() {
+			LocalizedString desc = Messages.get(this, "desc");
 
 			if (Actor.chars().contains(this)) {
 				if (Dungeon.isChallenged(Challenges.NO_ARMOR)) {
-					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, 2 + wandLevel);
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "wand_info", wandLevel, 2 + wandLevel)));
 				} else {
-					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, 3 + 3 * wandLevel);
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "wand_info", wandLevel, 3 + 3 * wandLevel)));
 				}
 			}
 

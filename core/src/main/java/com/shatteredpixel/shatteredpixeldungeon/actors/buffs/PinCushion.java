@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -93,10 +94,10 @@ public class PinCushion extends Buff {
 	}
 
 	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
 		for (Item i : items){
-			desc += "\n" + i.title();
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", i.title()));
 		}
 		return desc;
 	}

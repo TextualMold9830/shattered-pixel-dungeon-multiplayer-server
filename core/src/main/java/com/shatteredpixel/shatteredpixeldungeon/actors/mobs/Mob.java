@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -984,7 +985,7 @@ public abstract class Mob extends Char {
 
 		}
 
-		String message = Messages.get(this, "died");
+		LocalizedString message = Messages.get(this, "died");
 		for (Hero hero : Dungeon.heroes) {
 			if (hero == null) {
 				continue;
@@ -1169,15 +1170,20 @@ public abstract class Mob extends Char {
 		return target;
 	}
 
-	public String description() {
+	public LocalizedString description(Hero hero) {
+		return description();
+	}
+
+
+	public LocalizedString description() {
 		return Messages.get(this, "desc");
 	}
 
-	public String info(){
-		String desc = description();
+	public LocalizedString info(){
+		LocalizedString desc = description();
 
 		for (Buff b : buffs(ChampionEnemy.class)){
-			desc += "\n\n_" + Messages.titleCase(b.name()) + "_\n" + b.desc();
+			desc = LocalizedString.concat(desc, "\n\n_", Messages.titleCase(b.name()) , "_\n" + b.desc());
 		}
 
 		return desc;
@@ -1191,6 +1197,15 @@ public abstract class Mob extends Char {
 		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str, hero);
 	}
 	public void yell( String str ) {
+		GLog.newLine();
+		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str );
+	}
+
+	public void yell( LocalizedString str, Hero hero ) {
+		GLog.newLine();
+		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str, hero);
+	}
+	public void yell( LocalizedString str ) {
 		GLog.newLine();
 		GLog.n( "%s: \"%s\" ", Messages.titleCase(name()), str );
 	}

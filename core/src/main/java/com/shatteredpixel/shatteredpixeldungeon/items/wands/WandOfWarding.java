@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -209,7 +210,7 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", level()+2);
 		else
@@ -247,7 +248,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public String name() {
+		public LocalizedString name() {
 			return Messages.get(this, "name_" + tier );
 		}
 
@@ -471,7 +472,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public String description() {
+		public LocalizedString description() {
 			if (!Actor.chars().contains(this)){
 				//for viewing in the journal
 				if (tier < 4){

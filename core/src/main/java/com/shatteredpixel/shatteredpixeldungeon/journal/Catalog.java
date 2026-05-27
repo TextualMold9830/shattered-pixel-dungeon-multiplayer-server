@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
@@ -167,7 +168,7 @@ public enum Catalog {
 		}
 	}
 
-	public String title(){
+	public LocalizedString title(){
 		return Messages.get(this, name() + ".title");
 	}
 

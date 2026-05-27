@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.watabou.noosa.Visual;
 
@@ -62,7 +63,7 @@ public class ActionIndicator {
 
 	public interface Action {
 
-		String actionName();
+		LocalizedString actionName();
 
 		default int actionIcon(){
 			return HeroIcon.NONE;

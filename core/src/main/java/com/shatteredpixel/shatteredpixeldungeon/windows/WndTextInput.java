@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.badlogic.gdx.Gdx;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -31,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.TextInput;
 
+//todo send this?
 public class WndTextInput extends Window {
 
 	private static final int WIDTH = 135;
@@ -43,9 +45,8 @@ public class WndTextInput extends Window {
 	protected RedButton btnCopy;
 	protected RedButton btnPaste;
 
-	public WndTextInput(final String title, final String body, final String initialValue, final int maxLength,
-	                           final boolean multiLine, final String posTxt, final String negTxt) {
-		super();
+	public WndTextInput(final LocalizedString title, final LocalizedString body, final LocalizedString initialValue, final int maxLength,
+						final boolean multiLine, final LocalizedString posTxt, final LocalizedString negTxt) {
 
 		//need to offset to give space for the soft keyboard
 		if (PixelScene.landscape()) {
@@ -103,7 +104,7 @@ public class WndTextInput extends Window {
 				btnPaste.enable(Gdx.app.getClipboard().hasContents());
 			}
 		};
-		if (initialValue != null) textBox.setText(initialValue);
+		if (initialValue != null) textBox.setText(initialValue.toString());
 		textBox.setMaxLength(maxLength);
 
 		//sets different height depending on whether this is a single or multi line input.

@@ -650,7 +650,7 @@ public class Dungeon {
 			bundle.put( ENERGY, energy );
 
 			for (int d : droppedItems.keyArray()) {
-				bundle.put(Messages.format(DROPPED, d), droppedItems.get(d));
+				bundle.put(String.format(DROPPED, d), droppedItems.get(d));
 			}
 
 			quickslot.storePlaceholders( bundle );
@@ -801,8 +801,8 @@ public class Dungeon {
 
 				//dropped items
 				ArrayList<Item> items = new ArrayList<>();
-				if (bundle.contains(Messages.format( DROPPED, i )))
-					for (Bundlable b : bundle.getCollection( Messages.format( DROPPED, i ) ) ) {
+				if (bundle.contains(String.format( DROPPED, i )))
+					for (Bundlable b : bundle.getCollection( String.format( DROPPED, i ) ) ) {
 						items.add( (Item)b );
 					}
 				if (!items.isEmpty()) {

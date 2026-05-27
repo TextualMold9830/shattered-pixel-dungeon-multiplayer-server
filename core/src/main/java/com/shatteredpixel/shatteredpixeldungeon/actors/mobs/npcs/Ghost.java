@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -181,7 +182,7 @@ public class Ghost extends NPC {
 			}
 		} else {
 			Mob questBoss;
-			String txt_quest;
+			LocalizedString txt_quest;
 
 			switch (Quest.type){
 				case 1: default:

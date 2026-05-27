@@ -23,6 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.messages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.nikita22007.multiplayer.utils.text.LocalizedKey;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -49,7 +51,7 @@ public class Messages {
 	private static Languages lang;
 	private static Locale locale;
 
-	public static final String NO_TEXT_FOUND = "!!!NO TEXT FOUND!!!";
+	public static final LocalizedString NO_TEXT_FOUND = LocalizedString.raw("!!!NO TEXT FOUND!!!"); //todo check usages
 
 	public static Languages lang(){
 		return lang;
@@ -114,15 +116,39 @@ public class Messages {
 	 * Resource grabbing methods
 	 */
 
-	public static String get(String key, Object...args){
-		return get(null, key, args);
+	public static LocalizedString get(String key, Object...args){
+		return LocalizedString.key(new LocalizedKey(null, key), args);
 	}
 
-	public static String get(Object o, String k, Object...args){
+	public static LocalizedString get(Object o, String k, Object...args){
 		return get(o.getClass(), k, args);
 	}
 
-	public static String get(Class c, String k, Object...args){
+	public static LocalizedString get(Class<?> c, String k, Object...args){
+		return LocalizedString.key(new LocalizedKey(c == null ? null : c.getName(), k), args);
+	}
+
+	public static String resolve(String key, Object...args){
+		return resolve((Class<?>) null, key, args);
+	}
+
+	public static String resolve(Object o, String k, Object...args){
+		return resolve(o.getClass(), k, args);
+	}
+
+	public static String resolve(LocalizedString text) {
+		return text.resolve();
+	}
+
+	public static String resolve(LocalizedKey key, Object... args) {
+		String ownerClass = key.ownerClass();
+		if (ownerClass == null) {
+			return resolve(key.name(), args);
+		}
+		return resolveByKey(toPropertyOwner(ownerClass) + "." + key.name(), key.name(), args);
+	}
+
+	public static String resolve(Class<?> c, String k, Object...args){
 		String key;
 		if (c != null){
 			key = c.getName().replace("com.shatteredpixel.shatteredpixeldungeon.", "");
@@ -130,20 +156,24 @@ public class Messages {
 		} else
 			key = k;
 
+		return resolveByKey(key, k, args);
+	}
+
+	private static String resolveByKey(String key, String fallbackKey, Object... args) {
 		String value = getFromBundle(key.toLowerCase(Locale.ENGLISH));
 		if (value != null){
-			if (args.length > 0) return format(value, args);
+			if (args.length > 0) return resolveFormat(value, args);
 			else return value;
 		} else {
 			//this is so child classes can inherit properties from their parents.
 			//in cases where text is commonly grabbed as a utility from classes that aren't mean to be instantiated
 			//(e.g. flavourbuff.dispTurns()) using .class directly is probably smarter to prevent unnecessary recursive calls.
-			if (c != null && c.getSuperclass() != null){
-				return get(c.getSuperclass(), k, args);
-			} else {
-				return NO_TEXT_FOUND;
-			}
+			return NO_TEXT_FOUND.toString();
 		}
+	}
+
+	private static String toPropertyOwner(String ownerClass) {
+		return ownerClass.replace("com.shatteredpixel.shatteredpixeldungeon.", "");
 	}
 	public static String getFirstValidKey(Class c, String k){
 		String key;
@@ -181,7 +211,15 @@ public class Messages {
 	 * String Utility Methods
 	 */
 
-	public static String format( String format, Object...args ) {
+	public static LocalizedString format( String format, Object...args ) {
+		return LocalizedString.raw(format, args);
+	}
+
+	public static LocalizedString concat( Object...parts ) {
+		return LocalizedString.concat(parts);
+	}
+
+	public static String resolveFormat( String format, Object...args ) {
 		try {
 			return String.format(locale(), format, args);
 		} catch (IllegalFormatException e) {
@@ -199,7 +237,15 @@ public class Messages {
 		return formatters.get(format).format(number);
 	}
 
-	public static String capitalize( String str ){
+	public static LocalizedString capitalize( String str ){
+		return capitalize(LocalizedString.raw(str));
+	}
+
+	public static LocalizedString capitalize( LocalizedString text ){
+		return LocalizedString.transform(LocalizedString.Transform.CAPITALIZE, text);
+	}
+
+	public static String resolveCapitalize( String str ){
 		if (str.length() == 0)  return str;
 		else                    return str.substring( 0, 1 ).toUpperCase(locale) + str.substring( 1 );
 	}
@@ -210,7 +256,15 @@ public class Messages {
 			Arrays.asList("a", "an", "and", "of", "by", "to", "the", "x", "for")
 	);
 
-	public static String titleCase( String str ){
+	public static LocalizedString titleCase( String str ){
+		return titleCase(LocalizedString.raw(str));
+	}
+
+	public static LocalizedString titleCase( LocalizedString text ){
+		return LocalizedString.transform(LocalizedString.Transform.TITLE_CASE, text);
+	}
+
+	public static String resolveTitleCase( String str ){
 		//English capitalizes every word except for a few exceptions
 		if (lang == Languages.ENGLISH){
 			String result = "";
@@ -219,22 +273,51 @@ public class Messages {
 				if (noCaps.contains(word.trim().toLowerCase(Locale.ENGLISH).replaceAll(":|[0-9]", ""))){
 					result += word;
 				} else {
-					result += capitalize(word);
+					result += resolveCapitalize(word);
 				}
 			}
 			//first character is always capitalized.
-			return capitalize(result);
+			return resolveCapitalize(result);
 		}
 
 		//Otherwise, use sentence case
-		return capitalize(str);
+		return resolveCapitalize(str);
 	}
 
-	public static String upperCase( String str ){
+	public static LocalizedString upperCase( String str ){
+		return upperCase(LocalizedString.raw(str));
+	}
+
+	public static LocalizedString upperCase( LocalizedString text ){
+		return LocalizedString.transform(LocalizedString.Transform.UPPER_CASE, text);
+	}
+
+	public static LocalizedString toUpperCase( String str, Locale ignoredLocale ){
+		return toUpperCase(LocalizedString.raw(str), ignoredLocale);
+	}
+
+	public static LocalizedString toUpperCase( LocalizedString text, Locale ignoredLocale ){
+		return LocalizedString.transform(LocalizedString.Transform.UPPER_CASE, text);
+	}
+
+	public static String resolveUpperCase( String str ){
 		return str.toUpperCase(locale);
 	}
 
-	public static String lowerCase( String str ){
+	public static String resolveToUpperCase( String str, Locale locale ){
+		return str.toUpperCase(locale);
+	}
+
+	public static LocalizedString lowerCase( String str ){
+		return lowerCase(LocalizedString.raw(str));
+	}
+
+	public static LocalizedString lowerCase( LocalizedString text ){
+		return LocalizedString.transform(LocalizedString.Transform.LOWER_CASE, text);
+	}
+
+	public static String resolveLowerCase( String str ){
 		return str.toLowerCase(locale);
 	}
+
 }

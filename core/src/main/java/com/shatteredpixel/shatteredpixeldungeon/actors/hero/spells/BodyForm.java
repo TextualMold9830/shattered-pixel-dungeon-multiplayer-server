@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -47,8 +47,8 @@ public class BodyForm extends ClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		return Messages.get(this, "desc", duration(hero)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+	public LocalizedString desc(Hero hero) {
+		return LocalizedString.concat(Messages.get(this, "desc", duration(hero)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class BodyForm extends ClericSpell {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			if (enchant() != null){
 				return Messages.get(this, "desc", Messages.titleCase(enchant().name()), dispTurns());
 			} else if (glyph() != null){

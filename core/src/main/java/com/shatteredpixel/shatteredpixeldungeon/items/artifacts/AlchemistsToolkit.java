@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -93,11 +94,11 @@ public class AlchemistsToolkit extends Artifact {
 
 				final int maxLevels = Math.min(levelCap - level(), Dungeon.energy/6);
 
-				String[] options;
+				LocalizedString[] options;
 				if (maxLevels > 1){
-					options = new String[]{ Messages.get(this, "energize_1"), Messages.get(this, "energize_all", 6*maxLevels, maxLevels)};
+					options = new LocalizedString[]{ Messages.get(this, "energize_1"), Messages.get(this, "energize_all", 6*maxLevels, maxLevels)};
 				} else {
-					options = new String[]{ Messages.get(this, "energize_1")};
+					options = new LocalizedString[]{ Messages.get(this, "energize_1")};
 				}
 
 				GameScene.show(new WndOptions(hero, new ItemSprite(image),
@@ -143,7 +144,7 @@ public class AlchemistsToolkit extends Artifact {
 	}
 
 	@Override
-	public String status(Hero hero) {
+	public LocalizedString status(Hero hero) {
 		if (isEquipped(hero) && warmUpDelay > 0 && !cursed){
 			return Messages.format( "%d%%", Math.max(0, 100 - (int)warmUpDelay) );
 		} else {
@@ -179,13 +180,13 @@ public class AlchemistsToolkit extends Artifact {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String result = Messages.get(this, "desc");
+	public LocalizedString desc(Hero hero) {
+		LocalizedString result = Messages.get(this, "desc");
 
 		if (isEquipped(hero)) {
-			if (cursed)                 result += "\n\n" + Messages.get(this, "desc_cursed");
-			else if (warmUpDelay > 0)   result += "\n\n" + Messages.get(this, "desc_warming");
-			else                        result += "\n\n" + Messages.get(this, "desc_hint");
+			if (cursed)                 result = LocalizedString.concat(result, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
+			else if (warmUpDelay > 0)   result = LocalizedString.concat(result, LocalizedString.concat("\n\n", Messages.get(this, "desc_warming")));
+			else                        result = LocalizedString.concat(result, LocalizedString.concat("\n\n", Messages.get(this, "desc_hint")));
 		}
 		
 		return result;

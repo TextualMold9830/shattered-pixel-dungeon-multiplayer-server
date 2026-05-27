@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -580,11 +581,11 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public String description() {
-		String desc = super.description();
+	public LocalizedString description() {
+		LocalizedString desc = super.description();
 
 		if (Statistics.spawnersAlive > 0){
-			desc += "\n\n" + Messages.get(this, "desc_spawners");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_spawners")));
 		}
 
 		return desc;

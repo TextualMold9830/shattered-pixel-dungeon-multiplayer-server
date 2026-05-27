@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -377,6 +378,10 @@ public class SendData {
     }
 
     public static void sendMessageToAll(String message) {
+        sendMessageToAll(LocalizedString.raw(message));
+    }
+
+    public static void sendMessageToAll(LocalizedString message) {
         JSONObject messageObj;
         try {
             messageObj = new JSONObject().put("text", message);
@@ -394,6 +399,10 @@ public class SendData {
     }
 
     public static void sendMessage(Integer ID, String message) {
+        sendMessage(ID, LocalizedString.raw(message));
+    }
+
+    public static void sendMessage(Integer ID, LocalizedString message) {
         JSONObject messageObj;
         try {
             messageObj = new JSONObject().put("text", message);
@@ -413,6 +422,10 @@ public class SendData {
     }
 
     public static void sendMessageExcept(Integer exceptId, String message) {
+        sendMessageExcept(exceptId, LocalizedString.raw(message));
+    }
+
+    public static void sendMessageExcept(Integer exceptId, LocalizedString message) {
         if (exceptId == null)
         {
             sendMessageToAll(message);
@@ -666,7 +679,7 @@ public class SendData {
         sendCustomActionForAll(action);
     }
 
-    public static void sendCellListenerPrompt(String new_prompt, int networkID) {
+    public static void sendCellListenerPrompt(LocalizedString new_prompt, int networkID) {
         if (networkID < 0){
             return;
         }

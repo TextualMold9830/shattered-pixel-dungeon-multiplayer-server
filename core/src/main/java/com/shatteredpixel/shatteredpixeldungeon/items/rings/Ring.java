@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -168,22 +169,22 @@ public class Ring extends KindofMisc {
 		}
 	
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		return isKnown() ? super.name() : Messages.get(Ring.class, gem);
 	}
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return isKnown() ? super.desc() : Messages.get(this, "unknown_desc");
 	}
 
 	@Override
-	public String info(Hero hero){
-		String desc;
+	public LocalizedString info(Hero hero){
+		LocalizedString desc;
 		//skip custom notes if anonymized and un-Ided
 		//skip custom notes if anonymized and un-IdedString desc;
 		if (anonymous && (handler == null || !handler.isKnown( this ))){
@@ -194,18 +195,18 @@ public class Ring extends KindofMisc {
 		}
 
 		if (cursed && isEquipped( hero)) {
-			desc += "\n\n" + Messages.get(Ring.class, "cursed_worn");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "cursed_worn")));
 			
 		} else if (cursed && cursedKnown) {
-			desc += "\n\n" + Messages.get(Ring.class, "curse_known");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "curse_known")));
 			
 		} else if (!isIdentified() && cursedKnown){
-			desc += "\n\n" + Messages.get(Ring.class, "not_cursed");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(Ring.class, "not_cursed")));
 			
 		}
 		
 		if (isKnown()) {
-			desc += "\n\n" + statsInfo();
+			desc = LocalizedString.concat(desc,"\n\n", statsInfo());
 		}
 		
 		return desc;
@@ -339,7 +340,7 @@ public class Ring extends KindofMisc {
 		if (levelsToID <= 0){
 			if (ShardOfOblivion.passiveIDDisabled()){
 				if (levelsToID > -1){
-					GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
+					GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready", name()));
 				}
 				levelsToID = -1;
 			} else {

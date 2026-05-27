@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
@@ -81,10 +82,10 @@ public class ItemJournalButton extends IconButton {
 		}
 	}
 
-	private static void addNote(Window parentWindow, Notes.CustomRecord note, String promptTitle, String prompttext){
+	private static void addNote(Window parentWindow, Notes.CustomRecord note, LocalizedString promptTitle, LocalizedString prompttext){
 		GameScene.show(new WndTextInput(promptTitle,
 				prompttext,
-				"",
+				LocalizedString.EMPTY,
 				50,
 				false,
 				Messages.get(CustomNoteButton.CustomNoteWindow.class, "confirm"),

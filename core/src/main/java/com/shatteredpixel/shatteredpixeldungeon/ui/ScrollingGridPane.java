@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.ColorBlock;
@@ -57,10 +58,14 @@ public class ScrollingGridPane extends ScrollPane {
 	}
 
 	public void addHeader( String text ){
+		addHeader(LocalizedString.raw(text));
+	}
+
+	public void addHeader( LocalizedString text ){
 		addHeader( text, 7, false );
 	}
 
-	public void addHeader( String text, int size, boolean center ){
+	public void addHeader( LocalizedString text, int size, boolean center ){
 		GridHeader header = new GridHeader(text, size, center);
 		content.add(header);
 		items.add(header);
@@ -230,11 +235,11 @@ public class ScrollingGridPane extends ScrollPane {
 		protected RenderedTextBlock text;
 		boolean center;
 
-		public GridHeader( String text ){
+		public GridHeader( LocalizedString text ){
 			this(text, 7, false);
 		}
 
-		public GridHeader( String text, int size, boolean center ){
+		public GridHeader( LocalizedString text, int size, boolean center ){
 			super();
 
 			this.center = center;

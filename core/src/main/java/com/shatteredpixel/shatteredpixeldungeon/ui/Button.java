@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
@@ -86,7 +87,7 @@ public class Button extends Component {
 
 			@Override
 			protected void onHoverStart(PointerEvent event) {
-				String text = hoverText();
+				String text = hoverText().toString();
 				if (text != null){
 					int key = 0;
 					if (keyAction() != null){
@@ -178,7 +179,7 @@ public class Button extends Component {
 		return false;
 	}
 
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return null;
 	}
 

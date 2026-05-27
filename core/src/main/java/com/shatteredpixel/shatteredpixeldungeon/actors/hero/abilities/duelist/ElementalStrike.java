@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -51,7 +52,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
@@ -134,7 +134,7 @@ public class ElementalStrike extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt(Hero hero) {
+	public LocalizedString targetingPrompt(Hero hero) {
 		return Messages.get(this, "prompt");
 	}
 
@@ -553,19 +553,19 @@ public class ElementalStrike extends ArmorAbility {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = Messages.get(this, "desc");
 		if (Game.scene() instanceof GameScene){
 			KindOfWeapon w = hero.belongings.weapon();
 			if (w instanceof MeleeWeapon && ((MeleeWeapon) w).enchantment != null){
-				desc += "\n\n" + Messages.get(((MeleeWeapon) w).enchantment, "elestrike_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(((MeleeWeapon) w).enchantment, "elestrike_desc")));
 			} else {
-				desc += "\n\n" + Messages.get(this, "generic_desc");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 			}
 		} else {
-			desc += "\n\n" + Messages.get(this, "generic_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "generic_desc")));
 		}
-		desc += "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "cost", (int)baseChargeUse)));
 		return desc;
 	}
 

@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.utils;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Signal;
 
@@ -47,23 +47,28 @@ public class GLog {
 	}
 	
 	public static void i( String text, Object... args ) {
-		
+		String resolved = text;
 		if (args.length > 0) {
-			text = Messages.format( text, args );
+			resolved = Messages.resolveFormat(text, args);
 		}
-		
-		DeviceCompat.log( TAG, text );
-		update.dispatch( text );
-		iWithTarget(null, text, args);
+
+		DeviceCompat.log(TAG, resolved);
+		update.dispatch(resolved);
+		iWithTarget(null, LocalizedString.raw(text, args));
 	}
-	public static void iWithTarget( Integer ID,  String text, Object... args ) {
 
-		if (args.length > 0) {
-			text = Utils.format( text, args );
-		}
+	public static void i(LocalizedString text) {
+		iWithTarget(null, text);
+	}
 
+	public static void iWithTarget( Integer ID, String text, Object... args ) {
+		iWithTarget(ID, LocalizedString.raw(text, args));
+	}
+
+	public static void iWithTarget( Integer ID, LocalizedString text ) {
 		sendMessage(ID, text);
 	}
+
 	public static void withColor(String text, int color, Object... args) {
 		i(CUSTOM+Integer.toHexString(color), text, args);
 	}
@@ -71,16 +76,32 @@ public class GLog {
 	public static void p( String text, Object... args ) {
 		i( POSITIVE + text, args );
 	}
+
+	public static void p( LocalizedString text ) {
+		i( LocalizedString.raw(POSITIVE + "%s", text) );
+	}
 	
 	public static void n( String text, Object... args ) {
 		i( NEGATIVE + text, args );
+	}
+
+	public static void n( LocalizedString text ) {
+		i( LocalizedString.raw(NEGATIVE + "%s", text) );
 	}
 	
 	public static void w( String text, Object... args ) {
 		i( WARNING + text, args );
 	}
+
+	public static void w( LocalizedString text ) {
+		i( LocalizedString.raw(WARNING + "%s", text) );
+	}
 	
 	public static void h( String text, Object... args ) {
 		i( HIGHLIGHT + text, args );
+	}
+
+	public static void h( LocalizedString text ) {
+		i( LocalizedString.raw(HIGHLIGHT + "%s", text) );
 	}
 }

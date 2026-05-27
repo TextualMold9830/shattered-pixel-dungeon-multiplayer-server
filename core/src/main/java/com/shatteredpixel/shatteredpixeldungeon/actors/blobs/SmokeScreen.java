@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -34,7 +35,7 @@ public class SmokeScreen extends Blob {
 	}
 
 	@Override
-	public String tileDesc() {
+	public LocalizedString tileDesc() {
 		return Messages.get(this, "desc");
 	}
 	

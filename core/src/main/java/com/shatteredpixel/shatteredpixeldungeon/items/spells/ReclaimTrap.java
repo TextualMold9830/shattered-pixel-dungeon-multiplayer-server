@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -116,12 +117,12 @@ public class ReclaimTrap extends TargetedSpell {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 		if (storedTrap != null){
-			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(storedTrap, "name"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_trap", Messages.get(storedTrap, "name"))));
 		} else if (hero != null && hero.belongings.contains(this) && hero.buff(ReclaimedTrap.class) != null){
-			desc += "\n\n" + Messages.get(this, "desc_trap", Messages.get(hero.buff(ReclaimedTrap.class).trap, "name"));
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_trap", Messages.get(hero.buff(ReclaimedTrap.class).trap, "name"))));
 		}
 		return desc;
 	}

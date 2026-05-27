@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -189,7 +190,7 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (level < STARVING) {
 			return Messages.get(this, "hungry");
 		} else {
@@ -198,15 +199,15 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public String desc() {
-		String result;
+	public LocalizedString desc() {
+		LocalizedString result;
 		if (level < STARVING) {
 			result = Messages.get(this, "desc_intro_hungry");
 		} else {
 			result = Messages.get(this, "desc_intro_starving");
 		}
 
-		result += Messages.get(this, "desc");
+		result = LocalizedString.concat(result, Messages.get(this, "desc"));
 
 		return result;
 	}

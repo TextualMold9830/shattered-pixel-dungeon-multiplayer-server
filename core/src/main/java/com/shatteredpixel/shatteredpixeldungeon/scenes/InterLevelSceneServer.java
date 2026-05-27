@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.heroes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -108,7 +109,7 @@ public class InterLevelSceneServer extends Scene {
 				scrollSpeed = 5;
 				break;
 			case DESCEND:
-				if (Dungeon.heroes == null){
+				if (heroes == null){
 					loadingDepth = 1;
 					fadeTime = FADE_TIME.SLOW_FADE;
 				} else {
@@ -154,7 +155,7 @@ public class InterLevelSceneServer extends Scene {
 //		else
 			loadingAsset = Assets.Interfaces.SHADOW;
 
-		String text = Messages.get(Mode.class, mode.name());
+		LocalizedString text = Messages.get(Mode.class, mode.name());
 
 		phase = Phase.FADE_IN;
 		// We do not send the message and the scrolling speed
@@ -232,7 +233,7 @@ public class InterLevelSceneServer extends Scene {
 			}*/
 		}
 		if (error != null) {
-			String errorMsg;
+			LocalizedString errorMsg;
 			if (error instanceof FileNotFoundException)
 				errorMsg = Messages.get(this, "file_not_found");
 			else if (error instanceof IOException) errorMsg = Messages.get(this, "io_error");

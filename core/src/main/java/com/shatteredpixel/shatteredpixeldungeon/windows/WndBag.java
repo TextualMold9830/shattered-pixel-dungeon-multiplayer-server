@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.HeroHelp;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -44,7 +45,6 @@ import com.watabou.pixeldungeon.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class WndBag extends WndTabbed {
 		layoutTabs();
 
 
-		String title = selector != null ? selector.textPrompt() : null;
+		LocalizedString title = selector != null ? selector.textPrompt() : null;
 		//title =	title != null ? Messages.titleCase(title) : Messages.titleCase( bag.name() );
 
 		JSONObject wnd_obj = new JSONObject();
@@ -245,7 +245,7 @@ public class WndBag extends WndTabbed {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return Messages.titleCase(bag.name());
 		}
 	}
@@ -257,7 +257,7 @@ public class WndBag extends WndTabbed {
 		}
 
 		@Override
-		public String name() {
+		public LocalizedString name() {
 			return null;
 		}
 
@@ -274,7 +274,7 @@ public class WndBag extends WndTabbed {
 
 	public abstract static class ItemSelector {
 		public Hero owner = null;
-		public abstract String textPrompt();
+		public abstract LocalizedString textPrompt();
 		public Class<?extends Bag> preferredBag(){
 			return null; //defaults to last bag opened
 		}

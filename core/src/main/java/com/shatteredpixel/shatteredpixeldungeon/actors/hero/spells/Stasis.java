@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -58,8 +59,8 @@ public class Stasis extends ClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		return Messages.get(this, "desc", 30 + 30*hero.pointsInTalent(Talent.STASIS)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+	public LocalizedString desc(Hero hero) {
+		return LocalizedString.concat(Messages.get(this, "desc", 30 + 30*hero.pointsInTalent(Talent.STASIS)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	@Override
@@ -144,7 +145,7 @@ public class Stasis extends ClericSpell {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", Messages.titleCase(stasisAlly.name()), dispTurns());
 		}
 

@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.badlogic.gdx.Input;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -329,6 +330,10 @@ public class PixelScene extends Scene {
 
 	public static RenderedTextBlock renderTextBlock(int size ){
 		return renderTextBlock("", size);
+	}
+
+	public static RenderedTextBlock renderTextBlock(LocalizedString text, int size ) {
+		return renderTextBlock(text.toString(), size);
 	}
 
 	public static RenderedTextBlock renderTextBlock(String text, int size ){

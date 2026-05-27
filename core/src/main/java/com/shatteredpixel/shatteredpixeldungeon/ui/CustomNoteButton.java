@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -36,8 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.windows.*;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
-import com.watabou.noosa.Game;
-import com.watabou.utils.Callback;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Reflection;
 
@@ -103,7 +102,7 @@ public class CustomNoteButton extends IconButton {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return Messages.get(this, "title");
 	}
 
@@ -145,7 +144,7 @@ public class CustomNoteButton extends IconButton {
 	private WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return	Messages.get(CustomNoteButton.class, "new_inv_prompt");
 		}
 
@@ -267,7 +266,7 @@ public class CustomNoteButton extends IconButton {
 				@Override
 				protected void onClick() {
 					GameScene.show(new WndTextInput(Messages.get(CustomNoteWindow.class, "edit_title"),
-							"",
+							LocalizedString.EMPTY,
 							rec.title(),
 							50,
 							false,
@@ -276,7 +275,7 @@ public class CustomNoteButton extends IconButton {
 						@Override
 						public void onSelect(boolean positive, String text) {
 							if (positive && !text.isEmpty()){
-								rec.editText(text, rec.desc());
+								rec.editText(text, rec.desc().toString());
 								CustomNoteWindow.this.hide();
 								if (parentWindow instanceof WndUseItem){
 									WndUseItem newParent = new WndUseItem(((WndUseItem) parentWindow).owner, ((WndUseItem) parentWindow).item, getOwnerHero());
@@ -293,12 +292,12 @@ public class CustomNoteButton extends IconButton {
 			add(title);
 			title.setRect(0, Math.min(height+2, PixelScene.uiCamera.height-50), width/2-1, 16);
 
-			String editBodyText = rec.desc().isEmpty() ? Messages.get(CustomNoteWindow.class, "add_text") : Messages.get(CustomNoteWindow.class, "edit_text");
+			LocalizedString editBodyText = rec.desc().isEmpty() ? Messages.get(CustomNoteWindow.class, "add_text") : Messages.get(CustomNoteWindow.class, "edit_text");
 			RedButton body = new RedButton(editBodyText){
 				@Override
 				protected void onClick() {
 					GameScene.show(new WndTextInput(editBodyText,
-							"",
+							LocalizedString.EMPTY,
 							rec.desc(),
 							500,
 							true,
@@ -307,7 +306,7 @@ public class CustomNoteButton extends IconButton {
 						@Override
 						public void onSelect(boolean positive, String text) {
 							if (positive){
-								rec.editText(rec.title(), text);
+								rec.editText(rec.title().toString(), text);
 								CustomNoteWindow.this.hide();
 								GameScene.show(new CustomNoteWindow(rec, parentWindow));
 							}
@@ -353,10 +352,10 @@ public class CustomNoteButton extends IconButton {
 		}
 	}
 
-	private static void addNote(Notes.CustomRecord note, String promptTitle, String prompttext){
+	private static void addNote(Notes.CustomRecord note, LocalizedString promptTitle, LocalizedString prompttext){
 		GameScene.show(new WndTextInput(promptTitle,
 				prompttext,
-				"",
+				LocalizedString.EMPTY,
 				50,
 				false,
 				Messages.get(CustomNoteWindow.class, "confirm"),

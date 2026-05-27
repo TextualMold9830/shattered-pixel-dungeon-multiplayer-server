@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Foliage;
@@ -87,9 +88,9 @@ public class Notes {
 
 		protected abstract int order();
 
-		public abstract String title();
+		public abstract LocalizedString title();
 
-		public abstract String desc();
+		public abstract LocalizedString desc();
 		
 		@Override
 		public abstract boolean equals(Object obj);
@@ -213,7 +214,7 @@ public class Notes {
 		}
 
 		@Override
-		public String title() {
+		public LocalizedString title() {
 			switch (landmark) {
 				default:            return Messages.get(Landmark.class, landmark.name());
 				case CHASM_FLOOR:   return Messages.get(Level.Feeling.class, "chasm_title");
@@ -230,9 +231,9 @@ public class Notes {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			switch (landmark) {
-				default:            return "";
+				default:            return LocalizedString.EMPTY;
 
 				case CHASM_FLOOR:   return Messages.get(Level.Feeling.class, "chasm_desc");
 				case WATER_FLOOR:   return Messages.get(Level.Feeling.class, "water_desc");
@@ -325,12 +326,12 @@ public class Notes {
 		}
 
 		@Override
-		public String title() {
+		public LocalizedString title() {
 			return key.title();
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			//TODO: check this
 			return key.desc(null);
 		}
@@ -485,13 +486,13 @@ public class Notes {
 		}
 
 		@Override
-		public String title() {
-			return title;
+		public LocalizedString title() {
+			return LocalizedString.raw(title);
 		}
 
 		@Override
-		public String desc() {
-			return body;
+		public LocalizedString desc() {
+			return LocalizedString.raw(body);
 		}
 
 		@Override

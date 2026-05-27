@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -188,29 +189,29 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
 		
 		AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 		if (target instanceof Hero) {
-			desc += "\n\n" + Messages.get(this, "desc_dmg",
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_dmg",
 					(int) (lvl.baseDmgBonus * 100),
 					(int) (lvl.KOThreshold((Hero) target) * 100),
-					(int) (lvl.KOThreshold((Hero) target) * 20));
+					(int) (lvl.KOThreshold((Hero) target) * 20))));
 		}
 		if (lvl.damageRolls > 1){
-			desc += " " + Messages.get(this, "desc_dmg_likely");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_dmg_likely")));
 		}
 		
 		if (lvl.blinkDistance(target) > 0){
-			desc += "\n\n" + Messages.get(this, "desc_blink", lvl.blinkDistance(target));
+			 desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_blink", lvl.blinkDistance(target))));
 		}
 		
-		desc += "\n\n" + Messages.get(this, "desc_invis_time", turnsInvis);
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_invis_time", turnsInvis)));
 		
 		if (lvl.ordinal() != AttackLevel.values().length-1){
 			AttackLevel next = AttackLevel.values()[lvl.ordinal()+1];
-			desc += "\n" + Messages.get(this, "desc_invis_next", next.turnsReq);
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_invis_next", next.turnsReq)));
 		}
 		
 		return desc;
@@ -232,7 +233,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action_name");
 	}
 	
@@ -331,7 +332,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Preparation.class, "prompt", AttackLevel.getLvl(turnsInvis).blinkDistance(target));
 		}
 	};

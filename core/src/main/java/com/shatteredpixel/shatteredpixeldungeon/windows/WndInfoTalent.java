@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -47,9 +47,9 @@ public class WndInfoTalent extends Window {
 		IconTitle titlebar = new IconTitle();
 
 		titlebar.icon( new TalentIcon( talent ) );
-		String title = Messages.titleCase(talent.title());
+		LocalizedString title = Messages.titleCase(talent.title());
 		if (points > 0){
-			title += " +" + points;
+			title = LocalizedString.concat(title, " +", points);
 		}
 		titlebar.label( title, Window.TITLE_COLOR );
 		titlebar.setRect( 0, 0, width, 0 );
@@ -91,7 +91,7 @@ public class WndInfoTalent extends Window {
 
 	public static abstract class TalentButtonCallback implements Callback {
 
-		public abstract String prompt();
+		public abstract LocalizedString prompt();
 
 		public boolean metamorphDesc(){
 			return false;
