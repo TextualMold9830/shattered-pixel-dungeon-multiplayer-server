@@ -163,7 +163,7 @@ public class WndClericSpells extends Window {
 
 		@Override
 		protected LocalizedString hoverText() {
-			return "_" + Messages.titleCase(spell.name()) + "_\n" + spell.shortDesc(getOwnerHero());
+			return LocalizedString.concat("_", Messages.titleCase(spell.name()), "_\n", spell.shortDesc(getOwnerHero()));
 		}
 	}
 

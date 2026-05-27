@@ -51,7 +51,7 @@ public class Messages {
 	private static Languages lang;
 	private static Locale locale;
 
-	public static final LocalizedString NO_TEXT_FOUND = LocalizedString.raw("!!!NO TEXT FOUND!!!");
+	public static final LocalizedString NO_TEXT_FOUND = LocalizedString.raw("!!!NO TEXT FOUND!!!"); //todo check usages
 
 	public static Languages lang(){
 		return lang;
@@ -178,7 +178,7 @@ public class Messages {
 			//this is so child classes can inherit properties from their parents.
 			//in cases where text is commonly grabbed as a utility from classes that aren't mean to be instantiated
 			//(e.g. flavourbuff.dispTurns()) using .class directly is probably smarter to prevent unnecessary recursive calls.
-			return NO_TEXT_FOUND;
+			return NO_TEXT_FOUND.toString();
 		}
 	}
 

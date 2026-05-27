@@ -164,7 +164,7 @@ public class WndHeroInfo extends WndTabbed {
 			title.hardlight(TITLE_COLOR);
 			add(title);
 
-			String[] desc_entries = cls.desc().split("\n\n");
+			String[] desc_entries = cls.desc().toString().split("\n\n"); //it is visual only
 
 			info = new RenderedTextBlock[desc_entries.length];
 

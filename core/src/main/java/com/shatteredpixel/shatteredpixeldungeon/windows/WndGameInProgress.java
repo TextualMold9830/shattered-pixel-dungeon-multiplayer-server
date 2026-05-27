@@ -193,7 +193,7 @@ public class WndGameInProgress extends Window {
 	}
 
 	private void statSlot( String label, int value ) {
-		statSlot(LocalizedString.raw(label), valie);
+		statSlot(LocalizedString.raw(label), value);
 	}
 
 	private void statSlot( LocalizedString label, int value ) {
