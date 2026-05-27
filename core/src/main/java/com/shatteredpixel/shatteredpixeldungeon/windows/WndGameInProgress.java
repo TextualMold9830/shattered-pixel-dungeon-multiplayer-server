@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -53,7 +54,7 @@ public class WndGameInProgress extends Window {
 		
 		final GamesInProgress.Info info = GamesInProgress.check(slot);
 		
-		String className = null;
+		LocalizedString className = null;
 		if (info.subClass != HeroSubClass.NONE){
 			className = info.subClass.title();
 		} else {
@@ -94,21 +95,21 @@ public class WndGameInProgress extends Window {
 		else                        statSlot( Messages.get(this, "str"), info.str );
 		if (info.shld > 0)  statSlot( Messages.get(this, "health"), info.hp + "+" + info.shld + "/" + info.ht );
 		else                statSlot( Messages.get(this, "health"), (info.hp) + "/" + info.ht );
-		statSlot( Messages.get(this, "exp"), info.exp + "/" + Hero.maxExp(info.level) );
+		statSlot( Messages.get(this, "exp"), LocalizedString.raw(info.exp + "/", Hero.maxExp(info.level) ));
 		
 		pos += GAP;
 		statSlot( Messages.get(this, "gold"), info.goldCollected );
 		statSlot( Messages.get(this, "depth"), info.maxDepth );
 		if (info.daily) {
 			if (info.dailyReplay) {
-				statSlot(Messages.get(this, "replay_for"), "_" + info.customSeed + "_");
+				statSlot(Messages.get(this, "replay_for"), LocalizedString.concat("_", info.customSeed, "_"));
 			} else {
-				statSlot(Messages.get(this, "daily_for"), "_" + info.customSeed + "_");
+				statSlot(Messages.get(this, "daily_for"), LocalizedString.concat("_", info.customSeed, "_"));
 			}
 		} else if (!info.customSeed.isEmpty()){
-			statSlot( Messages.get(this, "custom_seed"), "_" + info.customSeed + "_" );
+			statSlot( Messages.get(this, "custom_seed"), LocalizedString.concat("_", info.customSeed, "_" ));
 		} else {
-			statSlot( Messages.get(this, "dungeon_seed"), DungeonSeed.convertToCode(info.seed) );
+			statSlot( Messages.get(this, "dungeon_seed"), LocalizedString.raw(DungeonSeed.convertToCode(info.seed) ));
 		}
 		
 		pos += GAP;
@@ -158,8 +159,16 @@ public class WndGameInProgress extends Window {
 		
 		resize(WIDTH, (int)cont.bottom()+1);
 	}
-	
+
+
+	private void statSlot( LocalizedString label, String value ) {
+		statSlot(label, LocalizedString.raw(value));
+	}
 	private void statSlot( String label, String value ) {
+		statSlot(LocalizedString.raw(label), LocalizedString.raw(value));
+	}
+
+	private void statSlot( LocalizedString label, LocalizedString value ) {
 
 		int size = 8;
 		RenderedTextBlock txt;
@@ -182,8 +191,12 @@ public class WndGameInProgress extends Window {
 		
 		pos += GAP + txt.height();
 	}
-	
+
 	private void statSlot( String label, int value ) {
+		statSlot(LocalizedString.raw(label), valie);
+	}
+
+	private void statSlot( LocalizedString label, int value ) {
 		statSlot( label, Integer.toString( value ) );
 	}
 }
