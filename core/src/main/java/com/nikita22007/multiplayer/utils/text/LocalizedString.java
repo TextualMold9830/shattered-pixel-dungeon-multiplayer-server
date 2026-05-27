@@ -17,7 +17,8 @@ public class LocalizedString {
         RAW,
         TRANSFORM,
         CONCAT,
-        TRUNCATE
+        TRUNCATE,
+        REPLACE
     }
 
     public enum Transform {
@@ -37,8 +38,10 @@ public class LocalizedString {
 
     private final int maxLength;
     private final String ellipsis;
+    private final char oldChar;
+    private final char newChar;
 
-    private LocalizedString(Mode mode, LocalizedKey key, String raw, Object[] args, Transform transform, LocalizedString text, Object[] parts, int maxLength, String ellipsis) {
+    private LocalizedString(Mode mode, LocalizedKey key, String raw, Object[] args, Transform transform, LocalizedString text, Object[] parts, int maxLength, String ellipsis, char oldChar, char newChar) {
         this.mode = mode;
         this.key = key;
         this.raw = raw;
@@ -48,16 +51,18 @@ public class LocalizedString {
         this.parts = parts == null ? new Object[0] : parts;
         this.maxLength = maxLength;
         this.ellipsis = ellipsis;
+        this.oldChar = oldChar;
+        this.newChar = newChar;
     }
 
     @CheckReturnValue
     public static LocalizedString key(LocalizedKey key, Object... args) {
-        return new LocalizedString(Mode.KEY, key, null, args, null, null, null, 0, null);
+        return new LocalizedString(Mode.KEY, key, null, args, null, null, null, 0, null, '\0', '\0');
     }
 
     @CheckReturnValue
     public static LocalizedString raw(String raw, Object... args) {
-        return new LocalizedString(Mode.RAW, null, raw, args, null, null, null, 0, null);
+        return new LocalizedString(Mode.RAW, null, raw, args, null, null, null, 0, null, '\0', '\0');
     }
 
     @CheckReturnValue
@@ -71,19 +76,24 @@ public class LocalizedString {
 
     @CheckReturnValue
     public static LocalizedString transform(Transform transform, LocalizedString text) {
-        return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null, 0, null);
+        return new LocalizedString(Mode.TRANSFORM, null, null, null, transform, text, null, 0, null, '\0', '\0');
     }
 
     @CheckReturnValue
     public static LocalizedString truncate(LocalizedString text, int maxLength, String ellipsis) {
-        return new LocalizedString(Mode.TRUNCATE, null, null, null, null, text, null, maxLength, ellipsis);
+        return new LocalizedString(Mode.TRUNCATE, null, null, null, null, text, null, maxLength, ellipsis, '\0', '\0');
+    }
+
+    @CheckReturnValue
+    public LocalizedString replace(char oldChar, char newChar) {
+        return new LocalizedString(Mode.REPLACE, null, null, null, null, this, null, 0, null, oldChar, newChar);
     }
 
     @CheckReturnValue
     public static LocalizedString concat(Object... parts) {
         ArrayList<Object> flattened = new ArrayList<>();
         flattenConcatParts(flattened, parts);
-        return new LocalizedString(Mode.CONCAT, null, null, null, null, null, flattened.toArray(new Object[0]), 0, null);
+        return new LocalizedString(Mode.CONCAT, null, null, null, null, null, flattened.toArray(new Object[0]), 0, null, '\0', '\0');
     }
 
     private static void flattenConcatParts(ArrayList<Object> flattened, Object[] parts) {
@@ -210,10 +220,6 @@ public class LocalizedString {
         int result = Objects.hash(mode, key, raw, transform, text, maxLength, ellipsis, oldChar, newChar);
         result = 31 * result + Arrays.hashCode(args);
         result = 31 * result + Arrays.hashCode(parts);
-        return result;
-    }
-}
-e(parts);
         return result;
     }
 }
