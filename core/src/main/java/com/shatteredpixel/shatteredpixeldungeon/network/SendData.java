@@ -279,6 +279,10 @@ public class SendData {
         if (actor == null) {
             return;
         }
+        if (actor instanceof Buff) {
+            sendBuff((Buff) actor, false);
+            return;
+        }
         for (ClientThread client : clients) {
             if (client == null) {
                 continue;
@@ -578,6 +582,10 @@ public class SendData {
     }
 
     public static void sendActorRemoving(Actor actor) {
+        if (actor instanceof Buff) {
+            sendBuff((Buff) actor, true);
+            return;
+        }
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
                 continue;
