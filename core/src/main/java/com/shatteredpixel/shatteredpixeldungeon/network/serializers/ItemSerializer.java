@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +22,19 @@ public class ItemSerializer implements Serializer<Item> {
             // On the ground, we typically don't send actions or UI.
             // When in inventory/window, and if we know the observer, we send them.
             if (hero != null) {
-                itemObj.put("actions", NetworkPacket.packActions(item, hero));
+                JSONArray actionsArr = new JSONArray();
+                for (String action : item.actions(hero)) {
+                    actionsArr.put(action);
+                }
+                itemObj.put("actions", actionsArr);
+
+                JSONObject actionNames = new JSONObject();
+                for (int i = 0; i < actionsArr.length(); i++) {
+                    String action = actionsArr.getString(i);
+                    actionNames.put(action, item.actionName(action, hero));
+                }
+                itemObj.put("action_names", actionNames);
+
                 itemObj.put("default_action", item.defaultAction == null ? "null" : item.defaultAction);
                 itemObj.put("info", item.info(hero));
                 itemObj.put("ui", item.itemUI(hero));

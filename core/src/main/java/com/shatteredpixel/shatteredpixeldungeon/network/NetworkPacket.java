@@ -397,15 +397,6 @@ public class NetworkPacket {
     }
 
     @NotNull
-    public static JSONArray packActions(@NotNull Item item, @NotNull Hero hero) {
-        JSONArray actionsArr = new JSONArray();
-        for (String action : item.actions(hero)) {
-            actionsArr.put(action);
-        }
-        return actionsArr;
-    }
-
-    @NotNull
     public JSONObject packBag(Bag bag) {
         if ((bag.owner != null) && (bag.owner instanceof Hero)) {
             return packBag(bag, (Hero) bag.owner);
