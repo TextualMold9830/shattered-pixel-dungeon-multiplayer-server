@@ -123,7 +123,7 @@ public class TalentButton extends Button {
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
-				public String prompt() {
+				public LocalizedString prompt() {
 					return Messages.titleCase(Messages.get(WndInfoTalent.class, "upgrade"));
 				}
 
@@ -137,7 +137,7 @@ public class TalentButton extends Button {
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
-				public String prompt() {
+				public LocalizedString prompt() {
 					return Messages.titleCase(Messages.get(ScrollOfMetamorphosis.class, "metamorphose_talent"));
 				}
 
@@ -158,7 +158,7 @@ public class TalentButton extends Button {
 			toAdd = new WndInfoTalent(talent, pointsInTalent, new WndInfoTalent.TalentButtonCallback() {
 
 				@Override
-				public String prompt() {
+				public LocalizedString prompt() {
 					return Messages.titleCase(Messages.get(ScrollOfMetamorphosis.class, "metamorphose_talent"));
 				}
 

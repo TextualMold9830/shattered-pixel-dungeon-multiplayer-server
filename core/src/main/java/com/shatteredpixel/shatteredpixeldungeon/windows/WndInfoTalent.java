@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -92,7 +91,7 @@ public class WndInfoTalent extends Window {
 
 	public static abstract class TalentButtonCallback implements Callback {
 
-		public abstract String prompt();
+		public abstract LocalizedString prompt();
 
 		public boolean metamorphDesc(){
 			return false;
