@@ -117,7 +117,7 @@ public class Messages {
 	 */
 
 	public static LocalizedString get(String key, Object...args){
-		return LocalizedString.key(new LocalizedKey(null, key), args);
+		return LocalizedString.key(new LocalizedKey((String[]) null, key), args);
 	}
 
 	public static LocalizedString get(Object o, String k, Object...args){
@@ -125,7 +125,7 @@ public class Messages {
 	}
 
 	public static LocalizedString get(Class<?> c, String k, Object...args){
-		return LocalizedString.key(new LocalizedKey(c == null ? null : c.getName(), k), args);
+		return LocalizedString.key(new LocalizedKey(c == null ? null : ownerHierarchy(c), k), args);
 	}
 
 	public static String resolve(String key, Object...args){
@@ -141,22 +141,19 @@ public class Messages {
 	}
 
 	public static String resolve(LocalizedKey key, Object... args) {
-		String ownerClass = key.ownerClass();
-		if (ownerClass == null) {
+		String[] ownerClasses = key.ownerClasses();
+		if (ownerClasses == null || ownerClasses.length == 0) {
 			return resolve(key.name(), args);
 		}
-		return resolveByKey(toPropertyOwner(ownerClass) + "." + key.name(), key.name(), args);
+		return resolveByOwners(ownerClasses, key.name(), args);
 	}
 
 	public static String resolve(Class<?> c, String k, Object...args){
-		String key;
 		if (c != null){
-			key = c.getName().replace("com.shatteredpixel.shatteredpixeldungeon.", "");
-			key += "." + k;
-		} else
-			key = k;
+			return resolveByOwners(ownerHierarchy(c), k, args);
+		}
 
-		return resolveByKey(key, k, args);
+		return resolveByKey(k, k, args);
 	}
 
 	private static String resolveByKey(String key, String fallbackKey, Object... args) {
@@ -172,8 +169,28 @@ public class Messages {
 		}
 	}
 
+	private static String resolveByOwners(String[] ownerClasses, String fallbackKey, Object... args) {
+		for (String ownerClass : ownerClasses) {
+			String value = getFromBundle((toPropertyOwner(ownerClass) + "." + fallbackKey).toLowerCase(Locale.ENGLISH));
+			if (value != null) {
+				if (args.length > 0) return resolveFormat(value, args);
+				else return value;
+			}
+		}
+		return NO_TEXT_FOUND.toString();
+	}
+
 	private static String toPropertyOwner(String ownerClass) {
 		return ownerClass.replace("com.shatteredpixel.shatteredpixeldungeon.", "");
+	}
+
+	private static String[] ownerHierarchy(Class<?> c) {
+		ArrayList<String> owners = new ArrayList<>();
+		while (c != null) {
+			owners.add(c.getName());
+			c = c.getSuperclass();
+		}
+		return owners.toArray(new String[0]);
 	}
 	public static String getFirstValidKey(Class c, String k){
 		String key;
