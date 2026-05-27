@@ -14,7 +14,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
-import com.shatteredpixel.shatteredpixeldungeon.network.text.LocalizedStringSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -33,8 +32,6 @@ import static com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.add
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
 public class SendData {
-
-    private static final LocalizedStringSerializer LOCALIZED_STRING_SERIALIZER = new LocalizedStringSerializer();
 
     //---------------------------Level
 
@@ -387,7 +384,7 @@ public class SendData {
     public static void sendMessageToAll(LocalizedString message) {
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", LOCALIZED_STRING_SERIALIZER.serialize(message));
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
@@ -408,7 +405,7 @@ public class SendData {
     public static void sendMessage(Integer ID, LocalizedString message) {
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", LOCALIZED_STRING_SERIALIZER.serialize(message));
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }
@@ -436,7 +433,7 @@ public class SendData {
         }
         JSONObject messageObj;
         try {
-            messageObj = new JSONObject().put("text", LOCALIZED_STRING_SERIALIZER.serialize(message));
+            messageObj = new JSONObject().put("text", message);
         } catch (JSONException e) {
             return;
         }

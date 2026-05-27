@@ -137,23 +137,7 @@ public class Messages {
 	}
 
 	public static String resolve(LocalizedString text) {
-		Object[] args = resolveArgs(text.args());
-		if (text.mode() == LocalizedString.Mode.RAW) {
-			return args.length > 0 ? resolveFormat(text.raw(), args) : text.raw();
-		}
-		if (text.mode() == LocalizedString.Mode.TRANSFORM) {
-			return resolveTransform(text.transform(), resolve(text.text()));
-		}
-		if (text.mode() == LocalizedString.Mode.CONCAT) {
-			return resolveConcat(text.parts());
-		}
-		if (text.mode() == LocalizedString.Mode.TRUNCATE) {
-			return com.nikita22007.multiplayer.utils.Utils.truncate(resolve(text.text()), text.maxLength(), text.ellipsis());
-		}
-		if (text.mode() == LocalizedString.Mode.REPLACE) {
-			return resolve(text.text()).replace(text.oldChar(), text.newChar());
-		}
-		return resolve(text.key(), args);
+		return text.resolve();
 	}
 
 	public static String resolve(LocalizedKey key, Object... args) {
@@ -186,14 +170,6 @@ public class Messages {
 			//(e.g. flavourbuff.dispTurns()) using .class directly is probably smarter to prevent unnecessary recursive calls.
 			return NO_TEXT_FOUND.toString();
 		}
-	}
-
-	private static Object[] resolveArgs(Object[] args) {
-		Object[] resolved = new Object[args.length];
-		for (int i = 0; i < args.length; i++) {
-			resolved[i] = args[i] instanceof LocalizedString ? resolve((LocalizedString) args[i]) : args[i];
-		}
-		return resolved;
 	}
 
 	private static String toPropertyOwner(String ownerClass) {
@@ -344,30 +320,4 @@ public class Messages {
 		return str.toLowerCase(locale);
 	}
 
-	private static String resolveTransform(LocalizedString.Transform transform, String text) {
-		switch (transform) {
-			case CAPITALIZE:
-				return resolveCapitalize(text);
-			case TITLE_CASE:
-				return resolveTitleCase(text);
-			case UPPER_CASE:
-				return resolveUpperCase(text);
-			case LOWER_CASE:
-				return resolveLowerCase(text);
-			default:
-				return text;
-		}
-	}
-
-	private static String resolveConcat(Object[] parts) {
-		StringBuilder result = new StringBuilder();
-		for (Object part : parts) {
-			if (part instanceof LocalizedString) {
-				result.append(resolve((LocalizedString) part));
-			} else if (part != null) {
-				result.append(part);
-			}
-		}
-		return result.toString();
-	}
 }
