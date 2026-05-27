@@ -260,7 +260,7 @@ public class CustomNoteButton extends IconButton {
 	public static class CustomNoteWindow extends WndJournalItem {
 
 		public CustomNoteWindow(Notes.CustomRecord rec, Window parentWindow) {
-			super(rec.icon(), rec.title().toString(), rec.desc().toString());
+			super(rec.icon(), rec.title(), rec.desc());
 
 			RedButton title = new RedButton( Messages.get(CustomNoteWindow.class, "edit_title") ){
 				@Override
@@ -306,7 +306,7 @@ public class CustomNoteButton extends IconButton {
 						@Override
 						public void onSelect(boolean positive, String text) {
 							if (positive){
-								rec.editText(rec.title(), text);
+								rec.editText(rec.title().toString(), text);
 								CustomNoteWindow.this.hide();
 								GameScene.show(new CustomNoteWindow(rec, parentWindow));
 							}
