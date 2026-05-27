@@ -251,7 +251,7 @@ public class Shopkeeper extends NPC {
 				options[i++] = Messages.get(Shopkeeper.this, "talk");
 				for (Item item : buybackItems){
 					options[i] = Messages.get(Heap.class, "for_sale", item.value(), Messages.titleCase(item.title()));
-					if (options[i].length() > maxLen) options[i] = options[i].substring(0, maxLen-3) + "...";
+					options[i] = LocalizedString.truncate(options[i], maxLen, "..."); //todo check this
 					i++;
 				}
 				GameScene.show(new WndOptions((Hero) c,sprite(), Messages.titleCase(name()), description(), options){

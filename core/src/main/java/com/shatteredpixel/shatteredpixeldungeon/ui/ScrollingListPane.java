@@ -112,7 +112,7 @@ public class ScrollingListPane extends ScrollPane {
 			label.text( text );
 
 			if (iconText != null) {
-				iconLabel.text(iconText);
+				iconLabel.text(iconText.toString());
 				iconLabel.measure();
 			}
 		}

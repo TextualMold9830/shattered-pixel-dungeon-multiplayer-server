@@ -145,6 +145,16 @@ public class LocalizedString {
     }
 
     @CheckReturnValue
+    public char oldChar() {
+        return oldChar;
+    }
+
+    @CheckReturnValue
+    public char newChar() {
+        return newChar;
+    }
+
+    @CheckReturnValue
     public static String[] resolveArray(LocalizedString[] localizedStrings) {
         String[] strings = new String[localizedStrings.length];
         for (int i= 0 ; i < localizedStrings.length; i++) {
@@ -190,14 +200,20 @@ public class LocalizedString {
                 && Objects.equals(text, other.text)
                 && Arrays.equals(parts, other.parts)
                 && maxLength == other.maxLength
-                && Objects.equals(ellipsis, other.ellipsis);
+                && Objects.equals(ellipsis, other.ellipsis)
+                && oldChar == other.oldChar
+                && newChar == other.newChar;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(mode, key, raw, transform, text, maxLength, ellipsis);
+        int result = Objects.hash(mode, key, raw, transform, text, maxLength, ellipsis, oldChar, newChar);
         result = 31 * result + Arrays.hashCode(args);
         result = 31 * result + Arrays.hashCode(parts);
+        return result;
+    }
+}
+e(parts);
         return result;
     }
 }
