@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class LocalizedString {
 
-    public static LocalizedString EMPTY = LocalizedString.raw("");
+    public static final LocalizedString EMPTY = LocalizedString.raw("");
 
     public enum Mode {
         KEY,
@@ -158,6 +158,11 @@ public class LocalizedString {
     @CheckReturnValue
     public LocalizedString toUpperCase(Locale locale) {
         return Messages.toUpperCase(this, locale);
+    }
+
+    @CheckReturnValue
+    public boolean isEmpty() {
+        return this.equals(EMPTY);
     }
 
     @Override
