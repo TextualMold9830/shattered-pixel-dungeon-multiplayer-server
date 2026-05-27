@@ -1372,7 +1372,7 @@ public class GameScene extends PixelScene {
 		} else if (objects.size() == 1) {
 			examineObject(objects.get(0), hero);
 		} else {
-			String[] names = getObjectNames(objects).toArray(new String[0]);
+			LocalizedString[] names = getObjectNames(objects).toArray(new LocalizedString[0]);
 
 			GameScene.show(new WndOptions(hero, Icons.get(Icons.INFO),
 					Messages.get(GameScene.class, "choose_examine"),
