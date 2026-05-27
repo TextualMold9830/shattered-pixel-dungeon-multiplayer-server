@@ -214,6 +214,7 @@ public class NetworkPacket {
         try {
             JSONObject payload = new JSONObject();
             payload.put("id", id);
+            payload.put("type", "char");
             payload.put("shield", shielding);
             
             JSONObject event = new JSONObject();
