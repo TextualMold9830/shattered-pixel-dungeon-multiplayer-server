@@ -58,6 +58,13 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactor
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.LevelSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CellsUpdateSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterAnchorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterBurstSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterPourSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStartSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStopSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -103,6 +110,11 @@ public class Server extends Thread {
         SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
         SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
+        SERIALIZERS.register(EmitterAnchor.class, "default", new EmitterAnchorSerializer());
+        SERIALIZERS.register(Emitter.class, "burst", new EmitterBurstSerializer());
+        SERIALIZERS.register(Emitter.class, "start", new EmitterStartSerializer());
+        SERIALIZERS.register(Emitter.class, "pour", new EmitterPourSerializer());
+        SERIALIZERS.register(Emitter.class, "stop", new EmitterStopSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

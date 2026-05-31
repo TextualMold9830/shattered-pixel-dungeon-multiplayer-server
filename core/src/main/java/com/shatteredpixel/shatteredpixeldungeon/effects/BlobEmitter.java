@@ -43,5 +43,7 @@ public class BlobEmitter extends Emitter {
 	public RectF bound = new RectF(0, 0, 1, 1);
 
 	@Override
-	public void  sendSelf() {}
+	public boolean sendSelf() {
+		return true;
+	}
 }
