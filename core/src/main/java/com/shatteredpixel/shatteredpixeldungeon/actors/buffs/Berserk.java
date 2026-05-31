@@ -339,7 +339,7 @@ public class Berserk extends ShieldBuff implements ActionIndicator.Action {
 				return Integer.toString(shielding());
 			case RECOVERING:
 				if (levelRecovery > 0) {
-					return Messages.decimalFormat("#.##", levelRecovery);
+					return Messages.resolveDecimalFormat("#.##", levelRecovery);
 				} else {
 					return Integer.toString(turnRecovery);
 				}

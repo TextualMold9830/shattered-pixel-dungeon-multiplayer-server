@@ -254,7 +254,7 @@ public class WandOfCorruption extends Wand {
 
 	@Override
 	public String upgradeStat1(int level) {
-		return Messages.decimalFormat("#.##", 3f + level/3f);
+		return Messages.resolveDecimalFormat("#.##", 3f + level/3f);
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class FlavourBuff extends Buff {
 	}
 
 	//flavour buffs can all just rely on cooldown()
-	protected String dispTurns() {
+	protected LocalizedString dispTurns() {
 		return dispTurns(visualcooldown());
 	}
 

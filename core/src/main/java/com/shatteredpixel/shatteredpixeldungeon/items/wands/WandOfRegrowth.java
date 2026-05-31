@@ -299,7 +299,7 @@ public class WandOfRegrowth extends Wand {
 
 	@Override
 	public String upgradeStat1(int level, Hero hero) {
-		return Messages.decimalFormat("#.##", 3 + (2+level)/3f);
+		return Messages.resolveDecimalFormat("#.##", 3 + (2+level)/3f);
 	}
 
 	@Override

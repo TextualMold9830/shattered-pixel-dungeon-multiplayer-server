@@ -247,11 +247,15 @@ public class Messages {
 
 	private static HashMap<String, DecimalFormat> formatters;
 
-	public static String decimalFormat( String format, double number ){
+	public static String resolveDecimalFormat( String format, double number ){
 		if (!formatters.containsKey(format)){
 			formatters.put(format, new DecimalFormat(format, DecimalFormatSymbols.getInstance(locale())));
 		}
 		return formatters.get(format).format(number);
+	}
+
+	public static LocalizedString decimalFormat( String format, double number ){
+		return LocalizedString.decimalFormat(format, number);
 	}
 
 	public static LocalizedString capitalize( String str ){

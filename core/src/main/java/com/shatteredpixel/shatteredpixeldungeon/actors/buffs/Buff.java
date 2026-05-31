@@ -32,6 +32,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Reflection;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Buff extends Actor {
 	
@@ -137,7 +138,7 @@ public class Buff extends Actor {
 	}
 
 	//to handle the common case of showing how many turns are remaining in a buff description.
-	protected String dispTurns(float input){
+	protected LocalizedString dispTurns(float input){
 		return Messages.decimalFormat("#.##", input);
 	}
 
@@ -164,7 +165,7 @@ public class Buff extends Actor {
 
 	//creates a fresh instance of the buff and attaches that, this allows duplication.
 	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {
-		T buff = Reflection.newInstance(buffClass);
+		T buff = Objects.requireNonNull(Reflection.newInstance(buffClass));
 		buff.attachTo( target );
 		return buff;
 	}
