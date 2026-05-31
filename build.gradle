@@ -8,20 +8,21 @@ buildscript {
     }
 }
 
-allprojects {
-    // load version from file
-    def versionFile = new File(rootProject.rootDir, "version")
-    def versionName = "Local-build"
+// load version from file
+def versionFile = new File(rootProject.rootDir, "version")
+def versionName = "Local-build"
 
-    if (versionFile.exists()) {
-        try {
-            versionName = versionFile.text.trim()
-        } catch (Exception e) {
-            println("Error reading version file: ${e.message}")
-        }
-    } else {
-        println("Version file not found, using default: 'Local-build'")
+if (versionFile.exists()) {
+    try {
+        versionName = versionFile.text.trim()
+    } catch (Exception e) {
+        println("Error reading version file: ${e.message}")
     }
+} else {
+    println("Version file not found, using default: 'Local-build'")
+}
+
+allprojects {
     def baseVersionName = "3.3.6"
     ext {
         appName = 'Shattered Pixel Dungeon Server'
