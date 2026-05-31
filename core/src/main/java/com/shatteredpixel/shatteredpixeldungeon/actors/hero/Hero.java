@@ -179,6 +179,7 @@ import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.BArray;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -258,6 +259,8 @@ public class Hero extends Char {
 	private int gold = 0;
 	public Hero() {
 		super();
+
+		spriteClass = HeroSprite.class;
 
 		setHP(setHT(20));
 		STR = STARTING_STR;

@@ -126,8 +126,6 @@ public abstract class Mob extends Char {
 	public AiState PASSIVE = new Passive();
 	public AiState state = SLEEPING;
 
-	public Class<? extends CharSprite> spriteClass;
-
 	protected int target = -1;
 
 	public int defenseSkill = 0;

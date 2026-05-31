@@ -45,6 +45,8 @@ public class CharSerializer implements Serializer<Char> {
                 if (character.getSprite() instanceof ClassSprite) {
                     object.put("class", ((ClassSprite) character.getSprite()).heroClass());
                 }
+            } else if (character.spriteClass != null) {
+                object.put("sprite_name", character.spriteClass.getName());
             }
 
             object.put("hp", character.getHP());

@@ -174,6 +174,8 @@ public abstract class Char extends Actor {
 	public int pos = 0;
 	
 	private CharSprite sprite;
+
+	public Class<? extends CharSprite> spriteClass;
 	
 	protected int HT;
 	public int HP;
