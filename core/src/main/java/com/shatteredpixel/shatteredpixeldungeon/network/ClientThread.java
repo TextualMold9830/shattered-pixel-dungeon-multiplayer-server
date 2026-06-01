@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -516,7 +517,7 @@ public class ClientThread implements Callable<String> {
         addAllCharsToSend();
 
         Dungeon.observe(clientHero, false);
-        packet.packAndAddVisiblePositions(clientHero.fieldOfView);
+        packet.addAction(new UpdateFovAction(clientHero, true));
         //TODO send all  information
         for (Actor actor: Actor.all()) {
             if (actor instanceof Buff)

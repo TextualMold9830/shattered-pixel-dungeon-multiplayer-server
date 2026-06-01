@@ -1048,7 +1048,7 @@ public class Dungeon {
 		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache);
 		addToSendLevelVisitedState(level, oldLevelMappedChache);
 		if (send) {
-			addToSendHeroVisibleCells(hero.fieldOfView, hero);
+			addToSendHeroVisibleCells(hero, true);
 			SendData.flush(hero);
 		}
 	}

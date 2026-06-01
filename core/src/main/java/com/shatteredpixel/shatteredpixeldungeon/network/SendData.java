@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -93,11 +94,8 @@ public class SendData {
     }
 
     //---------------------------Hero
-    public static void addToSendHeroVisibleCells(boolean[] visible, Hero hero) {
-        final int ID = hero.networkID;
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddVisiblePositions(visible);
-        }
+    public static void addToSendHeroVisibleCells(Hero hero, boolean allowLateSerialization) {
+        sendAction(hero, new UpdateFovAction(hero, allowLateSerialization));
     }
 
     public static void SendHeroLevel(int ID, int lvl, int exp) {

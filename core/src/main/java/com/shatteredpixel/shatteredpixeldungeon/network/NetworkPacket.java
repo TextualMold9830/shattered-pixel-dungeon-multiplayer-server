@@ -350,19 +350,6 @@ public class NetworkPacket {
         addAction(event);
     }
 
-    public void packAndAddVisiblePositions(boolean[] visible) {
-        JSONArray arr = new JSONArray();
-        for (int i = 0; i < visible.length; i++) {
-            if (visible[i]) {
-                arr.put(i);
-            }
-        }
-        JSONObject event = new JSONObject();
-        event.put("action_name", "update_fov");
-        event.put("visible_pos", arr);
-        addAction(event);
-    }
-
     public void packAndAddCellsUpdate(int[] positions, @Nullable int[] tiles, @Nullable int[] states) {
         CellsUpdateDTO dto = new CellsUpdateDTO(positions, tiles, states);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
