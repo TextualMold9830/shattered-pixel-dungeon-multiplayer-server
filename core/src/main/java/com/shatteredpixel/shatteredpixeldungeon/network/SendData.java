@@ -81,13 +81,6 @@ public class SendData {
         }
     }
 
-    public static void SendLevelReset(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddResetLevel();
-            clients[ID].flush();
-        }
-    }
-
     public static void sendLevelCell(Level level, int cell) {
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {

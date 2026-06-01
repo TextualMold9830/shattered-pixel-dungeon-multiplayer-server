@@ -544,12 +544,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddResetLevel() {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "reset_level");
-        addAction(event);
-    }
-
     public void packAndAddShowBanner(@NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         JSONObject event = new JSONObject();
         event.put("action_name", "show_banner");
