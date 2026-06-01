@@ -279,6 +279,7 @@ public class ClientThread implements Callable<String> {
     }
 
     //network functions
+    @Deprecated
     protected void flush() {
     }
 

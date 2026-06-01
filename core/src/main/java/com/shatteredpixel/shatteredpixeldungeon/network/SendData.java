@@ -366,12 +366,14 @@ public class SendData {
         sendActor(actor);
     }
 
+    @Deprecated
     public static void flush(Hero hero) {
         if (hero.networkID >= 0) {
             flush(hero.networkID);
         }
     }
 
+    @Deprecated
     public static void flush(int networkID) {
         if (networkID <= -1) {
             return;
