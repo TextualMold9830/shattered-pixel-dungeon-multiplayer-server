@@ -97,7 +97,7 @@ public class ClientThread implements Callable<String> {
 
     private void sendServerUUID() {
         packet.addServerUUID();
-        flush();
+        forceFlush();
     }
 
     protected void updateTask() {
@@ -280,6 +280,9 @@ public class ClientThread implements Callable<String> {
 
     //network functions
     protected void flush() {
+    }
+
+    protected void forceFlush() {
         try {
             synchronized (packet.dataRef) {
                 if (packet.dataRef.get().length() == 0) {
@@ -309,7 +312,7 @@ public class ClientThread implements Callable<String> {
     //some functions
     protected void sendServerType(){
         packet.addServerType(SERVER_TYPE);
-        flush();
+        forceFlush();
     }
     protected void sendServerInfo() {
         try {
@@ -478,13 +481,13 @@ public class ClientThread implements Callable<String> {
             if (actor instanceof Buff)
                 packet.packAndAddBuff((Buff) actor, false);
         }
-        flush();
+        forceFlush();
 
         packet.packAndAddInterlevelSceneState("fade_out", null);
-        flush();
+        forceFlush();
     }
     private void sendTexture(String textureData){
         packet.packAndAddRawTextures(textureData);
-        flush();
+        forceFlush();
     }
 }

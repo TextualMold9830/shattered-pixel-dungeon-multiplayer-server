@@ -339,6 +339,7 @@ public abstract class Actor implements Bundlable {
 					}
 
 					//signals to the gamescene that actor processing is finished for now
+					SendData.forceFlushAll();
 					Thread.currentThread().notify();
 					
 					try {

@@ -721,6 +721,7 @@ public class GameScene extends PixelScene {
 				actorThread = new Thread() {
 					@Override
 					public void run() {
+						SendData.forceFlushAll();
 						if (shouldProcess) {
 						Actor.process();
 						}

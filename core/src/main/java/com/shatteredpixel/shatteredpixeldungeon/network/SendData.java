@@ -234,25 +234,25 @@ public class SendData {
     }
     public static void sendInterLevelScene(int ID, JSONObject interlevelSceneParams) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].flush();
+            clients[ID].forceFlush();
             {
                 if (clients[ID].clientHero == null) {
                     return;
                 }
             }
             clients[ID].packet.addInterlevelSceneObject(interlevelSceneParams);
-            clients[ID].flush();
+            clients[ID].forceFlush();
         }
     }
 
     public static void sendInterLevelSceneFadeOut(int ID) {
         if ((ID != -1)&&  (clients[ID] != null)) {
-            clients[ID].flush();
+            clients[ID].forceFlush();
             if (clients[ID].clientHero == null) {
                 return;
             }
             clients[ID].packet.packAndAddInterlevelSceneState("fade_out");
-            clients[ID].flush();
+            clients[ID].forceFlush();
         }
     }
 
@@ -376,8 +376,28 @@ public class SendData {
         if (networkID <= -1) {
             return;
         }
+    }
+
+    public static void forceFlush(Hero hero) {
+        if (hero.networkID >= 0) {
+            forceFlush(hero.networkID);
+        }
+    }
+
+    public static void forceFlush(int networkID) {
+        if (networkID <= -1) {
+            return;
+        }
         if (clients[networkID] != null) {
-            clients[networkID].flush();
+            clients[networkID].forceFlush();
+        }
+    }
+
+    public static void forceFlushAll() {
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.forceFlush();
+            }
         }
     }
 
