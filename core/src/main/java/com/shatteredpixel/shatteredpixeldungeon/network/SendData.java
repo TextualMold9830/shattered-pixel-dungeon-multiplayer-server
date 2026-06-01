@@ -19,7 +19,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.shatteredpixel.shatteredpixeldungeon.items.Item.packItem;
 import static com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.addToArray;
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
@@ -583,7 +581,17 @@ public class SendData {
     }
 
     public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
-        sendInventoryItemAction(owner, null, path, "remove");
+        if ((owner == null) || !(owner instanceof Hero)) {
+            return;
+        }
+        Hero hero = (Hero) owner;
+        if (hero.networkID < 0 || path == null || path.isEmpty()) {
+            return;
+        }
+        ClientThread client = clients[hero.networkID];
+        if (client != null) {
+            client.packet.packAndAddItemRemove(path);
+        }
     }
 
     public static void sendUpdateItemCount(Char owner, Item item, int count, List<Integer> path) {
@@ -615,39 +623,27 @@ public class SendData {
         if ((owner == null) || !(owner instanceof Hero)) {
             return;
         }
-
-        JSONObject itemObj = (item == null) ? null : packItem(item, (Hero) owner);
-        sendInventoryItemAction(owner, itemObj, path, "update");
+        Hero hero = (Hero) owner;
+        if (hero.networkID < 0 || path == null || path.isEmpty() || item == null) {
+            return;
+        }
+        ClientThread client = clients[hero.networkID];
+        if (client != null) {
+            client.packet.packAndAddItemUpdate(path, item, hero);
+        }
     }
 
     public static void sendNewInventoryItem(Char owner, Item item, List<Integer> path) {
         if ((owner == null) || !(owner instanceof Hero)) {
             return;
         }
-        JSONObject itemObj = (item == null) ? null : packItem(item, (Hero) owner);
-        //todo optimize
-        sendInventoryItemAction(owner, itemObj, path, "place");
-    }
-
-    private static void sendInventoryItemAction(Char owner, JSONObject itemObj, List<Integer> path, String action) {
-        if (!(owner instanceof Hero)) {
-            return;
-        }
         Hero hero = (Hero) owner;
-        if (hero.networkID < 0) {
+        if (hero.networkID < 0 || path == null || path.isEmpty() || item == null) {
             return;
         }
-        JSONArray slot = new JSONArray(path);
-        JSONObject action_obj = new JSONObject();
-        try {
-            action_obj.put("action_type", "add_item_to_bag");
-            action_obj.put("slot", slot);
-            action_obj.put("item", (itemObj == null) ? JSONObject.NULL : itemObj);
-            action_obj.put("update_mode", action);
-        } catch (JSONException ignored) {
-        }
-        if (clients[hero.networkID] != null) {
-            clients[hero.networkID].packet.addAction(action_obj);
+        ClientThread client = clients[hero.networkID];
+        if (client != null) {
+            client.packet.packAndAddItemAdd(path, item, hero);
         }
     }
 
