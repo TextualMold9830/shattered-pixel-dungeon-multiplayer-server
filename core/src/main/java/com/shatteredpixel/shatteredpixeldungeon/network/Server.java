@@ -216,6 +216,9 @@ public class Server extends Thread {
             }
             client.parse();
         }
+        if (!Actor.processing() && !Game.switchingScene()) {
+            SendData.forceFlushAll();
+        }
     }
 
     public static void startClientThread(Socket client) throws IOException {

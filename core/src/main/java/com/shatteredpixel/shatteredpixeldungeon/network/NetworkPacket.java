@@ -117,6 +117,28 @@ public class NetworkPacket {
         }
     }
 
+    public void compress() {
+        synchronized (dataRef) {
+            try {
+                NetworkPacketCompressor.compress(dataRef.get());
+            } catch (JSONException e) {
+                Log.w("NetworkPacket", "Failed to compress packet. " + e.toString());
+            }
+        }
+    }
+
+    public String toJsonString() {
+        synchronized (dataRef) {
+            return dataRef.get().toString();
+        }
+    }
+
+    public String toJsonString(int indentFactor) throws JSONException {
+        synchronized (dataRef) {
+            return dataRef.get().toString(indentFactor);
+        }
+    }
+
     public static void addToArray(JSONObject storage, String token, JSONObject data) throws JSONException {
         if (!storage.has(token)) {
             storage.put(token, new JSONArray());
@@ -153,6 +175,23 @@ public class NetworkPacket {
                 Log.w("NetworkPacket", "Failed to add message. " + e.toString());
             }
         }
+    }
+
+    public static JSONObject packChatMessages(List<JSONObject> messages) {
+        JSONObject data = new JSONObject();
+        JSONArray actions = new JSONArray();
+        JSONObject messagesAction = new JSONObject();
+
+        messagesAction.put("action_name", "messages");
+        JSONArray messagesArray = new JSONArray();
+        for (JSONObject message : messages) {
+            messagesArray.put(message);
+        }
+        messagesAction.put("messages", messagesArray);
+        actions.put(messagesAction);
+        data.put("actions", actions);
+
+        return data;
     }
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {

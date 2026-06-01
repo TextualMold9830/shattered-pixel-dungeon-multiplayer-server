@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +60,7 @@ public class ClientThread implements Callable<String> {
     protected Hero clientHero;
 
     protected final NetworkPacket packet = new NetworkPacket();
+    private final ArrayList<JSONObject> pendingChatMessages = new ArrayList<>();
 
     @NotNull
     private FutureTask<String> jsonCall;
@@ -97,7 +99,7 @@ public class ClientThread implements Callable<String> {
 
     private void sendServerUUID() {
         packet.addServerUUID();
-        flush();
+        forceFlush();
     }
 
     protected void updateTask() {
@@ -217,7 +219,7 @@ public class ClientThread implements Callable<String> {
                             break;
                         }
                         Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
-                        GLog.i("%s: %s", clientHero.name,  text.trim());
+                        SendData.enqueueChatMessageToAll(clientHero.name + ": " + text.trim());
                         break;
                     }
                     case "toolbar_action": {
@@ -279,20 +281,25 @@ public class ClientThread implements Callable<String> {
     }
 
     //network functions
+    @Deprecated
     protected void flush() {
+    }
+
+    protected void forceFlush() {
         try {
             synchronized (packet.dataRef) {
+                packet.compress();
                 if (packet.dataRef.get().length() == 0) {
                     return;
                 }
                 if (DeviceCompat.isDebug()) {
                     try {
-                        Log.i("flush", "clientID: " + threadID + " data:" + packet.dataRef.get().toString(4));
+                        Log.i("flush", "clientID: " + threadID + " data:" + packet.toJsonString(4));
                     } catch (JSONException ignored) {
                     }
                 }
                 synchronized (writer) {
-                    writer.write(packet.dataRef.get().toString());
+                    writer.write(packet.toJsonString());
                     writer.write('\n');
                     writer.flush();
                 }
@@ -306,10 +313,47 @@ public class ClientThread implements Callable<String> {
         }
     }
 
+    protected void enqueueChatMessage(@NotNull JSONObject messageObj) {
+        synchronized (pendingChatMessages) {
+            pendingChatMessages.add(messageObj);
+        }
+    }
+
+    protected void flushPendingChatMessages() {
+        ArrayList<JSONObject> messages;
+        synchronized (pendingChatMessages) {
+            if (pendingChatMessages.isEmpty()) {
+                return;
+            }
+            messages = new ArrayList<>(pendingChatMessages);
+            pendingChatMessages.clear();
+        }
+        sendImmediate(NetworkPacket.packChatMessages(messages));
+    }
+
+    protected void sendImmediate(@NotNull JSONObject data) {
+        try {
+            if (DeviceCompat.isDebug()) {
+                try {
+                    Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));
+                } catch (JSONException ignored) {
+                }
+            }
+            synchronized (writer) {
+                writer.write(data.toString());
+                writer.write('\n');
+                writer.flush();
+            }
+        } catch (IOException e) {
+            Log.e(String.format("ClientThread%d", threadID), String.format("IOException in threadID %s. Message: %s", threadID, e.getMessage()));
+            disconnect();
+        }
+    }
+
     //some functions
     protected void sendServerType(){
         packet.addServerType(SERVER_TYPE);
-        flush();
+        forceFlush();
     }
     protected void sendServerInfo() {
         try {
@@ -478,13 +522,13 @@ public class ClientThread implements Callable<String> {
             if (actor instanceof Buff)
                 packet.packAndAddBuff((Buff) actor, false);
         }
-        flush();
+        forceFlush();
 
         packet.packAndAddInterlevelSceneState("fade_out", null);
-        flush();
+        forceFlush();
     }
     private void sendTexture(String textureData){
         packet.packAndAddRawTextures(textureData);
-        flush();
+        forceFlush();
     }
 }
