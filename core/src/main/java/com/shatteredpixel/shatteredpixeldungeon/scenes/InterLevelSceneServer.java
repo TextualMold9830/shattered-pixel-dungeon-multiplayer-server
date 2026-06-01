@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.*;
@@ -49,19 +50,13 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.utils.DeviceCompat;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class InterLevelSceneServer extends Scene {
-
-	private enum FADE_TIME {
-		SLOW_FADE, NORM_FADE, FAST_FADE
-	}
 
 	public enum Mode {
 		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE
@@ -97,8 +92,8 @@ public class InterLevelSceneServer extends Scene {
 		@SuppressWarnings("unused")
 		final float scrollSpeed;
 
-		FADE_TIME fadeTime;
-		fadeTime = FADE_TIME.NORM_FADE;
+		InterlevelSceneDTO.FadeTime fadeTime;
+		fadeTime = InterlevelSceneDTO.FadeTime.NORM_FADE;
 		switch (mode){
 			default:
 				loadingDepth = Dungeon.depth;
@@ -111,14 +106,14 @@ public class InterLevelSceneServer extends Scene {
 			case DESCEND:
 				if (heroes == null){
 					loadingDepth = 1;
-					fadeTime = FADE_TIME.SLOW_FADE;
+					fadeTime = InterlevelSceneDTO.FadeTime.SLOW_FADE;
 				} else {
 					if (curTransition != null)  loadingDepth = curTransition.destDepth;
 					else                        loadingDepth = Dungeon.depth+1;
 					if (Statistics.deepestFloor >= loadingDepth) {
-						fadeTime = FADE_TIME.FAST_FADE;
+						fadeTime = InterlevelSceneDTO.FadeTime.FAST_FADE;
 					} else if (loadingDepth % 5 == 1) {
-						fadeTime = FADE_TIME.SLOW_FADE;
+						fadeTime = InterlevelSceneDTO.FadeTime.SLOW_FADE;
 					}
 				}
 				scrollSpeed = 5;
@@ -128,7 +123,7 @@ public class InterLevelSceneServer extends Scene {
 				scrollSpeed = 50;
 				break;
 			case ASCEND:
-				fadeTime = FADE_TIME.FAST_FADE;
+				fadeTime = InterlevelSceneDTO.FadeTime.FAST_FADE;
 				if (curTransition != null)  loadingDepth = curTransition.destDepth;
 				else                        loadingDepth = Dungeon.depth-1;
 				scrollSpeed = -5;
@@ -155,14 +150,11 @@ public class InterLevelSceneServer extends Scene {
 //		else
 			loadingAsset = Assets.Interfaces.SHADOW;
 
-		LocalizedString text = Messages.get(Mode.class, mode.name());
-
 		phase = Phase.FADE_IN;
 		// We do not send the message and the scrolling speed
 		// to allow the client to determine them independently according to the current mode
 		// the background scale is determined by the texture pack
-		//JSONObject paramsObject = (new InterLevelSceneParams(mode, loadingAsset, scrollSpeed, text)).toJSONObject();
-		JSONObject paramsObject = (new InterLevelSceneParams(mode, loadingAsset, fadeTime)).toJSONObject();
+		InterlevelSceneDTO paramsObject = new InterlevelSceneDTO(mode, loadingAsset, fadeTime, null, null, true);
 		SendData.sendInterLevelSceneForAll(paramsObject);
 
 		if (thread == null) {
@@ -441,47 +433,4 @@ public class InterLevelSceneServer extends Scene {
 		super.destroy();
 	}
 
-	private static class InterLevelSceneParams {
-		@NotNull
-		final Mode mode;
-		@Nullable
-		final String message;
-		@Nullable
-		final Float scrollSpeed;
-		@Nullable
-		final String loadingTexture;
-		@Nullable
-		final FADE_TIME fadeTime;
-
-
-		public InterLevelSceneParams(@NotNull Mode mode, @Nullable String loadingTexture, @Nullable FADE_TIME fadeTime) {
-			this(mode, loadingTexture, fadeTime, null, null);
-		}
-		public InterLevelSceneParams(@NotNull Mode mode, @Nullable String loadingTexture, @Nullable FADE_TIME fadeTime, @Nullable Float scrollSpeed, @Nullable String message) {
-			this.mode = mode;
-			this.message = message;
-			this.fadeTime = fadeTime;
-			this.scrollSpeed = scrollSpeed;
-			this.loadingTexture = loadingTexture;
-		}
-
-		public JSONObject toJSONObject() {
-			JSONObject result = new JSONObject();
-			result.put("type", mode.name().toLowerCase());
-			if (message != null) {
-				result.put("custom_message", message);
-			}
-			if (scrollSpeed != null){
-				result.put("scroll_speed", scrollSpeed);
-			}
-			if (loadingTexture != null){
-				result.put("loading_texture", loadingTexture);
-			}
-			if (fadeTime != null){
-				result.put("fade_time", fadeTime.name().toLowerCase());
-			}
-			result.put("reset_level", true);
-			return result;
-		}
-	}
 }

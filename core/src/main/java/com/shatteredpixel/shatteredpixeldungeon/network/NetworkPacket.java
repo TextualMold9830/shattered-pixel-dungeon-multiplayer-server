@@ -417,18 +417,16 @@ public class NetworkPacket {
             }
         }
     }
-    public void addInterlevelSceneObject(JSONObject interlevelSceneParams) {
-        interlevelSceneParams.put("action_name", "interlevel_scene");
-        addAction(interlevelSceneParams);
+    public void addInterlevelSceneObject(InterlevelSceneDTO interlevelSceneParams) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        JSONObject sceneObj = (JSONObject) ctx.serialize(interlevelSceneParams);
+        sceneObj.put("action_name", "interlevel_scene");
+        addAction(sceneObj);
     }
 
     public void packAndAddInterlevelSceneState(String state, String customMessage) {
         InterlevelSceneDTO dto = new InterlevelSceneDTO(state, customMessage);
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject stateObj = (JSONObject) ctx.serialize(dto);
-
-        stateObj.put("action_name", "interlevel_scene");
-        addAction(stateObj);
+        addInterlevelSceneObject(dto);
     }
 
     public void packAndAddInterlevelSceneState(String state) {

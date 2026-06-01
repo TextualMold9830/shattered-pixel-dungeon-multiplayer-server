@@ -14,6 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -195,12 +196,12 @@ public class SendData {
 
     //-----------------------------Interlevel Scene
 
-    public static void sendInterLevelSceneForAll(JSONObject interlevelSceneParams) {
+    public static void sendInterLevelSceneForAll(InterlevelSceneDTO interlevelSceneParams) {
         for (int i = 0; i < clients.length; i++) {
             sendInterLevelScene(i, interlevelSceneParams);
         }
     }
-    public static void sendInterLevelScene(int ID, JSONObject interlevelSceneParams) {
+    public static void sendInterLevelScene(int ID, InterlevelSceneDTO interlevelSceneParams) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].forceFlush();
             {
