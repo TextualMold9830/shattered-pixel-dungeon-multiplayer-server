@@ -193,31 +193,6 @@ public class SendData {
         }
     }
 
-
-    //---------------------------Badges
-    //public static void sendBadge
-    public static void sendBadgeLevelReached(int ID, int bLevel) {//bLevel=BadgeLevel
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].addBadgeToSend("level_reached", bLevel);
-        }
-    }
-
-    public static void sendBadgeStrengthAttained(int ID, int bLevel) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].send(Codes.BADGE_STRENGTH_ATTAINED, bLevel);
-        }
-    }
-
-    public static void sendAllBadgeBossSlain(int bLevel) {
-        ClientThread.sendAll(Codes.BADGE_BOSS_SLAIN, bLevel);
-    }
-
-    public static void sendBadgeMastery(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].sendCode(Codes.BADGE_MASTERY);
-        }
-    }
-
     //-----------------------------Interlevel Scene
 
     public static void sendInterLevelSceneForAll(JSONObject interlevelSceneParams) {
