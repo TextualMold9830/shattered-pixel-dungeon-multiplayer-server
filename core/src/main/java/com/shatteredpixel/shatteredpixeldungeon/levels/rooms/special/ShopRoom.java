@@ -382,10 +382,28 @@ public class ShopRoom extends SpecialRoom {
 
 		//count up items in the main bag
 
+		for(Hero hero: Dungeon.heroes) {
+			if(hero != null) {
+                Belongings pack = hero.belongings;
+                for (Item item : pack.backpack.items) {
+                    for (Bag bag : bags.keySet()) {
+                        if (bag.canHold(item)) {
+                            bags.put(bag, bags.get(bag) + 1);
+                        }
+                    }
+                }
+            }
+		}
 		//find which bag will result in most inventory savings, drop that.
-		//TODO: check this
-		Bag bestBag = (Bag) bags.keySet().toArray()[Random.Int(1,3)];
 
+		Bag bestBag = null;
+		for (Bag bag : bags.keySet()){
+			if (bestBag == null){
+				bestBag = bag;
+			} else if (bags.get(bag) > bags.get(bestBag)){
+				bestBag = bag;
+			}
+		}
 		if (bestBag instanceof VelvetPouch){
 			Dungeon.LimitedDrops.VELVET_POUCH.drop();
 		} else if (bestBag instanceof ScrollHolder){
