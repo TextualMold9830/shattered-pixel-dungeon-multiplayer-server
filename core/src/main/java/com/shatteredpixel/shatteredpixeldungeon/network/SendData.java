@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
@@ -737,14 +738,7 @@ public class SendData {
 
 
     public static void sendActionDiscoverTile(int pos, int oldValue) {
-        JSONObject action = new JSONObject();
-        try {
-            action.put("action_name", "discover_tile");
-            action.put("pos", pos);
-            action.put("old_tile", oldValue);
-        } catch (JSONException ignored) {
-        }
-        sendCustomActionForAll(action);
+        sendActionForAll(new DiscoverTileAction(pos, oldValue));
     }
 
     public static void sendCellListenerPrompt(LocalizedString new_prompt, int networkID) {
