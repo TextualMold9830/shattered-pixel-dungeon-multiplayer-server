@@ -442,7 +442,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void add( State state ) {
 		//instant as it just changes an animation property that will get read later
 		if (state == State.PARALYSED){
-			paused = true;
+			processStateAddition(state);
 		} else {
 			synchronized (State.class) {
 				stateRemovals.remove(state);
@@ -462,6 +462,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	protected synchronized void processStateAddition( State state ) {
+		states.add(state);
 		switch (state) {
 			case BURNING:
 				if (burning != null) burning.on(false);
@@ -541,6 +542,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				break;
 		}
+		if (ch != null) {
+			SendData.sendAddCharSpriteState(ch, state);
+		}
 	}
 
 	private final HashSet<State> stateRemovals = new HashSet<>();
@@ -549,6 +553,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		//instant as it just changes an animation property that will get read later
 		if (state == State.PARALYSED){
 			paused = false;
+			processStateRemoval(state);
 		} else {
 			synchronized (State.class) {
 				stateAdditions.remove(state);
@@ -562,6 +567,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	protected synchronized void processStateRemoval( State state ) {
+		states.remove(state);
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
@@ -644,6 +650,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					aura = null;
 				}
 				break;
+		}
+		if (ch != null) {
+			SendData.sendRemoveCharSpriteState(ch, state);
 		}
 	}
 	

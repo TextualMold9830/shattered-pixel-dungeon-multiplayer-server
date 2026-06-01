@@ -318,21 +318,29 @@ public class SendData {
         }
     }
 
-    public static void sendCharSpriteState(Actor actor, CharSprite.State state, boolean remove) {
+    public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
+        sendSpriteStateChange(actor, state, false);
+    }
+
+    public static void sendRemoveCharSpriteState(Actor actor, CharSprite.State state) {
+        sendSpriteStateChange(actor, state, true);
+    }
+
+    private static void sendSpriteStateChange(Actor actor, CharSprite.State state, boolean remove) {
+        if (actor == null) {
+            return;
+        }
         int id = actor.id();
         if (id == Actor.NO_ID) {
             return;
         }
-        String stateName = state.name().toLowerCase();
-        JSONObject stateObj = new JSONObject();
-        try {
-            stateObj.put("state", stateName);
-            stateObj.put("is_removing", remove);
-            stateObj.put("actor_id", id);
-        } catch (JSONException ignored) {
-
+        for (ClientThread client : clients) {
+            if (client == null) {
+                continue;
+            }
+            client.packet.packAndAddCharSpriteState(id, state, remove);
+            client.flush();
         }
-        sendActor(actor);
     }
 
     @Deprecated

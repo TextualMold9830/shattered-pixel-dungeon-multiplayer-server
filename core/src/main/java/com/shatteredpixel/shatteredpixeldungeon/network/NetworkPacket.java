@@ -265,6 +265,14 @@ public class NetworkPacket {
         }
     }
 
+    public void packAndAddCharSpriteState(int actorId, CharSprite.State state, boolean remove) {
+        JSONObject event = new JSONObject();
+        event.put("action_name", remove ? "char_sprite_state_remove" : "char_sprite_state_add");
+        event.put("actor_id", actorId);
+        event.put("state", state.name().toLowerCase(Locale.ROOT));
+        addAction(event);
+    }
+
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
         try {
             JSONObject heroObj = new JSONObject();
