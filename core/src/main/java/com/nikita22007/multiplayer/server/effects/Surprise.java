@@ -4,11 +4,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SurpriseVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
+import org.jetbrains.annotations.Contract;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,22 +20,15 @@ public class Surprise {
 
     private float time;
 
-    @Deprecated
-    public Surprise() {
+    @Contract(value = " -> fail", pure = true)
+    private Surprise() {
         throw new RuntimeException();
     }
 
     public static void reset(int p, float angle) {
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_name", "surprise_visual");
-            actionObj.put("pos", p);
-            actionObj.put("angle", angle);
-            actionObj.put("time_to_fade", TIME_TO_FADE);
-        } catch (JSONException ignore) {
-        }
-        SendData.sendCustomActionForAll(actionObj);
+        SendData.sendActionForAll(new SurpriseVisualAction(p, angle, TIME_TO_FADE));
     }
+
     public static void hit(Char ch) {
         hit(ch, 0);
     }

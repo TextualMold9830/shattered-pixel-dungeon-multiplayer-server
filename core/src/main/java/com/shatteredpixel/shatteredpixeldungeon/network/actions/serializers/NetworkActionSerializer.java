@@ -1,5 +1,6 @@
-package com.shatteredpixel.shatteredpixeldungeon.network.actions;
+package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.Serializer;
 import org.json.JSONObject;

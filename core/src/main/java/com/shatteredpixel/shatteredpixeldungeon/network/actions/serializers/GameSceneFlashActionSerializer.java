@@ -1,7 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.json.JSONObject;
 

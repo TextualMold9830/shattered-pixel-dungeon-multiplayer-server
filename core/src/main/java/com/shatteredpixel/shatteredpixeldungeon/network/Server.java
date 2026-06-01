@@ -9,6 +9,8 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SurpriseVisualAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SurpriseVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -35,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BlobSerializer;
@@ -57,7 +58,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializ
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.LevelSerializer;
@@ -123,6 +123,7 @@ public class Server extends Thread {
 
         //actions
         SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
+        SERIALIZERS.register(SurpriseVisualAction.class, new SurpriseVisualActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
