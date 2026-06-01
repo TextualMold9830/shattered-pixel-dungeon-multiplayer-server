@@ -9,7 +9,6 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 class Codes {
     //Network block 0x00-0x0F
     public static final int NOP           = 0X00;   //nothing
-    public static final int SERVER_FULL   = 0X01;   //server->client;
     public static final int SERVER_CLOSED = 0X02;   //server->client; when server is going off
 
     //level block 0X10-0X1F

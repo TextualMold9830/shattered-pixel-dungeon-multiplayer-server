@@ -13,12 +13,15 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -225,8 +228,7 @@ public class Server extends Thread {
         synchronized (clients) {
             for (int i = 0; i <= clients.length; i++) {   //search not connected
                 if (i == clients.length) { //If we test last and it's connected too
-                    //todo use new json
-                    new DataOutputStream(client.getOutputStream()).writeInt(Codes.SERVER_FULL);
+                    rejectClient(client, "server_full", "Server is full");
                     client.close();
                 } else if (clients[i] == null) {
                         Hero emptyHero = null;
@@ -235,6 +237,24 @@ public class Server extends Thread {
                 }
             }
         }
+    }
+
+    private static void rejectClient(Socket client, String reason, String message) throws IOException {
+        JSONObject action = new JSONObject();
+        action.put("action_name", "connection_rejected");
+        action.put("reason", reason);
+        action.put("message", message);
+
+        JSONObject packet = new JSONObject();
+        packet.put("actions", new JSONArray().put(action));
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                client.getOutputStream(),
+                Charset.forName(ClientThread.CHARSET).newEncoder()
+        ));
+        writer.write(packet.toString());
+        writer.write('\n');
+        writer.flush();
     }
 
     //Server thread
