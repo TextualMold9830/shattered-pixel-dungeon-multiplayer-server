@@ -117,6 +117,28 @@ public class NetworkPacket {
         }
     }
 
+    public void compress() {
+        synchronized (dataRef) {
+            try {
+                NetworkPacketCompressor.compress(dataRef.get());
+            } catch (JSONException e) {
+                Log.w("NetworkPacket", "Failed to compress packet. " + e.toString());
+            }
+        }
+    }
+
+    public String toJsonString() {
+        synchronized (dataRef) {
+            return dataRef.get().toString();
+        }
+    }
+
+    public String toJsonString(int indentFactor) throws JSONException {
+        synchronized (dataRef) {
+            return dataRef.get().toString(indentFactor);
+        }
+    }
+
     public static void addToArray(JSONObject storage, String token, JSONObject data) throws JSONException {
         if (!storage.has(token)) {
             storage.put(token, new JSONArray());

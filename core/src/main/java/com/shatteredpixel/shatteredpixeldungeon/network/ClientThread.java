@@ -288,17 +288,18 @@ public class ClientThread implements Callable<String> {
     protected void forceFlush() {
         try {
             synchronized (packet.dataRef) {
+                packet.compress();
                 if (packet.dataRef.get().length() == 0) {
                     return;
                 }
                 if (DeviceCompat.isDebug()) {
                     try {
-                        Log.i("flush", "clientID: " + threadID + " data:" + packet.dataRef.get().toString(4));
+                        Log.i("flush", "clientID: " + threadID + " data:" + packet.toJsonString(4));
                     } catch (JSONException ignored) {
                     }
                 }
                 synchronized (writer) {
-                    writer.write(packet.dataRef.get().toString());
+                    writer.write(packet.toJsonString());
                     writer.write('\n');
                     writer.flush();
                 }
