@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.levels.VaultLevel;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -292,9 +293,17 @@ public abstract class Actor implements Bundlable {
 					// If it's character's turn to act, but its sprite
 					// is moving, wait till the movement is over
 					try {
-						synchronized (((Char) acting).getSprite()) {
-							if (((Char) acting).getSprite().isMoving) {
-								((Char) acting).getSprite().wait();
+						CharSprite sprite = ((Char) acting).getSprite();
+						boolean isMoving;
+						synchronized (sprite) {
+							isMoving = sprite.isMoving;
+						}
+						if (isMoving) {
+							SendData.forceFlushAll();
+							synchronized (sprite) {
+								while (sprite.isMoving) {
+									sprite.wait();
+								}
 							}
 						}
 					} catch (InterruptedException e) {
