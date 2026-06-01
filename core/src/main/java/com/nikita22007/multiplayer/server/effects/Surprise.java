@@ -1,24 +1,13 @@
 package com.nikita22007.multiplayer.server.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SurpriseVisualAction;
-import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.Group;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.Visual;
 import org.jetbrains.annotations.Contract;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Surprise {
 
     private static final float TIME_TO_FADE = 1f;
-
-    private float time;
 
     @Contract(value = " -> fail", pure = true)
     private Surprise() {
