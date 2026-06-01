@@ -694,6 +694,7 @@ public class GameScene extends PixelScene {
 	@Override
 	public synchronized void update() {
 		Server.parseActions();
+		SendData.updatePendingChat(Game.elapsed);
 		lastOffset = null;
 
 		updateItemDisplays();

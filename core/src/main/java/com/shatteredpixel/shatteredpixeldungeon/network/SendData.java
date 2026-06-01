@@ -32,6 +32,8 @@ import static com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.add
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
 public class SendData {
+    public static final float CHAT_FLUSH_INTERVAL = 0.1f;
+    private static float chatFlushElapsed = 0f;
 
     //---------------------------Level
 
@@ -471,6 +473,89 @@ public class SendData {
             }
             client.packet.addChatMessage(messageObj);
             client.flush();
+        }
+    }
+
+    public static void enqueueChatMessageToAll(String message) {
+        enqueueChatMessageToAll(LocalizedString.raw(message));
+    }
+
+    public static void enqueueChatMessageToAll(LocalizedString message) {
+        JSONObject messageObj = packMessage(message);
+        if (messageObj == null) {
+            return;
+        }
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.enqueueChatMessage(messageObj);
+            }
+        }
+    }
+
+    public static void enqueueChatMessage(Integer ID, String message) {
+        enqueueChatMessage(ID, LocalizedString.raw(message));
+    }
+
+    public static void enqueueChatMessage(Integer ID, LocalizedString message) {
+        if (ID == null) {
+            enqueueChatMessageToAll(message);
+            return;
+        }
+        JSONObject messageObj = packMessage(message);
+        if (messageObj == null) {
+            return;
+        }
+        if (ID >= 0 && ID < clients.length && clients[ID] != null) {
+            clients[ID].enqueueChatMessage(messageObj);
+        }
+    }
+
+    public static void enqueueChatMessageExcept(Integer exceptId, String message) {
+        enqueueChatMessageExcept(exceptId, LocalizedString.raw(message));
+    }
+
+    public static void enqueueChatMessageExcept(Integer exceptId, LocalizedString message) {
+        if (exceptId == null) {
+            enqueueChatMessageToAll(message);
+            return;
+        }
+        JSONObject messageObj = packMessage(message);
+        if (messageObj == null) {
+            return;
+        }
+        for (int i = 0; i < clients.length; i++) {
+            if (i == exceptId) {
+                continue;
+            }
+            ClientThread client = clients[i];
+            if (client != null) {
+                client.enqueueChatMessage(messageObj);
+            }
+        }
+    }
+
+    public static void updatePendingChat(float elapsed) {
+        chatFlushElapsed += elapsed;
+        if (chatFlushElapsed < CHAT_FLUSH_INTERVAL) {
+            return;
+        }
+        chatFlushElapsed = 0f;
+        flushPendingChat();
+    }
+
+    public static void flushPendingChat() {
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.flushPendingChatMessages();
+            }
+        }
+    }
+
+    private static JSONObject packMessage(LocalizedString message) {
+        try {
+            return new JSONObject().put("text", message);
+        } catch (JSONException e) {
+            return null;
         }
     }
 

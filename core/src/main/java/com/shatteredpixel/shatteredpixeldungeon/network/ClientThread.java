@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +60,7 @@ public class ClientThread implements Callable<String> {
     protected Hero clientHero;
 
     protected final NetworkPacket packet = new NetworkPacket();
+    private final ArrayList<JSONObject> pendingChatMessages = new ArrayList<>();
 
     @NotNull
     private FutureTask<String> jsonCall;
@@ -217,7 +219,7 @@ public class ClientThread implements Callable<String> {
                             break;
                         }
                         Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
-                        GLog.i("%s: %s", clientHero.name,  text.trim());
+                        SendData.enqueueChatMessageToAll(clientHero.name + ": " + text.trim());
                         break;
                     }
                     case "toolbar_action": {
@@ -307,6 +309,43 @@ public class ClientThread implements Callable<String> {
             disconnect();
         } catch (StackOverflowError e) {
             Log.e("st", "st", e);
+        }
+    }
+
+    protected void enqueueChatMessage(@NotNull JSONObject messageObj) {
+        synchronized (pendingChatMessages) {
+            pendingChatMessages.add(messageObj);
+        }
+    }
+
+    protected void flushPendingChatMessages() {
+        ArrayList<JSONObject> messages;
+        synchronized (pendingChatMessages) {
+            if (pendingChatMessages.isEmpty()) {
+                return;
+            }
+            messages = new ArrayList<>(pendingChatMessages);
+            pendingChatMessages.clear();
+        }
+        sendImmediate(NetworkPacket.packChatMessages(messages));
+    }
+
+    protected void sendImmediate(@NotNull JSONObject data) {
+        try {
+            if (DeviceCompat.isDebug()) {
+                try {
+                    Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));
+                } catch (JSONException ignored) {
+                }
+            }
+            synchronized (writer) {
+                writer.write(data.toString());
+                writer.write('\n');
+                writer.flush();
+            }
+        } catch (IOException e) {
+            Log.e(String.format("ClientThread%d", threadID), String.format("IOException in threadID %s. Message: %s", threadID, e.getMessage()));
+            disconnect();
         }
     }
 

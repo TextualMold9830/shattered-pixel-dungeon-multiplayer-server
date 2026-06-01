@@ -155,6 +155,23 @@ public class NetworkPacket {
         }
     }
 
+    public static JSONObject packChatMessages(List<JSONObject> messages) {
+        JSONObject data = new JSONObject();
+        JSONArray actions = new JSONArray();
+        JSONObject messagesAction = new JSONObject();
+
+        messagesAction.put("action_name", "messages");
+        JSONArray messagesArray = new JSONArray();
+        for (JSONObject message : messages) {
+            messagesArray.put(message);
+        }
+        messagesAction.put("messages", messagesArray);
+        actions.put(messagesAction);
+        data.put("actions", actions);
+
+        return data;
+    }
+
     public void packAndAddActor(Actor actor, boolean heroAsHero) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "default");
