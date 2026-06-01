@@ -33,7 +33,7 @@ public class Wound {
     public static void reset(int p) {
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "wound_visual");
+            actionObj.put("action_name", "wound_visual");
             actionObj.put("pos", p);
             actionObj.put("time_to_fade", TIME_TO_FADE);
         } catch (JSONException ignore) {

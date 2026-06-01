@@ -99,7 +99,7 @@ public class Degradation {
 	public static void showDegradation(PointF p, int[] matrix, int color ) {
 		JSONObject action = new JSONObject();
 		try {
-			action.put("action_type", "degradation");
+			action.put("action_name", "degradation");
 			action.put("position_x", p.x);
 			action.put("position_y", p.y);
 			action.put("matrix", putToJSONArray(matrix));

@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -104,6 +105,7 @@ public class NetworkPacket {
 
     public void addAction(@NotNull JSONObject actionObj) {
         Objects.requireNonNull(actionObj);
+        assert(actionObj.has("action_name"));
         synchronized (dataRef) {
             try {
                 JSONObject data = dataRef.get();
@@ -114,6 +116,14 @@ public class NetworkPacket {
             } catch (JSONException e) {
                 Log.w("NetworkPacket", "Failed to add action. " + e.toString());
             }
+        }
+    }
+
+    public void addAction(@NotNull NetworkAction action) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        Object serialized = ctx.serialize(action);
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            addAction((JSONObject) serialized);
         }
     }
 

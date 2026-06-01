@@ -7,6 +7,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -118,6 +120,9 @@ public class Server extends Thread {
         SERIALIZERS.register(Emitter.class, "start", new EmitterStartSerializer());
         SERIALIZERS.register(Emitter.class, "pour", new EmitterPourSerializer());
         SERIALIZERS.register(Emitter.class, "stop", new EmitterStopSerializer());
+
+        //actions
+        SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

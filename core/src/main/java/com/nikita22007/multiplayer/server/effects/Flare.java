@@ -87,7 +87,7 @@ public final class Flare extends Visual {
 	public void SendThis(){
 		try{
 			JSONObject actionObj = new JSONObject();
-			actionObj.put("action_type", "flare_visual");
+			actionObj.put("action_name", "flare_visual");
 			if (position != null) {
 				actionObj.put("position_x", position.x);
 				actionObj.put("position_y", position.y);

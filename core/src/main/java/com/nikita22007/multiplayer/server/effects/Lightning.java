@@ -52,7 +52,7 @@ public class Lightning {
     protected static void showLightning(int[] cells) {
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "lightning_visual");
+            actionObj.put("action_name", "lightning_visual");
             actionObj.put("cells", Utils.putToJSONArray(cells));
             actionObj.put("duration", DURATION);
         } catch (JSONException ignore) {

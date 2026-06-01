@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DiscardedItemSprite;
@@ -1018,7 +1019,7 @@ public class GameScene extends PixelScene {
 	public static void ripple(int pos) {
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "ripple_visual");
+			actionObj.put("action_name", "ripple_visual");
 			actionObj.put("pos", pos);
 		} catch (JSONException ignore) {
 		}
@@ -1243,27 +1244,11 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void flash(int color) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("action_type", "game_scene_flash");
-			obj.put("color", color);
-			obj.put("light", true);
-		} catch (JSONException ignored) {
-
-		}
-		SendData.sendCustomActionForAll(obj);
+		SendData.sendActionForAll(new GameSceneFlashAction(color));
 	}
 
 	public static void flash(int color, boolean lightmode) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("action_type", "game_scene_flash");
-			obj.put("color", color);
-			obj.put("light", lightmode);
-		} catch (JSONException ignored) {
-
-		}
-		SendData.sendCustomActionForAll(obj);
+		SendData.sendActionForAll(new GameSceneFlashAction(color, lightmode));
 	}
 
 	@Deprecated

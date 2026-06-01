@@ -26,7 +26,7 @@ public class Surprise {
     public static void reset(int p, float angle) {
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "surprise_visual");
+            actionObj.put("action_name", "surprise_visual");
             actionObj.put("pos", p);
             actionObj.put("angle", angle);
             actionObj.put("time_to_fade", TIME_TO_FADE);

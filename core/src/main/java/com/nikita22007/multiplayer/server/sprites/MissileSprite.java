@@ -70,7 +70,7 @@ public class MissileSprite {
 
 		JSONObject action = new JSONObject();
 		try {
-			action.put("action_type", "missile_sprite_visual");
+			action.put("action_name", "missile_sprite_visual");
 			action.put("from", from);
 			action.put("to", to);
 			action.put("speed", SPEED);

@@ -28,7 +28,7 @@ public class DeathRay {
     public static void showDeathRayCentered(int start_pos, int end_pos) {
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "death_ray_centered_visual");
+            actionObj.put("action_name", "death_ray_centered_visual");
             actionObj.put("start_pos", start_pos);
             actionObj.put("end_pos", end_pos);
             actionObj.put("duration", DURATION);

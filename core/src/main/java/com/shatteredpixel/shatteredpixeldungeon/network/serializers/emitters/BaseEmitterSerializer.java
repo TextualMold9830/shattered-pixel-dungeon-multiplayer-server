@@ -8,7 +8,7 @@ abstract class BaseEmitterSerializer {
 
 	protected JSONObject baseObject(String actionType, Emitter emitter, SerializationContext ctx) {
 		JSONObject object = new JSONObject();
-		object.put("action_type", actionType);
+		object.put("action_name", actionType);
 		object.put("anchor", ctx.serialize(emitter.anchor()));
 		Object factory = ctx.serialize(emitter.networkFactory());
 		if (factory == null || factory == JSONObject.NULL) {

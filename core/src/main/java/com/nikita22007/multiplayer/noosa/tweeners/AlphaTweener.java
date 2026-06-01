@@ -34,7 +34,7 @@ public class AlphaTweener {
 		} else {
 			JSONObject actionObj = new JSONObject();
 			try {
-				actionObj.put("action_type", "sprite_action");
+				actionObj.put("action_name", "sprite_action");
 				actionObj.put("action", "alpha_tweener");
 				actionObj.put("actor_id", image.ch.id());
 				actionObj.put("start_alpha", image.alpha());

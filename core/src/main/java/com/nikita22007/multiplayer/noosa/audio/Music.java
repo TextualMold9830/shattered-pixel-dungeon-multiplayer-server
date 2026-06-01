@@ -62,7 +62,7 @@ public enum Music {
 	public static abstract class MusicAction {
 		public JSONObject toJSON(){
 			JSONObject object = new JSONObject();
-			object.put("action_type", "music");
+			object.put("action_name", "music");
 			object.put("music_action_type", musicActionType());
 			pack(object);
 			return object;

@@ -880,14 +880,14 @@ public class PrisonBossLevel extends Level {
 			}
 			Dungeon.level.customTiles.remove(this);
 			JSONObject object = new JSONObject();
-			object.put("action_type", "fading_traps");
+			object.put("action_name", "fading_traps");
 			object.put("kill", true);
 			SendData.sendCustomActionForAll(object);
 		}
 		boolean newInstance = true;
 		public void sendSelf(){
 			JSONObject object = new JSONObject();
-			object.put("action_type", "fading_traps");
+			object.put("action_name", "fading_traps");
 			object.put("tileX", tileX);
 			object.put("tileY", tileY);
 			object.put("tileH", tileH);

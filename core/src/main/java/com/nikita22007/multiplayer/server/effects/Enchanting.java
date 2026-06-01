@@ -32,7 +32,7 @@ public class Enchanting {
     public static void show(@NotNull Char ch, @NotNull Item item) {
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "enchanting_visual");
+            actionObj.put("action_name", "enchanting_visual");
             actionObj.put("target", ch.id());
             actionObj.put("item", item.toJsonObject(ch instanceof Hero ? (Hero) ch : null));
         } catch (JSONException e) {

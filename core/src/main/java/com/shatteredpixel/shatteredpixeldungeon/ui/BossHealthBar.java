@@ -64,7 +64,7 @@ public class BossHealthBar {
 		JSONObject object = new JSONObject();
 		object.put("bleeding", bleeding);
 		object.put("id", boss.id());
-		object.put("action_type", "boss_health_bar");
+		object.put("action_name", "boss_health_bar");
 		SendData.sendCustomActionForAll(object);
 	}
 

@@ -688,7 +688,7 @@ public class MagicMissile extends Emitter {
 	protected static void Send(int type, int from, int to){
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "magic_missile_visual");
+			actionObj.put("action_name", "magic_missile_visual");
 			actionObj.put("type", type);
 			actionObj.put("from", from);
 			actionObj.put("to", to);

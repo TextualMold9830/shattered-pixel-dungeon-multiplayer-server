@@ -107,7 +107,7 @@ public class Enchanting extends ItemSprite {
 
 	public static void show( Char ch, Item item ) {
 		JSONObject enchantingVisual = new JSONObject();
-		enchantingVisual.put("action_type", "enchanting_visual");
+		enchantingVisual.put("action_name", "enchanting_visual");
 		enchantingVisual.put("target", ch.id());
 		enchantingVisual.put("item", item.toJsonObject(null));
 		SendData.sendCustomActionForAll(enchantingVisual);

@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -298,7 +299,7 @@ public class SendData {
         }
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "sprite_action");
+            actionObj.put("action_name", "sprite_action");
             actionObj.put("action", action);
             actionObj.put("from", cell_from);
             actionObj.put("to", cell_to);
@@ -537,7 +538,7 @@ public class SendData {
     public static void addToSendShowStatus(Float x, Float y, Integer key, String text, int color, boolean ignorePosition) {
         JSONObject data = new JSONObject();
         try {
-            data.put("action_type", "show_status");
+            data.put("action_name", "show_status");
             data.put("x", x);
             data.put("y", y);
             data.put("key", key);
@@ -696,7 +697,7 @@ public class SendData {
 
         JSONObject actionObj = new JSONObject();
         try {
-            actionObj.put("action_type", "sprite_action");
+            actionObj.put("action_name", "sprite_action");
             actionObj.put("action", "flash");
             actionObj.put("actor_id", sprite.ch.id());
             actionObj.put("flash_time", flashTime);
@@ -713,12 +714,6 @@ public class SendData {
         }
     }
 
-    public static void addToSendCustomActionForAll(@NotNull JSONObject action_obj) {
-        for (int i = 0; i < clients.length; i++) {
-            addToSendCustomAction(action_obj, i);
-        }
-    }
-
     public static void sendCustomAction(@NotNull JSONObject action_obj, @NotNull Hero hero) {
         if (hero.networkID <= -1) {
             return;
@@ -730,36 +725,21 @@ public class SendData {
         }
     }
 
-    public static void sendCustomAction(JSONObject action_obj, int networkID, boolean flush) {
-        assert action_obj.has("action_type") : "Action object must contains \"action_type\" field";
+    public static void sendCustomAction(JSONObject action_obj, int networkID) {
+        assert action_obj.has("action_name") : "Action object must contains \"action_type\" field";
         if (networkID <= -1) {
             return;
         }
         if (clients[networkID] != null) {
             clients[networkID].packet.addAction(action_obj);
-            if (flush) {
-                clients[networkID].flush();
-            }
         }
     }
 
-    public static void sendCustomAction(JSONObject action_obj, int networkID) {
-        sendCustomAction(action_obj, networkID, true);
-    }
-
-    public static void addToSendCustomAction(JSONObject action_obj, int networkID) {
-        sendCustomAction(action_obj, networkID, false);
-    }
-
-    public static void addToSendCustomAction(JSONObject action_obj, Hero hero) {
-        if (hero == null) return;
-        sendCustomAction(action_obj, hero.networkID, false);
-    }
 
     public static void sendActionDiscoverTile(int pos, int oldValue) {
         JSONObject action = new JSONObject();
         try {
-            action.put("action_type", "discover_tile");
+            action.put("action_name", "discover_tile");
             action.put("pos", pos);
             action.put("old_tile", oldValue);
         } catch (JSONException ignored) {
@@ -856,5 +836,30 @@ public class SendData {
     {
         clients[hero.networkID].packet.packAndAddRedirect(redirectPacket);
         clients[hero.networkID].flush();
+    }
+
+    public static void sendAction(@Nullable Hero hero, NetworkAction networkAction) {
+        if (hero == null) return;
+        int networkId = hero.networkID;
+        if (networkId < 0) {
+            return;
+        }
+        if (networkId >= clients.length) {
+            Log.e("Hero network id is too much");
+            return;
+        }
+        var client = clients[networkId];
+        if (client != null) {
+            client.packet.addAction(networkAction);
+        }
+    }
+
+    public static void sendActionForAll(NetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.addAction(networkAction);
+            }
+        }
     }
 }

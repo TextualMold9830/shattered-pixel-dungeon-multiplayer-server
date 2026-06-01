@@ -50,7 +50,7 @@ public enum Sample {
 	public void load( String... assets ) {
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "load_sample");
+			actionObj.put("action_name", "load_sample");
 			actionObj.put("samples",	Utils.putToJSONArray(assets));
 		} catch (JSONException ignored) {}
 		ids.addAll(Arrays.asList(assets));
@@ -64,7 +64,7 @@ public enum Sample {
 	public void unload( String src ) {
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "unload_sample");
+			actionObj.put("action_name", "unload_sample");
 			actionObj.put("sample", src);
 		} catch (JSONException ignored) {}
 		SendData.sendCustomActionForAll(actionObj);
@@ -77,7 +77,7 @@ public enum Sample {
 	public void reload(){
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "reload_sample");
+			actionObj.put("action_name", "reload_sample");
 			actionObj.put("samples",	Utils.putToJSONArray(ids.toArray()));
 		} catch (JSONException ignored) {}
 		SendData.sendCustomActionForAll(actionObj);
@@ -121,7 +121,7 @@ public enum Sample {
 
 		JSONObject actionObj = new JSONObject();
 		try {
-			actionObj.put("action_type", "play_sample");
+			actionObj.put("action_name", "play_sample");
 			actionObj.put("sample", id);
 			actionObj.put("left_volume", leftVolume);
 			actionObj.put("right_volume", rightVolume);
