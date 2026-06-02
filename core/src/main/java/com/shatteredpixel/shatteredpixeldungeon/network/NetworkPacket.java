@@ -54,7 +54,7 @@ public class NetworkPacket {
             }
         }
     }
-    
+
     public void addServerUUID() {
         synchronized (dataRef) {
             try {

@@ -32,6 +32,34 @@ public class UpdateCellsAction implements NetworkAction {
         this.states = new int[]{state};
     }
 
+    public UpdateCellsAction(@NotNull Level level, boolean[] diff) {
+        int count = 0;
+        for (int i = 0; i < diff.length; i++) {
+            if (diff[i]) {
+                count++;
+            }
+        }
+
+        this.positions = new int[count];
+        this.tiles = new int[count];
+        this.states = new int[count];
+
+        int idx = 0;
+        for (int i = 0; i < diff.length; i++) {
+            if (diff[i]) {
+                this.positions[idx] = i;
+                this.tiles[idx] = level.map[i];
+
+                int state = 0;
+                if (level.visited[i]) state = 1;
+                else if (level.mapped[i]) state = 2;
+                this.states[idx] = state;
+
+                idx++;
+            }
+        }
+    }
+
     @Override
     public @NotNull String actionName() {
         return "update_cells";
