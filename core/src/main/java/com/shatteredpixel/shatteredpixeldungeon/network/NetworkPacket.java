@@ -21,6 +21,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -278,11 +279,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddCharSpriteState(int actorId, CharSprite.State state, boolean remove) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", remove ? "char_sprite_state_remove" : "char_sprite_state_add");
-        event.put("actor_id", actorId);
-        event.put("state", state.name().toLowerCase(Locale.ROOT));
-        addAction(event);
+        addAction(new CharSpriteStateAction(actorId, state, remove));
     }
 
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
