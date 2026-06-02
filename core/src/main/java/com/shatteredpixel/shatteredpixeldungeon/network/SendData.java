@@ -52,10 +52,7 @@ public class SendData {
         if ((ID != -1) && (clients[ID] != null)) {
             for (int i = 0; i< diff.length; i++) {
                 if (diff[i]) {
-                    int state = 0;
-                    if (level.visited[i]) state = 1;
-                    else if (level.mapped[i]) state = 2;
-                    clients[ID].packet.addAction(new UpdateCellsAction(i, level.map[i], state));
+                    clients[ID].packet.addAction(new UpdateCellsAction(i, level));
                 }
             }
         }

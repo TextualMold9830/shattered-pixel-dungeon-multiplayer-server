@@ -1002,10 +1002,7 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-		int state = 0;
-		if (level.visited[cell]) state = 1;
-		else if (level.mapped[cell]) state = 2;
-		SendData.sendActionForAll(new UpdateCellsAction(cell, level.map[cell], state), true);
+		SendData.sendActionForAll(new UpdateCellsAction(cell, level), true);
 
 	}
 	//FIXME
