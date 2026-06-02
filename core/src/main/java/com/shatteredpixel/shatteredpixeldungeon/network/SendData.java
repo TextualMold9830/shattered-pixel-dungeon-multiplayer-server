@@ -9,16 +9,10 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroActorIdAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroExperienceAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroStrengthAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
@@ -106,17 +100,6 @@ public class SendData {
         sendAction(hero, new UpdateFovAction(hero, allowLateSerialization));
     }
 
-    public static void sendHeroExperience(int ID, int lvl, int exp) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new HeroExperienceAction(lvl, exp));
-        }
-    }
-    public static void sendHeroStrength(int ID, int str) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new HeroStrengthAction(str));
-        }
-    }
-
     public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         final int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
@@ -150,22 +133,6 @@ public class SendData {
     public static void sendDepth(int ID, int depth) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.packAndAddDepth(depth);
-            clients[ID].flush();
-        }
-    }
-
-    //--------------------------Control
-
-    public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new HeroSubclassAction(subclass.ordinal()));
-            clients[ID].flush();
-        }
-    }
-    public static void sendHeroTalents(Hero hero){
-        int ID = hero.networkID;
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new HeroTalentsAction(hero.getTalents()));
             clients[ID].flush();
         }
     }
@@ -252,15 +219,6 @@ public class SendData {
             clients[ID].flush();
         }
     }
-
-    public static void sendHeroNewID(Hero hero, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new HeroActorIdAction(hero.id()));
-            clients[ID].flush();
-        }
-    }
-
-
 
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
         sendSpriteStateChange(actor, state, false);

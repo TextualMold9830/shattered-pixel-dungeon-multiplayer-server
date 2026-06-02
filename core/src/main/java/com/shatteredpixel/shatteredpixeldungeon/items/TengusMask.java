@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -111,7 +112,7 @@ public class TengusMask extends Item {
 		
 		curUser.subClass = way;
 		Talent.initSubclassTalents(curUser);
-		SendData.sendHeroSubclassID(curUser.networkID, way);
+		SendData.sendAction(curUser, new HeroSubclassAction(way));
 		if (way == HeroSubClass.ASSASSIN && curUser.invisible > 0){
 			Buff.affect(curUser, Preparation.class);
 		}
