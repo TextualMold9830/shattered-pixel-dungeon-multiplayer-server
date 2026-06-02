@@ -23,6 +23,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntrance
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
@@ -271,14 +272,7 @@ public class NetworkPacket {
     }
 
 
-    public void packAndAddLevelTiles(Level level) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONArray tilesArr = (JSONArray) ctx.serialize(level, "set_level_tiles");
-        JSONObject event = new JSONObject();
-        event.put("action_name", "set_level_tiles");
-        event.put("tiles", tilesArr);
-        addAction(event);
-    }
+
 
 
 
@@ -289,7 +283,7 @@ public class NetworkPacket {
         packAndAddLevelVisuals(level);
         addAction(new SetLevelEntranceAction(level.entrance()));
         addAction(new SetLevelExitAction(level.exit()));
-        packAndAddLevelTiles(level);
+        addAction(new SetLevelTilesAction(level));
         addAction(new SetLevelStatesAction(level));
 
         level.heaps.values().forEach(heap -> addHeap(heap, observer));
@@ -318,7 +312,7 @@ public class NetworkPacket {
     public void packAndAddLevelCells(Level level) {
         // Redundant, but kept for legacy proxying if needed. 
         // We'll just call the full tiles/states updates.
-        packAndAddLevelTiles(level);
+        addAction(new SetLevelTilesAction(level));
         addAction(new SetLevelStatesAction(level));
     }
 
