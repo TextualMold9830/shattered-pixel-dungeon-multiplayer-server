@@ -1,0 +1,35 @@
+package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
+
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class UpdateCellsActionSerializer extends NetworkActionSerializer<UpdateCellsAction> {
+    @Override
+    protected JSONObject serializeInternal(@NotNull UpdateCellsAction action, SerializationContext ctx, String profile) {
+        JSONObject obj = new JSONObject();
+        try {
+            JSONArray posArr = new JSONArray();
+            for (int p : action.positions) posArr.put(p);
+            obj.put("positions", posArr);
+
+            if (action.tiles != null) {
+                JSONArray tilesArr = new JSONArray();
+                for (int t : action.tiles) tilesArr.put(t);
+                obj.put("tiles", tilesArr);
+            }
+
+            if (action.states != null) {
+                JSONArray statesArr = new JSONArray();
+                for (int s : action.states) statesArr.put(s);
+                obj.put("states", statesArr);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+}
