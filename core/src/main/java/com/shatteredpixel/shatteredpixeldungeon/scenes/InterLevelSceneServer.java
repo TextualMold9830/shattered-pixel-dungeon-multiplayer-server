@@ -41,7 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.*;
@@ -92,8 +92,8 @@ public class InterLevelSceneServer extends Scene {
 		@SuppressWarnings("unused")
 		final float scrollSpeed;
 
-		InterlevelSceneDTO.FadeTime fadeTime;
-		fadeTime = InterlevelSceneDTO.FadeTime.NORM_FADE;
+		InterlevelSceneAction.FadeTime fadeTime;
+		fadeTime = InterlevelSceneAction.FadeTime.NORM_FADE;
 		switch (mode){
 			default:
 				loadingDepth = Dungeon.depth;
@@ -106,14 +106,14 @@ public class InterLevelSceneServer extends Scene {
 			case DESCEND:
 				if (heroes == null){
 					loadingDepth = 1;
-					fadeTime = InterlevelSceneDTO.FadeTime.SLOW_FADE;
+					fadeTime = InterlevelSceneAction.FadeTime.SLOW_FADE;
 				} else {
 					if (curTransition != null)  loadingDepth = curTransition.destDepth;
 					else                        loadingDepth = Dungeon.depth+1;
 					if (Statistics.deepestFloor >= loadingDepth) {
-						fadeTime = InterlevelSceneDTO.FadeTime.FAST_FADE;
+						fadeTime = InterlevelSceneAction.FadeTime.FAST_FADE;
 					} else if (loadingDepth % 5 == 1) {
-						fadeTime = InterlevelSceneDTO.FadeTime.SLOW_FADE;
+						fadeTime = InterlevelSceneAction.FadeTime.SLOW_FADE;
 					}
 				}
 				scrollSpeed = 5;
@@ -123,7 +123,7 @@ public class InterLevelSceneServer extends Scene {
 				scrollSpeed = 50;
 				break;
 			case ASCEND:
-				fadeTime = InterlevelSceneDTO.FadeTime.FAST_FADE;
+				fadeTime = InterlevelSceneAction.FadeTime.FAST_FADE;
 				if (curTransition != null)  loadingDepth = curTransition.destDepth;
 				else                        loadingDepth = Dungeon.depth-1;
 				scrollSpeed = -5;
@@ -154,7 +154,7 @@ public class InterLevelSceneServer extends Scene {
 		// We do not send the message and the scrolling speed
 		// to allow the client to determine them independently according to the current mode
 		// the background scale is determined by the texture pack
-		InterlevelSceneDTO paramsObject = new InterlevelSceneDTO(mode, loadingAsset, fadeTime, null, null, true);
+		InterlevelSceneAction paramsObject = new InterlevelSceneAction(mode, loadingAsset, fadeTime, null, null, true);
 		SendData.sendInterLevelSceneForAll(paramsObject);
 
 		if (thread == null) {

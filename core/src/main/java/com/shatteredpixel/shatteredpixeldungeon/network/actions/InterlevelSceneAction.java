@@ -1,11 +1,12 @@
-package com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos;
+package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterLevelSceneServer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InterlevelSceneDTO {
+public class InterlevelSceneAction implements NetworkAction {
     public enum FadeTime {
         SLOW_FADE, NORM_FADE, FAST_FADE
     }
@@ -24,11 +25,18 @@ public class InterlevelSceneDTO {
     public final FadeTime fadeTime;
     public final boolean resetLevel;
 
-    public InterlevelSceneDTO(@NotNull String state, @Nullable String customMessage) {
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull String state) {
+        this(state, (LocalizedString) null);
+    }
+
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull String state, @Nullable String customMessage) {
         this(state, customMessage == null ? null : LocalizedString.raw(customMessage));
     }
 
-    public InterlevelSceneDTO(@NotNull String state, @Nullable LocalizedString customMessage) {
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull String state, @Nullable LocalizedString customMessage) {
         this.state = state;
         this.mode = null;
         this.customMessage = customMessage;
@@ -38,15 +46,18 @@ public class InterlevelSceneDTO {
         this.resetLevel = false;
     }
 
-    public InterlevelSceneDTO(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime) {
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime) {
         this(mode, loadingTexture, fadeTime, null, null, false);
     }
 
-    public InterlevelSceneDTO(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime, @Nullable Float scrollSpeed, @Nullable LocalizedString customMessage) {
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime, @Nullable Float scrollSpeed, @Nullable LocalizedString customMessage) {
         this(mode, loadingTexture, fadeTime, scrollSpeed, customMessage, false);
     }
 
-    public InterlevelSceneDTO(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime, @Nullable Float scrollSpeed, @Nullable LocalizedString customMessage, boolean resetLevel) {
+    @Contract(pure = true)
+    public InterlevelSceneAction(@NotNull InterLevelSceneServer.Mode mode, @Nullable String loadingTexture, @Nullable FadeTime fadeTime, @Nullable Float scrollSpeed, @Nullable LocalizedString customMessage, boolean resetLevel) {
         this.state = null;
         this.mode = mode;
         this.customMessage = customMessage;
@@ -54,5 +65,11 @@ public class InterlevelSceneDTO {
         this.loadingTexture = loadingTexture;
         this.fadeTime = fadeTime;
         this.resetLevel = resetLevel;
+    }
+
+    @Override
+    @Contract(pure = true)
+    public @NotNull String actionName() {
+        return "interlevel_scene";
     }
 }

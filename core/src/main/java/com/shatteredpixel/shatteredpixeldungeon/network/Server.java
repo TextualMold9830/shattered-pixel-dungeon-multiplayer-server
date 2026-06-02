@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
@@ -31,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.Heap
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ShowBannerActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.TexturePackActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CharSpriteActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.InterlevelSceneActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroReadyActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
@@ -84,7 +86,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalS
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.InterlevelSceneSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
@@ -110,7 +111,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUp
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -141,7 +141,6 @@ public class Server extends Thread {
         SERIALIZERS.register(CellsUpdateDTO.class, "default", new CellsUpdateSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
-        SERIALIZERS.register(InterlevelSceneDTO.class, "default", new InterlevelSceneSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
         SERIALIZERS.register(PlantDTO.class, "remove", new PlantRemovalSerializer());
         SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
@@ -170,6 +169,7 @@ public class Server extends Thread {
         SERIALIZERS.register(ShowBannerAction.class, new ShowBannerActionSerializer());
         SERIALIZERS.register(TexturePackAction.class, new TexturePackActionSerializer());
         SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
+        SERIALIZERS.register(InterlevelSceneAction.class, new InterlevelSceneActionSerializer());
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
         SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());

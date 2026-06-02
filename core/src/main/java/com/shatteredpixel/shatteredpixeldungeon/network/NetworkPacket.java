@@ -24,7 +24,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitActi
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
@@ -335,21 +334,7 @@ public class NetworkPacket {
         packAndAddLevelStates(level);
     }
 
-    public void addInterlevelSceneObject(InterlevelSceneDTO interlevelSceneParams) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject sceneObj = (JSONObject) ctx.serialize(interlevelSceneParams);
-        sceneObj.put("action_name", "interlevel_scene");
-        addAction(sceneObj);
-    }
 
-    public void packAndAddInterlevelSceneState(String state, String customMessage) {
-        InterlevelSceneDTO dto = new InterlevelSceneDTO(state, customMessage);
-        addInterlevelSceneObject(dto);
-    }
-
-    public void packAndAddInterlevelSceneState(String state) {
-        packAndAddInterlevelSceneState(state, null);
-    }
 
     @NotNull
     public JSONObject packBag(Bag bag) {
