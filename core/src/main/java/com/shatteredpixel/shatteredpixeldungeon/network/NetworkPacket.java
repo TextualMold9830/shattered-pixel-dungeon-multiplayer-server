@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -635,10 +636,7 @@ public class NetworkPacket {
         packAndAddRawTextures(base64String);
     }
     public void packAndAddRawTextures(String data) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "texturepack");
-        event.put("texturepack", data);
-        addAction(event);
+        addAction(new TexturePackAction(data));
     }
     public void packAndAddCounter(float portion) {
         try {
