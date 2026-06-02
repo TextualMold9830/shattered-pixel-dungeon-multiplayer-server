@@ -21,7 +21,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -484,9 +483,7 @@ public class NetworkPacket {
         packAndAddItemAction("item_replace", path, item, hero);
     }
 
-    public void addHeapRemoving(int pos) {
-        addAction(new HeapRemoveAction(pos));
-    }
+
 
     public void addHeap(Heap heap, Hero observer) {
         if (heap.isEmpty()) {

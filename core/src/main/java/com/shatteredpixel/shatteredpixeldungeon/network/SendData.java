@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -606,7 +607,7 @@ public class SendData {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.addHeapRemoving(heap.pos);
+            clients[i].packet.addAction(new HeapRemoveAction(heap.pos));
             clients[i].flush();
         }
     }
