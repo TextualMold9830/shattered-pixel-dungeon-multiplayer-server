@@ -22,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -521,10 +522,7 @@ public class NetworkPacket {
     }
 
     public void addHeapRemoving(int pos) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "heap_remove");
-        event.put("pos", pos);
-        addAction(event);
+        addAction(new HeapRemoveAction(pos));
     }
 
     public void addHeap(Heap heap, Hero observer) {
