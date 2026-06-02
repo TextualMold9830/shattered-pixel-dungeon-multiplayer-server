@@ -20,6 +20,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackActio
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
@@ -35,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.Text
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CharSpriteActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.InterlevelSceneActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateCellsActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelStatesActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroReadyActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
@@ -137,7 +139,6 @@ public class Server extends Thread {
         SERIALIZERS.register(Level.class, "resize_level", new LevelSerializer());
         SERIALIZERS.register(Level.class, "set_level_visuals", new LevelSerializer());
         SERIALIZERS.register(Level.class, "set_level_tiles", new LevelSerializer());
-        SERIALIZERS.register(Level.class, "set_level_states", new LevelSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
@@ -170,6 +171,7 @@ public class Server extends Thread {
         SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
         SERIALIZERS.register(InterlevelSceneAction.class, new InterlevelSceneActionSerializer());
         SERIALIZERS.register(UpdateCellsAction.class, new UpdateCellsActionSerializer());
+        SERIALIZERS.register(SetLevelStatesAction.class, new SetLevelStatesActionSerializer());
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
         SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
