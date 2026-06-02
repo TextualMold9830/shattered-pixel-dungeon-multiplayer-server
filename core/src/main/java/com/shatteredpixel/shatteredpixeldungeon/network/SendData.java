@@ -602,15 +602,7 @@ public class SendData {
         }
     }
 
-    public static void sendHeapRemoving(Heap heap) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.addAction(new HeapRemoveAction(heap.pos));
-            clients[i].flush();
-        }
-    }
+
 
     public static void sendHeap(Heap heap) {
         for (int i = 0; i < clients.length; i++) {
@@ -818,10 +810,17 @@ public class SendData {
     }
 
     public static void sendActionForAll(NetworkAction networkAction) {
+        sendActionForAll(networkAction, false);
+    }
+
+    public static void sendActionForAll(NetworkAction networkAction, boolean flush) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
             if (client != null) {
                 client.packet.addAction(networkAction);
+                if (flush) {
+                    client.flush();
+                }
             }
         }
     }
