@@ -380,32 +380,6 @@ public class NetworkPacket {
         packAndAddLevelStates(level);
     }
 
-    public void packAndAddLevelCellsSeparateState(Level level){
-        packAndAddLevelTiles(level);
-        packAndAddLevelStates(level);
-    }
-
-    public void packAndAddLevelHeaps(com.watabou.utils.SparseArray<Heap> heaps, Hero observer) {
-        for (Heap heap : heaps.values()) {
-            addHeap(heap, observer);
-        }
-    }
-
-    public void packAndAddBadge(String badgeName, int badgeLevel) {
-        JSONObject badge = new JSONObject();
-        try {
-            badge.put("name", badgeName);
-            badge.put("level", badgeLevel);
-        } catch (Exception ignored) {
-        }
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put("badge", badge);
-            } catch (Exception ignored) {
-            }
-        }
-    }
     public void addInterlevelSceneObject(InterlevelSceneDTO interlevelSceneParams) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject sceneObj = (JSONObject) ctx.serialize(interlevelSceneParams);
@@ -453,8 +427,6 @@ public class NetworkPacket {
         return packHeroBags(hero.belongings);
     }
 
-    protected static final String INVENTORY = "inventory";
-
     public void addInventoryFull(@NotNull Hero hero) {
         if (hero == null) {
             throw new IllegalArgumentException("hero is null");
@@ -471,6 +443,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
+        //todo implement this
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
         Object payload = ctx.serialize(hero.belongings, "special_slot_definitions");
 

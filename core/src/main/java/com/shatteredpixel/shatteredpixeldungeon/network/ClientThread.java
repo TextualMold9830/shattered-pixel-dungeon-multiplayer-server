@@ -446,10 +446,6 @@ public class ClientThread implements Callable<String> {
         }
     }
 
-    public void addBadgeToSend(String badgeName, int badgeLevel) {
-        packet.packAndAddBadge(badgeName, badgeLevel);
-    }
-
     //send primitives
     @Deprecated
     public void sendCode(int code) {
