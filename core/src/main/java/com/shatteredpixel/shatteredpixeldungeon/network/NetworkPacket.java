@@ -1,79 +1,35 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
-import com.nikita22007.multiplayer.utils.Text;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelVisualsAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.TieredSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.KeyDisplay;
-import com.watabou.noosa.Image;
-import com.watabou.utils.SparseArray;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.nikita22007.multiplayer.utils.Utils.putToJSONArray;
-import static com.watabou.pixeldungeon.utils.Utils.toSnakeCase;
-
 public class NetworkPacket {
-
-    enum CellState {
-        VISITED,
-        UNVISITED,
-        MAPPED;
-
-        public String toString() {
-            return this.name().toLowerCase();
-        }
-        public int toInt(){
-            switch (this) {
-                case UNVISITED : return 0;
-                case VISITED :return  1;
-                case MAPPED : return 2;
-            };
-            //This never happens, screw Java 8
-            return -1;
-        }
-    }
 
     public final AtomicReference<JSONObject> dataRef;
 
@@ -98,6 +54,7 @@ public class NetworkPacket {
             }
         }
     }
+    
     public void addServerUUID() {
         synchronized (dataRef) {
             try {
