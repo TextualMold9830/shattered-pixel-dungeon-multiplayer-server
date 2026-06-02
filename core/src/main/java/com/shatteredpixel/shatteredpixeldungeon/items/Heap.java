@@ -393,7 +393,7 @@ public class Heap implements Bundlable {
 			sprite.kill();
 		}
 		items.clear();
-		sendActionForAll(new HeapRemoveAction(this.pos), true);
+		sendActionForAll(new HeapRemoveAction(this.pos));
 	}
 
 	public LocalizedString title(){

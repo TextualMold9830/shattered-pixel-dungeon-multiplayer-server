@@ -970,7 +970,7 @@ public class GameScene extends PixelScene {
 	public static void discard(Heap heap) {
 		if (scene != null) {
 			scene.addDiscardedSprite(heap);
-			SendData.sendActionForAll(new HeapRemoveAction(heap.pos), true);
+			SendData.sendActionForAll(new HeapRemoveAction(heap.pos));
 		}
 	}
 

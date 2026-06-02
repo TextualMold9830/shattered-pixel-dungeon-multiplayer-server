@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -324,7 +325,7 @@ public abstract class Level implements Bundlable {
 		height = h;
 		length = w * h;
 
-		SendData.sendLevelSize(this);
+		SendData.sendActionForAll(new ResizeLevelAction(this));
 
 		map = new int[length];
 		Arrays.fill( map, feeling == Level.Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
@@ -1002,7 +1003,7 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-		SendData.sendActionForAll(new UpdateCellsAction(cell, level), true);
+		SendData.sendActionForAll(new UpdateCellsAction(cell, level));
 
 	}
 	//FIXME

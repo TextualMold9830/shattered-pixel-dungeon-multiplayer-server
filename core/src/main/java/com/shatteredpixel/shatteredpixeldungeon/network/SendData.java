@@ -14,16 +14,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -70,18 +68,12 @@ public class SendData {
     }
 
 
-
+    //---------------------------UI
     public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         final int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
             clients[ID].flush();
-        }
-    }
-    //---------------------------UI  and mechanics
-    public static void sendResumeButtonVisible(int ID, boolean visible) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            //  clients[ID].send(Codes.RESUME_BUTTON, visible);
         }
     }
 
@@ -92,7 +84,6 @@ public class SendData {
                 client.flush();
             }
         }
-
     }
 
     public static void sendDepth(int depth) {
@@ -144,7 +135,6 @@ public class SendData {
         sendWindow(wnd, type, null);
     }
 
-    //-----------------------------Windows
     public static void sendWindow(@NotNull final Window wnd, @NotNull final String type, @Nullable final JSONObject args) {
         final int ID = wnd.getOwnerHero().networkID;
         final int windowID = wnd.getId();
@@ -157,7 +147,7 @@ public class SendData {
         }
     }
 
-    //----------
+    //----------Actors
     public static void sendActor(Actor actor) {
         if (actor == null) {
             return;
@@ -175,6 +165,21 @@ public class SendData {
         }
     }
 
+    public static void sendActorRemoving(Actor actor) {
+        if (actor instanceof Buff) {
+            sendBuff((Buff) actor, true);
+            return;
+        }
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] == null) {
+                continue;
+            }
+            clients[i].packet.packAndAddActorRemoving(actor);
+            clients[i].flush();
+        }
+    }
+
+
     public static void sendCharShield(int id, int shielding) {
         for (ClientThread client : clients) {
             if (client == null) {
@@ -191,6 +196,7 @@ public class SendData {
         }
     }
 
+    //---------------------------Sprites
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
         sendSpriteStateChange(actor, state, false);
     }
@@ -216,18 +222,16 @@ public class SendData {
         }
     }
 
+    //---------------------------Packet Flush
+
+    @Contract(pure = true)
     @Deprecated
     public static void flush(Hero hero) {
-        if (hero.networkID >= 0) {
-            flush(hero.networkID);
-        }
     }
 
+    @Contract(pure = true)
     @Deprecated
     public static void flush(int networkID) {
-        if (networkID <= -1) {
-            return;
-        }
     }
 
     public static void forceFlush(Hero hero) {
@@ -252,6 +256,8 @@ public class SendData {
             }
         }
     }
+
+    //---------------------------Messages
 
     public static void sendMessageToAll(String message) {
         sendMessageToAll(LocalizedString.raw(message));
@@ -324,6 +330,8 @@ public class SendData {
         }
     }
 
+
+    //---------------------------Chat
     public static void enqueueChatMessageToAll(String message) {
         enqueueChatMessageToAll(LocalizedString.raw(message));
     }
@@ -407,6 +415,7 @@ public class SendData {
         }
     }
 
+    //---------------------------More UI
     public static void addToSendShowStatus(Float x, Float y, Integer key, String text, int color, boolean ignorePosition) {
         JSONObject data = new JSONObject();
         try {
@@ -437,6 +446,7 @@ public class SendData {
         }
     }
 
+    //---------------------------Items
     public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
         if ((owner == null) || !(owner instanceof Hero)) {
             return;
@@ -505,7 +515,7 @@ public class SendData {
     }
 
 
-
+    //---------------------------Heaps
     public static void sendHeap(Heap heap) {
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
@@ -516,6 +526,7 @@ public class SendData {
         }
     }
 
+    //---------------------------Plants
     public static void sendPlant(int pos, Plant plant) {
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
@@ -526,20 +537,7 @@ public class SendData {
         }
     }
 
-    public static void sendActorRemoving(Actor actor) {
-        if (actor instanceof Buff) {
-            sendBuff((Buff) actor, true);
-            return;
-        }
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddActorRemoving(actor);
-            clients[i].flush();
-        }
-    }
-
+    //---------------------------Buffs
     public static void sendBuff(Buff buff, boolean remove) {
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
@@ -552,6 +550,8 @@ public class SendData {
     public static void sendBuff(Buff buff){
         sendBuff(buff, false);
     }
+
+    //--------------------------- More Effects
     public static void sendFlashChar(CharSprite sprite, float flashTime) {
 
         if (sprite.ch == null){
@@ -572,12 +572,16 @@ public class SendData {
 
     }
 
+
+    //--------------------------- External Actions
+    @Deprecated
     public static void sendCustomActionForAll(@NotNull JSONObject action_obj) {
         for (int i = 0; i < clients.length; i++) {
             sendCustomAction(action_obj, i);
         }
     }
 
+    @Deprecated
     public static void sendCustomAction(@NotNull JSONObject action_obj, @NotNull Hero hero) {
         if (hero.networkID <= -1) {
             return;
@@ -589,6 +593,7 @@ public class SendData {
         }
     }
 
+    @Deprecated
     public static void sendCustomAction(JSONObject action_obj, int networkID) {
         assert action_obj.has("action_name") : "Action object must contains \"action_type\" field";
         if (networkID <= -1) {
@@ -599,11 +604,12 @@ public class SendData {
         }
     }
 
-
+    //--------------------------- More Effects
     public static void sendActionDiscoverTile(int pos, int oldValue) {
         sendActionForAll(new DiscoverTileAction(pos, oldValue));
     }
 
+    //--------------------------- UI
     public static void sendCellListenerPrompt(LocalizedString new_prompt, int networkID) {
         if (networkID < 0){
             return;
@@ -659,18 +665,7 @@ public class SendData {
     }
 
 
-    public static void sendLevelSize(Level level) {
-        for (int i = 0; i < clients.length; i++){
-            sendLevelSize(level, i);
-        }
-    }
-    public static void sendLevelSize(Level level, int ID){
-        if (ID < 0) return;
-        if (clients[ID] == null) return;
-        clients[ID].packet.packAndAddLevelParams(level);
-        clients[ID].flush();
-    }
-
+    //--------------------------- Traps
     public static void sendTraps(Level level) {
         for (int i = 0; i < clients.length; i++){
             if(clients[i] != null) {
@@ -682,6 +677,7 @@ public class SendData {
         }
     }
 
+    //--------------------------- UI
     public static void sendCounter(Hero hero, float portion) {
         ClientThread client = clients[hero.networkID];
         if (client != null) {
@@ -689,12 +685,15 @@ public class SendData {
             client.flush();
         }
     }
+
+    //--------------------------- Special
     public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
     {
         clients[hero.networkID].packet.packAndAddRedirect(redirectPacket);
         clients[hero.networkID].flush();
     }
 
+    //--------------------------- Events/Actions
     public static void sendAction(@Nullable Hero hero, NetworkAction networkAction) {
         if (hero == null) return;
         int networkId = hero.networkID;
@@ -710,19 +709,12 @@ public class SendData {
             client.packet.addAction(networkAction);
         }
     }
-
+    
     public static void sendActionForAll(NetworkAction networkAction) {
-        sendActionForAll(networkAction, false);
-    }
-
-    public static void sendActionForAll(NetworkAction networkAction, boolean flush) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
             if (client != null) {
                 client.packet.addAction(networkAction);
-                if (flush) {
-                    client.flush();
-                }
             }
         }
     }
