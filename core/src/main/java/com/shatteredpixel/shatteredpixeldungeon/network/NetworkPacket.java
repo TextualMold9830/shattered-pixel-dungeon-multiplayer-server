@@ -320,13 +320,6 @@ public class NetworkPacket {
         addAction(payload);
     }
 
-    public void packAndAddLevelEntrance(int pos) {
-        addAction(new SetLevelEntranceAction(pos));
-    }
-
-    public void packAndAddLevelExit(int pos) {
-        addAction(new SetLevelExitAction(pos));
-    }
 
     public void packAndAddLevelTiles(Level level) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
@@ -357,8 +350,8 @@ public class NetworkPacket {
     public void packAndAddLevel(Level level, Hero observer) {
         packAndAddLevelResize(level);
         packAndAddLevelVisuals(level);
-        packAndAddLevelEntrance(level.entrance());
-        packAndAddLevelExit(level.exit());
+        addAction(new SetLevelEntranceAction(level.entrance()));
+        addAction(new SetLevelExitAction(level.exit()));
         packAndAddLevelTiles(level);
         packAndAddLevelStates(level);
 
