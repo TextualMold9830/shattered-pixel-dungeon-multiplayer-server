@@ -20,6 +20,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -324,10 +325,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddLevelExit(int pos) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "set_level_exit");
-        event.put("pos", pos);
-        addAction(event);
+        addAction(new SetLevelExitAction(pos));
     }
 
     public void packAndAddLevelTiles(Level level) {
