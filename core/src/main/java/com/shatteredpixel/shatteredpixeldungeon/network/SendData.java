@@ -16,6 +16,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -112,7 +115,7 @@ public class SendData {
     public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         final int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddShowBanner(banner, color, fadeTime, showTime);
+            clients[ID].packet.addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
             clients[ID].flush();
         }
     }
@@ -284,39 +287,7 @@ public class SendData {
         }
     }
 
-    public static void addToSendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, false);
-    }
 
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, true);
-    }
-
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to, boolean send) {
-        if (actorID == Actor.NO_ID) {
-            return;
-        }
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_name", "sprite_action");
-            actionObj.put("action", action);
-            actionObj.put("from", cell_from);
-            actionObj.put("to", cell_to);
-            actionObj.put("actor_id", actorID);
-        } catch (JSONException ignored) {
-
-        }
-        for (int i = 0; i < clients.length; i++) {
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addAction(actionObj);
-            if (send) {
-                client.flush();
-            }
-        }
-    }
 
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
         sendSpriteStateChange(actor, state, false);
@@ -338,7 +309,7 @@ public class SendData {
             if (client == null) {
                 continue;
             }
-            client.packet.packAndAddCharSpriteState(id, state, remove);
+            client.packet.addAction(new CharSpriteStateAction(id, state, remove));
             client.flush();
         }
     }
@@ -631,15 +602,7 @@ public class SendData {
         }
     }
 
-    public static void sendHeapRemoving(Heap heap) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.addHeapRemoving(heap.pos);
-            clients[i].flush();
-        }
-    }
+
 
     public static void sendHeap(Heap heap) {
         for (int i = 0; i < clients.length; i++) {
@@ -847,10 +810,17 @@ public class SendData {
     }
 
     public static void sendActionForAll(NetworkAction networkAction) {
+        sendActionForAll(networkAction, false);
+    }
+
+    public static void sendActionForAll(NetworkAction networkAction, boolean flush) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
             if (client != null) {
                 client.packet.addAction(networkAction);
+                if (flush) {
+                    client.flush();
+                }
             }
         }
     }

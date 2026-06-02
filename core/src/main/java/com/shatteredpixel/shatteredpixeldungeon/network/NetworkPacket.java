@@ -19,6 +19,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -275,13 +277,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddCharSpriteState(int actorId, CharSprite.State state, boolean remove) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", remove ? "char_sprite_state_remove" : "char_sprite_state_add");
-        event.put("actor_id", actorId);
-        event.put("state", state.name().toLowerCase(Locale.ROOT));
-        addAction(event);
-    }
+
 
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
         try {
@@ -318,19 +314,6 @@ public class NetworkPacket {
         addAction(payload);
     }
 
-    public void packAndAddLevelEntrance(int pos) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "set_level_entrance");
-        event.put("pos", pos);
-        addAction(event);
-    }
-
-    public void packAndAddLevelExit(int pos) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "set_level_exit");
-        event.put("pos", pos);
-        addAction(event);
-    }
 
     public void packAndAddLevelTiles(Level level) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
@@ -361,8 +344,8 @@ public class NetworkPacket {
     public void packAndAddLevel(Level level, Hero observer) {
         packAndAddLevelResize(level);
         packAndAddLevelVisuals(level);
-        packAndAddLevelEntrance(level.entrance());
-        packAndAddLevelExit(level.exit());
+        addAction(new SetLevelEntranceAction(level.entrance()));
+        addAction(new SetLevelExitAction(level.exit()));
         packAndAddLevelTiles(level);
         packAndAddLevelStates(level);
 
@@ -396,32 +379,6 @@ public class NetworkPacket {
         packAndAddLevelStates(level);
     }
 
-    public void packAndAddLevelCellsSeparateState(Level level){
-        packAndAddLevelTiles(level);
-        packAndAddLevelStates(level);
-    }
-
-    public void packAndAddLevelHeaps(com.watabou.utils.SparseArray<Heap> heaps, Hero observer) {
-        for (Heap heap : heaps.values()) {
-            addHeap(heap, observer);
-        }
-    }
-
-    public void packAndAddBadge(String badgeName, int badgeLevel) {
-        JSONObject badge = new JSONObject();
-        try {
-            badge.put("name", badgeName);
-            badge.put("level", badgeLevel);
-        } catch (Exception ignored) {
-        }
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put("badge", badge);
-            } catch (Exception ignored) {
-            }
-        }
-    }
     public void addInterlevelSceneObject(InterlevelSceneDTO interlevelSceneParams) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject sceneObj = (JSONObject) ctx.serialize(interlevelSceneParams);
@@ -469,8 +426,6 @@ public class NetworkPacket {
         return packHeroBags(hero.belongings);
     }
 
-    protected static final String INVENTORY = "inventory";
-
     public void addInventoryFull(@NotNull Hero hero) {
         if (hero == null) {
             throw new IllegalArgumentException("hero is null");
@@ -487,6 +442,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
+        //todo implement this
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
         Object payload = ctx.serialize(hero.belongings, "special_slot_definitions");
 
@@ -527,12 +483,7 @@ public class NetworkPacket {
         packAndAddItemAction("item_replace", path, item, hero);
     }
 
-    public void addHeapRemoving(int pos) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "heap_remove");
-        event.put("pos", pos);
-        addAction(event);
-    }
+
 
     public void addHeap(Heap heap, Hero observer) {
         if (heap.isEmpty()) {
@@ -547,15 +498,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddShowBanner(@NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "show_banner");
-        event.put("banner", banner.toString().toLowerCase(Locale.ROOT));
-        event.put("color", color);
-        event.put("fade_time", fadeTime);
-        event.put("show_time", showTime);
-        addAction(event);
-    }
+
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
         WindowDTO dto = new WindowDTO(type, windowID, args);
@@ -635,25 +578,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddTextures(String path) {
 
-        // Read all bytes from a file and convert to Base64 String
-        byte[] byteData = new byte[0];
-        try {
-            byteData = Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String base64String = Base64.getEncoder().encodeToString(byteData);
-
-        packAndAddRawTextures(base64String);
-    }
-    public void packAndAddRawTextures(String data) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "texturepack");
-        event.put("texturepack", data);
-        addAction(event);
-    }
     public void packAndAddCounter(float portion) {
         try {
             synchronized (dataRef) {

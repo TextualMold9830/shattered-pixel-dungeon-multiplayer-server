@@ -63,6 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -969,7 +970,7 @@ public class GameScene extends PixelScene {
 	public static void discard(Heap heap) {
 		if (scene != null) {
 			scene.addDiscardedSprite(heap);
-			SendData.sendHeapRemoving(heap);
+			SendData.sendActionForAll(new HeapRemoveAction(heap.pos), true);
 		}
 	}
 

@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -445,10 +446,6 @@ public class ClientThread implements Callable<String> {
         }
     }
 
-    public void addBadgeToSend(String badgeName, int badgeLevel) {
-        packet.packAndAddBadge(badgeName, badgeLevel);
-    }
-
     //send primitives
     @Deprecated
     public void sendCode(int code) {
@@ -529,7 +526,7 @@ public class ClientThread implements Callable<String> {
         forceFlush();
     }
     private void sendTexture(String textureData){
-        packet.packAndAddRawTextures(textureData);
+        packet.addAction(new TexturePackAction(textureData));
         forceFlush();
     }
 }
