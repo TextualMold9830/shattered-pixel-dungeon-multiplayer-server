@@ -11,12 +11,14 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.FlareVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SurpriseVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SurpriseVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateFovActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelEntranceActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -133,6 +135,7 @@ public class Server extends Thread {
         SERIALIZERS.register(FlareVisualAction.class, new FlareVisualActionSerializer());
         SERIALIZERS.register(DiscoverTileAction.class, new DiscoverTileActionSerializer());
         SERIALIZERS.register(UpdateFovAction.class, new UpdateFovActionSerializer());
+        SERIALIZERS.register(SetLevelEntranceAction.class, new SetLevelEntranceActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
