@@ -21,7 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteAction;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendActionForAll;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -235,7 +236,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void place( int cell ) {
 		point( worldToCamera( cell ) );
-		sendCharSpriteAction(ch.id(), "place", null, cell);
+		sendActionForAll(new CharSpriteAction(ch.id(), "place", null, cell));
 	}
 	
 	public void showStatus(int color, String text, Object... args ) {
@@ -267,14 +268,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void idle() {
 		if (curAnim == idle) return;
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "idle", null, null);
+			sendActionForAll(new CharSpriteAction(ch.id(), "idle", null, null));
 		}
 		play(idle);
 	}
 	
 	public void move( int from, int to ) {
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "run", from, to);
+			sendActionForAll(new CharSpriteAction(ch.id(), "run", from, to));
 		}
 		turnTo( from , to );
 
@@ -320,7 +321,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "attack", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "attack", null, cell));
 		}
 		play( attack );
 	}
@@ -333,7 +334,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "operate", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "operate", null, cell));
 		}
 		play( operate );
 	}
@@ -346,7 +347,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "zap", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "zap", null, cell));
 		}
 		play( zap );
 	}
@@ -359,7 +360,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		} else if (tx < fx) {
 			flipHorizontal = true;
 		}
-		sendCharSpriteAction(ch.id(), "turn", from, to);
+		sendActionForAll(new CharSpriteAction(ch.id(), "turn", from, to));
 	}
 
 	public void jump( int from, int to, Callback callback ) {
@@ -376,7 +377,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 		turnTo( from, to );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "jump", from, to);
+			sendActionForAll(new CharSpriteAction(ch.id(), "jump", from, to));
 		}
 	}
 
@@ -384,7 +385,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		sleeping = false;
 		processStateRemoval( State.PARALYSED );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "die", null, null);
+			sendActionForAll(new CharSpriteAction(ch.id(), "die", null, null));
 		}
 		play( die );
 

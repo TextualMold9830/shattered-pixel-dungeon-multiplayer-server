@@ -18,7 +18,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -287,12 +286,7 @@ public class SendData {
         }
     }
 
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to) {
-        if (actorID == Actor.NO_ID) {
-            return;
-        }
-        sendActionForAll(new CharSpriteAction(actorID, action, cell_from, cell_to));
-    }
+
 
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
         sendSpriteStateChange(actor, state, false);

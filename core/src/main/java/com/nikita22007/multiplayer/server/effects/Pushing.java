@@ -19,6 +19,7 @@ package com.nikita22007.multiplayer.server.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
 
 public class Pushing {
     public Pushing(Char ch, int from, int to) {
@@ -26,6 +27,6 @@ public class Pushing {
     }
 
     public static void sendPushing(Char ch, int from, int to) {
-        SendData.sendCharSpriteAction(ch.id(), "pushing", from, to);
+        SendData.sendActionForAll(new CharSpriteAction(ch.id(), "pushing", from, to));
     }
 }
