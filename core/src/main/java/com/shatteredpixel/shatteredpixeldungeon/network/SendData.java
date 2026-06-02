@@ -151,17 +151,7 @@ public class SendData {
     }
 
     //--------------------------Control
-    public static void sendHeroGold(int ID, int gold) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            try {
-                JSONObject heroObj = new JSONObject();
-                heroObj.put("gold", gold);
-                clients[ID].packet.addHero(heroObj);
-            } catch (JSONException ignored) {
-            }
-            clients[ID].flush();
-        }
-    }
+
     public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
         if ((ID != -1) && (clients[ID] != null)) {
             try {

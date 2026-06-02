@@ -161,6 +161,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -2699,7 +2700,7 @@ public class Hero extends Char {
 
 	public void setGold(int gold) {
 		this.gold = gold;
-		SendData.sendHeroGold(networkID, gold);
+		SendData.sendAction(this, new HeroGoldAction(gold));
 	}
 
 	public int getSTR() {
