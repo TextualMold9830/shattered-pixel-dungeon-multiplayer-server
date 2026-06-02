@@ -37,6 +37,16 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroGoldActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroUUIDAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroUUIDActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroActorIdAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroActorIdActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroExperienceAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroExperienceActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroStrengthAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroStrengthActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroSubclassActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroTalentsActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -163,6 +173,11 @@ public class Server extends Thread {
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
         SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
+        SERIALIZERS.register(HeroActorIdAction.class, new HeroActorIdActionSerializer());
+        SERIALIZERS.register(HeroExperienceAction.class, new HeroExperienceActionSerializer());
+        SERIALIZERS.register(HeroStrengthAction.class, new HeroStrengthActionSerializer());
+        SERIALIZERS.register(HeroSubclassAction.class, new HeroSubclassActionSerializer());
+        SERIALIZERS.register(HeroTalentsAction.class, new HeroTalentsActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
