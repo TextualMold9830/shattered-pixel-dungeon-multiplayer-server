@@ -21,9 +21,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
@@ -288,13 +288,7 @@ public class NetworkPacket {
         addAction(event);
     }
 
-    public void packAndAddCellsUpdate(int[] positions, @Nullable int[] tiles, @Nullable int[] states) {
-        CellsUpdateDTO dto = new CellsUpdateDTO(positions, tiles, states);
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject payload = (JSONObject) ctx.serialize(dto);
-        payload.put("action_name", "update_cells");
-        addAction(payload);
-    }
+
 
     public void packAndAddLevel(Level level, Hero observer) {
         packAndAddLevelResize(level);
@@ -324,7 +318,7 @@ public class NetworkPacket {
         if (level.visited[cell]) state = 1;
         else if (level.mapped[cell]) state = 2;
         
-        packAndAddCellsUpdate(new int[]{cell}, new int[]{level.map[cell]}, new int[]{state});
+        addAction(new UpdateCellsAction(cell, level.map[cell], state));
     }
 
     public void packAndAddLevelCells(Level level) {
