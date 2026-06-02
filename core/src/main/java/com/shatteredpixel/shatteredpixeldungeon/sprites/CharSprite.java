@@ -22,7 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendActionForAll;
+import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SpriteFlashAction;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -434,7 +436,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void flash() {
 		ra = ba = ga = 1f;
 		flashTime = FLASH_INTERVAL;
-		SendData.sendFlashChar(this, FLASH_INTERVAL);
+		if (ch == null) {
+			Log.w("CharSprite", "char sprite has no owner. Ignored");
+			return;
+		}
+		sendActionForAll(new SpriteFlashAction(ch.id(), FLASH_INTERVAL));
 	}
 
 	private final HashSet<State> stateAdditions = new HashSet<>();
