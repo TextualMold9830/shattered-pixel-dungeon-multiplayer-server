@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelVisualsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
@@ -264,12 +265,7 @@ public class NetworkPacket {
         addAction(payload);
     }
 
-    public void packAndAddLevelVisuals(Level level) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject payload = (JSONObject) ctx.serialize(level, "set_level_visuals");
-        payload.put("action_name", "set_level_visuals");
-        addAction(payload);
-    }
+
 
 
 
@@ -280,7 +276,7 @@ public class NetworkPacket {
 
     public void packAndAddLevel(Level level, Hero observer) {
         packAndAddLevelResize(level);
-        packAndAddLevelVisuals(level);
+        addAction(new SetLevelVisualsAction(level));
         addAction(new SetLevelEntranceAction(level.entrance()));
         addAction(new SetLevelExitAction(level.exit()));
         addAction(new SetLevelTilesAction(level));
@@ -298,7 +294,7 @@ public class NetworkPacket {
     public void packAndAddLevelParams(Level level)
     {
         packAndAddLevelResize(level);
-        packAndAddLevelVisuals(level);
+        addAction(new SetLevelVisualsAction(level));
     }
 
     public void packAndAddLevelCell(Level level, int cell) {
