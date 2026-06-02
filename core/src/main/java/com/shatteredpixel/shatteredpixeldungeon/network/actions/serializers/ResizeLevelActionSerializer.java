@@ -9,9 +9,8 @@ public class ResizeLevelActionSerializer extends NetworkActionSerializer<ResizeL
     @Override
     protected JSONObject serializeInternal(@NotNull ResizeLevelAction action, SerializationContext ctx, String profile) {
         JSONObject obj = new JSONObject();
-        var level = action.level;
-        obj.put("width", level.width());
-        obj.put("height", level.height());
+        obj.put("width", action.width);
+        obj.put("height", action.height);
         return obj;
     }
 }

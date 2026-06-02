@@ -4,10 +4,20 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class SetLevelStatesAction implements NetworkAction {
-    public final Level level;
+    public final int[] states;
 
     public SetLevelStatesAction(@NotNull Level level) {
-        this.level = level;
+        this.states = new int[level.length()];
+        for (int i = 0; i < level.length(); i++) {
+            int state = 0; // UNVISITED
+            if (level.visited[i]) state = 1; // VISITED
+            else if (level.mapped[i]) state = 2; // MAPPED
+            this.states[i] = state;
+        }
+    }
+
+    public SetLevelStatesAction(int[] states) {
+        this.states = states;
     }
 
     @Override

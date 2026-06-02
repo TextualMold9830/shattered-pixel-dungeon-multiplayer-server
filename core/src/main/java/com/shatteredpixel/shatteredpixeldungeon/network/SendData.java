@@ -20,6 +20,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -51,7 +52,10 @@ public class SendData {
         if ((ID != -1) && (clients[ID] != null)) {
             for (int i = 0; i< diff.length; i++) {
                 if (diff[i]) {
-                    clients[ID].packet.packAndAddLevelCell(level, i); //todo optimize this
+                    int state = 0;
+                    if (level.visited[i]) state = 1;
+                    else if (level.mapped[i]) state = 2;
+                    clients[ID].packet.addAction(new UpdateCellsAction(i, level.map[i], state));
                 }
             }
         }
@@ -85,15 +89,7 @@ public class SendData {
         }
     }
 
-    public static void sendLevelCell(Level level, int cell) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddLevelCell(level, cell);
-            clients[i].flush();
-        }
-    }
+
 
     //---------------------------Hero
     public static void addToSendHeroVisibleCells(Hero hero, boolean allowLateSerialization) {

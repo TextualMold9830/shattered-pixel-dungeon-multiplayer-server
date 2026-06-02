@@ -2,12 +2,17 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
+import java.util.Arrays;
 
 public class SetLevelTilesAction implements NetworkAction {
-    public final Level level;
+    public final int[] tiles;
 
     public SetLevelTilesAction(@NotNull Level level) {
-        this.level = level;
+        this.tiles = Arrays.copyOf(level.map, level.map.length);
+    }
+
+    public SetLevelTilesAction(int[] tiles) {
+        this.tiles = tiles;
     }
 
     @Override

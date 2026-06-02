@@ -11,11 +11,7 @@ public class SetLevelStatesActionSerializer extends NetworkActionSerializer<SetL
     protected JSONObject serializeInternal(@NotNull SetLevelStatesAction action, SerializationContext ctx, String profile) {
         JSONObject obj = new JSONObject();
         JSONArray arr = new JSONArray();
-        var level = action.level;
-        for (int i = 0; i < level.length(); i++) {
-            int state = 0; // UNVISITED
-            if (level.visited[i]) state = 1; // VISITED
-            else if (level.mapped[i]) state = 2; // MAPPED
+        for (int state : action.states) {
             arr.put(state);
         }
         obj.put("states", arr);

@@ -260,16 +260,6 @@ public class NetworkPacket {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
         addAction(new SetLevelVisualsAction(level));
@@ -293,13 +283,7 @@ public class NetworkPacket {
         addAction(new SetLevelVisualsAction(level));
     }
 
-    public void packAndAddLevelCell(Level level, int cell) {
-        int state = 0;
-        if (level.visited[cell]) state = 1;
-        else if (level.mapped[cell]) state = 2;
-        
-        addAction(new UpdateCellsAction(cell, level.map[cell], state));
-    }
+
 
     public void packAndAddLevelCells(Level level) {
         // Redundant, but kept for legacy proxying if needed. 

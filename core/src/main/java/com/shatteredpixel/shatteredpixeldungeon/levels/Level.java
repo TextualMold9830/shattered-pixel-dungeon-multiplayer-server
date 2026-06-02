@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -1001,7 +1002,10 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-		SendData.sendLevelCell(level,  cell);
+		int state = 0;
+		if (level.visited[cell]) state = 1;
+		else if (level.mapped[cell]) state = 2;
+		SendData.sendActionForAll(new UpdateCellsAction(cell, level.map[cell], state), true);
 
 	}
 	//FIXME
