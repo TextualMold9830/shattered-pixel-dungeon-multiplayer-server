@@ -22,7 +22,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -609,22 +608,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddTextures(String path) {
 
-        // Read all bytes from a file and convert to Base64 String
-        byte[] byteData = new byte[0];
-        try {
-            byteData = Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String base64String = Base64.getEncoder().encodeToString(byteData);
-
-        packAndAddRawTextures(base64String);
-    }
-    public void packAndAddRawTextures(String data) {
-        addAction(new TexturePackAction(data));
-    }
     public void packAndAddCounter(float portion) {
         try {
             synchronized (dataRef) {
