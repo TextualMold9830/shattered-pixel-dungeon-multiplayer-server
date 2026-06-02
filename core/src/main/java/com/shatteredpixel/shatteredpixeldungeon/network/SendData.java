@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -286,38 +287,11 @@ public class SendData {
         }
     }
 
-    public static void addToSendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, false);
-    }
-
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, true);
-    }
-
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to, boolean send) {
+    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to) {
         if (actorID == Actor.NO_ID) {
             return;
         }
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_name", "sprite_action");
-            actionObj.put("action", action);
-            actionObj.put("from", cell_from);
-            actionObj.put("to", cell_to);
-            actionObj.put("actor_id", actorID);
-        } catch (JSONException ignored) {
-
-        }
-        for (int i = 0; i < clients.length; i++) {
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addAction(actionObj);
-            if (send) {
-                client.flush();
-            }
-        }
+        sendActionForAll(new CharSpriteAction(actorID, action, cell_from, cell_to));
     }
 
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
