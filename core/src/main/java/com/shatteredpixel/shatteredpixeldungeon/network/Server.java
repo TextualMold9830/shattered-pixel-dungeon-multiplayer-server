@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAc
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelVisualsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowStatusAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
@@ -43,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetL
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelTilesActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelVisualsActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ResizeLevelActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ShowStatusActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroReadyActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
@@ -177,6 +179,7 @@ public class Server extends Thread {
         SERIALIZERS.register(SetLevelTilesAction.class, new SetLevelTilesActionSerializer());
         SERIALIZERS.register(SetLevelVisualsAction.class, new SetLevelVisualsActionSerializer());
         SERIALIZERS.register(ResizeLevelAction.class, new ResizeLevelActionSerializer());
+        SERIALIZERS.register(ShowStatusAction.class, new ShowStatusActionSerializer());
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
         SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
