@@ -62,6 +62,8 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroActorIdAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.DungeonGenerateLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.SwitchLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -923,8 +925,8 @@ public class Dungeon {
 		observe( hero, dist+1, send );
 	}
 
-	private static boolean[] oldLevelVisitedChache = new boolean[0];
-	private static boolean[] oldLevelMappedChache = new boolean[0];
+	private static boolean[] oldLevelVisitedChache = new boolean[0]; //reduce GC usage
+	private static boolean[] oldLevelMappedChache = new boolean[0]; //reduce GC usage
 
 	public static void observe(Hero hero, int dist, boolean send ) {
 		if (level == null) {
@@ -936,6 +938,7 @@ public class Dungeon {
 		if (oldLevelVisitedChache.length != level.visited.length) {
 			oldLevelVisitedChache = new boolean[level.visited.length];
 		}
+		assert(level.visited.length == level.mapped.length);
 		System.arraycopy(level.visited, 0, oldLevelVisitedChache, 0, level.visited.length);
 		System.arraycopy(level.mapped, 0, oldLevelMappedChache, 0, level.mapped.length);
 
@@ -1046,10 +1049,10 @@ public class Dungeon {
 
 		BArray.xor(oldLevelVisitedChache, level.visited, oldLevelVisitedChache);
 		BArray.xor(oldLevelMappedChache, level.mapped, oldLevelMappedChache);
-		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache);
-		addToSendLevelVisitedState(level, oldLevelMappedChache);
+		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache); // oldLevelMappedChache is a full diff array
+		sendActionForAll(new UpdateCellsAction(level, oldLevelMappedChache));
 		if (send) {
-			addToSendHeroVisibleCells(hero, true);
+			sendAction(hero, new UpdateFovAction(hero, true));
 			SendData.flush(hero);
 		}
 	}

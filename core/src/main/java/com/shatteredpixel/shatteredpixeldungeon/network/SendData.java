@@ -48,10 +48,6 @@ public class SendData {
         }
     }
 
-    public static void addToSendLevelVisitedState(Level level, boolean[] diff) {
-        sendActionForAll(new UpdateCellsAction(level, diff));
-    }
-
     public static void addToSendLevelMappedState(Level level, int ID) {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.packAndAddLevelCells(level);
@@ -74,11 +70,6 @@ public class SendData {
     }
 
 
-
-    //---------------------------Hero
-    public static void addToSendHeroVisibleCells(Hero hero, boolean allowLateSerialization) {
-        sendAction(hero, new UpdateFovAction(hero, allowLateSerialization));
-    }
 
     public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         final int ID = hero.networkID;
