@@ -284,7 +284,6 @@ public class NetworkPacket {
     }
 
 
-
     public void packAndAddLevelCells(Level level) {
         // Redundant, but kept for legacy proxying if needed. 
         // We'll just call the full tiles/states updates.
