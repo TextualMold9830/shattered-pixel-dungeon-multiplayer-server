@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
@@ -150,18 +151,6 @@ public class SendData {
     }
 
     //--------------------------Control
-    public static void sendHeroReady(int ID, boolean ready) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            try {
-                JSONObject heroObj = new JSONObject();
-                heroObj.put("ready", ready);
-                clients[ID].packet.addHero(heroObj);
-            } catch (JSONException ignored) {
-            }
-            clients[ID].flush();
-        }
-    }
-
     public static void sendHeroGold(int ID, int gold) {
         if ((ID != -1) && (clients[ID] != null)) {
             try {
