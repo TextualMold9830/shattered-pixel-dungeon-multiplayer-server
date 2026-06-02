@@ -16,6 +16,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -338,7 +339,7 @@ public class SendData {
             if (client == null) {
                 continue;
             }
-            client.packet.packAndAddCharSpriteState(id, state, remove);
+            client.packet.addAction(new CharSpriteStateAction(id, state, remove));
             client.flush();
         }
     }

@@ -21,7 +21,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
@@ -281,9 +280,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddCharSpriteState(int actorId, CharSprite.State state, boolean remove) {
-        addAction(new CharSpriteStateAction(actorId, state, remove));
-    }
+
 
     public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
         try {
