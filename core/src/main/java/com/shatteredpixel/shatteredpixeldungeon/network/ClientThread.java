@@ -14,6 +14,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroUUIDAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -509,6 +511,8 @@ public class ClientThread implements Callable<String> {
 
         packet.packAndAddLevel(level, clientHero);
         packet.packAndAddHero(clientHero);
+        packet.addAction(new HeroGoldAction(clientHero.getGold()));
+        packet.addAction(new HeroReadyAction(clientHero.isReady()));
         packet.addAction(new HeroUUIDAction(clientHero.uuid));
         packet.packAndAddDepth(Dungeon.depth);
         packet.packAndAddIronKeysCount();
