@@ -35,6 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroReadyActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroGoldActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroUUIDAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroUUIDActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -160,6 +162,7 @@ public class Server extends Thread {
         SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
+        SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

@@ -31,7 +31,6 @@ public class HeroSerializer implements Serializer<Hero> {
             object.put("strength", strength);
             object.put("lvl", lvl);
             object.put("exp", exp);
-            object.put("uuid", hero.uuid);
             object.put("talents", hero.getTalents());
         } catch (JSONException e) {
             e.printStackTrace();
