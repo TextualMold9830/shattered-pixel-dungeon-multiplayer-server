@@ -160,6 +160,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -2679,7 +2680,7 @@ public class Hero extends Char {
 
 	public boolean setReady(boolean ready) {
 		this.ready = ready;
-		SendData.sendHeroReady(this.networkID, ready);
+		SendData.sendAction(this, new HeroReadyAction(ready));
 		return this.ready;
 	}
 
