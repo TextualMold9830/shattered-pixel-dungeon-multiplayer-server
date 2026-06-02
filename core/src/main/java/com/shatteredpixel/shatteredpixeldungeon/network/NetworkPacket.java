@@ -22,7 +22,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntranceAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
@@ -530,9 +529,7 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddShowBanner(@NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
-    }
+
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
         WindowDTO dto = new WindowDTO(type, windowID, args);

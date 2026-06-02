@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -113,7 +114,7 @@ public class SendData {
     public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
         final int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddShowBanner(banner, color, fadeTime, showTime);
+            clients[ID].packet.addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
             clients[ID].flush();
         }
     }
