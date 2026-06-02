@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntrance
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
@@ -25,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetL
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelExitActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CharSpriteStateActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeapRemoveActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ShowBannerActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -145,6 +147,7 @@ public class Server extends Thread {
         SERIALIZERS.register(SetLevelExitAction.class, new SetLevelExitActionSerializer());
         SERIALIZERS.register(CharSpriteStateAction.class, new CharSpriteStateActionSerializer());
         SERIALIZERS.register(HeapRemoveAction.class, new HeapRemoveActionSerializer());
+        SERIALIZERS.register(ShowBannerAction.class, new ShowBannerActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

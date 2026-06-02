@@ -23,6 +23,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelEntrance
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelExitAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.CellsUpdateDTO;
@@ -539,13 +540,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddShowBanner(@NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "show_banner");
-        event.put("banner", banner.toString().toLowerCase(Locale.ROOT));
-        event.put("color", color);
-        event.put("fade_time", fadeTime);
-        event.put("show_time", showTime);
-        addAction(event);
+        addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
