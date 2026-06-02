@@ -14,6 +14,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroActorIdAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroExperienceAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroStrengthAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
@@ -101,14 +106,14 @@ public class SendData {
         sendAction(hero, new UpdateFovAction(hero, allowLateSerialization));
     }
 
-    public static void SendHeroLevel(int ID, int lvl, int exp) {
+    public static void sendHeroExperience(int ID, int lvl, int exp) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddHeroLevel(lvl, exp);
+            clients[ID].packet.addAction(new HeroExperienceAction(lvl, exp));
         }
     }
-    public static void SendHeroStrength(int ID, int str) {
+    public static void sendHeroStrength(int ID, int str) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddHeroStrength(str);
+            clients[ID].packet.addAction(new HeroStrengthAction(str));
         }
     }
 
@@ -153,24 +158,14 @@ public class SendData {
 
     public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
         if ((ID != -1) && (clients[ID] != null)) {
-            try {
-                JSONObject heroObj = new JSONObject();
-                heroObj.put("subclass_id", subclass.ordinal());
-                clients[ID].packet.addHero(heroObj);
-            } catch (JSONException ignored) {
-            }
+            clients[ID].packet.addAction(new HeroSubclassAction(subclass.ordinal()));
             clients[ID].flush();
         }
     }
     public static void sendHeroTalents(Hero hero){
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            try {
-                JSONObject heroObj = new JSONObject();
-                heroObj.put("talents", hero.getTalents());
-                clients[ID].packet.addHero(heroObj);
-            } catch (JSONException ignored) {
-            }
+            clients[ID].packet.addAction(new HeroTalentsAction(hero.getTalents()));
             clients[ID].flush();
         }
     }
@@ -260,7 +255,7 @@ public class SendData {
 
     public static void sendHeroNewID(Hero hero, int ID) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addNewHeroID(hero.id());
+            clients[ID].packet.addAction(new HeroActorIdAction(hero.id()));
             clients[ID].flush();
         }
     }

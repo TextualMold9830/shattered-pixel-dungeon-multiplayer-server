@@ -228,28 +228,6 @@ public class NetworkPacket {
         }
     }
 
-    public void addHero(JSONObject hero) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", "hero");
-        event.put("payload", hero);
-        addAction(event);
-    }
-
-    public void addNewHeroID(int id) {
-        addHero(packNewHeroID(id));
-    }
-
-    protected JSONObject packNewHeroID(int id) {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("actor_id", id);
-        } catch (JSONException e) {
-
-        }
-
-        return object;
-    }
-
     protected JSONObject packHero(@NotNull Hero hero) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
         Object serialized = ctx.serialize(hero, "hero_block");
@@ -258,7 +236,9 @@ public class NetworkPacket {
 
     public void packAndAddHero(@NotNull Hero hero) {
         packAndAddActor(hero, true);
-        addHero(packHero(hero));
+        JSONObject heroPatch = packHero(hero);
+        heroPatch.put("action_name", "hero_patch");
+        addAction(heroPatch);
     }
 
     public void packAndAddShield(int id, int shielding) {
@@ -276,30 +256,6 @@ public class NetworkPacket {
             e.printStackTrace();
         }
     }
-
-
-
-    public void packAndAddHeroLevel(@NotNull int lvl, int exp) {
-        try {
-            JSONObject heroObj = new JSONObject();
-            heroObj.put("lvl", lvl);
-            heroObj.put("exp", exp);
-            addHero(heroObj);
-        } catch (JSONException e) {
-            ShatteredPixelDungeon.reportException(e);
-        }
-    }
-
-    public void packAndAddHeroStrength(@NotNull int str) {
-        try {
-            JSONObject heroObj = new JSONObject();
-            heroObj.put("strength", str);
-            addHero(heroObj);
-        } catch (JSONException e) {
-            ShatteredPixelDungeon.reportException(e);
-        }
-    }
-
     public void packAndAddLevelResize(Level level) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject payload = (JSONObject) ctx.serialize(level, "resize_level");
