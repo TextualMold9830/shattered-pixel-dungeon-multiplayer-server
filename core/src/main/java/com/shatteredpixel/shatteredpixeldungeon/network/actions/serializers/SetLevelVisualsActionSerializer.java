@@ -9,10 +9,9 @@ public class SetLevelVisualsActionSerializer extends NetworkActionSerializer<Set
     @Override
     protected JSONObject serializeInternal(@NotNull SetLevelVisualsAction action, SerializationContext ctx, String profile) {
         JSONObject obj = new JSONObject();
-        var level = action.level;
-        obj.put("tiles_texture", level.tilesTex());
-        obj.put("water_texture", level.waterTex());
-        obj.put("feeling", level.feeling.name());
+        obj.put("tiles_texture", action.tilesTexture);
+        obj.put("water_texture", action.waterTexture);
+        obj.put("feeling", action.feeling);
         return obj;
     }
 }

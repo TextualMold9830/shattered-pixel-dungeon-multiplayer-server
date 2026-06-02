@@ -4,10 +4,20 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class SetLevelVisualsAction implements NetworkAction {
-    public final Level level;
+    public final String tilesTexture;
+    public final String waterTexture;
+    public final String feeling;
 
     public SetLevelVisualsAction(@NotNull Level level) {
-        this.level = level;
+        this.tilesTexture = level.tilesTex();
+        this.waterTexture = level.waterTex();
+        this.feeling = level.feeling.name();
+    }
+
+    public SetLevelVisualsAction(String tilesTexture, String waterTexture, String feeling) {
+        this.tilesTexture = tilesTexture;
+        this.waterTexture = waterTexture;
+        this.feeling = feeling;
     }
 
     @Override

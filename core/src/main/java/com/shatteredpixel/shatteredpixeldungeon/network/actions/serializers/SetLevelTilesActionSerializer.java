@@ -11,7 +11,7 @@ public class SetLevelTilesActionSerializer extends NetworkActionSerializer<SetLe
     protected JSONObject serializeInternal(@NotNull SetLevelTilesAction action, SerializationContext ctx, String profile) {
         JSONObject obj = new JSONObject();
         JSONArray arr = new JSONArray();
-        for (int tile : action.level.map) {
+        for (int tile : action.tiles) {
             arr.put(tile);
         }
         obj.put("tiles", arr);
