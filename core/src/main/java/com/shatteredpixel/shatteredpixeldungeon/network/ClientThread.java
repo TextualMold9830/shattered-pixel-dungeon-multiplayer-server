@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackActio
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroUUIDAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -528,7 +529,7 @@ public class ClientThread implements Callable<String> {
         }
         forceFlush();
 
-        packet.packAndAddInterlevelSceneState("fade_out", null);
+        packet.addAction(new InterlevelSceneAction("fade_out"));
         forceFlush();
     }
     private void sendTexture(String textureData){

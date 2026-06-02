@@ -19,7 +19,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateA
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.InterlevelSceneDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -139,20 +139,20 @@ public class SendData {
 
     //-----------------------------Interlevel Scene
 
-    public static void sendInterLevelSceneForAll(InterlevelSceneDTO interlevelSceneParams) {
+    public static void sendInterLevelSceneForAll(InterlevelSceneAction interlevelSceneParams) {
         for (int i = 0; i < clients.length; i++) {
             sendInterLevelScene(i, interlevelSceneParams);
         }
     }
-    public static void sendInterLevelScene(int ID, InterlevelSceneDTO interlevelSceneParams) {
+    public static void sendInterLevelScene(int ID, InterlevelSceneAction interlevelSceneParams) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].forceFlush();
             {
                 if (clients[ID].clientHero == null) {
                     return;
                 }
             }
-            clients[ID].packet.addInterlevelSceneObject(interlevelSceneParams);
+            clients[ID].forceFlush();
+            clients[ID].packet.addAction(interlevelSceneParams);
             clients[ID].forceFlush();
         }
     }
@@ -163,7 +163,7 @@ public class SendData {
             if (clients[ID].clientHero == null) {
                 return;
             }
-            clients[ID].packet.packAndAddInterlevelSceneState("fade_out");
+            clients[ID].packet.addAction(new InterlevelSceneAction("fade_out"));
             clients[ID].forceFlush();
         }
     }
