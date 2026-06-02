@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SpriteFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
@@ -38,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.Heap
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ShowBannerActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.TexturePackActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CharSpriteActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SpriteFlashActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.InterlevelSceneActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateCellsActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.SetLevelStatesActionSerializer;
@@ -173,6 +175,7 @@ public class Server extends Thread {
         SERIALIZERS.register(ShowBannerAction.class, new ShowBannerActionSerializer());
         SERIALIZERS.register(TexturePackAction.class, new TexturePackActionSerializer());
         SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
+        SERIALIZERS.register(SpriteFlashAction.class, new SpriteFlashActionSerializer());
         SERIALIZERS.register(InterlevelSceneAction.class, new InterlevelSceneActionSerializer());
         SERIALIZERS.register(UpdateCellsAction.class, new UpdateCellsActionSerializer());
         SERIALIZERS.register(SetLevelStatesAction.class, new SetLevelStatesActionSerializer());

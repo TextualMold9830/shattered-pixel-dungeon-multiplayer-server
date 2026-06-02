@@ -414,7 +414,7 @@ public class SendData {
             return null;
         }
     }
-    
+
 
     //---------------------------Items
     public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
@@ -520,28 +520,6 @@ public class SendData {
     public static void sendBuff(Buff buff){
         sendBuff(buff, false);
     }
-
-    //--------------------------- More Effects
-    public static void sendFlashChar(CharSprite sprite, float flashTime) {
-
-        if (sprite.ch == null){
-            ShatteredPixelDungeon.reportException(new RuntimeException("char sprite has not owner. Ignored"));
-            return;
-        }
-
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_name", "sprite_action");
-            actionObj.put("action", "flash");
-            actionObj.put("actor_id", sprite.ch.id());
-            actionObj.put("flash_time", flashTime);
-            sendCustomActionForAll(actionObj);
-        } catch (JSONException e) {
-            ShatteredPixelDungeon.reportException(e);
-        }
-
-    }
-
 
     //--------------------------- External Actions
     @Deprecated
