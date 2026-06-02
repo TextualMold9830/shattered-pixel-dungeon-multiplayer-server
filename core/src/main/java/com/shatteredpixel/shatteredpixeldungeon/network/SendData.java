@@ -414,37 +414,7 @@ public class SendData {
             return null;
         }
     }
-
-    //---------------------------More UI
-    public static void addToSendShowStatus(Float x, Float y, Integer key, String text, int color, boolean ignorePosition) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("action_name", "show_status");
-            data.put("x", x);
-            data.put("y", y);
-            data.put("key", key);
-            data.put("text", text);
-            data.put("color", color);
-            data.put("ignore_position", ignorePosition);
-        } catch (JSONException e) {
-            Log.wtf("SendData", "Exception while adding showstatus", e);
-            return;
-        }
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            AtomicReference<JSONObject> ref = client.packet.dataRef;
-            synchronized (ref) {
-                try {
-                    addToArray(ref.get(), "actions", data);
-                } catch (JSONException e) {
-                    Log.w("SendData", "failed to send \"Show_status\"");
-                    continue;
-                }
-            }
-        }
-    }
+    
 
     //---------------------------Items
     public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
@@ -709,7 +679,7 @@ public class SendData {
             client.packet.addAction(networkAction);
         }
     }
-    
+
     public static void sendActionForAll(NetworkAction networkAction) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
