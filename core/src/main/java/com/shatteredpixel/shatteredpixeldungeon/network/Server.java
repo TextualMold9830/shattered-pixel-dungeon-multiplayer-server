@@ -298,27 +298,37 @@ public class Server extends Thread {
     }
 
     public static void startClientThread(Socket client) throws IOException {
+        QueryClientThread queryThread = new QueryClientThread(client);
+        queryThread.setDaemon(true);
+        queryThread.setName("SPDMP Query Client");
+        queryThread.start();
+    }
+
+    public static void joinClient(Socket client, String heroClass, String uuid) throws IOException {
         synchronized (clients) {
             for (int i = 0; i <= clients.length; i++) {   //search not connected
                 if (i == clients.length) { //If we test last and it's connected too
                     rejectClient(client, "server_full", "Server is full");
                     client.close();
                 } else if (clients[i] == null) {
-                        Hero emptyHero = null;
-                        clients[i] = new ClientThread(i, client, emptyHero); //found
+                    client.setSoTimeout(0);
+                    ClientThread thread = new ClientThread(i, client, null);
+                    clients[i] = thread;
+                    thread.InitPlayerHero(heroClass, uuid);
                     break;
                 }
             }
         }
     }
 
-    private static void rejectClient(Socket client, String reason, String message) throws IOException {
+    static void rejectClient(Socket client, String reason, String message) throws IOException {
         JSONObject action = new JSONObject();
         action.put("action_name", "connection_rejected");
         action.put("reason", reason);
         action.put("message", message);
 
         JSONObject packet = new JSONObject();
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
         packet.put("actions", new JSONArray().put(action));
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(

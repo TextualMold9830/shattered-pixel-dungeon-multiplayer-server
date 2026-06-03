@@ -73,11 +73,12 @@ public class ClientThread implements Callable<String> {
 
     public ClientThread(int ThreadID, Socket clientSocket, @Nullable Hero hero) {
         clientHero = hero;
-        if (hero != null){
-            hero.networkID = threadID;
-        }
         this.clientSocket = clientSocket;
         try {
+            this.threadID = ThreadID;
+            if (hero != null){
+                hero.networkID = threadID;
+            }
             writeStream = new OutputStreamWriter(
                     clientSocket.getOutputStream(),
                     Charset.forName(CHARSET).newEncoder()
@@ -86,7 +87,6 @@ public class ClientThread implements Callable<String> {
                     clientSocket.getInputStream(),
                     Charset.forName(CHARSET).newDecoder()
             );
-            this.threadID = ThreadID;
             reader = new BufferedReader(readStream);
             writer = new BufferedWriter(writeStream, 16384);
         } catch (IOException e) {
@@ -94,9 +94,6 @@ public class ClientThread implements Callable<String> {
             disconnect();
             return;
         }
-        sendServerInfo();
-        sendServerType();
-        sendServerUUID();
         if (clientHero != null){
             sendInitData();
         }
@@ -134,6 +131,9 @@ public class ClientThread implements Callable<String> {
             String token = it.next();
             try {
                 switch (token) {
+                    case Protocol.FIELD_PACKET_TYPE: {
+                        break;
+                    }
                     //Level block
                     case ("hero_class"): {
                         if (clientHero == null) {
@@ -297,6 +297,9 @@ public class ClientThread implements Callable<String> {
                 packet.compress();
                 if (packet.dataRef.get().length() == 0) {
                     return;
+                }
+                if (!packet.dataRef.get().has(Protocol.FIELD_PACKET_TYPE)) {
+                    packet.dataRef.get().put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
                 }
                 if (DeviceCompat.isDebug()) {
                     try {
