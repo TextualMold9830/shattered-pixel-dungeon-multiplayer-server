@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.shatteredpixel.shatteredpixeldungeon.balance.BalanceData;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -198,6 +199,7 @@ public class Dungeon {
 	public static String customSeedText = "";
 	public static long seed;
 	public static long lastPlayed;
+	public static BalanceData balance;
 
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
@@ -269,6 +271,7 @@ public class Dungeon {
 		Badges.reset();
 		//TODO: Check this
 		//GamesInProgress.selectedClass.initHero(heroes);
+		balance = BalanceData.load();
 	}
 
 	public static boolean isChallenged( int mask ) {
@@ -283,7 +286,13 @@ public class Dungeon {
 		
 		Dungeon.level = null;
 		Actor.clear();
-		
+
+		for (Hero hero : Dungeon.heroes){
+			if (hero != null && !hero.isAlive()){
+				hero.setHP(hero.getHT());
+				hero.live();
+			}
+		}
 		Level level;
 		if (branch == 0) {
 			switch (depth) {
@@ -630,7 +639,8 @@ public class Dungeon {
 	private static final String CHAPTERS	= "chapters";
 	private static final String QUESTS		= "quests";
 	private static final String BADGES		= "badges";
-	
+	private static final String USE_FRAGMENTS	= "use_fragments";
+	private static final String BALANCE_DATA = "balance_data";
 	public static void saveGame( int save ) {
 		try {
 			Bundle bundle = new Bundle();
@@ -695,7 +705,8 @@ public class Dungeon {
 			Bundle badges = new Bundle();
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
-			
+			bundle.put(BALANCE_DATA, balance);
+
 			FileUtils.bundleToFile( GamesInProgress.gameFile(), bundle);
 			for (Hero hero: Dungeon.heroes) {
 				if (hero != null) {
@@ -774,7 +785,11 @@ public class Dungeon {
 					chapters.add( id );
 				}
 			}
-			
+			if (bundle.contains(BALANCE_DATA)) {
+				balance = (BalanceData) bundle.get(BALANCE_DATA);
+			} else {
+				balance = BalanceData.load();
+			}
 			Bundle quests = bundle.getBundle( QUESTS );
 			if (!quests.isNull()) {
 				Ghost.Quest.restoreFromBundle( quests );
@@ -832,7 +847,6 @@ public class Dungeon {
 
 		Statistics.restoreFromBundle( bundle );
 		Generator.restoreFromBundle( bundle );
-
 	}
 	
 	public static Level loadLevel() throws IOException {
@@ -1137,7 +1151,9 @@ public class Dungeon {
 			heroes[ID] = null;
 		} else {
 			saveHero(hero);
-			Dungeon.heroes[hero.networkID] = null;
+			if (hero.networkID > -1) {
+				Dungeon.heroes[hero.networkID] = null;
+			}
 			hero.next();
 			Actor.remove(hero);
 		}

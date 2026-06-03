@@ -148,7 +148,7 @@ class ClientThread implements Callable<String> {
                                 if (cell != -1) {
                                     clientHero.cellSelector.getListener().onSelect(cell);
                                 } else {
-                                    clientHero.cellSelector.cancel();
+                                    GameScene.cancel(clientHero);
                                 }
                                 GameScene.ready(clientHero);
                             }
@@ -213,8 +213,11 @@ class ClientThread implements Callable<String> {
                         if (text.trim().isEmpty()) {
                             break;
                         }
-                        Server.pluginManager.fireEvent(new ChatEvent(text, clientHero));
-                        GLog.i("%s: %s", clientHero.name,  text.trim());
+                        ChatEvent chatEvent = new ChatEvent(text, clientHero);
+                        Server.pluginManager.fireEvent(chatEvent);
+                        if (!chatEvent.canceled) {
+                            GLog.i("%s: %s", clientHero.name, text.trim());
+                        }
                         break;
                     }
                     case "toolbar_action": {
@@ -331,6 +334,11 @@ class ClientThread implements Callable<String> {
         boolean heroFound = false;
         Hero newHero = new Hero();
         if (uuid != null && !uuid.isEmpty()) {
+            for (Hero h : heroes){
+                if (h != null && h.uuid.equals(uuid)){
+                    disconnect("Hero is already connected");
+                }
+            }
             Hero hero = Dungeon.loadHero(uuid);
             if (hero != null) {
                 newHero = hero;
@@ -452,6 +460,37 @@ class ClientThread implements Callable<String> {
                 if (!notNullHero) {
                     GameScene.shouldProcess = false;
                 }
+            }
+        }
+    }
+    public synchronized void disconnect(String message) {
+        if (!disconnected) {
+            disconnected = true;
+            try {
+                //TODO: send message
+                clientSocket.close(); //it creates exception when we will wait client data
+            } catch (Exception ignore) {
+            }
+            if (clientHero != null) {
+                clientHero.next();
+                Dungeon.removeHero(clientHero);
+                clientHero = null;
+            }
+            Server.clients[threadID] = null;
+            readStream = null;
+            writeStream = null;
+            jsonCall.cancel(true);
+            GLog.n("player " + threadID + " disconnected");
+            boolean notNullHero = false;
+            for (Hero hero: Dungeon.heroes) {
+                if (hero != null) {
+                    GameScene.shouldProcess = true;
+                    notNullHero = true;
+                    break;
+                }
+            }
+            if (!notNullHero) {
+                GameScene.shouldProcess = false;
             }
         }
     }

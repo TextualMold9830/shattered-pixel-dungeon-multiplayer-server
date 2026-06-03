@@ -91,7 +91,7 @@ public class WandOfRegrowth extends Wand {
 		ArrayList<Integer> cells = new ArrayList<>(cone.cells);
 
 		float furrowedChance = 0;
-		if (totChrgUsed >= chargeLimit(hero.lvl)){
+		if (totChrgUsed >= chargeLimit(hero)){
 			furrowedChance = (chargesOverLimit+1)/5f;
 		}
 
@@ -189,12 +189,12 @@ public class WandOfRegrowth extends Wand {
 			grassToPlace--;
 		}
 
-		if (totChrgUsed < chargeLimit(hero.lvl)) {
+		if (totChrgUsed < chargeLimit(hero)) {
 			chargesOverLimit = 0;
 			totChrgUsed += chrgUsed;
-			if (totChrgUsed > chargeLimit(hero.lvl)){
-				chargesOverLimit = totChrgUsed - chargeLimit(hero.lvl);
-				totChrgUsed = chargeLimit(hero.lvl);
+			if (totChrgUsed > chargeLimit(hero)){
+				chargesOverLimit = totChrgUsed - chargeLimit(hero);
+				totChrgUsed = chargeLimit(hero);
 			}
 		} else {
 			chargesOverLimit += chrgUsed;
@@ -202,18 +202,18 @@ public class WandOfRegrowth extends Wand {
 
 	}
 
-	private int chargeLimit( int heroLvl ){
-		return chargeLimit(  heroLvl, level() );
+	private int chargeLimit(Hero hero ){
+		return chargeLimit(  hero , level(hero) );
 	}
 
-	private int chargeLimit( int heroLvl, int wndLvl ){
+	private int chargeLimit( Hero hero , int wndLvl ){
 		if (wndLvl >= 10){
 			return Integer.MAX_VALUE;
 		} else {
 			//20 charges at base, plus:
 			//2/3.1/4.2/5.5/6.8/8.4/10.4/13.2/18.0/30.8/inf. charges per hero level, at wand level:
 			//0/1  /2  /3  /4  /5  /6   /7   /8   /9   /10
-			return Math.round(20 + heroLvl * (2+wndLvl) * (1f + (wndLvl/(50 - 5*wndLvl))));
+			return Math.round(20 + hero.lvl * (2+wndLvl) * (1f + (wndLvl/(50 - 5*wndLvl))));
 		}
 	}
 
@@ -290,7 +290,7 @@ public class WandOfRegrowth extends Wand {
 	public String statsDesc(Hero hero) {
 		String desc = Messages.get(this, "stats_desc", chargesPerCast());
 		if (isIdentified()){
-			int chargeLeft = chargeLimit(hero.lvl) - totChrgUsed;
+			int chargeLeft = chargeLimit(hero) - totChrgUsed;
 			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));
 		}
 		return desc;
@@ -298,15 +298,15 @@ public class WandOfRegrowth extends Wand {
 
 	@Override
 	public String upgradeStat1(int level, Hero hero) {
-		return Messages.decimalFormat("#.##", 3 + (2+level)/3f);
+		return Messages.decimalFormat("#.##", 3 + (2+level(hero))/3f);
 	}
 
 	@Override
 	public String upgradeStat2(int level, Hero hero) {
-		if (level >= 10){
+		if (level(hero) >= 10){
 			return "∞";
 		} else {
-			return Integer.toString(chargeLimit(hero.lvl, level));
+			return Integer.toString(chargeLimit(hero, level));
 		}
 	}
 

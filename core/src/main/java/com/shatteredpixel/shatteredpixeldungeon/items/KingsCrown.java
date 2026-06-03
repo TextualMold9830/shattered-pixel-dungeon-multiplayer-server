@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -56,7 +57,9 @@ public class KingsCrown extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		actions.add( AC_WEAR );
+		if (canUse(hero)) {
+			actions.add(AC_WEAR);
+		}
 		return actions;
 	}
 	
@@ -126,4 +129,17 @@ public class KingsCrown extends Item {
 		Sample.INSTANCE.play( Assets.Sounds.MASTERY );
 	}
 
+	@Override
+	public boolean doPickUp(Hero hero, int pos) {
+		if (isBound()) {
+			return super.doPickUp(hero, pos);
+		} else {
+			for (Hero h: Dungeon.heroes){
+				if (h != null) {
+					duplicate().bind(h).collect(h);
+				}
+			}
+			return true;
+		}
+	}
 }

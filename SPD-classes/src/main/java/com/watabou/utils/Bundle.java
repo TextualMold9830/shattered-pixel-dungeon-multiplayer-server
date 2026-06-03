@@ -74,6 +74,9 @@ public class Bundle {
 	public String toString() {
 		return data.toString();
 	}
+	public String toString(int indent) {
+		return data.toString(indent);
+	}
 
 	private Bundle( JSONObject data ) {
 		this.data = data;

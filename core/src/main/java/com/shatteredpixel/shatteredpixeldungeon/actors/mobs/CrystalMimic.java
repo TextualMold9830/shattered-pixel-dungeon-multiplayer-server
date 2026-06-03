@@ -153,9 +153,9 @@ public class CrystalMimic extends Mimic {
 		Item item;
 		do {
 			item = hero.belongings.randomUnequipped();
-		} while (tries-- > 0 && (item == null || item.unique || item.level() > 0));
+		} while (tries-- > 0 && (item == null || item.unique || item.level(hero) > 0));
 
-		if (item != null && !item.unique && item.level() < 1 ) {
+		if (item != null && !item.unique && item.level(hero) < 1 ) {
 
 			GLog.w( Messages.get(this, "ate", item.name()) );
 			if (!item.stackable) {

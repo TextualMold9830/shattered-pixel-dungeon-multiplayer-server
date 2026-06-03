@@ -58,6 +58,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Reflection;
 
+import java.util.ArrayList;
+
 public class ScrollOfTransmutation extends InventoryScroll {
 	
 	{
@@ -213,6 +215,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			} while (Challenges.isItemBlocked(n) || n.getClass() == wandClass);
 			n.cursed = false;
 			n.level(0);
+			n.fragmentUpgrades = (ArrayList<com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade.Upgrade>) staff.fragmentUpgrades.clone();
 			//TODO: check this
 			n.identify(staff.findOwner());
 			staff.imbueWand(n, null);
@@ -246,6 +249,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.level(0);
 		n.quantity(w.quantity());
 		int level = w.trueLevel();
+		n.fragmentUpgrades = (ArrayList<com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade.Upgrade>) w.fragmentUpgrades.clone();
 		if (level > 0) {
 			n.upgrade( level );
 		} else if (level < 0) {
@@ -281,6 +285,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.level(0);
 		
 		int level = r.level();
+		n.fragmentUpgrades = (ArrayList<com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade.Upgrade>) r.fragmentUpgrades.clone();
 		if (level > 0) {
 			n.upgrade( level );
 		} else if (level < 0) {
@@ -340,7 +345,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		do {
 			n = (Wand)Generator.randomUsingDefaults( Generator.Category.WAND );
 		} while ( Challenges.isItemBlocked(n) || n.getClass() == w.getClass());
-		
+		n.fragmentUpgrades = (ArrayList<com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade.Upgrade>) w.fragmentUpgrades.clone();
 		n.level( 0 );
 		int level = w.trueLevel();
 		n.upgrade( level );
@@ -353,7 +358,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.resinBonus = w.resinBonus;
 
 		n.setCurCharges(w.getCurCharges());
-		n.updateLevel();
+		//Hope for the best
+		//n.updateLevel();
 		
 		return n;
 	}

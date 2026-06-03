@@ -665,7 +665,7 @@ public class GameScene extends PixelScene {
 	public static boolean updateTags = false;
 	private static float waterOfs = 0;
 
-	public static boolean shouldProcess = true;
+	public static boolean shouldProcess = false;
 
 	private void updateItemDisplays() {
 		for (int id = 0; id < Dungeon.heroes.length; id++){
@@ -689,7 +689,6 @@ public class GameScene extends PixelScene {
 		}
 		SendData.flush(hero);
 	}
-
 	@Override
 	public synchronized void update() {
 		Server.parseActions();

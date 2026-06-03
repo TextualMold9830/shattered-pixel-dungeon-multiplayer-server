@@ -122,7 +122,7 @@ public class Alchemize extends Spell {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return !(item instanceof Alchemize)
-					&& (Shopkeeper.canSell(item, getOwner()) || item.energyVal() > 0);
+					&& (Shopkeeper.canSell(item, getOwner()) || item.energyVal() > 0) && !item.isBound();
 		}
 
 		@Override
@@ -207,7 +207,7 @@ public class Alchemize extends Spell {
 				}
 			}
 
-			if (item.energyVal() > 0) {
+			if (item.energyVal() > 0 && !item.isBound()) {
 				if (item.quantity() == 1) {
 
 					RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
