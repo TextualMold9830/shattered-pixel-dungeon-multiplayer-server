@@ -62,7 +62,21 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.Hero
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroSubclassActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.AttackIndicatorTargetAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.KeysIndicatorAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResumeButtonVisibleAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCounterAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateDepthAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.AttackIndicatorTargetActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CellListenerPromptActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroTalentsActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.KeysIndicatorActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.LockedFloorStateActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ResumeButtonVisibleActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateCounterActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateDepthActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -191,6 +205,13 @@ public class Server extends Thread {
         SERIALIZERS.register(HeroStrengthAction.class, new HeroStrengthActionSerializer());
         SERIALIZERS.register(HeroSubclassAction.class, new HeroSubclassActionSerializer());
         SERIALIZERS.register(HeroTalentsAction.class, new HeroTalentsActionSerializer());
+        SERIALIZERS.register(UpdateDepthAction.class, new UpdateDepthActionSerializer());
+        SERIALIZERS.register(LockedFloorStateAction.class, new LockedFloorStateActionSerializer());
+        SERIALIZERS.register(KeysIndicatorAction.class, new KeysIndicatorActionSerializer());
+        SERIALIZERS.register(UpdateCounterAction.class, new UpdateCounterActionSerializer());
+        SERIALIZERS.register(CellListenerPromptAction.class, new CellListenerPromptActionSerializer());
+        SERIALIZERS.register(AttackIndicatorTargetAction.class, new AttackIndicatorTargetActionSerializer());
+        SERIALIZERS.register(ResumeButtonVisibleAction.class, new ResumeButtonVisibleActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

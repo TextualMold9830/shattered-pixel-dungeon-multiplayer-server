@@ -868,7 +868,7 @@ public class Hero extends Char {
 	}
 
 	float lastCounter = 0;
-	public void updateCounter(){
+	public void updateCounter(){ //todo check this logic twice. Maybe should use gamescene instead
 		float portion = ((1f - time%1f)%1f);
 		if (portion != lastCounter){
 			lastCounter = portion;
@@ -2694,6 +2694,10 @@ public class Hero extends Char {
 
 	public boolean getReady() {
 		return ready;
+	}
+
+	public float getCounter() {
+		return lastCounter;
 	}
 
 	public int getGold() {

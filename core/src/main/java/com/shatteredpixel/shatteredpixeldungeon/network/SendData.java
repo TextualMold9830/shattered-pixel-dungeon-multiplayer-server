@@ -13,6 +13,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.AttackIndicatorTargetAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
@@ -29,9 +32,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.addToArray;
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
 public class SendData {
@@ -565,18 +566,8 @@ public class SendData {
         if (clients[networkID] == null) {
             return;
         }
-        try {
-            AtomicReference<JSONObject> dataRef = clients[networkID].packet.dataRef;
-            synchronized (clients[networkID].packet.dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("cell_listener_prompt", new_prompt == null ? "" : new_prompt);
-                dataRef.get().put("ui", uiObj);
-            }
-            clients[networkID].flush();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        clients[networkID].packet.addAction(new CellListenerPromptAction(new_prompt));
+        clients[networkID].flush();
     }
     public static void sendHeroAttackIndicator(@Nullable Integer target, int networkID) {
         sendHeroAttackIndicator(target == null? -1: target, networkID);
@@ -584,6 +575,11 @@ public class SendData {
 
 
     private static final HashMap<Integer, Integer> attackIndicatorCache = new HashMap<>();
+
+    public static int getHeroAttackIndicatorTarget(int networkID) {
+        return attackIndicatorCache.getOrDefault(networkID, -1);
+    }
+
     public static void sendHeroAttackIndicator(int target, int networkID) {
         if (networkID <0)
         {
@@ -598,18 +594,12 @@ public class SendData {
             }
         }
         attackIndicatorCache.put(networkID, target);
-        try {
-            AtomicReference<JSONObject> dataRef = clients[networkID].packet.dataRef;
-            synchronized (clients[networkID].packet.dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("attack_indicator_target", target);
-                dataRef.get().put("ui", uiObj);
-            }
-            clients[networkID].flush();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        clients[networkID].packet.addAction(new AttackIndicatorTargetAction(target));
+        clients[networkID].flush();
+    }
+
+    public static void sendLockedFloorState(boolean locked) {
+        sendActionForAll(new LockedFloorStateAction(locked));
     }
 
 

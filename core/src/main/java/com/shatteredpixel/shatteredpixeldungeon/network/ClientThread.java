@@ -13,11 +13,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.AttackIndicatorTargetAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.TexturePackAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroGoldAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroReadyAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroUUIDAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResumeButtonVisibleAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -520,6 +523,10 @@ public class ClientThread implements Callable<String> {
         packet.addAction(new HeroUUIDAction(clientHero.uuid));
         packet.packAndAddDepth(Dungeon.depth);
         packet.packAndAddIronKeysCount();
+        packet.packAndAddCounter(clientHero.getCounter());
+        packet.addAction(new CellListenerPromptAction(clientHero.cellSelector.getListener()));
+        packet.addAction(new AttackIndicatorTargetAction(SendData.getHeroAttackIndicatorTarget(threadID)));
+        packet.addAction(new ResumeButtonVisibleAction(clientHero.lastAction != null));
         packet.addInventoryFull(clientHero);
         addAllCharsToSend();
 

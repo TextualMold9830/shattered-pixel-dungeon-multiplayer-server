@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -18,7 +19,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDT
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.ui.KeyDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -367,33 +367,12 @@ public class NetworkPacket {
     }
 
     public void packAndAddIronKeysCount() {
-        try {
-            synchronized (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                JSONArray keyArray = new JSONArray();
-                for (int key: KeyDisplay.keys) {
-                    keyArray.put(key);
-                }
-                uiObj.put("iron_keys_count", keyArray);
-                dataRef.get().put("ui", uiObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        addAction(new KeysIndicatorAction());
     }
 
     public void packAndAddDepth(int depth) {
-        try {
-            synchronized (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("depth", depth);
-                dataRef.get().put("ui", uiObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        addAction(new UpdateDepthAction(depth, Dungeon.branch, Dungeon.level.feeling));
+        addAction(new LockedFloorStateAction(Dungeon.level.locked));
     }
 
     public void packAndAddPlant(int pos, Plant plant) {
@@ -438,16 +417,7 @@ public class NetworkPacket {
 
 
     public void packAndAddCounter(float portion) {
-        try {
-            synchronized (dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("counter", portion);
-                dataRef.get().put("ui", uiObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        addAction(new UpdateCounterAction(portion));
     }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
         JSONObject event = redirectPacket.toJSON();

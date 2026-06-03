@@ -631,6 +631,7 @@ public abstract class Level implements Bundlable {
 	public void seal(){
 		if (!locked) {
 			locked = true;
+			SendData.sendLockedFloorState(true);
 			for (Hero hero: Dungeon.heroes) {
 				if(hero != null) {
 					Buff.affect(hero, LockedFloor.class);
@@ -642,6 +643,7 @@ public abstract class Level implements Bundlable {
 	public void unseal(){
 		if (locked) {
 			locked = false;
+			SendData.sendLockedFloorState(false);
 			for(Hero hero: Dungeon.heroes) {
 				if (hero != null) {
 				if (hero.buff(LockedFloor.class) != null) {
