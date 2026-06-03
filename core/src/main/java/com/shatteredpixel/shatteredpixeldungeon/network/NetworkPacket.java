@@ -71,6 +71,7 @@ public class NetworkPacket {
         synchronized (dataRef) {
             try {
                 JSONObject data = dataRef.get();
+                data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
                 if (!data.has("actions")) {
                     data.put("actions", new JSONArray());
                 }
@@ -122,6 +123,7 @@ public class NetworkPacket {
         synchronized (dataRef) {
             try {
                 JSONObject data = dataRef.get();
+                data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
                 JSONArray actions = data.optJSONArray("actions");
                 if (actions == null) {
                     actions = new JSONArray();
@@ -151,6 +153,7 @@ public class NetworkPacket {
 
     public static JSONObject packChatMessages(List<JSONObject> messages) {
         JSONObject data = new JSONObject();
+        data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
         JSONArray actions = new JSONArray();
         JSONObject messagesAction = new JSONObject();
 
