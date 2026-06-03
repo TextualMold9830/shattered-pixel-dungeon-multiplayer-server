@@ -403,7 +403,7 @@ public abstract class Actor implements Bundlable {
 				ids.remove( actor.id );
 			}
 		}
-		SendData.sendActorRemoving(actor);
+//		SendData.sendActorRemoving(actor); //todo check this
 	}
 
 	//'freezes' a character in time for a specified amount of time

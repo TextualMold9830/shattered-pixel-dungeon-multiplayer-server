@@ -229,7 +229,7 @@ public class Tengu extends Mob {
 			Badges.validateBossChallengeCompleted();
 		}
 		Statistics.bossScores[1] += 2000;
-		//This will never trigger
+		//This will never trigger //todo fix it
 //		LloydsBeacon beacon = Dungeon.heroes.belongings.getItem(LloydsBeacon.class);
 //		if (beacon != null) {
 //			beacon.upgrade();
