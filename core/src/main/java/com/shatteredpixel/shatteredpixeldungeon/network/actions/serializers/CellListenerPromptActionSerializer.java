@@ -1,0 +1,15 @@
+package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
+
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+public class CellListenerPromptActionSerializer extends NetworkActionSerializer<CellListenerPromptAction> {
+    @Override
+    protected JSONObject serializeInternal(@NotNull CellListenerPromptAction obj, SerializationContext ctx, String profile) {
+        JSONObject actionObj = new JSONObject();
+        actionObj.put("prompt", obj.prompt == null ? JSONObject.NULL : obj.prompt);
+        return actionObj;
+    }
+}

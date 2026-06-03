@@ -37,7 +37,6 @@ import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.RectF;
-import org.json.JSONArray;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
