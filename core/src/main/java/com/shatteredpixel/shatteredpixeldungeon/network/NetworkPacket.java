@@ -41,27 +41,6 @@ public class NetworkPacket {
         }
     }
 
-    public void addServerType(@NotNull String serverType){
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put("server_type", serverType);
-            } catch (JSONException e) {
-                Log.w("NetworkPacket", "Failed to add serverType. " + e.toString());
-            }
-        }
-    }
-
-    public void addServerUUID() {
-        synchronized (dataRef) {
-            try {
-                dataRef.get().put("server_uuid", SPDSettings.serverUUID());
-            } catch (JSONException e) {
-                Log.w("NetworkPacket", "Failed to add action. " + e.toString());
-            }
-        }
-    }
-
     public void addAction(@NotNull JSONObject actionObj) {
         Objects.requireNonNull(actionObj);
         assert(actionObj.has("action_name"));
