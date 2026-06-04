@@ -70,7 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.KeysIndicatorAct
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResumeButtonVisibleAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCounterAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateDepthAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFloorInfoAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.AttackIndicatorTargetActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.CellListenerPromptActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroTalentsActionSerializer;
@@ -78,7 +78,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.Keys
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.LockedFloorStateActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ResumeButtonVisibleActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateCounterActionSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateDepthActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.UpdateFloorInfoActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -208,7 +208,7 @@ public class Server extends Thread {
         SERIALIZERS.register(HeroStrengthAction.class, new HeroStrengthActionSerializer());
         SERIALIZERS.register(HeroSubclassAction.class, new HeroSubclassActionSerializer());
         SERIALIZERS.register(HeroTalentsAction.class, new HeroTalentsActionSerializer());
-        SERIALIZERS.register(UpdateDepthAction.class, new UpdateDepthActionSerializer());
+        SERIALIZERS.register(UpdateFloorInfoAction.class, new UpdateFloorInfoActionSerializer());
         SERIALIZERS.register(LockedFloorStateAction.class, new LockedFloorStateActionSerializer());
         SERIALIZERS.register(KeysIndicatorAction.class, new KeysIndicatorActionSerializer());
         SERIALIZERS.register(UpdateCounterAction.class, new UpdateCounterActionSerializer());

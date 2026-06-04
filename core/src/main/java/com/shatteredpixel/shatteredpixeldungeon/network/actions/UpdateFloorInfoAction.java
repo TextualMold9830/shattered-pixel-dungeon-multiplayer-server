@@ -4,13 +4,13 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class UpdateDepthAction implements NetworkAction {
+public class UpdateFloorInfoAction implements NetworkAction {
     public final int depth;
     public final int branch;
     public final Level.Feeling feeling;
 
     @Contract(pure = true)
-    public UpdateDepthAction(int depth, int branch, Level.Feeling feeling) {
+    public UpdateFloorInfoAction(int depth, int branch, Level.Feeling feeling) {
         this.depth = depth;
         this.branch = branch;
         this.feeling = feeling;
@@ -18,6 +18,6 @@ public class UpdateDepthAction implements NetworkAction {
 
     @Override
     public @NotNull String actionName() {
-        return "update_depth";
+        return "update_floor_info";
     }
 }
