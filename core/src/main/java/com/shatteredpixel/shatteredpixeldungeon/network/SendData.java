@@ -97,7 +97,7 @@ public class SendData {
         if (actor == null) {
             return;
         }
-        if (actor instanceof Buff) {
+        if (actor instanceof Buff) { //todo fix this
             sendBuff((Buff) actor, false);
             return;
         }
