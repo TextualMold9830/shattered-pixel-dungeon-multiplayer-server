@@ -329,10 +329,6 @@ public class NetworkPacket {
         }
     }
 
-
-    public void packAndAddCounter(float portion) {
-        addAction(new UpdateCounterAction(portion));
-    }
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
         JSONObject event = redirectPacket.toJSON();
         event.put("action_name", "redirect_server");
