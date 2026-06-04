@@ -59,12 +59,12 @@ public class SendData {
         }
     }
 
-    public static void sendLevel(Level level, int ID) {
+    public static void sendLevel(Level level, Hero hero) { //keep because of observer
+        int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
             PlantCache.clear();
             TrapCache.clear();
             clients[ID].packet.packAndAddLevel(level, clients[ID].clientHero);
-            clients[ID].flush();
         }
     }
 
@@ -84,19 +84,6 @@ public class SendData {
                 client.packet.packAndAddIronKeysCount();
                 client.flush();
             }
-        }
-    }
-
-    public static void sendDepth(int depth) {
-        for (int i = 0; i < clients.length; i++) {
-            sendDepth(i, depth);
-        }
-    }
-
-    public static void sendDepth(int ID, int depth) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddDepth(depth);
-            clients[ID].flush();
         }
     }
 
@@ -190,10 +177,12 @@ public class SendData {
             client.flush();
         }
     }
-    public static void sendAllChars(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].addAllCharsToSend();
-            clients[ID].flush();
+
+    public static void sendAllChars() {
+        for (int ID = 0; ID < clients.length; ID++) {
+            if (clients[ID] != null) {
+                clients[ID].addAllCharsToSend();
+            }
         }
     }
 

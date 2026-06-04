@@ -369,12 +369,7 @@ public class NetworkPacket {
     public void packAndAddIronKeysCount() {
         addAction(new KeysIndicatorAction());
     }
-
-    public void packAndAddDepth(int depth) {
-        addAction(new UpdateFloorInfoAction(depth, Dungeon.branch, Dungeon.level.feeling));
-        addAction(new LockedFloorStateAction(Dungeon.level.locked));
-    }
-
+    
     public void packAndAddPlant(int pos, Plant plant) {
         PlantDTO dto = new PlantDTO(pos, plant);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
