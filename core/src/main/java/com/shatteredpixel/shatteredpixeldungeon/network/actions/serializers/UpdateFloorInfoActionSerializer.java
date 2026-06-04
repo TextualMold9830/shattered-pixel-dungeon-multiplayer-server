@@ -1,13 +1,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateDepthAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFloorInfoAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-public class UpdateDepthActionSerializer extends NetworkActionSerializer<UpdateDepthAction> {
+public class UpdateFloorInfoActionSerializer extends NetworkActionSerializer<UpdateFloorInfoAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull UpdateDepthAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull UpdateFloorInfoAction obj, SerializationContext ctx, String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("depth", obj.depth);
         actionObj.put("branch", obj.branch);

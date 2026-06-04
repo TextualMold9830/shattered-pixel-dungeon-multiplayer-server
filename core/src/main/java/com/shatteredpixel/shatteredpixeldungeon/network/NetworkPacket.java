@@ -371,7 +371,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddDepth(int depth) {
-        addAction(new UpdateDepthAction(depth, Dungeon.branch, Dungeon.level.feeling));
+        addAction(new UpdateFloorInfoAction(depth, Dungeon.branch, Dungeon.level.feeling));
         addAction(new LockedFloorStateAction(Dungeon.level.locked));
     }
 
