@@ -495,7 +495,7 @@ public class ClientThread implements Callable<String> {
         packet.addAction(new UpdateFloorInfoAction(Dungeon.depth, Dungeon.branch, Dungeon.level != null? Dungeon.level.feeling: Level.Feeling.NONE));
         packet.addAction(new LockedFloorStateAction(Dungeon.level.locked));
         packet.addAction(new KeysIndicatorAction());
-        packet.packAndAddCounter(clientHero.getCounter());
+        packet.addAction(new UpdateCounterAction(clientHero.getCounter()));
         packet.addAction(new CellListenerPromptAction(clientHero.cellSelector.getListener()));
         packet.addAction(new AttackIndicatorTargetAction(SendData.getHeroAttackIndicatorTarget(threadID)));
         packet.addAction(new ResumeButtonVisibleAction(clientHero.lastAction != null));
