@@ -23,15 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
@@ -58,12 +50,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.*;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroActorIdAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.DungeonGenerateLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.SwitchLevelEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -73,7 +62,6 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
 import com.watabou.utils.*;
-
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,8 +70,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.shatteredpixel.shatteredpixeldungeon.HeroHelp.getHeroID;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.*;
 import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 public class Dungeon {
@@ -515,12 +501,14 @@ public class Dungeon {
 				hero.curAction = hero.lastAction = null;
 
 				observe(hero);
-				sendDepth(Dungeon.depth);
-				sendLevel(level, hero.networkID);
-				sendAllChars(hero.networkID);
-				sendAction(hero, new HeroActorIdAction(hero.id()));
+				SendData.sendLevel(level, hero);
+				SendData.sendAction(hero, new HeroActorIdAction(hero.id()));
 			}
 		}
+		SendData.sendActionForAll(new UpdateFloorInfoAction(Dungeon.depth, Dungeon.branch, Dungeon.level.feeling));
+		SendData.sendActionForAll(new LockedFloorStateAction(Dungeon.level.locked));
+		SendData.sendAllChars();
+
 		Server.pluginManager.fireEvent(new SwitchLevelEvent());
 		try {
 			saveAll();
@@ -1050,10 +1038,9 @@ public class Dungeon {
 		BArray.xor(oldLevelVisitedChache, level.visited, oldLevelVisitedChache);
 		BArray.xor(oldLevelMappedChache, level.mapped, oldLevelMappedChache);
 		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache); // oldLevelMappedChache is a full diff array
-		sendActionForAll(new UpdateCellsAction(level, oldLevelMappedChache));
+		SendData.sendActionForAll(new UpdateCellsAction(level, oldLevelMappedChache));
 		if (send) {
-			sendAction(hero, new UpdateFovAction(hero, true));
-			SendData.flush(hero);
+			SendData.sendAction(hero, new UpdateFovAction(hero, true));
 		}
 	}
 
