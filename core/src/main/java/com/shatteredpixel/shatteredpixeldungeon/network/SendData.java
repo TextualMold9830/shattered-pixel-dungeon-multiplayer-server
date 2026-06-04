@@ -12,15 +12,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.AttackIndicatorTargetAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.NetworkAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteStateAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -75,15 +68,6 @@ public class SendData {
         if ((ID != -1) && (clients[ID] != null)) {
             clients[ID].packet.addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
             clients[ID].flush();
-        }
-    }
-
-    public static void sendIronKeysCount() {
-        for (ClientThread client: clients) {
-            if (client != null) {
-                client.packet.packAndAddIronKeysCount();
-                client.flush();
-            }
         }
     }
 
