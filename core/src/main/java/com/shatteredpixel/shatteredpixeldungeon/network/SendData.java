@@ -34,24 +34,6 @@ public class SendData {
 
     //---------------------------Level
 
-    public static void addToSendLevelVisitedStateFull(Level level, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddLevelCells(level);
-        }
-    }
-
-    public static void addToSendLevelMappedState(Level level, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddLevelCells(level);
-        }
-    }
-
-    public static void addToSendLevelMappedState(Level level) {
-        for (int ID =0; ID < clients.length; ID++){
-            addToSendLevelMappedState(level, ID);
-        }
-    }
-
     public static void sendLevel(Level level, Hero hero) { //keep because of observer
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {

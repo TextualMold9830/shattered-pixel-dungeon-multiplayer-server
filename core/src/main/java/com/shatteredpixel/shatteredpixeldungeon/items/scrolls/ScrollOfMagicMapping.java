@@ -29,12 +29,13 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.addToSendLevelMappedState;
 
 public class ScrollOfMagicMapping extends Scroll {
 
@@ -74,7 +75,10 @@ public class ScrollOfMagicMapping extends Scroll {
 			}
 		}
 		GameScene.updateFog();
-		addToSendLevelMappedState(Dungeon.level);
+
+		SendData.sendActionForAll(new SetLevelStatesAction(Dungeon.level));
+		SendData.sendActionForAll(new SetLevelTilesAction(Dungeon.level)); // if some tiles was discovered, we should update them. //todo think about removing this
+
 		GLog.i( Messages.get(this, "layout") );
 		if (noticed) {
 			Sample.INSTANCE.play( Assets.Sounds.SECRET );
