@@ -242,6 +242,7 @@ public class NetworkPacket {
         addAction(payload);
     }
 
+    @SuppressWarnings("unused") //keep it for future implementation
     public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
         //todo implement this
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
