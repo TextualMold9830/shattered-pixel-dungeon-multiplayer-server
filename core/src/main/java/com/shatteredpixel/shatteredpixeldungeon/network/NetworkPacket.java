@@ -180,22 +180,6 @@ public class NetworkPacket {
         addAction(heroPatch);
     }
 
-    public void packAndAddShield(int id, int shielding) {
-        try {
-            JSONObject payload = new JSONObject();
-            payload.put("id", id);
-            payload.put("type", "char");
-            payload.put("shield", shielding);
-            
-            JSONObject event = new JSONObject();
-            event.put("action_name", "actor_update");
-            event.put("payload", payload);
-            addAction(event);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
         addAction(new SetLevelVisualsAction(level));

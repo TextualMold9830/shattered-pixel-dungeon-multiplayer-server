@@ -125,17 +125,6 @@ public class SendData {
         }
     }
 
-
-    public static void sendCharShield(int id, int shielding) {
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            client.packet.packAndAddShield(id, shielding);
-            client.flush();
-        }
-    }
-
     public static void sendAllChars() {
         for (int ID = 0; ID < clients.length; ID++) {
             if (clients[ID] != null) {
