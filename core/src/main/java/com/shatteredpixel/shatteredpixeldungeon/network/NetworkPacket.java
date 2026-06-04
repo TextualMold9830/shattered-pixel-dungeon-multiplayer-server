@@ -237,43 +237,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddLevelParams(Level level)
-    {
-        addAction(new ResizeLevelAction(level));
-        addAction(new SetLevelVisualsAction(level));
-    }
-
-    @NotNull
-    public JSONObject packBag(Bag bag) {
-        if ((bag.owner != null) && (bag.owner instanceof Hero)) {
-            return packBag(bag, (Hero) bag.owner);
-        } else {
-            return packBag(bag, null);
-        }
-    }
-
-    @NotNull
-    public JSONObject packBag(@NotNull Bag bag, Hero hero) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
-        Object serialized = ctx.serialize(bag, "inventory");
-        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
-    }
-
-    @NotNull
-    public JSONObject packHeroBags(@NotNull Belongings belongings) {
-        Bag backpack = belongings.backpack;
-        return packBag(backpack);
-    }
-
-    @NotNull
-    public JSONObject packHeroBags(@NotNull Hero hero) {
-        if (hero.belongings == null) {
-            Log.w("Packet", "Hero belongings is null");
-            return new JSONObject();
-        }
-        return packHeroBags(hero.belongings);
-    }
-
     public void addInventoryFull(@NotNull Hero hero) {
         if (hero == null) {
             throw new IllegalArgumentException("hero is null");
