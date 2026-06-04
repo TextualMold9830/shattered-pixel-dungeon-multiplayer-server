@@ -1,15 +1,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
@@ -235,13 +232,6 @@ public class NetworkPacket {
         for (int pos = 0; pos < level.length(); pos++) {
             packAndAddTrap(pos, level.traps.get(pos, null));
         }
-    }
-
-    public void addInventoryFull(@NotNull Hero hero) {
-        if (hero == null) {
-            throw new IllegalArgumentException("hero is null");
-        }
-        packAndAddInventoryRebuild(hero);
     }
 
     public void packAndAddInventoryRebuild(@NotNull Hero hero) {
