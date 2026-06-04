@@ -20,6 +20,7 @@ package com.nikita22007.multiplayer.server.ui;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
@@ -27,7 +28,7 @@ import java.util.Locale;
 public class Banner {
 
     public static void show(@NotNull Hero actor, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        SendData.sendShowBanner(actor, banner, color, fadeTime, showTime);
+        SendData.sendAction(actor,new ShowBannerAction(banner, color, fadeTime, showTime));
     }
 
     public static void show(@NotNull Hero actor, @NotNull BannerSprites.Type banner, int color, float fadeTime) {

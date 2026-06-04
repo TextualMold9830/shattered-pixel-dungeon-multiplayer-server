@@ -43,17 +43,8 @@ public class SendData {
         }
     }
 
-
-    //---------------------------UI
-    public static void sendShowBanner(@NotNull Hero hero, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        final int ID = hero.networkID;
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addAction(new ShowBannerAction(banner, color, fadeTime, showTime));
-            clients[ID].flush();
-        }
-    }
-
     //-----------------------------Interlevel Scene
+    // we keep his section because of double force flash
 
     public static void sendInterLevelSceneForAll(InterlevelSceneAction interlevelSceneParams) {
         for (int i = 0; i < clients.length; i++) {
