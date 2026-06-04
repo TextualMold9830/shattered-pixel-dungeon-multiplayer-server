@@ -119,6 +119,7 @@ public class SendData {
         }
     }
 
+    @SuppressWarnings("unused") // todo should we use this?
     public static void sendActorRemoving(Actor actor) {
         if (actor instanceof Buff) {
             sendBuff((Buff) actor, true);
