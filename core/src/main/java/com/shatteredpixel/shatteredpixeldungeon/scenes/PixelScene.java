@@ -26,6 +26,7 @@ import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -410,8 +411,12 @@ public class PixelScene extends Scene {
 	}
 	
 	public static void shake( float magnitude, float duration){
-		magnitude *= SPDSettings.screenShake();
-		Camera.main.shake(magnitude, duration);
+		//magnitude *= SPDSettings.screenShake(); //client-side config
+		com.nikita22007.multiplayer.noosa.Camera.shake(magnitude, duration);
+	}
+
+	public static void shake( float magnitude, float duration, Hero hero){
+		com.nikita22007.multiplayer.noosa.Camera.shake(magnitude, duration, hero);
 	}
 
 	//returns insets for the common case of all on top/bottom and only blocking on left/right

@@ -26,7 +26,9 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAct
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelVisualsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowStatusAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShakeCameraAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.DiscoverTileActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ShakeCameraActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.FlareVisualActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.GameSceneFlashActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SurpriseVisualAction;
@@ -197,6 +199,7 @@ public class Server extends Thread {
         SERIALIZERS.register(SetLevelVisualsAction.class, new SetLevelVisualsActionSerializer());
         SERIALIZERS.register(ResizeLevelAction.class, new ResizeLevelActionSerializer());
         SERIALIZERS.register(ShowStatusAction.class, new ShowStatusActionSerializer());
+        SERIALIZERS.register(ShakeCameraAction.class, new ShakeCameraActionSerializer());
         SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
         SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
         SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
