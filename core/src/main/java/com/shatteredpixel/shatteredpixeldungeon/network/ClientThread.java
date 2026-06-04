@@ -94,11 +94,6 @@ public class ClientThread implements Callable<String> {
         updateTask();
     }
 
-    private void sendServerUUID() {
-        packet.addServerUUID();
-        forceFlush();
-    }
-
     protected void updateTask() {
         if ((jsonCall == null) || (jsonCall.isDone())) {
             jsonCall = new FutureTask<String>(this);
@@ -353,21 +348,6 @@ public class ClientThread implements Callable<String> {
         }
     }
 
-    //some functions
-    protected void sendServerType(){
-        packet.addServerType(SERVER_TYPE);
-        forceFlush();
-    }
-    protected void sendServerInfo() {
-        try {
-            writeStream.write(new JSONObject().put("server_info", Server.serverInfo().toString()).toString() );
-            writeStream.write("\n");
-            writeStream.flush();
-            flush();
-        } catch (IOException e) {
-            //Maybe the client disconnected
-        }
-    }
     protected void InitPlayerHero(String className, String uuid) {
         HeroClass curClass;
         try {
