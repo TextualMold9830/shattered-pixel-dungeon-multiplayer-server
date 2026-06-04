@@ -243,16 +243,6 @@ public class NetworkPacket {
         addAction(new SetLevelVisualsAction(level));
     }
 
-
-    public void packAndAddLevelCells(Level level) {
-        // Redundant, but kept for legacy proxying if needed. 
-        // We'll just call the full tiles/states updates.
-        addAction(new SetLevelTilesAction(level));
-        addAction(new SetLevelStatesAction(level));
-    }
-
-
-
     @NotNull
     public JSONObject packBag(Bag bag) {
         if ((bag.owner != null) && (bag.owner instanceof Hero)) {
