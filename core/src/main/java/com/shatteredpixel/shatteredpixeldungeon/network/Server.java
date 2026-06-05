@@ -108,7 +108,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BlobSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CharSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
@@ -160,8 +159,6 @@ public class Server extends Thread {
         SERIALIZERS.register(Char.class, "default", new CharSerializer());
         SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
-        SERIALIZERS.register(Actor.class, "hero", new ActorSerializer());
-        SERIALIZERS.register(Actor.class, "remove", new ActorRemovalSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
