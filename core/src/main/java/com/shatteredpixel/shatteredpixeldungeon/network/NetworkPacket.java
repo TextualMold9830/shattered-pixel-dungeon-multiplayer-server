@@ -1,7 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -107,19 +106,12 @@ public class NetworkPacket {
         storage.getJSONArray(token).put(data);
     }
 
-    public void packAndAddActor(Actor actor) {
+    public void packAndAddChar(@NotNull Char actor) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(actor, "default");
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
             String actionName;
-            if (actor instanceof Char) {
-                actionName = "char_update";
-            } else if (actor instanceof Blob) {
-                actionName = "blob_update";
-            } else {
-                Log.w("NetworkPacket", "Unsupported actor update class: " + actor.getClass().toString());
-                return;
-            }
+            actionName = "char_update";
 
             JSONObject event = new JSONObject();
             event.put("action_name", actionName);
@@ -128,6 +120,19 @@ public class NetworkPacket {
         }
     }
 
+    public void packAndAddBlob(@NotNull Blob actor) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+        Object serialized = ctx.serialize(actor, "default");
+        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            String actionName;
+            actionName = "blob_update";
+
+            JSONObject event = new JSONObject();
+            event.put("action_name", actionName);
+            event.put("payload", serialized);
+            addAction(event);
+        }
+    }
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
         addAction(new SetLevelVisualsAction(level));

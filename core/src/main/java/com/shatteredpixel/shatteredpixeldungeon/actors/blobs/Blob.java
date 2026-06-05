@@ -52,7 +52,13 @@ public class Blob extends Actor {
 	private static final String CUR		= "cur";
 	private static final String START	= "start";
 	private static final String LENGTH	= "length";
-	
+
+	@Override
+	protected void onAdd() {
+		super.onAdd();
+		SendData.sendBlob(this);
+	}
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
@@ -131,7 +137,7 @@ public class Blob extends Actor {
 			}
 		}
 
-		SendData.sendActor(this);
+		SendData.sendBlob(this);
 		return true;
 	}
 

@@ -112,9 +112,7 @@ public abstract class Actor implements Bundlable {
 		time = Float.MAX_VALUE;
 	}
 	
-	protected void onAdd() {
-		SendData.sendActor(this);
-	}
+	protected void onAdd() {}
 	
 	protected void onRemove() {}
 
@@ -389,7 +387,6 @@ public abstract class Actor implements Bundlable {
 				add(buff);
 			}
 		}
-		SendData.sendActor(actor);
 	}
 	
 	public static synchronized void remove( Actor actor ) {

@@ -5,6 +5,7 @@ import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -91,20 +92,22 @@ public class SendData {
     }
 
     //----------Actors
-    public static void sendActor(Actor actor) {
-        if (actor == null) {
-            return;
-        }
-        if (actor instanceof Buff) { //todo fix this
-            sendBuff((Buff) actor, false);
-            return;
-        }
+
+    public static void sendBlob(@NotNull Blob actor) {
         for (ClientThread client : clients) {
             if (client == null) {
                 continue;
             }
-            client.packet.packAndAddActor(actor);
-            client.flush();
+            client.packet.packAndAddBlob(actor);
+        }
+    }
+
+    public static void sendChar(@NotNull Char actor) {
+        for (ClientThread client : clients) {
+            if (client == null) {
+                continue;
+            }
+            client.packet.packAndAddChar(actor);
         }
     }
 
