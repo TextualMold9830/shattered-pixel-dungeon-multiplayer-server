@@ -138,6 +138,8 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitter
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.ChatMessageActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -179,6 +181,7 @@ public class Server extends Thread {
         SERIALIZERS.register(Emitter.class, "stop", new EmitterStopSerializer());
 
         //actions
+        SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
         SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
         SERIALIZERS.register(SurpriseVisualAction.class, new SurpriseVisualActionSerializer());
         SERIALIZERS.register(FlareVisualAction.class, new FlareVisualActionSerializer());
