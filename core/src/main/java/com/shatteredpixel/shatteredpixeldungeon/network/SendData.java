@@ -479,6 +479,10 @@ public class SendData {
 
     //--------------------------- Events/Actions
     public static void sendAction(@Nullable Hero hero, ImmutableNetworkAction networkAction) {
+        sendLateLiveStateAction(hero, networkAction);
+    }
+
+    public static void sendLateLiveStateAction(@Nullable Hero hero, LiveStateNetworkAction  networkAction) {
         if (hero == null) return;
         int networkId = hero.networkID;
         if (networkId < 0) {
@@ -490,7 +494,7 @@ public class SendData {
         }
         var client = clients[networkId];
         if (client != null) {
-            client.packet.addAction(networkAction);
+            client.packet.addLateLiveStateAction(networkAction);
         }
     }
 

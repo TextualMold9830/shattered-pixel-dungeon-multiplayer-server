@@ -511,7 +511,7 @@ public class ClientThread implements Callable<String> {
         addAllCharsToSend();
 
         Dungeon.observe(clientHero, false);
-        packet.addAction(new UpdateFovAction(clientHero, true));
+        packet.addLateLiveStateAction(new UpdateFovAction(clientHero));
         //TODO send all  information
         for (Actor actor: Actor.all()) {
             if (actor instanceof Buff)

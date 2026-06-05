@@ -8,15 +8,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class UpdateFovAction implements ImmutableNetworkAction {
+public class UpdateFovAction implements LiveStateNetworkAction {
     @Nullable
     private final Hero hero;
     private final boolean @Nullable [] visible;
 
     @Contract(pure = true)
-    public UpdateFovAction(@NotNull Hero hero, boolean allowLateSerialization) {
-        this.hero = allowLateSerialization ? hero : null;
-        this.visible = allowLateSerialization ? null : Arrays.copyOf(hero.fieldOfView, hero.fieldOfView.length);
+    public UpdateFovAction(@NotNull Hero hero) {
+        this.hero = hero;
+        this.visible = null;
+    }
+
+    @Contract(pure = true)
+    public UpdateFovAction(boolean @NotNull [] visible) {
+        this.hero = null;
+        this.visible = Arrays.copyOf(visible, visible.length);
     }
 
     @Contract(pure = true)

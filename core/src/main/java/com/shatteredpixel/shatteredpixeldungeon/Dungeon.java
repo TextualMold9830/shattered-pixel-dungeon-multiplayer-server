@@ -1040,7 +1040,7 @@ public class Dungeon {
 		BArray.or(oldLevelMappedChache, oldLevelVisitedChache, oldLevelMappedChache); // oldLevelMappedChache is a full diff array
 		SendData.sendActionForAll(new UpdateCellsAction(level, oldLevelMappedChache));
 		if (send) {
-			SendData.sendAction(hero, new UpdateFovAction(hero, true));
+			SendData.sendLateLiveStateAction(hero, new UpdateFovAction(hero));
 		}
 	}
 
