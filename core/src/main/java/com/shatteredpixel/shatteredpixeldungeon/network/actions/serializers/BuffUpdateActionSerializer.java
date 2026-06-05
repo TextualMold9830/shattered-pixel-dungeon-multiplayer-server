@@ -1,25 +1,27 @@
-package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
+package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
 import com.nikita22007.multiplayer.utils.Text;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.watabou.noosa.Image;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BuffSerializer implements Serializer<Buff> {
-
+public class BuffUpdateActionSerializer extends NetworkActionSerializer<BuffUpdateAction> {
     @Override
-    public Object serialize(Buff buff, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull BuffUpdateAction obj, SerializationContext ctx, String profile) {
         JSONObject buffObj = new JSONObject();
+        Buff buff = obj.buff;
         int id = buff.id();
-        boolean remove = "removed".equals(profile);
         
         try {
             buffObj.put("id", id);
             buffObj.put("icon", buff.icon());
             Actor target = buff.target;
-            buffObj.put("target_id", (target == null || remove) ? JSONObject.NULL : target.id());
+            buffObj.put("target_id", target == null ? JSONObject.NULL : target.id());
             buffObj.put("desc", Text.of(buff, "desc").toJSON());
             buffObj.put("name", Text.of(buff, "name").toJSON());
             
@@ -32,7 +34,7 @@ public class BuffSerializer implements Serializer<Buff> {
             buffObj.put("hardlight", hardlight);
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return new JSONObject();
         }
 
         return buffObj;
