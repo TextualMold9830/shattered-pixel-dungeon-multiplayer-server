@@ -112,17 +112,10 @@ public class NetworkPacket {
 
 
     public void packAndAddChar(@NotNull Char actor) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, "default");
-        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            String actionName;
-            actionName = "char_update";
-
-            JSONObject event = new JSONObject();
-            event.put("action_name", actionName);
-            event.put("payload", serialized);
-            addAction(event);
+        if (actor.id() <= 0) {
+            return;
         }
+        packAndAdd(new CharUpdateAction(actor));
     }
 
     public void packAndAddBlob(@NotNull Blob actor) {

@@ -19,18 +19,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Compresses accumulated packet actions without changing non-cell event order.
+ * <p> Compresses accumulated packet actions without changing non-cell event order. </p>
  *
- * Level cell diffs are allowed to move across other actions, but their own order is preserved:
+ * <p>Level cell diffs are allowed to move across other actions, but their own order is preserved:
  * later cell updates override earlier cell updates, and a later level snapshot overrides all
- * earlier pending cell updates for the same data kind.
+ * earlier pending cell updates for the same data kind. </p>
  *
- * A cell update is absorbed into the latest matching snapshot array when possible:
- * - update_cells.tiles updates the latest set_level_tiles.tiles snapshot;
- * - update_cells.states updates the latest set_level_states.states snapshot;
- * - if only one snapshot array exists, the uncovered part of update_cells remains pending;
- * - if both tiles and states are covered by snapshots, update_cells is not emitted.
- *
+ * <ul>A cell update is absorbed into the latest matching snapshot array when possible:
+ * <li>update_cells.tiles updates the latest set_level_tiles.tiles snapshot;</li>
+ * <li>update_cells.states updates the latest set_level_states.states snapshot; </li>
+ * <li>if only one snapshot array exists, the uncovered part of update_cells remains pending;</li>
+ * <li>if both tiles and states are covered by snapshots, update_cells is not emitted.</li>
+ * </ul>
  * The returned list is always new; retained live actions may still be compacted in place.
  */
 class NetworkPacketCompressor {
