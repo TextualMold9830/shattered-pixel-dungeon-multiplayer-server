@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -97,39 +98,12 @@ public class NetworkPacket {
         storage.getJSONArray(token).put(data);
     }
 
-    public void addChatMessage(JSONObject message) {
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
-                JSONArray actions = data.optJSONArray("actions");
-                if (actions == null) {
-                    actions = new JSONArray();
-                    data.put("actions", actions);
-                }
-
-                JSONObject messagesAction = null;
-                for (int i = 0; i < actions.length(); i++) {
-                    JSONObject action = actions.optJSONObject(i);
-                    if (action != null && "messages".equals(action.optString("action_name"))) {
-                        messagesAction = action;
-                        break;
-                    }
-                }
-                if (messagesAction == null) {
-                    messagesAction = new JSONObject();
-                    messagesAction.put("action_name", "messages");
-                    messagesAction.put("messages", new JSONArray());
-                    actions.put(messagesAction);
-                }
-                messagesAction.getJSONArray("messages").put(message);
-            } catch (JSONException e) {
-                Log.w("NetworkPacket", "Failed to add message. " + e.toString());
-            }
-        }
+    public void addChatMessage(ChatMessageAction message) {
+        addAction(message);
     }
 
-    public static JSONObject packChatMessages(List<JSONObject> messages) {
+    public static JSONObject packChatMessages(List<ChatMessageAction> messages) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         JSONObject data = new JSONObject();
         data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
         JSONArray actions = new JSONArray();
@@ -137,8 +111,12 @@ public class NetworkPacket {
 
         messagesAction.put("action_name", "messages");
         JSONArray messagesArray = new JSONArray();
-        for (JSONObject message : messages) {
-            messagesArray.put(message);
+        for (ChatMessageAction message : messages) {
+            JSONObject messageObj = (JSONObject) ctx.serialize(message);
+            if (messageObj != null) {
+                messageObj.remove("action_name");
+                messagesArray.put(messageObj);
+            }
         }
         messagesAction.put("messages", messagesArray);
         actions.put(messagesAction);

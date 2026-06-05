@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -46,7 +47,6 @@ import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 public class ClientThread implements Callable<String> {
 
     public static final String CHARSET = "UTF-8";
-    public static final String SERVER_TYPE = "SPD";
 
     protected OutputStreamWriter writeStream;
     protected BufferedWriter writer;
@@ -60,7 +60,7 @@ public class ClientThread implements Callable<String> {
     protected Hero clientHero;
 
     protected final NetworkPacket packet = new NetworkPacket();
-    private final ArrayList<JSONObject> pendingChatMessages = new ArrayList<>();
+    private final ArrayList<ChatMessageAction> pendingChatMessages = new ArrayList<>();
 
     @NotNull
     private FutureTask<String> jsonCall;
@@ -311,14 +311,14 @@ public class ClientThread implements Callable<String> {
         }
     }
 
-    protected void enqueueChatMessage(@NotNull JSONObject messageObj) {
+    protected void enqueueChatMessage(@NotNull ChatMessageAction message) {
         synchronized (pendingChatMessages) {
-            pendingChatMessages.add(messageObj);
+            pendingChatMessages.add(message);
         }
     }
 
     protected void flushPendingChatMessages() {
-        ArrayList<JSONObject> messages;
+        ArrayList<ChatMessageAction> messages;
         synchronized (pendingChatMessages) {
             if (pendingChatMessages.isEmpty()) {
                 return;

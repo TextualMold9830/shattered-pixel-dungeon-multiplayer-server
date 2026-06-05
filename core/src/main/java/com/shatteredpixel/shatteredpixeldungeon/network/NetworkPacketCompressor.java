@@ -48,6 +48,7 @@ class NetworkPacketCompressor {
         private final LinkedHashMap<Integer, Integer> pendingStates = new LinkedHashMap<>();
         private JSONArray currentTiles;
         private JSONArray currentStates;
+        private JSONObject currentMessagesAction;
 
         void add(Object actionValue) {
             actions.add(actionValue);
@@ -75,9 +76,38 @@ class NetworkPacketCompressor {
                 case "update_cells":
                     addCellsUpdate(action);
                     break;
+                case "messages":
+                    addMessagesUpdate(action);
+                    break;
                 default:
                     actions.add(action);
                     break;
+            }
+        }
+
+        private void addMessagesUpdate(JSONObject action) {
+            if (currentMessagesAction == null) {
+                currentMessagesAction = new JSONObject();
+                currentMessagesAction.put("action_name", "messages");
+                currentMessagesAction.put("messages", new JSONArray());
+                actions.add(currentMessagesAction);
+            }
+            JSONArray messagesArray = currentMessagesAction.optJSONArray("messages");
+            if (messagesArray == null) {
+                messagesArray = new JSONArray();
+                currentMessagesAction.put("messages", messagesArray);
+            }
+            if (action.has("messages")) {
+                JSONArray incomingMessages = action.optJSONArray("messages");
+                if (incomingMessages != null) {
+                    for (int i = 0; i < incomingMessages.length(); i++) {
+                        messagesArray.put(incomingMessages.opt(i));
+                    }
+                }
+            } else if (action.has("text")) {
+                JSONObject messageObj = new JSONObject();
+                messageObj.put("text", action.opt("text"));
+                messagesArray.put(messageObj);
             }
         }
 

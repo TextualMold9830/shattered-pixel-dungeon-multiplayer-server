@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -201,18 +202,13 @@ public class SendData {
     }
 
     public static void sendMessageToAll(LocalizedString message) {
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
+        ChatMessageAction messageAction = new ChatMessageAction(message);
         for (int i = 0; i < clients.length; i++) {
             ClientThread client = clients[i];
             if (client == null) {
                 continue;
             }
-            client.packet.addChatMessage(messageObj);
+            client.packet.addChatMessage(messageAction);
             client.flush();
         }
     }
@@ -222,18 +218,13 @@ public class SendData {
     }
 
     public static void sendMessage(Integer ID, LocalizedString message) {
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
-        if(ID != null) {
+        ChatMessageAction messageAction = new ChatMessageAction(message);
+        if (ID != null) {
             ClientThread client = clients[ID];
             if (client == null) {
                 return;
             }
-            client.packet.addChatMessage(messageObj);
+            client.packet.addChatMessage(messageAction);
             client.flush();
         } else {
             sendMessageToAll(message);
@@ -245,24 +236,18 @@ public class SendData {
     }
 
     public static void sendMessageExcept(Integer exceptId, LocalizedString message) {
-        if (exceptId == null)
-        {
+        if (exceptId == null) {
             sendMessageToAll(message);
             return;
         }
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
+        ChatMessageAction messageAction = new ChatMessageAction(message);
         for (int i = 0; i < clients.length; i++) {
             if (i == exceptId) continue;
             ClientThread client = clients[i];
             if (client == null) {
                 continue;
             }
-            client.packet.addChatMessage(messageObj);
+            client.packet.addChatMessage(messageAction);
             client.flush();
         }
     }
@@ -274,13 +259,10 @@ public class SendData {
     }
 
     public static void enqueueChatMessageToAll(LocalizedString message) {
-        JSONObject messageObj = packMessage(message);
-        if (messageObj == null) {
-            return;
-        }
+        ChatMessageAction messageAction = packMessage(message);
         for (ClientThread client : clients) {
             if (client != null) {
-                client.enqueueChatMessage(messageObj);
+                client.enqueueChatMessage(messageAction);
             }
         }
     }
@@ -294,12 +276,9 @@ public class SendData {
             enqueueChatMessageToAll(message);
             return;
         }
-        JSONObject messageObj = packMessage(message);
-        if (messageObj == null) {
-            return;
-        }
+        ChatMessageAction messageAction = packMessage(message);
         if (ID >= 0 && ID < clients.length && clients[ID] != null) {
-            clients[ID].enqueueChatMessage(messageObj);
+            clients[ID].enqueueChatMessage(messageAction);
         }
     }
 
@@ -312,17 +291,14 @@ public class SendData {
             enqueueChatMessageToAll(message);
             return;
         }
-        JSONObject messageObj = packMessage(message);
-        if (messageObj == null) {
-            return;
-        }
+        ChatMessageAction messageAction = packMessage(message);
         for (int i = 0; i < clients.length; i++) {
             if (i == exceptId) {
                 continue;
             }
             ClientThread client = clients[i];
             if (client != null) {
-                client.enqueueChatMessage(messageObj);
+                client.enqueueChatMessage(messageAction);
             }
         }
     }
@@ -344,12 +320,8 @@ public class SendData {
         }
     }
 
-    private static JSONObject packMessage(LocalizedString message) {
-        try {
-            return new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return null;
-        }
+    private static ChatMessageAction packMessage(LocalizedString message) {
+        return new ChatMessageAction(message);
     }
 
 
