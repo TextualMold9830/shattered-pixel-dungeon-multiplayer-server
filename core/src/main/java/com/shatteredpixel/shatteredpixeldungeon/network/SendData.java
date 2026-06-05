@@ -113,7 +113,7 @@ public class SendData {
     @SuppressWarnings("unused") // todo should we use this?
     public static void sendActorRemoving(@NotNull Actor actor) {
         if (actor instanceof Buff) {
-            sendBuff((Buff) actor, true);
+            sendActionForAll(new BuffRemoveAction((Buff) actor));
             return;
         }
         SendData.sendActionForAll(new ActorRemoveAction(actor));
@@ -341,17 +341,6 @@ public class SendData {
         }
     }
 
-    //---------------------------Buffs
-    public static void sendBuff(Buff buff, boolean remove) {
-        if (remove) {
-            sendActionForAll(new BuffRemoveAction(buff));
-        } else {
-            sendLateLiveStateActionForAll(new BuffUpdateAction(buff));
-        }
-    }
-    public static void sendBuff(Buff buff){
-        sendBuff(buff, false);
-    }
 
     //--------------------------- External Actions
     @Deprecated

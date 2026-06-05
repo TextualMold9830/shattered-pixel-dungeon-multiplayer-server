@@ -26,6 +26,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
@@ -77,7 +79,7 @@ public class Buff extends Actor {
 
 		if (target.add( this )){
 			if (target.getSprite() != null) fx( true );
-			SendData.sendBuff(this);
+			SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 			return true;
 		} else {
 			this.target = null;
@@ -87,7 +89,7 @@ public class Buff extends Actor {
 	
 	public void detach() {
 		if (target.remove( this ) && target.getSprite() != null) fx( false );
-		SendData.sendBuff(this, true);
+		SendData.sendActionForAll(new BuffRemoveAction(this));
 	}
 	
 	@Override
