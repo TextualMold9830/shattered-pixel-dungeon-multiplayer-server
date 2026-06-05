@@ -1,6 +1,5 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
-import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -13,33 +12,29 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class NetworkPacket {
 
-    public final AtomicReference<JSONObject> dataRef;
+    private final List<LiveStateNetworkAction> actions;
 
     public NetworkPacket() {
-        dataRef = new AtomicReference<>();
-        dataRef.set(new JSONObject());
+        actions = new ArrayList<>();
     }
 
-    public void clearData() {
-        synchronized (dataRef) {
-            dataRef.set(new JSONObject());
-        }
+    public synchronized void clearData() {
+        actions.clear();
     }
 
     @NotNull
@@ -53,58 +48,68 @@ public class NetworkPacket {
 
 
     public void addAction(@NotNull JSONObject actionObj) {
-        Objects.requireNonNull(actionObj);
-        assert(actionObj.has("action_name"));
-        synchronized (dataRef) {
-            try {
-                JSONObject data = dataRef.get();
-                data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
-                if (!data.has("actions")) {
-                    data.put("actions", new JSONArray());
-                }
-                data.getJSONArray("actions").put(actionObj);
-            } catch (JSONException e) {
-                Log.w("NetworkPacket", "Failed to add action. " + e.toString());
-            }
-        }
+        addAction(serializedActionFrom(actionObj));
     }
 
     public void addAction(@NotNull ImmutableNetworkAction action) {
+        addLateLiveStateAction(action);
+    }
+
+    public synchronized void addLateLiveStateAction(@NotNull LiveStateNetworkAction action) {
+        Objects.requireNonNull(action);
+        actions.add(action);
+    }
+
+    public synchronized void packAndAdd(@NotNull LiveStateNetworkAction action) {
+        JSONObject serialized = serializeAction(action);
+        if (serialized.length() > 0) {
+            addAction(serializedActionFrom(serialized));
+        }
+    }
+
+    public void packAndAdd(@NotNull ImmutableNetworkAction action) {
+        addAction(action);
+    }
+
+    private static SerializedAction serializedActionFrom(@NotNull JSONObject actionObj) {
+        if (!actionObj.has("action_name")) {
+            throw new IllegalArgumentException("Serialized action must have action_name");
+        }
+        String actionName = actionObj.getString("action_name");
+        actionObj.remove("action_name");
+        return new SerializedAction(actionName, actionObj);
+    }
+
+    public synchronized JSONObject serialize() {
+        JSONObject packet = new JSONObject();
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
+
+        JSONArray actionsArr = new JSONArray();
+        for (LiveStateNetworkAction action : actions) {
+            JSONObject serialized = serializeAction(action);
+            if (serialized.length() > 0) {
+                actionsArr.put(serialized);
+            }
+        }
+        packet.put("actions", actionsArr);
+        return packet;
+    }
+
+    private JSONObject serializeAction(@NotNull LiveStateNetworkAction action) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(action);
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            addAction((JSONObject) serialized);
+            return (JSONObject) serialized;
         }
+        return new JSONObject();
     }
 
-    public void compress() {
-        synchronized (dataRef) {
-            try {
-                NetworkPacketCompressor.compress(dataRef.get());
-            } catch (JSONException e) {
-                Log.w("NetworkPacket", "Failed to compress packet. " + e.toString());
-            }
-        }
+    public synchronized void compress() {
+        List<LiveStateNetworkAction> compressed = NetworkPacketCompressor.compress(actions);
+        actions.clear();
+        actions.addAll(compressed);
     }
 
-    public String toJsonString() {
-        synchronized (dataRef) {
-            return dataRef.get().toString();
-        }
-    }
-
-    public String toJsonString(int indentFactor) throws JSONException {
-        synchronized (dataRef) {
-            return dataRef.get().toString(indentFactor);
-        }
-    }
-
-    public static void addToArray(JSONObject storage, String token, JSONObject data) throws JSONException {
-        if (!storage.has(token)) {
-            storage.put(token, new JSONArray());
-        }
-        storage.getJSONArray(token).put(data);
-    }
 
     public void packAndAddChar(@NotNull Char actor) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
@@ -216,8 +221,6 @@ public class NetworkPacket {
         }
     }
 
-
-
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
         WindowDTO dto = new WindowDTO(type, windowID, args);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
@@ -270,5 +273,27 @@ public class NetworkPacket {
         JSONObject event = redirectPacket.toJSON();
         event.put("action_name", "redirect_server");
         addAction(event);
+    }
+
+    public static final class SerializedAction implements ImmutableNetworkAction {
+        private final String actionName;
+        private final JSONObject actionObj;
+
+        @Contract(pure = true)
+        private SerializedAction(@NotNull String actionName, @NotNull JSONObject actionObj) {
+            Objects.requireNonNull(actionName);
+            Objects.requireNonNull(actionObj);
+            this.actionName = actionName;
+            this.actionObj = actionObj;
+        }
+
+        @Override
+        public @NotNull String actionName() {
+            return actionName;
+        }
+
+        public JSONObject actionObj() {
+            return actionObj;
+        }
     }
 }

@@ -282,26 +282,26 @@ public class ClientThread implements Callable<String> {
 
     protected void forceFlush() {
         try {
-            synchronized (packet.dataRef) {
+            JSONObject json;
+            synchronized (packet) {
                 packet.compress();
-                if (packet.dataRef.get().length() == 0) {
-                    return;
-                }
-                if (!packet.dataRef.get().has(Protocol.FIELD_PACKET_TYPE)) {
-                    packet.dataRef.get().put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
-                }
-                if (DeviceCompat.isDebug()) {
-                    try {
-                        Log.i("flush", "clientID: " + threadID + " data:" + packet.toJsonString(4));
-                    } catch (JSONException ignored) {
-                    }
-                }
-                synchronized (writer) {
-                    writer.write(packet.toJsonString());
-                    writer.write('\n');
-                    writer.flush();
-                }
+                json = packet.serialize();
                 packet.clearData();
+            }
+            if (json.length() <= 1) {
+                // packet contains only packet type
+                return;
+            }
+            if (DeviceCompat.isDebug()) {
+                try {
+                    Log.i("flush", "clientID: " + threadID + " data:" + json.toString(4));
+                } catch (JSONException ignored) {
+                }
+            }
+            synchronized (writer) {
+                writer.write(json.toString());
+                writer.write('\n');
+                writer.flush();
             }
         } catch (IOException e) {
             Log.e(String.format("ClientThread%d", threadID), String.format("IOException in threadID %s. Message: %s", threadID, e.getMessage()));
@@ -332,7 +332,7 @@ public class ClientThread implements Callable<String> {
     protected void sendImmediate(@NotNull NetworkPacket networkPacket) {
         try {
             networkPacket.compress();
-            JSONObject data = networkPacket.dataRef.get();
+            JSONObject data = networkPacket.serialize();
             if (DeviceCompat.isDebug()) {
                 try {
                     Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));

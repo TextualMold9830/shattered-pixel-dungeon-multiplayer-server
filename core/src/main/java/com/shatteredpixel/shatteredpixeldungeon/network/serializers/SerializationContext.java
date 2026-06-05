@@ -14,20 +14,20 @@ public class SerializationContext {
         this.observer = observer;
     }
 
-    public Object serialize(Object obj) {
+    public Object serialize(@Nullable Object obj) {
         return serialize(obj, "default");
     }
 
-    public Object serialize(Object obj, String profile) {
+    public Object serialize(@Nullable Object obj, String profile) {
         if (obj == null) return JSONObject.NULL;
         return serializeAs(obj, obj.getClass(), profile);
     }
 
-    public Object serializeAs(Object obj, Class<?> asClass) {
+    public Object serializeAs(@Nullable Object obj, Class<?> asClass) {
         return serializeAs(obj, asClass, "default");
     }
 
-    public Object serializeAs(Object obj, Class<?> asClass, String profile) {
+    public Object serializeAs(@Nullable Object obj, Class<?> asClass, String profile) {
         if (obj == null) return JSONObject.NULL;
 
         @SuppressWarnings("unchecked")

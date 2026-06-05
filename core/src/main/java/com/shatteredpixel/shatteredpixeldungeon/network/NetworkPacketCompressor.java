@@ -1,13 +1,22 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessagesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Compresses accumulated packet actions without changing non-cell event order.
@@ -21,94 +30,67 @@ import java.util.LinkedHashSet;
  * - update_cells.states updates the latest set_level_states.states snapshot;
  * - if only one snapshot array exists, the uncovered part of update_cells remains pending;
  * - if both tiles and states are covered by snapshots, update_cells is not emitted.
+ *
+ * The returned list is always new; retained live actions may still be compacted in place.
  */
 class NetworkPacketCompressor {
 
-    static void compress(JSONObject data) throws JSONException {
-        JSONArray actions = data.optJSONArray("actions");
-        if (actions == null || actions.length() == 0) {
-            return;
-        }
-
+    @Contract("_->new")
+    static @NotNull List<LiveStateNetworkAction> compress(@NotNull @UnmodifiableView List<LiveStateNetworkAction> actions) {
         LevelActionsCompressor levelActions = new LevelActionsCompressor();
-        for (int i = 0; i < actions.length(); i++) {
-            Object actionValue = actions.opt(i);
-            if (actionValue instanceof JSONObject) {
-                levelActions.add((JSONObject) actionValue);
-            } else {
-                levelActions.add(actionValue);
-            }
+        for (LiveStateNetworkAction action : actions) {
+            levelActions.add(action);
         }
-        data.put("actions", levelActions.toActions());
+        return levelActions.toActions();
     }
 
     private static class LevelActionsCompressor {
-        private final ArrayList<Object> actions = new ArrayList<>();
+        private final ArrayList<LiveStateNetworkAction> actions = new ArrayList<>();
         private final LinkedHashMap<Integer, Integer> pendingTiles = new LinkedHashMap<>();
         private final LinkedHashMap<Integer, Integer> pendingStates = new LinkedHashMap<>();
-        private JSONArray currentTiles;
-        private JSONArray currentStates;
-        private JSONObject currentMessagesAction;
+        private int @Nullable [] currentTiles;
+        private int @Nullable [] currentStates;
+        @Nullable
+        private ChatMessagesAction currentMessagesAction;
 
-        void add(Object actionValue) {
-            actions.add(actionValue);
-        }
-
-        void add(JSONObject action) {
-            String actionName = action.optString("action_name", "");
-            switch (actionName) {
-                case "resize_level":
-                    currentTiles = null;
-                    currentStates = null;
-                    clearPendingUpdates();
-                    actions.add(action);
-                    break;
-                case "set_level_tiles":
-                    currentTiles = action.optJSONArray("tiles");
-                    pendingTiles.clear();
-                    actions.add(action);
-                    break;
-                case "set_level_states":
-                    currentStates = action.optJSONArray("states");
-                    pendingStates.clear();
-                    actions.add(action);
-                    break;
-                case "update_cells":
-                    addCellsUpdate(action);
-                    break;
-                case "messages":
-                    addMessagesUpdate(action);
-                    break;
-                default:
-                    actions.add(action);
-                    break;
+        void add(@NotNull LiveStateNetworkAction action) {
+            if (action instanceof ResizeLevelAction) {
+                currentTiles = null;
+                currentStates = null;
+                clearPendingUpdates();
+                actions.add(action);
+            } else if (action instanceof SetLevelTilesAction) {
+                currentTiles = ((SetLevelTilesAction) action).tiles;
+                pendingTiles.clear();
+                actions.add(action);
+            } else if (action instanceof SetLevelStatesAction) {
+                currentStates = ((SetLevelStatesAction) action).states;
+                pendingStates.clear();
+                actions.add(action);
+            } else if (action instanceof UpdateCellsAction) {
+                addCellsUpdate((UpdateCellsAction) action);
+            } else if (action instanceof ChatMessageAction) {
+                addMessage(((ChatMessageAction) action).text);
+            } else if (action instanceof ChatMessagesAction) {
+                addMessages((ChatMessagesAction) action);
+            } else {
+                actions.add(action);
             }
         }
 
-        private void addMessagesUpdate(JSONObject action) {
+        private void addMessages(@NotNull ChatMessagesAction action) {
+            for (LocalizedString text : action.messages()) {
+                addMessage(text);
+            }
+        }
+
+        private void addMessage(@NotNull LocalizedString text) {
             if (currentMessagesAction == null) {
-                currentMessagesAction = new JSONObject();
-                currentMessagesAction.put("action_name", "messages");
-                currentMessagesAction.put("messages", new JSONArray());
+                currentMessagesAction = new ChatMessagesAction(text);
                 actions.add(currentMessagesAction);
+                return;
             }
-            JSONArray messagesArray = currentMessagesAction.optJSONArray("messages");
-            if (messagesArray == null) {
-                messagesArray = new JSONArray();
-                currentMessagesAction.put("messages", messagesArray);
-            }
-            if (action.has("messages")) {
-                JSONArray incomingMessages = action.optJSONArray("messages");
-                if (incomingMessages != null) {
-                    for (int i = 0; i < incomingMessages.length(); i++) {
-                        messagesArray.put(incomingMessages.opt(i));
-                    }
-                }
-            } else if (action.has("text")) {
-                JSONObject messageObj = new JSONObject();
-                messageObj.put("text", action.opt("text"));
-                messagesArray.put(messageObj);
-            }
+            currentMessagesAction.addMessage(text);
         }
 
         private void clearPendingUpdates() {
@@ -116,26 +98,20 @@ class NetworkPacketCompressor {
             pendingStates.clear();
         }
 
-        private void addCellsUpdate(JSONObject action) {
-            JSONArray positions = action.optJSONArray("positions");
-            if (positions == null) {
-                return;
-            }
-            JSONArray tileUpdates = action.optJSONArray("tiles");
-            JSONArray stateUpdates = action.optJSONArray("states");
-            for (int i = 0; i < positions.length(); i++) {
-                int pos = positions.optInt(i, -1);
+        private void addCellsUpdate(@NotNull UpdateCellsAction action) {
+            for (int i = 0; i < action.positions.length; i++) {
+                int pos = action.positions[i];
                 if (pos < 0) {
                     continue;
                 }
-                if (tileUpdates != null && i < tileUpdates.length()) {
-                    int tile = tileUpdates.optInt(i);
+                if (action.tiles != null && i < action.tiles.length) {
+                    int tile = action.tiles[i];
                     if (!applyCellUpdate(currentTiles, pos, tile)) {
                         pendingTiles.put(pos, tile);
                     }
                 }
-                if (stateUpdates != null && i < stateUpdates.length()) {
-                    int state = stateUpdates.optInt(i);
+                if (action.states != null && i < action.states.length) {
+                    int state = action.states[i];
                     if (!applyCellUpdate(currentStates, pos, state)) {
                         pendingStates.put(pos, state);
                     }
@@ -143,28 +119,21 @@ class NetworkPacketCompressor {
             }
         }
 
-        private boolean applyCellUpdate(JSONArray values, int pos, int value) {
-            if (values == null || pos >= values.length()) {
+        private boolean applyCellUpdate(int @Nullable [] values, int pos, int value) {
+            if (values == null || pos >= values.length) {
                 return false;
             }
-            try {
-                values.put(pos, value);
-                return true;
-            } catch (JSONException e) {
-                return false;
-            }
+            values[pos] = value;
+            return true;
         }
 
-        JSONArray toActions() throws JSONException {
+        @Contract("->new")
+        @NotNull List<LiveStateNetworkAction> toActions() {
             addPendingUpdates();
-            JSONArray output = new JSONArray();
-            for (Object action : actions) {
-                output.put(action);
-            }
-            return output;
+            return new ArrayList<>(actions);
         }
 
-        private void addPendingUpdates() throws JSONException {
+        private void addPendingUpdates() {
             if (pendingTiles.isEmpty() && pendingStates.isEmpty()) {
                 return;
             }
@@ -180,27 +149,25 @@ class NetworkPacketCompressor {
             }
         }
 
-        private JSONObject createCellsUpdate(@Nullable LinkedHashMap<Integer, Integer> tileUpdates,
-                                             @Nullable LinkedHashMap<Integer, Integer> stateUpdates) throws JSONException {
+        private UpdateCellsAction createCellsUpdate(@Nullable LinkedHashMap<Integer, Integer> tileUpdates,
+                                                    @Nullable LinkedHashMap<Integer, Integer> stateUpdates) {
             LinkedHashSet<Integer> positions = new LinkedHashSet<>();
             if (tileUpdates != null) positions.addAll(tileUpdates.keySet());
             if (stateUpdates != null) positions.addAll(stateUpdates.keySet());
 
-            JSONArray positionsArray = new JSONArray();
-            JSONArray tilesArray = tileUpdates == null ? null : new JSONArray();
-            JSONArray statesArray = stateUpdates == null ? null : new JSONArray();
+            int[] positionsArray = new int[positions.size()];
+            int[] tilesArray = tileUpdates == null ? null : new int[positions.size()];
+            int[] statesArray = stateUpdates == null ? null : new int[positions.size()];
+
+            int i = 0;
             for (Integer pos : positions) {
-                positionsArray.put(pos);
-                if (tilesArray != null) tilesArray.put(tileUpdates.get(pos));
-                if (statesArray != null) statesArray.put(stateUpdates.get(pos));
+                positionsArray[i] = pos;
+                if (tilesArray != null) tilesArray[i] = tileUpdates.get(pos);
+                if (statesArray != null) statesArray[i] = stateUpdates.get(pos);
+                i++;
             }
 
-            JSONObject update = new JSONObject();
-            update.put("action_name", "update_cells");
-            update.put("positions", positionsArray);
-            if (tilesArray != null) update.put("tiles", tilesArray);
-            if (statesArray != null) update.put("states", statesArray);
-            return update;
+            return new UpdateCellsAction(positionsArray, tilesArray, statesArray);
         }
     }
 }

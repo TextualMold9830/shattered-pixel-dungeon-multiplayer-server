@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.*;
+import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.SerializedAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -103,8 +104,10 @@ public class Server extends Thread {
         SERIALIZERS.register(Emitter.class, "stop", new EmitterStopSerializer());
 
         //actions
+        SERIALIZERS.register(SerializedAction.class, new SerializedActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
+        SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());
         SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
         SERIALIZERS.register(SurpriseVisualAction.class, new SurpriseVisualActionSerializer());
         SERIALIZERS.register(FlareVisualAction.class, new FlareVisualActionSerializer());
