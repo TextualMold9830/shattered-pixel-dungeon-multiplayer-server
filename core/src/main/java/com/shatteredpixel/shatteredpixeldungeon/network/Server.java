@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactory
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpecialSlotDefinitionsSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
@@ -82,6 +83,7 @@ public class Server extends Thread {
         SERIALIZERS.register(Heap.class, "remove", new HeapRemovalSerializer());
         SERIALIZERS.register(Bag.class, "default", new BagSerializer());
         SERIALIZERS.register(Belongings.class, "default", new BelongingsSerializer());
+        SERIALIZERS.register(Belongings.class, "special_slot_definitions", new SpecialSlotDefinitionsSerializer());
         SERIALIZERS.register(Char.class, "default", new CharSerializer());
         SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
