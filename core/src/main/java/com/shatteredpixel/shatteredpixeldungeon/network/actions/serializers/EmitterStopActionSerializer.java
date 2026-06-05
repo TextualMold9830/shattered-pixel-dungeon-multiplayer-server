@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class EmitterStopActionSerializer extends NetworkActionSerializer<EmitterStopAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull EmitterStopAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull EmitterStopAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("id", obj.id);
         return actionObj;

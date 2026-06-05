@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class ShowBannerActionSerializer extends NetworkActionSerializer<ShowBannerAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull ShowBannerAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull ShowBannerAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("banner", obj.banner.toString().toLowerCase(Locale.ROOT));
         actionObj.put("color", obj.color);

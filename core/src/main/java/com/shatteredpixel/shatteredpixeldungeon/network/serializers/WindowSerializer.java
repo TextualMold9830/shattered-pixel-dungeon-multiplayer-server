@@ -1,13 +1,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WindowSerializer implements Serializer<WindowDTO> {
 
     @Override
-    public Object serialize(WindowDTO window, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull WindowDTO window, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("id", window.windowID);

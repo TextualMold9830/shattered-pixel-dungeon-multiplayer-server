@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.TieredSprite;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ import static com.nikita22007.multiplayer.utils.Utils.putToJSONArray;
 public class CharSerializer implements Serializer<Char> {
 
     @Override
-    public Object serialize(Char character, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Char character, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject object = new JSONObject();
 
         try {

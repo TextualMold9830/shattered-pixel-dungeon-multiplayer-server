@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class SetLevelTilesActionSerializer extends NetworkActionSerializer<SetLevelTilesAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SetLevelTilesAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SetLevelTilesAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         JSONArray arr = new JSONArray();
         for (int tile : action.tiles) {

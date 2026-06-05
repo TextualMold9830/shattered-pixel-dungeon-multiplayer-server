@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class ShowStatusActionSerializer extends NetworkActionSerializer<ShowStatusAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull ShowStatusAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull ShowStatusAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         if (action.x != null) {
             obj.put("x", action.x);

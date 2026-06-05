@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +9,7 @@ import org.json.JSONObject;
 public class BlobSerializer implements Serializer<Blob> {
 
     @Override
-    public Object serialize(Blob blob, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Blob blob, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject object = new JSONObject();
         if (blob.cur == null) {
             return object;

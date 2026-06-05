@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class KeysIndicatorActionSerializer extends NetworkActionSerializer<KeysIndicatorAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull KeysIndicatorAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull KeysIndicatorAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         JSONArray keysCount = new JSONArray();
         for (Integer count : obj.keysCount) {

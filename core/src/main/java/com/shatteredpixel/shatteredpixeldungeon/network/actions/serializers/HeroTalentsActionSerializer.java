@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class HeroTalentsActionSerializer extends NetworkActionSerializer<HeroTalentsAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull HeroTalentsAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull HeroTalentsAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("talents", obj.talents);
         return actionObj;

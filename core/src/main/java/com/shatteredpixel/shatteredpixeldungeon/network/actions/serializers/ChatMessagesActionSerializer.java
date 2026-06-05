@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class ChatMessagesActionSerializer extends NetworkActionSerializer<ChatMessagesAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull ChatMessagesAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull ChatMessagesAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         JSONArray messages = new JSONArray();
         for (LocalizedString text : obj.messages()) {

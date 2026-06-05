@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class CharUpdateActionSerializer extends NetworkActionSerializer<CharUpdateAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull CharUpdateAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull CharUpdateAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         Object serialized = ctx.serialize(action.character, "default");
         if (serialized instanceof JSONObject) {
             return (JSONObject) serialized;

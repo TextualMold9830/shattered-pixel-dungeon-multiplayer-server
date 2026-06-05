@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class SurpriseVisualActionSerializer extends NetworkActionSerializer<SurpriseVisualAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SurpriseVisualAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SurpriseVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("action_name", "surprise_visual");
         actionObj.put("pos", obj.pos);

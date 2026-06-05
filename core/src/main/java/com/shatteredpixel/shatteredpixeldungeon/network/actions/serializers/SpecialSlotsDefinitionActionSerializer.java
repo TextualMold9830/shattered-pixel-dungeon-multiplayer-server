@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class SpecialSlotsDefinitionActionSerializer extends NetworkActionSerializer<SpecialSlotsDefinitionAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SpecialSlotsDefinitionAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SpecialSlotsDefinitionAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         SerializationContext innerCtx = new SerializationContext(Server.SERIALIZERS, obj.hero);
         Object payload = innerCtx.serialize(obj.hero.belongings, "special_slot_definitions");
 

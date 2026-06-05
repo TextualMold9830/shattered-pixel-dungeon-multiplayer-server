@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class SetLevelVisualsActionSerializer extends NetworkActionSerializer<SetLevelVisualsAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SetLevelVisualsAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SetLevelVisualsAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         obj.put("tiles_texture", action.tilesTexture);
         obj.put("water_texture", action.waterTexture);

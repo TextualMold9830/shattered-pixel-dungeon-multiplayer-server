@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class DiscoverTileActionSerializer extends NetworkActionSerializer<DiscoverTileAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull DiscoverTileAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull DiscoverTileAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("pos", obj.pos);
         actionObj.put("old_tile", obj.oldValue);

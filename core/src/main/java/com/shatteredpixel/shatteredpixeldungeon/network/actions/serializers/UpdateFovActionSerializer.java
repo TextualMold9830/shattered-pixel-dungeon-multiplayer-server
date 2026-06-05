@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class UpdateFovActionSerializer extends NetworkActionSerializer<UpdateFovAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull UpdateFovAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull UpdateFovAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONArray visiblePos = new JSONArray();
         boolean[] visible = obj.visible();
         for (int i = 0; i < visible.length; i++) {

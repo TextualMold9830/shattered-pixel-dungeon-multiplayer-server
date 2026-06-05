@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class CharEmoActionSerializer extends NetworkActionSerializer<CharEmoAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull CharEmoAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull CharEmoAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("actor_id", obj.actorId);
         actionObj.put("emotion", obj.emotion == null ? JSONObject.NULL : obj.emotion);

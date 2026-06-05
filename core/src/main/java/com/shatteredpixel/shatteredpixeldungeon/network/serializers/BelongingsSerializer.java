@@ -1,15 +1,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
-import com.shatteredpixel.shatteredpixeldungeon.network.SpecialSlot;
-import org.json.JSONArray;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BelongingsSerializer implements Serializer<Belongings> {
 
     @Override
-    public Object serialize(Belongings belongings, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Belongings belongings, @NotNull SerializationContext ctx, @NotNull String profile) {
 
         try {
             // Default or "rebuild" profile
