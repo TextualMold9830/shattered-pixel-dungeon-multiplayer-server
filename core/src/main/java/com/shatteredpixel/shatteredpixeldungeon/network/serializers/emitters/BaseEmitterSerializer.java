@@ -4,9 +4,9 @@ import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.json.JSONObject;
 
-abstract class BaseEmitterSerializer {
+public abstract class BaseEmitterSerializer {
 
-	protected JSONObject baseObject(String actionType, Emitter emitter, SerializationContext ctx) {
+	public static JSONObject baseObject(String actionType, Emitter emitter, SerializationContext ctx) {
 		JSONObject object = new JSONObject();
 		object.put("action_name", actionType);
 		object.put("anchor", ctx.serialize(emitter.anchor()));

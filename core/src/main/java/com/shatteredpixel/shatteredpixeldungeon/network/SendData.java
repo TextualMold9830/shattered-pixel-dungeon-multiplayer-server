@@ -506,4 +506,13 @@ public class SendData {
             }
         }
     }
+
+    public static void packAndSendActionForAll(LiveStateNetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.packAndAdd(networkAction);
+            }
+        }
+    }
 }
