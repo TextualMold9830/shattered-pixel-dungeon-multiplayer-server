@@ -506,7 +506,8 @@ public class ClientThread implements Callable<String> {
         packet.addAction(new CellListenerPromptAction(clientHero.cellSelector.getListener()));
         packet.addAction(new AttackIndicatorTargetAction(SendData.getHeroAttackIndicatorTarget(threadID)));
         packet.addAction(new ResumeButtonVisibleAction(clientHero.lastAction != null));
-        packet.packAndAddInventoryRebuild(clientHero);
+        packet.addLateLiveStateAction(new SpecialSlotsDefinitionAction(clientHero));
+        packet.addLateLiveStateAction(new InventoryRebuildAction(clientHero));
         addAllCharsToSend();
 
         Dungeon.observe(clientHero, false);
