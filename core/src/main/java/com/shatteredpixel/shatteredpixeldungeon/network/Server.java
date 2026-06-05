@@ -115,6 +115,7 @@ public class Server extends Thread {
         SERIALIZERS.register(UpdateFovAction.class, new UpdateFovActionSerializer());
         SERIALIZERS.register(SetLevelEntranceAction.class, new SetLevelEntranceActionSerializer());
         SERIALIZERS.register(SetLevelExitAction.class, new SetLevelExitActionSerializer());
+        SERIALIZERS.register(CharEmoAction.class, new CharEmoActionSerializer());
         SERIALIZERS.register(CharSpriteStateAction.class, new CharSpriteStateActionSerializer());
         SERIALIZERS.register(HeapRemoveAction.class, new HeapRemoveActionSerializer());
         SERIALIZERS.register(ShowBannerAction.class, new ShowBannerActionSerializer());

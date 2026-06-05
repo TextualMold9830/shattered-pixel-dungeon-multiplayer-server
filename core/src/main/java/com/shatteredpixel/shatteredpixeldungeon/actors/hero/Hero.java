@@ -2728,12 +2728,6 @@ public class Hero extends Char {
 	}
 
 
-	public JSONObject getEmoJsonObject() {
-		if (getSprite() == null){
-			return new JSONObject();
-		}
-		return getSprite().getEmoJsonObject();
-	}
 	public JSONArray getTalents(){
 		JSONArray[] talentsArray = new JSONArray[4];
 		for (int i =  0; i < talentsArray.length; i++) {
