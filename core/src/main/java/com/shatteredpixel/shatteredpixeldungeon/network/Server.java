@@ -46,8 +46,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRe
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
@@ -64,7 +62,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitter
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -86,9 +83,6 @@ public class Server extends Thread {
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
 
-        SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
-        SERIALIZERS.register(TrapDTO.class, "remove", new TrapRemovalSerializer());
-
         SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
         SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
@@ -104,6 +98,8 @@ public class Server extends Thread {
         SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
         SERIALIZERS.register(PlantUpdateAction.class, new PlantUpdateActionSerializer());
         SERIALIZERS.register(PlantRemoveAction.class, new PlantRemoveActionSerializer());
+        SERIALIZERS.register(TrapUpdateAction.class, new TrapUpdateActionSerializer());
+        SERIALIZERS.register(TrapRemoveAction.class, new TrapRemoveActionSerializer());
         SERIALIZERS.register(RippleVisualAction.class, new RippleVisualActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());

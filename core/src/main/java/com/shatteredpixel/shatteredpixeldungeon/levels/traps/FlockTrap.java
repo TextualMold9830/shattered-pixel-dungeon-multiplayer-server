@@ -66,7 +66,7 @@ public class FlockTrap extends Trap {
 				GameScene.add(sheep);
 				CellEmitter.get(i).burst(Speck.factory(Speck.WOOL), 4);
 				//before the tile is pressed, directly trigger traps to avoid sfx spam
-				if ((t = Dungeon.level.traps.get(i)) != null && t.active){
+				if ((t = Dungeon.level.traps.get(i)) != null && t.isActive()){
 					if (t.disarmedByActivation) t.disarm();
 					t.reveal();
 					Bestiary.setSeen(t.getClass());

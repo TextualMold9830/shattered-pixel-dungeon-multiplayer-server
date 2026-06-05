@@ -85,7 +85,7 @@ public class ReclaimTrap extends TargetedSpell {
 		}
 		if (storedTrap == null) {
 			Trap t = Dungeon.level.traps.get(bolt.collisionPos);
-			if (t != null && t.active && t.visible) {
+			if (t != null && t.isActive() && t.visible) {
 				t.disarm(); //even disarms traps that normally wouldn't be
 				
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);

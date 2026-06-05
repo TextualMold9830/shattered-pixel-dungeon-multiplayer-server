@@ -92,7 +92,7 @@ public class SummoningTrap extends Trap {
 		Trap t;
 		for (Mob mob : mobs){
 			//manually trigger traps first to avoid sfx spam
-			if ((t = Dungeon.level.traps.get(mob.pos)) != null && t.active){
+			if ((t = Dungeon.level.traps.get(mob.pos)) != null && t.isActive()){
 				if (t.disarmedByActivation) t.disarm();
 				t.reveal();
 				Bestiary.setSeen(t.getClass());

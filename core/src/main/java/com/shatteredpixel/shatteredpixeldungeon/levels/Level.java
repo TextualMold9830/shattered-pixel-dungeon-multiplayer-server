@@ -973,6 +973,7 @@ public abstract class Level implements Bundlable {
 
 		if (terrain != Terrain.TRAP && terrain != Terrain.SECRET_TRAP && terrain != Terrain.INACTIVE_TRAP){
 			level.traps.remove( cell );
+			SendData.sendTrap(cell); //send trap removing
 		}
 
 		int flags = Terrain.flags[terrain];
@@ -1108,9 +1109,11 @@ public abstract class Level implements Bundlable {
 		Trap existingTrap = traps.get(pos);
 		if (existingTrap != null){
 			traps.remove( pos );
+			SendData.sendTrap(pos); //send trap removing
 		}
 		trap.set( pos );
 		traps.put( pos, trap );
+		SendData.sendTrap(pos);
 		GameScene.updateMap( pos );
 		return trap;
 	}
@@ -1156,6 +1159,7 @@ public abstract class Level implements Bundlable {
 				terr == Terrain.TRAP || terr == Terrain.INACTIVE_TRAP)){
 			set(cell, Terrain.WATER);
 			Dungeon.level.traps.remove(cell);
+			SendData.sendTrap(cell); //send trap removing
 			GameScene.updateMap(cell);
 			return true;
 		}
