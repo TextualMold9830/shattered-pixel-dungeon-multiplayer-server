@@ -4,6 +4,7 @@ import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,7 @@ import org.json.JSONObject;
 public class ItemSerializer implements Serializer<Item> {
 
     @Override
-    public Object serialize(Item item, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Item item, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject itemObj = new JSONObject();
         Hero hero = ctx.observer;
 

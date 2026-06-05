@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class HeapRemoveActionSerializer extends NetworkActionSerializer<HeapRemoveAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull HeapRemoveAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull HeapRemoveAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("pos", obj.pos);
         return actionObj;

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class InventoryRebuildActionSerializer extends NetworkActionSerializer<InventoryRebuildAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull InventoryRebuildAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull InventoryRebuildAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         SerializationContext innerCtx = new SerializationContext(Server.SERIALIZERS, obj.hero);
         Object payload = innerCtx.serialize(obj.hero.belongings, "rebuild");
 

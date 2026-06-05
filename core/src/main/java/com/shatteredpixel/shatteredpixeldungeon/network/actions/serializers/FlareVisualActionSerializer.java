@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class FlareVisualActionSerializer extends NetworkActionSerializer<FlareVisualAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull FlareVisualAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull FlareVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         if (obj.positionX != null && obj.positionY != null) {
             actionObj.put("position_x", obj.positionX);

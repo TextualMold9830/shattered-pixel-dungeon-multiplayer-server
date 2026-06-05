@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class UpdateFloorInfoActionSerializer extends NetworkActionSerializer<UpdateFloorInfoAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull UpdateFloorInfoAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull UpdateFloorInfoAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("depth", obj.depth);
         actionObj.put("branch", obj.branch);

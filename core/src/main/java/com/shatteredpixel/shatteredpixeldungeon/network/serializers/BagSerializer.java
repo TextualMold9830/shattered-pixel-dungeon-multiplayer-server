@@ -4,6 +4,7 @@ import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,7 @@ import org.json.JSONObject;
 public class BagSerializer implements Serializer<Bag> {
 
     @Override
-    public Object serialize(Bag bag, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Bag bag, @NotNull SerializationContext ctx, @NotNull String profile) {
         // 1. Serialize as base Item first
         JSONObject bagObj = (JSONObject) ctx.serializeAs(bag,  Bag.class.getSuperclass(), profile);
 

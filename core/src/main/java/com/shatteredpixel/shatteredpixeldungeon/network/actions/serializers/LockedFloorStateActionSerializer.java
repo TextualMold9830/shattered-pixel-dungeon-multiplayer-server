@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class LockedFloorStateActionSerializer extends NetworkActionSerializer<LockedFloorStateAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull LockedFloorStateAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull LockedFloorStateAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("locked", obj.locked);
         return actionObj;

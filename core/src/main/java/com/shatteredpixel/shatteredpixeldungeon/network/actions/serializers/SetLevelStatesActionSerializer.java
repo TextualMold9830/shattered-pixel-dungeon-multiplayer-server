@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class SetLevelStatesActionSerializer extends NetworkActionSerializer<SetLevelStatesAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SetLevelStatesAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SetLevelStatesAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         JSONArray arr = new JSONArray();
         for (int state : action.states) {

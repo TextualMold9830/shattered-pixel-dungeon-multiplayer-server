@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class CharSpriteStateActionSerializer extends NetworkActionSerializer<CharSpriteStateAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull CharSpriteStateAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull CharSpriteStateAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("actor_id", obj.actorId);
         actionObj.put("state", obj.state.name().toLowerCase(Locale.ROOT));

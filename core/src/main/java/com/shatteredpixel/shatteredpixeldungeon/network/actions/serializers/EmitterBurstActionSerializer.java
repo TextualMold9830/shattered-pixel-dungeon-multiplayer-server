@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class EmitterBurstActionSerializer extends NetworkActionSerializer<EmitterBurstAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull EmitterBurstAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull EmitterBurstAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = BaseEmitterSerializer.baseObject("emitter_burst", obj.emitter, ctx);
         return actionObj != null ? actionObj : new JSONObject();
     }

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class EmitterPourActionSerializer extends NetworkActionSerializer<EmitterPourAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull EmitterPourAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull EmitterPourAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = BaseEmitterSerializer.baseObject("emitter_pour", obj.emitter, ctx);
         if (actionObj != null) {
             actionObj.put("id", obj.emitter.networkId());

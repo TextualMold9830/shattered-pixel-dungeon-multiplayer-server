@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class CharSpriteActionSerializer extends NetworkActionSerializer<CharSpriteAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull CharSpriteAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull CharSpriteAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("action", obj.action);
         actionObj.put("from", obj.from);

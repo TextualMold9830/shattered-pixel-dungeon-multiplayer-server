@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class TexturePackActionSerializer extends NetworkActionSerializer<TexturePackAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull TexturePackAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull TexturePackAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("texturepack", obj.data);
         return actionObj;

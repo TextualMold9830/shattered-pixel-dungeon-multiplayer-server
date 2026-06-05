@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class CellListenerPromptActionSerializer extends NetworkActionSerializer<CellListenerPromptAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull CellListenerPromptAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull CellListenerPromptAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("prompt", obj.prompt == null ? JSONObject.NULL : obj.prompt);
         return actionObj;

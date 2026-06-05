@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class ResumeButtonVisibleActionSerializer extends NetworkActionSerializer<ResumeButtonVisibleAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull ResumeButtonVisibleAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull ResumeButtonVisibleAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("visible", obj.visible);
         return actionObj;

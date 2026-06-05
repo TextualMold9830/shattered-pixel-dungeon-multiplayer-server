@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class UpdateCellsActionSerializer extends NetworkActionSerializer<UpdateCellsAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull UpdateCellsAction action, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull UpdateCellsAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         try {
             JSONArray posArr = new JSONArray();

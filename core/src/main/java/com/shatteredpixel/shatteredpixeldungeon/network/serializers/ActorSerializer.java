@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.PrintWriter;
@@ -10,7 +11,7 @@ import java.io.StringWriter;
 public class ActorSerializer implements Serializer<Actor> {
 
     @Override
-    public Object serialize(Actor actor, SerializationContext ctx, String profile) {
+    public Object serialize(@NotNull Actor actor, @NotNull SerializationContext ctx, @NotNull String profile) {
         Log.w(
                 "ActorSerializer",
                 "Unexpected ActorSerializer call for type " + actor.getClass().getName()

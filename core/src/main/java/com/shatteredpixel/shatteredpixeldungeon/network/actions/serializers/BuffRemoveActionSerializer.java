@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class BuffRemoveActionSerializer extends NetworkActionSerializer<BuffRemoveAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull BuffRemoveAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull BuffRemoveAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject buffObj = new JSONObject();
         buffObj.put("id", obj.buffId);
         return buffObj;

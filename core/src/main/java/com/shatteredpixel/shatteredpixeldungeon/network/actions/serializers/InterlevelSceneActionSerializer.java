@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class InterlevelSceneActionSerializer extends NetworkActionSerializer<InterlevelSceneAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull InterlevelSceneAction scene, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull InterlevelSceneAction scene, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject sceneObj = new JSONObject();
         if (scene.state != null) {
             sceneObj.put("state", scene.state);

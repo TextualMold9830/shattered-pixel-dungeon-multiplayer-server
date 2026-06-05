@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class SetLevelEntranceActionSerializer extends NetworkActionSerializer<SetLevelEntranceAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull SetLevelEntranceAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull SetLevelEntranceAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         actionObj.put("pos", obj.pos);
         return actionObj;

@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class BuffUpdateActionSerializer extends NetworkActionSerializer<BuffUpdateAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull BuffUpdateAction obj, SerializationContext ctx, String profile) {
+    protected JSONObject serializeInternal(@NotNull BuffUpdateAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject buffObj = new JSONObject();
         Buff buff = obj.buff;
         int id = buff.id();

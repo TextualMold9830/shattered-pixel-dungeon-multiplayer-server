@@ -3,12 +3,13 @@ package com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.Serializer;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class EmitterAnchorSerializer implements Serializer<EmitterAnchor> {
 
 	@Override
-	public Object serialize(EmitterAnchor anchor, SerializationContext ctx, String profile) {
+	public Object serialize(@NotNull EmitterAnchor anchor, @NotNull SerializationContext ctx, @NotNull String profile) {
 		JSONObject object = new JSONObject();
 		object.put("type", anchor.type());
 		object.put("x", anchor.x());
