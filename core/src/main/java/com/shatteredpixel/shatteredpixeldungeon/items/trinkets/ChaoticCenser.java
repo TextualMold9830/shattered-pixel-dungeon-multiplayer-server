@@ -117,7 +117,7 @@ public class ChaoticCenser extends Trinket {
 							&& (!(target instanceof Mob) || ((Mob) target).state != ((Mob) target).PASSIVE)){
 
 						if (produceGas(target)){
-							com.watabou.noosa.audio.Sample.INSTANCE.play(Assets.Sounds.GAS, 0.5f);
+							Sample.INSTANCE.play(Assets.Sounds.GAS, 0.5f);
 						((Hero)target).interrupt();
 							left += Random.IntRange((int) (avgTurns * 0.9f), (int) (avgTurns * 1.1f));
 						}

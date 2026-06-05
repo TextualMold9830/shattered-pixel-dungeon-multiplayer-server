@@ -211,7 +211,7 @@ public class WandOfBlastWave extends DamageWand {
 
 			defender.damage(Math.round(procChanceMultiplier(attacker) * dmg), new Char.DamageCause(this, attacker));
 			BlastWave.blast(defender.pos, attacker);
-			com.watabou.noosa.audio.Sample.INSTANCE.play( Assets.Sounds.BLAST );
+			Sample.INSTANCE.play( Assets.Sounds.BLAST );
 
 			//brief immunity, to prevent stacking absurd damage with it with things like para gas
 			Buff.prolong(defender, BWaveOnHitTracker.class, 3f);
