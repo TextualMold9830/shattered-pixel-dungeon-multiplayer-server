@@ -16,7 +16,6 @@ public class BlobSerializer implements Serializer<Blob> {
 
         try {
             object.put("id", blob.id());
-            object.put("type", "blob");
             object.put("blob_type", blob.getClass().getName());
 
             JSONArray positions = new JSONArray();
