@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class AttackIndicatorTargetAction implements NetworkAction {
+public class AttackIndicatorTargetAction implements ImmutableNetworkAction {
     public final int target;
 
     @Contract(pure = true)

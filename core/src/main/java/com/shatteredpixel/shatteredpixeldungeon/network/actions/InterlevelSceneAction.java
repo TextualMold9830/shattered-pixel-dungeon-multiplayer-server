@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InterlevelSceneAction implements NetworkAction {
+public class InterlevelSceneAction implements ImmutableNetworkAction {
     public enum FadeTime {
         SLOW_FADE, NORM_FADE, FAST_FADE
     }

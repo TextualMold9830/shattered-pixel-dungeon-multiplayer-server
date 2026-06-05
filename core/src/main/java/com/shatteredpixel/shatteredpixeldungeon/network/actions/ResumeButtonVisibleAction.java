@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class ResumeButtonVisibleAction implements NetworkAction {
+public class ResumeButtonVisibleAction implements ImmutableNetworkAction {
     public final boolean visible;
 
     @Contract(pure = true)

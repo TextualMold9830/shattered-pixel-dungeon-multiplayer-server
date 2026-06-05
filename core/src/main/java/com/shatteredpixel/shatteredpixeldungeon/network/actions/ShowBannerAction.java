@@ -4,7 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class ShowBannerAction implements NetworkAction {
+public class ShowBannerAction implements ImmutableNetworkAction {
     public final BannerSprites.Type banner;
     public final int color;
     public final float fadeTime;

@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class HeroReadyAction implements NetworkAction {
+public class HeroReadyAction implements ImmutableNetworkAction {
     public final boolean ready;
 
     @Contract(pure = true)

@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public final class GameSceneFlashAction implements  NetworkAction{
+public final class GameSceneFlashAction implements ImmutableNetworkAction {
     public final int color;
     public final boolean light;
 

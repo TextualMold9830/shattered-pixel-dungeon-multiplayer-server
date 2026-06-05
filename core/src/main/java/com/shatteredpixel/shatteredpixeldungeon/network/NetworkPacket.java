@@ -45,7 +45,7 @@ public class NetworkPacket {
     @NotNull
     public static NetworkPacket fromChatMessages(@NotNull List<@NotNull ChatMessageAction> messages) {
         final NetworkPacket networkPacket = new NetworkPacket();
-        for (NetworkAction action : messages) {
+        for (ImmutableNetworkAction action : messages) {
             networkPacket.addAction(action);
         }
         return networkPacket;
@@ -69,7 +69,7 @@ public class NetworkPacket {
         }
     }
 
-    public void addAction(@NotNull NetworkAction action) {
+    public void addAction(@NotNull ImmutableNetworkAction action) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(action);
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {

@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class HeroUUIDAction implements NetworkAction {
+public class HeroUUIDAction implements ImmutableNetworkAction {
     public final String uuid;
 
     @Contract(pure = true)

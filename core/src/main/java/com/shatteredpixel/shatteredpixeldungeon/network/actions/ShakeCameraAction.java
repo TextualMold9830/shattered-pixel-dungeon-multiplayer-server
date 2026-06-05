@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public final class ShakeCameraAction implements NetworkAction {
+public final class ShakeCameraAction implements ImmutableNetworkAction {
     public final float magnitude;
     public final float duration;
 

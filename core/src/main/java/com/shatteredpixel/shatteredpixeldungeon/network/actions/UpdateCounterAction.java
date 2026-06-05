@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class UpdateCounterAction implements NetworkAction {
+public class UpdateCounterAction implements ImmutableNetworkAction {
     public final float counter;
 
     @Contract(pure = true)

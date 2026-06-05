@@ -4,7 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class UpdateCellsAction implements NetworkAction {
+public class UpdateCellsAction implements ImmutableNetworkAction {
     public final int[] positions;
     @Nullable
     public final int[] tiles;

@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class TexturePackAction implements NetworkAction {
+public class TexturePackAction implements ImmutableNetworkAction {
     public final String data;
 
     @Contract(pure = true)

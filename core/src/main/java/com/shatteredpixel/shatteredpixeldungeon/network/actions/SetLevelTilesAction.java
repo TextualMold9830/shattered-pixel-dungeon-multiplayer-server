@@ -4,7 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
-public class SetLevelTilesAction implements NetworkAction {
+public class SetLevelTilesAction implements ImmutableNetworkAction {
     public final int[] tiles;
 
     public SetLevelTilesAction(@NotNull Level level) {
