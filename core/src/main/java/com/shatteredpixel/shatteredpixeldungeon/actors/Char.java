@@ -251,7 +251,7 @@ public abstract class Char extends Actor {
 		if ( !all().contains(this) ){
 			return;
 		}
-		SendData.sendActor(this);
+		SendData.sendChar(this);
 	}
 
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
