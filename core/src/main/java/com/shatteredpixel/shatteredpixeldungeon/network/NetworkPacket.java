@@ -148,19 +148,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddInventoryRebuild(@NotNull Hero hero) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
-        JSONObject payload = (JSONObject) ctx.serialize(hero.belongings, "rebuild");
-
-        payload.put("action_name", "inventory_rebuild");
-        addAction(payload);
-    }
-
-    @SuppressWarnings("unused") //keep it for future implementation
-    public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
-        packAndAdd(new SpecialSlotsDefinitionAction(hero));
-    }
-
     private void packAndAddItemAction(String actionName, List<Integer> path, @Nullable Item item, @Nullable Hero hero) {
         JSONObject event = new JSONObject();
         event.put("action_name", actionName);
