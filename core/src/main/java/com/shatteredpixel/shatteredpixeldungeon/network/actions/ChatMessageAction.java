@@ -8,8 +8,14 @@ public class ChatMessageAction implements NetworkAction {
     @NotNull
     public final LocalizedString text;
 
+    @Contract(pure = true)
     public ChatMessageAction(@NotNull LocalizedString text) {
         this.text = text;
+    }
+
+    @Contract(pure = true)
+    public ChatMessageAction(@NotNull String text) {
+        this.text = LocalizedString.raw(text);
     }
 
     @Override

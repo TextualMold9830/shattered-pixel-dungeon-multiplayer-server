@@ -44,6 +44,16 @@ public class NetworkPacket {
         }
     }
 
+    @NotNull
+    public static NetworkPacket fromChatMessages(@NotNull List<@NotNull ChatMessageAction> messages) {
+        final NetworkPacket networkPacket = new NetworkPacket();
+        for (NetworkAction action : messages) {
+            networkPacket.addAction(action);
+        }
+        return networkPacket;
+    }
+
+
     public void addAction(@NotNull JSONObject actionObj) {
         Objects.requireNonNull(actionObj);
         assert(actionObj.has("action_name"));
@@ -96,33 +106,6 @@ public class NetworkPacket {
             storage.put(token, new JSONArray());
         }
         storage.getJSONArray(token).put(data);
-    }
-
-    public void addChatMessage(ChatMessageAction message) {
-        addAction(message);
-    }
-
-    public static JSONObject packChatMessages(List<ChatMessageAction> messages) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject data = new JSONObject();
-        data.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
-        JSONArray actions = new JSONArray();
-        JSONObject messagesAction = new JSONObject();
-
-        messagesAction.put("action_name", "messages");
-        JSONArray messagesArray = new JSONArray();
-        for (ChatMessageAction message : messages) {
-            JSONObject messageObj = (JSONObject) ctx.serialize(message);
-            if (messageObj != null) {
-                messageObj.remove("action_name");
-                messagesArray.put(messageObj);
-            }
-        }
-        messagesAction.put("messages", messagesArray);
-        actions.put(messagesAction);
-        data.put("actions", actions);
-
-        return data;
     }
 
     public void packAndAddActor(Actor actor, boolean heroAsHero) {

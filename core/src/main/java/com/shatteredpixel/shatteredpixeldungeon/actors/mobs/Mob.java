@@ -989,7 +989,7 @@ public abstract class Mob extends Char {
 				continue;
 			}
 			if (!hero.fieldOfView[pos]) {
-				GLog.iWithTarget(hero.networkID, message);
+				GLog.iWithTarget(hero, message);
 			}
 		}
 		boolean soulMarked = buff(SoulMark.class) != null;

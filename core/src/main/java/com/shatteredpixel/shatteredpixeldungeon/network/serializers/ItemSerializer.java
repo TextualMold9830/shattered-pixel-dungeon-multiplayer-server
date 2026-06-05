@@ -3,7 +3,6 @@ package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import org.json.JSONArray;
 import org.json.JSONException;
