@@ -50,8 +50,6 @@ public class CharSerializer implements Serializer<Char> {
             if (shield > 0 || character.needsShieldUpdate()) {
                 object.put("shield", shield);
             }
-            object.put("emo", character.getEmoJsonObject());
-
             CharSprite sprite = character.getSprite();
             if (sprite != null) {
                 JSONArray states = putToJSONArray(sprite.states().toArray());

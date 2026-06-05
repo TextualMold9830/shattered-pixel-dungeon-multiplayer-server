@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendActionForAll;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharEmoAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SpriteFlashAction;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
@@ -66,7 +67,6 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.nio.Buffer;
 import java.util.Set;
@@ -150,20 +150,23 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		return states;
 	}
 
-	public JSONObject getEmoJsonObject() {
-		if (getEmo() == null){
-			return new JSONObject();
-		}
-		return getEmo().toJsonObject();
-	}
-
 	protected EmoIcon getEmo() {
 		return emo;
 	}
 
 	protected void setEmo(EmoIcon emo) {
 		this.emo = emo;
-		SendData.sendChar(this.ch);
+		if (ch != null) {
+			sendActionForAll(new CharEmoAction(ch.id(), emotionName(emo)));
+		}
+	}
+
+	private String emotionName(EmoIcon emo) {
+		if (emo instanceof EmoIcon.Alert) return "alert";
+		if (emo instanceof EmoIcon.Sleep) return "sleep";
+		if (emo instanceof EmoIcon.Lost) return "lost";
+		if (emo instanceof EmoIcon.Investigate) return "investigate";
+		return null;
 	}
 
 
@@ -775,7 +778,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				setEmo(new EmoIcon.Alert(this));
 				getEmo().visible = visible;
-				SendData.sendChar(this.ch);
 			}
 		}
 	}
@@ -785,7 +787,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() instanceof EmoIcon.Alert) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendChar(this.ch);
 			}
 		}
 	}
@@ -796,8 +797,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				if (emo != null) {
 					emo.killAndErase();
 				}
-				emo = new EmoIcon.Investigate(this);
-				emo.visible = visible;
+				setEmo(new EmoIcon.Investigate(this));
+				getEmo().visible = visible;
 			}
 		}
 	}
@@ -806,7 +807,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		synchronized (EmoIcon.class) {
 			if (emo instanceof EmoIcon.Investigate) {
 				emo.killAndErase();
-				emo = null;
+				setEmo(null);
 			}
 		}
 	}
@@ -819,7 +820,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				setEmo(new EmoIcon.Lost(this));
 				getEmo().visible = visible;
-				SendData.sendChar(this.ch);
 			}
 		}
 	}
@@ -829,7 +829,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() instanceof EmoIcon.Lost) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendChar(this.ch);
 			}
 		}
 	}
@@ -839,7 +838,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() != null) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendChar(this.ch);
 			}
 		}
 	}

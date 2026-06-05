@@ -255,13 +255,6 @@ public abstract class Char extends Actor {
 	}
 
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-	public JSONObject getEmoJsonObject() {
-		if (getSprite() == null){
-			return new JSONObject();
-		}
-		return getSprite().getEmoJsonObject();
-	}
-
 	@Override
 	protected boolean act() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
