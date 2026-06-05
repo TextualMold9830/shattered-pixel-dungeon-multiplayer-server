@@ -1,7 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ClassSprite;
@@ -24,13 +23,6 @@ public class CharSerializer implements Serializer<Char> {
                 return object;
             }
             object.put("id", id);
-
-            boolean heroAsHero = "hero".equals(profile);
-            if (character instanceof Hero && heroAsHero) {
-                object.put("type", "hero");
-            } else {
-                object.put("type", "character");
-            }
 
             if (character.getSprite() != null) {
                 String spriteAsset = character.getSprite().getSpriteAsset();

@@ -3,6 +3,8 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 import com.nikita22007.multiplayer.utils.Log;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -149,8 +151,18 @@ public class NetworkPacket {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
         Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "default");
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
+            String actionName;
+            if (actor instanceof Char) {
+                actionName = "char_update";
+            } else if (actor instanceof Blob) {
+                actionName = "blob_update";
+            } else {
+                Log.w("NetworkPacket", "Unsupported actor update class: " + actor.getClass().toString());
+                return;
+            }
+
             JSONObject event = new JSONObject();
-            event.put("action_name", "actor_update");
+            event.put("action_name", actionName);
             event.put("payload", serialized);
             addAction(event);
         }
@@ -174,10 +186,10 @@ public class NetworkPacket {
     }
 
     public void packAndAddHero(@NotNull Hero hero) {
-        packAndAddActor(hero, true);
         JSONObject heroPatch = packHero(hero);
         heroPatch.put("action_name", "hero_patch");
         addAction(heroPatch);
+        packAndAddActor(hero, true);
     }
 
     public void packAndAddLevel(Level level, Hero observer) {
