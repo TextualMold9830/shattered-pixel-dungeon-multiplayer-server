@@ -1,7 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.nikita22007.multiplayer.utils.Log;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -108,9 +107,9 @@ public class NetworkPacket {
         storage.getJSONArray(token).put(data);
     }
 
-    public void packAndAddActor(Actor actor, boolean heroAsHero) {
+    public void packAndAddActor(Actor actor) {
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, heroAsHero ? "hero" : "default");
+        Object serialized = ctx.serialize(actor, "default");
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
             String actionName;
             if (actor instanceof Char) {
@@ -138,19 +137,6 @@ public class NetworkPacket {
             event.put("payload", serialized);
             addAction(event);
         }
-    }
-
-    protected JSONObject packHero(@NotNull Hero hero) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
-        Object serialized = ctx.serialize(hero, "hero_block");
-        return serialized instanceof JSONObject ? (JSONObject) serialized : new JSONObject();
-    }
-
-    public void packAndAddHero(@NotNull Hero hero) {
-        JSONObject heroPatch = packHero(hero);
-        heroPatch.put("action_name", "hero_patch");
-        addAction(heroPatch);
-        packAndAddActor(hero, true);
     }
 
     public void packAndAddLevel(Level level, Hero observer) {

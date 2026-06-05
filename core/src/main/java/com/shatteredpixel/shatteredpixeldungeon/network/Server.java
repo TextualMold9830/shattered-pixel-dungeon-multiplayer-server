@@ -63,6 +63,8 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroStrengthActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroStrengthActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroSubclassAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroSubclassActionSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroClassAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.HeroClassActionSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.AttackIndicatorTargetAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
@@ -109,7 +111,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSeriali
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BlobSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CharSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeroSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalSerializer;
@@ -157,12 +158,10 @@ public class Server extends Thread {
         SERIALIZERS.register(Bag.class, "default", new BagSerializer());
         SERIALIZERS.register(Belongings.class, "default", new BelongingsSerializer());
         SERIALIZERS.register(Char.class, "default", new CharSerializer());
-        SERIALIZERS.register(Char.class, "hero", new CharSerializer());
         SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(Actor.class, "hero", new ActorSerializer());
         SERIALIZERS.register(Actor.class, "remove", new ActorRemovalSerializer());
-        SERIALIZERS.register(Hero.class, "hero_block", new HeroSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
         SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
@@ -211,6 +210,7 @@ public class Server extends Thread {
         SERIALIZERS.register(HeroStrengthAction.class, new HeroStrengthActionSerializer());
         SERIALIZERS.register(HeroSubclassAction.class, new HeroSubclassActionSerializer());
         SERIALIZERS.register(HeroTalentsAction.class, new HeroTalentsActionSerializer());
+        SERIALIZERS.register(HeroClassAction.class, new HeroClassActionSerializer());
         SERIALIZERS.register(UpdateFloorInfoAction.class, new UpdateFloorInfoActionSerializer());
         SERIALIZERS.register(LockedFloorStateAction.class, new LockedFloorStateActionSerializer());
         SERIALIZERS.register(KeysIndicatorAction.class, new KeysIndicatorActionSerializer());

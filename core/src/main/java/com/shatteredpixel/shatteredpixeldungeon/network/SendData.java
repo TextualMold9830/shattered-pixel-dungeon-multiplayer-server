@@ -3,9 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network;
 import com.nikita22007.multiplayer.utils.Log;
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -21,7 +19,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageActio
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -106,7 +103,7 @@ public class SendData {
             if (client == null) {
                 continue;
             }
-            client.packet.packAndAddActor(actor, actor == client.clientHero);
+            client.packet.packAndAddActor(actor);
             client.flush();
         }
     }

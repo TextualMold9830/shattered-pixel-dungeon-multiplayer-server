@@ -416,7 +416,7 @@ public class ClientThread implements Callable<String> {
 
     protected void addCharToSend(@NotNull Char ch) {
         synchronized (packet) {
-            packet.packAndAddActor(ch, ch == clientHero);
+            packet.packAndAddActor(ch);
         }
         //todo SEND TEXTURE
     }
@@ -490,7 +490,12 @@ public class ClientThread implements Callable<String> {
         }
 
         packet.packAndAddLevel(level, clientHero);
-        packet.packAndAddHero(clientHero);
+        packet.addAction(new HeroActorIdAction(clientHero.id()));
+        packet.addAction(new HeroClassAction(clientHero.heroClass));
+        packet.addAction(new HeroSubclassAction(clientHero.subClass));
+        packet.addAction(new HeroStrengthAction(clientHero.STR()));
+        packet.addAction(new HeroExperienceAction(clientHero.lvl, clientHero.exp));
+        packet.addAction(new HeroTalentsAction(clientHero.getTalents()));
         packet.addAction(new HeroGoldAction(clientHero.getGold()));
         packet.addAction(new HeroReadyAction(clientHero.isReady()));
         packet.addAction(new HeroUUIDAction(clientHero.uuid));
