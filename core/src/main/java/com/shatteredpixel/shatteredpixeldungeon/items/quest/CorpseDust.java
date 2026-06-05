@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
@@ -154,7 +155,7 @@ public class CorpseDust extends Item {
 				}
 			}
 			//We know that quest is active
-			Music.INSTANCE.fadeOut(1f, new Music.PlayAction(Assets.Music.PRISON_TENSE));
+			Music.INSTANCE.fadeOut(1f, new MusicAction.PlayAction(Assets.Music.PRISON_TENSE));
 		}
 
 		private static String SPAWNPOWER = "spawnpower";

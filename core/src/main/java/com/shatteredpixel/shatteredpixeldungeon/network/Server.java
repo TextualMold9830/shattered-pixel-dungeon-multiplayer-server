@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.*;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
@@ -65,7 +64,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.Emi
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStopSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
@@ -144,6 +142,8 @@ public class Server extends Thread {
         SERIALIZERS.register(CellListenerPromptAction.class, new CellListenerPromptActionSerializer());
         SERIALIZERS.register(AttackIndicatorTargetAction.class, new AttackIndicatorTargetActionSerializer());
         SERIALIZERS.register(ResumeButtonVisibleAction.class, new ResumeButtonVisibleActionSerializer());
+        SERIALIZERS.register(MusicAction.class, new MusicActionSerializer());
+        SERIALIZERS.register(PlaySampleAction.class, new PlaySampleActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();

@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.LarvaSprite;
@@ -375,7 +376,7 @@ public class YogDzewa extends Mob {
 			summonCooldown = -15; //summon a burst of minions!
 			phase = 5;
 			BossHealthBar.bleed(true);
-			Music.INSTANCE.fadeOut(0.5f, new Music.PlayAction(Assets.Music.HALLS_BOSS_FINALE, true));
+			Music.INSTANCE.fadeOut(0.5f, new MusicAction.PlayAction(Assets.Music.HALLS_BOSS_FINALE, true));
 
 		}
 	}
