@@ -26,6 +26,10 @@ package com.nikita22007.multiplayer.noosa.particles;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterBurstAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStartAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterPourAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStopAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -275,7 +279,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 
 	private void stopInfinite() {
 		if (id != -1) {
-			sendProfile("stop");
+			SendData.sendActionForAll(new EmitterStopAction(id));
 			infiniteEmitters.remove(id);
 			id = -1;
 		}
@@ -283,25 +287,15 @@ public class Emitter /*this is temporary ->*/extends Group {
 
 	protected boolean sendSelf() {
 		if (quantity == 0) {
-			return sendProfile("pour"); // infinity emitter
+			SendData.packAndSendActionForAll(new EmitterPourAction(this));
+			return true;
 		} else if (interval == 0) {
-			return sendProfile("burst");
+			SendData.packAndSendActionForAll(new EmitterBurstAction(this));
+			return true;
 		} else {
-			return sendProfile("start");
+			SendData.packAndSendActionForAll(new EmitterStartAction(this));
+			return true;
 		}
-	}
-
-	private boolean sendProfile(String profile) {
-		SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-		try {
-			Object serialized = ctx.serialize(this, profile);
-			if (serialized instanceof JSONObject) {
-				SendData.sendCustomActionForAll((JSONObject) serialized);
-				return true;
-			}
-		} catch (RuntimeException ignored) {
-		}
-		return false;
 	}
 
 	public int networkId() {

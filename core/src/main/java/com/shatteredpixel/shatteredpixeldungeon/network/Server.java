@@ -98,13 +98,13 @@ public class Server extends Thread {
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
         SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
         SERIALIZERS.register(EmitterAnchor.class, "default", new EmitterAnchorSerializer());
-        SERIALIZERS.register(Emitter.class, "burst", new EmitterBurstSerializer());
-        SERIALIZERS.register(Emitter.class, "start", new EmitterStartSerializer());
-        SERIALIZERS.register(Emitter.class, "pour", new EmitterPourSerializer());
-        SERIALIZERS.register(Emitter.class, "stop", new EmitterStopSerializer());
 
         //actions
         SERIALIZERS.register(SerializedAction.class, new SerializedActionSerializer());
+        SERIALIZERS.register(EmitterStopAction.class, new EmitterStopActionSerializer());
+        SERIALIZERS.register(EmitterBurstAction.class, new EmitterBurstActionSerializer());
+        SERIALIZERS.register(EmitterStartAction.class, new EmitterStartActionSerializer());
+        SERIALIZERS.register(EmitterPourAction.class, new EmitterPourActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
         SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());
