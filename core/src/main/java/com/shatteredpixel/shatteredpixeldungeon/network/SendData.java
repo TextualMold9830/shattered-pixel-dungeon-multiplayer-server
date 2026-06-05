@@ -109,18 +109,12 @@ public class SendData {
     }
 
     @SuppressWarnings("unused") // todo should we use this?
-    public static void sendActorRemoving(Actor actor) {
+    public static void sendActorRemoving(@NotNull Actor actor) {
         if (actor instanceof Buff) {
             sendBuff((Buff) actor, true);
             return;
         }
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddActorRemoving(actor);
-            clients[i].flush();
-        }
+        SendData.sendActionForAll(new ActorRemoveAction(actor));
     }
 
     public static void sendAllChars() {

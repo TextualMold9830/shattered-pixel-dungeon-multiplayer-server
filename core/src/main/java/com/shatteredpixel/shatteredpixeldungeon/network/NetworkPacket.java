@@ -128,17 +128,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddActorRemoving(Actor actor) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, "remove");
-        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            JSONObject event = new JSONObject();
-            event.put("action_name", "actor_delete");
-            event.put("payload", serialized);
-            addAction(event);
-        }
-    }
-
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
         addAction(new SetLevelVisualsAction(level));
