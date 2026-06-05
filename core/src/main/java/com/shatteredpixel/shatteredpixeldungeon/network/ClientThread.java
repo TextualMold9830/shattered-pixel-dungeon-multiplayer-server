@@ -429,6 +429,17 @@ public class ClientThread implements Callable<String> {
         }
     }
 
+    public void addTraps(@NotNull Level level) {
+        synchronized (packet) {
+            for (int pos = 0; pos < level.length(); pos++) {
+                var trap = level.traps.get(pos, null);
+                if (trap != null && trap.visible) {
+                    packet.addAction(new TrapUpdateAction(pos, trap));
+                }
+            }
+        }
+    }
+
     //send primitives
     @Deprecated
     public void sendCode(int code) {
@@ -490,6 +501,7 @@ public class ClientThread implements Callable<String> {
         }
 
         packet.packAndAddLevel(level, clientHero);
+        addTraps(level);
         packet.addAction(new HeroActorIdAction(clientHero.id()));
         packet.addAction(new HeroClassAction(clientHero.heroClass));
         packet.addAction(new HeroSubclassAction(clientHero.subClass));

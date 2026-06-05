@@ -160,7 +160,7 @@ public class ToxicGasRoom extends SpecialRoom {
 			shape = GRILL;
 
 			canBeHidden = false;
-			active = false;
+			setActive(false);
 		}
 
 		@Override

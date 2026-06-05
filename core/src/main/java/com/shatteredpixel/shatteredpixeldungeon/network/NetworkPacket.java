@@ -7,11 +7,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import org.jetbrains.annotations.Contract;
@@ -145,9 +143,6 @@ public class NetworkPacket {
                 addLateLiveStateAction(new PlantUpdateAction(pos, plant));
             }
         }
-        for (int pos = 0; pos < level.length(); pos++) {
-            packAndAddTrap(pos, level.traps.get(pos, null));
-        }
     }
 
     private void packAndAddItemAction(String actionName, List<Integer> path, @Nullable Item item, @Nullable Hero hero) {
@@ -203,23 +198,6 @@ public class NetworkPacket {
         obj.put("action_name", "show_window");
         addAction(obj);
     }
-
-
-    public void packAndAddTrap(int pos, Trap trap){
-        TrapDTO dto = new TrapDTO(pos, trap);
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject trapObj = (JSONObject) ctx.serialize(dto);
-
-        if (trapObj != null && trapObj.length() > 0) {
-            boolean isRemoval = trapObj.has("trap_info") && trapObj.isNull("trap_info");
-            trapObj.put("action_name", isRemoval ? "trap_remove" : "trap_update");
-            if (isRemoval) {
-                trapObj.remove("trap_info");
-            }
-            addAction(trapObj);
-        }
-    }
-
 
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
         JSONObject event = redirectPacket.toJSON();

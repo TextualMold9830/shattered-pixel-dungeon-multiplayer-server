@@ -159,7 +159,7 @@ public class VaultLevel extends CityLevel {
 			shape = DOTS;
 
 			canBeHidden = false;
-			active = false;
+			setActive(false);
 		}
 
 		@Override

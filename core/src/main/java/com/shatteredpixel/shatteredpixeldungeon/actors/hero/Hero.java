@@ -183,7 +183,6 @@ import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.BArray;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -1834,7 +1833,7 @@ public class Hero extends Char {
 				if (walkingToVisibleTrapInFog
 						&& Dungeon.level.traps.get(target) != null
 						&& Dungeon.level.traps.get(target).visible
-						&& Dungeon.level.traps.get(target).active){
+						&& Dungeon.level.traps.get(target).isActive()){
 					return false;
 				}
 			}
@@ -1937,7 +1936,7 @@ public class Hero extends Char {
 		if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				&& Dungeon.level.traps.get(cell) != null
 				&& Dungeon.level.traps.get(cell).visible
-				&& Dungeon.level.traps.get(cell).active) {
+				&& Dungeon.level.traps.get(cell).isActive()) {
 			walkingToVisibleTrapInFog = true;
 		} else {
 			walkingToVisibleTrapInFog = false;

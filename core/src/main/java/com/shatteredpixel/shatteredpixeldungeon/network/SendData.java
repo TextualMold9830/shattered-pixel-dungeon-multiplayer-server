@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -36,8 +37,8 @@ public class SendData {
     public static void sendLevel(Level level, Hero hero) { //keep because of observer
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            TrapCache.clear();
             clients[ID].packet.packAndAddLevel(level, clients[ID].clientHero);
+            clients[ID].addTraps(level);
         }
     }
 
@@ -416,12 +417,21 @@ public class SendData {
     public static void sendTraps(Level level) {
         for (int i = 0; i < clients.length; i++){
             if(clients[i] != null) {
-                for (int pos = 0; pos < level.length(); pos++) {
-                    clients[i].packet.packAndAddTrap(pos, level.traps.get(pos, null));
-                }
+                clients[i].addTraps(level);
                 clients[i].flush();
             }
         }
+    }
+
+
+    public static void sendTrap(int cell) {
+        //no `Trap trap` overload because you need to make sure that the trap exists on the level.
+        @Nullable Trap trap = Dungeon.level == null ? null : Dungeon.level.traps.get(cell, null);
+        //use this method instead of raw action to avoid sending invisible trap
+        ImmutableNetworkAction action = trap == null || !trap.visible
+                ? new TrapRemoveAction(cell)
+                : new TrapUpdateAction(cell, trap);
+        sendActionForAll(action);
     }
 
     //--------------------------- UI
