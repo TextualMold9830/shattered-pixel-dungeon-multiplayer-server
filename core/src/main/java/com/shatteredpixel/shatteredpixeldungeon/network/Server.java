@@ -44,8 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalS
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantRemovalSerializer;
+
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapRemovalSerializer;
@@ -64,7 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.Emi
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
+
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -86,8 +85,7 @@ public class Server extends Thread {
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
         SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
-        SERIALIZERS.register(PlantDTO.class, "default", new PlantSerializer());
-        SERIALIZERS.register(PlantDTO.class, "remove", new PlantRemovalSerializer());
+
         SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
         SERIALIZERS.register(TrapDTO.class, "remove", new TrapRemovalSerializer());
 
@@ -104,6 +102,8 @@ public class Server extends Thread {
         SERIALIZERS.register(EmitterPourAction.class, new EmitterPourActionSerializer());
         SERIALIZERS.register(BuffUpdateAction.class, new BuffUpdateActionSerializer());
         SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
+        SERIALIZERS.register(PlantUpdateAction.class, new PlantUpdateActionSerializer());
+        SERIALIZERS.register(PlantRemoveAction.class, new PlantRemoveActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
         SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());
