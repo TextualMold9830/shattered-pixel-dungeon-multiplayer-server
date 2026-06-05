@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.levels.VaultLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -124,7 +125,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 		}
 		if(needsUpdate){
-			SendData.sendBuff(this);
+			SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 		}
 		return true;
 	}
@@ -166,7 +167,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			GLog.n( Messages.get(this, "onstarving") );
 			target.damage( 1, this );
 		}
-		SendData.sendBuff(this);
+		SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 		BuffIndicator.refreshHero();
 	}
 
