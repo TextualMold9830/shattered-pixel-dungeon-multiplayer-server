@@ -122,6 +122,7 @@ public class Server extends Thread {
         SERIALIZERS.register(TexturePackAction.class, new TexturePackActionSerializer());
         SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
         SERIALIZERS.register(CharUpdateAction.class, new CharUpdateActionSerializer());
+        SERIALIZERS.register(SpecialSlotsDefinitionAction.class, new SpecialSlotsDefinitionActionSerializer());
         SERIALIZERS.register(SpriteFlashAction.class, new SpriteFlashActionSerializer());
         SERIALIZERS.register(InterlevelSceneAction.class, new InterlevelSceneActionSerializer());
         SERIALIZERS.register(UpdateCellsAction.class, new UpdateCellsActionSerializer());

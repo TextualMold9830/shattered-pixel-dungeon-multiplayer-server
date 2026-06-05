@@ -46,7 +46,7 @@ public class NetworkPacket {
         return networkPacket;
     }
 
-
+    @Deprecated
     public void addAction(@NotNull JSONObject actionObj) {
         addAction(serializedActionFrom(actionObj));
     }
@@ -158,14 +158,7 @@ public class NetworkPacket {
 
     @SuppressWarnings("unused") //keep it for future implementation
     public void packAndAddSpecialSlotsDefinition(@NotNull Hero hero) {
-        //todo implement this
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, hero);
-        Object payload = ctx.serialize(hero.belongings, "special_slot_definitions");
-
-        JSONObject event = new JSONObject();
-        event.put("action_name", "inventory_define_special_slots");
-        event.put("slots", payload);
-        addAction(event);
+        packAndAdd(new SpecialSlotsDefinitionAction(hero));
     }
 
     private void packAndAddItemAction(String actionName, List<Integer> path, @Nullable Item item, @Nullable Hero hero) {
