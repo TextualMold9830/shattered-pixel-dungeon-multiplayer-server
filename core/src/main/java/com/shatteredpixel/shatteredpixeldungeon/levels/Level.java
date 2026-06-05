@@ -24,6 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -1092,13 +1094,13 @@ public abstract class Level implements Bundlable {
 				return null;
 			}
 		}
-		SendData.sendPlant(pos, plant);
+		SendData.sendLateLiveStateActionForAll(new PlantUpdateAction(pos, plant));
 		return plant;
 	}
 	
 	public void uproot( int pos ) {
 		plants.remove(pos);
-		SendData.sendPlant(pos, null);
+		SendData.sendActionForAll(new PlantRemoveAction(pos));
 		GameScene.updateMap( pos );
 	}
 

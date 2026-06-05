@@ -341,15 +341,6 @@ public class SendData {
         }
     }
 
-    //---------------------------Plants
-    public static void sendPlant(int pos, Plant plant) {
-        if (plant == null) {
-            sendActionForAll(new PlantRemoveAction(pos));
-        } else {
-            sendLateLiveStateActionForAll(new PlantUpdateAction(pos, plant));
-        }
-    }
-
     //---------------------------Buffs
     public static void sendBuff(Buff buff, boolean remove) {
         if (remove) {
