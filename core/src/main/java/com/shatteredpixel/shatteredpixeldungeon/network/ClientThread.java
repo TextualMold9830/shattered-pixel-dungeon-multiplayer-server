@@ -326,11 +326,13 @@ public class ClientThread implements Callable<String> {
             messages = new ArrayList<>(pendingChatMessages);
             pendingChatMessages.clear();
         }
-        sendImmediate(NetworkPacket.packChatMessages(messages));
+        sendImmediate(NetworkPacket.fromChatMessages(messages));
     }
 
-    protected void sendImmediate(@NotNull JSONObject data) {
+    protected void sendImmediate(@NotNull NetworkPacket networkPacket) {
         try {
+            networkPacket.compress();
+            JSONObject data = networkPacket.dataRef.get();
             if (DeviceCompat.isDebug()) {
                 try {
                     Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));

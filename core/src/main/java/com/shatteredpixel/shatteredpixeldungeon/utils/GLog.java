@@ -22,11 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.utils;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.GreatCrabSprite;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Signal;
-
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendMessage;
 
 public class GLog {
 
@@ -35,7 +37,7 @@ public class GLog {
 	public static final String POSITIVE		= "++ ";
 	public static final String NEGATIVE		= "-- ";
 	public static final String WARNING		= "** ";
-	public static final String CUSTOM = "&&";
+	public static final String CUSTOM = "&&"; //&& + custom hex color
 	public static final String HIGHLIGHT	= "@@ ";
 
 	public static final String NEW_LINE	    = "\n";
@@ -47,28 +49,28 @@ public class GLog {
 	}
 	
 	public static void i( String text, Object... args ) {
-		String resolved = text;
-		if (args.length > 0) {
-			resolved = Messages.resolveFormat(text, args);
+		LocalizedString str;
+		if (args != null || args.length > 0) {
+			str = Messages.format(text, args);
+		}
+		else {
+			str = LocalizedString.raw(text);
 		}
 
-		DeviceCompat.log(TAG, resolved);
-		update.dispatch(resolved);
-		iWithTarget(null, LocalizedString.raw(text, args));
+		DeviceCompat.log(TAG, str.toString());
+		update.dispatch(str.toString());
+		SendData.sendActionForAll(new ChatMessageAction(text));
 	}
 
 	public static void i(LocalizedString text) {
-		iWithTarget(null, text);
+		SendData.sendActionForAll(new ChatMessageAction(text));
 	}
 
-	public static void iWithTarget( Integer ID, String text, Object... args ) {
-		iWithTarget(ID, LocalizedString.raw(text, args));
+	public static void iWithTarget(Hero hero, LocalizedString text ) {
+		SendData.sendAction(hero, new ChatMessageAction(text));
 	}
 
-	public static void iWithTarget( Integer ID, LocalizedString text ) {
-		sendMessage(ID, text);
-	}
-
+	@SuppressWarnings("unused")
 	public static void withColor(String text, int color, Object... args) {
 		i(CUSTOM+Integer.toHexString(color), text, args);
 	}

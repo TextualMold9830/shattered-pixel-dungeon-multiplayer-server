@@ -194,64 +194,7 @@ public class SendData {
             }
         }
     }
-
-    //---------------------------Messages
-
-    public static void sendMessageToAll(String message) {
-        sendMessageToAll(LocalizedString.raw(message));
-    }
-
-    public static void sendMessageToAll(LocalizedString message) {
-        ChatMessageAction messageAction = new ChatMessageAction(message);
-        for (int i = 0; i < clients.length; i++) {
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addChatMessage(messageAction);
-            client.flush();
-        }
-    }
-
-    public static void sendMessage(Integer ID, String message) {
-        sendMessage(ID, LocalizedString.raw(message));
-    }
-
-    public static void sendMessage(Integer ID, LocalizedString message) {
-        ChatMessageAction messageAction = new ChatMessageAction(message);
-        if (ID != null) {
-            ClientThread client = clients[ID];
-            if (client == null) {
-                return;
-            }
-            client.packet.addChatMessage(messageAction);
-            client.flush();
-        } else {
-            sendMessageToAll(message);
-        }
-    }
-
-    public static void sendMessageExcept(Integer exceptId, String message) {
-        sendMessageExcept(exceptId, LocalizedString.raw(message));
-    }
-
-    public static void sendMessageExcept(Integer exceptId, LocalizedString message) {
-        if (exceptId == null) {
-            sendMessageToAll(message);
-            return;
-        }
-        ChatMessageAction messageAction = new ChatMessageAction(message);
-        for (int i = 0; i < clients.length; i++) {
-            if (i == exceptId) continue;
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addChatMessage(messageAction);
-            client.flush();
-        }
-    }
-
+    
 
     //---------------------------Chat
     public static void enqueueChatMessageToAll(String message) {
