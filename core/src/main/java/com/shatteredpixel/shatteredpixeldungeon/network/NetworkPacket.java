@@ -231,16 +231,7 @@ public class NetworkPacket {
             addAction(trapObj);
         }
     }
-    public void packAndAddBuff(Buff buff, boolean remove) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(buff, remove ? "remove" : "default");
 
-        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            JSONObject event = (JSONObject) serialized;
-            event.put("action_name", remove ? "buff_remove" : "buff_update");
-            addAction(event);
-        }
-    }
 
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
         JSONObject event = redirectPacket.toJSON();

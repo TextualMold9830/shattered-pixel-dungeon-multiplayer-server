@@ -49,11 +49,9 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.PlantRemoval
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.TrapRemovalSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BuffRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpecialSlotDefinitionsSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
@@ -92,8 +90,7 @@ public class Server extends Thread {
         SERIALIZERS.register(PlantDTO.class, "remove", new PlantRemovalSerializer());
         SERIALIZERS.register(TrapDTO.class, "default", new TrapSerializer());
         SERIALIZERS.register(TrapDTO.class, "remove", new TrapRemovalSerializer());
-        SERIALIZERS.register(Buff.class, "default", new BuffSerializer());
-        SERIALIZERS.register(Buff.class, "remove", new BuffRemovalSerializer());
+
         SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
         SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
@@ -105,6 +102,8 @@ public class Server extends Thread {
         SERIALIZERS.register(EmitterBurstAction.class, new EmitterBurstActionSerializer());
         SERIALIZERS.register(EmitterStartAction.class, new EmitterStartActionSerializer());
         SERIALIZERS.register(EmitterPourAction.class, new EmitterPourActionSerializer());
+        SERIALIZERS.register(BuffUpdateAction.class, new BuffUpdateActionSerializer());
+        SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
         SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());

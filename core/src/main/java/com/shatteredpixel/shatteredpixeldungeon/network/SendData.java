@@ -359,7 +359,11 @@ public class SendData {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.packAndAddBuff(buff, remove);
+            if (remove) {
+                clients[i].packet.packAndAdd(new BuffRemoveAction(buff));
+            } else {
+                clients[i].packet.packAndAdd(new BuffUpdateAction(buff));
+            }
             clients[i].flush();
         }
     }
