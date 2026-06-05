@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -294,7 +295,7 @@ public class HallsBossLevel extends Level {
 		}
 
 		Dungeon.observe();
-		Music.INSTANCE.fadeOut(5f, new Music.PlayAction(Assets.Music.THEME_FINALE, true));
+		Music.INSTANCE.fadeOut(5f, new MusicAction.PlayAction(Assets.Music.THEME_FINALE, true));
 	}
 
 	@Override

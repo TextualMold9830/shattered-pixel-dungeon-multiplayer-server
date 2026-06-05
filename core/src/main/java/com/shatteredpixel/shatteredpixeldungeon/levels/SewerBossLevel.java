@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss.GooBossRo
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss.SewerBossEntranceRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss.SewerBossExitRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.StandardRoom;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -190,7 +191,7 @@ public class SewerBossLevel extends SewerLevel {
 			set( entrance(), Terrain.ENTRANCE );
 			GameScene.updateMap( entrance() );
 
-			Music.INSTANCE.fadeOut(5f, new Music.EndAction());
+			Music.INSTANCE.fadeOut(5f, new MusicAction.EndAction());
 		}
 	}
 	

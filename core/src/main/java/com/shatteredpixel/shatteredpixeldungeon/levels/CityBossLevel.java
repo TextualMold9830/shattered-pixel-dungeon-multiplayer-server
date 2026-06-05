@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.ImpShopRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
@@ -369,7 +370,7 @@ public class CityBossLevel extends Level {
 				Dungeon.observe(hero);
 			}
 		}
-		Music.INSTANCE.fadeOut(5f, new Music.EndAction());
+		Music.INSTANCE.fadeOut(5f, new MusicAction.EndAction());
 	}
 
 	private void spawnShop(){

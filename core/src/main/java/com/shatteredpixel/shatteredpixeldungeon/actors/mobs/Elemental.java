@@ -52,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
@@ -423,11 +424,11 @@ public abstract class Elemental extends Mob {
 				Dungeon.level.drop( new Embers(), pos ).sprite.drop();
 				//assign score here as player may choose to keep the embers
 				Statistics.questScores[1] += 2000;
-				Music.MusicAction callback;
+				MusicAction callback;
 				if (Wandmaker.Quest.active() || Statistics.amuletObtained){
-					callback = new Music.PlayAction(Assets.Music.PRISON_TENSE, true);
+					callback = new MusicAction.PlayAction(Assets.Music.PRISON_TENSE, true);
 				} else {
-					callback = new Music.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+					callback = new MusicAction.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
 				}
 				Music.INSTANCE.fadeOut(1f, callback);
 			}

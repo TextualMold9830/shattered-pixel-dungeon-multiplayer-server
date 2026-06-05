@@ -23,7 +23,7 @@ import com.nikita22007.multiplayer.utils.Log;
 import com.nikita22007.multiplayer.utils.Utils;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.watabou.utils.DeviceCompat;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlaySampleAction;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,22 +119,11 @@ public enum Sample {
 			load(id);
 		}
 
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_name", "play_sample");
-			actionObj.put("sample", id);
-			actionObj.put("left_volume", leftVolume);
-			actionObj.put("right_volume", rightVolume);
-			actionObj.put("rate", rate);
-			if (delay != null){
-				actionObj.put("delay", (float)delay);
-			}
-			actionObj.put("pitch", pitch);
-		} catch (JSONException ignored) {}
+		PlaySampleAction action = new PlaySampleAction(id, leftVolume, rightVolume, rate, pitch, delay);
 		if (hero != null){
-			SendData.sendCustomAction(actionObj, hero);
+			SendData.sendAction(hero, action);
 		} else {
-			SendData.sendCustomActionForAll(actionObj);
+			SendData.sendActionForAll(action);
 		}
 	}
 	public void play(String id, float volume, float pitch){
