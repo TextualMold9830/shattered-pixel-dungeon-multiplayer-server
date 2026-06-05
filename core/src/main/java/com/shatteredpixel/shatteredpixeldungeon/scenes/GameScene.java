@@ -66,6 +66,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.RippleVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DiscardedItemSprite;
@@ -1018,13 +1019,7 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void ripple(int pos) {
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_name", "ripple_visual");
-			actionObj.put("pos", pos);
-		} catch (JSONException ignore) {
-		}
-		SendData.sendCustomActionForAll(actionObj);
+		SendData.sendActionForAll(new RippleVisualAction(pos));
 	}
 
 	public static synchronized SpellSprite spellSprite() {

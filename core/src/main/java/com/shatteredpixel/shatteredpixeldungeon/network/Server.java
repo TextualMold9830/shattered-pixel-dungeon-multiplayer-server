@@ -104,6 +104,7 @@ public class Server extends Thread {
         SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
         SERIALIZERS.register(PlantUpdateAction.class, new PlantUpdateActionSerializer());
         SERIALIZERS.register(PlantRemoveAction.class, new PlantRemoveActionSerializer());
+        SERIALIZERS.register(RippleVisualAction.class, new RippleVisualActionSerializer());
         SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
         SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
         SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());
