@@ -350,20 +350,9 @@ public class SendData {
         }
     }
 
-    @Deprecated
-    public static void sendCustomAction(@NotNull JSONObject action_obj, @NotNull Hero hero) {
-        if (hero.networkID <= -1) {
-            return;
-        }
-        int networkID = hero.networkID;
-        if (clients[networkID] != null) {
-            clients[networkID].packet.addAction(action_obj);
-            clients[networkID].flush();
-        }
-    }
 
     @Deprecated
-    public static void sendCustomAction(JSONObject action_obj, int networkID) {
+    private static void sendCustomAction(JSONObject action_obj, int networkID) {
         assert action_obj.has("action_name") : "Action object must contains \"action_type\" field";
         if (networkID <= -1) {
             return;
