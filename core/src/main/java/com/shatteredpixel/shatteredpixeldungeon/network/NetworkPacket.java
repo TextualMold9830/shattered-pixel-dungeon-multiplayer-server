@@ -11,7 +11,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.PlantDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.TrapDTO;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -141,7 +140,10 @@ public class NetworkPacket {
 
         level.heaps.values().forEach(heap -> addHeap(heap, observer));
         for (int pos = 0; pos < level.length(); pos++) {
-            packAndAddPlant(pos, level.plants.get(pos, null));
+            Plant plant = level.plants.get(pos, null);
+            if (plant != null) {
+                addLateLiveStateAction(new PlantUpdateAction(pos, plant));
+            }
         }
         for (int pos = 0; pos < level.length(); pos++) {
             packAndAddTrap(pos, level.traps.get(pos, null));
@@ -202,21 +204,7 @@ public class NetworkPacket {
         addAction(obj);
     }
 
-    public void packAndAddPlant(int pos, Plant plant) {
-        PlantDTO dto = new PlantDTO(pos, plant);
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject plantObj = (JSONObject) ctx.serialize(dto);
 
-        if (plantObj != null && plantObj.length() > 0) {
-            boolean isRemoval = plantObj.has("plant_info") && plantObj.isNull("plant_info");
-            plantObj.put("action_name", isRemoval ? "plant_remove" : "plant_update");
-            if (isRemoval) {
-                plantObj.remove("plant_info");
-                plantObj.remove("texture");
-            }
-            addAction(plantObj);
-        }
-    }
     public void packAndAddTrap(int pos, Trap trap){
         TrapDTO dto = new TrapDTO(pos, trap);
         SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);

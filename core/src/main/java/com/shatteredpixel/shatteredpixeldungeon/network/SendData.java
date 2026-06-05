@@ -36,7 +36,6 @@ public class SendData {
     public static void sendLevel(Level level, Hero hero) { //keep because of observer
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            PlantCache.clear();
             TrapCache.clear();
             clients[ID].packet.packAndAddLevel(level, clients[ID].clientHero);
         }
@@ -344,27 +343,19 @@ public class SendData {
 
     //---------------------------Plants
     public static void sendPlant(int pos, Plant plant) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddPlant(pos, plant);
-            clients[i].flush();
+        if (plant == null) {
+            sendActionForAll(new PlantRemoveAction(pos));
+        } else {
+            sendLateLiveStateActionForAll(new PlantUpdateAction(pos, plant));
         }
     }
 
     //---------------------------Buffs
     public static void sendBuff(Buff buff, boolean remove) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            if (remove) {
-                clients[i].packet.packAndAdd(new BuffRemoveAction(buff));
-            } else {
-                clients[i].packet.packAndAdd(new BuffUpdateAction(buff));
-            }
-            clients[i].flush();
+        if (remove) {
+            sendActionForAll(new BuffRemoveAction(buff));
+        } else {
+            sendLateLiveStateActionForAll(new BuffUpdateAction(buff));
         }
     }
     public static void sendBuff(Buff buff){
@@ -516,6 +507,15 @@ public class SendData {
             var client = clients[i];
             if (client != null) {
                 client.packet.packAndAdd(networkAction);
+            }
+        }
+    }
+
+    public static void sendLateLiveStateActionForAll(LiveStateNetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.addLateLiveStateAction(networkAction);
             }
         }
     }
