@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class SpriteFlashAction implements NetworkAction {
+public class SpriteFlashAction implements ImmutableNetworkAction {
     public final int actorId;
     public final float flashTime;
 

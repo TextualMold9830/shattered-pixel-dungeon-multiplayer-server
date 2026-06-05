@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class UpdateFovAction implements NetworkAction {
+public class UpdateFovAction implements ImmutableNetworkAction {
     @Nullable
     private final Hero hero;
     private final boolean @Nullable [] visible;

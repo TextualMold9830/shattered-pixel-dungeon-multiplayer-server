@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class DiscoverTileAction implements NetworkAction {
+public class DiscoverTileAction implements ImmutableNetworkAction {
     public final int pos;
     public final int oldValue;
 

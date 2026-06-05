@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class HeapRemoveAction implements NetworkAction {
+public class HeapRemoveAction implements ImmutableNetworkAction {
     public final int pos;
 
     @Contract(pure = true)

@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class LockedFloorStateAction implements NetworkAction {
+public class LockedFloorStateAction implements ImmutableNetworkAction {
     public final boolean locked;
 
     @Contract(pure = true)

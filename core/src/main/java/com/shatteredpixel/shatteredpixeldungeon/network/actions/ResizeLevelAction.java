@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class ResizeLevelAction implements NetworkAction {
+public class ResizeLevelAction implements ImmutableNetworkAction {
     public final int width;
     public final int height;
 

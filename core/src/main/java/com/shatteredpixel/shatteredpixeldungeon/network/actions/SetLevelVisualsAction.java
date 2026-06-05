@@ -4,7 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class SetLevelVisualsAction implements NetworkAction {
+public class SetLevelVisualsAction implements ImmutableNetworkAction {
     public final String tilesTexture;
     public final String waterTexture;
     public final String feeling;

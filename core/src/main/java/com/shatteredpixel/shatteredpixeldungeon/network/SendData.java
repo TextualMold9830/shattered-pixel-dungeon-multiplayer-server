@@ -478,7 +478,7 @@ public class SendData {
     }
 
     //--------------------------- Events/Actions
-    public static void sendAction(@Nullable Hero hero, NetworkAction networkAction) {
+    public static void sendAction(@Nullable Hero hero, ImmutableNetworkAction networkAction) {
         if (hero == null) return;
         int networkId = hero.networkID;
         if (networkId < 0) {
@@ -494,7 +494,7 @@ public class SendData {
         }
     }
 
-    public static void sendActionForAll(NetworkAction networkAction) {
+    public static void sendActionForAll(ImmutableNetworkAction networkAction) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
             if (client != null) {

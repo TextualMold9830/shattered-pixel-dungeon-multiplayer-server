@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FlareVisualAction implements NetworkAction {
+public class FlareVisualAction implements ImmutableNetworkAction {
     public final int pos;
     @Nullable
     public final Float positionX;

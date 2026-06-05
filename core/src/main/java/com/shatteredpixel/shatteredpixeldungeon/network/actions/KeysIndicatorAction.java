@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class KeysIndicatorAction implements NetworkAction {
+public class KeysIndicatorAction implements ImmutableNetworkAction {
     public final List<Integer> keysCount;
 
     public KeysIndicatorAction() {

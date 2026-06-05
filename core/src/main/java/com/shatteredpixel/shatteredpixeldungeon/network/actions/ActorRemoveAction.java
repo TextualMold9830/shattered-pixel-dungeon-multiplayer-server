@@ -4,7 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class ActorRemoveAction implements NetworkAction {
+public class ActorRemoveAction implements ImmutableNetworkAction {
     public final int actorId;
 
     @Contract(pure = true)

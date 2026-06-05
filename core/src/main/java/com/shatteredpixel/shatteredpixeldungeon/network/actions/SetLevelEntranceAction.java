@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class SetLevelEntranceAction implements NetworkAction {
+public class SetLevelEntranceAction implements ImmutableNetworkAction {
     public final int pos;
 
     @Contract(pure = true)

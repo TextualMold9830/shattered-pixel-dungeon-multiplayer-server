@@ -4,7 +4,7 @@ import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class ChatMessageAction implements NetworkAction {
+public class ChatMessageAction implements ImmutableNetworkAction {
     @NotNull
     public final LocalizedString text;
 

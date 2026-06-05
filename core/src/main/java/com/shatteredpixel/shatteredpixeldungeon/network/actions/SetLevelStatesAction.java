@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class SetLevelStatesAction implements NetworkAction {
+public class SetLevelStatesAction implements ImmutableNetworkAction {
     public final int[] states;
 
     public SetLevelStatesAction(@NotNull Level level) {

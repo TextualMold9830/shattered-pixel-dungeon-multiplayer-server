@@ -4,9 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
-public class CharSpriteStateAction implements NetworkAction {
+public class CharSpriteStateAction implements ImmutableNetworkAction {
     public final int actorId;
     public final CharSprite.State state;
     public final boolean remove;

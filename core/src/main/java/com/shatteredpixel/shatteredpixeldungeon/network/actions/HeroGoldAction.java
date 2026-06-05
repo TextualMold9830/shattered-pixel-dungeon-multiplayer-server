@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class HeroGoldAction implements NetworkAction {
+public class HeroGoldAction implements ImmutableNetworkAction {
     public final int gold;
 
     @Contract(pure = true)

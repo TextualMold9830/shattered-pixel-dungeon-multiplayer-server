@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ShowStatusAction implements NetworkAction {
+public class ShowStatusAction implements ImmutableNetworkAction {
     @Nullable
     public final Float x;
     @Nullable

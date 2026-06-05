@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class SurpriseVisualAction implements NetworkAction {
+public class SurpriseVisualAction implements ImmutableNetworkAction {
     public final int pos;
     public final float angle;
     public final float timeToFade;
