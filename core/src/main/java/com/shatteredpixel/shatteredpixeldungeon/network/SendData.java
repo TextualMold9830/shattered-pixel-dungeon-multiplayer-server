@@ -354,7 +354,7 @@ public class SendData {
 
     @Deprecated
     private static void sendCustomAction(JSONObject action_obj, int networkID) {
-        assert action_obj.has("action_name") : "Action object must contains \"action_type\" field";
+        assert action_obj.has("action_name") : "Action object must contains \"action_name\" field";
         if (networkID <= -1) {
             return;
         }

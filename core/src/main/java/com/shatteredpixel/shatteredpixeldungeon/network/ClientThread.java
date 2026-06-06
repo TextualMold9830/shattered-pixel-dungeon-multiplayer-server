@@ -462,14 +462,16 @@ public class ClientThread implements Callable<String> {
 
     //hack
     boolean disconnected = false;
-    public synchronized void disconnect() {
+    public synchronized void disconnect(String message) {
         if (!disconnected) {
             disconnected = true;
             try {
+                //TODO: send message
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }
             Server.clients[threadID] = null;
+            Server.used[threadID] = false;
             readStream = null;
             writeStream = null;
             if (jsonCall != null) {
@@ -493,6 +495,9 @@ public class ClientThread implements Callable<String> {
                 }
             }
         }
+    }
+    public synchronized void disconnect() {
+        disconnect("You was kicked");
     }
 
     private synchronized void sendInitData() {
@@ -533,6 +538,8 @@ public class ClientThread implements Callable<String> {
 
         packet.addAction(new InterlevelSceneAction("fade_out"));
         forceFlush();
+
+        Server.clients[threadID] = this;
     }
     private void sendTexture(String textureData){
         packet.addAction(new TexturePackAction(textureData));

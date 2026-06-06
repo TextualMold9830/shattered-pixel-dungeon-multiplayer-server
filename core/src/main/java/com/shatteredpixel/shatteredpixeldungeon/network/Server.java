@@ -166,6 +166,7 @@ public class Server extends Thread {
     protected static ServerSocket serverSocket;
     protected static Server serverThread;
     protected static ClientThread[] clients = new ClientThread[0];
+    protected static boolean[] used = new boolean[0];
     protected static RelayThread relay;
 
     //NSD
@@ -215,6 +216,7 @@ public class Server extends Thread {
             return false;
         }
         clients = new ClientThread[SPDSettings.maxPlayers()];
+        used = new boolean[SPDSettings.maxPlayers()];
         serviceName = SPDSettings.serverName();
         regListenerState = RegListenerState.NONE;
         if (!initializeServerSocket()) {
@@ -270,10 +272,10 @@ public class Server extends Thread {
                 if (i == clients.length) { //If we test last and it's connected too
                     rejectClient(client, "server_full", "Server is full");
                     client.close();
-                } else if (clients[i] == null) {
+                } else if ((clients[i] == null) && !used[i])  {
                     client.setSoTimeout(0);
                     ClientThread thread = new ClientThread(i, client, null);
-                    clients[i] = thread;
+                    //clients[i] = thread;
                     thread.InitPlayerHero(heroClass, uuid);
                     break;
                 }
