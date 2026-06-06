@@ -1,8 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.optional;
 
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -35,8 +35,8 @@ public class FragmentOfUpgrade extends Item {
     }
     private final WndBag.ItemSelector selector = new WndBag.ItemSelector() {
         @Override
-        public String textPrompt() {
-            return "Choose an item to upgrade";
+        public LocalizedString textPrompt() {
+            return LocalizedString.raw("Choose an item to upgrade");
         }
 
         @Override
@@ -171,11 +171,11 @@ public class FragmentOfUpgrade extends Item {
 */
 
     @Override
-    public String desc(Hero hero) {
-        String desc = super.desc();
+    public LocalizedString desc(Hero hero) {
+        LocalizedString desc = super.desc();
 
         if (!canUse(hero)) {
-            desc += "\n\n" + Messages.get(this, "nouse");
+            desc = LocalizedString.concat(desc, LocalizedString.raw("\n\n" + Messages.get(this, "nouse")));
         }
 
         return desc;

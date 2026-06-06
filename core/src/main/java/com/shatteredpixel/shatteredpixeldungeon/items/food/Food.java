@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -99,8 +100,8 @@ public class Food extends Item {
 
 
 	@Override
-	public String desc() {
-		return super.desc() + (Dungeon.balance.foodSatisfiesEveryHero ? "\n\n"+Messages.get(Food.class, "share") : "");
+	public LocalizedString desc() {
+		return LocalizedString.concat(super.desc(), LocalizedString.raw((Dungeon.balance.foodSatisfiesEveryHero ? "\n\n"+Messages.get(Food.class, "share") : "")));
 	}
 
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -165,7 +166,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Dungeon.balance.useFragments && isKnown() ? Messages.get(this, "fragment") : super.desc();
 	}
 	

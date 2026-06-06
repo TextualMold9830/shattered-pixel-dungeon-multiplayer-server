@@ -55,8 +55,8 @@ public class PotionOfMastery extends ExoticPotion {
 	protected static boolean identifiedByUse = false;
 
 	@Override
-	public String desc() {
-		return super.desc() + (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(PotionOfStrength.class, "global_strength") : "");
+	public LocalizedString desc() {
+		return LocalizedString.concat(super.desc(), (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(PotionOfStrength.class, "global_strength") : ""));
 	}
 
 	@Override
