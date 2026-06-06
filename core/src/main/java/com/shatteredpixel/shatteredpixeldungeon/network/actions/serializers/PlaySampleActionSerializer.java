@@ -9,7 +9,6 @@ public class PlaySampleActionSerializer extends NetworkActionSerializer<PlaySamp
     @Override
     protected JSONObject serializeInternal(@NotNull PlaySampleAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject object = new JSONObject();
-        object.put("action_name", "play_sample");
         object.put("sample", obj.id);
         object.put("left_volume", obj.leftVolume);
         object.put("right_volume", obj.rightVolume);
