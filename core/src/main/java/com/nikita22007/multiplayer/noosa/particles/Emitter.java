@@ -30,16 +30,15 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterBurstActi
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStartAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterPourAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStopAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.particles.SerializableParticleFactory;
 import com.watabou.utils.PointF;
 import com.watabou.utils.SparseArray;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -87,6 +86,8 @@ public class Emitter /*this is temporary ->*/extends Group {
 	protected int quantity;
 
 	private boolean on = false;
+	private LiveStateNetworkAction pendingStartAction;
+	private boolean startActionSent;
 
 	/**
 	 * Factory which producing particles
@@ -213,19 +214,14 @@ public class Emitter /*this is temporary ->*/extends Group {
 		this.interval = interval;
 		this.quantity = quantity;
 
-		boolean newInfiniteId = false;
-		if (quantity == 0 && id == -1) {
-			assignEmitterId(this);
-			newInfiniteId = true;
-		}
-		
+		pendingStartAction = createStartAction();
+		startActionSent = false;
+
 		if (sendSelf()) {
 			on(true);
 			if (quantity == 0) {
 				infiniteEmitters.put(id, this);
 			}
-		} else if (newInfiniteId) {
-			id = -1;
 		}
 	}
 	//TODO: remove all uses of this
@@ -238,6 +234,8 @@ public class Emitter /*this is temporary ->*/extends Group {
 		interval = 0;
 		quantity = 0;
 		on = false;
+		pendingStartAction = null;
+		startActionSent = false;
 		visible = true;
 		fillTarget = true;
 	}
@@ -286,15 +284,36 @@ public class Emitter /*this is temporary ->*/extends Group {
 	}
 
 	protected boolean sendSelf() {
+		if (parent == null || pendingStartAction == null || startActionSent) {
+			return false;
+		}
+		if (quantity == 0 && id == -1) {
+			assignEmitterId(this);
+		}
+		SendData.packAndSendActionForAll(pendingStartAction);
+		startActionSent = true;
+		return true;
+	}
+
+	@NotNull
+	private LiveStateNetworkAction createStartAction() {
 		if (quantity == 0) {
-			SendData.packAndSendActionForAll(new EmitterPourAction(this));
-			return true;
+			return new EmitterPourAction(this);
 		} else if (interval == 0) {
-			SendData.packAndSendActionForAll(new EmitterBurstAction(this));
-			return true;
+			return new EmitterBurstAction(this);
 		} else {
-			SendData.packAndSendActionForAll(new EmitterStartAction(this));
-			return true;
+			return new EmitterStartAction(this);
+		}
+	}
+
+	@Override
+	public void onAdd() {
+		super.onAdd();
+		if (sendSelf()) {
+			on(true);
+			if (quantity == 0) {
+				infiniteEmitters.put(id, this);
+			}
 		}
 	}
 
@@ -317,6 +336,15 @@ public class Emitter /*this is temporary ->*/extends Group {
 
 	public int networkQuantity() {
 		return quantity;
+	}
+
+	public boolean networkFillTarget() {
+		return fillTarget;
+	}
+
+	@Nullable
+	public LiveStateNetworkAction networkStartAction() {
+		return pendingStartAction;
 	}
 
 	public void pos(float x, float y) {

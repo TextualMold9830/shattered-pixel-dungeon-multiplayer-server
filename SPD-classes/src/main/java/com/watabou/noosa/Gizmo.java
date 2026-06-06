@@ -48,6 +48,9 @@ public class Gizmo {
 	
 	public void draw() {
 	}
+
+	public void onAdd() {
+	}
 	
 	public void kill() {
 		alive = false;

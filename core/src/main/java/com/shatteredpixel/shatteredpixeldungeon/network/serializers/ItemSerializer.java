@@ -1,8 +1,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -59,6 +61,10 @@ public class ItemSerializer implements Serializer<Item> {
             } else {
                 itemObj.put("glowing", JSONObject.NULL);
             }
+
+            Emitter emitter = item.emitter();
+            LiveStateNetworkAction emitterAction = emitter == null ? null : emitter.networkStartAction();
+            itemObj.put("emitter", emitterAction == null ? JSONObject.NULL : ctx.serialize(emitterAction));
 
         } catch (JSONException e) {
             Log.e("Packet", "JSONException inside ItemSerializer. " + e.toString());

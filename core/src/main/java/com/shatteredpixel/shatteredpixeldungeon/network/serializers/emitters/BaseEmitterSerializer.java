@@ -17,6 +17,7 @@ public abstract class BaseEmitterSerializer {
 		object.put("factory", factory);
 		object.put("interval", emitter.networkInterval());
 		object.put("quantity", emitter.networkQuantity());
+		object.put("fill_target", emitter.networkFillTarget());
 		return object;
 	}
 }
