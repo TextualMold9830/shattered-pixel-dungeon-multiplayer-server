@@ -467,14 +467,16 @@ public class ClientThread implements Callable<String> {
 
     //hack
     boolean disconnected = false;
-    public synchronized void disconnect() {
+    public synchronized void disconnect(String message) {
         if (!disconnected) {
             disconnected = true;
             try {
+                //TODO: send message
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }
             Server.clients[threadID] = null;
+            Server.used[threadID] = false;
             readStream = null;
             writeStream = null;
             if (jsonCall != null) {
@@ -499,36 +501,8 @@ public class ClientThread implements Callable<String> {
             }
         }
     }
-    public synchronized void disconnect(String message) {
-        if (!disconnected) {
-            disconnected = true;
-            try {
-                //TODO: send message
-                clientSocket.close(); //it creates exception when we will wait client data
-            } catch (Exception ignore) {
-            }
-            if (clientHero != null) {
-                clientHero.next();
-                Dungeon.removeHero(clientHero);
-                clientHero = null;
-            }
-            Server.clients[threadID] = null;
-            readStream = null;
-            writeStream = null;
-            jsonCall.cancel(true);
-            GLog.n("player " + threadID + " disconnected");
-            boolean notNullHero = false;
-            for (Hero hero: Dungeon.heroes) {
-                if (hero != null) {
-                    GameScene.shouldProcess = true;
-                    notNullHero = true;
-                    break;
-                }
-            }
-            if (!notNullHero) {
-                GameScene.shouldProcess = false;
-            }
-        }
+    public synchronized void disconnect() {
+        disconnect("You was kicked");
     }
 
     private synchronized void sendInitData() {
@@ -569,6 +543,8 @@ public class ClientThread implements Callable<String> {
 
         packet.addAction(new InterlevelSceneAction("fade_out"));
         forceFlush();
+
+        Server.clients[threadID] = this;
     }
     private void sendTexture(String textureData){
         packet.addAction(new TexturePackAction(textureData));

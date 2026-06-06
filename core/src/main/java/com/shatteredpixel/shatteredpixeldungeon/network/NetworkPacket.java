@@ -78,6 +78,9 @@ public class NetworkPacket {
     }
 
     public synchronized JSONObject serialize() {
+        if (actions.isEmpty()) {
+            return new JSONObject();
+        }
         JSONObject packet = new JSONObject();
         packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
 
