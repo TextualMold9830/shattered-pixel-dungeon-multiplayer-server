@@ -31,6 +31,7 @@ import java.util.Map;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -42,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerialize
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.MissileAnchorSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
 
@@ -87,6 +89,7 @@ public class Server extends Thread {
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
         SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
         SERIALIZERS.register(EmitterAnchor.class, "default", new EmitterAnchorSerializer());
+        SERIALIZERS.register(MissileSprite.Anchor.class, "default", new MissileAnchorSerializer());
 
         //actions
         SERIALIZERS.register(SerializedAction.class, new SerializedActionSerializer());
@@ -147,6 +150,7 @@ public class Server extends Thread {
         SERIALIZERS.register(ResumeButtonVisibleAction.class, new ResumeButtonVisibleActionSerializer());
         SERIALIZERS.register(MusicAction.class, new MusicActionSerializer());
         SERIALIZERS.register(PlaySampleAction.class, new PlaySampleActionSerializer());
+        SERIALIZERS.register(MissileSpriteVisualAction.class, new MissileSpriteVisualActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
