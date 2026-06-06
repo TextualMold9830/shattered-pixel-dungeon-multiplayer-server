@@ -463,7 +463,7 @@ public class SendData {
             return;
         }
         if (networkId >= clients.length) {
-            Log.e("Hero network id is too much");
+            Log.e("SendData","Hero network id is too much");
             return;
         }
         var client = clients[networkId];
