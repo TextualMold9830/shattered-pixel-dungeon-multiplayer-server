@@ -1624,9 +1624,9 @@ public class Hero extends Char {
 
 	@Override
 	public void damage(int dmg, @NotNull DamageCause source ) {
-		if (dmg > 0) {
-			return;
-		}
+		//if (dmg > 0) {
+		//	return;
+		//}
 		Object src = source.getCause();
 		if (buff(TimekeepersHourglass.timeStasis.class) != null
 				|| buff(TimeStasis.class) != null) {

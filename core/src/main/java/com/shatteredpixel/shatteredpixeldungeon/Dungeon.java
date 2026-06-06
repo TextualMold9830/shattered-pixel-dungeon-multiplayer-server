@@ -213,9 +213,9 @@ public class Dungeon {
 		initialVersion = version = Game.versionCode;
 		challenges = SPDSettings.challenges();
 		mobsToChampion = 1;
-		if (!DeviceCompat.isDebug() && Dungeon.seed == 0) {
+		//if (!DeviceCompat.isDebug() && Dungeon.seed == 0) {
 			initSeed();
-		}
+		//}
 		Actor.clear();
 		Actor.resetNextID();
 
