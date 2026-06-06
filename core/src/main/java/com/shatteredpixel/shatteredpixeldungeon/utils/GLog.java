@@ -50,7 +50,7 @@ public class GLog {
 	
 	public static void i( String text, Object... args ) {
 		LocalizedString str;
-		if (args != null || args.length > 0) {
+		if (args != null && args.length > 0) {
 			str = Messages.format(text, args);
 		}
 		else {
@@ -63,6 +63,8 @@ public class GLog {
 	}
 
 	public static void i(LocalizedString text) {
+		DeviceCompat.log(TAG, text.toString());
+		update.dispatch(text.toString());
 		SendData.sendActionForAll(new ChatMessageAction(text));
 	}
 
