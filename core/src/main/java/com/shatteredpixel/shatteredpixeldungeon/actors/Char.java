@@ -1338,6 +1338,11 @@ public abstract class Char extends Actor {
 	}
 
 	@Override
+	protected void onAdd() {
+		sendSelf();
+	}
+
+	@Override
 	protected synchronized void onRemove() {
 		for (Buff buff : buffs.toArray(new Buff[buffs.size()])) {
 			buff.detach();
