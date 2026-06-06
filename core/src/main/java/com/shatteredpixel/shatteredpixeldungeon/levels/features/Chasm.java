@@ -150,7 +150,7 @@ public class Chasm implements Hero.Doom {
 			if (target instanceof Hero) {
 				heroLand((Hero) target);
 			} else {
-				Log.e("Falling actor is not hero");
+				Log.e("Chasm","Falling actor is not hero");
 			}
 			detach();
 			return true;

@@ -199,7 +199,7 @@ public class Bomb extends Item {
 					if (curItem == this) {
 						ch.damage(dmg, new Char.DamageCause(this, curUser));
 					} else {
-						Log.e("Bomb explosion curr item is not this");
+						Log.e("Bomb","Bomb explosion curr item is not this");
 						ch.damage(dmg, new Char.DamageCause(this, null));
 					}
 				}

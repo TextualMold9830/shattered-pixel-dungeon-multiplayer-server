@@ -79,7 +79,7 @@ public class ShrapnelBomb extends Bomb {
 			if (curItem == this) {
 				ch.damage(damage, new Char.DamageCause(this, curUser));
 			} else {
-				Log.e("Shrapnel bomb explosion curr item is not this");
+				Log.e("ShrapnelBomb","Shrapnel bomb explosion curr item is not this");
 				ch.damage(damage, new Char.DamageCause(this, null));
 			}
 			if (ch instanceof Hero && !ch.isAlive()) {
