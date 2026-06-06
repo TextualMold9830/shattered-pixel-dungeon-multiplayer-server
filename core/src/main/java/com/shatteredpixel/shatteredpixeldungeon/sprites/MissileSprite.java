@@ -84,7 +84,7 @@ public final class MissileSprite extends ItemSprite implements Tweener.Listener 
 
 		if (item == null) {
 			view(0, null);
-			Log.e("MissileSprite: item is null");
+			Log.e("MissileSprite", "item is null");
 			if (DeviceCompat.isDebug()) {
 				throw new RuntimeException("MissileSprite: item is null");
 			}

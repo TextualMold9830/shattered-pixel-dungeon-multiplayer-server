@@ -24,7 +24,18 @@ public class Log {
     private static void print(String logLevel, String tag, String s, Object... params)
     {
         String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        String message = (params != null && params.length > 0) ? String.format(s, params) : s;
+        String message;
+        try {
+            message = (params != null && params.length > 0) ? String.format(s, params) : s;
+        } catch (Exception e) {
+            StringBuilder q = new  StringBuilder();
+            q.append(s);
+            for (Object o : params) {
+                q.append(" ");
+                q.append(o);
+            }
+            message = q.toString();
+        }
         System.out.printf("[%s] [%s] %s: %s", time, logLevel, tag, message);
     }
 }
