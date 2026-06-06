@@ -111,6 +111,7 @@ public class Group extends Gizmo {
 			if (members.get( i ) == null) {
 				members.set( i, g );
 				g.parent = this;
+				g.onAdd();
 				return g;
 			}
 		}
@@ -118,6 +119,7 @@ public class Group extends Gizmo {
 		members.add( g );
 		g.parent = this;
 		length++;
+		g.onAdd();
 		return g;
 	}
 	
@@ -138,6 +140,7 @@ public class Group extends Gizmo {
 				if (i == 0 || members.get(i - 1) != null) {
 					members.set(i, g);
 					g.parent = this;
+					g.onAdd();
 					return g;
 				}
 			} else {
@@ -148,6 +151,7 @@ public class Group extends Gizmo {
 		members.add( g );
 		g.parent = this;
 		length++;
+		g.onAdd();
 		return g;
 	}
 	
@@ -165,12 +169,14 @@ public class Group extends Gizmo {
 		if (!members.isEmpty() && members.get( 0 ) == null) {
 			members.set( 0, g );
 			g.parent = this;
+			g.onAdd();
 			return g;
 		}
 		
 		members.add( 0, g );
 		g.parent = this;
 		length++;
+		g.onAdd();
 		return g;
 	}
 	
@@ -227,6 +233,7 @@ public class Group extends Gizmo {
 			members.set( index, newOne );
 			newOne.parent = this;
 			oldOne.parent = null;
+			newOne.onAdd();
 			return newOne;
 		} else {
 			return null;
