@@ -106,7 +106,7 @@ public class MagesStaff extends MeleeWeapon {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add(AC_IMBUE);
-		if (wand!= null && wand.getCurCharges() > 0) {
+		if (wand!= null && wand.getCurCharges() > 0 && canUse(hero)) {
 			actions.add( AC_ZAP );
 		}
 		return actions;
@@ -223,13 +223,13 @@ public class MagesStaff extends MeleeWeapon {
 		if (wand != null) wand.stopCharging();
 	}
 
-	public Item imbueWand(Wand wand, Char owner){
+	public Item imbueWand(Wand wand, Char owner) {
 
 		int oldStaffcharges = this.wand != null ? this.wand.getCurCharges() : 0;
 
-		if (owner instanceof Hero && ((Hero) owner).hasTalent(Talent.WAND_PRESERVATION)){
+		if (owner instanceof Hero && ((Hero) owner).hasTalent(Talent.WAND_PRESERVATION)) {
 			Talent.WandPreservationCounter counter = Buff.affect(owner, Talent.WandPreservationCounter.class);
-			if (counter.count() == 0){
+			if (counter.count() == 0) {
 				counter.countUp(1);
 				this.wand.level(0);
 				if (!this.wand.collect((Hero) owner)) {
@@ -243,7 +243,9 @@ public class MagesStaff extends MeleeWeapon {
 		this.wand = null;
 
 		wand.resinBonus = 0;
-		wand.updateLevel();
+		if (owner instanceof Hero ) {
+			wand.updateLevel((Hero) owner);
+		}
 
 		//syncs the level of the two items.
 		int targetLevel = Math.max(this.trueLevel(), wand.trueLevel());
@@ -324,15 +326,23 @@ public class MagesStaff extends MeleeWeapon {
 
 		return this;
 	}
-	
-	public void updateWand(boolean levelled){
+
+    @Override
+    public Item upgradeFragmented(Hero hero) {
+        super.upgradeFragmented(hero);
+        updateWand(true);
+        return this;
+    }
+
+    public void updateWand(boolean levelled){
 		if (wand != null) {
 			int curCharges = wand.getCurCharges();
-			wand.level(level());
+			wand.level(level(findOwner()));
 			//gives the wand one additional max charge
 			wand.maxCharges = Math.min(wand.maxCharges + 1, 10);
 			wand.setCurCharges(Math.min(curCharges + (levelled ? 1 : 0), wand.maxCharges));
 			updateQuickslot();
+            sendSelfUpdate();
 		}
 	}
 

@@ -31,6 +31,8 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class WndWandmaker extends Window {
 
 	Wandmaker wandmaker;
@@ -59,19 +61,22 @@ public class WndWandmaker extends Window {
 		hide();
 
 		questItem.detach( getOwnerHero().belongings.backpack );
-
+		Wandmaker.collectedHeroUUIDs.add(getOwnerHero().uuid);
 		reward.identify(false, getOwnerHero());
+		if(Dungeon.balance.multipleWandmakerReward){
+			reward.bind(getOwnerHero());
+		}
 		if (reward.doPickUp( getOwnerHero())) {
 			GLog.i( Messages.capitalize(Messages.get(getOwnerHero(), "you_now_have", reward.name())) );
 		} else {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}
-		
-		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
-		wandmaker.destroy();
-		
-		wandmaker.getSprite().die();
-		
+		if (!Dungeon.balance.multipleWandmakerReward) {
+			wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(getOwnerHero().name())) );
+			wandmaker.destroy();
+
+			wandmaker.getSprite().die();
+		}
 		Wandmaker.Quest.complete();
 	}
 

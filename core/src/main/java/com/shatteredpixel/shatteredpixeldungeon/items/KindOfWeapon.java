@@ -213,6 +213,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 		if (second){
 			//do this first so that the item can go to a full inventory
 			hero.belongings.secondWep = null;
+			sendSelfUpdate(hero);
 		}
 
 		if (super.doUnequip( hero, collect, single )) {
@@ -220,6 +221,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 			if (!second){
 				hero.belongings.setWeapon(null);
 			}
+			sendSelfUpdate(hero);
 			return true;
 
 		} else {
@@ -227,6 +229,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 			if (second){
 				hero.belongings.secondWep = this;
 			}
+			sendSelfUpdate(hero);
 			return false;
 
 		}

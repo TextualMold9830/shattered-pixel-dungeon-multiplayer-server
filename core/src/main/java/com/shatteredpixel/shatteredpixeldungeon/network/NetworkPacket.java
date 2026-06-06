@@ -152,7 +152,7 @@ public class NetworkPacket {
         JSONArray pathArr = new JSONArray();
         for (int p : path) pathArr.put(p);
         event.put("path", pathArr);
-        
+
         if (item != null) {
             event.put("item", Item.packItem(item, hero));
         }

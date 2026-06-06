@@ -61,6 +61,7 @@ import com.watabou.utils.Random;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Wandmaker extends NPC {
 
@@ -103,7 +104,7 @@ public class Wandmaker extends NPC {
 	public boolean reset() {
 		return true;
 	}
-	
+	public static ArrayList<String> collectedHeroUUIDs = new ArrayList<>();
 	@Override
 	public boolean interact(Char c) {
 		getSprite().turnTo( pos, c.pos );
@@ -128,7 +129,7 @@ public class Wandmaker extends NPC {
 					break;
 			}
 
-			if (item != null) {
+			if (item != null || (Dungeon.balance.multipleWandmakerReward && Quest.completed)) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
@@ -239,6 +240,7 @@ public class Wandmaker extends NPC {
 			wand1 = null;
 			wand2 = null;
 		}
+		private static boolean completed = false;
 		
 		private static final String NODE		= "wandmaker";
 		
@@ -249,6 +251,7 @@ public class Wandmaker extends NPC {
 		private static final String WAND2		= "wand2";
 
 		private static final String RITUALPOS	= "ritualpos";
+		private static final String COLLECETED_HERO_UUIDS = "collected_hero_uuids";
 		
 		public static void storeInBundle( Bundle bundle ) {
 			
@@ -270,7 +273,9 @@ public class Wandmaker extends NPC {
 				}
 
 			}
-			
+			if (Dungeon.balance.multipleWandmakerReward){
+				bundle.put(COLLECETED_HERO_UUIDS, collectedHeroUUIDs.toArray(new String[0]));
+			}
 			bundle.put( NODE, node );
 		}
 		
@@ -291,6 +296,9 @@ public class Wandmaker extends NPC {
 					CeremonialCandle.ritualPos = node.getInt( RITUALPOS );
 				}
 
+				if (node.contains(COLLECETED_HERO_UUIDS) && Dungeon.balance.multipleWandmakerReward){
+					collectedHeroUUIDs = new ArrayList<>(List.of(bundle.getStringArray(COLLECETED_HERO_UUIDS)));
+				}
 			} else {
 				reset();
 			}
@@ -464,9 +472,11 @@ public class Wandmaker extends NPC {
 		}
 		
 		public static void complete() {
-			wand1 = null;
-			wand2 = null;
-			
+			if (!Dungeon.balance.multipleWandmakerReward) {
+				wand1 = null;
+				wand2 = null;
+			}
+			completed = true;
 			Notes.remove( Notes.Landmark.WANDMAKER );
 			//other quests award score when their boss is defeated
 			if (Quest.type == 1) {

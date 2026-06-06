@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;

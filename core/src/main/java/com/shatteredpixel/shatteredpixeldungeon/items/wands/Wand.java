@@ -107,7 +107,7 @@ public abstract class Wand extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (getCurCharges() > 0 || !curChargeKnown) {
+        if ((getCurCharges() > 0 || !curChargeKnown) && canUse(hero)) {
 			actions.add( AC_ZAP );
 		}
 
@@ -261,9 +261,9 @@ public abstract class Wand extends Item {
 		}
 	}
 	
-	public void level( int value) {
+	public void level( int value, Hero hero) {
 		super.level( value );
-		updateLevel();
+		updateLevel(hero);
 	}
 	
 	@Override
@@ -363,12 +363,12 @@ public abstract class Wand extends Item {
 	}
 	
 	@Override
-	public int level() {
+	public int level(Hero hero) {
 		if (!cursed && curseInfusionBonus){
 			curseInfusionBonus = false;
-			updateLevel();
+			updateLevel(hero);
 		}
-		int level = super.level();
+		int level = super.level(hero);
 		if (curseInfusionBonus) level += 1 + level/6;
 		level += resinBonus;
 		return level;
@@ -386,8 +386,10 @@ public abstract class Wand extends Item {
 		if (resinBonus > 0){
 			resinBonus--;
 		}
-
-		updateLevel();
+		Hero owner = findOwner();
+		if (owner != null) {
+			updateLevel(owner);
+		}
 		setCurCharges(Math.min( getCurCharges() + 1, maxCharges ));
 		updateQuickslot();
 		
@@ -397,8 +399,10 @@ public abstract class Wand extends Item {
 	@Override
 	public Item degrade() {
 		super.degrade();
-		
-		updateLevel();
+		Hero owner = findOwner();
+		if (owner != null) {
+			updateLevel(owner);
+		}
 		updateQuickslot();
 		
 		return this;
@@ -444,8 +448,8 @@ public abstract class Wand extends Item {
 		return lvl;
 	}
 
-	public void updateLevel() {
-		maxCharges = Math.min( initialCharges() + level(), 10 );
+	public void updateLevel(Hero hero) {
+		maxCharges = Math.min( initialCharges() + level(hero), 10 );
 		setCurCharges(Math.min(getCurCharges(), maxCharges ));
 	}
 	
@@ -642,8 +646,8 @@ public abstract class Wand extends Item {
 		availableUsesToID = bundle.getInt( AVAILABLE_USES );
 		curseInfusionBonus = bundle.getBoolean(CURSE_INFUSION_BONUS);
 		resinBonus = bundle.getInt(RESIN_BONUS);
-
-		updateLevel();
+		//TODO: check this
+		//updateLevel();
 
 		setCurCharges(bundle.getInt( CUR_CHARGES ));
 		curChargeKnown = bundle.getBoolean( CUR_CHARGE_KNOWN );

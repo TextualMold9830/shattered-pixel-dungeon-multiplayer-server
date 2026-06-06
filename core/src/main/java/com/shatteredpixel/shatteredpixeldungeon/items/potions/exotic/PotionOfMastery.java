@@ -23,10 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -51,6 +53,11 @@ public class PotionOfMastery extends ExoticPotion {
 	}
 
 	protected static boolean identifiedByUse = false;
+
+	@Override
+	public String desc() {
+		return super.desc() + (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(PotionOfStrength.class, "global_strength") : "");
+	}
 
 	@Override
 	//need to override drink so that time isn't spent right away
@@ -127,6 +134,14 @@ public class PotionOfMastery extends ExoticPotion {
 					Catalog.countUse(PotionOfMastery.class);
 					if (Random.Float() < talentChance) {
 						Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
+					}
+				}
+
+				if (Dungeon.balance.globalStrength) {
+					for (Hero h : Dungeon.heroes) {
+						if (h != null && h != hero) {
+							h.setSTR(h.getSTR() + 1);
+						}
 					}
 				}
 			}

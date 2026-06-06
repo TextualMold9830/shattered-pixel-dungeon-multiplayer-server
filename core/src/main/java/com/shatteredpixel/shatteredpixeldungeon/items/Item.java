@@ -26,6 +26,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -37,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.optional.FragmentOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -68,11 +71,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendNewInventoryItem;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
@@ -115,6 +114,7 @@ public class Item implements Bundlable {
 	// These items are preserved even if the hero's inventory is lost via unblessed ankh
 	// this is largely set by the resurrection window, items can override this to always be kept
 	public boolean keptThoughLostInvent = false;
+	public ArrayList<FragmentOfUpgrade.Upgrade> fragmentUpgrades = new ArrayList<>();
 
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
@@ -135,6 +135,7 @@ public class Item implements Bundlable {
 
 	public int customNoteID = -1;
 
+	private String boundUUID;
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
@@ -426,7 +427,11 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
-		return getClass() == item.getClass();
+		boolean sameOwner = true;
+		if (isBound()){
+			sameOwner = boundUUID.equals(item.boundUUID);
+		}
+		return getClass() == item.getClass() && sameOwner;
 	}
 
 	protected void onDetach(){}
@@ -447,7 +452,17 @@ public class Item implements Bundlable {
 		return level;
 	}
 	public int level(Hero hero){
-		return level();
+		int level =  level();
+		if(hero != null) {
+			if (Dungeon.balance.useFragments) {
+				for (FragmentOfUpgrade.Upgrade upgrade : fragmentUpgrades) {
+					if (upgrade.uuid.equals(hero.uuid)) {
+						level++;
+					}
+				}
+			}
+		}
+		return level;
 	}
 
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
@@ -487,6 +502,13 @@ public class Item implements Bundlable {
 		}
 		return this;
 	}
+	public Item upgradeFragmented(Hero hero) {
+		fragmentUpgrades.add(new FragmentOfUpgrade.Upgrade(hero.uuid));
+		sendSelfUpdate(hero);
+
+		return this;
+	}
+	@Deprecated
 	public Item upgrade(int n){
 		for (int i=0; i < n; i++) {
 			upgrade();
@@ -511,7 +533,9 @@ public class Item implements Bundlable {
 		
 		return this;
 	}
-	
+	public int visiblyUpgraded(Hero hero){
+        return levelKnown ? level(hero) : 0;
+    }
 	public int visiblyUpgraded() {
 		return levelKnown ? level() : 0;
 	}
@@ -726,6 +750,8 @@ public class Item implements Bundlable {
 	private static final String QUICKSLOT		= "quickslotpos";
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String CUSTOM_NOTE_ID = "custom_note_id";
+	private static final String FRAGMENT_UPGRADES = "fragment_upgrades";
+	private static final String BOUND_UUID = "bound_uuid";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -739,6 +765,10 @@ public class Item implements Bundlable {
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		if (customNoteID != -1)     bundle.put(CUSTOM_NOTE_ID, customNoteID);
+		bundle.put(FRAGMENT_UPGRADES, fragmentUpgrades);
+		if (boundUUID != null) {
+			bundle.put(BOUND_UUID, boundUUID);
+		}
 	}
 	
 	@Override
@@ -765,6 +795,14 @@ public class Item implements Bundlable {
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
 		if (bundle.contains(CUSTOM_NOTE_ID))    customNoteID = bundle.getInt(CUSTOM_NOTE_ID);
+		if (bundle.contains(FRAGMENT_UPGRADES)) {
+			fragmentUpgrades = new ArrayList(bundle.getCollection(FRAGMENT_UPGRADES));
+		} else {
+			fragmentUpgrades = new ArrayList<>();
+		}
+		if (bundle.contains(BOUND_UUID)){
+			boundUUID = bundle.getString(BOUND_UUID);
+		}
 	}
 
 	public int targetingPos( Hero user, int dst ){
@@ -924,7 +962,7 @@ public class Item implements Bundlable {
 			topRight.put("text", JSONObject.NULL);
 		}
 
-		int level = item.visiblyUpgraded();
+		int level = item.visiblyUpgraded(owner);
 		if (level != 0 || (item.cursed && item.cursedKnown)) {
 			bottomRight.put("text", item.levelKnown ? Utils.format(TXT_LEVEL, level) : TXT_CURSED);
 			boolean curseInfusionBonus = false;
@@ -1006,4 +1044,17 @@ public class Item implements Bundlable {
     public void setNeedUpdateVisual(boolean needUpdateVisual) {
         this.needUpdateVisual = needUpdateVisual;
     }
+	public boolean isBound(){
+		return boundUUID != null;
+	}
+	public boolean canUse(Hero hero){
+		return boundUUID == null || hero.uuid.equals(boundUUID);
+	}
+	public Item bind(Hero hero){
+		boundUUID = hero.uuid;
+		return this;
+	}
+	public void unbind(){
+		boundUUID = null;
+	}
 }

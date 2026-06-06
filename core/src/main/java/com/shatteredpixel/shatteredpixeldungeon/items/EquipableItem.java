@@ -49,6 +49,9 @@ public abstract class EquipableItem extends Item {
 	public ArrayList<String> actions(Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( isEquipped( hero ) ? AC_UNEQUIP : AC_EQUIP );
+		if (!canUse(hero)){
+			actions.remove(AC_EQUIP);
+		}
 		return actions;
 	}
 
@@ -148,7 +151,7 @@ public abstract class EquipableItem extends Item {
 			if (collect) Dungeon.level.drop( this, hero.pos ).sprite.drop();
 		}
 		keptThoughLostInvent = wasKept;
-		this.sendSelfUpdate(hero);
+		sendSelfUpdate(hero);
 		return true;
 	}
 

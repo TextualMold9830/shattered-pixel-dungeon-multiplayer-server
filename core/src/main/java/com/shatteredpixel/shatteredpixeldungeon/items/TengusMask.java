@@ -49,8 +49,7 @@ public class TengusMask extends Item {
 	
 	private static final String AC_WEAR	= "WEAR";
 	public boolean cloned = false;
-	String boundUUID;
-	
+
 	{
 		stackable = false;
 		image = ItemSpriteSheet.MASK;
@@ -63,29 +62,24 @@ public class TengusMask extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		actions.add( AC_WEAR );
+		if (canUse(hero)) {
+			actions.add(AC_WEAR);
+		}
 		return actions;
 	}
 	
 	@Override
 	public void execute( Hero hero, String action ) {
-
 		super.execute( hero, action );
-		if (!cloned ||hero.uuid.equals(boundUUID)) {
-
-			if (action.equals(AC_WEAR)) {
-
-				curUser = hero;
-
-				GameScene.show(new WndChooseSubclass(this, hero));
-
-			}
+		if (action.equals(AC_WEAR)) {
+			curUser = hero;
+			GameScene.show(new WndChooseSubclass(this, hero));
 		}
 	}
 	
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
-		if (!cloned ||hero.uuid.equals(boundUUID)) {
+		if (!cloned || canUse(hero)) {
 			Badges.validateMastery(hero);
 			return super.doPickUp(hero, pos);
 		}
@@ -136,12 +130,13 @@ public class TengusMask extends Item {
 			if (hero != null && hero != container.owner) {
 			TengusMask mask = new TengusMask();
 			mask.cloned = true;
+			mask.bind(hero);
 
 			}
 		}
 		TengusMask mask = new TengusMask();
 		mask.cloned = true;
-		mask.boundUUID = container.owner.uuid;
+		mask.bind(container.owner);
 		return mask.collect(container);
 	}
 }
