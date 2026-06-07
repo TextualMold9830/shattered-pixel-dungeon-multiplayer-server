@@ -874,7 +874,7 @@ public class Hero extends Char {
 		float portion = ((1f - time%1f)%1f);
 		if (portion != lastCounter){
 			lastCounter = portion;
-			SendData.sendCounter(this, portion);
+			SendData.packAndSendAction(this, new UpdateCounterAction(portion));
 		}
 	}
 	@Override

@@ -368,15 +368,6 @@ public class SendData {
         sendActionForAll(action);
     }
 
-    //--------------------------- UI
-    public static void sendCounter(Hero hero, float portion) {
-        int ID = hero.networkID;
-        if (ID < 0) return;
-        ClientThread client = clients[hero.networkID];
-        if (client != null) {
-            client.packet.addAction(new UpdateCounterAction(portion));
-        }
-    }
 
     //--------------------------- Special
     public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
