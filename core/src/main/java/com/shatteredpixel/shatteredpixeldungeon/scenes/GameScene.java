@@ -63,11 +63,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.RippleVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DiscardedItemSprite;
@@ -688,7 +685,7 @@ public class GameScene extends PixelScene {
 	private void updateItemDisplays(@NotNull Hero hero) {
 		for (Item item: hero.belongings) {
 			if (item.isNeedUpdateVisual()) {
-				SendData.sendUpdateItemFull(hero, item);
+				SendData.packAndSendAction(hero, new ItemAction.Update(item));
 				item.setNeedUpdateVisual(false);
 			}
 		}

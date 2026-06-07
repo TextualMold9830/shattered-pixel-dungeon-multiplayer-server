@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ItemAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -74,7 +75,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendNewInventoryItem;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemCount;
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
@@ -328,7 +328,7 @@ public class Item implements Bundlable {
 		Dungeon.quickslot.replacePlaceholder(this);
 		Collections.sort( items, itemComparator );
 		path.add(items.indexOf(this));
-		sendNewInventoryItem(container.owner, this);
+		SendData.packAndSendAction(container.owner, new ItemAction.Add(this));
 		updateQuickslot();
 		return path;
 

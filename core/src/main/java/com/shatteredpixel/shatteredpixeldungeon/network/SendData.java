@@ -237,15 +237,18 @@ public class SendData {
 
 
     //---------------------------Items
-    public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
-        if (path == null || path.isEmpty() || !(owner instanceof Hero)) {
+    public static void sendRemoveItemFromInventory(Hero owner, List<Integer> path) {
+        if (path == null || path.isEmpty() || owner == null) {
             return;
         }
-        packAndSendAction((Hero) owner, new ItemAction.Remove(path));
+        packAndSendAction(owner, new ItemAction.Remove(path));
     }
 
     public static void sendUpdateItemCount(Char owner, Item item, int count, List<Integer> path) {
-        sendUpdateItemFull(owner, item);
+        if (item == null || !(owner instanceof Hero)) {
+            return;
+        }
+        packAndSendAction((Hero) owner, new ItemAction.UpdateCount(item, count, path));
     }
 
     public static void sendUpdateItemFull(Item item) {
@@ -255,18 +258,11 @@ public class SendData {
         packAndSendActionForAll(new ItemAction.Update(item));
     }
 
-    public static void sendUpdateItemFull(Char owner, Item item) {
-        if (item == null || !(owner instanceof Hero)) {
+    public static void sendUpdateItemFull(Hero owner, Item item) {
+        if (item == null || owner == null) {
             return;
         }
         packAndSendAction((Hero) owner, new ItemAction.Update(item));
-    }
-
-    public static void sendNewInventoryItem(Char owner, Item item) {
-        if (item == null || !(owner instanceof Hero)) {
-            return;
-        }
-        packAndSendAction((Hero) owner, new ItemAction.Add(item));
     }
 
 

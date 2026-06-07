@@ -60,6 +60,13 @@ public final class ItemAction {
         }
     }
 
+    public static class UpdateCount extends Update {
+        @Contract(pure = true)
+        public UpdateCount(@NotNull Item item, int count, @Nullable List<Integer> path) {
+            super(item);
+        }
+    }
+
     public static class Replace implements LiveStateNetworkAction {
         public final @NotNull Item item;
 
