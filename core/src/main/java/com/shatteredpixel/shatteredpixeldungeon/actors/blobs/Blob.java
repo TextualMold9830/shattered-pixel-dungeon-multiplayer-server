@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BlobUpdateAction;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Rect;
 import com.watabou.utils.Reflection;
@@ -56,7 +57,7 @@ public class Blob extends Actor {
 	@Override
 	protected void onAdd() {
 		super.onAdd();
-		SendData.sendBlob(this);
+		SendData.packAndSendActionForAll(new BlobUpdateAction(this));
 	}
 
 	@Override
@@ -137,7 +138,7 @@ public class Blob extends Actor {
 			}
 		}
 
-		SendData.sendBlob(this);
+		SendData.packAndSendActionForAll(new BlobUpdateAction(this));
 		return true;
 	}
 

@@ -1,8 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
-import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ImmutableNetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -101,8 +102,6 @@ public class NetworkPacket {
         actions.clear();
         actions.addAll(compressed);
     }
-
-
 
     public static final class SerializedAction implements ImmutableNetworkAction {
         private final String actionName;

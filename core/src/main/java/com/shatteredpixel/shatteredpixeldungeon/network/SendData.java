@@ -92,15 +92,6 @@ public class SendData {
 
     //----------Actors
 
-    public static void sendBlob(@NotNull Blob actor) {
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            client.packet.packAndAdd(new BlobUpdateAction(actor));
-        }
-    }
-
     public static void sendChar(@NotNull Char actor) {
         if (actor.id() <= 0) {
             return;
