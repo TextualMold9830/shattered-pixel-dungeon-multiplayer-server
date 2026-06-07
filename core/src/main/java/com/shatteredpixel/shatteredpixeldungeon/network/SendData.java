@@ -249,17 +249,10 @@ public class SendData {
     }
 
     public static void sendUpdateItemFull(Item item) {
-        for (Hero hero : Dungeon.heroes) {
-            if (hero == null) {
-                continue;
-            }
-            List<Integer> path = hero.belongings.pathOfItem(item);
-            if ((path == null) || (path.isEmpty())) {
-                continue;
-            }
-            sendUpdateItemFull(hero, item);
-            break;
+        if (item == null) {
+            return;
         }
+        packAndSendActionForAll(new ItemAction.Update(item));
     }
 
     public static void sendUpdateItemFull(Char owner, Item item) {
