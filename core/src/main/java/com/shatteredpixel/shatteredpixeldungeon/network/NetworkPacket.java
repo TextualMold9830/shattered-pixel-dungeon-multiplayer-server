@@ -128,23 +128,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddItemAdd(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAdd(new ItemAction.Add(path, item, hero));
-    }
-
-    public void packAndAddItemRemove(List<Integer> path) {
-        packAndAdd(new ItemAction.Remove(path));
-    }
-
-    public void packAndAddItemUpdate(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAdd(new ItemAction.Update(path, item, hero));
-    }
-
-    public void packAndAddItemReplace(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAdd(new ItemAction.Replace(path, item, hero));
-    }
-
-
 
     public void addHeap(Heap heap, Hero observer) {
         if (heap.isEmpty()) {
