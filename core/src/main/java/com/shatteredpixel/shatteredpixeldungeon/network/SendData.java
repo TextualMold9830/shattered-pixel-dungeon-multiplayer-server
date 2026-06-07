@@ -416,6 +416,10 @@ public class SendData {
         }
     }
 
+    public static void packAndSendAction(@Nullable Hero hero, ImmutableNetworkAction networkAction) {
+        sendAction(hero, networkAction);
+    }
+
     public static void packAndSendActionForAll(LiveStateNetworkAction networkAction) {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
