@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
@@ -61,7 +62,7 @@ public class CellSelector extends ScrollArea {
 		if (listener != null) {
 			listener.owner = this.owner;
 		}
-		SendData.sendCellListenerPrompt(listener.prompt(), owner.networkID);
+		SendData.packAndSendAction(owner, new CellListenerPromptAction(listener));
 	}
 
 	public boolean enabled;

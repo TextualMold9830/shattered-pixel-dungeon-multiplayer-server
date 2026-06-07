@@ -327,17 +327,6 @@ public class SendData {
         }
     }
 
-    //--------------------------- UI
-    public static void sendCellListenerPrompt(LocalizedString new_prompt, int networkID) {
-        if (networkID < 0){
-            return;
-        }
-        if (clients[networkID] == null) {
-            return;
-        }
-        clients[networkID].packet.addAction(new CellListenerPromptAction(new_prompt));
-        clients[networkID].flush();
-    }
     public static void sendHeroAttackIndicator(@Nullable Integer target, int networkID) {
         sendHeroAttackIndicator(target == null? -1: target, networkID);
     }
@@ -437,6 +426,16 @@ public class SendData {
             if (client != null) {
                 client.packet.addAction(networkAction);
             }
+        }
+    }
+
+    public static void packAndSendAction(@Nullable Hero hero, LiveStateNetworkAction networkAction) {
+        if (hero == null) return;
+        int networkId = hero.networkID;
+        if (networkId < 0 || networkId >= clients.length) return;
+        var client = clients[networkId];
+        if (client != null) {
+            client.packet.packAndAdd(networkAction, client.clientHero);
         }
     }
 
