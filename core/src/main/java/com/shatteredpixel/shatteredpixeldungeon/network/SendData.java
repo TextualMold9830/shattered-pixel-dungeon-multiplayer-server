@@ -143,11 +143,6 @@ public class SendData {
     public static void flush(Hero hero) {
     }
 
-    @Contract(pure = true)
-    @Deprecated
-    public static void flush(int networkID) {
-    }
-
     public static void forceFlush(Hero hero) {
         if (hero.networkID >= 0) {
             forceFlush(hero.networkID);

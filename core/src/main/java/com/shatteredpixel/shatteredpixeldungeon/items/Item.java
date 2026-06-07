@@ -994,9 +994,6 @@ public class Item implements Bundlable {
 	}
 	public void sendSelfUpdate(Hero heroToFlush){
 		sendUpdateItemFull(this);
-		if (heroToFlush != null){
-			SendData.flush(heroToFlush);
-		}
 	}
 
     public boolean isNeedUpdateVisual() {
