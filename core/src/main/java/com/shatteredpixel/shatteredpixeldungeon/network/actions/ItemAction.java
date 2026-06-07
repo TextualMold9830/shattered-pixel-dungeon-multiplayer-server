@@ -16,15 +16,11 @@ public final class ItemAction {
     }
 
     public static class Add implements LiveStateNetworkAction {
-        public final @NotNull List<Integer> path;
         public final @NotNull Item item;
-        public final @Nullable Hero hero;
 
         @Contract(pure = true)
-        public Add(@NotNull List<Integer> path, @NotNull Item item, @Nullable Hero hero) {
-            this.path = path;
+        public Add(@NotNull Item item) {
             this.item = item;
-            this.hero = hero;
         }
 
         @Override
@@ -50,15 +46,11 @@ public final class ItemAction {
     }
 
     public static class Update implements LiveStateNetworkAction {
-        public final @NotNull List<Integer> path;
         public final @NotNull Item item;
-        public final @Nullable Hero hero;
 
         @Contract(pure = true)
-        public Update(@NotNull List<Integer> path, @NotNull Item item, @Nullable Hero hero) {
-            this.path = path;
+        public Update(@NotNull Item item) {
             this.item = item;
-            this.hero = hero;
         }
 
         @Override
@@ -69,15 +61,11 @@ public final class ItemAction {
     }
 
     public static class Replace implements LiveStateNetworkAction {
-        public final @NotNull List<Integer> path;
         public final @NotNull Item item;
-        public final @Nullable Hero hero;
 
         @Contract(pure = true)
-        public Replace(@NotNull List<Integer> path, @NotNull Item item, @Nullable Hero hero) {
-            this.path = path;
+        public Replace(@NotNull Item item) {
             this.item = item;
-            this.hero = hero;
         }
 
         @Override

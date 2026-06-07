@@ -328,7 +328,7 @@ public class Item implements Bundlable {
 		Dungeon.quickslot.replacePlaceholder(this);
 		Collections.sort( items, itemComparator );
 		path.add(items.indexOf(this));
-		sendNewInventoryItem(container.owner, this, path);
+		sendNewInventoryItem(container.owner, this);
 		updateQuickslot();
 		return path;
 

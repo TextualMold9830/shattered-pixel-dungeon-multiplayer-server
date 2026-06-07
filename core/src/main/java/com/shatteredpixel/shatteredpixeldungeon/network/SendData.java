@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.watabou.utils.DeviceCompat;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
@@ -236,21 +238,14 @@ public class SendData {
 
     //---------------------------Items
     public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
-        if ((owner == null) || !(owner instanceof Hero)) {
+        if (path == null || path.isEmpty() || !(owner instanceof Hero)) {
             return;
         }
-        Hero hero = (Hero) owner;
-        if (hero.networkID < 0 || path == null || path.isEmpty()) {
-            return;
-        }
-        ClientThread client = clients[hero.networkID];
-        if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Remove(path), hero);
-        }
+        packAndSendAction((Hero) owner, new ItemAction.Remove(path));
     }
 
     public static void sendUpdateItemCount(Char owner, Item item, int count, List<Integer> path) {
-        sendUpdateItemFull(owner, item, path);
+        sendUpdateItemFull(owner, item);
     }
 
     public static void sendUpdateItemFull(Item item) {
@@ -260,46 +255,25 @@ public class SendData {
             }
             List<Integer> path = hero.belongings.pathOfItem(item);
             if ((path == null) || (path.isEmpty())) {
-
                 continue;
             }
-            sendUpdateItemFull(hero, item, path);
+            sendUpdateItemFull(hero, item);
             break;
         }
     }
 
     public static void sendUpdateItemFull(Char owner, Item item) {
-        if ((owner == null) || !(owner instanceof Hero)) {
+        if (item == null || !(owner instanceof Hero)) {
             return;
         }
-        sendUpdateItemFull(owner, item, ((Hero) owner).belongings.pathOfItem(item));
-    }
-    public static void sendUpdateItemFull(Char owner, Item item, List<Integer> path) {
-        if ((owner == null) || !(owner instanceof Hero)) {
-            return;
-        }
-        Hero hero = (Hero) owner;
-        if (hero.networkID < 0 || path == null || path.isEmpty() || item == null) {
-            return;
-        }
-        ClientThread client = clients[hero.networkID];
-        if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Update(path, item, hero), hero);
-        }
+        packAndSendAction((Hero) owner, new ItemAction.Update(item));
     }
 
-    public static void sendNewInventoryItem(Char owner, Item item, List<Integer> path) {
-        if ((owner == null) || !(owner instanceof Hero)) {
+    public static void sendNewInventoryItem(Char owner, Item item) {
+        if (item == null || !(owner instanceof Hero)) {
             return;
         }
-        Hero hero = (Hero) owner;
-        if (hero.networkID < 0 || path == null || path.isEmpty() || item == null) {
-            return;
-        }
-        ClientThread client = clients[hero.networkID];
-        if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Add(path, item, hero), hero);
-        }
+        packAndSendAction((Hero) owner, new ItemAction.Add(item));
     }
 
 
