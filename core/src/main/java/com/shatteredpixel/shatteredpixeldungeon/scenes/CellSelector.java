@@ -45,6 +45,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Signal;
+import org.jetbrains.annotations.Nullable;
 
 public class CellSelector extends ScrollArea {
 	private Hero owner;
@@ -55,7 +56,7 @@ public class CellSelector extends ScrollArea {
 
 	private Listener listener = null;
 
-	public void setListener(Listener listener) {
+	public void setListener(@Nullable Listener listener) {
 		this.listener = listener;
 		if (listener != null) {
 			listener.owner = this.owner;

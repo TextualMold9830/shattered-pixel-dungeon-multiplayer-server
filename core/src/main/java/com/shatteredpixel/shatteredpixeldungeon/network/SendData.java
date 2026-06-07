@@ -327,12 +327,6 @@ public class SendData {
         }
     }
 
-
-    //--------------------------- More Effects
-    public static void sendActionDiscoverTile(int pos, int oldValue) {
-        sendActionForAll(new DiscoverTileAction(pos, oldValue));
-    }
-
     //--------------------------- UI
     public static void sendCellListenerPrompt(LocalizedString new_prompt, int networkID) {
         if (networkID < 0){

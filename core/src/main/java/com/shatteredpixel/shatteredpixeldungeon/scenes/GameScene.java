@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.GameSceneFlashAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.RippleVisualAction;
@@ -1166,7 +1167,7 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void discoverTile(int pos, int oldValue) {
-		SendData.sendActionDiscoverTile(pos, oldValue);
+		SendData.sendActionForAll(new DiscoverTileAction(pos, oldValue));
 	}
 
 	public static void show(Window wnd) {
