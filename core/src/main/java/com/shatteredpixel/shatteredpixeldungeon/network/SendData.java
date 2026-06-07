@@ -97,7 +97,7 @@ public class SendData {
             if (client == null) {
                 continue;
             }
-            client.packet.packAndAddBlob(actor);
+            client.packet.packAndAdd(new BlobUpdateAction(actor));
         }
     }
 

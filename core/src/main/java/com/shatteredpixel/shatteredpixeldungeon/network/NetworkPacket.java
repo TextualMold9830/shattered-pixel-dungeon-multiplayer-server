@@ -111,9 +111,6 @@ public class NetworkPacket {
 
 
 
-    public void packAndAddBlob(@NotNull Blob actor) {
-        packAndAdd(new BlobUpdateAction(actor));
-    }
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
         addAction(new SetLevelVisualsAction(level));
