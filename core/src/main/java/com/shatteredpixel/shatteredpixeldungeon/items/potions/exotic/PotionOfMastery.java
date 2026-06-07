@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -54,8 +55,10 @@ public class PotionOfMastery extends ExoticPotion {
 	protected static boolean identifiedByUse = false;
 
 	@Override
-	public String desc() {
-		return super.desc() + (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(PotionOfStrength.class, "global_strength") : "");
+	public LocalizedString desc() {
+		return Dungeon.balance.globalStrength && isKnown()
+				? LocalizedString.concat(super.desc(), "\n\n", Messages.get(PotionOfStrength.class, "global_strength"))
+				: super.desc();
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class PotionOfMastery extends ExoticPotion {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(PotionOfMastery.class, "prompt");
 		}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -65,6 +66,9 @@ public class RenderedTextBlock extends Component {
 		text(text);
 	}
 
+	public void text(LocalizedString text) {
+		text(text.toString());
+	}
 	public void text(String text){
 		this.text = text;
 
@@ -86,6 +90,10 @@ public class RenderedTextBlock extends Component {
 
 		tokens = words;
 		build();
+	}
+
+	public void text(LocalizedString text, int maxWidth){
+		text(text.toString(), maxWidth);
 	}
 
 	public void text(String text, int maxWidth){

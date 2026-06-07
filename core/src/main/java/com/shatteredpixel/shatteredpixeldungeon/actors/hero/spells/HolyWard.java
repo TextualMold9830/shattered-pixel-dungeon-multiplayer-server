@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -62,12 +62,12 @@ public class HolyWard extends ClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero){
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc(Hero hero){
+		LocalizedString desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.PALADIN){
-			desc += "\n\n" + Messages.get(this, "desc_paladin");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_paladin")));
 		}
-		return desc + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(desc, "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public static class HolyArmBuff extends FlavourBuff {
@@ -89,7 +89,7 @@ public class HolyWard extends ClericSpell {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			if (((Hero)target).subClass == HeroSubClass.PALADIN){
 				return Messages.get(this, "desc_paladin", dispTurns());
 			} else {

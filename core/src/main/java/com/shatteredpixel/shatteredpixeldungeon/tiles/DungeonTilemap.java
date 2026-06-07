@@ -24,10 +24,11 @@ package com.shatteredpixel.shatteredpixeldungeon.tiles;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.DiscoverTileAction;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Tilemap;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
@@ -121,7 +122,7 @@ public abstract class DungeonTilemap extends Tilemap {
 	}
 	
 	public void discover( int pos, int oldValue ) {
-		SendData.sendActionDiscoverTile(pos, oldValue);
+		SendData.sendActionForAll(new DiscoverTileAction(pos, oldValue));
 	}
 
 	public static PointF tileToWorld( int pos ) {

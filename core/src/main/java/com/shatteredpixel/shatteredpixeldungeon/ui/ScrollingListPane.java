@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ColorBlock;
@@ -48,9 +49,11 @@ public class ScrollingListPane extends ScrollPane {
 		}
 	}
 
+	/*
 	public void addItem( Image icon, String iconText, String text ){
 		addItem( new ListItem(icon, iconText, text) );
 	}
+	*/
 
 	public void addItem( ListItem item ){
 		content.add(item);
@@ -58,7 +61,7 @@ public class ScrollingListPane extends ScrollPane {
 		layout();
 	}
 
-	public void addTitle( String text ){
+	public void addTitle( LocalizedString text ){
 		ListTitle title = new ListTitle(text);
 		content.add(title);
 		items.add(title);
@@ -91,11 +94,11 @@ public class ScrollingListPane extends ScrollPane {
 		protected RenderedTextBlock label;
 		protected ColorBlock line;
 
-		public ListItem( Image icon, String text ) {
+		public ListItem( Image icon, LocalizedString text ) {
 			this(icon, null, text);
 		}
 
-		public ListItem( Image icon, String iconText, String text ) {
+		public ListItem( Image icon, LocalizedString iconText, LocalizedString text ) {
 			super();
 
 			if (icon != null) {
@@ -109,7 +112,7 @@ public class ScrollingListPane extends ScrollPane {
 			label.text( text );
 
 			if (iconText != null) {
-				iconLabel.text(iconText);
+				iconLabel.text(iconText.toString());
 				iconLabel.measure();
 			}
 		}
@@ -169,7 +172,7 @@ public class ScrollingListPane extends ScrollPane {
 		protected RenderedTextBlock label;
 		protected ColorBlock line;
 
-		public ListTitle (String title){
+		public ListTitle (LocalizedString title){
 			super();
 			label.text(title);
 		}

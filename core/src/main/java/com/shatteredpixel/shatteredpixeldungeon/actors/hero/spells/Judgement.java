@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -92,13 +92,13 @@ public class Judgement extends ClericSpell {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		int baseDmg = 5 + 5*hero.pointsInTalent(Talent.JUDGEMENT);
 		int totalBaseDmg = baseDmg;
 		if (hero.buff(AscendedForm.AscendBuff.class) != null) {
 			totalBaseDmg += Math.round(baseDmg*hero.buff(AscendedForm.AscendBuff.class).spellCasts/3f);
 		}
 
-		return Messages.get(this, "desc", baseDmg, 2*baseDmg, totalBaseDmg, 2*totalBaseDmg) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+		return LocalizedString.concat(Messages.get(this, "desc", baseDmg, 2*baseDmg, totalBaseDmg, 2*totalBaseDmg), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 }

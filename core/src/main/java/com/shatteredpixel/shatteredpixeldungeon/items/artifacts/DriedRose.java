@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -58,17 +59,13 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
@@ -81,8 +78,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 
@@ -239,37 +235,37 @@ public class DriedRose extends Artifact {
 	}
 
 	@Override
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		if (!Ghost.Quest.completed()
 				&& (ShatteredPixelDungeon.scene() instanceof GameScene)){
 			return Messages.get(this, "desc_no_quest");
 		}
 		
-		String desc = super.desc();
+		LocalizedString desc = super.desc();
 
 		if (isEquipped(hero)){
 			if (!cursed){
 
 				if (level() < levelCap)
-					desc+= "\n\n" + Messages.get(this, "desc_hint");
+					desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_hint")));
 
 			} else {
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 		}
 
 		if (weapon != null || armor != null) {
-			desc += "\n";
+			desc = LocalizedString.concat( desc, "\n");
 
 			if (weapon != null) {
-				desc += "\n" + Messages.get(this, "desc_weapon", Messages.titleCase(weapon.title()));
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_weapon", Messages.titleCase(weapon.title()))));
 			}
 
 			if (armor != null) {
-				desc += "\n" + Messages.get(this, "desc_armor", Messages.titleCase(armor.title()));
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_armor", Messages.titleCase(armor.title()))));
 			}
 
-			desc += "\n" + Messages.get(this, "desc_strength", ghostStrength());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_strength", ghostStrength())));
 
 		}
 		
@@ -288,7 +284,7 @@ public class DriedRose extends Artifact {
 	}
 
 	@Override
-	public String status(Hero hero) {
+	public LocalizedString status(Hero hero) {
 		if (ghost == null && ghostID != 0){
 			try {
 				findGhost(hero);
@@ -300,7 +296,7 @@ public class DriedRose extends Artifact {
 		if (ghost == null){
 			return super.status();
 		} else {
-			return ((ghost.getHP() *100) / ghost.getHT()) + "%";
+			return LocalizedString.raw(((ghost.getHP() *100) / ghost.getHT()) + "%");
 		}
 	}
 	
@@ -485,8 +481,8 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public String prompt() {
-			return  "\"" + Messages.get(GhostHero.class, "direct_prompt") + "\"";
+		public LocalizedString prompt() {
+			return  LocalizedString.concat("\"" , Messages.get(GhostHero.class, "direct_prompt"), "\"");
 		}
 	};
 
@@ -895,8 +891,8 @@ public class DriedRose extends Artifact {
 		private final ItemButton btnArmor;
 		private final DriedRose rose;
 		private boolean hidden = false;
-		private final String title;
-		private final String message;
+		private final LocalizedString title;
+		private final LocalizedString message;
 
 		WndGhostHero(final DriedRose rose, Hero hero){
 			super(hero);
@@ -917,7 +913,7 @@ public class DriedRose extends Artifact {
 						GameScene.selectItem(new WndBag.ItemSelector() {
 
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(WndGhostHero.class, "weapon_prompt");
 							}
 
@@ -935,7 +931,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof MeleeWeapon)) {
 									//do nothing, should only happen when window is cancelled
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								} else if (item.unique) {
 									GLog.w(Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -956,7 +952,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.weapon = (MeleeWeapon) item;
 									item(rose.weapon);
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								}
 
 							}
@@ -993,7 +989,7 @@ public class DriedRose extends Artifact {
 						GameScene.selectItem(new WndBag.ItemSelector() {
 
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(WndGhostHero.class, "armor_prompt");
 							}
 
@@ -1011,7 +1007,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof Armor)) {
 									//do nothing, should only happen when window is cancelled
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								} else if (item.unique || ((Armor) item).checkSeal() != null) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -1032,7 +1028,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.armor = (Armor) item;
 									item(rose.armor);
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								}
 								
 							}
@@ -1058,17 +1054,17 @@ public class DriedRose extends Artifact {
 			add( btnArmor );
 			
 			resize(WIDTH, (int)(btnArmor.bottom() + GAP));
-			SendData.sendWindow(this, TYPE, args());
+			sendSelf();
 		}
-		private JSONObject args() {
-			final Hero hero = getOwnerHero();
-			JSONObject json = new JSONObject();
-			json.put("weapon", btnWeapon.item().toJsonObject(hero));
-			json.put("armor", btnArmor.item().toJsonObject(hero));
-			json.put("rose", rose.toJsonObject(hero));
-			json.put("title", title);
-			json.put("message", message);
-			return json;
+		private void sendSelf() {
+			SendData.packAndSendAction(getOwnerHero(), new WindowAction.GhostHero(
+				getId(),
+				btnWeapon.item(),
+				btnArmor.item(),
+				rose,
+				title,
+				message
+			));
 		}
 
 		@Override

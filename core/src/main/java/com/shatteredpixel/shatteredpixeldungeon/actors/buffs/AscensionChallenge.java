@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -388,19 +389,19 @@ public static boolean qualifiedForPacifist(){
 	}
 
 	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
-		desc += "\n";
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
+		desc = LocalizedString.concat(desc, "\n");
 		if (stacks < 2){
 
-			desc += "\n" + Messages.get(this, "desc_clear");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_clear")));
 
 		} else {
 
-			if (stacks >= 2)    desc += "\n" + Messages.get(this, "desc_beckon");
-			if (stacks >= 4)    desc += "\n" + Messages.get(this, "desc_haste");
-			if (stacks >= 6)    desc += "\n" + Messages.get(this, "desc_slow");
-			if (stacks >= 8)    desc += "\n" + Messages.get(this, "desc_damage");
+			if (stacks >= 2)    desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_beckon")));
+			if (stacks >= 4)    desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_haste")));
+			if (stacks >= 6)    desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_slow")));
+			if (stacks >= 8)    desc = LocalizedString.concat(desc, LocalizedString.concat("\n", Messages.get(this, "desc_damage")));
 
 		}
 

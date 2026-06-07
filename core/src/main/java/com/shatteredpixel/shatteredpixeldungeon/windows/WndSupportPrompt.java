@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
@@ -45,12 +46,12 @@ public class WndSupportPrompt extends Window {
 		title.setRect( 0, 0, width, 0 );
 		add(title);
 
-		String message = Messages.get(WndSupportPrompt.class, "intro");
-		message += "\n\n" + Messages.get(SupporterScene.class, "patreon_msg");
+		LocalizedString message = Messages.get(WndSupportPrompt.class, "intro");
+		message = LocalizedString.concat(message, LocalizedString.concat("\n\n", Messages.get(SupporterScene.class, "patreon_msg")));
 		if (Messages.lang() != Languages.ENGLISH) {
-			message += "\n" + Messages.get(SupporterScene.class, "patreon_english");
+			message = LocalizedString.concat(message, LocalizedString.concat("\n", Messages.get(SupporterScene.class, "patreon_english")));
 		}
-		message += "\n- Evan";
+		message = LocalizedString.concat(message , "\n- Evan");
 
 		RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
 		text.text( message, width );

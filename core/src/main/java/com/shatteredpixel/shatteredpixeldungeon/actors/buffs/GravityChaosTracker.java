@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -148,12 +149,12 @@ public class GravityChaosTracker extends Buff {
 	}
 
 	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc_intro");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc_intro");
 		if (positiveOnly){
-			desc += " " + Messages.get(this, "desc_positive");
+			desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_positive")));
 		}
-		desc += "\n\n" + Messages.get(this, "desc_duration");
+		desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_duration")));
 		return desc;
 	}
 

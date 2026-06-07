@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -146,6 +147,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -173,6 +175,8 @@ public abstract class Char extends Actor {
 	public int pos = 0;
 	
 	private CharSprite sprite;
+
+	public Class<? extends CharSprite> spriteClass;
 	
 	protected int HT;
 	public int HP;
@@ -248,17 +252,12 @@ public abstract class Char extends Actor {
 		if ( !all().contains(this) ){
 			return;
 		}
-		SendData.sendActor(this);
+		if (id() > 0) {
+			SendData.packAndSendActionForAll(new CharUpdateAction(this));
+		}
 	}
 
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-	public JSONObject getEmoJsonObject() {
-		if (getSprite() == null){
-			return new JSONObject();
-		}
-		return getSprite().getEmoJsonObject();
-	}
-
 	@Override
 	protected boolean act() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
@@ -290,7 +289,7 @@ public abstract class Char extends Actor {
 		}
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
@@ -776,7 +775,7 @@ public abstract class Char extends Actor {
 		return 0;
 	}
 
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		return Messages.get(this, "def_verb");
 	}
 
@@ -1339,6 +1338,11 @@ public abstract class Char extends Actor {
 		for (Buff buff : buffs( buffClass )) {
 			remove( buff );
 		}
+	}
+
+	@Override
+	protected void onAdd() {
+		sendSelf();
 	}
 
 	@Override

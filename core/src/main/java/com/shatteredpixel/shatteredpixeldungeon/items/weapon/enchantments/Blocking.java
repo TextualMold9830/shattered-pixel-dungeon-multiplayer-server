@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -125,7 +126,7 @@ public class Blocking extends Weapon.Enchantment {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", shielding(), dispTurns(left));
 		}
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
@@ -110,7 +111,7 @@ public class FireImbue extends Buff {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", dispTurns(left));
 	}
 

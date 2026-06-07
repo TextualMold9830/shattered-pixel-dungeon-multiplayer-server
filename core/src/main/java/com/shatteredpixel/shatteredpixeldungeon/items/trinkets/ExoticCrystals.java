@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -37,7 +38,7 @@ public class ExoticCrystals extends Trinket {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc", Messages.decimalFormat("#.##", 100*consumableExoticChance(buffedLvl())));
 		} else {

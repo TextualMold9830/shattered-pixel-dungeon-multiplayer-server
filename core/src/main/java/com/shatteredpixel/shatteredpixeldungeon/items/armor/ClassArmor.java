@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -34,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.Tri
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -177,7 +177,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String actionName(String action, Hero hero) {
+	public LocalizedString actionName(String action, Hero hero) {
 		if (hero.armorAbility != null && action.equals(AC_ABILITY)){
 			return Messages.upperCase(hero.armorAbility.name());
 		} else {
@@ -186,7 +186,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String status() {
+	public LocalizedString status() {
 		return Messages.format( "%.0f%%", Math.floor(charge) );
 	}
 
@@ -223,7 +223,7 @@ abstract public class ClassArmor extends Armor {
 						//FIXME
 						GameScene.selectItem(new WndBag.ItemSelector() {
 							@Override
-							public String textPrompt() {
+							public LocalizedString textPrompt() {
 								return Messages.get(ClassArmor.class, "transfer_prompt");
 							}
 
@@ -300,20 +300,20 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 
 		if (hero.belongings.contains(this)) {
 			ArmorAbility ability = hero.armorAbility;
 			if (ability != null) {
-				desc += "\n\n" + ability.shortDesc();
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", ability.shortDesc()));
 				float chargeUse = ability.chargeUse(hero);
 				//trinity has variable charge cost
 				if (!(ability instanceof Trinity)) {
-					desc += " " + Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse));
+					desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse))));
 				}
 			} else {
-				desc += "\n\n" + "_" + Messages.get(this, "no_ability") + "_";
+				 desc = LocalizedString.concat(desc, "\n\n",  "_", Messages.get(this, "no_ability"), "_");
 			}
 		}
 

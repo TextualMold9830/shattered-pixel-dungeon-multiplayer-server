@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -223,14 +224,14 @@ public class BeaconOfReturning extends Spell {
 	}
 	
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc();
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc();
 		if (hero != null) {
 			BeaconTracker tracker = hero.buff(BeaconTracker.class);
 			if (tracker != null){
-				desc += "\n\n" + Messages.get(this, "desc_set", tracker.returnDepth);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_set", tracker.returnDepth)));
 			} else if (returnDepth != -1) {
-				desc += "\n\n" + Messages.get(this, "desc_set", returnDepth);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_set", returnDepth)));
 			}
 		}
 		return desc;

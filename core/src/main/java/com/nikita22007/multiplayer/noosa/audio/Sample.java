@@ -18,15 +18,11 @@
 
 package com.nikita22007.multiplayer.noosa.audio;
 
-
 import com.nikita22007.multiplayer.utils.Log;
-import com.nikita22007.multiplayer.utils.Utils;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.watabou.utils.DeviceCompat;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SampleAction;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,18 +39,9 @@ public enum Sample {
 	protected final HashSet<String> ids =
 			new HashSet<>();
 
-	/**
-	 * Loads sounds on clients. Adds sounds to list
-	 * @param assets sound asset
-	 */
 	public void load( String... assets ) {
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_type", "load_sample");
-			actionObj.put("samples",	Utils.putToJSONArray(assets));
-		} catch (JSONException ignored) {}
 		ids.addAll(Arrays.asList(assets));
-		SendData.sendCustomActionForAll(actionObj);
+		SendData.sendActionForAll(new SampleAction.LoadAction(assets));
 	}
 
 	/**
@@ -62,12 +49,7 @@ public enum Sample {
 	 * @param src sound asset
 	 */
 	public void unload( String src ) {
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_type", "unload_sample");
-			actionObj.put("sample", src);
-		} catch (JSONException ignored) {}
-		SendData.sendCustomActionForAll(actionObj);
+		SendData.sendActionForAll(new SampleAction.UnloadAction(src));
 		ids.remove( src );
 	}
 
@@ -75,12 +57,7 @@ public enum Sample {
 	 * Sends list of loaded sounds to client
 	 */
 	public void reload(){
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_type", "reload_sample");
-			actionObj.put("samples",	Utils.putToJSONArray(ids.toArray()));
-		} catch (JSONException ignored) {}
-		SendData.sendCustomActionForAll(actionObj);
+		SendData.sendActionForAll(new SampleAction.ReloadAction(ids.toArray(new String[0])));
 	}
 
 	public void play( String id ) {
@@ -115,26 +92,15 @@ public enum Sample {
 	public void play( String id, float leftVolume, float rightVolume, float rate, float pitch, @Nullable Float delay, @Nullable Hero hero) {
 		if (!ids.contains( id )) {
 			//assert !DeviceCompat.isDebug(): "playing unloaded sample: " + id; todo
-			Log.e("Sound", "playing unloaded sample: " + id);
+			Log.e("Sound", "Sound  playing unloaded sample: %s", id);
 			load(id);
 		}
 
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_type", "play_sample");
-			actionObj.put("sample", id);
-			actionObj.put("left_volume", leftVolume);
-			actionObj.put("right_volume", rightVolume);
-			actionObj.put("rate", rate);
-			if (delay != null){
-				actionObj.put("delay", (float)delay);
-			}
-			actionObj.put("pitch", pitch);
-		} catch (JSONException ignored) {}
+		SampleAction.PlayAction action = new SampleAction.PlayAction(id, leftVolume, rightVolume, rate, pitch, delay);
 		if (hero != null){
-			SendData.sendCustomAction(actionObj, hero);
+			SendData.sendAction(hero, action);
 		} else {
-			SendData.sendCustomActionForAll(actionObj);
+			SendData.sendActionForAll(action);
 		}
 	}
 	public void play(String id, float volume, float pitch){

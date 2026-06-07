@@ -21,13 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.Builder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.LineBuilder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
@@ -140,7 +139,7 @@ public class LastShopLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(CityLevel.class, "water_name");
@@ -155,7 +154,7 @@ public class LastShopLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:

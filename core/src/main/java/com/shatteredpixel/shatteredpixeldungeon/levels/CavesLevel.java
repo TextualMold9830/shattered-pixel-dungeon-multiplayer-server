@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -59,7 +60,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.watabou.noosa.particles.PixelParticle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -185,7 +185,7 @@ public class CavesLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.GRASS:
 				return Messages.get(CavesLevel.class, "grass_name");
@@ -202,7 +202,7 @@ public class CavesLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:

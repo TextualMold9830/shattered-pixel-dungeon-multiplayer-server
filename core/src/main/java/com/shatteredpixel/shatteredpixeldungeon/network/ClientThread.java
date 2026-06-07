@@ -10,12 +10,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.KeyDisplay;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -42,10 +45,9 @@ import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.level;
 import static com.watabou.utils.PathFinder.NEIGHBOURS8;
 
 
-class ClientThread implements Callable<String> {
+public class ClientThread implements Callable<String> {
 
     public static final String CHARSET = "UTF-8";
-    public static final String SERVER_TYPE = "SPD";
 
     protected OutputStreamWriter writeStream;
     protected BufferedWriter writer;
@@ -53,23 +55,27 @@ class ClientThread implements Callable<String> {
     private BufferedReader reader;
 
     protected int threadID;
+    protected final int protocolVersion;
 
     protected final Socket clientSocket;
 
     protected Hero clientHero;
 
     protected final NetworkPacket packet = new NetworkPacket();
+    private final ArrayList<ChatMessageAction> pendingChatMessages = new ArrayList<>();
 
     @NotNull
     private FutureTask<String> jsonCall;
 
-    public ClientThread(int ThreadID, Socket clientSocket, @Nullable Hero hero) {
+    public ClientThread(int ThreadID, Socket clientSocket, @Nullable Hero hero, int protocolVersion) {
         clientHero = hero;
-        if (hero != null){
-            hero.networkID = threadID;
-        }
         this.clientSocket = clientSocket;
+        this.protocolVersion = protocolVersion;
         try {
+            this.threadID = ThreadID;
+            if (hero != null){
+                hero.networkID = threadID;
+            }
             writeStream = new OutputStreamWriter(
                     clientSocket.getOutputStream(),
                     Charset.forName(CHARSET).newEncoder()
@@ -78,7 +84,6 @@ class ClientThread implements Callable<String> {
                     clientSocket.getInputStream(),
                     Charset.forName(CHARSET).newDecoder()
             );
-            this.threadID = ThreadID;
             reader = new BufferedReader(readStream);
             writer = new BufferedWriter(writeStream, 16384);
         } catch (IOException e) {
@@ -86,18 +91,10 @@ class ClientThread implements Callable<String> {
             disconnect();
             return;
         }
-        sendServerInfo();
-        sendServerType();
-        sendServerUUID();
         if (clientHero != null){
             sendInitData();
         }
         updateTask();
-    }
-
-    private void sendServerUUID() {
-        packet.addServerUUID();
-        flush();
     }
 
     protected void updateTask() {
@@ -126,6 +123,9 @@ class ClientThread implements Callable<String> {
             String token = it.next();
             try {
                 switch (token) {
+                    case Protocol.FIELD_PACKET_TYPE: {
+                        break;
+                    }
                     //Level block
                     case ("hero_class"): {
                         if (clientHero == null) {
@@ -144,6 +144,9 @@ class ClientThread implements Callable<String> {
                     case ("cell_listener"): {
                         Integer cell = data.getInt(token);
                         if (clientHero.cellSelector != null) {
+                            if (clientHero.cellSelector.getListener() == null) {
+                                clientHero.cellSelector.setListener(clientHero.defaultCellListener);
+                            }
                             if (clientHero.cellSelector.getListener() != null) {
                                 if (cell != -1) {
                                     clientHero.cellSelector.getListener().onSelect(cell);
@@ -216,7 +219,7 @@ class ClientThread implements Callable<String> {
                         ChatEvent chatEvent = new ChatEvent(text, clientHero);
                         Server.pluginManager.fireEvent(chatEvent);
                         if (!chatEvent.canceled) {
-                            GLog.i("%s: %s", clientHero.name, text.trim());
+                            SendData.enqueueChatMessageToAll(clientHero.name + ": " + text.trim());
                         }
                         break;
                     }
@@ -279,48 +282,80 @@ class ClientThread implements Callable<String> {
     }
 
     //network functions
+    @Deprecated
     protected void flush() {
+    }
+
+    protected void forceFlush() {
         try {
-            synchronized (packet.dataRef) {
-                if (packet.dataRef.get().length() == 0) {
-                    return;
-                }
-                if (DeviceCompat.isDebug()) {
-                    try {
-                        Log.i("flush", "clientID: " + threadID + " data:" + packet.dataRef.get().toString(4));
-                    } catch (JSONException ignored) {
-                    }
-                }
-                synchronized (writer) {
-                    writer.write(packet.dataRef.get().toString());
-                    writer.write('\n');
-                    writer.flush();
-                }
+            JSONObject json;
+            synchronized (packet) {
+                packet.compress();
+                json = packet.serialize(clientHero);
                 packet.clearData();
+            }
+            if (json.length() <= 1) {
+                // packet contains only packet type
+                return;
+            }
+            if (DeviceCompat.isDebug()) {
+                try {
+                    Log.i("flush", "clientID: " + threadID + " data:" + json.toString(4));
+                } catch (JSONException ignored) {
+                }
+            }
+            synchronized (writer) {
+                writer.write(json.toString());
+                writer.write('\n');
+                writer.flush();
             }
         } catch (IOException e) {
             Log.e(String.format("ClientThread%d", threadID), String.format("IOException in threadID %s. Message: %s", threadID, e.getMessage()));
             disconnect();
         } catch (StackOverflowError e) {
-            Log.e("st", "st", e);
+            Log.e("ClientThread", "stack overflow %s", e);
         }
     }
 
-    //some functions
-    protected void sendServerType(){
-        packet.addServerType(SERVER_TYPE);
-        flush();
-    }
-    protected void sendServerInfo() {
-        try {
-            writeStream.write(new JSONObject().put("server_info", Server.serverInfo().toString()).toString() );
-            writeStream.write("\n");
-            writeStream.flush();
-            flush();
-        } catch (IOException e) {
-            //Maybe the client disconnected
+    protected void enqueueChatMessage(@NotNull ChatMessageAction message) {
+        synchronized (pendingChatMessages) {
+            pendingChatMessages.add(message);
         }
     }
+
+    protected void flushPendingChatMessages() {
+        ArrayList<ChatMessageAction> messages;
+        synchronized (pendingChatMessages) {
+            if (pendingChatMessages.isEmpty()) {
+                return;
+            }
+            messages = new ArrayList<>(pendingChatMessages);
+            pendingChatMessages.clear();
+        }
+        sendImmediate(NetworkPacket.fromChatMessages(messages));
+    }
+
+    protected void sendImmediate(@NotNull NetworkPacket networkPacket) {
+        try {
+            networkPacket.compress();
+            JSONObject data = networkPacket.serialize(clientHero);
+            if (DeviceCompat.isDebug()) {
+                try {
+                    Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));
+                } catch (JSONException ignored) {
+                }
+            }
+            synchronized (writer) {
+                writer.write(data.toString());
+                writer.write('\n');
+                writer.flush();
+            }
+        } catch (IOException e) {
+            Log.e(String.format("ClientThread%d", threadID), String.format("IOException in threadID %s. Message: %s", threadID, e.getMessage()));
+            disconnect();
+        }
+    }
+
     protected void InitPlayerHero(String className, String uuid) {
         HeroClass curClass;
         try {
@@ -392,7 +427,9 @@ class ClientThread implements Callable<String> {
 
     protected void addCharToSend(@NotNull Char ch) {
         synchronized (packet) {
-            packet.packAndAddActor(ch, ch == clientHero);
+            if (ch.id() > 0) {
+                packet.packAndAdd(new CharUpdateAction(ch), clientHero);
+            }
         }
         //todo SEND TEXTURE
     }
@@ -405,8 +442,38 @@ class ClientThread implements Callable<String> {
         }
     }
 
-    public void addBadgeToSend(String badgeName, int badgeLevel) {
-        packet.packAndAddBadge(badgeName, badgeLevel);
+    public void addTraps(@NotNull Level level) {
+        synchronized (packet) {
+            for (int pos = 0; pos < level.length(); pos++) {
+                var trap = level.traps.get(pos, null);
+                if (trap != null && trap.visible) {
+                    packet.addAction(new TrapUpdateAction(pos, trap));
+                }
+            }
+        }
+    }
+
+    public void packAndAddLevel(Level level) {
+        synchronized (packet) {
+            packet.addAction(new ResizeLevelAction(level));
+            packet.addAction(new SetLevelVisualsAction(level));
+            packet.addAction(new SetLevelEntranceAction(level.entrance()));
+            packet.addAction(new SetLevelExitAction(level.exit()));
+            packet.addAction(new SetLevelTilesAction(level));
+            packet.addAction(new SetLevelStatesAction(level));
+
+            level.heaps.values().forEach(heap -> {
+                if (!heap.isEmpty()) {
+                    packet.packAndAdd(new HeapUpdateAction(heap), clientHero);
+                }
+            });
+            for (int pos = 0; pos < level.length(); pos++) {
+                Plant plant = level.plants.get(pos, null);
+                if (plant != null) {
+                    packet.addLateLiveStateAction(new PlantUpdateAction(pos, plant));
+                }
+            }
+        }
     }
 
     //send primitives
@@ -431,14 +498,16 @@ class ClientThread implements Callable<String> {
 
     //hack
     boolean disconnected = false;
-    public synchronized void disconnect() {
+    public synchronized void disconnect(String message) {
         if (!disconnected) {
             disconnected = true;
             try {
+                Server.sendDisconnect(clientSocket, "disconnect", message);
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }
             Server.clients[threadID] = null;
+            Server.used[threadID] = false;
             readStream = null;
             writeStream = null;
             if (jsonCall != null) {
@@ -463,36 +532,8 @@ class ClientThread implements Callable<String> {
             }
         }
     }
-    public synchronized void disconnect(String message) {
-        if (!disconnected) {
-            disconnected = true;
-            try {
-                //TODO: send message
-                clientSocket.close(); //it creates exception when we will wait client data
-            } catch (Exception ignore) {
-            }
-            if (clientHero != null) {
-                clientHero.next();
-                Dungeon.removeHero(clientHero);
-                clientHero = null;
-            }
-            Server.clients[threadID] = null;
-            readStream = null;
-            writeStream = null;
-            jsonCall.cancel(true);
-            GLog.n("player " + threadID + " disconnected");
-            boolean notNullHero = false;
-            for (Hero hero: Dungeon.heroes) {
-                if (hero != null) {
-                    GameScene.shouldProcess = true;
-                    notNullHero = true;
-                    break;
-                }
-            }
-            if (!notNullHero) {
-                GameScene.shouldProcess = false;
-            }
-        }
+    public synchronized void disconnect() {
+        disconnect("You was kicked");
     }
 
     private synchronized void sendInitData() {
@@ -500,27 +541,44 @@ class ClientThread implements Callable<String> {
             sendTexture(texture);
         }
 
-        packet.packAndAddLevel(level, clientHero);
-        packet.packAndAddHero(clientHero);
-        packet.packAndAddDepth(Dungeon.depth);
-        packet.packAndAddIronKeysCount();
-        packet.addInventoryFull(clientHero);
+        packAndAddLevel(level);
+        addTraps(level);
+        packet.addAction(new HeroActorIdAction(clientHero.id()));
+        packet.addAction(new HeroClassAction(clientHero.heroClass));
+        packet.addAction(new HeroSubclassAction(clientHero.subClass));
+        packet.addAction(new HeroStrengthAction(clientHero.STR()));
+        packet.addAction(new HeroExperienceAction(clientHero.lvl, clientHero.exp));
+        packet.addAction(new HeroTalentsAction(clientHero.getTalents()));
+        packet.addAction(new HeroGoldAction(clientHero.getGold()));
+        packet.addAction(new HeroReadyAction(clientHero.isReady()));
+        packet.addAction(new HeroUUIDAction(clientHero.uuid));
+        packet.addAction(new UpdateFloorInfoAction(Dungeon.depth, Dungeon.branch, Dungeon.level != null? Dungeon.level.feeling: Level.Feeling.NONE));
+        packet.addAction(new LockedFloorStateAction(Dungeon.level.locked));
+        packet.addAction(new KeysIndicatorAction());
+        packet.addAction(new UpdateCounterAction(clientHero.getCounter()));
+        packet.addAction(new CellListenerPromptAction(clientHero.cellSelector.getListener()));
+        packet.addAction(new AttackIndicatorTargetAction(SendData.getHeroAttackIndicatorTarget(threadID)));
+        packet.addAction(new ResumeButtonVisibleAction(clientHero.lastAction != null));
+        packet.addLateLiveStateAction(new SpecialSlotsDefinitionAction(clientHero));
+        packet.addLateLiveStateAction(new InventoryRebuildAction(clientHero));
         addAllCharsToSend();
 
         Dungeon.observe(clientHero, false);
-        packet.packAndAddVisiblePositions(clientHero.fieldOfView);
+        packet.addLateLiveStateAction(new UpdateFovAction(clientHero));
         //TODO send all  information
         for (Actor actor: Actor.all()) {
             if (actor instanceof Buff)
-                packet.packAndAddBuff((Buff) actor, false);
+                packet.packAndAdd(new BuffUpdateAction((Buff) actor), clientHero);
         }
-        flush();
+        forceFlush();
 
-        packet.packAndAddInterlevelSceneState("fade_out", null);
-        flush();
+        packet.addAction(new InterlevelSceneAction("fade_out"));
+        forceFlush();
+
+        Server.clients[threadID] = this;
     }
     private void sendTexture(String textureData){
-        packet.packAndAddRawTextures(textureData);
-        flush();
+        packet.addAction(new TexturePackAction(textureData));
+        forceFlush();
     }
 }

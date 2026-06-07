@@ -21,8 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
-import com.nikita22007.multiplayer.utils.Log;
-import com.shatteredpixel.shatteredpixeldungeon.*;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -45,21 +50,18 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ItemAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,10 +70,6 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendNewInventoryItem;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemCount;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
 public class Item implements Bundlable {
 
@@ -85,7 +83,7 @@ public class Item implements Bundlable {
 	public static final String AC_DROP		= "DROP";
 	public static final String AC_THROW		= "THROW";
 	
-	protected String defaultAction;
+	public String defaultAction;
 	public boolean usesTargeting;
 
 	//TODO should these be private and accessed through methods?
@@ -145,7 +143,7 @@ public class Item implements Bundlable {
 		return actions;
 	}
 
-	public String actionName(String action, Hero hero){
+	public LocalizedString actionName(String action, Hero hero){
 		return Messages.get(this, "ac_" + action);
 	}
 
@@ -260,7 +258,7 @@ public class Item implements Bundlable {
 		}
 		for (Item item:items) {
 			if (item instanceof Bag && ((Bag)item).canHold( this )) {
-				List<Integer> newPath = new ArrayList(path);
+				List<Integer> newPath = new ArrayList<>(path);
 				newPath.add(items.indexOf(item));
 				newPath = collect( (Bag)item, newPath );
 				if (newPath != null) {
@@ -273,13 +271,13 @@ public class Item implements Bundlable {
 		if (!container.canHold(this)){
 			return null;
 		}
-		Hero hero = (container.owner instanceof Hero)? (Hero)container.owner : null;
+		Hero hero = container.owner;
 		if (stackable) {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
 					path.add(items.indexOf(item));
-					sendUpdateItemCount(container.owner, item, item.quantity(), path);
+					SendData.packAndSendAction(container.owner, new ItemAction.UpdateCount( item, item.quantity(), path));
 					item.updateQuickslot();
 					if (hero != null && hero.isAlive()) {
 						Badges.validateItemLevelAquired( this );
@@ -324,7 +322,7 @@ public class Item implements Bundlable {
 		Dungeon.quickslot.replacePlaceholder(this);
 		Collections.sort( items, itemComparator );
 		path.add(items.indexOf(this));
-		sendNewInventoryItem(container.owner, this, path);
+		SendData.packAndSendAction(container.owner, new ItemAction.Add(this));
 		updateQuickslot();
 		return path;
 
@@ -402,7 +400,7 @@ public class Item implements Bundlable {
 		for (Item item : container.items) {
 			if (item == this) {
 				if (owner != null) {
-					sendRemoveItemFromInventory(owner, getSlot(owner));
+					SendData.packAndSendAction(owner, new ItemAction.Remove(getSlot(owner)));
 				}
 				container.items.remove(this);
 				item.onDetach();
@@ -588,9 +586,9 @@ public class Item implements Bundlable {
 		hero.getSprite().emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
 
-	public String title() {
+	public LocalizedString title() {
 
-		String name = name();
+		LocalizedString name = name();
 
 		if (visiblyUpgraded() != 0)
 			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
@@ -602,11 +600,11 @@ public class Item implements Bundlable {
 
 	}
 	
-	public String name() {
+	public LocalizedString name() {
 		return trueName();
 	}
 	
-	public final String trueName() {
+	public final LocalizedString trueName() {
 		return Messages.get(this, "name");
 	}
 	
@@ -620,31 +618,31 @@ public class Item implements Bundlable {
 
 	public Emitter emitter() { return null; }
 	
-	public String info(Hero hero) {
+	public LocalizedString info(Hero hero) {
 		return info();
 	}
-	public String info(){
+	public LocalizedString info(){
 
 		if (false) {
 			Notes.CustomRecord note = Notes.findCustomRecord(customNoteID);
 			if (note != null) {
 				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
-				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+				return Messages.concat(Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')), "\n\n", desc());
 			} else {
 				note = Notes.findCustomRecord(getClass());
 				if (note != null) {
 					//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
-					return Messages.get(this, "custom_note_type", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+					return Messages.concat(Messages.get(this, "custom_note_type", note.title().replace('_', 'ˍ')), "\n\n", desc());
 				}
 			}
 		}
 		return desc();
 	}
 	
-	public String desc(Hero hero) {
+	public LocalizedString desc(Hero hero) {
 		return desc();
 	}
-	protected String desc(){
+	protected LocalizedString desc(){
 		return Messages.get(this, "desc");
 	}
 	
@@ -658,7 +656,7 @@ public class Item implements Bundlable {
 	public Item quantity(int quantity,  boolean send) {
 		this.quantity = quantity;
 		if (send){
-			sendUpdateItemFull(this);
+			SendData.packAndSendActionForAll( new ItemAction.Update(this));
 		}
 		return this;
 	}
@@ -686,10 +684,10 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public String status() {
-		return quantity() != 1 ? Integer.toString(quantity()) : null;
+	public LocalizedString status() {
+		return quantity() != 1 ? LocalizedString.raw(Integer.toString(quantity())) : null;
 	}
-	public String status(Hero hero){
+	public LocalizedString status(Hero hero){
 		return status();
 	};
 
@@ -897,61 +895,16 @@ public class Item implements Bundlable {
 			}
 		}
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(Item.class, "prompt");
 		}
 	};
-	public static JSONObject packItem(@NotNull Item item, @Nullable Hero hero) {
-		return item.toJsonObject(hero);
-	}
-
 	public List<Integer> getSlot(Hero owner) {
 		return owner.belongings.pathOfItem(this);
 	}
 
-	public final JSONObject toJsonObject(@Nullable Hero hero) {
-		JSONObject itemObj = new JSONObject();
-		try {
-			if (hero != null) {
-				itemObj.put("actions", NetworkPacket.packActions(this, hero));
-				itemObj.put("default_action", defaultAction == null ? "null" : defaultAction);
-				itemObj.put("info", info(hero));
-				itemObj.put("ui", itemUI(hero));
-			}
-			itemObj.put("sprite_sheet", spriteSheet());
-			itemObj.put("image", image());
-			itemObj.put("icon", icon);
-			itemObj.put("name", name());
-			itemObj.put("stackable", stackable);
-			itemObj.put("quantity", quantity());
-			itemObj.put("known", isIdentified());
-			itemObj.put("cursed", visiblyCursed());
-			itemObj.put("identified", isIdentified());
-			itemObj.put("level_known", levelKnown);
-            if (hero != null) {
-                itemObj.put("level", visiblyUpgraded(hero));
-            } else {
-                itemObj.put("level", visiblyUpgraded());
-            }
-			itemObj.put("energy_value", energyVal());
-			ItemSprite.Glowing glowing = glowing();
-			if (glowing != null) {
-				itemObj.put("glowing", glowing.toJsonObject());
-			}
-			else{
-				itemObj.put("glowing", JSONObject.NULL);
-			}
-			if (this instanceof Bag) {
-				itemObj = NetworkPacket.packBag((Bag) this, hero, itemObj);
-			}
-		} catch (JSONException e) {
-			Log.e("Packet", "JSONException inside packItem. " + e.toString());
-		}
-		return itemObj;
-	}
-
 	@NotNull
-	protected JSONObject itemUI(@NotNull Hero owner) throws JSONException {
+    public JSONObject itemUI(@NotNull Hero owner) throws JSONException {
 		Objects.requireNonNull(owner);
 		@NotNull Item item = this;
 		JSONObject ui = new JSONObject();
@@ -1038,7 +991,7 @@ public class Item implements Bundlable {
 
 	public void spriteSheet(String newSpriteSheet) {
 		spriteSheet = newSpriteSheet;
-		sendUpdateItemFull(this);
+		SendData.packAndSendActionForAll(new ItemAction.Update(this));
 	}
 	public String getNameKey(){
 		return getClass().getName() + "name";
@@ -1059,9 +1012,10 @@ public class Item implements Bundlable {
 		sendSelfUpdate(null);
 	}
 	public void sendSelfUpdate(Hero heroToFlush){
-		sendUpdateItemFull(this);
-		if (heroToFlush != null){
-			SendData.flush(heroToFlush);
+		if (heroToFlush != null) {
+			SendData.packAndSendAction(heroToFlush, new ItemAction.Update(this));
+		} else {
+			SendData.packAndSendActionForAll(new ItemAction.Update(this));
 		}
 	}
 

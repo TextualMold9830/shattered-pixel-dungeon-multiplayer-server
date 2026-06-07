@@ -18,31 +18,44 @@
 package com.nikita22007.multiplayer.noosa.tweeners;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.AlphaTweenerAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.utils.DeviceCompat;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class AlphaTweener {
-	private AlphaTweener(){
-		throw new RuntimeException("Forbidden");
+import java.util.Objects;
+
+public class AlphaTweener extends Tweener {
+
+	@Nullable
+	private final AlphaTweenerAction action;
+
+	public AlphaTweener(@NotNull CharSprite sprite, float target_alpha, float interval) {
+		super(sprite, interval);
+		if (DeviceCompat.isDebug()) {
+			Objects.requireNonNull(sprite);
+		}
+		if (sprite.ch == null) {
+			GLog.n("Can't add alpha tweener to unknown character");
+			this.action = null;
+		} else {
+			this.action = new AlphaTweenerAction(sprite.ch.id(), target_alpha, interval);
+		}
 	}
 
-	public static void showAlphaTweener(CharSprite image, float target_alpha, float interval ) {
-		if (image.ch == null) {
-			GLog.n("Can't add alpha tweener to unknown character");
-		} else {
-			JSONObject actionObj = new JSONObject();
-			try {
-				actionObj.put("action_type", "sprite_action");
-				actionObj.put("action", "alpha_tweener");
-				actionObj.put("actor_id", image.ch.id());
-				actionObj.put("start_alpha", image.alpha());
-				actionObj.put("target_alpha", target_alpha);
-				actionObj.put("interval", interval);
-			} catch (JSONException ignored) {
-			}
-			SendData.sendCustomActionForAll(actionObj);
+
+	@Override
+	public void onAdd() {
+		if (action != null) {
+			SendData.sendActionForAll(action);
 		}
+	}
+
+	@Override
+	protected void updateValues(float progress) {
+
 	}
 }

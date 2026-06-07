@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,7 +54,7 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt(Hero hero) {
+	public LocalizedString targetingPrompt(Hero hero) {
 		return Messages.get(this, "prompt");
 	}
 

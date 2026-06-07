@@ -2,9 +2,8 @@ package com.nikita22007.multiplayer.noosa;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShakeCameraAction;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Camera {
     public static void shake(float magnitude, float duration) {
@@ -12,17 +11,12 @@ public class Camera {
     }
 
     public static void shake(float magnitude, float duration, @Nullable Hero heroForVisual) {
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_type", "shake_camera");
-            actionObj.put("magnitude", magnitude);
-            actionObj.put("duration", duration);
-        } catch (JSONException ignored) {
-        }
+        ShakeCameraAction action = new ShakeCameraAction(magnitude, duration);
         if (heroForVisual != null) {
-            SendData.sendCustomAction(actionObj, heroForVisual);
+            SendData.sendAction(heroForVisual, action);
         } else {
-            SendData.sendCustomActionForAll(actionObj);
+            SendData.sendActionForAll(action);
         }
     }
 }
+

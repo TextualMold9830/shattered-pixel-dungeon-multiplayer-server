@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -259,7 +260,7 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	@Override
-	public String statsDesc() {
+	public LocalizedString statsDesc() {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(), max());
 		else

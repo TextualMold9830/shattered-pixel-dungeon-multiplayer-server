@@ -21,13 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.network.TrapCache;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
@@ -55,14 +55,14 @@ public abstract class Trap implements Bundlable {
 	public static final int CROSSHAIR   = 5;
 	public static final int LARGE_DOT   = 6;
 
-	public int color;
-	public int shape;
+	public int color; //used for visual
+	public int shape; //used for visual
 
-	public int pos;
+	public int pos; //used for visual
 	public boolean reclaimed = false; //if this trap was spawned by reclaim trap
 
-	public boolean visible;
-	public boolean active = true;
+	public boolean visible; //we remove trap from client if it is invisible
+	public boolean active = true; //used for visual
 	public boolean disarmedByActivation = true;
 	
 	public boolean canBeHidden = true;
@@ -71,6 +71,8 @@ public abstract class Trap implements Bundlable {
 	public boolean avoidsHallways = false; //whether this trap should avoid being placed in hallways
 
 	public Trap set(int pos){
+		// Don't send this. This is a builder method for `pos`, and it's used to execute a trap
+		// effect without changing the tiles. Look for `level.traps.put()` instead.
 		this.pos = pos;
 		return this;
 	}
@@ -79,7 +81,7 @@ public abstract class Trap implements Bundlable {
 		visible = true;
 		GameScene.updateMap(pos);
 		if (Dungeon.level != null) {
-			SendData.sendTraps(Dungeon.level);
+			SendData.sendTrap(this.pos);
 		}
 		return this;
 	}
@@ -95,7 +97,7 @@ public abstract class Trap implements Bundlable {
 	}
 
 	public void trigger() {
-		if (active) {
+		if (isActive()) {
 			if (Dungeon.visibleforAnyHero(pos)) {
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);
 			}
@@ -110,9 +112,8 @@ public abstract class Trap implements Bundlable {
 	public abstract void activate();
 
 	public void disarm(){
-		active = false;
+		setActive(false);
 		Dungeon.level.disarmTrap(pos);
-		TrapCache.remove(pos);
 	}
 
 	//returns the depth value the trap should use for determining its power
@@ -122,11 +123,11 @@ public abstract class Trap implements Bundlable {
 		return (reclaimed || Dungeon.level.traps.get(pos) != this) ? Dungeon.scalingDepth() : Dungeon.depth;
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc");
 	}
 
@@ -139,7 +140,7 @@ public abstract class Trap implements Bundlable {
 		pos = bundle.getInt( POS );
 		visible = bundle.getBoolean( VISIBLE );
 		if (bundle.contains(ACTIVE)){
-			active = bundle.getBoolean(ACTIVE);
+			setActive(bundle.getBoolean(ACTIVE));
 		}
 	}
 
@@ -147,7 +148,18 @@ public abstract class Trap implements Bundlable {
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( POS, pos );
 		bundle.put( VISIBLE, visible );
-		bundle.put( ACTIVE, active );
+		bundle.put( ACTIVE, isActive());
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+		if (Dungeon.level!= null && Dungeon.level.traps != null && Dungeon.level.traps.get(pos, null) == this) {
+			SendData.sendTrap(this.pos);
+		}
 	}
 
 	//this buff is used to keep track of hazards recently affecting a character

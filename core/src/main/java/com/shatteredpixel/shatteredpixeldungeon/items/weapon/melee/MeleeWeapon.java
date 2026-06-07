@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
@@ -89,7 +90,7 @@ public class MeleeWeapon extends Weapon {
     }
 
     @Override
-    public String actionName(String action, Hero hero) {
+    public LocalizedString actionName(String action, Hero hero) {
         if (action.equals(AC_ABILITY)) {
             return Messages.upperCase(Messages.get(this, "ability_name"));
         } else {
@@ -137,7 +138,7 @@ public class MeleeWeapon extends Weapon {
                         }
 
                         @Override
-                        public String prompt() {
+                        public LocalizedString prompt() {
                             return targetingPrompt();
                         }
                     });
@@ -147,7 +148,7 @@ public class MeleeWeapon extends Weapon {
     }
 
     //leave null for no targeting
-    public String targetingPrompt() {
+    public LocalizedString targetingPrompt() {
         return null;
     }
 
@@ -304,77 +305,79 @@ public class MeleeWeapon extends Weapon {
     }
 
     @Override
-    public String info(Hero hero) {
+    public LocalizedString info(Hero hero) {
 
-        String info = super.info();
+        LocalizedString info = super.info();
 
         if (levelKnown) {
-            info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq());
+            info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min(hero)), augment.damageFactor(max(hero)), STRReq())));
             if (hero != null) {
                 if (STRReq() > hero.STR()) {
-                    info += " " + Messages.get(Weapon.class, "too_heavy");
+                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "too_heavy")));
                 } else if (hero.STR() > STRReq()) {
-                    info += " " + Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq());
+                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq())));
                 }
 
             } else {
-                info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(0, hero), max(0, hero), STRReq(0));
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(0, hero), max(0, hero), STRReq(0))));
                 if (hero != null && STRReq(0) > hero.STR()) {
-                    info += " " + Messages.get(MeleeWeapon.class, "probably_too_heavy");
+                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(MeleeWeapon.class, "probably_too_heavy")));
                 }
             }
 
-            String statsInfo = statsInfo();
-            if (!statsInfo.equals("")) info += "\n\n" + statsInfo;
+            LocalizedString statsInfo = statsInfo();
+            if (!statsInfo.equals(LocalizedString.EMPTY)) {
+                info = LocalizedString.concat(info,  "\n\n", statsInfo);
+            }
 
             switch (augment) {
                 case SPEED:
-                    info += " " + Messages.get(Weapon.class, "faster");
+                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "faster")));
                     break;
                 case DAMAGE:
-                    info += " " + Messages.get(Weapon.class, "stronger");
+                    info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "stronger")));
                     break;
                 case NONE:
             }
 
             if (isEquipped(hero) && !hasCurseEnchant() && hero.buff(HolyWeapon.HolyWepBuff.class) != null
                     && (hero.subClass != HeroSubClass.PALADIN || enchantment == null)) {
-                info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", Messages.get(HolyWeapon.class, "ench_name", Messages.get(Enchantment.class, "enchant"))));
-                info += " " + Messages.get(HolyWeapon.class, "ench_desc");
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Weapon.class, "enchanted", Messages.get(HolyWeapon.class, "ench_name", Messages.get(Enchantment.class, "enchant"))))));
+                info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(HolyWeapon.class, "ench_desc")));
             } else if (enchantment != null && (cursedKnown || !enchantment.curse())) {
-                info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
-                if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
-                info += " " + enchantment.desc();
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()))));
+                if (enchantHardened) info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "enchant_hardened")));
+                info = LocalizedString.concat(info, LocalizedString.concat(" ", enchantment.desc()));
             } else if (enchantHardened) {
-                info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "hardened_no_enchant")));
             }
 
             if (cursed && isEquipped(hero)) {
-                info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "cursed_worn")));
             } else if (cursedKnown && cursed) {
-                info += "\n\n" + Messages.get(Weapon.class, "cursed");
+                info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "cursed")));
             } else if (!isIdentified() && cursedKnown) {
                 if (enchantment != null && enchantment.curse()) {
-                    info += "\n\n" + Messages.get(Weapon.class, "weak_cursed");
+                    info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "weak_cursed")));
                 } else {
-                    info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
+                    info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "not_cursed")));
                 }
             }
 
             //the mage's staff has no ability as it can only be gained by the mage
             if (hero.heroClass == HeroClass.DUELIST && !(this instanceof MagesStaff)) {
-                info += "\n\n" + abilityInfo(hero);
+                info = LocalizedString.concat(info, "\n\n",  abilityInfo(hero));
             }
 
         }
         return info;
     }
 
-    public String statsInfo() {
+    public LocalizedString statsInfo() {
         return Messages.get(this, "stats_desc");
     }
 
-    public String abilityInfo(Hero hero) {
+    public LocalizedString abilityInfo(Hero hero) {
         return Messages.get(this, "ability_desc");
     }
 
@@ -383,11 +386,11 @@ public class MeleeWeapon extends Weapon {
     }
 
     @Override
-    public String status(Hero hero) {
+    public LocalizedString status(Hero hero) {
         if (isEquipped(hero)
                 && hero.buff(Charger.class) != null) {
             Charger buff = hero.buff(Charger.class);
-            return buff.charges + "/" + buff.chargeCap(hero);
+            return LocalizedString.concat(buff.charges, "/", buff.chargeCap(hero));
         } else {
             return super.status();
         }
@@ -526,7 +529,7 @@ public class MeleeWeapon extends Weapon {
         }
 
         @Override
-        public String actionName() {
+        public LocalizedString actionName() {
             return Messages.get(MeleeWeapon.class, "swap");
         }
 

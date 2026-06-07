@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -65,6 +66,9 @@ public class IconTitle extends Component {
 		layout();
 	}
 
+	public IconTitle( Image icon, LocalizedString label ) {
+		this(icon, label.toString());
+	}
 	public IconTitle( Image icon, String label ) {
 		icon( icon );
 		label( label );
@@ -121,10 +125,18 @@ public class IconTitle extends Component {
 		}
 	}
 
+
+	public void label( LocalizedString label ) {
+		tfLabel.text( label.toString() );
+	}
+
 	public void label( String label ) {
 		tfLabel.text( label );
 	}
 
+	public void label(LocalizedString label, int color ) {
+		label(label.toString(), color);
+	}
 	public void label( String label, int color ) {
 		tfLabel.text( label );
 		tfLabel.hardlight( color );

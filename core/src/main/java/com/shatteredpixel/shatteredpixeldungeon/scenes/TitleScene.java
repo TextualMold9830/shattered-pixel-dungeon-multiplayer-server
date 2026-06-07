@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
@@ -345,6 +346,9 @@ public class TitleScene extends PixelScene {
 
 	private static class NewsButton extends StyledButton {
 
+		public NewsButton(Chrome.Type type, LocalizedString label ){
+			this(type, label.toString());
+		}
 		public NewsButton(Chrome.Type type, String label ){
 			super(type, label);
 			if (SPDSettings.news()) News.checkForNews();
@@ -385,6 +389,9 @@ public class TitleScene extends PixelScene {
 
 	private static class ChangesButton extends StyledButton {
 
+		public ChangesButton( Chrome.Type type, LocalizedString label ){
+			this(type, label.toString());
+		}
 		public ChangesButton( Chrome.Type type, String label ){
 			super(type, label);
 			if (SPDSettings.updates()) Updates.checkForUpdate();
@@ -414,7 +421,7 @@ public class TitleScene extends PixelScene {
 				ShatteredPixelDungeon.scene().addToFront( new WndOptions(
 						Icons.get(Icons.CHANGES),
 						update.versionName == null ? Messages.get(this,"title") : Messages.get(this,"versioned_title", update.versionName),
-						update.desc == null ? Messages.get(this,"desc") : update.desc,
+						update.desc == null ? Messages.get(this,"desc") : LocalizedString.raw(update.desc),
 						Messages.get(this,"update"),
 						Messages.get(this,"changes")
 				) {
@@ -439,6 +446,9 @@ public class TitleScene extends PixelScene {
 
 	private static class SettingsButton extends StyledButton {
 
+		public  SettingsButton( Chrome.Type type, LocalizedString label ) {
+			this(type, label.toString());
+		}
 		public SettingsButton( Chrome.Type type, String label ){
 			super(type, label);
 			if (Messages.lang().status() == Languages.Status.X_UNFINISH){
@@ -468,6 +478,10 @@ public class TitleScene extends PixelScene {
 	}
 
 	private static class SupportButton extends StyledButton{
+
+		public SupportButton( Chrome.Type type, LocalizedString label ){
+			this(type, label.toString());
+		}
 
 		public SupportButton( Chrome.Type type, String label ){
 			super(type, label);

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -134,10 +135,10 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public String description() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString description() {
+		LocalizedString desc = Messages.get(this, "desc");
 		if (weapon != null && armor != null){
-			desc += "\n\n" + Messages.get(this, "desc_arm_wep", weapon.name(), armor.name());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_arm_wep", weapon.name(), armor.name())));
 		}
 		return desc;
 	}

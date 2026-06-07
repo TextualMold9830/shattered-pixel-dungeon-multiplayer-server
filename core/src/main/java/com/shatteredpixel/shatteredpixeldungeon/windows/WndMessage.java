@@ -21,23 +21,28 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 
+//todo send This
 public class WndMessage extends Window {
 
 	private static final int WIDTH_MIN = 120;
 	private static final int WIDTH_MAX = 220;
 	private static final int MARGIN = 4;
-	
+
 	public WndMessage( String text ) {
+		this(LocalizedString.raw(text));
+	}
+	public WndMessage( LocalizedString text ) {
 		
 		super();
 
 		int width = WIDTH_MIN;
 		
-		RenderedTextBlock info = PixelScene.renderTextBlock( text, 6 );
+		RenderedTextBlock info = PixelScene.renderTextBlock( text.toString(), 6 );
 		info.maxWidth(width - MARGIN * 2);
 		info.setPos(MARGIN, MARGIN);
 		add( info );

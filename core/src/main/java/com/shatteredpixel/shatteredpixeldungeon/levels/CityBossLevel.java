@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -36,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.ImpShopRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
@@ -43,7 +45,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Tilemap;
 import com.nikita22007.multiplayer.noosa.audio.Music;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
@@ -368,7 +370,7 @@ public class CityBossLevel extends Level {
 				Dungeon.observe(hero);
 			}
 		}
-		Music.INSTANCE.fadeOut(5f, new Music.EndAction());
+		Music.INSTANCE.fadeOut(5f, new MusicAction.EndAction());
 	}
 
 	private void spawnShop(){
@@ -379,7 +381,7 @@ public class CityBossLevel extends Level {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(CityLevel.class, "water_name");
@@ -394,7 +396,7 @@ public class CityBossLevel extends Level {
 	}
 
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:
@@ -571,7 +573,7 @@ public class CityBossLevel extends Level {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int cell = (this.tileX + tileX) + (this.tileY + tileY)*tileW;
 
 			//demon halls tiles
@@ -593,7 +595,7 @@ public class CityBossLevel extends Level {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int cell = (this.tileX + tileX) + (this.tileY + tileY)*tileW;
 
 			//demon halls tiles
@@ -603,7 +605,7 @@ public class CityBossLevel extends Level {
 				} else if (Dungeon.level.map[cell] == Terrain.STATUE){
 					return Messages.get(HallsLevel.class, "statue_desc");
 				} else if (Dungeon.level.map[cell] == Terrain.EMPTY_DECO){
-					return "";
+					return LocalizedString.EMPTY;
 				}
 
 			//DK arena tiles

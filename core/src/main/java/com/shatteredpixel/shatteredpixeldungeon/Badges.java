@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -35,13 +36,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.RemainsItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Explosive;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -237,11 +236,11 @@ public class Badges {
 			this.type = type;
 		}
 
-		public String title(){
+		public LocalizedString title(){
 			return Messages.get(this, name()+".title");
 		}
 
-		public String desc(){
+		public LocalizedString desc(){
 			return Messages.get(this, name()+".desc");
 		}
 	}
@@ -1188,7 +1187,7 @@ public class Badges {
 			
 			unlock(badge);
 			
-			GLog.h( Messages.get(Badges.class, "new", badge.title() + " (" + badge.desc() + ")") );
+			GLog.h( Messages.get(Badges.class, "new", LocalizedString.concat(badge.title(), " (", badge.desc(), ")")));
 			GLog.newLine();
 			PixelScene.showBadge( badge );
 		}
@@ -1359,16 +1358,17 @@ public class Badges {
 	}
 
 	//used for badges with completion progress that would otherwise be hard to track
-	public static String showCompletionProgress( Badge badge ){
+	public static LocalizedString showCompletionProgress( Badge badge ){
 		if (isUnlocked(badge)) return null;
 
-		String result = "\n";
+		LocalizedString result = LocalizedString.raw("\n");
 
 		if (badge == Badge.BOSS_SLAIN_1_ALL_CLASSES){
 			for (HeroClass cls : HeroClass.values()){
-				result += "\n";
-				if (isUnlocked(firstBossClassBadges.get(cls)))  result += "_" + Messages.titleCase(cls.title()) + "_";
-				else                                            result += Messages.titleCase(cls.title());
+				result = LocalizedString.concat(result, "\n");
+
+				if (isUnlocked(firstBossClassBadges.get(cls)))  result = LocalizedString.concat(result, "_" , Messages.titleCase(cls.title()) , "_" );
+				else                                            result = LocalizedString.concat(result, Messages.titleCase(cls.title()) );
 			}
 
 			return result;
@@ -1376,9 +1376,9 @@ public class Badges {
 		} else if (badge == Badge.VICTORY_ALL_CLASSES) {
 
 			for (HeroClass cls : HeroClass.values()){
-				result += "\n";
-				if (isUnlocked(victoryClassBadges.get(cls)))    result += "_" + Messages.titleCase(cls.title()) + "_";
-				else                                            result += Messages.titleCase(cls.title());
+				result = LocalizedString.concat(result, "\n");
+				if (isUnlocked(victoryClassBadges.get(cls)))    result = LocalizedString.concat(result, "_" , Messages.titleCase(cls.title()) , "_" );
+				else                                            result = LocalizedString.concat(result, Messages.titleCase(cls.title()) );
 			}
 
 			return result;
@@ -1387,9 +1387,9 @@ public class Badges {
 
 			for (HeroSubClass cls : HeroSubClass.values()){
 				if (cls == HeroSubClass.NONE) continue;
-				result += "\n";
-				if (isUnlocked(thirdBossSubclassBadges.get(cls)))   result += "_" + Messages.titleCase(cls.title()) + "_";
-				else                                                result += Messages.titleCase(cls.title()) ;
+				result = LocalizedString.concat(result, "\n");
+				if (isUnlocked(thirdBossSubclassBadges.get(cls)))  result = LocalizedString.concat(result, "_" , Messages.titleCase(cls.title()) , "_" );
+				else                                            result = LocalizedString.concat(result, Messages.titleCase(cls.title()) );
 			}
 
 			return result;

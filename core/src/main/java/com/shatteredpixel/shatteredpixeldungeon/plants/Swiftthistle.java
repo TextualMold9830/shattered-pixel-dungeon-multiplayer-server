@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -106,7 +107,7 @@ public class Swiftthistle extends Plant {
 		}
 		
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", dispTurns(Math.max(0, left)));
 		}
 		

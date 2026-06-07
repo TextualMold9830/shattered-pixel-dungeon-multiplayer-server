@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -287,18 +288,18 @@ public class WandOfRegrowth extends Wand {
 	}
 
 	@Override
-	public String statsDesc(Hero hero) {
-		String desc = Messages.get(this, "stats_desc", chargesPerCast());
+	public LocalizedString statsDesc(Hero hero) {
+		LocalizedString desc = Messages.get(this, "stats_desc", chargesPerCast());
 		if (isIdentified()){
 			int chargeLeft = chargeLimit(hero) - totChrgUsed;
-			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));
+			if (chargeLeft < 10000) desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "degradation", Math.max(chargeLeft, 0))));
 		}
 		return desc;
 	}
 
 	@Override
 	public String upgradeStat1(int level, Hero hero) {
-		return Messages.decimalFormat("#.##", 3 + (2+level(hero))/3f);
+		return Messages.resolveDecimalFormat("#.##", 3 + (2+level(hero))/3f);
 	}
 
 	@Override
@@ -487,11 +488,11 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public String description() {
-			String desc = Messages.get(this, "desc");
+		public LocalizedString description() {
+			LocalizedString desc = Messages.get(this, "desc");
 			if (Actor.chars().contains(this)) {
 				int preservation = Math.round(seedPreservation()*100);
-				desc += "\n\n" + Messages.get(this, "wand_info", wandLvl, preservation, preservation);
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "wand_info", wandLvl, preservation, preservation)));
 			}
 			return desc;
 		}

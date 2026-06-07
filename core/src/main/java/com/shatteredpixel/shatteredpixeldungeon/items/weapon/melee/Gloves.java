@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -46,7 +47,7 @@ public class Gloves extends MeleeWeapon {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 
@@ -58,7 +59,7 @@ public class Gloves extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo(Hero hero) {
+	public LocalizedString abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 3 + buffedLvl() : 3;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));

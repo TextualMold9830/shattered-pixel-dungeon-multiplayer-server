@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -237,7 +238,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 
 	JmDNS dns;
 	@Override
-	public void registerService(int port) {
+	public void registerService(int port, Map<String, String> properties) {
 		if(dns ==null)
 		{
             try {
@@ -264,7 +265,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 				} else {
 					dns = JmDNS.create();
 				}
-				ServiceInfo serviceInfo = ServiceInfo.create("._mppd._tcp.local.", SPDSettings.serverName(), port, "");
+				ServiceInfo serviceInfo = ServiceInfo.create("_spdmp._tcp.local.", SPDSettings.serverName(), port, 0, 0, properties);
 				dns.registerService(serviceInfo);
 				System.out.println(serviceInfo.getHostAddresses()[0]);
 				System.out.println("Service registered: " + serviceInfo.getName() + " on port " + serviceInfo.getPort());

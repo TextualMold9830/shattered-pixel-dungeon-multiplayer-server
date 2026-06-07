@@ -19,27 +19,28 @@ package com.nikita22007.multiplayer.server.effects;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowStatusAction;
 
 public final class FloatingText {
 	public static void show( float x, float y, String text, int color ) {
-		SendData.addToSendShowStatus(
+		SendData.sendActionForAll(new ShowStatusAction(
 				x,
 				y,
 				null,
 				text,
 				color,
 				true
-		);
+		));
 	}
 	
 	public static void show( float x, float y, int key, String text, int color ) {
-		SendData.addToSendShowStatus(
+		SendData.sendActionForAll(new ShowStatusAction(
 				x,
 				y,
 				key,
 				text,
 				color,
 				true
-		);
+		));
 	}
 }

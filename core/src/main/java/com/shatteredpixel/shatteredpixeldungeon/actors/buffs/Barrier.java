@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -92,7 +93,7 @@ public class Barrier extends ShieldBuff {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", shielding());
 	}
 

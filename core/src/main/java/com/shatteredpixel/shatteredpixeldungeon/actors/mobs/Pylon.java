@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -170,7 +171,7 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(this, "desc_inactive");
 		} else {

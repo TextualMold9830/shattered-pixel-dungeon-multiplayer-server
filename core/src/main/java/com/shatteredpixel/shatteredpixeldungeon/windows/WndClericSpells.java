@@ -21,9 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
@@ -32,24 +31,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.input.PointerEvent;
-import com.watabou.noosa.ColorBlock;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.NinePatch;
-import com.watabou.utils.DeviceCompat;
-import com.watabou.utils.PointF;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 
@@ -70,22 +58,23 @@ public class WndClericSpells extends Window {
 
 			for (ClericSpell spell : spells) {
 				SpellButton spellBtn = new SpellButton(spell, tome, info, i, ClericSpell.getSpellID(spell));
-				add(spellBtn);
 				spellBtns.add(spellBtn);
 			}
-
 		}
-		SendData.sendWindow(getOwnerHero().networkID, "cleric_spells", getId(), toJSON(info));
-	}
-	public JSONObject toJSON(boolean info){
-		JSONObject object = new JSONObject();
-		object.put("info", info);
-		JSONArray buttons = new JSONArray();
-		for (SpellButton button : spellBtns) {
-			buttons.put(button.toJSON());
+		
+		java.util.List<WindowAction.SpellButtonInfo> buttonInfos = new java.util.ArrayList<>();
+		for (SpellButton btn : spellBtns) {
+			buttonInfos.add(new WindowAction.SpellButtonInfo(
+				btn.info,
+				tome.canCast(getOwnerHero(), btn.spell) ? 1.0 : 0.3,
+				btn.tier,
+				btn.spell.icon(),
+				btn.spellID,
+				btn.spell.shortDesc(getOwnerHero()),
+				btn.spell.name()
+			));
 		}
-		object.put("buttons", buttons);
-		return object;
+		SendData.packAndSendAction(getOwnerHero(), new WindowAction.ClericSpells(getId(), info, buttonInfos));
 	}
 
 	@Override
@@ -132,17 +121,7 @@ public class WndClericSpells extends Window {
 		protected void layout() {
 		}
 
-		public JSONObject toJSON(){
-			JSONObject object = new JSONObject();
-			object.put("info", info);
-			object.put("alpha", tome.canCast(getOwnerHero(), spell) ? 1 : 0.3);
-			object.put("tier", tier);
-			object.put("icon", spell.icon());
-			object.put("spell_id", spellID);
-			object.put("spell_short_desc", spell.shortDesc(getOwnerHero()));
-			object.put("spell_name", spell.name());
-			return object;
-		}
+
 		@Override
         public void onClick() {
 			if (info){
@@ -174,8 +153,8 @@ public class WndClericSpells extends Window {
 
 
 		@Override
-		protected String hoverText() {
-			return "_" + Messages.titleCase(spell.name()) + "_\n" + spell.shortDesc(getOwnerHero());
+		protected LocalizedString hoverText() {
+			return LocalizedString.concat("_", Messages.titleCase(spell.name()), "_\n", spell.shortDesc(getOwnerHero()));
 		}
 	}
 

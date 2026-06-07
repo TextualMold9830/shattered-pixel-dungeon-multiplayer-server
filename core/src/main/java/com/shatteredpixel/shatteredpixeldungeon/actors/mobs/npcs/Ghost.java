@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -44,6 +45,8 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -183,7 +186,7 @@ public class Ghost extends NPC {
 			}
 		} else {
 			Mob questBoss;
-			String txt_quest;
+			LocalizedString txt_quest;
 
 			switch (Quest.type){
 				case 1: default:
@@ -203,7 +206,7 @@ public class Ghost extends NPC {
 				GameScene.add(questBoss);
 				Quest.given = true;
 				GameScene.show( new WndQuest( Ghost.this, txt_quest, hero));
-				Music.INSTANCE.fadeOut(1f,new Music.PlayAction(Assets.Music.SEWERS_TENSE));
+				Music.INSTANCE.fadeOut(1f,new MusicAction.PlayAction(Assets.Music.SEWERS_TENSE));
 			}
 		}
 		return true;
@@ -376,18 +379,18 @@ public class Ghost extends NPC {
 				Sample.INSTANCE.play( Assets.Sounds.GHOST );
 				processed = true;
 				Statistics.questScores[0] += 1000;
-				Music.MusicAction callback;
+				MusicAction callback;
 				if (Ghost.Quest.active() || Statistics.amuletObtained){
 					if (Statistics.amuletObtained && Dungeon.depth == 1){
-						callback = new Music.PlayAction(Assets.Music.THEME_FINALE, true);
+						callback = new MusicAction.PlayAction(Assets.Music.THEME_FINALE, true);
 					} else {
-						callback = new Music.PlayAction(Assets.Music.SEWERS_TENSE, true);
+						callback = new MusicAction.PlayAction(Assets.Music.SEWERS_TENSE, true);
 					}
 				} else {
-					callback = new Music.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false);
+					callback = new MusicAction.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false);
 				}
 				Music.INSTANCE.fadeOut(1f, callback);
-				Music.INSTANCE.fadeOut(1f, new Music.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false));
+				Music.INSTANCE.fadeOut(1f, new MusicAction.PlayTracksAction(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false));
 			}
 		}
 

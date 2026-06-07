@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AdrenalineSurge;
@@ -190,8 +190,8 @@ public class MnemonicPrayer extends TargetedClericSpell {
 		}
 	}
 
-	public String desc(Hero hero){
-		return Messages.get(this, "desc", 2 + hero.pointsInTalent(Talent.MNEMONIC_PRAYER)) + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+	public LocalizedString desc(Hero hero){
+		return LocalizedString.concat(Messages.get(this, "desc", 2 + hero.pointsInTalent(Talent.MNEMONIC_PRAYER)), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 }

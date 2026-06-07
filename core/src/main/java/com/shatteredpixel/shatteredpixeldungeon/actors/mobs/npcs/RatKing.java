@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -163,8 +164,7 @@ public class RatKing extends NPC {
 		}
 		return true;
 	}
-	
-	public String description(Hero hero) {
+	public LocalizedString description(Hero hero) {
 		if (hero.armorAbility instanceof Ratmogrify){
 			return Messages.get(this, "desc_crown");
 		} else if (Holiday.getCurrentHoliday() == Holiday.APRIL_FOOLS){

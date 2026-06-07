@@ -1,719 +1,250 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
-import com.badlogic.gdx.Gdx;
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
+import com.watabou.utils.DeviceCompat;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Objects;
 
-import static com.shatteredpixel.shatteredpixeldungeon.items.Item.packItem;
-import static com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.addToArray;
 import static com.shatteredpixel.shatteredpixeldungeon.network.Server.clients;
 
 public class SendData {
+    public static final float CHAT_FLUSH_INTERVAL = 0.1f;
+    private static float chatFlushElapsed = 0f;
 
     //---------------------------Level
 
-    public static void addToSendLevelVisitedStateFull(Level level, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddLevelCells(level);
-        }
-    }
-
-    public static void addToSendLevelVisitedState(Level level, int ID, boolean[] diff) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            for (int i = 0; i< diff.length; i++) {
-                if (diff[i]) {
-                    clients[ID].packet.packAndAddLevelCell(level, i); //todo optimize this
-                }
-            }
-        }
-    }
-
-    public static void addToSendLevelVisitedState(Level level, boolean[] diff) {
-        for (int ID =0; ID < clients.length; ID++)
-        {
-            addToSendLevelVisitedState(level,ID,diff);
-        }
-    }
-
-    public static void addToSendLevelMappedState(Level level, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddLevelCells(level);
-        }
-    }
-
-    public static void addToSendLevelMappedState(Level level) {
-        for (int ID =0; ID < clients.length; ID++){
-            addToSendLevelMappedState(level, ID);
-        }
-    }
-
-    public static void sendLevel(Level level, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddLevel(level, clients[ID].clientHero);
-            clients[ID].flush();
-        }
-    }
-
-    public static void SendLevelReset(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddServerAction("reset_level");
-            clients[ID].flush();
-        }
-    }
-
-    public static void sendLevelCell(Level level, int cell) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddLevelCell(level, cell);
-            clients[i].flush();
-        }
-    }
-
-    //---------------------------Hero
-    public static void addToSendHeroVisibleCells(boolean[] visible, Hero hero) {
-        final int ID = hero.networkID;
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddVisiblePositions(visible);
-        }
-    }
-
-    public static void SendHeroLevel(int ID, int lvl, int exp) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddHeroLevel(lvl, exp);
-        }
-    }
-    public static void SendHeroStrength(int ID, int str) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddHeroStrength(str);
-        }
-    }
-    //---------------------------UI  and mechanics
-    public static void sendResumeButtonVisible(int ID, boolean visible) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            //  clients[ID].send(Codes.RESUME_BUTTON, visible);
-        }
-    }
-
-    public static void sendIronKeysCount() {
-        for (ClientThread client: clients) {
-            if (client != null) {
-                client.packet.packAndAddIronKeysCount();
-                client.flush();
-            }
-        }
-
-    }
-
-    public static void sendDepth(int depth) {
-        for (int i = 0; i < clients.length; i++) {
-            sendDepth(i, depth);
-        }
-    }
-
-    public static void sendDepth(int ID, int depth) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddDepth(depth);
-            clients[ID].flush();
-        }
-    }
-
-    //--------------------------Control
-    public static void sendHeroReady(int ID, boolean ready) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("ready", ready);
-                } catch (JSONException ignored) {
-                }
-            }
-            clients[ID].flush();
-        }
-    }
-
-    public static void sendHeroGold(int ID, int gold) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("gold", gold);
-                } catch (JSONException ignored) {
-                }
-            }
-            clients[ID].flush();
-        }
-    }
-    public static void sendHeroSubclassID(int ID, HeroSubClass subclass){
-        if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("subclass_id", subclass.ordinal());
-                } catch (JSONException ignored) {
-                }
-            }
-            clients[ID].flush();
-        }
-    }
-    public static void sendHeroTalents(Hero hero){
+    public static void sendLevel(Level level, Hero hero) { //keep because of observer
         int ID = hero.networkID;
         if ((ID != -1) && (clients[ID] != null)) {
-            synchronized (clients[ID].packet.dataRef) {
-                JSONObject data = clients[ID].packet.dataRef.get();
-                JSONObject heroObj = null;
-                try {
-                    if (data.has("hero")) {
-                        heroObj = data.getJSONObject("hero");
-                    } else {
-                        heroObj = new JSONObject();
-                        data.put("hero", heroObj);
-                    }
-                    heroObj.put("talents", hero.getTalents());
-                } catch (JSONException ignored) {
-                }
-            }
-            clients[ID].flush();
-        }
-    }
-
-
-    //---------------------------Badges
-    //public static void sendBadge
-    public static void sendBadgeLevelReached(int ID, int bLevel) {//bLevel=BadgeLevel
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].addBadgeToSend("level_reached", bLevel);
-        }
-    }
-
-    public static void sendBadgeStrengthAttained(int ID, int bLevel) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].send(Codes.BADGE_STRENGTH_ATTAINED, bLevel);
-        }
-    }
-
-    public static void sendAllBadgeBossSlain(int bLevel) {
-        ClientThread.sendAll(Codes.BADGE_BOSS_SLAIN, bLevel);
-    }
-
-    public static void sendBadgeMastery(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].sendCode(Codes.BADGE_MASTERY);
+            clients[ID].packAndAddLevel(level);
+            clients[ID].addTraps(level);
         }
     }
 
     //-----------------------------Interlevel Scene
+    // we keep his section because of double force flash
 
-    public static void sendInterLevelSceneForAll(JSONObject interlevelSceneParams) {
+    public static void sendInterLevelSceneForAll(InterlevelSceneAction interlevelSceneParams) {
         for (int i = 0; i < clients.length; i++) {
             sendInterLevelScene(i, interlevelSceneParams);
         }
     }
-    public static void sendInterLevelScene(int ID, JSONObject interlevelSceneParams) {
+    public static void sendInterLevelScene(int ID, InterlevelSceneAction interlevelSceneParams) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].flush();
             {
                 if (clients[ID].clientHero == null) {
                     return;
                 }
             }
-            clients[ID].packet.addInterlevelSceneObject(interlevelSceneParams);
-            clients[ID].flush();
+            clients[ID].forceFlush();
+            clients[ID].packet.addAction(interlevelSceneParams);
+            clients[ID].forceFlush();
         }
     }
 
     public static void sendInterLevelSceneFadeOut(int ID) {
         if ((ID != -1)&&  (clients[ID] != null)) {
-            clients[ID].flush();
+            clients[ID].forceFlush();
             if (clients[ID].clientHero == null) {
                 return;
             }
-            clients[ID].packet.packAndAddInterlevelSceneState("fade_out");
-            clients[ID].flush();
+            clients[ID].packet.addAction(new InterlevelSceneAction("fade_out"));
+            clients[ID].forceFlush();
         }
     }
 
     //-----------------------------Windows
-    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type) {
-        sendWindow(wnd, type, null);
+
+    //----------Actors
+
+
+    @SuppressWarnings("unused") // todo should we use this?
+    public static void sendActorRemoving(@NotNull Actor actor) {
+        if (actor instanceof Buff) {
+            sendActionForAll(new BuffRemoveAction((Buff) actor));
+            return;
+        }
+        SendData.sendActionForAll(new ActorRemoveAction(actor));
     }
 
-    //-----------------------------Windows
-    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type, @Nullable final JSONObject args) {
-        final int ID = wnd.getOwnerHero().networkID;
-        final int windowID = wnd.getId();
-        sendWindow(ID, type, windowID, args);
-    }
-    public static void sendWindow(int ID, String type, int windowID, @Nullable JSONObject args) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddWindow(type, windowID, args);
-            clients[ID].flush();
+    public static void sendAllChars() {
+        for (int ID = 0; ID < clients.length; ID++) {
+            if (clients[ID] != null) {
+                clients[ID].addAllCharsToSend();
+            }
         }
     }
 
-    //----------
-    public static void sendActor(Actor actor) {
+    //---------------------------Sprites
+    public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
+        sendSpriteStateChange(actor, state, false);
+    }
+
+    public static void sendRemoveCharSpriteState(Actor actor, CharSprite.State state) {
+        sendSpriteStateChange(actor, state, true);
+    }
+
+    private static void sendSpriteStateChange(Actor actor, CharSprite.State state, boolean remove) {
         if (actor == null) {
             return;
         }
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            client.packet.packAndAddActor(actor, actor == client.clientHero);
-            client.flush();
-        }
-    }
-
-    public static void sendCharShield(int id, int shielding) {
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            client.packet.packAndAddShield(id, shielding);
-            client.flush();
-        }
-    }
-    public static void sendAllChars(int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].addAllCharsToSend();
-            clients[ID].flush();
-        }
-    }
-
-    public static void sendHeroNewID(Hero hero, int ID) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.addNewHeroID(hero.id());
-            clients[ID].flush();
-        }
-    }
-
-    public static void addToSendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, false);
-    }
-
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to){
-        sendCharSpriteAction(actorID, action, cell_from, cell_to, true);
-    }
-
-    public static void sendCharSpriteAction(int actorID, String action, Integer cell_from, Integer cell_to, boolean send) {
-        if (actorID == Actor.NO_ID) {
-            return;
-        }
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_type", "sprite_action");
-            actionObj.put("action", action);
-            actionObj.put("from", cell_from);
-            actionObj.put("to", cell_to);
-            actionObj.put("actor_id", actorID);
-        } catch (JSONException ignored) {
-
-        }
-        for (int i = 0; i < clients.length; i++) {
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addAction(actionObj);
-            if (send) {
-                client.flush();
-            }
-        }
-    }
-
-    public static void sendCharSpriteState(Actor actor, CharSprite.State state, boolean remove) {
         int id = actor.id();
         if (id == Actor.NO_ID) {
             return;
         }
-        String stateName = state.name().toLowerCase();
-        JSONObject stateObj = new JSONObject();
-        try {
-            stateObj.put("state", stateName);
-            stateObj.put("is_removing", remove);
-            stateObj.put("actor_id", id);
-        } catch (JSONException ignored) {
-
-        }
-        sendActor(actor);
-    }
-
-    public static void flush(Hero hero) {
-        if (hero.networkID >= 0) {
-            flush(hero.networkID);
-        }
-    }
-
-    public static void flush(int networkID) {
-        if (networkID <= -1) {
-            return;
-        }
-        if (clients[networkID] != null) {
-            clients[networkID].flush();
-        }
-    }
-
-    public static void sendMessageToAll(String message) {
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
-        for (int i = 0; i < clients.length; i++) {
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addChatMessage(messageObj);
-            client.flush();
-        }
-    }
-
-    public static void sendMessage(Integer ID, String message) {
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
-        if(ID != null) {
-            ClientThread client = clients[ID];
-            if (client == null) {
-                return;
-            }
-            client.packet.addChatMessage(messageObj);
-            client.flush();
-        } else {
-            sendMessageToAll(message);
-        }
-    }
-
-    public static void sendMessageExcept(Integer exceptId, String message) {
-        if (exceptId == null)
-        {
-            sendMessageToAll(message);
-            return;
-        }
-        JSONObject messageObj;
-        try {
-            messageObj = new JSONObject().put("text", message);
-        } catch (JSONException e) {
-            return;
-        }
-        for (int i = 0; i < clients.length; i++) {
-            if (i == exceptId) continue;
-            ClientThread client = clients[i];
-            if (client == null) {
-                continue;
-            }
-            client.packet.addChatMessage(messageObj);
-            client.flush();
-        }
-    }
-
-    public static void addToSendShowStatus(Float x, Float y, Integer key, String text, int color, boolean ignorePosition) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("action_type", "show_status");
-            data.put("x", x);
-            data.put("y", y);
-            data.put("key", key);
-            data.put("text", text);
-            data.put("color", color);
-            data.put("ignore_position", ignorePosition);
-        } catch (JSONException e) {
-            Log.wtf("SendData", "Exception while adding showstatus", e);
-            return;
-        }
         for (ClientThread client : clients) {
             if (client == null) {
                 continue;
             }
-            AtomicReference<JSONObject> ref = client.packet.dataRef;
-            synchronized (ref) {
-                try {
-                    addToArray(ref.get(), "actions", data);
-                } catch (JSONException e) {
-                    Log.w("SendData", "failed to send \"Show_status\"");
-                    continue;
-                }
-            }
+            client.packet.addAction(new CharSpriteStateAction(id, state, remove));
+            client.flush();
         }
     }
 
-    public static void sendRemoveItemFromInventory(Char owner, List<Integer> path) {
-        sendInventoryItemAction(owner, null, path, "remove");
-    }
+    //---------------------------Packet Flush
 
-    public static void sendUpdateItemCount(Char owner, Item item, int count, List<Integer> path) {
-        sendUpdateItemFull(owner, item, path);
-    }
-
-    public static void sendUpdateItemFull(Item item) {
-        for (Hero hero : Dungeon.heroes) {
-            if (hero == null) {
-                continue;
-            }
-            List<Integer> path = hero.belongings.pathOfItem(item);
-            if ((path == null) || (path.isEmpty())) {
-
-                continue;
-            }
-            sendUpdateItemFull(hero, item, path);
-            break;
+    public static void forceFlush(Hero hero) {
+        if (hero.networkID >= 0) {
+            forceFlush(hero.networkID);
         }
     }
 
-    public static void sendUpdateItemFull(Char owner, Item item) {
-        if ((owner == null) || !(owner instanceof Hero)) {
-            return;
-        }
-        sendUpdateItemFull(owner, item, ((Hero) owner).belongings.pathOfItem(item));
-    }
-    public static void sendUpdateItemFull(Char owner, Item item, List<Integer> path) {
-        if ((owner == null) || !(owner instanceof Hero)) {
-            return;
-        }
-
-        JSONObject itemObj = (item == null) ? null : packItem(item, (Hero) owner);
-        sendInventoryItemAction(owner, itemObj, path, "update");
-    }
-
-    public static void sendNewInventoryItem(Char owner, Item item, List<Integer> path) {
-        if ((owner == null) || !(owner instanceof Hero)) {
-            return;
-        }
-        JSONObject itemObj = (item == null) ? null : packItem(item, (Hero) owner);
-        //todo optimize
-        sendInventoryItemAction(owner, itemObj, path, "place");
-    }
-
-    private static void sendInventoryItemAction(Char owner, JSONObject itemObj, List<Integer> path, String action) {
-        if (!(owner instanceof Hero)) {
-            return;
-        }
-        Hero hero = (Hero) owner;
-        if (hero.networkID < 0) {
-            return;
-        }
-        JSONArray slot = new JSONArray(path);
-        JSONObject action_obj = new JSONObject();
-        try {
-            action_obj.put("action_type", "add_item_to_bag");
-            action_obj.put("slot", slot);
-            action_obj.put("item", (itemObj == null) ? JSONObject.NULL : itemObj);
-            action_obj.put("update_mode", action);
-        } catch (JSONException ignored) {
-        }
-        if (clients[hero.networkID] != null) {
-            clients[hero.networkID].packet.addAction(action_obj);
-        }
-    }
-
-    public static void sendHeapRemoving(Heap heap) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.addHeapRemoving(heap);
-            clients[i].flush();
-        }
-    }
-
-    public static void sendHeap(Heap heap) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.addHeap(heap, clients[i].clientHero);
-            clients[i].flush();
-        }
-    }
-
-    public static void sendPlant(int pos, Plant plant) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddPlant(pos, plant);
-            clients[i].flush();
-        }
-    }
-
-    public static void sendActorRemoving(Actor actor) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddActorRemoving(actor);
-            clients[i].flush();
-        }
-    }
-
-    public static void sendBuff(Buff buff, boolean remove) {
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                continue;
-            }
-            clients[i].packet.packAndAddBuff(buff, remove);
-            clients[i].flush();
-        }
-    }
-    public static void sendBuff(Buff buff){
-        sendBuff(buff, false);
-    }
-    public static void sendFlashChar(CharSprite sprite, float flashTime) {
-
-        if (sprite.ch == null){
-            ShatteredPixelDungeon.reportException(new RuntimeException("char sprite has not owner. Ignored"));
-            return;
-        }
-
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_type", "sprite_action");
-            actionObj.put("action", "flash");
-            actionObj.put("actor_id", sprite.ch.id());
-            actionObj.put("flash_time", flashTime);
-            sendCustomActionForAll(actionObj);
-        } catch (JSONException e) {
-            ShatteredPixelDungeon.reportException(e);
-        }
-
-    }
-
-    public static void sendCustomActionForAll(@NotNull JSONObject action_obj) {
-        for (int i = 0; i < clients.length; i++) {
-            sendCustomAction(action_obj, i);
-        }
-    }
-
-    public static void addToSendCustomActionForAll(@NotNull JSONObject action_obj) {
-        for (int i = 0; i < clients.length; i++) {
-            addToSendCustomAction(action_obj, i);
-        }
-    }
-
-    public static void sendCustomAction(@NotNull JSONObject action_obj, @NotNull Hero hero) {
-        if (hero.networkID <= -1) {
-            return;
-        }
-        int networkID = hero.networkID;
-        if (clients[networkID] != null) {
-            clients[networkID].packet.addAction(action_obj);
-            clients[networkID].flush();
-        }
-    }
-
-    public static void sendCustomAction(JSONObject action_obj, int networkID, boolean flush) {
-        assert action_obj.has("action_type") : "Action object must contains \"action_type\" field";
+    public static void forceFlush(int networkID) {
         if (networkID <= -1) {
             return;
         }
         if (clients[networkID] != null) {
-            clients[networkID].packet.addAction(action_obj);
-            if (flush) {
-                clients[networkID].flush();
+            clients[networkID].forceFlush();
+        }
+    }
+
+    public static void forceFlushAll() {
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.forceFlush();
+            }
+        }
+    }
+    
+
+    //---------------------------Chat
+    public static void enqueueChatMessageToAll(String message) {
+        enqueueChatMessageToAll(LocalizedString.raw(message));
+    }
+
+    public static void enqueueChatMessageToAll(LocalizedString message) {
+        ChatMessageAction messageAction = packMessage(message);
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.enqueueChatMessage(messageAction);
             }
         }
     }
 
-    public static void sendCustomAction(JSONObject action_obj, int networkID) {
-        sendCustomAction(action_obj, networkID, true);
+    public static void enqueueChatMessage(Integer ID, String message) {
+        enqueueChatMessage(ID, LocalizedString.raw(message));
     }
 
-    public static void addToSendCustomAction(JSONObject action_obj, int networkID) {
-        sendCustomAction(action_obj, networkID, false);
-    }
-
-    public static void addToSendCustomAction(JSONObject action_obj, Hero hero) {
-        if (hero == null) return;
-        sendCustomAction(action_obj, hero.networkID, false);
-    }
-
-    public static void sendActionDiscoverTile(int pos, int oldValue) {
-        JSONObject action = new JSONObject();
-        try {
-            action.put("action_type", "discover_tile");
-            action.put("pos", pos);
-            action.put("old_tile", oldValue);
-        } catch (JSONException ignored) {
-        }
-        sendCustomActionForAll(action);
-    }
-
-    public static void sendCellListenerPrompt(String new_prompt, int networkID) {
-        if (networkID < 0){
+    public static void enqueueChatMessage(Integer ID, LocalizedString message) {
+        if (ID == null) {
+            enqueueChatMessageToAll(message);
             return;
         }
-        if (clients[networkID] == null) {
+        ChatMessageAction messageAction = packMessage(message);
+        if (ID >= 0 && ID < clients.length && clients[ID] != null) {
+            clients[ID].enqueueChatMessage(messageAction);
+        }
+    }
+
+    public static void enqueueChatMessageExcept(Integer exceptId, String message) {
+        enqueueChatMessageExcept(exceptId, LocalizedString.raw(message));
+    }
+
+    public static void enqueueChatMessageExcept(Integer exceptId, LocalizedString message) {
+        if (exceptId == null) {
+            enqueueChatMessageToAll(message);
             return;
         }
-        try {
-            AtomicReference<JSONObject> dataRef = clients[networkID].packet.dataRef;
-            synchronized (clients[networkID].packet.dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("cell_listener_prompt", new_prompt == null ? "" : new_prompt);
-                dataRef.get().put("ui", uiObj);
+        ChatMessageAction messageAction = packMessage(message);
+        for (int i = 0; i < clients.length; i++) {
+            if (i == exceptId) {
+                continue;
             }
-            clients[networkID].flush();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            ClientThread client = clients[i];
+            if (client != null) {
+                client.enqueueChatMessage(messageAction);
+            }
         }
     }
+
+    public static void updatePendingChat(float elapsed) {
+        chatFlushElapsed += elapsed;
+        if (chatFlushElapsed < CHAT_FLUSH_INTERVAL) {
+            return;
+        }
+        chatFlushElapsed = 0f;
+        flushPendingChat();
+    }
+
+    public static void flushPendingChat() {
+        for (ClientThread client : clients) {
+            if (client != null) {
+                client.flushPendingChatMessages();
+            }
+        }
+    }
+
+    private static ChatMessageAction packMessage(LocalizedString message) {
+        return new ChatMessageAction(message);
+    }
+
+    //---------------------------Heaps
+    public static void sendHeap(Heap heap) {
+        if (heap.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] == null) {
+                continue;
+            }
+            clients[i].packet.packAndAdd(new HeapUpdateAction(heap), clients[i].clientHero);
+            clients[i].flush();
+        }
+    }
+
     public static void sendHeroAttackIndicator(@Nullable Integer target, int networkID) {
         sendHeroAttackIndicator(target == null? -1: target, networkID);
     }
 
 
     private static final HashMap<Integer, Integer> attackIndicatorCache = new HashMap<>();
+
+    public static int getHeroAttackIndicatorTarget(int networkID) {
+        return attackIndicatorCache.getOrDefault(networkID, -1);
+    }
+
     public static void sendHeroAttackIndicator(int target, int networkID) {
         if (networkID <0)
         {
@@ -728,52 +259,89 @@ public class SendData {
             }
         }
         attackIndicatorCache.put(networkID, target);
-        try {
-            AtomicReference<JSONObject> dataRef = clients[networkID].packet.dataRef;
-            synchronized (clients[networkID].packet.dataRef) {
-                JSONObject uiObj = dataRef.get().optJSONObject("ui");
-                uiObj = uiObj != null ? uiObj : new JSONObject();
-                uiObj.put("attack_indicator_target", target);
-                dataRef.get().put("ui", uiObj);
-            }
-            clients[networkID].flush();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        clients[networkID].packet.addAction(new AttackIndicatorTargetAction(target));
+        clients[networkID].flush();
+    }
+
+    //--------------------------- Traps
+
+    public static void sendTrap(int cell) {
+        //no `Trap trap` overload because you need to make sure that the trap exists on the level.
+        @Nullable Trap trap = Dungeon.level == null ? null : Dungeon.level.traps.get(cell, null);
+        //use this method instead of raw action to avoid sending invisible trap
+        ImmutableNetworkAction action = trap == null || !trap.visible
+                ? new TrapRemoveAction(cell)
+                : new TrapUpdateAction(cell, trap);
+        sendActionForAll(action);
     }
 
 
-    public static void sendLevelSize(Level level) {
-        for (int i = 0; i < clients.length; i++){
-            sendLevelSize(level, i);
-        }
-    }
-    public static void sendLevelSize(Level level, int ID){
-        if (ID < 0) return;
-        if (clients[ID] == null) return;
-        clients[ID].packet.packAndAddLevelParams(level);
-        clients[ID].flush();
-    }
-
-    public static void sendTraps(Level level) {
-        for (int i = 0; i < clients.length; i++){
-            if(clients[i] != null) {
-                clients[i].packet.packAndAddTraps(level);
-                clients[i].flush();
-            }
-        }
-    }
-
-    public static void sendCounter(Hero hero, float portion) {
-        ClientThread client = clients[hero.networkID];
-        if (client != null) {
-            client.packet.packAndAddCounter(portion);
-            client.flush();
-        }
-    }
+    //--------------------------- Special
     public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
     {
-        clients[hero.networkID].packet.packAndAddRedirect(redirectPacket);
+        clients[hero.networkID].packet.packAndAdd(new RedirectServerAction(redirectPacket), hero);
         clients[hero.networkID].flush();
+    }
+
+    //--------------------------- Events/Actions
+    public static void sendAction(@Nullable Hero hero, ImmutableNetworkAction networkAction) {
+        sendLateLiveStateAction(hero, networkAction);
+    }
+
+    public static void sendLateLiveStateAction(@Nullable Hero hero, LiveStateNetworkAction  networkAction) {
+        if (hero == null) return;
+        int networkId = hero.networkID;
+        if (networkId < 0) {
+            return;
+        }
+        if (networkId >= clients.length) {
+            Log.e("SendData","Hero network id is too much");
+            return;
+        }
+        var client = clients[networkId];
+        if (client != null) {
+            client.packet.addLateLiveStateAction(networkAction);
+        }
+    }
+
+    public static void sendActionForAll(ImmutableNetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.addAction(networkAction);
+            }
+        }
+    }
+
+    public static void packAndSendAction(@Nullable Hero hero, LiveStateNetworkAction networkAction) {
+        if (hero == null) return;
+        int networkId = hero.networkID;
+        if (networkId < 0 || networkId >= clients.length) return;
+        var client = clients[networkId];
+        if (client != null) {
+            client.packet.packAndAdd(networkAction, client.clientHero);
+        }
+    }
+
+    public static void packAndSendAction(@Nullable Hero hero, ImmutableNetworkAction networkAction) {
+        sendAction(hero, networkAction);
+    }
+
+    public static void packAndSendActionForAll(LiveStateNetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.packAndAdd(networkAction, client.clientHero);
+            }
+        }
+    }
+
+    public static void sendLateLiveStateActionForAll(LiveStateNetworkAction networkAction) {
+        for (int i = 0; i < clients.length; i++) {
+            var client = clients[i];
+            if (client != null) {
+                client.packet.addLateLiveStateAction(networkAction);
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -113,7 +114,7 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		Focus f = buff(Focus.class);
 		if (f == null) {
 			return super.defenseVerb();

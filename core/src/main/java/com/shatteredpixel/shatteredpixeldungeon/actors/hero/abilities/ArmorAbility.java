@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -48,7 +49,7 @@ public abstract class ArmorAbility implements Bundlable {
 				}
 
 				@Override
-				public String prompt() {
+				public LocalizedString prompt() {
 					return targetingPrompt();
 				}
 			});
@@ -57,10 +58,10 @@ public abstract class ArmorAbility implements Bundlable {
 
 	//leave null for no targeting
 	@Deprecated
-	public String targetingPrompt(){
+	public LocalizedString targetingPrompt(){
 		return null;
 	}
-	public String targetingPrompt(Hero hero){
+	public LocalizedString targetingPrompt(Hero hero){
 		return targetingPrompt();
 	}
 
@@ -96,21 +97,21 @@ public abstract class ArmorAbility implements Bundlable {
 
 	protected abstract void activate( ClassArmor armor, Hero hero, Integer target );
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
-	public String shortDesc(){
+	public LocalizedString shortDesc(){
 		return Messages.get(this, "short_desc");
 	}
-	public String shortDesc(Hero hero){
+	public LocalizedString shortDesc(Hero hero){
 		return shortDesc();
 	}
 
-	public String desc(){
-		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "cost", (int)baseChargeUse);
+	public LocalizedString desc(){
+		return LocalizedString.concat(Messages.get(this, "desc"), "\n\n", Messages.get(this, "cost", (int)baseChargeUse));
 	}
-	public String desc(Hero hero){
+	public LocalizedString desc(Hero hero){
 		return desc();
 	}
 

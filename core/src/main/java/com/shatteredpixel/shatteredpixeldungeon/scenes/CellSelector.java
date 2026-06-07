@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -30,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CellListenerPromptAction;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
@@ -44,6 +46,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Signal;
+import org.jetbrains.annotations.Nullable;
 
 public class CellSelector extends ScrollArea {
 	private Hero owner;
@@ -54,12 +57,12 @@ public class CellSelector extends ScrollArea {
 
 	private Listener listener = null;
 
-	public void setListener(Listener listener) {
+	public void setListener(@Nullable Listener listener) {
 		this.listener = listener;
 		if (listener != null) {
 			listener.owner = this.owner;
 		}
-		SendData.sendCellListenerPrompt(listener.prompt(), owner.networkID);
+		SendData.packAndSendAction(owner, new CellListenerPromptAction(listener));
 	}
 
 	public boolean enabled;
@@ -547,7 +550,7 @@ public class CellSelector extends ScrollArea {
 
 		public void onRightClick( Integer cell ){} //do nothing by default
 
-		public abstract String prompt();
+		public abstract LocalizedString prompt();
 	}
 	public CellSelector(Hero owner ) {
         super(GameScene.tiles);

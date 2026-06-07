@@ -21,8 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantUpdateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -135,11 +141,11 @@ public abstract class Level implements Bundlable {
 		TRAPS,
 		SECRETS;
 
-		public String title(){
+		public LocalizedString title(){
 			return Messages.get(this, name()+"_title");
 		}
 
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, name()+"_desc");
 		}
 	}
@@ -322,7 +328,7 @@ public abstract class Level implements Bundlable {
 		height = h;
 		length = w * h;
 
-		SendData.sendLevelSize(this);
+		SendData.sendActionForAll(new ResizeLevelAction(this));
 
 		map = new int[length];
 		Arrays.fill( map, feeling == Level.Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
@@ -631,6 +637,7 @@ public abstract class Level implements Bundlable {
 	public void seal(){
 		if (!locked) {
 			locked = true;
+			SendData.sendActionForAll(new LockedFloorStateAction(true));
 			for (Hero hero: Dungeon.heroes) {
 				if(hero != null) {
 					Buff.affect(hero, LockedFloor.class);
@@ -642,6 +649,7 @@ public abstract class Level implements Bundlable {
 	public void unseal(){
 		if (locked) {
 			locked = false;
+			SendData.sendActionForAll(new LockedFloorStateAction(false));
 			for(Hero hero: Dungeon.heroes) {
 				if (hero != null) {
 				if (hero.buff(LockedFloor.class) != null) {
@@ -969,6 +977,7 @@ public abstract class Level implements Bundlable {
 
 		if (terrain != Terrain.TRAP && terrain != Terrain.SECRET_TRAP && terrain != Terrain.INACTIVE_TRAP){
 			level.traps.remove( cell );
+			SendData.sendTrap(cell); //send trap removing
 		}
 
 		int flags = Terrain.flags[terrain];
@@ -1003,7 +1012,7 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-		SendData.sendLevelCell(level,  cell);
+		SendData.sendActionForAll(new UpdateCellsAction(cell, level));
 
 	}
 	//FIXME
@@ -1090,12 +1099,13 @@ public abstract class Level implements Bundlable {
 				return null;
 			}
 		}
-		SendData.sendPlant(pos, plant);
+		SendData.sendLateLiveStateActionForAll(new PlantUpdateAction(pos, plant));
 		return plant;
 	}
 	
 	public void uproot( int pos ) {
 		plants.remove(pos);
+		SendData.sendActionForAll(new PlantRemoveAction(pos));
 		GameScene.updateMap( pos );
 	}
 
@@ -1103,9 +1113,11 @@ public abstract class Level implements Bundlable {
 		Trap existingTrap = traps.get(pos);
 		if (existingTrap != null){
 			traps.remove( pos );
+			SendData.sendTrap(pos); //send trap removing
 		}
 		trap.set( pos );
 		traps.put( pos, trap );
+		SendData.sendTrap(pos);
 		GameScene.updateMap( pos );
 		return trap;
 	}
@@ -1151,6 +1163,7 @@ public abstract class Level implements Bundlable {
 				terr == Terrain.TRAP || terr == Terrain.INACTIVE_TRAP)){
 			set(cell, Terrain.WATER);
 			Dungeon.level.traps.remove(cell);
+			SendData.sendTrap(cell); //send trap removing
 			GameScene.updateMap(cell);
 			return true;
 		}
@@ -1595,7 +1608,7 @@ public abstract class Level implements Bundlable {
 		return p.x + p.y*width();
 	}
 	
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		
 		switch (tile) {
 			case Terrain.CHASM:
@@ -1660,7 +1673,7 @@ public abstract class Level implements Bundlable {
 		}
 	}
 	
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		
 		switch (tile) {
 			case Terrain.CHASM:
@@ -1697,7 +1710,7 @@ public abstract class Level implements Bundlable {
 			case Terrain.EMPTY_WELL:
 				return Messages.get(Level.class, "empty_well_desc");
 			default:
-				return "";
+				return LocalizedString.EMPTY;
 		}
 	}
 	//TODO: replace this

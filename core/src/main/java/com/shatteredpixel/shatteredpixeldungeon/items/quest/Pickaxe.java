@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -78,7 +79,7 @@ public class Pickaxe extends MeleeWeapon {
 		return super.keptThroughLostInventory() || Dungeon.level instanceof MiningLevel;
 	}
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 
@@ -133,7 +134,7 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo(Hero hero) {
+	public LocalizedString abilityInfo(Hero hero) {
 		int dmgBoost = 8 + 2*buffedLvl();
 		return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));
 	}

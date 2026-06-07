@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -51,11 +52,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
 import com.nikita22007.multiplayer.noosa.audio.Music;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -423,11 +424,11 @@ public abstract class Elemental extends Mob {
 				Dungeon.level.drop( new Embers(), pos ).sprite.drop();
 				//assign score here as player may choose to keep the embers
 				Statistics.questScores[1] += 2000;
-				Music.MusicAction callback;
+				MusicAction callback;
 				if (Wandmaker.Quest.active() || Statistics.amuletObtained){
-					callback = new Music.PlayAction(Assets.Music.PRISON_TENSE, true);
+					callback = new MusicAction.PlayAction(Assets.Music.PRISON_TENSE, true);
 				} else {
-					callback = new Music.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+					callback = new MusicAction.PlayTracksAction(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
 				}
 				Music.INSTANCE.fadeOut(1f, callback);
 			}
@@ -439,13 +440,13 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public String description() {
-			String desc = super.description();
+		public LocalizedString description() {
+			LocalizedString desc = super.description();
 
 			if (summonedALly){
-				desc += " " + Messages.get(this, "desc_ally");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_ally")));
 			} else {
-				desc += " " + Messages.get(this, "desc_boss");
+				desc = LocalizedString.concat(desc, LocalizedString.concat(" ", Messages.get(this, "desc_boss")));
 			}
 
 			return desc;

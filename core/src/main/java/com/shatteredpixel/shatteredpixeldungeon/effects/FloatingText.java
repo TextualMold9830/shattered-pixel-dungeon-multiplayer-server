@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -215,13 +216,13 @@ public class FloatingText extends RenderedTextBlock {
 		super.destroy();
 	}
 	
-	public void reset( float x, float y, String text, int color, int iconIdx, boolean left ) {
+	public void reset( float x, float y, LocalizedString text, int color, int iconIdx, boolean left ) {
 		
 		revive();
 		
 		zoom( 1 / (float)PixelScene.defaultZoom );
 
-		text( text );
+		text( text.toString() );
 		hardlight( color );
 
 		if (iconIdx != NO_ICON){
@@ -246,15 +247,19 @@ public class FloatingText extends RenderedTextBlock {
 	
 	/* STATIC METHODS */
 
-	public static void show( float x, float y, String text, int color) {
+	public static void show( float x, float y, LocalizedString text, int color) {
 		show(x, y, -1, text, color, -1, false);
 	}
-	
+
 	public static void show( float x, float y, int key, String text, int color) {
+		show(x, y, key, LocalizedString.raw(text), color);
+	}
+
+	public static void show( float x, float y, int key, LocalizedString text, int color) {
 		show(x, y, key, text, color, -1, false);
 	}
 	
-	public static void show( float x, float y, int key, String text, int color, int iconIdx, boolean left ) {
+	public static void show(float x, float y, int key, LocalizedString text, int color, int iconIdx, boolean left ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {

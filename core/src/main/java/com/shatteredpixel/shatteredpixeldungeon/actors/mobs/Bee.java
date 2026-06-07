@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -255,7 +256,7 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public String description() {
+	public LocalizedString description() {
 		if (alignment == Alignment.ALLY && buffs(AllyBuff.class).isEmpty()){
 			return Messages.get(this, "desc_honey");
 		} else {

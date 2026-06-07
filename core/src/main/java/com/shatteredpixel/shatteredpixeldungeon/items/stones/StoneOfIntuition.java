@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -35,7 +36,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScrol
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -47,9 +47,9 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Reflection;
-import com.watabou.utils.SparseArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 
@@ -76,17 +76,22 @@ public class StoneOfIntuition extends InventoryStone {
 
 		//GameScene.show( new WndGuess(item));
 		WndGuess wndGuess = new WndGuess(item, hero);
-		SendData.sendWindow(hero.networkID, "guess", wndGuess.getId(), wndGuess.toJson() );
+		SendData.packAndSendAction(hero, new WindowAction.Guess(
+			wndGuess.getId(),
+			item,
+			wndGuess.icons,
+			wndGuess.guessOptions
+		));
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String text = super.desc(hero);
+	public LocalizedString desc(Hero hero) {
+		LocalizedString text = super.desc(hero);
 		if (hero != null){
 			if (hero.buff(IntuitionUseTracker.class) == null){
-				text += "\n\n" + Messages.get(this, "break_info");
+				text = LocalizedString.concat(text, LocalizedString.concat("\n\n", Messages.get(this, "break_info")));
 			} else {
-				text += "\n\n" + Messages.get(this, "break_warn");
+				text = LocalizedString.concat(text, LocalizedString.concat("\n\n", Messages.get(this, "break_warn")));
 			}
 		}
 		return text;
@@ -242,20 +247,6 @@ public class StoneOfIntuition extends InventoryStone {
 			}
 		}
 
-		public JSONObject toJson() {
-			JSONObject object = new JSONObject();
-			object.put("item", item.toJsonObject(getOwnerHero()));
-			JSONArray icons = new JSONArray();
-			JSONArray keys = new JSONArray();
-			for (int i : this.icons){
-				icons.put(i);
-			}
-			for(Class c: guessOptions){
-				keys.put(c.getName());
-			}
-			object.put("icons", icons);
-			object.put("keys", keys);
-			return object;
-		}
+
 	}
 }

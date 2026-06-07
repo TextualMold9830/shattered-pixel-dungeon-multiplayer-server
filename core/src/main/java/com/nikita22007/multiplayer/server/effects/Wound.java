@@ -19,33 +19,23 @@ package com.nikita22007.multiplayer.server.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.Contract;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WoundVisualAction;
 
 public class Wound {
 
     private static final float TIME_TO_FADE = 0.8f;
     @Deprecated
+    @Contract(value = " -> fail", pure = true)
     protected Wound() {
         throw new RuntimeException();
     }
 
     public static void reset(int p) {
-        JSONObject actionObj = new JSONObject();
-        try {
-            actionObj.put("action_type", "wound_visual");
-            actionObj.put("pos", p);
-            actionObj.put("time_to_fade", TIME_TO_FADE);
-        } catch (JSONException ignore) {
-        }
-        SendData.sendCustomActionForAll(actionObj);
+        SendData.sendActionForAll(new WoundVisualAction(p, TIME_TO_FADE));
     }
 
     public static void hit(Char ch) {
-        hit(ch, 0);
-    }
-
-    public static void hit(Char ch, float angle) {
         reset(ch.pos);
     }
 

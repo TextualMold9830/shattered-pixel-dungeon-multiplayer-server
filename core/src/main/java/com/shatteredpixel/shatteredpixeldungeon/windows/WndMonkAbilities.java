@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -53,7 +54,7 @@ public class WndMonkAbilities extends Window {
 		pos = title.bottom() + 3*MARGIN;
 
 		for (MonkEnergy.MonkAbility abil : MonkEnergy.MonkAbility.abilities) {
-			String text = "_" + Messages.titleCase(abil.name()) + " " + Messages.get(this, "energycost", abil.energyCost()) + ":_ " + abil.desc(getOwnerHero());
+			LocalizedString text = LocalizedString.concat("_", Messages.titleCase(abil.name()), " ", Messages.get(this, "energycost", abil.energyCost()), ":_ " + abil.desc(getOwnerHero()));
 			RedButton moveBtn = new RedButton(text, 6){
 				@Override
 				protected void onClick() {
@@ -90,7 +91,7 @@ public class WndMonkAbilities extends Window {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return abilityBeingUsed.targetingPrompt();
 		}
 	};

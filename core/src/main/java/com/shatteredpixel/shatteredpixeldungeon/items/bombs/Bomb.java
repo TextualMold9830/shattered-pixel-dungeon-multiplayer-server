@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.nikita22007.multiplayer.utils.Log;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -198,7 +199,7 @@ public class Bomb extends Item {
 					if (curItem == this) {
 						ch.damage(dmg, new Char.DamageCause(this, curUser));
 					} else {
-						Log.e("Bomb explosion curr item is not this");
+						Log.e("Bomb","Bomb explosion curr item is not this");
 						ch.damage(dmg, new Char.DamageCause(this, null));
 					}
 				}
@@ -249,13 +250,13 @@ public class Bomb extends Item {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		int depth = Dungeon.scalingDepth();
-		String desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
+		LocalizedString desc = Messages.get(this, "desc", 4+depth, 12+3*depth);
 		if (fuse == null) {
-			return desc + "\n\n" + Messages.get(this, "desc_fuse");
+			return LocalizedString.concat(desc, LocalizedString.concat( "\n\n", Messages.get(this, "desc_fuse")));
 		} else {
-			return desc + "\n\n" + Messages.get(this, "desc_burning");
+			return LocalizedString.concat(desc, "\n\n", Messages.get(this, "desc_burning"));
 		}
 	}
 

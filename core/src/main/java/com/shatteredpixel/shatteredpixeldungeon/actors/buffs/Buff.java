@@ -21,16 +21,20 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffRemoveAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Reflection;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Buff extends Actor {
 	
@@ -75,7 +79,7 @@ public class Buff extends Actor {
 
 		if (target.add( this )){
 			if (target.getSprite() != null) fx( true );
-			SendData.sendBuff(this);
+			SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 			return true;
 		} else {
 			this.target = null;
@@ -85,7 +89,7 @@ public class Buff extends Actor {
 	
 	public void detach() {
 		if (target.remove( this ) && target.getSprite() != null) fx( false );
-		SendData.sendBuff(this, true);
+		SendData.sendActionForAll(new BuffRemoveAction(this));
 	}
 	
 	@Override
@@ -118,8 +122,8 @@ public class Buff extends Actor {
 		//do nothing by default
 	}
 
-	public String heroMessage(){
-		String msg = Messages.get(this, "heromsg");
+	public LocalizedString heroMessage(){
+		LocalizedString msg = Messages.get(this, "heromsg");
 		if (msg.isEmpty()) {
 			return null;
 		} else {
@@ -127,16 +131,16 @@ public class Buff extends Actor {
 		}
 	}
 
-	public String name() {
+	public LocalizedString name() {
 		return Messages.get(this, "name");
 	}
 
-	public String desc(){
+	public LocalizedString desc(){
 		return Messages.get(this, "desc");
 	}
 
 	//to handle the common case of showing how many turns are remaining in a buff description.
-	protected String dispTurns(float input){
+	protected LocalizedString dispTurns(float input){
 		return Messages.decimalFormat("#.##", input);
 	}
 
@@ -163,7 +167,7 @@ public class Buff extends Actor {
 
 	//creates a fresh instance of the buff and attaches that, this allows duplication.
 	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {
-		T buff = Reflection.newInstance(buffClass);
+		T buff = Objects.requireNonNull(Reflection.newInstance(buffClass));
 		buff.attachTo( target );
 		return buff;
 	}

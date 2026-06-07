@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.input.PointerEvent;
@@ -51,6 +52,14 @@ public abstract class OptionSlider extends Component {
 	private float tickDist;
 
 
+
+	public OptionSlider(LocalizedString title, LocalizedString minTxt, LocalizedString maxTxt, int minVal, int maxVal){
+		this(title.toString(), minTxt.toString(), maxTxt.toString(), minVal, maxVal);
+	}
+
+	public OptionSlider(LocalizedString title, String minTxt, String maxTxt, int minVal, int maxVal){
+		this(title.toString(), minTxt, maxTxt, minVal, maxVal);
+	}
 	public OptionSlider(String title, String minTxt, String maxTxt, int minVal, int maxVal){
 		super();
 

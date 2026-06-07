@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -45,13 +46,14 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.FadingTrapsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.watabou.utils.BArray;
 import com.watabou.noosa.Camera;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Tilemap;
 import com.nikita22007.multiplayer.noosa.audio.Music;
@@ -59,7 +61,6 @@ import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
@@ -558,7 +559,7 @@ public class PrisonBossLevel extends Level {
 				Sample.INSTANCE.play(Assets.Sounds.BLAST);
 				
 				state = State.WON;
-				Music.INSTANCE.fadeOut(5f, new Music.EndAction());
+				Music.INSTANCE.fadeOut(5f, new MusicAction.EndAction());
 				break;
 		}
 	}
@@ -741,7 +742,7 @@ public class PrisonBossLevel extends Level {
 	}
 	
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(PrisonLevel.class, "water_name");
@@ -754,7 +755,7 @@ public class PrisonBossLevel extends Level {
 	}
 	
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.EMPTY_DECO:
 				return Messages.get(PrisonLevel.class, "empty_deco_desc");
@@ -789,11 +790,11 @@ public class PrisonBossLevel extends Level {
 			
 			this.area = area;
 		}
-		JSONArray trapData = new JSONArray();
+		int[] data;
 		@Override
 		public Tilemap create() {
 			Tilemap v = super.create();
-			int[] data = new int[tileW*tileH];
+			data = new int[tileW*tileH];
 			int cell;
 			Trap t;
 			int i = 0;
@@ -806,11 +807,6 @@ public class PrisonBossLevel extends Level {
 					} else {
 						data[i] = -1;
 					}
-					JSONObject object = new JSONObject();
-					//TODO: optimize this
-					object.put("pos", i);
-					object.put("data", data[i]);
-					trapData.put(object);
 					cell++;
 					i++;
 				}
@@ -823,7 +819,7 @@ public class PrisonBossLevel extends Level {
 		}
 		
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int cell = (this.tileX+tileX) + Dungeon.level.width()*(this.tileY+tileY);
 			if (Dungeon.level.traps.get(cell) != null){
 				return Messages.titleCase(Dungeon.level.traps.get(cell).name());
@@ -832,7 +828,7 @@ public class PrisonBossLevel extends Level {
 		}
 		
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int cell = (this.tileX+tileX) + Dungeon.level.width()*(this.tileY+tileY);
 			if (Dungeon.level.traps.get(cell) != null){
 				return Dungeon.level.traps.get(cell).desc();
@@ -880,24 +876,12 @@ public class PrisonBossLevel extends Level {
 				vis.killAndErase();
 			}
 			Dungeon.level.customTiles.remove(this);
-			JSONObject object = new JSONObject();
-			object.put("action_type", "fading_traps");
-			object.put("kill", true);
-			SendData.sendCustomActionForAll(object);
+			SendData.sendActionForAll(new FadingTrapsAction.Kill());
 		}
 		boolean newInstance = true;
 		public void sendSelf(){
-			JSONObject object = new JSONObject();
-			object.put("action_type", "fading_traps");
-			object.put("tileX", tileX);
-			object.put("tileY", tileY);
-			object.put("tileH", tileH);
-			object.put("tileW", tileW);
-			object.put("data", trapData);
-			object.put("alpha", vis.alpha());
-			object.put("new", newInstance);
+			SendData.sendActionForAll(new FadingTrapsAction.Update(tileX, tileY, tileW, tileH, data, vis.alpha(), newInstance));
 			newInstance = false;
-			SendData.sendCustomActionForAll(object);
 		}
 	}
 	

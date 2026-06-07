@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -37,7 +38,11 @@ public class StyledButton extends Button {
 	public boolean leftJustify = false;
 
 	public boolean multiline;
-	
+
+	public StyledButton(Chrome.Type type, LocalizedString label ) {
+		this(type, label.toString());
+	}
+
 	public StyledButton(Chrome.Type type, String label ) {
 		this(type, label, 9);
 	}
@@ -115,7 +120,10 @@ public class StyledButton extends Button {
 		text.alpha( value ? 1.0f : 0.3f );
 		if (icon != null) icon.alpha( value ? 1.0f : 0.3f );
 	}
-	
+
+	public void text( LocalizedString value ) {
+		text(value.toString());
+	}
 	public void text( String value ) {
 		text.text( value );
 		layout();

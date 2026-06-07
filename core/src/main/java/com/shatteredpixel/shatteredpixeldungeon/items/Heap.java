@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -51,10 +52,10 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -63,7 +64,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeap;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendHeapRemoving;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendActionForAll;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeapRemoveAction;
 
 public class Heap implements Bundlable {
 	public enum Type {
@@ -391,10 +393,10 @@ public class Heap implements Bundlable {
 			sprite.kill();
 		}
 		items.clear();
-		sendHeapRemoving(this);
+		sendActionForAll(new HeapRemoveAction(this.pos));
 	}
 
-	public String title(){
+	public LocalizedString title(){
 		switch(type){
 			case FOR_SALE:
 				Item i = peek();
@@ -420,7 +422,7 @@ public class Heap implements Bundlable {
 		}
 	}
 
-	public String info(){
+	public LocalizedString info(){
 		switch(type){
 			case CHEST:
 				return Messages.get(this, "chest_desc");
@@ -519,21 +521,9 @@ public class Heap implements Bundlable {
 
 
 	public JSONObject toJsonObject(Hero observer) {
-		Heap heap = this;
-		if (heap.isEmpty()) {
-			return null;
-		}
-		JSONObject heapObj;
-		heapObj = new JSONObject();
-		try {
-			heapObj.put("pos", heap.pos);
-			heapObj.put("visible_item", peekVisual().toJsonObject(observer));
-			heapObj.put("show_item", true);
-			heapObj.put("seen", heap.isSeen());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return heapObj;
+		SerializationContext ctx = new SerializationContext(com.shatteredpixel.shatteredpixeldungeon.network.Server.SERIALIZERS, observer);
+        Object serialized = ctx.serialize(this, "default");
+        return serialized instanceof JSONObject ? (JSONObject) serialized : null;
 	}
 
 }

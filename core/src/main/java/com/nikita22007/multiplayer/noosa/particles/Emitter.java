@@ -25,13 +25,22 @@
 package com.nikita22007.multiplayer.noosa.particles;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterBurstAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStartAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterPourAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStopAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
+import com.watabou.noosa.particles.SerializableParticleFactory;
 import com.watabou.utils.PointF;
 import com.watabou.utils.SparseArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Emitter emits visual particles from random place in its area.
@@ -42,6 +51,9 @@ import org.json.JSONObject;
  * If {@code quantity == 0} emitter should be stopped manually */
 public class Emitter /*this is temporary ->*/extends Group {
 	int id = -1;
+	private enum AnchorType {
+		WORLD, CELL, TARGET
+	}
 
 	protected boolean lightMode = false;
 	/**
@@ -74,6 +86,8 @@ public class Emitter /*this is temporary ->*/extends Group {
 	protected int quantity;
 
 	private boolean on = false;
+	private LiveStateNetworkAction pendingStartAction;
+	private boolean startActionSent;
 
 	/**
 	 * Factory which producing particles
@@ -81,6 +95,7 @@ public class Emitter /*this is temporary ->*/extends Group {
 	protected Factory factory;
 	private Integer cell = null;
 	private PointF shift = new PointF(0, 0);
+	private AnchorType anchorType = AnchorType.WORLD;
 	public boolean visible = true;
 	public static boolean freezeEmitters = false;
 
@@ -89,9 +104,11 @@ public class Emitter /*this is temporary ->*/extends Group {
 	}
 
 	public void cellPos(int cell, float width, float height){
+		clearAnchor();
 		this.cell = cell;
 		this.width = width;
 		this.height = height;
+		this.anchorType = AnchorType.CELL;
 	}
 
 	public void cellPosWithShift(int cell, float shiftX, float shiftY) {
@@ -107,11 +124,12 @@ public class Emitter /*this is temporary ->*/extends Group {
 	}
 
 	public void cellPosWithShift(int cell, PointF shift, float width, float height) {
+		clearAnchor();
 		this.cell = cell;
 		this.shift = shift;
 		this.width = width;
 		this.height = height;
-		target = null;
+		this.anchorType = AnchorType.CELL;
 	}
 
 	public void pos( PointF p ) {
@@ -119,24 +137,34 @@ public class Emitter /*this is temporary ->*/extends Group {
 	}
 	
 	public void pos( float x, float y, float width, float height ) {
+		clearAnchor();
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
-		target = null;
+		this.anchorType = AnchorType.WORLD;
 	}
 	public void pos(CharSprite target, float x, float y, float width, float height){
-		pos(x, y, width, height);
+		clearAnchor();
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 		this.target = target;
+		this.anchorType = AnchorType.TARGET;
 	}
 	public void pos( CharSprite target ) {
+		clearAnchor();
 		this.target = target;
+		this.anchorType = AnchorType.TARGET;
 	}
 
 	public void pos( CharSprite target, PointF shift ) {
+		clearAnchor();
 		this.target = target;
 		this.shift = shift;
+		this.fillTarget = false;
+		this.anchorType = AnchorType.TARGET;
 	}
 
 	/**
@@ -170,15 +198,14 @@ public class Emitter /*this is temporary ->*/extends Group {
 	 */
 	static SparseArray<Emitter> infiniteEmitters = new SparseArray<>();
 	static int idCounter = 0;
-	static void putEmitter(Emitter emitter){
+	static void assignEmitterId(Emitter emitter){
 		emitter.id = idCounter;
-		infiniteEmitters.put(emitter.id, emitter);
 		idCounter++;
 	}
 	public void start( Factory factory, float interval, int quantity ) {
 
-		if (quantity == 0) {
-			putEmitter(this);
+		if (id != -1 && quantity > 0) {
+			stopInfinite();
 		}
 
 		this.factory = factory;
@@ -186,26 +213,37 @@ public class Emitter /*this is temporary ->*/extends Group {
 		
 		this.interval = interval;
 		this.quantity = quantity;
-		
-		on(true);
-		sendSelf();
+
+		pendingStartAction = createStartAction();
+		startActionSent = false;
+
+		if (sendSelf()) {
+			on(true);
+			if (quantity == 0) {
+				infiniteEmitters.put(id, this);
+			}
+		}
 	}
 	//TODO: remove all uses of this
 	public void update(){}
 
-	//TODO: remove all uses of this
-	public void revive(){}
+	public void revive(){
+		clearAnchor();
+		id = -1;
+		factory = null;
+		interval = 0;
+		quantity = 0;
+		on = false;
+		pendingStartAction = null;
+		startActionSent = false;
+		visible = true;
+		fillTarget = true;
+	}
 	//TODO: remove all uses of this
 	public boolean autoKill = false;
 	//TODO: remove all uses of this
 	public void killAndErase(){
-		if (id != -1){
-			JSONObject object = new JSONObject();
-			object.put("action_type", "emitter_visual");
-			object.put("id", id);
-			object.put("kill", true);
-			SendData.sendCustomActionForAll(object);
-		}
+		stopInfinite();
 	}
 	@Override
 	public void kill(){
@@ -215,38 +253,98 @@ public class Emitter /*this is temporary ->*/extends Group {
 	//TODO: check this
 	protected boolean isFrozen(){return false;}
 
-	protected void sendSelf() {
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_type", "emitter_visual");
+	private void clearAnchor() {
+		x = 0;
+		y = 0;
+		width = 0;
+		height = 0;
+		target = null;
+		cell = null;
+		shift = new PointF(0, 0);
+		anchorType = AnchorType.WORLD;
+	}
 
-			if ((target != null) && (target.ch != null) && (target.ch.id() != -1)) {
-				actionObj.put("target_char", target.ch.id());
-				actionObj.put("fill_target", fillTarget);
-			} else if (cell != null){
-				actionObj.put("pos", cell);
-			} else {
-				actionObj.put("position_x", x);
-				actionObj.put("position_y", y);
-			}
-
-			actionObj.put("shift_x", shift.x);
-			actionObj.put("shift_y", shift.y);
-
-			actionObj.put("width", width);
-			actionObj.put("height", height);
-
-			actionObj.put("interval", interval);
-			actionObj.put("quantity", quantity);
-			if (id > -1){
-				actionObj.put("id", id);
-			}
-			actionObj.put("factory", factory.toJsonObject());
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+	@NotNull
+	private EmitterAnchor buildAnchor() {
+		if (anchorType == AnchorType.TARGET) {
+			return EmitterAnchor.target(Objects.requireNonNull(target), x, y, width, height, shift.x, shift.y, fillTarget);
 		}
-		SendData.sendCustomActionForAll(actionObj);
+		if (anchorType == AnchorType.CELL) {
+			return EmitterAnchor.cell(Objects.requireNonNull(cell), x, y, width, height, shift.x, shift.y);
+		}
+		return EmitterAnchor.world(x, y, width, height, shift.x, shift.y);
+	}
+
+	private void stopInfinite() {
+		if (id != -1) {
+			SendData.sendActionForAll(new EmitterStopAction(id));
+			infiniteEmitters.remove(id);
+			id = -1;
+		}
+	}
+
+	protected boolean sendSelf() {
+		if (parent == null || pendingStartAction == null || startActionSent) {
+			return false;
+		}
+		if (quantity == 0 && id == -1) {
+			assignEmitterId(this);
+		}
+		SendData.packAndSendActionForAll(pendingStartAction);
+		startActionSent = true;
+		return true;
+	}
+
+	@NotNull
+	private LiveStateNetworkAction createStartAction() {
+		if (quantity == 0) {
+			return new EmitterPourAction(this);
+		} else if (interval == 0) {
+			return new EmitterBurstAction(this);
+		} else {
+			return new EmitterStartAction(this);
+		}
+	}
+
+	@Override
+	public void onAdd() {
+		super.onAdd();
+		if (sendSelf()) {
+			on(true);
+			if (quantity == 0) {
+				infiniteEmitters.put(id, this);
+			}
+		}
+	}
+
+	public int networkId() {
+		return id;
+	}
+
+	@NotNull
+	public EmitterAnchor anchor() {
+		return buildAnchor();
+	}
+
+	public Factory networkFactory() {
+		return factory;
+	}
+
+	public float networkInterval() {
+		return interval;
+	}
+
+	public int networkQuantity() {
+		return quantity;
+	}
+
+	public boolean networkFillTarget() {
+		return fillTarget;
+	}
+
+	@Nullable
+	public LiveStateNetworkAction networkStartAction() {
+		return pendingStartAction;
 	}
 
 	public void pos(float x, float y) {
@@ -260,38 +358,19 @@ public class Emitter /*this is temporary ->*/extends Group {
 		return on;
 	}
 
-	public void 	on(boolean on) {
+	public void on(boolean on) {
 		this.on = on;
 		if (!on){
 			killAndErase();
 		}
 	}
 
-	abstract public static class Factory {
+	abstract public static class Factory implements SerializableParticleFactory {
 
 		public boolean lightMode() {
 			return false;
 		}
-		//TODO: check this
-		public String factoryName(){
-			//return toPath(this);
-			return getClass().getName();
-		};
 
-		public JSONObject customParams() {
-			return new JSONObject();
-		}
-
-		public final JSONObject toJsonObject() {
-			JSONObject result =  customParams();
-			try {
-			result = result == null? new JSONObject(): result;
-			result.put("path", getClass().getName());
-			result.put("factory_type", factoryName());
-			result.put("light_mode", lightMode());
-			} catch (JSONException ignored) {}
-			return result;
-		}
 		//TODO: remove all overrides of this
 		public void emit(Emitter emitter, int index, float x, float y ){};
 	}

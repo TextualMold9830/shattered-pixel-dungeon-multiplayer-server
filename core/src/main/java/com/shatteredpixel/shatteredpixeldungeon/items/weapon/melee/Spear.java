@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -55,7 +56,7 @@ public class Spear extends MeleeWeapon {
 	}
 
 	@Override
-	public String targetingPrompt() {
+	public LocalizedString targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
 
@@ -67,7 +68,7 @@ public class Spear extends MeleeWeapon {
 	}
 
 	@Override
-	public String abilityInfo(Hero hero) {
+	public LocalizedString abilityInfo(Hero hero) {
 		int dmgBoost = levelKnown ? 9 + Math.round(2f*buffedLvl()) : 9;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min(hero)+dmgBoost), augment.damageFactor(max(hero)+dmgBoost));

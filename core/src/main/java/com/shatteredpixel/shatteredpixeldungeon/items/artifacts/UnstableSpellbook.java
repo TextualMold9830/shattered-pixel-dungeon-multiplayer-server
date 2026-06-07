@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -297,24 +298,24 @@ public class UnstableSpellbook extends Artifact {
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String desc = super.desc(hero);
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = super.desc(hero);
 
 		if (isEquipped(hero)) {
 			if (cursed) {
-				desc += "\n\n" + Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_cursed")));
 			}
 			
 			if (level() < levelCap && scrolls.size() > 0) {
-				desc += "\n\n" + Messages.get(this, "desc_index");
-				desc += "\n" + "_" + Messages.get(scrolls.get(0), "name") + "_";
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_index")));
+				desc = LocalizedString.concat(desc, "\n" , "_" , Messages.get(scrolls.get(0), "name") , "_");
 				if (scrolls.size() > 1)
-					desc += "\n" + "_" + Messages.get(scrolls.get(1), "name") + "_";
+					desc = LocalizedString.concat("\n" ,  "_", Messages.get(scrolls.get(1), "name") , "_");
 			}
 		}
 		
 		if (level() > 0) {
-			desc += "\n\n" + Messages.get(this, "desc_empowered");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_empowered")));
 		}
 
 		return desc;
@@ -372,7 +373,7 @@ public class UnstableSpellbook extends Artifact {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(UnstableSpellbook.class, "prompt");
 		}
 

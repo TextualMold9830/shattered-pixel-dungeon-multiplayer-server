@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -122,7 +123,7 @@ public class Shadows extends Invisibility {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc");
 	}
 }

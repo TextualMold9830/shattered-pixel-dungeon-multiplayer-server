@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.PathFinder;
 
@@ -44,7 +45,7 @@ public class HeroHelp {
          */
     }
 
-    public static String GetHeroesClass() {
+    public static LocalizedString GetHeroesClass() {
         int count = HeroCount();
         if (count == 1) {
             for (int i = 0; i < heroes.length; i++) {
@@ -53,24 +54,24 @@ public class HeroHelp {
                 }
             }
         }
-        String ClassName = "";
+        LocalizedString ClassName = null;
         if (count > 1) {
 
             for (int i = 0; i < heroes.length; i++) {
                 if ((!(heroes[i] == null)) && (heroes[i].isAlive())) {
-                    if (ClassName == "") {
+                    if (ClassName == null) {
                         ClassName = heroes[i].className();
                     } else {
                         if (ClassName != heroes[i].className())
                         {
-                            return "heroes";
+                            return LocalizedString.raw("heroes");
                         }
                     }
                 }
             }
-            return ClassName + 's';
+            return LocalizedString.raw("%ss", ClassName, 's');
         }
-        return "ERROR";
+        return LocalizedString.raw("ERROR");
     }
 
     public static Hero GetHeroOnLevel(int depth) { //use  this  if on level  only  one Hero

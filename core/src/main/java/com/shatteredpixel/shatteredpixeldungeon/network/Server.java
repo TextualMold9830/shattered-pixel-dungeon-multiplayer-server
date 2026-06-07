@@ -6,23 +6,179 @@ import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.*;
+import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.SerializedAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginLoader;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.PluginManager;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BlobSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CharSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.MissileAnchorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
+
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpecialSlotDefinitionsSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
+import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterAnchorSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterBurstSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterPourSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStartSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStopSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
+
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
+import com.watabou.noosa.particles.SerializableParticleFactory;
 
 public class Server extends Thread {
+    public static final SerializerRegistry SERIALIZERS = new SerializerRegistry();
+
+    static {
+        SERIALIZERS.register(Item.class, "default", new ItemSerializer());
+        SERIALIZERS.register(Heap.class, "default", new HeapSerializer());
+        SERIALIZERS.register(Heap.class, "remove", new HeapRemovalSerializer());
+        SERIALIZERS.register(Bag.class, "default", new BagSerializer());
+        SERIALIZERS.register(Belongings.class, "default", new BelongingsSerializer());
+        SERIALIZERS.register(Belongings.class, "special_slot_definitions", new SpecialSlotDefinitionsSerializer());
+        SERIALIZERS.register(Char.class, "default", new CharSerializer());
+        SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
+        SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
+        SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
+
+        SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
+        SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
+        SERIALIZERS.register(Splash.SplashFactory.class, "default", new SplashFactorySerializer());
+        SERIALIZERS.register(EmitterAnchor.class, "default", new EmitterAnchorSerializer());
+        SERIALIZERS.register(MissileSprite.Anchor.class, "default", new MissileAnchorSerializer());
+
+        //actions
+        SERIALIZERS.register(SerializedAction.class, new SerializedActionSerializer());
+        SERIALIZERS.register(EmitterStopAction.class, new EmitterStopActionSerializer());
+        SERIALIZERS.register(EmitterBurstAction.class, new EmitterBurstActionSerializer());
+        SERIALIZERS.register(EmitterStartAction.class, new EmitterStartActionSerializer());
+        SERIALIZERS.register(EmitterPourAction.class, new EmitterPourActionSerializer());
+        SERIALIZERS.register(BuffUpdateAction.class, new BuffUpdateActionSerializer());
+        SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
+        SERIALIZERS.register(PlantUpdateAction.class, new PlantUpdateActionSerializer());
+        SERIALIZERS.register(PlantRemoveAction.class, new PlantRemoveActionSerializer());
+        SERIALIZERS.register(TrapUpdateAction.class, new TrapUpdateActionSerializer());
+        SERIALIZERS.register(TrapRemoveAction.class, new TrapRemoveActionSerializer());
+        SERIALIZERS.register(RippleVisualAction.class, new RippleVisualActionSerializer());
+        SERIALIZERS.register(ActorRemoveAction.class, new ActorRemoveActionSerializer());
+        SERIALIZERS.register(ChatMessageAction.class, new ChatMessageActionSerializer());
+        SERIALIZERS.register(ChatMessagesAction.class, new ChatMessagesActionSerializer());
+        SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
+        SERIALIZERS.register(SurpriseVisualAction.class, new SurpriseVisualActionSerializer());
+        SERIALIZERS.register(FlareVisualAction.class, new FlareVisualActionSerializer());
+        SERIALIZERS.register(EnchantingVisualAction.class, new EnchantingVisualActionSerializer());
+        SERIALIZERS.register(MagicMissileVisualAction.class, new MagicMissileVisualActionSerializer());
+        SERIALIZERS.register(WoundVisualAction.class, new WoundVisualActionSerializer());
+        SERIALIZERS.register(DiscoverTileAction.class, new DiscoverTileActionSerializer());
+        SERIALIZERS.register(UpdateFovAction.class, new UpdateFovActionSerializer());
+        SERIALIZERS.register(SetLevelEntranceAction.class, new SetLevelEntranceActionSerializer());
+        SERIALIZERS.register(SetLevelExitAction.class, new SetLevelExitActionSerializer());
+        SERIALIZERS.register(CharEmoAction.class, new CharEmoActionSerializer());
+        SERIALIZERS.register(CharSpriteStateAction.class, new CharSpriteStateActionSerializer());
+        SERIALIZERS.register(HeapRemoveAction.class, new HeapRemoveActionSerializer());
+        SERIALIZERS.register(ShowBannerAction.class, new ShowBannerActionSerializer());
+        SERIALIZERS.register(TexturePackAction.class, new TexturePackActionSerializer());
+        SERIALIZERS.register(CharSpriteAction.class, new CharSpriteActionSerializer());
+        SERIALIZERS.register(AlphaTweenerAction.class, new AlphaTweenerActionSerializer());
+        SERIALIZERS.register(BossHealthBarAction.class, new BossHealthBarActionSerializer());
+        SERIALIZERS.register(CharUpdateAction.class, new CharUpdateActionSerializer());
+        SERIALIZERS.register(SpecialSlotsDefinitionAction.class, new SpecialSlotsDefinitionActionSerializer());
+        SERIALIZERS.register(InventoryRebuildAction.class, new InventoryRebuildActionSerializer());
+        SERIALIZERS.register(SpriteFlashAction.class, new SpriteFlashActionSerializer());
+        SERIALIZERS.register(InterlevelSceneAction.class, new InterlevelSceneActionSerializer());
+        SERIALIZERS.register(UpdateCellsAction.class, new UpdateCellsActionSerializer());
+        SERIALIZERS.register(SetLevelStatesAction.class, new SetLevelStatesActionSerializer());
+        SERIALIZERS.register(SetLevelTilesAction.class, new SetLevelTilesActionSerializer());
+        SERIALIZERS.register(SetLevelVisualsAction.class, new SetLevelVisualsActionSerializer());
+        SERIALIZERS.register(ResizeLevelAction.class, new ResizeLevelActionSerializer());
+        SERIALIZERS.register(ShowStatusAction.class, new ShowStatusActionSerializer());
+        SERIALIZERS.register(ShakeCameraAction.class, new ShakeCameraActionSerializer());
+        SERIALIZERS.register(HeroReadyAction.class, new HeroReadyActionSerializer());
+        SERIALIZERS.register(HeroGoldAction.class, new HeroGoldActionSerializer());
+        SERIALIZERS.register(HeroUUIDAction.class, new HeroUUIDActionSerializer());
+        SERIALIZERS.register(HeroActorIdAction.class, new HeroActorIdActionSerializer());
+        SERIALIZERS.register(HeroExperienceAction.class, new HeroExperienceActionSerializer());
+        SERIALIZERS.register(HeroStrengthAction.class, new HeroStrengthActionSerializer());
+        SERIALIZERS.register(HeroSubclassAction.class, new HeroSubclassActionSerializer());
+        SERIALIZERS.register(HeroTalentsAction.class, new HeroTalentsActionSerializer());
+        SERIALIZERS.register(HeroClassAction.class, new HeroClassActionSerializer());
+        SERIALIZERS.register(UpdateFloorInfoAction.class, new UpdateFloorInfoActionSerializer());
+        SERIALIZERS.register(LockedFloorStateAction.class, new LockedFloorStateActionSerializer());
+        SERIALIZERS.register(KeysIndicatorAction.class, new KeysIndicatorActionSerializer());
+        SERIALIZERS.register(UpdateCounterAction.class, new UpdateCounterActionSerializer());
+        SERIALIZERS.register(CellListenerPromptAction.class, new CellListenerPromptActionSerializer());
+        SERIALIZERS.register(AttackIndicatorTargetAction.class, new AttackIndicatorTargetActionSerializer());
+        SERIALIZERS.register(ResumeButtonVisibleAction.class, new ResumeButtonVisibleActionSerializer());
+        SERIALIZERS.register(MusicAction.class, new MusicActionSerializer());
+        SERIALIZERS.register(SampleAction.PlayAction.class, new SampleActionSerializers.Play());
+        SERIALIZERS.register(SampleAction.LoadAction.class, new SampleActionSerializers.Load());
+        SERIALIZERS.register(SampleAction.UnloadAction.class, new SampleActionSerializers.Unload());
+        SERIALIZERS.register(SampleAction.ReloadAction.class, new SampleActionSerializers.Reload());
+        SERIALIZERS.register(MissileSpriteVisualAction.class, new MissileSpriteVisualActionSerializer());
+        SERIALIZERS.register(FadingTrapsAction.Update.class, new FadingTrapsActionSerializers.Update());
+        SERIALIZERS.register(FadingTrapsAction.Kill.class, new FadingTrapsActionSerializers.Kill());
+        SERIALIZERS.register(BlobUpdateAction.class, new BlobUpdateActionSerializer());
+        SERIALIZERS.register(ItemAction.Add.class, new ItemActionSerializers.Add());
+        SERIALIZERS.register(ItemAction.Remove.class, new ItemActionSerializers.Remove());
+        SERIALIZERS.register(ItemAction.Update.class, new ItemActionSerializers.Update());
+        SERIALIZERS.register(ItemAction.Replace.class, new ItemActionSerializers.Replace());
+        SERIALIZERS.register(HeapUpdateAction.class, new HeapUpdateActionSerializer());
+        SERIALIZERS.register(WindowAction.Alchemy.class, new WindowActionSerializers.Alchemy());
+        SERIALIZERS.register(WindowAction.Bag.class, new WindowActionSerializers.Bag());
+        SERIALIZERS.register(WindowAction.ChooseSubclass.class, new WindowActionSerializers.ChooseSubclass());
+        SERIALIZERS.register(WindowAction.ClericSpells.class, new WindowActionSerializers.ClericSpells());
+        SERIALIZERS.register(WindowAction.InfoCell.class, new WindowActionSerializers.InfoCell());
+        SERIALIZERS.register(WindowAction.Options.class, new WindowActionSerializers.Options());
+        SERIALIZERS.register(WindowAction.Quest.class, new WindowActionSerializers.Quest());
+        SERIALIZERS.register(WindowAction.SadGhost.class, new WindowActionSerializers.SadGhost());
+        SERIALIZERS.register(WindowAction.TradeItem.class, new WindowActionSerializers.TradeItem());
+        SERIALIZERS.register(WindowAction.Wandmaker.class, new WindowActionSerializers.Wandmaker());
+        SERIALIZERS.register(WindowAction.Guess.class, new WindowActionSerializers.Guess());
+        SERIALIZERS.register(WindowAction.GhostHero.class, new WindowActionSerializers.GhostHero());
+        SERIALIZERS.register(RedirectServerAction.class, new RedirectServerActionSerializer());
+    }
+
     public static ArrayList<String> textures = new ArrayList<>();
     // will return in the future
     public static PluginManager pluginManager = new PluginManager(new PluginLoader(ShatteredPixelDungeon.platform.loadPlugins()));
@@ -36,6 +192,7 @@ public class Server extends Thread {
     protected static ServerSocket serverSocket;
     protected static Server serverThread;
     protected static ClientThread[] clients = new ClientThread[0];
+    protected static boolean[] used = new boolean[0];
     protected static RelayThread relay;
 
     //NSD
@@ -73,6 +230,7 @@ public class Server extends Thread {
                 }
             };
             serverStepThread.setDaemon(true);
+            serverStepThread.setName("SHPD Server Step Thread");
         }
         serverStepThread.start();
         return true;
@@ -84,6 +242,7 @@ public class Server extends Thread {
             return false;
         }
         clients = new ClientThread[SPDSettings.maxPlayers()];
+        used = new boolean[SPDSettings.maxPlayers()];
         serviceName = SPDSettings.serverName();
         regListenerState = RegListenerState.NONE;
         if (!initializeServerSocket()) {
@@ -121,23 +280,52 @@ public class Server extends Thread {
             }
             client.parse();
         }
+        if (!Actor.processing() && !Game.switchingScene()) {
+            SendData.forceFlushAll();
+        }
     }
 
     public static void startClientThread(Socket client) throws IOException {
+        QueryClientThread queryThread = new QueryClientThread(client);
+        queryThread.setDaemon(true);
+        queryThread.setName("SPDMP Query Client");
+        queryThread.start();
+    }
+
+    public static void joinClient(Socket client, String heroClass, String uuid, int protocolVersion) throws IOException {
         synchronized (clients) {
             for (int i = 0; i <= clients.length; i++) {   //search not connected
                 if (i == clients.length) { //If we test last and it's connected too
-                    //todo use new json
-                    new DataOutputStream(client.getOutputStream()).writeInt(Codes.SERVER_FULL);
+                    rejectClient(client, "server_full", "Server is full");
                     client.close();
-                } else if (clients[i] == null) {
-                        Hero emptyHero = null;
-                        GameScene.shouldProcess = true;
-                        clients[i] = new ClientThread(i, client, emptyHero); //found
+                } else if ((clients[i] == null) && !used[i])  {
+                    client.setSoTimeout(0);
+                    ClientThread thread = new ClientThread(i, client, null, protocolVersion);
+                    //clients[i] = thread;
+                    thread.InitPlayerHero(heroClass, uuid);
                     break;
                 }
             }
         }
+    }
+
+    static void rejectClient(@NotNull Socket client, String reason, String message) throws IOException {
+        sendDisconnect(client, reason, message);
+    }
+
+    static void sendDisconnect(@NotNull Socket client, String reason, String message) throws IOException {
+        JSONObject packet = new JSONObject();
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_DISCONNECT);
+        packet.put("reason", reason);
+        packet.put("message", message);
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                client.getOutputStream(),
+                Charset.forName(ClientThread.CHARSET).newEncoder()
+        ));
+        writer.write(packet.toString());
+        writer.write('\n');
+        writer.flush();
     }
 
     //Server thread
@@ -161,7 +349,7 @@ public class Server extends Thread {
     //DNS-SD
     protected static void registerService(int port) {
         try {
-            ShatteredPixelDungeon.platform.registerService(port);
+            ShatteredPixelDungeon.platform.registerService(port, serverInfoProperties());
         } catch (Exception e) {
             Gdx.app.error("DNS", "Failed to start dns-sd service", e);
         }
@@ -203,7 +391,29 @@ public class Server extends Thread {
             serverInfo.put("challenges", SPDSettings.challenges());
             serverInfo.put("current_floor", Dungeon.depth);
             serverInfo.put("motd", SPDSettings.motd());
+            serverInfo.put("server_version", Game.version);
+            serverInfo.put("server_version_code", Game.versionCode);
+            serverInfo.put("server_protocol_version", 2);
             return serverInfo;
+    }
+    private static Map<String, String> serverInfoProperties() {
+        JSONObject info = serverInfo();
+        Map<String, String> properties = new HashMap<>();
+        Iterator<String> keys = info.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object value = info.opt(key);
+            if (value != null) {
+                properties.put(key, dnsPropertyValue(String.valueOf(value)));
+            }
+        }
+        return properties;
+    }
+    private static String dnsPropertyValue(String value) {
+        if (value.length() <= 200) {
+            return value;
+        }
+        return value.substring(0, 200);
     }
     public static enum RegListenerState {NONE, UNREGISTERED, REGISTERED, REGISTRATION_FAILED, UNREGISTRATION_FAILED}
 }

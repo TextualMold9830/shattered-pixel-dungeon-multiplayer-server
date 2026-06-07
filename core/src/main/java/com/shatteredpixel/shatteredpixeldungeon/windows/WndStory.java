@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -45,7 +46,11 @@ public class WndStory extends Window {
 	public WndStory( String text ) {
 		this( null, null, text );
 	}
-	
+
+	public WndStory(Image icon, LocalizedString title, LocalizedString text ) {
+		this(icon, title == null? (String)null: title.toString(), text == null? (String)null: text.toString());
+	}
+
 	public WndStory(Image icon, String title, String text ) {
 		super( 0, 0, Chrome.get( Chrome.Type.SCROLL ) );
 

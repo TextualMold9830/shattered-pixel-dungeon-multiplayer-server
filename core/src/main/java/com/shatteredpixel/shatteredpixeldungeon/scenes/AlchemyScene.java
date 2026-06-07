@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -38,7 +39,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import java.util.ArrayList;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndEnergizeItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoItem;
@@ -186,50 +189,6 @@ public class AlchemyScene extends Window {
 		destroy();
 	}
 
-	private JSONObject getParamsObject() {
-		JSONObject params = new JSONObject();
-		params.put("energy", Dungeon.energy);
-		params.put("has_toolkit", toolkit != null);
-		if (toolkit != null) {
-			params.put("toolkit_energy", toolkit.availableEnergy());
-		}
-
-		{
-			JSONArray inputsArr = new JSONArray();
-			for (InputButton input : inputs) {
-				if (input == null) continue;
-				if (input.item == null) continue;
-				inputsArr.put(input.item.toJsonObject(getOwnerHero()));
-			}
-			params.put("input", inputsArr);
-		}
-		{
-			JSONArray outputsArr = new JSONArray();
-			for (int i = 0; i < outputs.length; i++) {
-				Item output = outputs[i];
-				if (output == null) continue;
-				JSONObject outputObj = new JSONObject();
-				outputObj.put("cost", combines[i].cost);
-				outputObj.put("enabled", combines[i].enabled);
-				outputObj.put("item", output.toJsonObject(getOwnerHero()));
-				outputsArr.put(outputObj);
-			}
-			params.put("output", outputsArr);
-		}
-
-		params.put("energyAddBlinking", energyAddBlinking);
-		params.put("repeat_enabled",  repeat_enabled);
-		if (createEnergy) {
-			params.put("createEnergy", true);
-			createEnergy = false;
-		}
-		if (craftedItem) {
-			params.put("craftedItem", true);
-			craftedItem = false;
-		}
-		return params;
-	}
-
 	public void create() {
 
 		synchronized (inputs) {
@@ -266,7 +225,7 @@ public class AlchemyScene extends Window {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(AlchemyScene.class, "select");
 		}
 
@@ -575,6 +534,33 @@ public class AlchemyScene extends Window {
 
 	}
 	public void sendSelf() {
-		SendData.sendWindow(getOwnerHero().networkID, "alchemy", getId(), getParamsObject());
+		java.util.List<Item> inputItems = new ArrayList<>(inputs.length);
+		for (InputButton input : inputs) {
+			inputItems.add(input != null ? input.item : null);
+		}
+
+		java.util.List<Integer> combineCosts = new ArrayList<>(combines.length);
+		java.util.List<Boolean> combineEnabled = new ArrayList<>(combines.length);
+		for (CombineButton combine : combines) {
+			combineCosts.add(combine != null ? combine.cost : 0);
+			combineEnabled.add(combine != null ? combine.enabled : false);
+		}
+
+		SendData.packAndSendAction(getOwnerHero(), new WindowAction.Alchemy(
+		    getId(),
+		    Dungeon.energy,
+		    toolkit != null,
+		    toolkit != null ? toolkit.availableEnergy() : 0,
+		    inputItems,
+		    combineCosts,
+		    combineEnabled,
+		    java.util.List.of(outputs),
+		    energyAddBlinking,
+		    repeat_enabled,
+		    createEnergy,
+		    craftedItem
+		));
+		createEnergy = false;
+		craftedItem = false;
 	}
 }

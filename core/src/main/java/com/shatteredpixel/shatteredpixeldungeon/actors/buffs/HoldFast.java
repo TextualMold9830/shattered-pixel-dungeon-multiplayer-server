@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -88,7 +87,7 @@ public class HoldFast extends Buff {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		//Hold fast should only be applies to a hero
 		return Messages.get(this, "desc", ((Hero) target ).pointsInTalent(Talent.HOLD_FAST),
 				2 * ((Hero) target).pointsInTalent(Talent.HOLD_FAST),

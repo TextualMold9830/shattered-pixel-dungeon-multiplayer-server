@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -149,7 +150,7 @@ public class HallsLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(HallsLevel.class, "water_name");
@@ -169,7 +170,7 @@ public class HallsLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(HallsLevel.class, "water_desc");

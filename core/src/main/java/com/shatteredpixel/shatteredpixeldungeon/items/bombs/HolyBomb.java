@@ -80,7 +80,7 @@ public class HolyBomb extends Bomb {
 				if (curItem == this) {
 					ch.damage(damage, new Char.DamageCause(new HolyDamage(), curUser));
 				} else {
-					Log.e("Acracne bomb explosion curr item is not this");
+					Log.e("HolyBomb","Acracne bomb explosion curr item is not this");
 					ch.damage(damage, new Char.DamageCause(new HolyDamage(), null));
 				}
 			}

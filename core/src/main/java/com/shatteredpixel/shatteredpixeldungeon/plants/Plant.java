@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,7 +40,6 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -66,14 +66,13 @@ public abstract class Plant implements Bundlable {
 			((Hero) ch).interrupt();
 		}
 		for (Hero hero : Dungeon.heroes) {
-			if (hero != null){
+			if (hero != null) {
 			if (hero.fieldOfView[pos] && hero.hasTalent(Talent.NATURES_AID)) {
 				// 3/5 turns based on talent points spent
 				Barkskin.conditionallyAppend(hero, 2, 1 + 2 * (hero.pointsInTalent(Talent.NATURES_AID)));
+				}
 			}
-	}
-}
-		SendData.sendPlant(pos, null);
+		}
 		wither();
 		activate( ch );
 		Bestiary.setSeen(getClass());
@@ -119,19 +118,19 @@ public abstract class Plant implements Bundlable {
 		bundle.put( POS, pos );
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
-	public String desc(Hero hero) {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = Messages.get(this, "desc");
 		if (hero.subClass == HeroSubClass.WARDEN){
-			desc += "\n\n" + Messages.get(this, "warden_desc");
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "warden_desc")));
 		}
 		return desc;
 	}
-	public String desc() {
-		String desc = Messages.get(this, "desc");
+	public LocalizedString desc() {
+		LocalizedString desc = Messages.get(this, "desc");
 		return desc;
 	}
 
@@ -231,16 +230,16 @@ public abstract class Plant implements Bundlable {
 		}
 
 		@Override
-		public String desc(Hero hero) {
-			String desc = Messages.get(plantClass, "desc");
+		public LocalizedString desc(Hero hero) {
+			LocalizedString desc = Messages.get(plantClass, "desc");
 			if (hero.subClass == HeroSubClass.WARDEN){
-				desc += "\n\n" + Messages.get(plantClass, "warden_desc");
+				desc = LocalizedString.concat(desc, "\n\n", Messages.get(plantClass, "warden_desc"));
 			}
 			return desc;
 		}
 
 		@Override
-		public String info() {
+		public LocalizedString info() {
 			return Messages.get( Seed.class, "info", super.info() );
 		}
 		
@@ -256,8 +255,8 @@ public abstract class Plant implements Bundlable {
 			}
 			
 			@Override
-			public String info() {
-				return "";
+			public LocalizedString info() {
+				return LocalizedString.EMPTY;
 			}
 		}
 	}

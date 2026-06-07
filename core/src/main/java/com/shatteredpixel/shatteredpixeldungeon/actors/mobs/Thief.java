@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -169,11 +170,11 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public String description() {
-		String desc = super.description();
+	public LocalizedString description() {
+		LocalizedString desc = super.description();
 
 		if (item != null) {
-			desc += Messages.get(this, "carries", item.name() );
+			desc = LocalizedString.concat(desc, Messages.get(this, "carries", item.name() ));
 		}
 
 		return desc;

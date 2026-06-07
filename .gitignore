@@ -26,9 +26,9 @@ local.properties
 /desktop/settings.xml
 desktop/.lwjgl
 /desktop/balance/
+/Plugins/
 
 #game saves
 */settings.xml
 */save/*
 */balance/balance.json
-

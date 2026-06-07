@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.WornKey;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.KeysIndicatorAction;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Quad;
@@ -37,10 +38,10 @@ import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.RectF;
-import org.json.JSONArray;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class KeyDisplay extends Visual {
@@ -73,6 +74,7 @@ public class KeyDisplay extends Visual {
 	}
 	
 	public void updateKeys(){
+		int[] cache = keys;
 		keys = new int[keyMap.size()+1];
 		
 		for (Notes.KeyRecord rec : Notes.getRecords(Notes.KeyRecord.class)){
@@ -88,8 +90,10 @@ public class KeyDisplay extends Visual {
 		for (int k : keys){
 			totalKeys += k;
 		}
-        SendData.sendIronKeysCount();
-		dirty = true;
+		if (Arrays.equals(keys, cache)) {
+			SendData.sendActionForAll(new KeysIndicatorAction());
+			dirty = true;
+		}
 	}
 	
 	public int keyCount(){

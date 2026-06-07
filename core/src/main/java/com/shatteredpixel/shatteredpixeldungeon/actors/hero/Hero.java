@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -159,6 +160,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -258,6 +260,8 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 
+		spriteClass = HeroSprite.class;
+
 		setHP(setHT(20));
 		STR = STARTING_STR;
 		
@@ -302,6 +306,12 @@ public class Hero extends Char {
 		}
 
 		return STR + strBonus;
+	}
+
+	@Override
+	public void onAdd() {
+		SendData.sendAction(this, new HeroActorIdAction(this.id()));
+		super.onAdd();
 	}
 
 	private static final String CLASS       = "class";
@@ -439,12 +449,12 @@ public class Hero extends Char {
 		}
 	}
 	
-	public String className() {
+	public LocalizedString className() {
 		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
 	}
 
 	@Override
-	public String name(){
+	public LocalizedString name(){
 		if (buff(HeroDisguise.class) != null) {
 			return buff(HeroDisguise.class).getDisguise().title();
 		} else {
@@ -635,7 +645,7 @@ public class Hero extends Char {
 	}
 
 	@Override
-	public String defenseVerb() {
+	public LocalizedString defenseVerb() {
 		Combo.ParryTracker parry = buff(Combo.ParryTracker.class);
 		if (parry != null){
 			parry.parried = true;
@@ -860,11 +870,11 @@ public class Hero extends Char {
 	}
 
 	float lastCounter = 0;
-	public void updateCounter(){
+	public void updateCounter(){ //todo check this logic twice. Maybe should use gamescene instead
 		float portion = ((1f - time%1f)%1f);
 		if (portion != lastCounter){
 			lastCounter = portion;
-			SendData.sendCounter(this, portion);
+			SendData.packAndSendAction(this, new UpdateCounterAction(portion));
 		}
 	}
 	@Override
@@ -1617,6 +1627,9 @@ public class Hero extends Char {
 
 	@Override
 	public void damage(int dmg, @NotNull DamageCause source ) {
+		//if (dmg > 0) {
+		//	return;
+		//}
 		Object src = source.getCause();
 		if (buff(TimekeepersHourglass.timeStasis.class) != null
 				|| buff(TimeStasis.class) != null) {
@@ -1823,7 +1836,7 @@ public class Hero extends Char {
 				if (walkingToVisibleTrapInFog
 						&& Dungeon.level.traps.get(target) != null
 						&& Dungeon.level.traps.get(target).visible
-						&& Dungeon.level.traps.get(target).active){
+						&& Dungeon.level.traps.get(target).isActive()){
 					return false;
 				}
 			}
@@ -1876,8 +1889,8 @@ public class Hero extends Char {
 			if (Dungeon.level.pit[step] && !Dungeon.level.solid[step]
 					&& (!flying || buff(Levitation.class) != null && buff(Levitation.class).detachesWithinDelay(delay / speed()))){
 				if (!Chasm.jumpConfirmed){
-					Chasm.heroJump(this);
 					interrupt();
+					Chasm.heroJump(this);
 				} else {
 					flying = false;
 					remove(buff(Levitation.class)); //directly remove to prevent cell pressing
@@ -1926,7 +1939,7 @@ public class Hero extends Char {
 		if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				&& Dungeon.level.traps.get(cell) != null
 				&& Dungeon.level.traps.get(cell).visible
-				&& Dungeon.level.traps.get(cell).active) {
+				&& Dungeon.level.traps.get(cell).isActive()) {
 			walkingToVisibleTrapInFog = true;
 		} else {
 			walkingToVisibleTrapInFog = false;
@@ -2098,7 +2111,7 @@ public class Hero extends Char {
 			
 			Badges.validateLevelReached(this);
 		}
-		SendData.SendHeroLevel(networkID, lvl, this.exp);
+		SendData.sendAction(this, new HeroExperienceAction(lvl, this.exp));
 	}
 	
 	public int maxExp() {
@@ -2124,7 +2137,7 @@ public class Hero extends Char {
 		boolean added = super.add( buff );
 
 		if (getSprite() != null && added) {
-			String msg = buff.heroMessage();
+			LocalizedString msg = buff.heroMessage();
 			if (msg != null){
 				GLog.w(msg);
 			}
@@ -2671,7 +2684,7 @@ public class Hero extends Char {
 
 	public boolean setReady(boolean ready) {
 		this.ready = ready;
-		SendData.sendHeroReady(this.networkID, ready);
+		SendData.sendAction(this, new HeroReadyAction(ready));
 		return this.ready;
 	}
 
@@ -2684,13 +2697,17 @@ public class Hero extends Char {
 		return ready;
 	}
 
+	public float getCounter() {
+		return lastCounter;
+	}
+
 	public int getGold() {
 		return gold;
 	}
 
 	public void setGold(int gold) {
 		this.gold = gold;
-		SendData.sendHeroGold(networkID, gold);
+		SendData.sendAction(this, new HeroGoldAction(gold));
 	}
 
 	public int getSTR() {
@@ -2699,7 +2716,7 @@ public class Hero extends Char {
 
 	public void setSTR(int STR) {
 		this.STR = STR;
-		SendData.SendHeroStrength(networkID, STR);
+		SendData.sendAction(this, new HeroStrengthAction(STR));
 		for (Item item: belongings.getAllItems(EquipableItem.class)){
 			if (item instanceof Weapon || item instanceof Armor || item instanceof MissileWeapon){
 				item.sendSelfUpdate(this);
@@ -2712,12 +2729,6 @@ public class Hero extends Char {
 	}
 
 
-	public JSONObject getEmoJsonObject() {
-		if (getSprite() == null){
-			return new JSONObject();
-		}
-		return getSprite().getEmoJsonObject();
-	}
 	public JSONArray getTalents(){
 		JSONArray[] talentsArray = new JSONArray[4];
 		for (int i =  0; i < talentsArray.length; i++) {

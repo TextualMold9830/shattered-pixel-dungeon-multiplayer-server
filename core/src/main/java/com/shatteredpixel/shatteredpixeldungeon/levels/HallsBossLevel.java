@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -37,11 +38,10 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -295,7 +295,7 @@ public class HallsBossLevel extends Level {
 		}
 
 		Dungeon.observe();
-		Music.INSTANCE.fadeOut(5f, new Music.PlayAction(Assets.Music.THEME_FINALE, true));
+		Music.INSTANCE.fadeOut(5f, new MusicAction.PlayAction(Assets.Music.THEME_FINALE, true));
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class HallsBossLevel extends Level {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(HallsLevel.class, "water_name");
@@ -361,7 +361,7 @@ public class HallsBossLevel extends Level {
 	}
 
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(HallsLevel.class, "water_desc");

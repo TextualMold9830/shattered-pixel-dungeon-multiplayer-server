@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -49,16 +49,16 @@ public abstract class ClericSpell {
 		return true;
 	}
 
-	public String name(){
+	public LocalizedString name(){
 		return Messages.get(this, "name");
 	}
 
-	public String shortDesc(Hero hero){
-		return Messages.get(this, "short_desc") + " " + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+	public LocalizedString shortDesc(Hero hero){
+		return LocalizedString.concat(Messages.get(this, "short_desc"), " ", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
-	public String desc(Hero hero){
-		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(hero));
+	public LocalizedString desc(Hero hero){
+		return LocalizedString.concat(Messages.get(this, "desc"), "\n\n", Messages.get(this, "charge_cost", (int)chargeUse(hero)));
 	}
 
 	public boolean usesTargeting(){

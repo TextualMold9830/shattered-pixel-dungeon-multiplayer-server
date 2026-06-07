@@ -21,9 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteAction;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendCharSpriteState;
+import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendActionForAll;
+import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharSpriteAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharEmoAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.SpriteFlashAction;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -42,7 +46,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -57,14 +60,13 @@ import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.NoosaScript;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.nio.Buffer;
 import java.util.Set;
@@ -148,20 +150,23 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		return states;
 	}
 
-	public JSONObject getEmoJsonObject() {
-		if (getEmo() == null){
-			return new JSONObject();
-		}
-		return getEmo().toJsonObject();
-	}
-
 	protected EmoIcon getEmo() {
 		return emo;
 	}
 
 	protected void setEmo(EmoIcon emo) {
 		this.emo = emo;
-		SendData.sendActor(this.ch);
+		if (ch != null) {
+			sendActionForAll(new CharEmoAction(ch.id(), emotionName(emo)));
+		}
+	}
+
+	private String emotionName(EmoIcon emo) {
+		if (emo instanceof EmoIcon.Alert) return "alert";
+		if (emo instanceof EmoIcon.Sleep) return "sleep";
+		if (emo instanceof EmoIcon.Lost) return "lost";
+		if (emo instanceof EmoIcon.Investigate) return "investigate";
+		return null;
 	}
 
 
@@ -235,18 +240,24 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void place( int cell ) {
 		point( worldToCamera( cell ) );
-		sendCharSpriteAction(ch.id(), "place", null, cell);
+		sendActionForAll(new CharSpriteAction(ch.id(), "place", null, cell));
 	}
 	
-	public void showStatus( int color, String text, Object... args ) {
-		showStatusWithIcon(color, text, FloatingText.NO_ICON, args);
+	public void showStatus(int color, String text, Object... args ) {
+		showStatusWithIcon(color, LocalizedString.raw(text, args), FloatingText.NO_ICON);
+	}
+	public void showStatus(int color, LocalizedString text) {
+		showStatusWithIcon(color, text, FloatingText.NO_ICON);
 	}
 
+
 	public void showStatusWithIcon( int color, String text, int icon, Object... args ) {
+		LocalizedString localizedString = LocalizedString.raw(text, args);
+		showStatusWithIcon(color, localizedString, icon);
+	}
+
+	public void showStatusWithIcon( int color, LocalizedString text, int icon ) {
 		if (visible) {
-			if (args.length > 0) {
-				text = Messages.format( text, args );
-			}
 			float x = destinationCenter().x;
 			float y = destinationCenter().y - height()/2f;
 			int pos = DungeonTilemap.worldToTile(x, y + height(), Dungeon.level.width());
@@ -261,14 +272,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void idle() {
 		if (curAnim == idle) return;
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "idle", null, null);
+			sendActionForAll(new CharSpriteAction(ch.id(), "idle", null, null));
 		}
 		play(idle);
 	}
 	
 	public void move( int from, int to ) {
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "run", from, to);
+			sendActionForAll(new CharSpriteAction(ch.id(), "run", from, to));
 		}
 		turnTo( from , to );
 
@@ -314,7 +325,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "attack", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "attack", null, cell));
 		}
 		play( attack );
 	}
@@ -327,7 +338,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "operate", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "operate", null, cell));
 		}
 		play( operate );
 	}
@@ -340,7 +351,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		animCallback = callback;
 		turnTo( ch.pos, cell );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "zap", null, cell);
+			sendActionForAll(new CharSpriteAction(ch.id(), "zap", null, cell));
 		}
 		play( zap );
 	}
@@ -353,7 +364,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		} else if (tx < fx) {
 			flipHorizontal = true;
 		}
-		sendCharSpriteAction(ch.id(), "turn", from, to);
+		sendActionForAll(new CharSpriteAction(ch.id(), "turn", from, to));
 	}
 
 	public void jump( int from, int to, Callback callback ) {
@@ -370,7 +381,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 		turnTo( from, to );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "jump", from, to);
+			sendActionForAll(new CharSpriteAction(ch.id(), "jump", from, to));
 		}
 	}
 
@@ -378,7 +389,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		sleeping = false;
 		processStateRemoval( State.PARALYSED );
 		if (ch != null) {
-			sendCharSpriteAction(ch.id(), "die", null, null);
+			sendActionForAll(new CharSpriteAction(ch.id(), "die", null, null));
 		}
 		play( die );
 
@@ -428,7 +439,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void flash() {
 		ra = ba = ga = 1f;
 		flashTime = FLASH_INTERVAL;
-		SendData.sendFlashChar(this, FLASH_INTERVAL);
+		if (ch == null) {
+			Log.w("CharSprite", "char sprite has no owner. Ignored");
+			return;
+		}
+		sendActionForAll(new SpriteFlashAction(ch.id(), FLASH_INTERVAL));
 	}
 
 	private final HashSet<State> stateAdditions = new HashSet<>();
@@ -436,7 +451,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void add( State state ) {
 		//instant as it just changes an animation property that will get read later
 		if (state == State.PARALYSED){
-			paused = true;
+			processStateAddition(state);
 		} else {
 			synchronized (State.class) {
 				stateRemovals.remove(state);
@@ -456,6 +471,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	protected synchronized void processStateAddition( State state ) {
+		states.add(state);
 		switch (state) {
 			case BURNING:
 				if (burning != null) burning.on(false);
@@ -535,6 +551,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				break;
 		}
+		if (ch != null) {
+			SendData.sendAddCharSpriteState(ch, state);
+		}
 	}
 
 	private final HashSet<State> stateRemovals = new HashSet<>();
@@ -543,6 +562,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		//instant as it just changes an animation property that will get read later
 		if (state == State.PARALYSED){
 			paused = false;
+			processStateRemoval(state);
 		} else {
 			synchronized (State.class) {
 				stateAdditions.remove(state);
@@ -556,6 +576,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	protected synchronized void processStateRemoval( State state ) {
+		states.remove(state);
 		switch (state) {
 			case BURNING:
 				if (burning != null) {
@@ -638,6 +659,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					aura = null;
 				}
 				break;
+		}
+		if (ch != null) {
+			SendData.sendRemoveCharSpriteState(ch, state);
 		}
 	}
 	
@@ -754,7 +778,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				setEmo(new EmoIcon.Alert(this));
 				getEmo().visible = visible;
-				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -764,7 +787,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() instanceof EmoIcon.Alert) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -775,8 +797,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				if (emo != null) {
 					emo.killAndErase();
 				}
-				emo = new EmoIcon.Investigate(this);
-				emo.visible = visible;
+				setEmo(new EmoIcon.Investigate(this));
+				getEmo().visible = visible;
 			}
 		}
 	}
@@ -785,7 +807,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		synchronized (EmoIcon.class) {
 			if (emo instanceof EmoIcon.Investigate) {
 				emo.killAndErase();
-				emo = null;
+				setEmo(null);
 			}
 		}
 	}
@@ -798,7 +820,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				}
 				setEmo(new EmoIcon.Lost(this));
 				getEmo().visible = visible;
-				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -808,7 +829,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() instanceof EmoIcon.Lost) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendActor(this.ch);
 			}
 		}
 	}
@@ -818,7 +838,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (getEmo() != null) {
 				getEmo().killAndErase();
 				setEmo(null);
-				SendData.sendActor(this.ch);
 			}
 		}
 	}

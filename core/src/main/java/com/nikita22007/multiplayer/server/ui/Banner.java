@@ -20,26 +20,15 @@ package com.nikita22007.multiplayer.server.ui;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowBannerAction;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Locale;
 
 public class Banner {
 
     public static void show(@NotNull Hero actor, @NotNull BannerSprites.Type banner, int color, float fadeTime, float showTime) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("action_type", "show_banner");
-            obj.put("banner", banner.toString().toLowerCase(Locale.ROOT));
-            obj.put("color", color);
-            obj.put("fade_time", fadeTime);
-            obj.put("show_time", showTime);
-        } catch (JSONException ignored) {
-
-        }
-        SendData.sendCustomAction(obj, actor);
+        SendData.sendAction(actor,new ShowBannerAction(banner, color, fadeTime, showTime));
     }
 
     public static void show(@NotNull Hero actor, @NotNull BannerSprites.Type banner, int color, float fadeTime) {

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -33,8 +34,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
@@ -210,7 +209,7 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.MINE_CRYSTAL:
 				return Messages.get(MiningLevel.class, "crystal_name");
@@ -238,7 +237,7 @@ public class MiningLevel extends CavesLevel {
 				return false;
 			}
 
-			String warnText;
+			LocalizedString warnText;
 			DarkGold gold = hero.belongings.getItem(DarkGold.class);
 			int goldAmount = gold == null ? 0 : gold.quantity();
 			if (goldAmount < 10){
@@ -255,13 +254,13 @@ public class MiningLevel extends CavesLevel {
 
 			if (!Blacksmith.Quest.bossBeaten()){
 				switch (Blacksmith.Quest.Type()){
-					case Blacksmith.Quest.CRYSTAL: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_crystal"); break;
-					case Blacksmith.Quest.GNOLL: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_gnoll"); break;
-					case Blacksmith.Quest.FUNGI: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_fungi"); break;
+					case Blacksmith.Quest.CRYSTAL: warnText = LocalizedString.concat(warnText, "\n\n", Messages.get(Blacksmith.class, "exit_warn_crystal")); break;
+					case Blacksmith.Quest.GNOLL: warnText = LocalizedString.concat(warnText, "\n\n", Messages.get(Blacksmith.class, "exit_warn_gnoll")); break;
+					case Blacksmith.Quest.FUNGI: warnText = LocalizedString.concat(warnText, "\n\n", Messages.get(Blacksmith.class, "exit_warn_fungi")); break;
 				}
 			}
 
-			String finalWarnText = warnText;
+			LocalizedString finalWarnText = warnText;
 			GameScene.show(new WndOptions(hero, new BlacksmithSprite(),
 					Messages.titleCase(Messages.get(Blacksmith.class, "name")),
 					finalWarnText,
@@ -283,12 +282,12 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.WALL:
 				return Messages.get(MiningLevel.class, "wall_desc");
 			case Terrain.WALL_DECO:
-				return super.tileDesc(tile) + "\n\n" +  Messages.get(MiningLevel.class, "gold_extra_desc");
+				return LocalizedString.concat(super.tileDesc(tile), "\n\n", Messages.get(MiningLevel.class, "gold_extra_desc"));
 			case Terrain.MINE_CRYSTAL:
 				return Messages.get(MiningLevel.class, "crystal_desc");
 			case Terrain.MINE_BOULDER:

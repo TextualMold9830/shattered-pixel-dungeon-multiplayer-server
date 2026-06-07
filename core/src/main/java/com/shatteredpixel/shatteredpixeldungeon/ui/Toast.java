@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.input.GameAction;
@@ -36,9 +37,9 @@ public class Toast extends Component {
 	protected IconButton close;
 	protected RenderedTextBlock text;
 
-	public Toast( String text ) {
+	public Toast( LocalizedString text ) {
 		super();
-		text( text );
+		text( text.toString() );
 
 		width = this.text.width() + close.width() + bg.marginHor() + MARGIN_HOR * 3;
 		height = Math.max( this.text.height(), close.height() ) + bg.marginVer() + MARGIN_VER * 2;

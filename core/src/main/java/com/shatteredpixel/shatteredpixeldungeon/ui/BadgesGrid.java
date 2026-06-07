@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
@@ -143,7 +144,7 @@ public class BadgesGrid extends Component {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return badge.title();
 		}
 	}

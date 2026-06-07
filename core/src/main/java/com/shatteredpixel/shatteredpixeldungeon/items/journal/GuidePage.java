@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.journal;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -37,7 +38,7 @@ public class GuidePage extends DocumentPage {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", document().pageTitle(page()));
 	}
 }

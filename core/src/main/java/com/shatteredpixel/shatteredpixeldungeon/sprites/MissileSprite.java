@@ -21,8 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
+import com.nikita22007.multiplayer.utils.Log;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MissileSpriteVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyLance;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -44,42 +50,45 @@ import com.watabou.noosa.Visual;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Callback;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PointF;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class MissileSprite extends ItemSprite implements Tweener.Listener {
+public final class MissileSprite extends ItemSprite implements Tweener.Listener {
 
 	private static final float SPEED	= 240f;
 	
 	private Callback callback;
 	
 	public void reset( int from, int to, Item item, Callback listener ) {
-		reset(Dungeon.level.solid[from] ? DungeonTilemap.raisedTileCenterToWorld(from) : DungeonTilemap.raisedTileCenterToWorld(from),
-				Dungeon.level.solid[to] ? DungeonTilemap.raisedTileCenterToWorld(to) : DungeonTilemap.raisedTileCenterToWorld(to),
-				item, listener);
+		reset( Anchor.cell(from), Anchor.cell(to), item, listener );
 	}
 
-	public void reset( Visual from, int to, Item item, Callback listener ) {
-		reset(from.center(),
-				Dungeon.level.solid[to] ? DungeonTilemap.raisedTileCenterToWorld(to) : DungeonTilemap.raisedTileCenterToWorld(to),
-				item, listener );
+	public void reset( CharSprite from, int to, Item item, Callback listener ) {
+		reset( Anchor.character(from), Anchor.cell(to), item, listener );
 	}
 
-	public void reset( int from, Visual to, Item item, Callback listener ) {
-		reset(Dungeon.level.solid[from] ? DungeonTilemap.raisedTileCenterToWorld(from) : DungeonTilemap.raisedTileCenterToWorld(from),
-				to.center(),
-				item, listener );
+	public void reset( int from, CharSprite to, Item item, Callback listener ) {
+		reset( Anchor.cell(from), Anchor.character(to), item, listener );
 	}
 
-	public void reset( Visual from, Visual to, Item item, Callback listener ) {
-		reset(from.center(), to.center(), item, listener );
+	public void reset( CharSprite from, CharSprite to, Item item, Callback listener ) {
+		reset( Anchor.character(from), Anchor.character(to), item, listener );
 	}
 
-	public void reset( PointF from, PointF to, Item item, Callback listener) {
+	private void reset( Anchor from, Anchor to, Item item, Callback listener) {
 		revive();
 
-		if (item == null)   view(0, null);
+		if (item == null) {
+			view(0, null);
+			Log.e("MissileSprite", "item is null");
+			if (DeviceCompat.isDebug()) {
+				throw new RuntimeException("MissileSprite: item is null");
+			}
+		}
 		else                view( item );
 
 		setup( from,
@@ -117,7 +126,10 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 	}
 
 	//TODO it might be nice to have a source and destination angle, to improve thrown weapon visuals
-	private void setup( PointF from, PointF to, Item item, Callback listener ){
+	private void setup( Anchor anchorFrom, Anchor anchorTo, Item item, Callback listener ){
+
+		PointF from = anchorFrom.toPointF();
+		PointF to = anchorTo.toPointF();
 
 		originToCenter();
 
@@ -175,6 +187,29 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 			speed *= 1.5f;
 		}
 		
+		/*
+		at this moment we have
+		1) source position (from)
+		2) target position (to)
+		3) speed
+		4) angle
+		5) angular speed
+		6) horizontal flipping flag
+		7) item
+
+		we can't use "time" because real (visual) coords may be broken
+		we can call a "callback" in the next frame to avoid adding the next visual element to this network packet
+		 */
+		SendData.packAndSendActionForAll(new MissileSpriteVisualAction(
+				anchorFrom,
+				anchorTo,
+				speed,
+				angularSpeed,
+				angle,
+				flipHorizontal,
+				item
+		));
+		
 		PosTweener tweener = new PosTweener( this, to, d.length() / speed );
 		tweener.listener = this;
 		parent.add( tweener );
@@ -185,6 +220,51 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		kill();
 		if (callback != null) {
 			callback.call();
+		}
+	}
+
+	public static class Anchor {
+		public static final String TYPE_CELL = "cell";
+		public static final String TYPE_CHAR = "char";
+
+		public final String type;
+		public final Integer cell;
+		public final Integer charId;
+
+		private final transient CharSprite sprite;
+
+		private Anchor(String type, Integer cell, Integer charId, CharSprite sprite) {
+			this.type = type;
+			this.cell = cell;
+			this.charId = charId;
+			this.sprite = sprite;
+		}
+
+		public static Anchor cell(int cell) {
+			return new Anchor(TYPE_CELL, cell, null, null);
+		}
+
+		public static Anchor character(CharSprite sprite) {
+			return new Anchor(TYPE_CHAR, null, sprite.ch.id(), sprite);
+		}
+
+		public PointF toPointF() {
+			if (TYPE_CELL.equals(type)) {
+				return DungeonTilemap.raisedTileCenterToWorld(cell);
+			} else if (TYPE_CHAR.equals(type)) {
+				if (sprite != null) {
+					return sprite.center();
+				}
+				Char ch = (Char) Actor.findById(charId);
+				if (ch != null && ch.getSprite() != null) {
+					return ch.getSprite().center();
+				}
+				if (ch != null) {
+					return DungeonTilemap.raisedTileCenterToWorld(ch.pos);
+				}
+				throw new IllegalStateException("No char with id " + charId);
+			}
+			throw new IllegalStateException("Invalid anchor type");
 		}
 	}
 }

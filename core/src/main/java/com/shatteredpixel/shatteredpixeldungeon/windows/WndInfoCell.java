@@ -21,20 +21,19 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 public class WndInfoCell extends Window {
 
@@ -43,7 +42,7 @@ public class WndInfoCell extends Window {
 	
 	private static final int WIDTH = 120;
 	//used for toJson
-	String desc;
+	LocalizedString desc;
 	IconTitle titlebar;
 
 	public static Image cellImage( int cell ){
@@ -80,7 +79,7 @@ public class WndInfoCell extends Window {
 		}
 	}
 
-	public static String cellName( int cell ){
+	public static LocalizedString cellName(int cell ){
 
 		CustomTilemap customTile = null;
 		int x = cell % Dungeon.level.width();
@@ -124,45 +123,39 @@ public class WndInfoCell extends Window {
 		}
 
 
-		String desc = "";
+		LocalizedString desc = LocalizedString.EMPTY;
 
 		IconTitle titlebar = new IconTitle();
 		titlebar.icon(cellImage(cell));
 		titlebar.label(cellName(cell));
 
 		if (customTile != null){
-			String customDesc = customTile.desc(x, y);
+			LocalizedString customDesc = customTile.desc(x, y);
 			if (customDesc != null) {
-				desc += customDesc;
+				desc = LocalizedString.concat(desc, customDesc);
 			} else {
-				desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
+				desc = LocalizedString.concat(desc, Dungeon.level.tileDesc(Dungeon.level.map[cell]));
 			}
 
 		} else {
 
-			desc += Dungeon.level.tileDesc(Dungeon.level.map[cell]);
+			desc = LocalizedString.concat(desc, Dungeon.level.tileDesc(Dungeon.level.map[cell]));
 		}
 		this.titlebar = titlebar;
 
 		if (hero.fieldOfView[cell]) {
 			for (Blob blob : Dungeon.level.blobs.values()) {
 				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
-					if (desc.length() > 0) {
-						desc += "\n\n";
+					if (!desc.equals(LocalizedString.EMPTY)) {
+						desc = LocalizedString.concat(desc, "\n\n");
 					}
-					desc += blob.tileDesc();
+					desc = LocalizedString.concat(desc, blob.tileDesc());
 				}
 			}
 		}
 
-		this.desc = desc.length() == 0 ? Messages.get(this, "nothing") : desc;
-		SendData.sendWindow(hero.networkID, "info_cell", getId(), toJson());
+		this.desc = desc.equals(LocalizedString.EMPTY) ? Messages.get(this, "nothing") : desc;
+		SendData.packAndSendAction(hero, new WindowAction.InfoCell(getId(), desc, titlebar));
 
-	}
-	public JSONObject toJson(){
-		JSONObject object = new JSONObject();
-		object.put("desc", desc);
-		object.put("title_bar", titlebar.toJson());
-		return object;
 	}
 }

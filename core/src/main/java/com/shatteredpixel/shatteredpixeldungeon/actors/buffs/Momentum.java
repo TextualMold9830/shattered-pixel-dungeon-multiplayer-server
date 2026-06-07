@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -162,7 +163,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (freerunTurns > 0){
 			return Messages.get(this, "running");
 		} else if (freerunCooldown > 0){
@@ -173,7 +174,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	}
 	
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		if (freerunTurns > 0){
 			return Messages.get(this, "running_desc", freerunTurns);
 		} else if (freerunCooldown > 0){
@@ -208,7 +209,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public String actionName() {
+	public LocalizedString actionName() {
 		return Messages.get(this, "action_name");
 	}
 

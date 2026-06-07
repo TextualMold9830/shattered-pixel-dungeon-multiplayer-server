@@ -59,7 +59,7 @@ public class SPDSettings extends GameSettings {
 		return getString(KEY_SERVER_NAME, "SPD-server");
 	}
 	//Version info
-	public static int defaultRelayServerPort =25555;
+	public static int defaultRelayServerPort =25566;
 	public static String defaultRelayServerAddress = "195.43.142.107";
 	public static String KEY_USE_CUSTOM_RELAY = "use_custom_relay";
 	public static boolean useCustomRelay = false;
@@ -72,7 +72,7 @@ public class SPDSettings extends GameSettings {
 	}
 	public static String KEY_CUSTOM_RELAY_PORT = "custom_relay_port";
 	public static int customRelayPort(){
-		return getInt(KEY_CUSTOM_RELAY_PORT, 25556);
+		return getInt(KEY_CUSTOM_RELAY_PORT, defaultRelayServerPort);
 	}
 	public static String KEY_CUSTOM_RELAY_ADDRESS = "custom_relay_address";
 	public static String customRelayAddress = "";

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -61,8 +62,10 @@ public class PotionOfStrength extends Potion {
 	}
 
 	@Override
-	public String desc() {
-		return super.desc() + (Dungeon.balance.globalStrength && isKnown() ? "\n\n"+Messages.get(this, "global_strength") : "");
+	public LocalizedString desc() {
+		return Dungeon.balance.globalStrength && isKnown()
+				? LocalizedString.concat(super.desc(), "\n\n", Messages.get(this, "global_strength"))
+				: super.desc();
 	}
 
 	@Override

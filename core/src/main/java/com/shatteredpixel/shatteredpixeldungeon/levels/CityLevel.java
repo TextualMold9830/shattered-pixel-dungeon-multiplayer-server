@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -36,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.EscapeCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -155,7 +155,7 @@ public class CityLevel extends RegularLevel {
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					GameScene.show( new WndOptions( Icons.SHPX.get(),
+					GameScene.show( new WndOptions(hero, Icons.SHPX.get(),
 							Messages.titleCase(Messages.get(CityLevel.class, "upcoming_quest_intro_title")),
 							Messages.get(CityLevel.class, "upcoming_quest_intro_body"),
 							Messages.get(CityLevel.class, "upcoming_quest_intro_yes"),
@@ -204,7 +204,7 @@ public class CityLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(CityLevel.class, "water_name");
@@ -219,7 +219,7 @@ public class CityLevel extends RegularLevel {
 	}
 	
 	@Override
-	public String tileDesc(int tile) {
+	public LocalizedString tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:

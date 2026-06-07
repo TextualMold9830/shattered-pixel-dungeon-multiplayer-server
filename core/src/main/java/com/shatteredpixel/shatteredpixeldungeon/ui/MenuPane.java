@@ -21,12 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -43,7 +43,7 @@ import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
-import com.watabou.noosa.audio.Sample;
+import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
 
@@ -93,7 +93,7 @@ public class MenuPane extends Component {
 
 		depthButton = new Button(){
 			@Override
-			protected String hoverText() {
+			protected LocalizedString hoverText() {
 				if (Dungeon.level.feeling != Level.Feeling.NONE){
 					return Dungeon.level.feeling.desc();
 				} else {
@@ -132,7 +132,7 @@ public class MenuPane extends Component {
 				}
 
 				@Override
-				protected String hoverText() {
+				protected LocalizedString hoverText() {
 					return Messages.get(WndChallenges.class, "title");
 				}
 			};
@@ -349,7 +349,7 @@ public class MenuPane extends Component {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return Messages.titleCase(Messages.get(WndKeyBindings.class, "journal"));
 		}
 	}
@@ -403,7 +403,7 @@ public class MenuPane extends Component {
 		}
 
 		@Override
-		protected String hoverText() {
+		protected LocalizedString hoverText() {
 			return Messages.titleCase(Messages.get(WndKeyBindings.class, "menu"));
 		}
 	}

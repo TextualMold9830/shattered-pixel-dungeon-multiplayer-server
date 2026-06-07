@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -188,34 +189,34 @@ public class SandalsOfNature extends Artifact {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (level() == 0)   return super.name();
 		else                return Messages.get(this, "name_" + level());
 	}
 
 	@Override
-	public String desc(Hero hero) {
-		String desc = Messages.get(this, "desc_" + (level()+1));
+	public LocalizedString desc(Hero hero) {
+		LocalizedString desc = Messages.get(this, "desc_" + (level()+1));
 
 		if ( isEquipped ( hero) ) {
-			desc += "\n\n";
+			desc = LocalizedString.concat(desc, "\n\n");
 
 			if (!cursed) {
-				desc += Messages.get(this, "desc_hint");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_hint"));
 			} else {
-				desc += Messages.get(this, "desc_cursed");
+				desc = LocalizedString.concat(desc, Messages.get(this, "desc_cursed"));
 			}
 
 		}
 
 		if (curSeedEffect != null){
-				desc += "\n\n" + Messages.get(this, "desc_ability",
+				desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_ability",
 					Messages.titleCase(Messages.get(curSeedEffect, "name")),
-					seedChargeReqs.get(curSeedEffect));
+					seedChargeReqs.get(curSeedEffect))));
 		}
 
 		if (!seeds.isEmpty()){
-			desc += "\n\n" + Messages.get(this, "desc_seeds", seeds.size());
+			desc = LocalizedString.concat(desc, LocalizedString.concat("\n\n", Messages.get(this, "desc_seeds", seeds.size())));
 		}
 
 		return desc;
@@ -289,7 +290,7 @@ public class SandalsOfNature extends Artifact {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return Messages.get(SandalsOfNature.class, "prompt");
 		}
 
@@ -365,7 +366,7 @@ public class SandalsOfNature extends Artifact {
 		}
 
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(SandalsOfNature.class, "prompt_target");
 		}
 	};

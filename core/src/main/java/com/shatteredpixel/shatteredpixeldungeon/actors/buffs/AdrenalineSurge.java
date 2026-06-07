@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
@@ -83,7 +84,7 @@ public class AdrenalineSurge extends Buff {
 	}
 
 	@Override
-	public String desc() {
+	public LocalizedString desc() {
 		return Messages.get(this, "desc", boost, dispTurns(visualcooldown()));
 	}
 	

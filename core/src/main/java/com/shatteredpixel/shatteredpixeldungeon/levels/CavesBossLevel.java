@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -46,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CavesPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -356,7 +358,7 @@ public class CavesBossLevel extends Level {
 		if (customArenaVisuals != null) customArenaVisuals.updateState();
 
 		Dungeon.observe();
-		Music.INSTANCE.fadeOut(5f,new Music.EndAction());
+		Music.INSTANCE.fadeOut(5f,new MusicAction.EndAction());
 	}
 
 	public void activatePylon(){
@@ -402,7 +404,7 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public LocalizedString tileName(int tile ) {
 		switch (tile) {
 			case Terrain.GRASS:
 				return Messages.get(CavesLevel.class, "grass_name");
@@ -422,10 +424,10 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public String tileDesc( int tile ) {
+	public LocalizedString tileDesc(int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
-				return super.tileDesc( tile ) + "\n\n" + Messages.get(CavesBossLevel.class, "water_desc");
+				return LocalizedString.concat(super.tileDesc( tile ), "\n\n", Messages.get(CavesBossLevel.class, "water_desc"));
 			case Terrain.ENTRANCE:
 			case Terrain.ENTRANCE_SP:
 				return Messages.get(CavesLevel.class, "entrance_desc");
@@ -781,7 +783,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String name(int tileX, int tileY) {
+		public LocalizedString name(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_name");
@@ -793,7 +795,7 @@ public class CavesBossLevel extends Level {
 		}
 
 		@Override
-		public String desc(int tileX, int tileY) {
+		public LocalizedString desc(int tileX, int tileY) {
 			int i = tileX + tileW*(tileY + this.tileY);
 			if (Dungeon.level.map[i] == Terrain.INACTIVE_TRAP){
 				return Messages.get(CavesBossLevel.class, "wires_desc");
@@ -874,7 +876,7 @@ public class CavesBossLevel extends Level {
 
 		private static CharSprite energySourceSprite = null;
 
-		private static Emitter.Factory DIRECTED_SPARKS = new Emitter.Factory() {
+		public static Emitter.Factory DIRECTED_SPARKS = new Emitter.Factory() {
 			@Override
 			public void emit(Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){
@@ -908,7 +910,7 @@ public class CavesBossLevel extends Level {
 		};
 
 		@Override
-		public String tileDesc() {
+		public LocalizedString tileDesc() {
 			return Messages.get(CavesBossLevel.class, "energy_desc");
 		}
 

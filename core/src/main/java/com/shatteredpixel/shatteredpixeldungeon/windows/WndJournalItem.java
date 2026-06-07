@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Image;
@@ -28,7 +29,7 @@ import com.watabou.noosa.PointerArea;
 
 public class WndJournalItem extends WndTitledMessage {
 
-	public WndJournalItem(Image icon, String title, String message ) {
+	public WndJournalItem(Image icon, LocalizedString title, LocalizedString message ) {
 		super( icon, title, message);
 
 		PointerArea blocker = new PointerArea( 0, 0, PixelScene.uiCamera.width, PixelScene.uiCamera.height ) {

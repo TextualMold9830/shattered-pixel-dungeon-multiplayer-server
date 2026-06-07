@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -54,7 +55,7 @@ public class ExitButton extends IconButton {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		return Messages.titleCase(Messages.get(WndKeyBindings.class, "back"));
 	}
 }

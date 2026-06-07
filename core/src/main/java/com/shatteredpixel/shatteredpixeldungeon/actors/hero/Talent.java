@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -76,6 +77,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.HeroTalentsAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -482,22 +484,22 @@ public enum Talent {
 		return maxPoints;
 	}
 
-	public String title(){
+	public LocalizedString title(){
 		if (this == HEROIC_ENERGY && Ratmogrify.useRatroicEnergy){
 			return Messages.get(this, name() + ".rat_title");
 		}
 		return Messages.get(this, name() + ".title");
 	}
 
-	public final String desc(){
+	public final LocalizedString desc(){
 		return desc(false);
 	}
 
-	public String desc(boolean metamorphed){
+	public LocalizedString desc(boolean metamorphed){
 		if (metamorphed){
-			String metaDesc = Messages.get(this, name() + ".meta_desc");
+			LocalizedString metaDesc = Messages.get(this, name() + ".meta_desc");
 			if (!metaDesc.equals(Messages.NO_TEXT_FOUND)){
-				return Messages.get(this, name() + ".desc") + "\n\n" + metaDesc;
+				return LocalizedString.concat(Messages.get(this, name() + ".desc"), "\n\n" , metaDesc);
 			}
 		}
 		return Messages.get(this, name() + ".desc");
@@ -1073,7 +1075,7 @@ public enum Talent {
 
 	public static void initSubclassTalents( Hero hero ){
 		initSubclassTalents( hero.subClass, hero.talents );
-		SendData.sendHeroTalents(hero);
+		SendData.sendAction(hero, new HeroTalentsAction(hero.getTalents()));
 	}
 
 	public static void initSubclassTalents( HeroSubClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents ){

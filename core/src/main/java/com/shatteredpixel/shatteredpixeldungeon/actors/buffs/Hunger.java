@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -31,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.levels.VaultLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -123,7 +125,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 		}
 		if(needsUpdate){
-			SendData.sendBuff(this);
+			SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 		}
 		return true;
 	}
@@ -165,7 +167,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			GLog.n( Messages.get(this, "onstarving") );
 			target.damage( 1, this );
 		}
-		SendData.sendBuff(this);
+		SendData.sendLateLiveStateActionForAll(new BuffUpdateAction(this));
 		BuffIndicator.refreshHero();
 	}
 
@@ -189,7 +191,7 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public String name() {
+	public LocalizedString name() {
 		if (level < STARVING) {
 			return Messages.get(this, "hungry");
 		} else {
@@ -198,15 +200,15 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public String desc() {
-		String result;
+	public LocalizedString desc() {
+		LocalizedString result;
 		if (level < STARVING) {
 			result = Messages.get(this, "desc_intro_hungry");
 		} else {
 			result = Messages.get(this, "desc_intro_starving");
 		}
 
-		result += Messages.get(this, "desc");
+		result = LocalizedString.concat(result, Messages.get(this, "desc"));
 
 		return result;
 	}

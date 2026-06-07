@@ -59,10 +59,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import android.annotation.SuppressLint;
 
 @SuppressLint("NewApi")
 public class AndroidPlatformSupport extends PlatformSupport {
@@ -432,11 +434,14 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		}
 	};
 	@Override
-	public void registerService(int port) {
+	public void registerService(int port, Map<String, String> properties) {
 		service = new NsdServiceInfo();
 		service.setServiceName(SPDSettings.serverName());
-		service.setServiceType("_mppd._tcp.");
+		service.setServiceType("_spdmp._tcp.");
 		service.setPort(port);
+		for (Map.Entry<String, String> property : properties.entrySet()) {
+			service.setAttribute(property.getKey(), property.getValue());
+		}
 		WifiManager wm = (WifiManager) AndroidLauncher.instance.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		service.setHost(getDeviceIpAddress(wm));
 		manager.registerService(service, NsdManager.PROTOCOL_DNS_SD, listener);

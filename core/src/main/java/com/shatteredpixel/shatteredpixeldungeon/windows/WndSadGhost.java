@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 public class WndSadGhost extends Window {
 
@@ -46,12 +46,13 @@ public class WndSadGhost extends Window {
 	
 	public WndSadGhost( final Ghost ghost, final int type, Hero hero ) {
 		super(hero);
-		JSONObject args = new JSONObject();
-		args.put("type", type);
-		args.put("weapon", Item.packItem(Ghost.Quest.weapon, hero));
-		args.put("armor", Item.packItem(Ghost.Quest.armor, hero));
 		this.ghost = ghost;
-		SendData.sendWindow(hero.networkID, "sad_ghost", getId(), args);
+		SendData.packAndSendAction(hero, new WindowAction.SadGhost(
+			getId(),
+			type,
+			Ghost.Quest.weapon,
+			Ghost.Quest.armor
+		));
 	}
 	
 	private void selectReward( Item reward ) {

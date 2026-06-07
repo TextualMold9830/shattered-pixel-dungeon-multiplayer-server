@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -41,7 +42,7 @@ public abstract class InventorySpell extends Spell {
 		GameScene.selectItem(itemSelector, hero);
 	}
 
-	private String inventoryTitle() {
+	private LocalizedString inventoryTitle() {
 		return Messages.get(this, "inv_title");
 	}
 
@@ -56,7 +57,7 @@ public abstract class InventorySpell extends Spell {
 	protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
-		public String textPrompt() {
+		public LocalizedString textPrompt() {
 			return inventoryTitle();
 		}
 

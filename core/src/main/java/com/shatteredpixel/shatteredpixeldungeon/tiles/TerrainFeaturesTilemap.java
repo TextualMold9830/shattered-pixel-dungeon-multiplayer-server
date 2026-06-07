@@ -28,8 +28,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.tweeners.ScaleTweener;
-import com.watabou.utils.PointF;
 import com.watabou.utils.RectF;
 import com.watabou.utils.SparseArray;
 
@@ -59,7 +57,7 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 			if (!trap.visible)
 				return -1;
 			else
-				return (trap.active ? trap.color : Trap.BLACK) + (trap.shape * 16);
+				return (trap.isActive() ? trap.color : Trap.BLACK) + (trap.shape * 16);
 		}
 
 		if (plants.get(pos) != null){
@@ -85,7 +83,7 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 	public static Image getTrapVisual( Trap trap ){
 		if (instance == null) instance = new TerrainFeaturesTilemap(null, null);
 
-		RectF uv = instance.tileset.get((trap.active ? trap.color : Trap.BLACK) + (trap.shape * 16));
+		RectF uv = instance.tileset.get((trap.isActive() ? trap.color : Trap.BLACK) + (trap.shape * 16));
 		if (uv == null) return null;
 
 		Image img = new Image( instance.texture );

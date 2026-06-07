@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -105,7 +106,7 @@ public class WndVictoryCongrats extends Window {
 
 		height += Math.max(dailyImg.height(), dailyTxt.height()) + 6;
 
-		RenderedTextBlock finalTxt = PixelScene.renderTextBlock(Messages.get(this, "thank_you") + " "  + Messages.get(this, "support_prompt"), 6);
+		RenderedTextBlock finalTxt = PixelScene.renderTextBlock(LocalizedString.concat(Messages.get(this, "thank_you"), " ", Messages.get(this, "support_prompt")), 6);
 		finalTxt.maxWidth(width);
 		finalTxt.setPos(0, height);
 		add(finalTxt);

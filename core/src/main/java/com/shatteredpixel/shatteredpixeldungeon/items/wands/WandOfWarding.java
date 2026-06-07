@@ -21,17 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.noosa.audio.Sample;
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
@@ -47,7 +44,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WardSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.nikita22007.multiplayer.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
@@ -209,7 +205,7 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public String statsDesc(Hero hero) {
+	public LocalizedString statsDesc(Hero hero) {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", level(hero)+2);
 		else
@@ -247,7 +243,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public String name() {
+		public LocalizedString name() {
 			return Messages.get(this, "name_" + tier );
 		}
 
@@ -471,7 +467,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public String description() {
+		public LocalizedString description() {
 			if (!Actor.chars().contains(this)){
 				//for viewing in the journal
 				if (tier < 4){

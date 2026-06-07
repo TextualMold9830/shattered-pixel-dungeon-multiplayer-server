@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -70,7 +71,7 @@ public class PowerOfMany extends ArmorAbility {
 	}
 
 	@Override
-	public String targetingPrompt(Hero hero) {
+	public LocalizedString targetingPrompt(Hero hero) {
 		Char ally = getPoweredAlly();
 
 		boolean allyExists = ally != null;

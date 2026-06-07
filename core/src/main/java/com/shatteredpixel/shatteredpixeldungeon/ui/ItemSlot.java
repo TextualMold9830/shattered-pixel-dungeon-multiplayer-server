@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -68,27 +68,27 @@ public class ItemSlot extends Button {
 	// Special "virtual items"
 	public static final Item CHEST = new Item() {
 		public int image() { return ItemSpriteSheet.CHEST; }
-		public String name() { return Messages.get(Heap.class, "chest"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "chest"); }
 	};
 	public static final Item LOCKED_CHEST = new Item() {
 		public int image() { return ItemSpriteSheet.LOCKED_CHEST; }
-		public String name() { return Messages.get(Heap.class, "locked_chest"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "locked_chest"); }
 	};
 	public static final Item CRYSTAL_CHEST = new Item() {
 		public int image() { return ItemSpriteSheet.CRYSTAL_CHEST; }
-		public String name() { return Messages.get(Heap.class, "crystal_chest"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "crystal_chest"); }
 	};
 	public static final Item TOMB = new Item() {
 		public int image() { return ItemSpriteSheet.TOMB; }
-		public String name() { return Messages.get(Heap.class, "tomb"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "tomb"); }
 	};
 	public static final Item SKELETON = new Item() {
 		public int image() { return ItemSpriteSheet.BONES; }
-		public String name() { return Messages.get(Heap.class, "skeleton"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "skeleton"); }
 	};
 	public static final Item REMAINS = new Item() {
 		public int image() { return ItemSpriteSheet.REMAINS; }
-		public String name() { return Messages.get(Heap.class, "remains"); }
+		public LocalizedString name() { return Messages.get(Heap.class, "remains"); }
 	};
 	
 	public ItemSlot() {
@@ -231,7 +231,7 @@ public class ItemSlot extends Button {
 			status.visible = extra.visible = level.visible = true;
 		}
 
-		status.text( item.status() );
+		status.text(item.status().toString());
 
 		//thrown weapons on their last use show quantity in orange, unless they are single-use
 		//FIXME
@@ -254,7 +254,7 @@ public class ItemSlot extends Button {
 
 			if (item.levelKnown){
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
-				extra.text( Messages.format( TXT_STRENGTH, str ) );
+				extra.text(Messages.format( TXT_STRENGTH, str ).toString());
 				//FIXME
 				//if (Dungeon.hero != null && str > Dungeon.heroes.STR()) {
 				if (false) {
@@ -268,7 +268,7 @@ public class ItemSlot extends Button {
 				}
 			} else {
 				int str = item instanceof Weapon ? ((Weapon)item).STRReq(0) : ((Armor)item).STRReq(0);
-				extra.text( Messages.format( TXT_TYPICAL_STR, str ) );
+				extra.text(Messages.format( TXT_TYPICAL_STR, str ).toString());
 				extra.hardlight( WARNING );
 			}
 			extra.measure();
@@ -284,7 +284,7 @@ public class ItemSlot extends Button {
 		int buffedLvl = trueLvl;
 
 		if (trueLvl != 0 || buffedLvl != 0) {
-			level.text( Messages.format( TXT_LEVEL, buffedLvl ) );
+			level.text(Messages.format( TXT_LEVEL, buffedLvl ).toString());
 			level.measure();
 			if (trueLvl == buffedLvl || buffedLvl <= 0) {
 				if (buffedLvl > 0){
@@ -355,7 +355,7 @@ public class ItemSlot extends Button {
 	}
 
 	@Override
-	protected String hoverText() {
+	protected LocalizedString hoverText() {
 		if (item != null && item.name() != null) {
 			return Messages.titleCase(item.name());
 		} else {

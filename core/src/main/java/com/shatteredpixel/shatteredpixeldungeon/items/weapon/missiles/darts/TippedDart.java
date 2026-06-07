@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -78,15 +79,15 @@ public abstract class TippedDart extends Dart {
 		super.execute(hero, action);
 		if (action.equals( AC_CLEAN )){
 
-			String[] options;
+			LocalizedString[] options;
 			if (quantity() > 1){
-				options = new String[]{
+				options = new LocalizedString[]{
 					Messages.get(this, "clean_all"),
 					Messages.get(this, "clean_one"),
 					Messages.get(this, "cancel")
 				};
 			} else {
-				options = new String[]{
+				options = new LocalizedString[]{
 					Messages.get(this, "clean_one"),
 					Messages.get(this, "cancel")
 				};

@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -62,7 +62,7 @@ public abstract class DamageWand extends Wand{
 	}
 
 	@Override
-	public String statsDesc(Hero hero) {
+	public LocalizedString statsDesc(Hero hero) {
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", min(), max());
 		else

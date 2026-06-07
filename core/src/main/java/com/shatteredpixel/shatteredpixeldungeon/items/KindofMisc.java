@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -88,9 +89,9 @@ public abstract class KindofMisc extends EquipableItem {
 					new WndOptions(hero, new ItemSprite(this),
 							Messages.get(KindofMisc.class, "unequip_title"),
 							Messages.get(KindofMisc.class, "unequip_message"),
-							miscs[0] == null ? "---" : Messages.titleCase(miscs[0].title()),
-							miscs[1] == null ? "---" : Messages.titleCase(miscs[1].title()),
-							miscs[2] == null ? "---" : Messages.titleCase(miscs[2].title())) {
+							miscs[0] == null ? LocalizedString.raw( "---") : Messages.titleCase(miscs[0].title()),
+							miscs[1] == null ? LocalizedString.raw( "---") : Messages.titleCase(miscs[1].title()),
+							miscs[2] == null ? LocalizedString.raw( "---") : Messages.titleCase(miscs[2].title())) {
 
 						@Override
 						protected void onSelect(int index) {

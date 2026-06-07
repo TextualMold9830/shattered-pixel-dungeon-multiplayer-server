@@ -19,12 +19,12 @@
 package com.nikita22007.multiplayer.server.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.FlareVisualAction;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public final class Flare extends Visual {
 
@@ -65,13 +65,16 @@ public final class Flare extends Visual {
 //
 //	}
 
-	public Flare color( int color, boolean lightMode ) {
+	@Contract("_, _ -> this")
+	public Flare color(int color, boolean lightMode ) {
 		this.lightMode = lightMode;
 		hardlight( color );
 
 		return this;
 	}
 
+	@Contract(mutates = "this")
+	@Deprecated
 	public PointF point(PointF pos){
 		this.position = pos;
 		return position;
@@ -85,24 +88,11 @@ public final class Flare extends Visual {
 	}
 
 	public void SendThis(){
-		try{
-			JSONObject actionObj = new JSONObject();
-			actionObj.put("action_type", "flare_visual");
-			if (position != null) {
-				actionObj.put("position_x", position.x);
-				actionObj.put("position_y", position.y);
-			} else {
-				actionObj.put("pos", pos);
-			}
-			actionObj.put("color", color);
-			actionObj.put("duration", duration);
-			actionObj.put("light_mode", lightMode);
-			actionObj.put("rays", nRays);
-			actionObj.put("radius", radius);
-			actionObj.put("angle", angle);
-			actionObj.put("angular_speed", angularSpeed);
-			SendData.sendCustomActionForAll(actionObj);
-		}catch (JSONException ignore){}
+		if (position != null) {
+			SendData.sendActionForAll(new FlareVisualAction(position.x, position.y, color, duration, lightMode, nRays, radius, angle, angularSpeed));
+		} else {
+			SendData.sendActionForAll(new FlareVisualAction(pos, color, duration, lightMode, nRays, radius, angle, angularSpeed));
+		}
 	}
 
 	@Contract ("_ -> this")
@@ -110,8 +100,14 @@ public final class Flare extends Visual {
 		this.angularSpeed = angularSpeed;
 		return this;
 	}
+
+	@Contract("_, _ -> this")
 	public Flare show(Visual visual, float duration ) {
-		point( visual.center() );
+		if (visual instanceof CharSprite && ((CharSprite) visual).ch != null) {
+			pos = ((CharSprite) visual).ch.pos;
+		} else {
+			point(visual.center());
+		}
 		visual.parent.addToBack( this );
 
 		lifespan = this.duration = duration;

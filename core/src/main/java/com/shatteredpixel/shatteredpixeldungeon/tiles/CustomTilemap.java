@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.watabou.noosa.Image;
@@ -109,11 +110,11 @@ public abstract class CustomTilemap implements Bundlable {
 		}
 	}
 
-	public String name(int tileX, int tileY){
+	public LocalizedString name(int tileX, int tileY){
 		return null;
 	}
 
-	public String desc(int tileX, int tileY){
+	public LocalizedString desc(int tileX, int tileY){
 		return null;
 	}
 

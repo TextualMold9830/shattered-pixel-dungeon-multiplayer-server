@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -137,47 +138,47 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	public String info(Hero hero) {
-		String info = super.info();
+	public LocalizedString info(Hero hero) {
+		LocalizedString info = super.info();
 		
-		info += "\n\n" + Messages.get( SpiritBow.class, "stats",
+		info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get( SpiritBow.class, "stats",
 				Math.round(augment.damageFactor(min(hero))),
 				Math.round(augment.damageFactor(max(hero))),
-				STRReq());
+				STRReq())));
 		
 		if (STRReq() > hero.STR()) {
-			info += " " + Messages.get(Weapon.class, "too_heavy");
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "too_heavy")));
 		} else if (hero.STR() > STRReq()){
-			info += " " + Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq());
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "excess_str", hero.STR() - STRReq())));
 		}
 		
 		switch (augment) {
 			case SPEED:
-				info += "\n\n" + Messages.get(Weapon.class, "faster");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "faster")));
 				break;
 			case DAMAGE:
-				info += "\n\n" + Messages.get(Weapon.class, "stronger");
+				info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "stronger")));
 				break;
 			case NONE:
 		}
 
 		if (enchantment != null && (cursedKnown || !enchantment.curse())){
-			info += "\n\n" + Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()));
-			if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
-			info += " " + enchantment.desc();
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.capitalize(Messages.get(Weapon.class, "enchanted", enchantment.name()))));
+			if (enchantHardened) info = LocalizedString.concat(info, LocalizedString.concat(" ", Messages.get(Weapon.class, "enchant_hardened")));
+			info = LocalizedString.concat(info, LocalizedString.concat(" ", enchantment.desc()));
 		} else if (enchantHardened){
-			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "hardened_no_enchant")));
 		}
 		
 		if (cursed && isEquipped(hero)) {
-			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "cursed_worn")));
 		} else if (cursedKnown && cursed) {
-			info += "\n\n" + Messages.get(Weapon.class, "cursed");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "cursed")));
 		} else if (!isIdentified() && cursedKnown){
-			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
+			info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(Weapon.class, "not_cursed")));
 		}
 		
-		info += "\n\n" + Messages.get(MissileWeapon.class, "distance");
+		info = LocalizedString.concat(info, LocalizedString.concat("\n\n", Messages.get(MissileWeapon.class, "distance")));
 		
 		return info;
 	}
@@ -513,7 +514,7 @@ public class SpiritBow extends Weapon {
 			}
 		}
 		@Override
-		public String prompt() {
+		public LocalizedString prompt() {
 			return Messages.get(SpiritBow.class, "prompt");
 		}
 	};

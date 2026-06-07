@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 
+import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -297,7 +298,7 @@ public class CloakOfShadows extends Artifact {
 		}
 
 		@Override
-		public String desc() {
+		public LocalizedString desc() {
 			return Messages.get(this, "desc", turnsToCost);
 		}
 
