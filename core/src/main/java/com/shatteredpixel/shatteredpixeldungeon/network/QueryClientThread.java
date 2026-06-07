@@ -56,6 +56,11 @@ public class QueryClientThread extends Thread {
             if (Protocol.PACKET_STATUS_REQUEST.equals(packetType)) {
                 sendStatus();
             } else if (Protocol.PACKET_JOIN.equals(packetType)) {
+                if (!isCompatibleJoin(packet)) {
+                    Server.rejectClient(socket, "unsupported_protocol", "Unsupported client protocol");
+                    closeSocket();
+                    return;
+                }
                 Server.joinClient(socket, packet.optString("hero_class", "random"), packet.optString("uuid", ""));
                 return;
             } else {
@@ -63,6 +68,11 @@ public class QueryClientThread extends Thread {
             }
         }
         closeSocket();
+    }
+
+    private boolean isCompatibleJoin(JSONObject packet) {
+        return Protocol.NAME.equals(packet.optString(Protocol.FIELD_PROTOCOL, ""))
+                && packet.optInt(Protocol.FIELD_VERSION, -1) == Protocol.VERSION;
     }
 
     private void sendHello() throws IOException, JSONException {
