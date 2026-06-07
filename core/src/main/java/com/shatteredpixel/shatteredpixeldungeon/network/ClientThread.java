@@ -494,7 +494,7 @@ public class ClientThread implements Callable<String> {
         if (!disconnected) {
             disconnected = true;
             try {
-                Server.sendDisconnected(clientSocket, "disconnected", message);
+                Server.sendDisconnect(clientSocket, "disconnect", message);
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }

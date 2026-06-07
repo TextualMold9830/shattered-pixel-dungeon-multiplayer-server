@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -308,13 +309,13 @@ public class Server extends Thread {
         }
     }
 
-    static void rejectClient(Socket client, String reason, String message) throws IOException {
-        sendDisconnected(client, reason, message);
+    static void rejectClient(@NotNull Socket client, String reason, String message) throws IOException {
+        sendDisconnect(client, reason, message);
     }
 
-    static void sendDisconnected(Socket client, String reason, String message) throws IOException {
+    static void sendDisconnect(@NotNull Socket client, String reason, String message) throws IOException {
         JSONObject packet = new JSONObject();
-        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_DISCONNECTED);
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_DISCONNECT);
         packet.put("reason", reason);
         packet.put("message", message);
 
