@@ -3,13 +3,15 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.nikita22007.multiplayer.utils.Utils;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SampleAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public final class SampleActionSerializers {
 
-    private SampleActionSerializers() {}
+    @Contract(value = "-> fail", pure = true)
+    private SampleActionSerializers() {throw new RuntimeException();}
 
     public static class Play extends NetworkActionSerializer<SampleAction.PlayAction> {
         @Override

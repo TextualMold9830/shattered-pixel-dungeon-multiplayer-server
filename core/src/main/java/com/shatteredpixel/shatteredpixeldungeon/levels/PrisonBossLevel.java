@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.FadingTrapsAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.MusicAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -789,11 +790,11 @@ public class PrisonBossLevel extends Level {
 			
 			this.area = area;
 		}
-		JSONArray trapData = new JSONArray();
+		int[] data;
 		@Override
 		public Tilemap create() {
 			Tilemap v = super.create();
-			int[] data = new int[tileW*tileH];
+			data = new int[tileW*tileH];
 			int cell;
 			Trap t;
 			int i = 0;
@@ -806,11 +807,6 @@ public class PrisonBossLevel extends Level {
 					} else {
 						data[i] = -1;
 					}
-					JSONObject object = new JSONObject();
-					//TODO: optimize this
-					object.put("pos", i);
-					object.put("data", data[i]);
-					trapData.put(object);
 					cell++;
 					i++;
 				}
@@ -880,24 +876,12 @@ public class PrisonBossLevel extends Level {
 				vis.killAndErase();
 			}
 			Dungeon.level.customTiles.remove(this);
-			JSONObject object = new JSONObject();
-			object.put("action_name", "fading_traps");
-			object.put("kill", true);
-			SendData.sendCustomActionForAll(object);
+			SendData.sendActionForAll(new FadingTrapsAction.Kill());
 		}
 		boolean newInstance = true;
 		public void sendSelf(){
-			JSONObject object = new JSONObject();
-			object.put("action_name", "fading_traps");
-			object.put("tileX", tileX);
-			object.put("tileY", tileY);
-			object.put("tileH", tileH);
-			object.put("tileW", tileW);
-			object.put("data", trapData);
-			object.put("alpha", vis.alpha());
-			object.put("new", newInstance);
+			SendData.sendActionForAll(new FadingTrapsAction.Update(tileX, tileY, tileW, tileH, data, vis.alpha(), newInstance));
 			newInstance = false;
-			SendData.sendCustomActionForAll(object);
 		}
 	}
 	

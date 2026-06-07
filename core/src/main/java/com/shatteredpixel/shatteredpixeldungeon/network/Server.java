@@ -159,6 +159,8 @@ public class Server extends Thread {
         SERIALIZERS.register(SampleAction.UnloadAction.class, new SampleActionSerializers.Unload());
         SERIALIZERS.register(SampleAction.ReloadAction.class, new SampleActionSerializers.Reload());
         SERIALIZERS.register(MissileSpriteVisualAction.class, new MissileSpriteVisualActionSerializer());
+        SERIALIZERS.register(FadingTrapsAction.Update.class, new FadingTrapsActionSerializers.Update());
+        SERIALIZERS.register(FadingTrapsAction.Kill.class, new FadingTrapsActionSerializers.Kill());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
