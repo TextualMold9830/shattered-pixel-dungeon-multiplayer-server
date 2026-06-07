@@ -75,9 +75,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendRemoveItemFromInventory;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemCount;
-import static com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendUpdateItemFull;
 //FIXME
 public class Item implements Bundlable {
 
@@ -283,7 +280,7 @@ public class Item implements Bundlable {
 				if (isSimilar( item )) {
 					item.merge( this );
 					path.add(items.indexOf(item));
-					sendUpdateItemCount(container.owner, item, item.quantity(), path);
+					SendData.packAndSendAction(container.owner, new ItemAction.UpdateCount( item, item.quantity(), path));
 					item.updateQuickslot();
 					if (hero != null && hero.isAlive()) {
 						Badges.validateItemLevelAquired( this );
@@ -406,7 +403,7 @@ public class Item implements Bundlable {
 		for (Item item : container.items) {
 			if (item == this) {
 				if (owner != null) {
-					sendRemoveItemFromInventory(owner, getSlot(owner));
+					SendData.packAndSendAction(owner, new ItemAction.Remove(getSlot(owner)));
 				}
 				container.items.remove(this);
 				item.onDetach();
@@ -639,7 +636,7 @@ public class Item implements Bundlable {
 	public Item quantity(int quantity,  boolean send) {
 		this.quantity = quantity;
 		if (send){
-			sendUpdateItemFull(this);
+			SendData.packAndSendActionForAll( new ItemAction.Update(this));
 		}
 		return this;
 	}
@@ -972,7 +969,7 @@ public class Item implements Bundlable {
 
 	public void spriteSheet(String newSpriteSheet) {
 		spriteSheet = newSpriteSheet;
-		sendUpdateItemFull(this);
+		SendData.packAndSendActionForAll(new ItemAction.Update(this));
 	}
 	public String getNameKey(){
 		return getClass().getName() + "name";
@@ -993,7 +990,11 @@ public class Item implements Bundlable {
 		sendSelfUpdate(null);
 	}
 	public void sendSelfUpdate(Hero heroToFlush){
-		sendUpdateItemFull(this);
+		if (heroToFlush != null) {
+			SendData.packAndSendAction(heroToFlush, new ItemAction.Update(this));
+		} else {
+			SendData.packAndSendActionForAll(new ItemAction.Update(this));
+		}
 	}
 
     public boolean isNeedUpdateVisual() {

@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.network.SpecialSlot;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.ItemAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -114,7 +115,7 @@ public class Belongings implements Iterable<Item> {
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-1);
-			SendData.sendRemoveItemFromInventory(owner, path);
+			SendData.packAndSendAction(owner, new ItemAction.Remove(path));
 		}
 		return weapon;
 	}
@@ -131,7 +132,7 @@ public class Belongings implements Iterable<Item> {
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-2);
-			SendData.sendRemoveItemFromInventory(owner, path);
+			SendData.packAndSendAction(owner, new ItemAction.Remove(path));
 		}
 		return armor;
 	}
@@ -147,7 +148,7 @@ public class Belongings implements Iterable<Item> {
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-3);
-			SendData.sendRemoveItemFromInventory(owner, path);
+			SendData.packAndSendAction(owner, new ItemAction.Remove(path));
 		}
 		return artifact;
 	}
@@ -163,7 +164,7 @@ public class Belongings implements Iterable<Item> {
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-4);
-			SendData.sendRemoveItemFromInventory(owner, path);
+			SendData.packAndSendAction(owner, new ItemAction.Remove(path));
 		}
 		return misc;
 	}
@@ -179,7 +180,7 @@ public class Belongings implements Iterable<Item> {
 		} else {
 			List<Integer> path = new ArrayList<>(1);
 			path.add(-5);
-			SendData.sendRemoveItemFromInventory(owner, path);
+			SendData.packAndSendAction(owner, new ItemAction.Remove(path));
 		}
 		return ring;
 	}

@@ -235,37 +235,6 @@ public class SendData {
         return new ChatMessageAction(message);
     }
 
-
-    //---------------------------Items
-    public static void sendRemoveItemFromInventory(Hero owner, List<Integer> path) {
-        if (path == null || path.isEmpty() || owner == null) {
-            return;
-        }
-        packAndSendAction(owner, new ItemAction.Remove(path));
-    }
-
-    public static void sendUpdateItemCount(Char owner, Item item, int count, List<Integer> path) {
-        if (item == null || !(owner instanceof Hero)) {
-            return;
-        }
-        packAndSendAction((Hero) owner, new ItemAction.UpdateCount(item, count, path));
-    }
-
-    public static void sendUpdateItemFull(Item item) {
-        if (item == null) {
-            return;
-        }
-        packAndSendActionForAll(new ItemAction.Update(item));
-    }
-
-    public static void sendUpdateItemFull(Hero owner, Item item) {
-        if (item == null || owner == null) {
-            return;
-        }
-        packAndSendAction((Hero) owner, new ItemAction.Update(item));
-    }
-
-
     //---------------------------Heaps
     public static void sendHeap(Heap heap) {
         if (heap.isEmpty()) {
