@@ -416,7 +416,9 @@ public class ClientThread implements Callable<String> {
 
     protected void addCharToSend(@NotNull Char ch) {
         synchronized (packet) {
-            packet.packAndAddChar(ch);
+            if (ch.id() > 0) {
+                packet.packAndAdd(new CharUpdateAction(ch));
+            }
         }
         //todo SEND TEXTURE
     }

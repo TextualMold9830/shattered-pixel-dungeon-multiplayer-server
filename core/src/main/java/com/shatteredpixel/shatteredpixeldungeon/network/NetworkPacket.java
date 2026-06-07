@@ -110,12 +110,6 @@ public class NetworkPacket {
     }
 
 
-    public void packAndAddChar(@NotNull Char actor) {
-        if (actor.id() <= 0) {
-            return;
-        }
-        packAndAdd(new CharUpdateAction(actor));
-    }
 
     public void packAndAddBlob(@NotNull Blob actor) {
         packAndAdd(new BlobUpdateAction(actor));
