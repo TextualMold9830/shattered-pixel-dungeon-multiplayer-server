@@ -160,13 +160,7 @@ public class NetworkPacket {
         if (heap.isEmpty()) {
             return;
         }
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, observer);
-        Object serialized = ctx.serialize(heap);
-        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            JSONObject event = (JSONObject) serialized;
-            event.put("action_name", "heap_update");
-            addAction(event);
-        }
+        packAndAdd(new HeapUpdateAction(heap));
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {

@@ -166,6 +166,7 @@ public class Server extends Thread {
         SERIALIZERS.register(ItemAction.Remove.class, new ItemActionSerializers.Remove());
         SERIALIZERS.register(ItemAction.Update.class, new ItemActionSerializers.Update());
         SERIALIZERS.register(ItemAction.Replace.class, new ItemActionSerializers.Replace());
+        SERIALIZERS.register(HeapUpdateAction.class, new HeapUpdateActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
