@@ -362,15 +362,6 @@ public class SendData {
 
 
     //--------------------------- Traps
-    public static void sendTraps(Level level) {
-        for (int i = 0; i < clients.length; i++){
-            if(clients[i] != null) {
-                clients[i].addTraps(level);
-                clients[i].flush();
-            }
-        }
-    }
-
 
     public static void sendTrap(int cell) {
         //no `Trap trap` overload because you need to make sure that the trap exists on the level.
