@@ -167,9 +167,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        JSONObject event = redirectPacket.toJSON();
-        event.put("action_name", "redirect_server");
-        addAction(event);
+        packAndAdd(new RedirectServerAction(redirectPacket));
     }
 
     public static final class SerializedAction implements ImmutableNetworkAction {
