@@ -1,12 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.network;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -106,27 +103,6 @@ public class NetworkPacket {
     }
 
 
-
-    public void packAndAddLevel(Level level, Hero observer) {
-        addAction(new ResizeLevelAction(level));
-        addAction(new SetLevelVisualsAction(level));
-        addAction(new SetLevelEntranceAction(level.entrance()));
-        addAction(new SetLevelExitAction(level.exit()));
-        addAction(new SetLevelTilesAction(level));
-        addAction(new SetLevelStatesAction(level));
-
-        level.heaps.values().forEach(heap -> {
-            if (!heap.isEmpty()) {
-                packAndAdd(new HeapUpdateAction(heap));
-            }
-        });
-        for (int pos = 0; pos < level.length(); pos++) {
-            Plant plant = level.plants.get(pos, null);
-            if (plant != null) {
-                addLateLiveStateAction(new PlantUpdateAction(pos, plant));
-            }
-        }
-    }
 
     public static final class SerializedAction implements ImmutableNetworkAction {
         private final String actionName;

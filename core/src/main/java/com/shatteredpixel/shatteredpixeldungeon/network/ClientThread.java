@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.plugins.events.ChatEvent;
@@ -442,6 +443,29 @@ public class ClientThread implements Callable<String> {
         }
     }
 
+    public void packAndAddLevel(Level level) {
+        synchronized (packet) {
+            packet.addAction(new ResizeLevelAction(level));
+            packet.addAction(new SetLevelVisualsAction(level));
+            packet.addAction(new SetLevelEntranceAction(level.entrance()));
+            packet.addAction(new SetLevelExitAction(level.exit()));
+            packet.addAction(new SetLevelTilesAction(level));
+            packet.addAction(new SetLevelStatesAction(level));
+
+            level.heaps.values().forEach(heap -> {
+                if (!heap.isEmpty()) {
+                    packet.packAndAdd(new HeapUpdateAction(heap));
+                }
+            });
+            for (int pos = 0; pos < level.length(); pos++) {
+                Plant plant = level.plants.get(pos, null);
+                if (plant != null) {
+                    packet.addLateLiveStateAction(new PlantUpdateAction(pos, plant));
+                }
+            }
+        }
+    }
+
     //send primitives
     @Deprecated
     public void sendCode(int code) {
@@ -507,7 +531,7 @@ public class ClientThread implements Callable<String> {
             sendTexture(texture);
         }
 
-        packet.packAndAddLevel(level, clientHero);
+        packAndAddLevel(level);
         addTraps(level);
         packet.addAction(new HeroActorIdAction(clientHero.id()));
         packet.addAction(new HeroClassAction(clientHero.heroClass));
