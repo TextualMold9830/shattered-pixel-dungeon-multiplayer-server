@@ -15,7 +15,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -310,14 +309,10 @@ public class Server extends Thread {
     }
 
     static void rejectClient(Socket client, String reason, String message) throws IOException {
-        JSONObject action = new JSONObject();
-        action.put("action_name", "connection_rejected");
-        action.put("reason", reason);
-        action.put("message", message);
-
         JSONObject packet = new JSONObject();
-        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_ACTIONS_BATCH);
-        packet.put("actions", new JSONArray().put(action));
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_CONNECTION_REJECTED);
+        packet.put("reason", reason);
+        packet.put("message", message);
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                 client.getOutputStream(),
