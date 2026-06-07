@@ -356,11 +356,6 @@ public class SendData {
         clients[networkID].flush();
     }
 
-    public static void sendLockedFloorState(boolean locked) {
-        sendActionForAll(new LockedFloorStateAction(locked));
-    }
-
-
     //--------------------------- Traps
 
     public static void sendTrap(int cell) {

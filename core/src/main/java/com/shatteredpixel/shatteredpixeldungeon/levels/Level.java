@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantRemoveActio
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.PlantUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateCellsAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LockedFloorStateAction;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -633,7 +634,7 @@ public abstract class Level implements Bundlable {
 	public void seal(){
 		if (!locked) {
 			locked = true;
-			SendData.sendLockedFloorState(true);
+			SendData.sendActionForAll(new LockedFloorStateAction(true));
 			for (Hero hero: Dungeon.heroes) {
 				if(hero != null) {
 					Buff.affect(hero, LockedFloor.class);
@@ -645,7 +646,7 @@ public abstract class Level implements Bundlable {
 	public void unseal(){
 		if (locked) {
 			locked = false;
-			SendData.sendLockedFloorState(false);
+			SendData.sendActionForAll(new LockedFloorStateAction(false));
 			for(Hero hero: Dungeon.heroes) {
 				if (hero != null) {
 				if (hero.buff(LockedFloor.class) != null) {
