@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.BossHealthBarAction;
 
 public class BossHealthBar {
 	private static Mob boss;
@@ -61,11 +61,7 @@ public class BossHealthBar {
 		return isAssigned() && bleeding;
 	}
 	public static void sendSelf(){
-		JSONObject object = new JSONObject();
-		object.put("bleeding", bleeding);
-		object.put("id", boss.id());
-		object.put("action_name", "boss_health_bar");
-		SendData.sendCustomActionForAll(object);
+		SendData.sendActionForAll(new BossHealthBarAction(boss.id(), bleeding));
 	}
 
 }
