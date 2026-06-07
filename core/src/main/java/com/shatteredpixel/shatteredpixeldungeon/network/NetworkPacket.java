@@ -132,10 +132,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
-        packAndAdd(new ShowWindowAction(type, windowID, args));
-    }
-
     public void packAndAddRedirect(RedirectPacket redirectPacket) {
         packAndAdd(new RedirectServerAction(redirectPacket));
     }

@@ -85,7 +85,7 @@ public class SendData {
     }
     public static void sendWindow(int ID, String type, int windowID, @Nullable JSONObject args) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAddWindow(type, windowID, args);
+            clients[ID].packet.packAndAdd(new ShowWindowAction(type, windowID, args));
             clients[ID].flush();
         }
     }
