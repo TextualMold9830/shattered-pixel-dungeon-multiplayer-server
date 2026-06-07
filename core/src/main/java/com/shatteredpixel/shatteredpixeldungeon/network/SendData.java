@@ -432,7 +432,7 @@ public class SendData {
     //--------------------------- Special
     public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
     {
-        clients[hero.networkID].packet.packAndAddRedirect(redirectPacket);
+        clients[hero.networkID].packet.packAndAdd(new RedirectServerAction(redirectPacket));
         clients[hero.networkID].flush();
     }
 

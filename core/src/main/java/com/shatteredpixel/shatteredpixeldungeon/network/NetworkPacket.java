@@ -132,10 +132,6 @@ public class NetworkPacket {
         }
     }
 
-    public void packAndAddRedirect(RedirectPacket redirectPacket) {
-        packAndAdd(new RedirectServerAction(redirectPacket));
-    }
-
     public static final class SerializedAction implements ImmutableNetworkAction {
         private final String actionName;
         private final JSONObject actionObj;
