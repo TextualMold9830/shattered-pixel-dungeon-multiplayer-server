@@ -55,6 +55,7 @@ public class ClientThread implements Callable<String> {
     private BufferedReader reader;
 
     protected int threadID;
+    protected final int protocolVersion;
 
     protected final Socket clientSocket;
 
@@ -66,9 +67,10 @@ public class ClientThread implements Callable<String> {
     @NotNull
     private FutureTask<String> jsonCall;
 
-    public ClientThread(int ThreadID, Socket clientSocket, @Nullable Hero hero) {
+    public ClientThread(int ThreadID, Socket clientSocket, @Nullable Hero hero, int protocolVersion) {
         clientHero = hero;
         this.clientSocket = clientSocket;
+        this.protocolVersion = protocolVersion;
         try {
             this.threadID = ThreadID;
             if (hero != null){
@@ -492,7 +494,7 @@ public class ClientThread implements Callable<String> {
         if (!disconnected) {
             disconnected = true;
             try {
-                //TODO: send message
+                Server.sendDisconnected(clientSocket, "disconnected", message);
                 clientSocket.close(); //it creates exception when we will wait client data
             } catch (Exception ignore) {
             }

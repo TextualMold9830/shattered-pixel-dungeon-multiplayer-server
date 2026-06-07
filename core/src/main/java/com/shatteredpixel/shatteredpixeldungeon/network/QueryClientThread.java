@@ -61,7 +61,7 @@ public class QueryClientThread extends Thread {
                     closeSocket();
                     return;
                 }
-                Server.joinClient(socket, packet.optString("hero_class", "random"), packet.optString("uuid", ""));
+                Server.joinClient(socket, packet.optString("hero_class", "random"), packet.optString("uuid", ""), protocolVersion(packet));
                 return;
             } else {
                 Log.w("QueryClientThread", "Unexpected query packet: " + packetType);
@@ -71,8 +71,14 @@ public class QueryClientThread extends Thread {
     }
 
     private boolean isCompatibleJoin(JSONObject packet) {
+        int protocolVersion = protocolVersion(packet);
         return Protocol.NAME.equals(packet.optString(Protocol.FIELD_PROTOCOL, ""))
-                && packet.optInt(Protocol.FIELD_VERSION, -1) == Protocol.VERSION;
+                && protocolVersion >= Protocol.MIN_VERSION
+                && protocolVersion <= Protocol.VERSION;
+    }
+
+    private int protocolVersion(JSONObject packet) {
+        return packet.optInt(Protocol.FIELD_VERSION, -1);
     }
 
     private void sendHello() throws IOException, JSONException {

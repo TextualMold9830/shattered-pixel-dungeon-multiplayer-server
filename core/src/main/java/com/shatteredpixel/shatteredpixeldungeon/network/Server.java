@@ -291,7 +291,7 @@ public class Server extends Thread {
         queryThread.start();
     }
 
-    public static void joinClient(Socket client, String heroClass, String uuid) throws IOException {
+    public static void joinClient(Socket client, String heroClass, String uuid, int protocolVersion) throws IOException {
         synchronized (clients) {
             for (int i = 0; i <= clients.length; i++) {   //search not connected
                 if (i == clients.length) { //If we test last and it's connected too
@@ -299,7 +299,7 @@ public class Server extends Thread {
                     client.close();
                 } else if ((clients[i] == null) && !used[i])  {
                     client.setSoTimeout(0);
-                    ClientThread thread = new ClientThread(i, client, null);
+                    ClientThread thread = new ClientThread(i, client, null, protocolVersion);
                     //clients[i] = thread;
                     thread.InitPlayerHero(heroClass, uuid);
                     break;
@@ -309,8 +309,12 @@ public class Server extends Thread {
     }
 
     static void rejectClient(Socket client, String reason, String message) throws IOException {
+        sendDisconnected(client, reason, message);
+    }
+
+    static void sendDisconnected(Socket client, String reason, String message) throws IOException {
         JSONObject packet = new JSONObject();
-        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_CONNECTION_REJECTED);
+        packet.put(Protocol.FIELD_PACKET_TYPE, Protocol.PACKET_DISCONNECTED);
         packet.put("reason", reason);
         packet.put("message", message);
 
