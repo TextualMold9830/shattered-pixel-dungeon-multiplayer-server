@@ -14,7 +14,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
@@ -342,26 +341,6 @@ public class SendData {
         }
     }
 
-
-    //--------------------------- External Actions
-    @Deprecated
-    public static void sendCustomActionForAll(@NotNull JSONObject action_obj) {
-        for (int i = 0; i < clients.length; i++) {
-            sendCustomAction(action_obj, i);
-        }
-    }
-
-
-    @Deprecated
-    private static void sendCustomAction(JSONObject action_obj, int networkID) {
-        assert action_obj.has("action_name") : "Action object must contains \"action_name\" field";
-        if (networkID <= -1) {
-            return;
-        }
-        if (clients[networkID] != null) {
-            clients[networkID].packet.addAction(action_obj);
-        }
-    }
 
     //--------------------------- More Effects
     public static void sendActionDiscoverTile(int pos, int oldValue) {

@@ -119,17 +119,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddBlob(@NotNull Blob actor) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        Object serialized = ctx.serialize(actor, "default");
-        if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
-            String actionName;
-            actionName = "blob_update";
-
-            JSONObject event = new JSONObject();
-            event.put("action_name", actionName);
-            event.put("payload", serialized);
-            addAction(event);
-        }
+        packAndAdd(new BlobUpdateAction(actor));
     }
     public void packAndAddLevel(Level level, Hero observer) {
         addAction(new ResizeLevelAction(level));
