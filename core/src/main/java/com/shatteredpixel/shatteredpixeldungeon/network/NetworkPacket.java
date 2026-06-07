@@ -10,7 +10,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.packets.RedirectPacket;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -164,11 +163,7 @@ public class NetworkPacket {
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {
-        WindowDTO dto = new WindowDTO(type, windowID, args);
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
-        JSONObject obj = (JSONObject) ctx.serialize(dto);
-        obj.put("action_name", "show_window");
-        addAction(obj);
+        packAndAdd(new ShowWindowAction(type, windowID, args));
     }
 
     public void packAndAddRedirect(RedirectPacket redirectPacket) {

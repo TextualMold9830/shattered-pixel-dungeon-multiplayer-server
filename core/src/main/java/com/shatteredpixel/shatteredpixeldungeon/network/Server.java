@@ -45,7 +45,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapRemovalS
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ItemSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.MissileAnchorSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializerRegistry;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.WindowSerializer;
 
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ParticleFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpeckFactorySerializer;
@@ -62,7 +61,6 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.Emi
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStopSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.WindowDTO;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -83,7 +81,6 @@ public class Server extends Thread {
         SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
-        SERIALIZERS.register(WindowDTO.class, "default", new WindowSerializer());
 
         SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());
@@ -167,6 +164,7 @@ public class Server extends Thread {
         SERIALIZERS.register(ItemAction.Update.class, new ItemActionSerializers.Update());
         SERIALIZERS.register(ItemAction.Replace.class, new ItemActionSerializers.Replace());
         SERIALIZERS.register(HeapUpdateAction.class, new HeapUpdateActionSerializer());
+        SERIALIZERS.register(ShowWindowAction.class, new ShowWindowActionSerializer());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
