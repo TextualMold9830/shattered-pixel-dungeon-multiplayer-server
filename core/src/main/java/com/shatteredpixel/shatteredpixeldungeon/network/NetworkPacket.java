@@ -58,7 +58,7 @@ public class NetworkPacket {
     }
 
     public synchronized void packAndAdd(@NotNull LiveStateNetworkAction action) {
-        JSONObject serialized = serializeAction(action);
+        JSONObject serialized = serializeAction(action, null);
         if (serialized.length() > 0) {
             addAction(serializedActionFrom(serialized));
         }
@@ -77,7 +77,7 @@ public class NetworkPacket {
         return new SerializedAction(actionName, actionObj);
     }
 
-    public synchronized JSONObject serialize() {
+    public synchronized JSONObject serialize(@Nullable Hero observer) {
         if (actions.isEmpty()) {
             return new JSONObject();
         }
@@ -86,7 +86,7 @@ public class NetworkPacket {
 
         JSONArray actionsArr = new JSONArray();
         for (LiveStateNetworkAction action : actions) {
-            JSONObject serialized = serializeAction(action);
+            JSONObject serialized = serializeAction(action, observer);
             if (serialized.length() > 0) {
                 actionsArr.put(serialized);
             }
@@ -95,8 +95,8 @@ public class NetworkPacket {
         return packet;
     }
 
-    private JSONObject serializeAction(@NotNull LiveStateNetworkAction action) {
-        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, null);
+    private JSONObject serializeAction(@NotNull LiveStateNetworkAction action, @Nullable Hero observer) {
+        SerializationContext ctx = new SerializationContext(Server.SERIALIZERS, observer);
         Object serialized = ctx.serialize(action);
         if (serialized instanceof JSONObject && ((JSONObject) serialized).length() > 0) {
             return (JSONObject) serialized;

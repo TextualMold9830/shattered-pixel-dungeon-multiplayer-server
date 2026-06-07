@@ -285,7 +285,7 @@ public class ClientThread implements Callable<String> {
             JSONObject json;
             synchronized (packet) {
                 packet.compress();
-                json = packet.serialize();
+                json = packet.serialize(clientHero);
                 packet.clearData();
             }
             if (json.length() <= 1) {
@@ -332,7 +332,7 @@ public class ClientThread implements Callable<String> {
     protected void sendImmediate(@NotNull NetworkPacket networkPacket) {
         try {
             networkPacket.compress();
-            JSONObject data = networkPacket.serialize();
+            JSONObject data = networkPacket.serialize(clientHero);
             if (DeviceCompat.isDebug()) {
                 try {
                     Log.i("immediate", "clientID: " + threadID + " data:" + data.toString(4));
