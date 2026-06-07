@@ -4,6 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.FadingTrapsActio
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +18,7 @@ public final class FadingTrapsActionSerializers {
 
     public static class Update extends NetworkActionSerializer<FadingTrapsAction.Update> {
         @Override
-        protected JSONObject serializeInternal(@NotNull FadingTrapsAction.Update obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull FadingTrapsAction.Update obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             object.put("tileX", obj.tileX);
             object.put("tileY", obj.tileY);
@@ -43,7 +44,7 @@ public final class FadingTrapsActionSerializers {
 
     public static class Kill extends NetworkActionSerializer<FadingTrapsAction.Kill> {
         @Override
-        protected JSONObject serializeInternal(@NotNull FadingTrapsAction.Kill obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull FadingTrapsAction.Kill obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             object.put("kill", true);
             return object;

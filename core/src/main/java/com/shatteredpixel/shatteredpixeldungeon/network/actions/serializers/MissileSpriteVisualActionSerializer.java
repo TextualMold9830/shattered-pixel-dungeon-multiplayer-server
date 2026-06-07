@@ -3,12 +3,13 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.MissileSpriteVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class MissileSpriteVisualActionSerializer extends NetworkActionSerializer<MissileSpriteVisualAction> {
 
     @Override
-    protected JSONObject serializeInternal(@NotNull MissileSpriteVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull MissileSpriteVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject action = new JSONObject();
 
         action.put("from", ctx.serialize(obj.from));

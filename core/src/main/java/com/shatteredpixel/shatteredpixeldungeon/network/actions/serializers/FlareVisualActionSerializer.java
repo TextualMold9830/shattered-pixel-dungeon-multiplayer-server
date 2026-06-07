@@ -3,11 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.FlareVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class FlareVisualActionSerializer extends NetworkActionSerializer<FlareVisualAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull FlareVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull FlareVisualAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = new JSONObject();
         if (obj.positionX != null && obj.positionY != null) {
             actionObj.put("position_x", obj.positionX);

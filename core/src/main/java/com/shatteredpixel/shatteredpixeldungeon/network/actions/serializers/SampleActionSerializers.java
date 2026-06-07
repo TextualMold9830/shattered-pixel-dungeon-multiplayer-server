@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.SampleAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +16,7 @@ public final class SampleActionSerializers {
 
     public static class Play extends NetworkActionSerializer<SampleAction.PlayAction> {
         @Override
-        protected JSONObject serializeInternal(@NotNull SampleAction.PlayAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull SampleAction.PlayAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             object.put("sample", obj.id);
             object.put("left_volume", obj.leftVolume);
@@ -31,7 +32,7 @@ public final class SampleActionSerializers {
 
     public static class Load extends NetworkActionSerializer<SampleAction.LoadAction> {
         @Override
-        protected JSONObject serializeInternal(@NotNull SampleAction.LoadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull SampleAction.LoadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             try {
                 object.put("samples", Utils.putToJSONArray(obj.samples));
@@ -42,7 +43,7 @@ public final class SampleActionSerializers {
 
     public static class Unload extends NetworkActionSerializer<SampleAction.UnloadAction> {
         @Override
-        protected JSONObject serializeInternal(@NotNull SampleAction.UnloadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull SampleAction.UnloadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             object.put("sample", obj.sample);
             return object;
@@ -51,7 +52,7 @@ public final class SampleActionSerializers {
 
     public static class Reload extends NetworkActionSerializer<SampleAction.ReloadAction> {
         @Override
-        protected JSONObject serializeInternal(@NotNull SampleAction.ReloadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+        protected @Nullable JSONObject serializeInternal(@NotNull SampleAction.ReloadAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
             JSONObject object = new JSONObject();
             try {
                 object.put("samples", Utils.putToJSONArray(obj.samples));

@@ -4,11 +4,12 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterStartActi
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.BaseEmitterSerializer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class EmitterStartActionSerializer extends NetworkActionSerializer<EmitterStartAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull EmitterStartAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull EmitterStartAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject actionObj = BaseEmitterSerializer.baseObject("emitter_start", obj.emitter, ctx);
         return actionObj != null ? actionObj : new JSONObject();
     }

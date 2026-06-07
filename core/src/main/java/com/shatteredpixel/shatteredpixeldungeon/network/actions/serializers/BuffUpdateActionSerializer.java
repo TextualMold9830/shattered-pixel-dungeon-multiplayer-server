@@ -7,12 +7,13 @@ import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.watabou.noosa.Image;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BuffUpdateActionSerializer extends NetworkActionSerializer<BuffUpdateAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull BuffUpdateAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull BuffUpdateAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject buffObj = new JSONObject();
         Buff buff = obj.buff;
         int id = buff.id();

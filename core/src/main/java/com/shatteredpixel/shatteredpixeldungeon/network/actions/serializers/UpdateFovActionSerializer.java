@@ -3,12 +3,13 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.UpdateFovAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class UpdateFovActionSerializer extends NetworkActionSerializer<UpdateFovAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull UpdateFovAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull UpdateFovAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONArray visiblePos = new JSONArray();
         boolean[] visible = obj.visible();
         for (int i = 0; i < visible.length; i++) {

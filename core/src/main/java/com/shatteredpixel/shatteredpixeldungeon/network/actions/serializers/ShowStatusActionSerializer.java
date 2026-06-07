@@ -3,11 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ShowStatusAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class ShowStatusActionSerializer extends NetworkActionSerializer<ShowStatusAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull ShowStatusAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull ShowStatusAction action, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject obj = new JSONObject();
         if (action.x != null) {
             obj.put("x", action.x);

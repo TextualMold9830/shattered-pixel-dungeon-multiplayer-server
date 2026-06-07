@@ -3,11 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.InterlevelSceneAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class InterlevelSceneActionSerializer extends NetworkActionSerializer<InterlevelSceneAction> {
     @Override
-    protected JSONObject serializeInternal(@NotNull InterlevelSceneAction scene, @NotNull SerializationContext ctx, @NotNull String profile) {
+    protected @Nullable JSONObject serializeInternal(@NotNull InterlevelSceneAction scene, @NotNull SerializationContext ctx, @NotNull String profile) {
         JSONObject sceneObj = new JSONObject();
         if (scene.state != null) {
             sceneObj.put("state", scene.state);
