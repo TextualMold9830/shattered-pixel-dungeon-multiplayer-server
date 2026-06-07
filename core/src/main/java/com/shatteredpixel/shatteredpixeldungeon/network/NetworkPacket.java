@@ -119,21 +119,17 @@ public class NetworkPacket {
         addAction(new SetLevelTilesAction(level));
         addAction(new SetLevelStatesAction(level));
 
-        level.heaps.values().forEach(heap -> addHeap(heap, observer));
+        level.heaps.values().forEach(heap -> {
+            if (!heap.isEmpty()) {
+                packAndAdd(new HeapUpdateAction(heap));
+            }
+        });
         for (int pos = 0; pos < level.length(); pos++) {
             Plant plant = level.plants.get(pos, null);
             if (plant != null) {
                 addLateLiveStateAction(new PlantUpdateAction(pos, plant));
             }
         }
-    }
-
-
-    public void addHeap(Heap heap, Hero observer) {
-        if (heap.isEmpty()) {
-            return;
-        }
-        packAndAdd(new HeapUpdateAction(heap));
     }
 
     public void packAndAddWindow(String type, int windowID, @Nullable JSONObject args) {

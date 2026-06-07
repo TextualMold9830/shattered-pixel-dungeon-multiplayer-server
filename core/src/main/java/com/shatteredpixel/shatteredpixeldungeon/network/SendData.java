@@ -335,11 +335,14 @@ public class SendData {
 
     //---------------------------Heaps
     public static void sendHeap(Heap heap) {
+        if (heap.isEmpty()) {
+            return;
+        }
         for (int i = 0; i < clients.length; i++) {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.addHeap(heap, clients[i].clientHero);
+            clients[i].packet.packAndAdd(new HeapUpdateAction(heap));
             clients[i].flush();
         }
     }
