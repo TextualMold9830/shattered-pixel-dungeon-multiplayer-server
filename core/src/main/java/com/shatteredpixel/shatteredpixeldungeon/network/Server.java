@@ -110,6 +110,7 @@ public class Server extends Thread {
         SERIALIZERS.register(GameSceneFlashAction.class, new GameSceneFlashActionSerializer());
         SERIALIZERS.register(SurpriseVisualAction.class, new SurpriseVisualActionSerializer());
         SERIALIZERS.register(FlareVisualAction.class, new FlareVisualActionSerializer());
+        SERIALIZERS.register(EnchantingVisualAction.class, new EnchantingVisualActionSerializer());
         SERIALIZERS.register(DiscoverTileAction.class, new DiscoverTileActionSerializer());
         SERIALIZERS.register(UpdateFovAction.class, new UpdateFovActionSerializer());
         SERIALIZERS.register(SetLevelEntranceAction.class, new SetLevelEntranceActionSerializer());
