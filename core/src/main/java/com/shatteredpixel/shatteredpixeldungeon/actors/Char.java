@@ -147,6 +147,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.CharUpdateAction;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -251,7 +252,9 @@ public abstract class Char extends Actor {
 		if ( !all().contains(this) ){
 			return;
 		}
-		SendData.sendChar(this);
+		if (id() > 0) {
+			SendData.packAndSendActionForAll(new CharUpdateAction(this));
+		}
 	}
 
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();

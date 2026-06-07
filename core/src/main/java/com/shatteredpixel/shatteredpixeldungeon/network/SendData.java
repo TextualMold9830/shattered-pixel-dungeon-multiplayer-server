@@ -92,17 +92,6 @@ public class SendData {
 
     //----------Actors
 
-    public static void sendChar(@NotNull Char actor) {
-        if (actor.id() <= 0) {
-            return;
-        }
-        for (ClientThread client : clients) {
-            if (client == null) {
-                continue;
-            }
-            client.packet.packAndAdd(new CharUpdateAction(actor));
-        }
-    }
 
     @SuppressWarnings("unused") // todo should we use this?
     public static void sendActorRemoving(@NotNull Actor actor) {
