@@ -418,7 +418,7 @@ public class ClientThread implements Callable<String> {
     protected void addCharToSend(@NotNull Char ch) {
         synchronized (packet) {
             if (ch.id() > 0) {
-                packet.packAndAdd(new CharUpdateAction(ch));
+                packet.packAndAdd(new CharUpdateAction(ch), clientHero);
             }
         }
         //todo SEND TEXTURE
@@ -454,7 +454,7 @@ public class ClientThread implements Callable<String> {
 
             level.heaps.values().forEach(heap -> {
                 if (!heap.isEmpty()) {
-                    packet.packAndAdd(new HeapUpdateAction(heap));
+                    packet.packAndAdd(new HeapUpdateAction(heap), clientHero);
                 }
             });
             for (int pos = 0; pos < level.length(); pos++) {
@@ -558,7 +558,7 @@ public class ClientThread implements Callable<String> {
         //TODO send all  information
         for (Actor actor: Actor.all()) {
             if (actor instanceof Buff)
-                packet.packAndAdd(new BuffUpdateAction((Buff) actor));
+                packet.packAndAdd(new BuffUpdateAction((Buff) actor), clientHero);
         }
         forceFlush();
 

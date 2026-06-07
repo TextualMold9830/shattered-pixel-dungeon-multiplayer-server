@@ -85,7 +85,7 @@ public class SendData {
     }
     public static void sendWindow(int ID, String type, int windowID, @Nullable JSONObject args) {
         if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAdd(new ShowWindowAction(type, windowID, args));
+            clients[ID].packet.packAndAdd(new ShowWindowAction(type, windowID, args), clients[ID].clientHero);
             clients[ID].flush();
         }
     }
@@ -322,7 +322,7 @@ public class SendData {
             if (clients[i] == null) {
                 continue;
             }
-            clients[i].packet.packAndAdd(new HeapUpdateAction(heap));
+            clients[i].packet.packAndAdd(new HeapUpdateAction(heap), clients[i].clientHero);
             clients[i].flush();
         }
     }
@@ -412,7 +412,7 @@ public class SendData {
     //--------------------------- Special
     public static void sendRedirect(Hero hero, RedirectPacket redirectPacket)
     {
-        clients[hero.networkID].packet.packAndAdd(new RedirectServerAction(redirectPacket));
+        clients[hero.networkID].packet.packAndAdd(new RedirectServerAction(redirectPacket), hero);
         clients[hero.networkID].flush();
     }
 
@@ -450,7 +450,7 @@ public class SendData {
         for (int i = 0; i < clients.length; i++) {
             var client = clients[i];
             if (client != null) {
-                client.packet.packAndAdd(networkAction);
+                client.packet.packAndAdd(networkAction, client.clientHero);
             }
         }
     }
