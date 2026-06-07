@@ -9,6 +9,7 @@ public class Surprise {
 
     private static final float TIME_TO_FADE = 1f;
 
+    @Deprecated
     @Contract(value = " -> fail", pure = true)
     private Surprise() {
         throw new RuntimeException();
