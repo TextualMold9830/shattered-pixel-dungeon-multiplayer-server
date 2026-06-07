@@ -138,35 +138,20 @@ public class NetworkPacket {
         }
     }
 
-    private void packAndAddItemAction(String actionName, List<Integer> path, @Nullable Item item, @Nullable Hero hero) {
-        JSONObject event = new JSONObject();
-        event.put("action_name", actionName);
-
-        JSONArray pathArr = new JSONArray();
-        for (int p : path) pathArr.put(p);
-        event.put("path", pathArr);
-        
-        if (item != null) {
-            event.put("item", Item.packItem(item, hero));
-        }
-
-        addAction(event);
-    }
-
     public void packAndAddItemAdd(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAddItemAction("item_add", path, item, hero);
+        packAndAdd(new ItemAction.Add(path, item, hero));
     }
 
     public void packAndAddItemRemove(List<Integer> path) {
-        packAndAddItemAction("item_remove", path, null, null);
+        packAndAdd(new ItemAction.Remove(path));
     }
 
     public void packAndAddItemUpdate(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAddItemAction("item_update", path, item, hero);
+        packAndAdd(new ItemAction.Update(path, item, hero));
     }
 
     public void packAndAddItemReplace(List<Integer> path, @NotNull Item item, Hero hero) {
-        packAndAddItemAction("item_replace", path, item, hero);
+        packAndAdd(new ItemAction.Replace(path, item, hero));
     }
 
 

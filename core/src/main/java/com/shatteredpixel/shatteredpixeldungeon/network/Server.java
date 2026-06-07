@@ -162,6 +162,10 @@ public class Server extends Thread {
         SERIALIZERS.register(FadingTrapsAction.Update.class, new FadingTrapsActionSerializers.Update());
         SERIALIZERS.register(FadingTrapsAction.Kill.class, new FadingTrapsActionSerializers.Kill());
         SERIALIZERS.register(BlobUpdateAction.class, new BlobUpdateActionSerializer());
+        SERIALIZERS.register(ItemAction.Add.class, new ItemActionSerializers.Add());
+        SERIALIZERS.register(ItemAction.Remove.class, new ItemActionSerializers.Remove());
+        SERIALIZERS.register(ItemAction.Update.class, new ItemActionSerializers.Update());
+        SERIALIZERS.register(ItemAction.Replace.class, new ItemActionSerializers.Replace());
     }
 
     public static ArrayList<String> textures = new ArrayList<>();
