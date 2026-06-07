@@ -154,7 +154,10 @@ public class Server extends Thread {
         SERIALIZERS.register(AttackIndicatorTargetAction.class, new AttackIndicatorTargetActionSerializer());
         SERIALIZERS.register(ResumeButtonVisibleAction.class, new ResumeButtonVisibleActionSerializer());
         SERIALIZERS.register(MusicAction.class, new MusicActionSerializer());
-        SERIALIZERS.register(PlaySampleAction.class, new PlaySampleActionSerializer());
+        SERIALIZERS.register(SampleAction.PlayAction.class, new SampleActionSerializers.Play());
+        SERIALIZERS.register(SampleAction.LoadAction.class, new SampleActionSerializers.Load());
+        SERIALIZERS.register(SampleAction.UnloadAction.class, new SampleActionSerializers.Unload());
+        SERIALIZERS.register(SampleAction.ReloadAction.class, new SampleActionSerializers.Reload());
         SERIALIZERS.register(MissileSpriteVisualAction.class, new MissileSpriteVisualActionSerializer());
     }
 

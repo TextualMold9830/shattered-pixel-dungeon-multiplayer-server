@@ -30,20 +30,20 @@ public enum Music {
 	INSTANCE;
 
 	public synchronized void play( String assetName, boolean looping ) {
-		SendData.sendAction(null, new MusicAction.PlayAction(assetName, looping));
+		SendData.sendActionForAll( new MusicAction.PlayAction(assetName, looping));
 	}
 
 	public synchronized void playTracks( String[] tracks, float[] chances, boolean shuffle){
-		SendData.sendAction(null, new MusicAction.PlayTracksAction(tracks, chances, shuffle));
+		SendData.sendActionForAll(new MusicAction.PlayTracksAction(tracks, chances, shuffle));
 	}
 
 	public synchronized void fadeOut(float duration, MusicAction onComplete){
-		SendData.sendAction(null, new MusicAction.FadeOutAction(duration, onComplete));
+		SendData.sendActionForAll( new MusicAction.FadeOutAction(duration, onComplete));
 	}
 
 	
 	public synchronized void end() {
-		SendData.sendAction(null, new MusicAction.EndAction());
+		SendData.sendActionForAll(new MusicAction.EndAction());
 	}
 
 }
