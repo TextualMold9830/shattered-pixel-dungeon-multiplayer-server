@@ -21,18 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BloodParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.CorrosionParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PoisonParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.MagicMissileVisualAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Group;
@@ -43,8 +34,6 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MagicMissile extends Emitter {
 
@@ -95,7 +84,7 @@ public class MagicMissile extends Emitter {
 	public static final int SPECK           = 1000;
 
 	public void reset( int type, int from, int to, Callback callback ) {
-		Send(type, from, to);
+		sendSelf(type, from, to);
 		callback.call();
 	}
 
@@ -685,14 +674,7 @@ public class MagicMissile extends Emitter {
 			am = 1 - left / lifespan;
 		}
 	}
-	protected static void Send(int type, int from, int to){
-		JSONObject actionObj = new JSONObject();
-		try {
-			actionObj.put("action_name", "magic_missile_visual");
-			actionObj.put("type", type);
-			actionObj.put("from", from);
-			actionObj.put("to", to);
-		} catch (JSONException ignored) {}
-		SendData.sendCustomActionForAll(actionObj);
+	protected static void sendSelf(int type, int from, int to){
+		SendData.sendActionForAll(new MagicMissileVisualAction(type, from, to));
 	}
 }
