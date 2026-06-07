@@ -692,7 +692,6 @@ public class GameScene extends PixelScene {
 				item.setNeedUpdateVisual(false);
 			}
 		}
-		SendData.flush(hero);
 	}
 
 	@Override
