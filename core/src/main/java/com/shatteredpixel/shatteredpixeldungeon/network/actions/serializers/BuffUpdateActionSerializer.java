@@ -1,6 +1,5 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
-import com.nikita22007.multiplayer.utils.Text;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.BuffUpdateAction;
@@ -23,8 +22,8 @@ public class BuffUpdateActionSerializer extends NetworkActionSerializer<BuffUpda
             buffObj.put("icon", buff.icon());
             Actor target = buff.target;
             buffObj.put("target_id", target == null ? JSONObject.NULL : target.id());
-            buffObj.put("desc", Text.of(buff, "desc").toJSON());
-            buffObj.put("name", Text.of(buff, "name").toJSON());
+            buffObj.put("desc", buff.desc() != null ? buff.desc().toJsonObject() : JSONObject.NULL);
+            buffObj.put("name", buff.name() != null ? buff.name().toJsonObject() : JSONObject.NULL);
             
             Image temp = new Image();
             buff.tintIcon(temp);
