@@ -35,7 +35,7 @@ import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.GameMath;
 
@@ -198,30 +198,7 @@ public class BuffIndicator extends Component {
 		int size = large ? SIZE_LARGE : SIZE_SMALL;
 
 		//remove any icons no longer present
-		for (Buff buff : buffButtons.keySet().toArray(new Buff[0])){
-			if (!newBuffs.contains(buff)){
-				Image icon = buffButtons.get( buff ).icon;
-				icon.originToCenter();
-				icon.alpha(0.6f);
-				add( icon );
-				add( new AlphaTweener( icon, 0, 0.6f ) {
-					@Override
-					protected void updateValues( float progress ) {
-						super.updateValues( progress );
-						image.scale.set( 1 + 5 * progress );
-					}
-					
-					@Override
-					protected void onComplete() {
-						image.killAndErase();
-					}
-				} );
-				
-				buffButtons.get( buff ).destroy();
-				remove(buffButtons.get( buff ));
-				buffButtons.remove( buff );
-			}
-		}
+		
 		
 		//add new icons
 		for (Buff buff : newBuffs) {

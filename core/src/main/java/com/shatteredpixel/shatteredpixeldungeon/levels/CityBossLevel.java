@@ -45,7 +45,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Tilemap;
 import com.nikita22007.multiplayer.noosa.audio.Music;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;

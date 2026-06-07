@@ -49,7 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
-import com.watabou.noosa.tweeners.AlphaTweener;
+import com.nikita22007.multiplayer.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.Callback;
 
