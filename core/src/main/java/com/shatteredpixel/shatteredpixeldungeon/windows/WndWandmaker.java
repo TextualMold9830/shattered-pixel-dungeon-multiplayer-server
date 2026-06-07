@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 public class WndWandmaker extends Window {
 
@@ -42,13 +42,13 @@ public class WndWandmaker extends Window {
 
 		this.wandmaker = wandmaker;
 		this.questItem = item;
-		JSONObject object = new JSONObject();
-		//object;
-		object.put("wand1", Wandmaker.Quest.wand1.toJsonObject(hero));
-		object.put("wand2", Wandmaker.Quest.wand2.toJsonObject(hero));
-		object.put("quest_item", Item.packItem(questItem, hero));
-		object.put("quest_item_class", questItem.getClass().getName());
-		SendData.sendWindow(hero.networkID, "wandmaker", getId(), object);
+		SendData.packAndSendAction(hero, new WindowAction.Wandmaker(
+			getId(),
+			Wandmaker.Quest.wand1,
+			Wandmaker.Quest.wand2,
+			questItem,
+			questItem.getClass().getName()
+		));
 	}
 	private void selectReward(Item reward ) {
 

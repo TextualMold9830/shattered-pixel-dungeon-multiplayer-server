@@ -36,9 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +113,7 @@ public class WndOptions extends Window {
 	}
 
 	protected void sendWnd(WndOptionsParams params) {
-		SendData.sendWindow(getOwnerHero().networkID, "wnd_option", getId(), params.toJSONObject(getOwnerHero()));
+		SendData.packAndSendAction(getOwnerHero(), new WindowAction.Options(getId(), params));
 	}
 
 	public WndOptions( String title, String message, String... options ) {
@@ -181,7 +179,7 @@ public class WndOptions extends Window {
 
 		resize( width, (int)(pos - MARGIN) );
 	}
-	protected static final class WndOptionsParams {
+	public static final class WndOptionsParams {
 		public @Nullable Item item;
 		public @Nullable CharSprite charSprite;
 		public @NotNull LocalizedString title = LocalizedString.raw("Untitled");
@@ -190,35 +188,7 @@ public class WndOptions extends Window {
 		public List<LocalizedString> options = new ArrayList<LocalizedString>(3);
 		public @Nullable Image icon;
 
-		public JSONObject toJSONObject(Hero owner) {
-			JSONObject params = new JSONObject();
 
-			try {
-				params.put("title", title);
-				params.put("title_color", titleColor);
-				params.put("message", message);
-				JSONArray optionsArr = new JSONArray();
-				for (int i = 0; i < options.size(); i += 1) {
-					optionsArr.put(options.get(i));
-				}
-				params.put("options", optionsArr);
-				if (item != null) {
-					params.put("item", item.toJsonObject(owner));
-				} else if (charSprite != null) {
-					String spriteAsset = charSprite.getSpriteAsset();
-					if (spriteAsset != null) {
-						params.put("sprite_asset", spriteAsset);
-					} else {
-						params.put("sprite_class", charSprite.spriteName());
-					}
-				}
-				if (icon != null) {
-					params.put("image", icon.toJson());
-				}
-			} catch (JSONException ignored) {
-			}
-			return params;
-		}
 
 	}
 

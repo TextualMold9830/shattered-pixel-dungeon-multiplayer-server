@@ -76,21 +76,6 @@ public class SendData {
     }
 
     //-----------------------------Windows
-    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type) {
-        sendWindow(wnd, type, null);
-    }
-
-    public static void sendWindow(@NotNull final Window wnd, @NotNull final String type, @Nullable final JSONObject args) {
-        final int ID = wnd.getOwnerHero().networkID;
-        final int windowID = wnd.getId();
-        sendWindow(ID, type, windowID, args);
-    }
-    public static void sendWindow(int ID, String type, int windowID, @Nullable JSONObject args) {
-        if ((ID != -1) && (clients[ID] != null)) {
-            clients[ID].packet.packAndAdd(new ShowWindowAction(type, windowID, args), clients[ID].clientHero);
-            clients[ID].flush();
-        }
-    }
 
     //----------Actors
 

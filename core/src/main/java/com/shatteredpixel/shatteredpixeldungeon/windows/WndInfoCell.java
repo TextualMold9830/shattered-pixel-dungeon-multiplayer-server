@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Image;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 public class WndInfoCell extends Window {
 
@@ -155,13 +155,7 @@ public class WndInfoCell extends Window {
 		}
 
 		this.desc = desc.equals(LocalizedString.EMPTY) ? Messages.get(this, "nothing") : desc;
-		SendData.sendWindow(hero.networkID, "info_cell", getId(), toJson());
+		SendData.packAndSendAction(hero, new WindowAction.InfoCell(getId(), desc, titlebar));
 
-	}
-	public JSONObject toJson(){
-		JSONObject object = new JSONObject();
-		object.put("desc", desc);
-		object.put("title_bar", titlebar.toJson());
-		return object;
 	}
 }

@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.SendData;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 public class WndQuest extends WndTitledMessage {
 
@@ -36,11 +36,11 @@ public class WndQuest extends WndTitledMessage {
 	}
 	public WndQuest(NPC questgiver, LocalizedString text, Hero hero) {
 		super( questgiver.sprite(), Messages.titleCase( questgiver.name() ), text, hero );
-		JSONObject object = new JSONObject();
-
-		object.put("sprite_name", questgiver.getSprite().getClass().getName());
-		object.put("char_name", questgiver.name());
-		object.put("text", text);
-		SendData.sendWindow(hero.networkID, "quest", getId(), object);
+		SendData.packAndSendAction(hero, new WindowAction.Quest(
+			getId(),
+			questgiver.getSprite().getClass().getName(),
+			questgiver.name(),
+			text
+		));
 	}
 }

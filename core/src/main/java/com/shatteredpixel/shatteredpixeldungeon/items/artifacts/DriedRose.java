@@ -78,7 +78,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 
@@ -931,7 +931,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof MeleeWeapon)) {
 									//do nothing, should only happen when window is cancelled
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								} else if (item.unique) {
 									GLog.w(Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -952,7 +952,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.weapon = (MeleeWeapon) item;
 									item(rose.weapon);
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								}
 
 							}
@@ -1007,7 +1007,7 @@ public class DriedRose extends Artifact {
 							public void onSelect(Item item) {
 								if (!(item instanceof Armor)) {
 									//do nothing, should only happen when window is cancelled
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								} else if (item.unique || ((Armor) item).checkSeal() != null) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
 									hide();
@@ -1028,7 +1028,7 @@ public class DriedRose extends Artifact {
 									}
 									rose.armor = (Armor) item;
 									item(rose.armor);
-									SendData.sendWindow(WndGhostHero.this, TYPE, args());
+									sendSelf();
 								}
 								
 							}
@@ -1054,17 +1054,17 @@ public class DriedRose extends Artifact {
 			add( btnArmor );
 			
 			resize(WIDTH, (int)(btnArmor.bottom() + GAP));
-			SendData.sendWindow(this, TYPE, args());
+			sendSelf();
 		}
-		private JSONObject args() {
-			final Hero hero = getOwnerHero();
-			JSONObject json = new JSONObject();
-			json.put("weapon", btnWeapon.item().toJsonObject(hero));
-			json.put("armor", btnArmor.item().toJsonObject(hero));
-			json.put("rose", rose.toJsonObject(hero));
-			json.put("title", title);
-			json.put("message", message);
-			return json;
+		private void sendSelf() {
+			SendData.packAndSendAction(getOwnerHero(), new WindowAction.GhostHero(
+				getId(),
+				btnWeapon.item(),
+				btnArmor.item(),
+				rose,
+				title,
+				message
+			));
 		}
 
 		@Override

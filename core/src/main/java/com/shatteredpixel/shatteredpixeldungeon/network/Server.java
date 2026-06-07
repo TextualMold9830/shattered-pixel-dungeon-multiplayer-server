@@ -164,7 +164,18 @@ public class Server extends Thread {
         SERIALIZERS.register(ItemAction.Update.class, new ItemActionSerializers.Update());
         SERIALIZERS.register(ItemAction.Replace.class, new ItemActionSerializers.Replace());
         SERIALIZERS.register(HeapUpdateAction.class, new HeapUpdateActionSerializer());
-        SERIALIZERS.register(ShowWindowAction.class, new ShowWindowActionSerializer());
+        SERIALIZERS.register(WindowAction.Alchemy.class, new WindowActionSerializers.Alchemy());
+        SERIALIZERS.register(WindowAction.Bag.class, new WindowActionSerializers.Bag());
+        SERIALIZERS.register(WindowAction.ChooseSubclass.class, new WindowActionSerializers.ChooseSubclass());
+        SERIALIZERS.register(WindowAction.ClericSpells.class, new WindowActionSerializers.ClericSpells());
+        SERIALIZERS.register(WindowAction.InfoCell.class, new WindowActionSerializers.InfoCell());
+        SERIALIZERS.register(WindowAction.Options.class, new WindowActionSerializers.Options());
+        SERIALIZERS.register(WindowAction.Quest.class, new WindowActionSerializers.Quest());
+        SERIALIZERS.register(WindowAction.SadGhost.class, new WindowActionSerializers.SadGhost());
+        SERIALIZERS.register(WindowAction.TradeItem.class, new WindowActionSerializers.TradeItem());
+        SERIALIZERS.register(WindowAction.Wandmaker.class, new WindowActionSerializers.Wandmaker());
+        SERIALIZERS.register(WindowAction.Guess.class, new WindowActionSerializers.Guess());
+        SERIALIZERS.register(WindowAction.GhostHero.class, new WindowActionSerializers.GhostHero());
         SERIALIZERS.register(RedirectServerAction.class, new RedirectServerActionSerializer());
     }
 

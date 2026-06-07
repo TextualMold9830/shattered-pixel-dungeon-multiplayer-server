@@ -49,6 +49,7 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Reflection;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.WindowAction;
 
 import java.util.ArrayList;
 
@@ -75,7 +76,12 @@ public class StoneOfIntuition extends InventoryStone {
 
 		//GameScene.show( new WndGuess(item));
 		WndGuess wndGuess = new WndGuess(item, hero);
-		SendData.sendWindow(hero.networkID, "guess", wndGuess.getId(), wndGuess.toJson() );
+		SendData.packAndSendAction(hero, new WindowAction.Guess(
+			wndGuess.getId(),
+			item,
+			wndGuess.icons,
+			wndGuess.guessOptions
+		));
 	}
 
 	@Override
@@ -241,20 +247,6 @@ public class StoneOfIntuition extends InventoryStone {
 			}
 		}
 
-		public JSONObject toJson() {
-			JSONObject object = new JSONObject();
-			object.put("item", item.toJsonObject(getOwnerHero()));
-			JSONArray icons = new JSONArray();
-			JSONArray keys = new JSONArray();
-			for (int i : this.icons){
-				icons.put(i);
-			}
-			for(Class c: guessOptions){
-				keys.put(c.getName());
-			}
-			object.put("icons", icons);
-			object.put("keys", keys);
-			return object;
-		}
+
 	}
 }
