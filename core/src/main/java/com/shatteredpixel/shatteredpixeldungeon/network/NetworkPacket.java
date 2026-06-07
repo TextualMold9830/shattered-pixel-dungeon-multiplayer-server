@@ -50,8 +50,12 @@ public class NetworkPacket {
         actions.add(action);
     }
 
-    public synchronized void packAndAdd(@NotNull LiveStateNetworkAction action) {
-        JSONObject serialized = serializeAction(action, null);
+    public void packAndAdd(@NotNull LiveStateNetworkAction action) {
+        packAndAdd(action, null);
+    }
+
+    public synchronized void packAndAdd(@NotNull LiveStateNetworkAction action, @Nullable Hero observer) {
+        JSONObject serialized = serializeAction(action, observer);
         if (serialized.length() > 0) {
             addAction(serializedActionFrom(serialized));
         }

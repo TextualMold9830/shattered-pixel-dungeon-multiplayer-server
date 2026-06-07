@@ -255,7 +255,7 @@ public class SendData {
         }
         ClientThread client = clients[hero.networkID];
         if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Remove(path));
+            client.packet.packAndAdd(new ItemAction.Remove(path), hero);
         }
     }
 
@@ -294,7 +294,7 @@ public class SendData {
         }
         ClientThread client = clients[hero.networkID];
         if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Update(path, item, hero));
+            client.packet.packAndAdd(new ItemAction.Update(path, item, hero), hero);
         }
     }
 
@@ -308,7 +308,7 @@ public class SendData {
         }
         ClientThread client = clients[hero.networkID];
         if (client != null) {
-            client.packet.packAndAdd(new ItemAction.Add(path, item, hero));
+            client.packet.packAndAdd(new ItemAction.Add(path, item, hero), hero);
         }
     }
 
