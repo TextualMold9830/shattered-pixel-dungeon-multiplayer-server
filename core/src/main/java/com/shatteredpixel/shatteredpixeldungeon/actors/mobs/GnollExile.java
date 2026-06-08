@@ -156,7 +156,7 @@ public class GnollExile extends Gnoll {
 			}
 			boolean didNotify = false;
 			for (Hero hero : Dungeon.heroes) {
-				if (fieldOfView[hero.pos] /*&& Dungeon.level.heroFOV[pos]*/) {
+				if (hero != null && hero.fieldOfView[pos]) {
 					if (seenNotifyCooldown <= 0) {
 						GLog.p(Messages.get(GnollExile.class, "seen_passive", hero));
 					}
