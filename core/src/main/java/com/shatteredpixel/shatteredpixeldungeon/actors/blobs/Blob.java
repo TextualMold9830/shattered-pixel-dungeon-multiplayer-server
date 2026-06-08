@@ -33,6 +33,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Rect;
 import com.watabou.utils.Reflection;
 
+import java.util.Arrays;
+
 public class Blob extends Actor {
 
 	{
@@ -129,7 +131,9 @@ public class Blob extends Actor {
 			int[] tmp = off;
 			off = cur;
 			cur = tmp;
-			
+			if (!Arrays.equals( off, cur )) {
+				SendData.packAndSendActionForAll(new BlobUpdateAction(this));
+			}
 		} else {
 			if (!area.isEmpty()) {
 				area.setEmpty();
@@ -138,7 +142,6 @@ public class Blob extends Actor {
 			}
 		}
 
-		SendData.packAndSendActionForAll(new BlobUpdateAction(this));
 		return true;
 	}
 
