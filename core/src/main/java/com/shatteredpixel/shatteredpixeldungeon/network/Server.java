@@ -78,7 +78,6 @@ public class Server extends Thread {
         SERIALIZERS.register(Belongings.class, "default", new BelongingsSerializer());
         SERIALIZERS.register(Belongings.class, "special_slot_definitions", new SpecialSlotDefinitionsSerializer());
         SERIALIZERS.register(Char.class, "default", new CharSerializer());
-        SERIALIZERS.register(Blob.class, "default", new BlobSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
 
