@@ -235,7 +235,6 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 	private static JSONObject badgeListTab(String id, LocalizedString title, boolean global) {
 		JSONObject tab = tab(id, title, icon("BADGES"));
 		JSONArray entries = new JSONArray();
-		entries.put(header(LocalizedString.concat("_", title, "_"), 9, true));
 		for (Badges.Badge badge : Badges.filterReplacedBadges(global)) {
 			if (badge.type == Badges.BadgeType.HIDDEN || badge.image < 0) continue;
 			entries.put(badgeEntry(badge, true));
@@ -393,7 +392,12 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 	private static JSONObject badgeEntry(Badges.Badge badge, boolean unlocked) {
 		JSONObject icon = badgeIcon(badge.image);
 		icon.put("dark", !unlocked);
-		JSONObject entry = entry("item", unlocked ? badge.title() : UNKNOWN, unlocked ? badge.desc() : LocalizedString.EMPTY, icon);
+		LocalizedString desc = badge.desc();
+		LocalizedString progress = Badges.showCompletionProgress(badge);
+		if (progress != null) {
+			desc = LocalizedString.concat(desc, progress);
+		}
+		JSONObject entry = entry("badge", badge.title(), desc, icon);
 		entry.put("seen", unlocked);
 		return entry;
 	}
