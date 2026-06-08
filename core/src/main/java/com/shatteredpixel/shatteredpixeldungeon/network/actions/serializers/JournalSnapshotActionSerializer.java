@@ -6,7 +6,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.SmokeBomb;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalSpire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -32,7 +35,9 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.JournalSnapshotAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.EarthGuardianSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.WardSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.watabou.utils.Reflection;
 
@@ -328,32 +333,23 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		LocalizedString desc = LocalizedString.EMPTY;
 		try {
 			if (Mob.class.isAssignableFrom(entityClass)) {
-				Mob mob = (Mob) Reflection.newInstance(entityClass);
-				if (mob instanceof Mimic || mob instanceof CrystalSpire) mob.alignment = Char.Alignment.ENEMY;
-				if (mob instanceof WandOfWarding.Ward) {
-					if (mob instanceof WandOfWarding.Ward.WardSentry) {
-						for (int i = 0; i < 4; i++) ((WandOfWarding.Ward) mob).upgrade(3);
-					} else {
-						((WandOfWarding.Ward) mob).upgrade(0);
-					}
-				}
-				icon = charIcon(mob.spriteClass == null ? null : mob.spriteClass.getName());
-				title = seen ? Messages.titleCase(mob.name()) : UNKNOWN;
+				icon = charIcon(entitySpriteName(entityClass));
+				title = seen ? Messages.titleCase(Messages.get(entityClass, "name")) : UNKNOWN;
 				if (seen) {
-					desc = mob.description();
+					desc = Messages.get(entityClass, "desc");
 					if (Bestiary.encounterCount(entityClass) > 1) {
 						desc = LocalizedString.concat(desc, "\n\n", msg(CATALOG, "enemy_count", Bestiary.encounterCount(entityClass)));
 					}
 				} else {
 					icon.put("dark", true);
-					if (mob instanceof WandOfRegrowth.Lotus) {
+					if (entityClass == WandOfRegrowth.Lotus.class) {
 						desc = msg(CATALOG, "not_seen_plant");
-					} else if (mob.alignment == Char.Alignment.ENEMY) {
-						desc = msg(CATALOG, "not_seen_enemy");
-					} else {
+					} else if (Bestiary.ALLY.entities().contains(entityClass)) {
 						desc = msg(CATALOG, "not_seen_ally");
+					} else {
+						desc = msg(CATALOG, "not_seen_enemy");
 					}
-					desc = LocalizedString.concat(desc, "\n\n", Messages.get(mob, "discover_hint"));
+					desc = LocalizedString.concat(desc, "\n\n", Messages.get(entityClass, "discover_hint"));
 				}
 			} else if (Trap.class.isAssignableFrom(entityClass)) {
 				Trap trap = (Trap) Reflection.newInstance(entityClass);
@@ -388,6 +384,39 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		JSONObject entry = entry("item", title, desc, icon);
 		entry.put("seen", seen);
 		return entry;
+	}
+
+	private static String entitySpriteName(Class<?> entityClass) {
+		Class<?> spriteClass = fixedEntitySpriteClass(entityClass);
+		if (spriteClass != null) {
+			return spriteClass.getName();
+		}
+		try {
+			Mob mob = (Mob) Reflection.newInstance(entityClass);
+			if (mob instanceof Mimic || mob instanceof CrystalSpire) {
+				mob.alignment = com.shatteredpixel.shatteredpixeldungeon.actors.Char.Alignment.ENEMY;
+			}
+			if (mob instanceof WandOfWarding.Ward) {
+				if (mob instanceof WandOfWarding.Ward.WardSentry) {
+					for (int i = 0; i < 4; i++) ((WandOfWarding.Ward) mob).upgrade(3);
+				} else {
+					((WandOfWarding.Ward) mob).upgrade(0);
+				}
+			}
+			return mob.spriteClass == null ? null : mob.spriteClass.getName();
+		} catch (Exception ignored) {
+			return null;
+		}
+	}
+
+	private static @Nullable Class<?> fixedEntitySpriteClass(Class<?> entityClass) {
+		if (entityClass == WandOfWarding.Ward.class || entityClass == WandOfWarding.Ward.WardSentry.class) return WardSprite.class;
+		if (entityClass == com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth.EarthGuardian.class) return EarthGuardianSprite.class;
+		if (entityClass == ShadowClone.ShadowAlly.class) return ShadowClone.ShadowSprite.class;
+		if (entityClass == SmokeBomb.NinjaLog.class) return SmokeBomb.NinjaLogSprite.class;
+		if (entityClass == SpiritHawk.HawkAlly.class) return SpiritHawk.HawkSprite.class;
+		if (entityClass == PowerOfMany.LightAlly.class) return PowerOfMany.LightAllySprite.class;
+		return null;
 	}
 
 	private static JSONObject badgeEntry(Badges.Badge badge, boolean unlocked) {
