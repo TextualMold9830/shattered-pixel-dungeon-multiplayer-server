@@ -93,6 +93,7 @@ public class Server extends Thread {
         SERIALIZERS.register(EmitterPourAction.class, new EmitterPourActionSerializer());
         SERIALIZERS.register(BuffUpdateAction.class, new BuffUpdateActionSerializer());
         SERIALIZERS.register(BuffRemoveAction.class, new BuffRemoveActionSerializer());
+        SERIALIZERS.register(com.shatteredpixel.shatteredpixeldungeon.network.actions.JournalSnapshotAction.class, new com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.JournalSnapshotActionSerializer());
         SERIALIZERS.register(PlantUpdateAction.class, new PlantUpdateActionSerializer());
         SERIALIZERS.register(PlantRemoveAction.class, new PlantRemoveActionSerializer());
         SERIALIZERS.register(TrapUpdateAction.class, new TrapUpdateActionSerializer());

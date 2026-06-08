@@ -246,7 +246,31 @@ public class Badges {
 	}
 	
 	private static HashSet<Badge> global;
-	private static HashSet<Badge> local = new HashSet<>();
+	private static class LocalBadgeSet extends HashSet<Badge> {
+		LocalBadgeSet() {
+		}
+
+		LocalBadgeSet(Collection<Badge> badges) {
+			for (Badge badge : badges) {
+				super.add(badge);
+			}
+		}
+
+		@Override
+		public boolean add(Badge badge) {
+			boolean result = super.add(badge);
+			if (result) {
+				sendBadgeUnlock(badge, false);
+			}
+			return result;
+		}
+	}
+
+	private static HashSet<Badge> local = new LocalBadgeSet();
+	
+	private static void sendBadgeUnlock(Badge badge, boolean isGlobal) {
+		com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+	}
 	
 	private static boolean saveNeeded = false;
 
@@ -306,7 +330,7 @@ public class Badges {
 	}
 	
 	public static void loadLocal( Bundle bundle ) {
-		local = restore( bundle );
+		local = new LocalBadgeSet(restore( bundle ));
 	}
 	
 	public static void saveLocal( Bundle bundle ) {
@@ -1201,6 +1225,10 @@ public class Badges {
 		loadGlobal();
 		return new HashSet<>(global);
 	}
+
+	public static HashSet<Badge> localUnlocked(){
+		return new HashSet<>(local);
+	}
 	
 	public static void disown( Badge badge ) {
 		loadGlobal();
@@ -1212,6 +1240,7 @@ public class Badges {
 		if (!isUnlocked(badge) && (badge.type == BadgeType.JOURNAL || Dungeon.customSeedText.isEmpty())){
 			global.add( badge );
 			saveNeeded = true;
+			sendBadgeUnlock(badge, true);
 		}
 	}
 
