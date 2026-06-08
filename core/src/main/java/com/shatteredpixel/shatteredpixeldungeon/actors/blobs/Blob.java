@@ -224,6 +224,7 @@ public class Blob extends Actor {
 		if (volume == 0) return;
 		volume -= cur[cell];
 		cur[cell] = 0;
+		SendData.packAndSendActionForAll(new BlobUpdateAction(this));
 	}
 
 	public void fullyClear(){
@@ -231,6 +232,7 @@ public class Blob extends Actor {
 		area.setEmpty();
 		cur = new int[Dungeon.level.length()];
 		off = new int[Dungeon.level.length()];
+		SendData.packAndSendActionForAll(new BlobUpdateAction(this));
 	}
 
 	public void onBuildFlagMaps( Level l ){
