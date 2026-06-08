@@ -125,6 +125,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		for (String page : Document.ALCHEMY_GUIDE.pageNames()) {
 			boolean found = Document.ALCHEMY_GUIDE.isPageFound(page);
 			JSONObject entry = entry("page", Document.ALCHEMY_GUIDE.pageTitle(page), Document.ALCHEMY_GUIDE.pageBody(page), itemIcon(found ? sprites[i] : ItemSpriteSheet.SOMETHING));
+			entry.put("title_icon", itemIcon(ItemSpriteSheet.ALCH_PAGE));
 			entry.put("enabled", found);
 			entry.put("seen", found);
 			entry.put("read", Document.ALCHEMY_GUIDE.isPageRead(page));
