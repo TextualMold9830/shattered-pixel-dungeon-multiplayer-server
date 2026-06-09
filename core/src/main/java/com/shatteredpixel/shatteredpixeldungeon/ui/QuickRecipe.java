@@ -85,7 +85,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
-public class QuickRecipe extends Component {
+/**
+ * This class is a <b>visual</b> representation of a specific recipe,
+ * unlike @{@link Recipe}, which does not store the recipes explicitly.
+ * <p/>
+ * All graphical logic has been removed from the class for the server side.
+ */
+public class QuickRecipe {
 	
 	private final ArrayList<Item> ingredients;
 	public final Item outputItem;
@@ -105,25 +111,6 @@ public class QuickRecipe extends Component {
 		this.energyCost = r.cost(inputs);
 	}
 	
-	@Override
-	protected void layout() {
-		height = 16;
-		width = width();
-	}
-
-	@Override
-	public float width() {
-		float calculatedWidth = 0;
-		if (ingredients != null) {
-			int padding = ingredients.size() == 1 ? 8 : 0;
-			calculatedWidth += ingredients.size() * (16 + padding);
-			calculatedWidth += 14;
-			calculatedWidth += 16;
-			calculatedWidth += padding;
-		}
-		return calculatedWidth;
-	}
-	
 	//used to ensure that un-IDed items are not spoiled
 	@Contract("_ -> param1")
 	public static Item anonymize(Item item){
@@ -133,66 +120,6 @@ public class QuickRecipe extends Component {
 			((Scroll) item).anonymize();
 		}
 		return item;
-	}
-	
-	public class arrow extends IconButton {
-		
-		BitmapText text;
-		
-		public arrow(){
-			super();
-		}
-		
-		public arrow( Image icon ){
-			super( icon );
-		}
-		
-		public arrow( Image icon, int count ){
-			super( icon );
-			hotArea.blockLevel = PointerArea.NEVER_BLOCK;
-
-			text = new BitmapText( Integer.toString(count), PixelScene.pixelFont);
-			text.measure();
-			add(text);
-		}
-		
-		@Override
-		protected void layout() {
-			super.layout();
-			
-			if (text != null){
-				text.x = x;
-				text.y = y;
-				PixelScene.align(text);
-			}
-		}
-		
-		@Override
-		protected void onPointerUp() {
-			icon.brightness(1f);
-		}
-
-		@Override
-		protected void onClick() {
-			super.onClick();
-			
-			//find the window this is inside of and close it
-			Group parent = this.parent;
-			while (parent != null){
-				if (parent instanceof Window){
-					((Window) parent).hide();
-					break;
-				} else {
-					parent = parent.parent;
-				}
-			}
-			
-//			((AlchemyScene)ShatteredPixelDungeon.scene()).populate(ingredients, Dungeon.heroes.belongings);
-		}
-		
-		public void hardlightText(int color ){
-			if (text != null) text.hardlight(color);
-		}
 	}
 
 	//gets recipes for a particular alchemy guide page
