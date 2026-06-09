@@ -35,9 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.ActorSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BlobSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.CharSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BagSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.HeapSerializer;
@@ -53,19 +51,17 @@ import com.shatteredpixel.shatteredpixeldungeon.network.serializers.BelongingsSe
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SpecialSlotDefinitionsSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SplashFactorySerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.KeyIndicatorSerializer;
-import com.nikita22007.multiplayer.noosa.particles.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterAnchorSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterBurstSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterPourSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStartSerializer;
-import com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters.EmitterStopSerializer;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.emitters.EmitterAnchor;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.dtos.KeyIndicatorDTO;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.watabou.noosa.particles.SerializableParticleFactory;
+import com.watabou.utils.Rect;
+import com.watabou.utils.RectF;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.RectSerializer;
+import com.shatteredpixel.shatteredpixeldungeon.network.serializers.RectFSerializer;
 
 public class Server extends Thread {
     public static final SerializerRegistry SERIALIZERS = new SerializerRegistry();
@@ -80,6 +76,8 @@ public class Server extends Thread {
         SERIALIZERS.register(Char.class, "default", new CharSerializer());
         SERIALIZERS.register(Actor.class, "default", new ActorSerializer());
         SERIALIZERS.register(KeyIndicatorDTO.class, "default", new KeyIndicatorSerializer());
+        SERIALIZERS.register(Rect.class, "default", new RectSerializer());
+        SERIALIZERS.register(RectF.class, "default", new RectFSerializer());
 
         SERIALIZERS.register(SerializableParticleFactory.class, "default", new ParticleFactorySerializer());
         SERIALIZERS.register(Speck.SpeckFactory.class, "default", new SpeckFactorySerializer());

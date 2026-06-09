@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -434,10 +435,14 @@ public class ClientThread implements Callable<String> {
         //todo SEND TEXTURE
     }
 
-    public void addAllCharsToSend() {
+    public void addAllActors() {
         for (Actor actor : Actor.all()) {
             if (actor instanceof Char) {
                 addCharToSend((Char) actor);
+            } else if (actor instanceof Buff) {
+                packet.packAndAdd(new BuffUpdateAction((Buff) actor), clientHero);
+            } else if (actor instanceof Blob) {
+                packet.packAndAdd(new BlobUpdateAction((Blob) actor), clientHero);
             }
         }
     }
@@ -561,15 +566,10 @@ public class ClientThread implements Callable<String> {
         packet.addAction(new ResumeButtonVisibleAction(clientHero.lastAction != null));
         packet.addLateLiveStateAction(new SpecialSlotsDefinitionAction(clientHero));
         packet.addLateLiveStateAction(new InventoryRebuildAction(clientHero));
-        addAllCharsToSend();
-
         Dungeon.observe(clientHero, false);
         packet.addLateLiveStateAction(new UpdateFovAction(clientHero));
-        //TODO send all  information
-        for (Actor actor: Actor.all()) {
-            if (actor instanceof Buff)
-                packet.packAndAdd(new BuffUpdateAction((Buff) actor), clientHero);
-        }
+
+        addAllActors();
         forceFlush();
 
         packet.addAction(new InterlevelSceneAction("fade_out"));

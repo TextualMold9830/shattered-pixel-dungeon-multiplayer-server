@@ -89,10 +89,10 @@ public class SendData {
         SendData.sendActionForAll(new ActorRemoveAction(actor));
     }
 
-    public static void sendAllChars() {
+    public static void sendAllActors() {
         for (int ID = 0; ID < clients.length; ID++) {
             if (clients[ID] != null) {
-                clients[ID].addAllCharsToSend();
+                clients[ID].addAllActors();
             }
         }
     }

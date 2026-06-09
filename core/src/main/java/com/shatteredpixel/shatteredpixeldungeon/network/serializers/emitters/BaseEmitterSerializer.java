@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.network.serializers.emitters;
 
 import com.nikita22007.multiplayer.noosa.particles.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.json.JSONObject;
 
@@ -18,6 +19,9 @@ public abstract class BaseEmitterSerializer {
 		object.put("interval", emitter.networkInterval());
 		object.put("quantity", emitter.networkQuantity());
 		object.put("fill_target", emitter.networkFillTarget());
+		if (emitter instanceof BlobEmitter) {
+			object.put("bound", ctx.serialize(((BlobEmitter) emitter).bound));
+		}
 		return object;
 	}
 }

@@ -2,6 +2,8 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.BlobUpdateAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.EmitterPourAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +23,10 @@ public class BlobUpdateActionSerializer extends NetworkActionSerializer<BlobUpda
 
         try {
             object.put("id", blob.id());
-            object.put("blob_type", blob.getClass().getName());
+            object.put("tile_desc", blob.tileDesc() == null? JSONObject.NULL: blob.tileDesc().toJsonObject());
+            object.put("always_visible", blob.alwaysVisible);
+            LiveStateNetworkAction emitter = blob.emitter != null? blob.emitter.networkStartAction() : null;
+            object.put("emitter", emitter == null? JSONObject.NULL: ctx.serialize(emitter, profile));
 
             JSONArray positions = new JSONArray();
             for (int i = 0; i < blob.cur.length; i++) {

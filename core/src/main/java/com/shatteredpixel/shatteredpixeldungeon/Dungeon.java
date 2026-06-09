@@ -516,7 +516,7 @@ public class Dungeon {
 		}
 		SendData.sendActionForAll(new UpdateFloorInfoAction(Dungeon.depth, Dungeon.branch, Dungeon.level.feeling));
 		SendData.sendActionForAll(new LockedFloorStateAction(Dungeon.level.locked));
-		SendData.sendAllChars();
+		SendData.sendAllActors();
 
 		Server.pluginManager.fireEvent(new SwitchLevelEvent());
 		try {

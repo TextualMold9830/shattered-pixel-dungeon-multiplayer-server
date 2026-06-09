@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.network.serializers;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import org.jetbrains.annotations.CheckReturnValue;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -23,6 +24,8 @@ public class SerializationContext {
     }
 
     @CheckReturnValue
+    @Nullable
+    @Contract("null,_->_")
     public Object serialize(@Nullable Object obj, @NotNull String profile) {
         if (obj == null) return JSONObject.NULL;
         return serializeAs(obj, obj.getClass(), profile);
