@@ -445,13 +445,13 @@ public class FloatingText extends RenderedTextBlock {
 
 		KindOfWeapon wep = null;
 		if (attacker instanceof Hero) wep = ((Hero) attacker).belongings.attackingWeapon();
-		if (attacker instanceof MirrorImage) wep = ((Hero) attacker).belongings.weapon();
+		if (attacker instanceof MirrorImage) wep = ((MirrorImage) attacker).getHero().belongings.weapon();
 		if (attacker instanceof Statue) wep = ((Statue)attacker).weapon();
 		if (attacker instanceof DriedRose.GhostHero) wep = ((DriedRose.GhostHero)attacker).weapon();
 
 		Armor arm = null;
 		if (defender instanceof Hero) arm = ((Hero) defender).belongings.armor();
-		if (defender instanceof PrismaticImage) arm = ((Hero) attacker).belongings.armor();
+		if (defender instanceof PrismaticImage) arm = ((PrismaticImage) attacker).getHero().belongings.armor();
 		if (defender instanceof ArmoredStatue) arm = ((ArmoredStatue)defender).armor();
 		if (defender instanceof DriedRose.GhostHero) arm = ((DriedRose.GhostHero)defender).armor();
 
