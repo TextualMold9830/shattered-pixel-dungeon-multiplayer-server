@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.EarthGuardianSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WardSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import com.shatteredpixel.shatteredpixeldungeon.ui.QuickRecipe;
 import com.watabou.utils.Reflection;
 
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +65,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		JSONArray tabs = new JSONArray();
 		tabs.put(notesTab());
 		tabs.put(guideTab());
-		tabs.put(alchemyTab());
+		tabs.put(alchemyTab(ctx));
 		tabs.put(catalogTab());
 		tabs.put(badgesTab());
 		root.put("tabs", tabs);
@@ -112,7 +113,21 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		return tab;
 	}
 
-	private static JSONObject alchemyTab() {
+	private static JSONObject serializeRecipe(QuickRecipe recipe, SerializationContext ctx) {
+		JSONObject obj = new JSONObject();
+		JSONArray ingredientsArr = new JSONArray();
+		if (recipe.getIngredients() != null) {
+			for (Item item : recipe.getIngredients()) {
+				ingredientsArr.put(ctx.serialize(QuickRecipe.anonymize(item), "inventory"));
+			}
+		}
+		obj.put("ingredients", ingredientsArr);
+		obj.put("output", recipe.outputItem != null ? ctx.serialize(recipe.outputItem, "inventory") : JSONObject.NULL);
+		obj.put("cost", recipe.energyCost);
+		return obj;
+	}
+
+	private static JSONObject alchemyTab(SerializationContext ctx) {
 		JSONObject tab = tab("alchemy", Document.ALCHEMY_GUIDE.title(), icon("ALCHEMY"));
 		JSONArray entries = new JSONArray();
 		int[] sprites = {
@@ -134,6 +149,20 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 			entry.put("enabled", found);
 			entry.put("seen", found);
 			entry.put("read", Document.ALCHEMY_GUIDE.isPageRead(page));
+
+			JSONArray recipesArr = new JSONArray();
+			ArrayList<QuickRecipe> pageRecipes = QuickRecipe.getRecipes(i, ctx.observer);
+			if (pageRecipes != null) {
+				for (QuickRecipe r : pageRecipes) {
+					if (r == null) {
+						recipesArr.put(JSONObject.NULL);
+					} else {
+						recipesArr.put(serializeRecipe(r, ctx));
+					}
+				}
+			}
+			entry.put("recipes", recipesArr);
+
 			entries.put(entry);
 			i++;
 		}
