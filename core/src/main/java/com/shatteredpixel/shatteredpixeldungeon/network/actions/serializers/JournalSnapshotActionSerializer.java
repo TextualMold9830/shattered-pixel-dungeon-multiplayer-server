@@ -2,7 +2,6 @@ package com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers;
 
 import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.nikita22007.multiplayer.utils.text.LocalizedKey;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -32,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.jsondiff.JSONObjectDiff;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.JournalSnapshotAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.serializers.SerializationContext;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -59,6 +59,9 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 	private static final String CATALOG = "com.shatteredpixel.shatteredpixeldungeon.windows.WndJournal$CatalogTab";
 	private static final String BADGES = "com.shatteredpixel.shatteredpixeldungeon.windows.WndJournal$BadgesTab";
 
+	private static final java.util.WeakHashMap<com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero, JSONObject> lastSnapshots =
+			new java.util.WeakHashMap<>();
+
 	@Override
 	protected @Nullable JSONObject serializeInternal(@NotNull JournalSnapshotAction obj, @NotNull SerializationContext ctx, @NotNull String profile) {
 		JSONObject root = new JSONObject();
@@ -68,7 +71,27 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		tabs.put(alchemyTab(ctx));
 		tabs.put(catalogTab());
 		tabs.put(badgesTab());
+		applyAfterField(tabs);
 		root.put("tabs", tabs);
+
+		if (ctx.observer != null) {
+			JSONObject lastSnapshot;
+			synchronized (lastSnapshots) {
+				lastSnapshot = obj.forceFull ? null : lastSnapshots.get(ctx.observer);
+			}
+			if (lastSnapshot == null) {
+				lastSnapshot = new JSONObject();
+			}
+			JSONObject patch = JSONObjectDiff.diff(lastSnapshot, root);
+			if (patch == null || patch.length() == 0) {
+				return null;
+			} // no diff
+			synchronized (lastSnapshots) {
+				lastSnapshots.put(ctx.observer, root);
+			}
+			return patch;
+		}
+
 		return root;
 	}
 
@@ -94,6 +117,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 			}
 		}
 
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -104,11 +128,12 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		entries.put(header(Document.ADVENTURERS_GUIDE.title()));
 		for (String page : Document.ADVENTURERS_GUIDE.pageNames()) {
 			boolean found = Document.ADVENTURERS_GUIDE.isPageFound(page);
-			JSONObject entry = entry("story", found ? Messages.titleCase(Document.ADVENTURERS_GUIDE.pageTitle(page)) : Messages.titleCase(msg(GUIDE, "missing")), Document.ADVENTURERS_GUIDE.pageBody(page), documentPageIcon(Document.ADVENTURERS_GUIDE, page, found));
+			JSONObject entry = entry(page, "story", found ? Messages.titleCase(Document.ADVENTURERS_GUIDE.pageTitle(page)) : Messages.titleCase(msg(GUIDE, "missing")), Document.ADVENTURERS_GUIDE.pageBody(page), documentPageIcon(Document.ADVENTURERS_GUIDE, page, found));
 			entry.put("enabled", found);
 			entry.put("seen", found);
 			entries.put(entry);
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -144,7 +169,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		int i = 0;
 		for (String page : Document.ALCHEMY_GUIDE.pageNames()) {
 			boolean found = Document.ALCHEMY_GUIDE.isPageFound(page);
-			JSONObject entry = entry("page", Document.ALCHEMY_GUIDE.pageTitle(page), Document.ALCHEMY_GUIDE.pageBody(page), itemIcon(found ? sprites[i] : ItemSpriteSheet.SOMETHING));
+			JSONObject entry = entry(page, "page", Document.ALCHEMY_GUIDE.pageTitle(page), Document.ALCHEMY_GUIDE.pageBody(page), itemIcon(found ? sprites[i] : ItemSpriteSheet.SOMETHING));
 			entry.put("title_icon", itemIcon(ItemSpriteSheet.ALCH_PAGE));
 			entry.put("enabled", found);
 			entry.put("seen", found);
@@ -166,6 +191,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 			entries.put(entry);
 			i++;
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -177,6 +203,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		tabs.put(catalogItemsTab("consumables", msg(CATALOG, "title_consumables"), itemIcon(ItemSpriteSheet.POTION_HOLDER), Catalog.consumableCatalogs));
 		tabs.put(bestiaryTab());
 		tabs.put(loreTab());
+		applyAfterField(tabs);
 		tab.put("tabs", tabs);
 		return tab;
 	}
@@ -197,6 +224,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 				entries.put(itemEntry(itemClass));
 			}
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -217,6 +245,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 				entries.put(entityEntry(entityClass));
 			}
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -245,7 +274,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 			entries.put(header(LocalizedString.concat(doc.anyPagesFound() ? LocalizedString.concat("_", Messages.titleCase(doc.title()), "_") : LocalizedString.raw("_???_"), " (", docSeen, "/", docItems, "):")));
 			for (String page : doc.pageNames()) {
 				boolean seen = doc.isPageFound(page);
-				JSONObject entry = entry(seen ? "story" : "item", seen ? doc.pageTitle(page) : UNKNOWN, seen ? doc.pageBody(page) : LocalizedString.concat(msg(CATALOG, "not_seen_lore"), "\n\n", doc.discoverHint()), documentPageIcon(doc, page, seen));
+				JSONObject entry = entry(page, seen ? "story" : "item", seen ? doc.pageTitle(page) : UNKNOWN, seen ? doc.pageBody(page) : LocalizedString.concat(msg(CATALOG, "not_seen_lore"), "\n\n", doc.discoverHint()), documentPageIcon(doc, page, seen));
 				entry.put("seen", seen);
 				entry.put("read", doc.isPageRead(page));
 				if (seen) {
@@ -254,6 +283,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 				entries.put(entry);
 			}
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
@@ -263,6 +293,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		JSONArray tabs = new JSONArray();
 		tabs.put(badgeListTab("run_badges", msg(BADGES, "this_run"), false));
 		tabs.put(badgeListTab("global_badges", msg(BADGES, "overall"), true));
+		applyAfterField(tabs);
 		tab.put("tabs", tabs);
 		return tab;
 	}
@@ -287,12 +318,24 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 				entries.put(badgeEntry(badge, false));
 			}
 		}
+		applyAfterField(entries);
 		tab.put("entries", entries);
 		return tab;
 	}
 
+	private static String recordId(Notes.Record record) {
+		if (record instanceof Notes.CustomRecord) {
+			return "custom_" + ((Notes.CustomRecord) record).ID;
+		} else if (record instanceof Notes.LandmarkRecord) {
+			return "landmark_" + record.depth() + "_" + ((Notes.LandmarkRecord) record).landmark.name();
+		} else if (record instanceof Notes.KeyRecord) {
+			return "key_" + record.depth() + "_" + (((Notes.KeyRecord) record).key != null ? ((Notes.KeyRecord) record).key.getClass().getSimpleName() : "null");
+		}
+		return "record_" + record.hashCode();
+	}
+
 	private static JSONObject noteEntry(Notes.Record record) {
-		JSONObject entry = entry("item", Messages.titleCase(record.title()), record.desc(), noteIcon(record));
+		JSONObject entry = entry(recordId(record), "item", Messages.titleCase(record.title()), record.desc(), noteIcon(record));
 		putSecondIcon(entry, noteSecondIcon(record));
 		return entry;
 	}
@@ -350,7 +393,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 			e.printStackTrace();
 		}
 
-		JSONObject entry = entry("item", title, desc, icon);
+		JSONObject entry = entry(itemClass.getSimpleName(), "item", title, desc, icon);
 		entry.put("seen", seen);
 		return entry;
 	}
@@ -410,7 +453,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONObject entry = entry("item", title, desc, icon);
+		JSONObject entry = entry(entityClass.getSimpleName(), "item", title, desc, icon);
 		entry.put("seen", seen);
 		return entry;
 	}
@@ -439,8 +482,10 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 	}
 
 	private static @Nullable Class<?> fixedEntitySpriteClass(Class<?> entityClass) {
-		if (entityClass == WandOfWarding.Ward.class || entityClass == WandOfWarding.Ward.WardSentry.class) return WardSprite.class;
-		if (entityClass == com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth.EarthGuardian.class) return EarthGuardianSprite.class;
+		if (entityClass == WandOfWarding.Ward.class || entityClass == WandOfWarding.Ward.WardSentry.class)
+			return WardSprite.class;
+		if (entityClass == com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth.EarthGuardian.class)
+			return EarthGuardianSprite.class;
 		if (entityClass == ShadowClone.ShadowAlly.class) return ShadowClone.ShadowSprite.class;
 		if (entityClass == SmokeBomb.NinjaLog.class) return SmokeBomb.NinjaLogSprite.class;
 		if (entityClass == SpiritHawk.HawkAlly.class) return SpiritHawk.HawkSprite.class;
@@ -456,7 +501,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		if (progress != null) {
 			desc = LocalizedString.concat(desc, progress);
 		}
-		JSONObject entry = entry("badge", badge.title(), desc, icon);
+		JSONObject entry = entry(badge.name(), "badge", badge.title(), desc, icon);
 		entry.put("seen", unlocked);
 		return entry;
 	}
@@ -522,6 +567,7 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 
 	private static JSONObject header(LocalizedString title, int size, boolean center) {
 		JSONObject entry = new JSONObject();
+		entry.put("id", "header_" + Math.abs(title.toJsonObject().toString().hashCode()));
 		entry.put("kind", "header");
 		entry.put("title", title.toJsonObject());
 		entry.put("header_size", size);
@@ -529,8 +575,9 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		return entry;
 	}
 
-	private static JSONObject entry(String kind, LocalizedString title, LocalizedString body, JSONObject icon) {
+	private static JSONObject entry(String id, String kind, LocalizedString title, LocalizedString body, JSONObject icon) {
 		JSONObject entry = new JSONObject();
+		entry.put("id", id);
 		entry.put("kind", kind);
 		entry.put("title", title.toJsonObject());
 		entry.put("body", body.toJsonObject());
@@ -583,6 +630,21 @@ public class JournalSnapshotActionSerializer extends NetworkActionSerializer<Jou
 		icon.put("type", "text");
 		icon.put("text", LocalizedString.raw(text).toJsonObject());
 		return icon;
+	}
+
+	private static void applyAfterField(JSONArray array) {
+		String prevId = null;
+		for (int i = 0; i < array.length(); i++) {
+			JSONObject obj = array.optJSONObject(i);
+			if (obj != null && obj.has("id")) {
+				if (prevId == null) {
+					obj.put("after", JSONObject.NULL);
+				} else {
+					obj.put("after", prevId);
+				}
+				prevId = obj.getString("id");
+			}
+		}
 	}
 
 	private static LocalizedString msg(String owner, String key, Object... args) {
