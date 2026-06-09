@@ -86,7 +86,7 @@ public class Notes {
 
 		public int quantity() { return 1; }
 
-		protected abstract int order();
+		public abstract int order();
 
 		public abstract LocalizedString title();
 
@@ -145,7 +145,7 @@ public class Notes {
 	
 	public static class LandmarkRecord extends Record {
 		
-		protected Landmark landmark;
+		public Landmark landmark;
 		
 		public LandmarkRecord() {}
 		
@@ -268,7 +268,7 @@ public class Notes {
 		}
 
 		@Override
-		protected int order(){
+		public int order(){
 			return landmark.ordinal();
 		}
 
@@ -296,7 +296,7 @@ public class Notes {
 	
 	public static class KeyRecord extends Record {
 		
-		protected Key key;
+		public Key key;
 		
 		public KeyRecord() {}
 		
@@ -341,7 +341,7 @@ public class Notes {
 		}
 
 		@Override
-		protected int order() {
+		public int order() {
 			return 1000 + Generator.Category.order(key);
 		}
 
@@ -384,13 +384,13 @@ public class Notes {
 
 	public static class CustomRecord extends Record {
 
-		protected CustomType type;
+		public CustomType type;
 
-		protected int ID = -1;
-		protected Class itemClass;
+		public int ID = -1;
+		public Class itemClass;
 
-		protected String title;
-		protected String body;
+		public String title;
+		public String body;
 
 		public CustomRecord() {}
 
@@ -476,7 +476,7 @@ public class Notes {
 		}
 
 		@Override
-		protected int order() {
+		public int order() {
 			return 2000 + ID;
 		}
 
@@ -575,6 +575,9 @@ public class Notes {
 		if (!records.contains(l)) {
 			boolean result = records.add(l);
 			Collections.sort(records, comparator);
+			if (result) {
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+			}
 			return result;
 		}
 		return false;
@@ -593,7 +596,13 @@ public class Notes {
 	}
 
 	public static boolean remove( Landmark landmark, int depth ) {
-		return records.remove( new LandmarkRecord(landmark, depth) );
+		LandmarkRecord l = new LandmarkRecord(landmark, depth);
+		boolean result = records.remove( l );
+		if (result) {
+			int id = (1 << 24) | (landmark.ordinal() << 8) | (depth & 0xFF);
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+		}
+		return result;
 	}
 	
 	public static boolean add( Key key ){
@@ -601,10 +610,14 @@ public class Notes {
 		if (!records.contains(k)){
 			boolean result = records.add(k);
 			Collections.sort(records, comparator);
+			if (result) {
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+			}
 			return result;
 		} else {
 			k = (KeyRecord) records.get(records.indexOf(k));
 			k.quantity(k.quantity() + key.quantity());
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 	}
@@ -617,6 +630,10 @@ public class Notes {
 			k.quantity(k.quantity() - key.quantity());
 			if (k.quantity() <= 0){
 				records.remove(k);
+				int id = (2 << 24) | (key.getClass().getName().hashCode() & 0x00FFFFFF);
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+			} else {
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			}
 			return true;
 		}
@@ -638,6 +655,9 @@ public class Notes {
 		if (!records.contains(rec)){
 			boolean result = records.add(rec);
 			Collections.sort(records, comparator);
+			if (result) {
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
+			}
 			return result;
 		}
 		return false;
@@ -646,9 +666,15 @@ public class Notes {
 	public static boolean remove( CustomRecord rec ){
 		if (records.contains(rec)){
 			records.remove(rec);
+			int id = (3 << 24) | (rec.ID & 0x00FFFFFF);
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 		return false;
+	}
+
+	public static ArrayList<Record> getRecords() {
+		return records;
 	}
 	
 	public static <T extends Record> ArrayList<T> getRecords( Class<T> recordType ){

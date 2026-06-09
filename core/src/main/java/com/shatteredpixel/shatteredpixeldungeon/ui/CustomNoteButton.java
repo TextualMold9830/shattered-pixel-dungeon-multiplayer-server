@@ -330,8 +330,7 @@ public class CustomNoteButton extends IconButton {
 							if (index == 0){
 								Notes.remove(rec);
 								CustomNoteWindow.this.hide();
-								if (parentWindow instanceof WndJournal || parentWindow == null){
-									ShatteredPixelDungeon.scene().addToFront(new WndJournal());
+								if ( parentWindow == null){
 								} else if (parentWindow instanceof WndUseItem){
 									GameScene.show(new WndUseItem(((WndUseItem) parentWindow).owner, ((WndUseItem) parentWindow).item, getOwnerHero()));
 								}

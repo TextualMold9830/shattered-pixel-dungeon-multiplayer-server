@@ -570,6 +570,7 @@ public class ClientThread implements Callable<String> {
         packet.addLateLiveStateAction(new UpdateFovAction(clientHero));
 
         addAllActors();
+        packet.packAndAdd(new JournalSnapshotAction(true), clientHero);
         forceFlush();
 
         packet.addAction(new InterlevelSceneAction("fade_out"));

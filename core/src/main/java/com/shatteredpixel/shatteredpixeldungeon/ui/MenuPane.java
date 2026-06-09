@@ -59,7 +59,6 @@ public class MenuPane extends Component {
 	private BitmapText challengeText;
 	private Button challengeButton;
 
-	private JournalButton btnJournal;
 	private MenuButton btnMenu;
 
 	private BitmapText version;
@@ -106,7 +105,7 @@ public class MenuPane extends Component {
 				super.onClick();
 
 				if (Dungeon.level.feeling == Level.Feeling.NONE){
-					GameScene.show(new WndJournal());
+
 				} else {
 					GameScene.show(new WndTitledMessage(Icons.getLarge(Dungeon.level.feeling),
 							Messages.titleCase(Dungeon.level.feeling.title()),
@@ -138,10 +137,6 @@ public class MenuPane extends Component {
 			};
 			add(challengeButton);
 		}
-
-		btnJournal = new JournalButton();
-		add( btnJournal );
-
 		btnMenu = new MenuButton();
 		add( btnMenu );
 
@@ -177,9 +172,8 @@ public class MenuPane extends Component {
 
 		btnMenu.setPos( x + WIDTH - btnMenu.width(), y );
 
-		btnJournal.setPos( btnMenu.left() - btnJournal.width() + 2, y );
 
-		depthIcon.x = btnJournal.left() - 7 + (7 - depthIcon.width())/2f - 0.1f;
+		depthIcon.x = btnMenu.left() - 7 + (7 - depthIcon.width())/2f - 0.1f;
 		depthIcon.y = y+8;
 		PixelScene.align(depthIcon);
 
@@ -191,7 +185,7 @@ public class MenuPane extends Component {
 		depthButton.setRect(depthIcon.x, depthIcon.y, depthIcon.width(), depthIcon.height() + depthText.height());
 
 		if (challengeIcon != null){
-			challengeIcon.x = btnJournal.left() - 14 + (7 - challengeIcon.width())/2f - 0.1f;
+			challengeIcon.x = btnMenu.left() - 14 + (7 - challengeIcon.width())/2f - 0.1f;
 			challengeIcon.y = depthIcon.y;
 			PixelScene.align(challengeIcon);
 
@@ -208,150 +202,9 @@ public class MenuPane extends Component {
 	}
 
 	public void flashForPage( Document doc, String page ){
-		btnJournal.flashingDoc = doc;
-		btnJournal.flashingPage = page;
 	}
 
 	public void updateKeys(){
-		btnJournal.updateKeyDisplay();
-	}
-
-	private static class JournalButton extends Button {
-
-		private Image bg;
-		private Image journalIcon;
-		private KeyDisplay keyIcon;
-
-		private Document flashingDoc = null;
-		private String flashingPage = null;
-
-		public JournalButton() {
-			super();
-
-			width = bg.width + 4;
-			height = bg.height + 10;
-		}
-
-		@Override
-		public GameAction keyAction() {
-			return SPDAction.JOURNAL;
-		}
-
-		@Override
-		protected void createChildren() {
-			super.createChildren();
-
-			bg = new Image( Assets.Interfaces.MENU_BTN, 2, 2, 13, 11 );
-			add( bg );
-
-			journalIcon = new Image( Assets.Interfaces.MENU_BTN, 31, 0, 11, 6);
-			add( journalIcon );
-
-			keyIcon = new KeyDisplay();
-			add(keyIcon);
-			updateKeyDisplay();
-		}
-
-		@Override
-		protected void layout() {
-			super.layout();
-
-			bg.x = x + 2;
-			bg.y = y + 8;
-
-			journalIcon.x = bg.x + (bg.width() - journalIcon.width())/2f;
-			journalIcon.y = bg.y + (bg.height() - journalIcon.height())/2f;
-			PixelScene.align(journalIcon);
-
-			keyIcon.x = bg.x + 1;
-			keyIcon.y = bg.y + 1;
-			keyIcon.width = bg.width - 2;
-			keyIcon.height = bg.height - 2;
-			PixelScene.align(keyIcon);
-		}
-
-		private float time;
-
-		@Override
-		public void update() {
-			super.update();
-
-			if (flashingPage != null){
-				journalIcon.am = (float)Math.abs(Math.cos( StatusPane.FLASH_RATE * (time += Game.elapsed) ));
-				keyIcon.am = journalIcon.am;
-				bg.brightness(0.5f + journalIcon.am);
-				if (time >= Math.PI/StatusPane.FLASH_RATE) {
-					time = 0;
-				}
-			}
-		}
-
-		public void updateKeyDisplay() {
-			keyIcon.updateKeys();
-			keyIcon.visible = keyIcon.keyCount() > 0;
-			journalIcon.visible = !keyIcon.visible;
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
-			} else {
-				bg.resetColor();
-			}
-		}
-
-		@Override
-		protected void onPointerDown() {
-			bg.brightness( 1.5f );
-			Sample.INSTANCE.play( Assets.Sounds.CLICK );
-		}
-
-		@Override
-		protected void onPointerUp() {
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
-			} else {
-				bg.resetColor();
-			}
-		}
-
-		@Override
-		protected void onClick() {
-			time = 0;
-			keyIcon.am = journalIcon.am = 1;
-			if (flashingPage != null){
-				if (flashingDoc == Document.ALCHEMY_GUIDE){
-					WndJournal.last_index = 2;
-					GameScene.show( new WndJournal() );
-				} else if (flashingDoc.pageNames().contains(flashingPage)){
-					if (flashingDoc == Document.ADVENTURERS_GUIDE){
-						WndJournal.last_index = 1;
-					} else if (flashingDoc.isLoreDoc()){
-						WndJournal.last_index = 3;
-//						WndJournal.CatalogTab.currentItemIdx = 3;
-					}
-					GameScene.show( new WndStory( flashingDoc.pageSprite(flashingPage),
-							flashingDoc.pageTitle(flashingPage),
-							flashingDoc.pageBody(flashingPage) ){
-						@Override
-						public void hide() {
-							super.hide();
-							if (SPDSettings.intro()){
-								GameScene.endIntro();
-							}
-						}
-					});
-					flashingDoc.readPage(flashingPage);
-				} else {
-					GameScene.show( new WndJournal() );
-				}
-				flashingPage = null;
-			} else {
-				GameScene.show( new WndJournal() );
-			}
-		}
-
-		@Override
-		protected LocalizedString hoverText() {
-			return Messages.titleCase(Messages.get(WndKeyBindings.class, "journal"));
-		}
 	}
 
 	private static class MenuButton extends Button {

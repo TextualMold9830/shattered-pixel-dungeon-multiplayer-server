@@ -901,7 +901,7 @@ public class Item implements Bundlable {
 	};
 	public List<Integer> getSlot(Hero owner) {
 		return owner.belongings.pathOfItem(this);
-	}
+	}	
 
 	@NotNull
     public JSONObject itemUI(@NotNull Hero owner) throws JSONException {

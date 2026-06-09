@@ -294,6 +294,7 @@ public enum Bestiary {
 			if (cat.seen.containsKey(cls) && !cat.seen.get(cls)) {
 				cat.seen.put(cls, true);
 				Journal.saveNeeded = true;
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			}
 		}
 		Badges.validateCatalogBadges();
@@ -329,6 +330,7 @@ public enum Bestiary {
 					cat.encounterCount.put(cls, Integer.MAX_VALUE);
 				}
 				Journal.saveNeeded = true;
+				com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			}
 		}
 	}

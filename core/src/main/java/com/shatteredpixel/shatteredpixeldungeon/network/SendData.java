@@ -97,6 +97,10 @@ public class SendData {
         }
     }
 
+    public static void sendJournalSnapshotForAll() {
+        sendLateLiveStateActionForAll(new JournalSnapshotAction());
+    }
+
     //---------------------------Sprites
     public static void sendAddCharSpriteState(Actor actor, CharSprite.State state) {
         sendSpriteStateChange(actor, state, false);

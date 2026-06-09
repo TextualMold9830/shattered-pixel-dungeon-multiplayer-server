@@ -69,6 +69,7 @@ public enum Document {
 			pagesStates.put(page, FOUND);
 			Journal.saveNeeded = true;
 			Badges.validateCatalogBadges();
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 		return false;
@@ -82,6 +83,7 @@ public enum Document {
 		if (pagesStates.containsKey(page) && pagesStates.get(page) != NOT_FOUND){
 			pagesStates.put(page, NOT_FOUND);
 			Journal.saveNeeded = true;
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 		return false;
@@ -95,6 +97,7 @@ public enum Document {
 		if (pagesStates.containsKey(page) && pagesStates.get(page) == READ){
 			pagesStates.put(page, FOUND);
 			Journal.saveNeeded = true;
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 		return false;
@@ -135,6 +138,7 @@ public enum Document {
 			pagesStates.put(page, READ);
 			Journal.saveNeeded = true;
 			Badges.validateCatalogBadges();
+			com.shatteredpixel.shatteredpixeldungeon.network.SendData.sendJournalSnapshotForAll();
 			return true;
 		}
 		return false;
@@ -174,44 +178,58 @@ public enum Document {
 	}
 
 	public Image pageSprite(String page){
-		if (page.isEmpty() || !isPageFound(page) || this != ADVENTURERS_GUIDE){
-			if (pageIcon != null){
-				return Icons.get(pageIcon);
-			} else {
-				return new ItemSprite(pageSprite);
-			}
+		Icons icon = pageIcon(page);
+		if (icon != null) {
+			return Icons.get(icon);
+		} else if (GUIDE_IDING.equals(page) && isPageFound(page) && this == ADVENTURERS_GUIDE) {
+			return new ItemSprite(new ScrollOfIdentify());
 		} else {
-			//special per-page visuals for guidebook
-			switch (page){
-				case Document.GUIDE_INTRO: default:
-					return new ItemSprite(ItemSpriteSheet.MASTERY);
-				case "Examining":
-					return Icons.get(Icons.MAGNIFY);
-				case "Surprise_Attacks":
-					return Icons.get(Icons.SNAKE);
-				case "Identifying":
-					return new ItemSprite( new ScrollOfIdentify() );
-				case "Food":
-					return new ItemSprite( ItemSpriteSheet.PASTY );
-				case "Alchemy":
-					return new ItemSprite( ItemSpriteSheet.TRINKET_CATA );
-				case "Dieing":
-					return new ItemSprite( ItemSpriteSheet.TOMB );
-				case Document.GUIDE_SEARCHING:
-					return Icons.get(Icons.MAGNIFY);
-				case "Strength":
-					return new ItemSprite( ItemSpriteSheet.GREATAXE );
-				case "Upgrades":
-					return new ItemSprite( ItemSpriteSheet.RING_EMERALD );
-				case "Looting":
-					return new ItemSprite( ItemSpriteSheet.CRYSTAL_KEY );
-				case "Levelling":
-					return Icons.get(Icons.TALENT);
-				case "Positioning":
-					return new ItemSprite( ItemSpriteSheet.SPIRIT_BOW );
-				case "Magic":
-					return new ItemSprite( ItemSpriteSheet.WAND_FIREBOLT );
-			}
+			return new ItemSprite(pageItemSprite(page));
+		}
+	}
+
+	public int pageItemSprite(String page) {
+		if (page.isEmpty() || !isPageFound(page) || this != ADVENTURERS_GUIDE) {
+			return pageSprite;
+		}
+		switch (page) {
+			case Document.GUIDE_INTRO: default:
+				return ItemSpriteSheet.MASTERY;
+			case Document.GUIDE_IDING:
+				return new ScrollOfIdentify().image;
+			case Document.GUIDE_FOOD:
+				return ItemSpriteSheet.PASTY;
+			case Document.GUIDE_ALCHEMY:
+				return ItemSpriteSheet.TRINKET_CATA;
+			case Document.GUIDE_DIEING:
+				return ItemSpriteSheet.TOMB;
+			case "Strength":
+				return ItemSpriteSheet.GREATAXE;
+			case "Upgrades":
+				return ItemSpriteSheet.RING_EMERALD;
+			case "Looting":
+				return ItemSpriteSheet.CRYSTAL_KEY;
+			case "Positioning":
+				return ItemSpriteSheet.SPIRIT_BOW;
+			case "Magic":
+				return ItemSpriteSheet.WAND_FIREBOLT;
+		}
+	}
+
+	public Icons pageIcon(String page) {
+		if (page.isEmpty() || !isPageFound(page) || this != ADVENTURERS_GUIDE) {
+			return pageIcon;
+		}
+		switch (page) {
+			case Document.GUIDE_EXAMINING:
+			case Document.GUIDE_SEARCHING:
+				return Icons.MAGNIFY;
+			case Document.GUIDE_SURPRISE_ATKS:
+				return Icons.SNAKE;
+			case "Levelling":
+				return Icons.TALENT;
+			default:
+				return null;
 		}
 	}
 

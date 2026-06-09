@@ -4,6 +4,7 @@ import com.nikita22007.multiplayer.utils.text.LocalizedString;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessageAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ChatMessagesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.LiveStateNetworkAction;
+import com.shatteredpixel.shatteredpixeldungeon.network.actions.JournalSnapshotAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.ResizeLevelAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelStatesAction;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.SetLevelTilesAction;
@@ -52,6 +53,8 @@ class NetworkPacketCompressor {
         private int @Nullable [] currentStates;
         @Nullable
         private ChatMessagesAction currentMessagesAction;
+        @Nullable
+        private JournalSnapshotAction pendingJournalSnapshot;
 
         void add(@NotNull LiveStateNetworkAction action) {
             if (action instanceof ResizeLevelAction) {
@@ -73,6 +76,8 @@ class NetworkPacketCompressor {
                 addMessage(((ChatMessageAction) action).text);
             } else if (action instanceof ChatMessagesAction) {
                 addMessages((ChatMessagesAction) action);
+            } else if (action instanceof JournalSnapshotAction) {
+                pendingJournalSnapshot = (JournalSnapshotAction) action;
             } else {
                 actions.add(action);
             }
@@ -130,6 +135,9 @@ class NetworkPacketCompressor {
         @Contract("->new")
         @NotNull List<LiveStateNetworkAction> toActions() {
             addPendingUpdates();
+            if (pendingJournalSnapshot != null) {
+                actions.add(pendingJournalSnapshot);
+            }
             return new ArrayList<>(actions);
         }
 
@@ -139,13 +147,17 @@ class NetworkPacketCompressor {
             }
             if (!pendingTiles.isEmpty() && pendingTiles.keySet().equals(pendingStates.keySet())) {
                 actions.add(createCellsUpdate(pendingTiles, pendingStates));
+                pendingTiles.clear();
+                pendingStates.clear();
                 return;
             }
             if (!pendingTiles.isEmpty()) {
                 actions.add(createCellsUpdate(pendingTiles, null));
+                pendingTiles.clear();
             }
             if (!pendingStates.isEmpty()) {
                 actions.add(createCellsUpdate(null, pendingStates));
+                pendingStates.clear();
             }
         }
 
