@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.PrismaticSprite;
 import com.nikita22007.multiplayer.noosa.audio.Sample;
@@ -141,6 +142,7 @@ public class PrismaticImage extends NPC {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		heroUUID = bundle.getString( HEROUUID );
+		hero = Server.findHeroByUUID(heroUUID);
 		deathTimer = bundle.getInt( TIMER );
 	}
 	
@@ -290,7 +292,9 @@ public class PrismaticImage extends NPC {
 
 	}
 	public Hero getHero() {
-		findHero();
+		if (hero == null){
+			hero = Server.findHeroByUUID(heroUUID);
+		}
     	return hero;
 	}
 }
