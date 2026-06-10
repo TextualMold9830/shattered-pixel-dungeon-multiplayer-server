@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.actions.serializers.*;
 import com.shatteredpixel.shatteredpixeldungeon.network.NetworkPacket.SerializedAction;
@@ -16,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.texturepack.TexturePackManager;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -380,6 +382,14 @@ public class Server extends Thread {
             }
         }
         return onlineCount;
+    }
+    public static @Nullable Hero findHeroByUUID(String uuid){
+        for (Hero hero: Dungeon.heroes) {
+            if (hero != null && hero.uuid.equals(uuid)) {
+                return hero;
+            }
+        }
+        return null;
     }
     public static JSONObject serverInfo(){
             JSONObject serverInfo = new JSONObject();

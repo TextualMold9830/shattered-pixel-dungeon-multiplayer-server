@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.network.Server;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MirrorSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -68,17 +69,18 @@ public class MirrorImage extends NPC {
 		return hero;
 	}
 
-	private int heroID;
+	private String heroUUID;
 	public int armTier;
 	
 	@Override
 	protected boolean act() {
-		
-		if ( hero == null ){
-			hero = (Hero)Actor.findById(heroID);
+
+		if ( hero == null ) {
+
+			hero = Server.findHeroByUUID(heroUUID);
 			if ( hero == null ){
-				die(new DamageCause( null));
-				getSprite().killAndErase();
+//				die(new DamageCause( null));
+//				getSprite().killAndErase();
 				return true;
 			}
 		}
@@ -91,23 +93,29 @@ public class MirrorImage extends NPC {
 		return super.act();
 	}
 	
-	private static final String HEROID	= "hero_id";
-	
+	private static final String HERO_UUID = "hero_id";
+	private static final String ARMOR_TIER = "armor_tier";
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
-		bundle.put( HEROID, heroID );
+		bundle.put(HERO_UUID, heroUUID);
+		bundle.put(ARMOR_TIER, armTier);
+
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		heroID = bundle.getInt( HEROID );
+		if (bundle.contains(ARMOR_TIER)) {
+			armTier = bundle.getInt(ARMOR_TIER);
+		}
+		heroUUID = bundle.getString(HERO_UUID);
+		hero = Server.findHeroByUUID(heroUUID);
 	}
 	
 	public void duplicate( Hero hero ) {
 		this.hero = hero;
-		heroID = this.hero.id();
+		heroUUID = this.hero.uuid;
 		Buff.affect(this, MirrorInvis.class, Short.MAX_VALUE);
 	}
 	
@@ -207,7 +215,7 @@ public class MirrorImage extends NPC {
 	public CharSprite sprite() {
 		CharSprite s = super.sprite();
 		
-		hero = (Hero)Actor.findById(heroID);
+		hero = Server.findHeroByUUID(heroUUID);
 		if (hero != null) {
 			armTier = hero.tier();
 		} else {
