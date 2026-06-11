@@ -87,7 +87,7 @@ public class Button extends Component {
 
 			@Override
 			protected void onHoverStart(PointerEvent event) {
-				String text = hoverText().toString();
+				String text = hoverText()!= null? hoverText().toString(): null;
 				if (text != null){
 					int key = 0;
 					if (keyAction() != null){
